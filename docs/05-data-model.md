@@ -55,6 +55,25 @@ Placement: `wake` — the first step at that day's Wake Up; `bed` — the last s
 `time` — the first step at `anchor_minute` local wall clock (DST-true). RLS: own rows only; synced
 through `sync_push` (0007 adds the entity); purged like other tombstones after 30 days.
 
+### `devices`  (the account's device list, "Alarm sounds on", ED-084, migration 0016)
+`id (uuid v7, one per install and account), user_id, platform ('ios'|'android'|'macos'|'web'),
+form ('phone'|'tablet'|'desktop'), can_ring bool, alarm_on bool, rings bool, armed_wake_utc?,
+last_seen_utc, created_at, updated_at, deleted_at?`
+
+One row per install, written only by that install: it **upserts its own row straight to the table**
+(PostgREST, RLS) instead of through `sync_push`, since a row has one writer and needs no field
+versions. That also keeps `sync_push` untouched (the open CR-160 change rewrites it). No name or
+model is stored (06 §1); the app labels a row from platform and form ("This iPhone", "Android
+tablet"). Checks: iOS/Android are a phone or tablet, Mac/web a desktop; a desktop never has
+`can_ring`, `alarm_on`, `rings` or `armed_wake_utc`. At most 50 live rows per account (trigger,
+54000). `alarm_on`: Wake Up is on and alarms are allowed there; `rings`: it has read
+`settings.alarmDeviceId` naming it and arms Wake Up; `armed_wake_utc`: its next planned Wake Up.
+A row is re-sent when it changes, or every 6 h to refresh `last_seen_utc` (24 h unseen reads
+"Offline"). RLS: own rows only; realtime on. Not exported (it describes installs, not the user's
+plan). Locally (schema 18) `devices` is a cache of the list, filled on report and when Settings
+opens; the install id lives in `local_meta` (`device_id:<user id>`), so a second account on the same
+phone gets its own row (CR-160).
+
 ### `subtasks`
 `id, user_id, occurrence_id, title, done bool, sort_order, duration_min? (1–1440, B2), done_at?
 (ADR-0012), created_at, updated_at, deleted_at?` — `sort_order` is the step order B2 asks for (no
@@ -166,11 +185,17 @@ Locally (M2.5) the purge never removes a tombstone that is still `dirty` (the se
 delete) or a series-instance tombstone with `original_start_utc` at or after `now − 1 day` (the
 Materialiser reads it as "skip this instance"). Trashing a task trashes its live subtasks with the
 same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in memory.
+Permanent delete (F7.6, ED-336: Trash's "Delete now" per task and "Empty Trash") is one write-path
+transaction that moves the occurrence's and its subtasks' `deleted_at` to `now − 60 days` (twice the
+window, so a Trash list already watching with an older cutoff drops it too). It is never a local
+`DELETE`: the tombstone syncs like any delete (docs/04 §4), every device's Trash hides it at once, and
+the server's nightly purge and each device's purge remove it once it is clean. Not undoable; the
+sheet confirms first.
 
 ## Settings JSON (profiles.settings) — validated with a schema on both sides
 ```json
 {
-  "dayBoundaries": {"mon": {"start": "07:00", "end": "22:00"}, "...": {}},
+  "dayBoundaries": {"mon": {"start": "07:00", "end": "22:00"}, "fri": {"start": "08:00", "end": "24:30"}, "...": {}},
   "snapMinutes": 5,
   "shiftFollowers": "ask",
   "includeCalendarInShift": false,
@@ -188,6 +213,7 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
   "rollUnfinished": false,
   "windDownReminder": true,
   "wakeUpAlarm": false,
+  "alarmDeviceId": null,
   "wakeUpSoundId": null,
   "wakeUpVarySound": false,
   "wakeUpRampSec": 30,
@@ -221,10 +247,28 @@ same `deleted_at`; restore brings back only those. Undo tokens (30 s) live in me
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
   the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` must be
   one of the 9 Concept A task colour keys or a retired 12-palette key kept for sync
-  (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm` with
-  start < end (no wrap); quiet hours may wrap past midnight. `quietHours: null` means off and is the
+  (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm`
+  with start < end (see "Wind Down after midnight" below); quiet hours may wrap past midnight. `quietHours: null` means off and is the
   default for new profiles (the example above shows the suggested window once enabled). Validation
   checks `tz_id` against the bundled IANA database, which `bootstrap()` loads before `runApp`.
+- Clarified for ED-084 (owner, Round 2 close-out): `alarmDeviceId` is the `devices.id` of the one
+  phone or tablet that arms Wake Up ("Alarm sounds on"); every other device disarms when it syncs.
+  Null means none chosen yet: every phone rings as before the list, and the first phone or tablet to
+  sync with `wakeUpAlarm` on writes its own id (a race between two is settled like any settings
+  write; the loser disarms on its next sync). No server check (`validate_settings()` ignores it).
+- Clarified for Q8 (owner, Round 2 close-out, ED-336): **Wind Down after midnight.** A day's
+  `end` counts from that day's own midnight and may pass it: 00:30 the next morning is stored as
+  `24:30`, and it still belongs to the day it closes (its Wind Down reminder, review and night).
+  Rules: `start` is `00:00`–`23:59`; `end` is after `start` and less than 24 h after it (hours
+  `00`–`47`). `24:00` is midnight. The app resolves an end at or after `24:00` on the next calendar
+  day's wall clock (DST-true: a time in a spring-forward gap moves on, a fall-back overlap takes the
+  earlier instant) and holds it at the next day's Wake Up, so a night is never negative. The clock
+  belongs to the previous day until, and including, that day's configured Wind Down
+  (`DayShape.dayOf`); Today still turns at midnight, and the Wind Down review opens on the day the
+  clock belongs to. Editors store a Wind Down picked at or before Wake Up a day on (`dayWindow`) and
+  show it as "00:30, next day". An older end stored at or before `start` is read the same way. No
+  column changes: the server's `validate_settings()` only checks the key; the client checks the
+  rule (`checkDayWindow`). Older app versions cannot read `24:30` and fall back to 22:00.
 - Clarified in M3c.3: `durationPresets` are the Add flow's duration chips — 1–12 distinct lengths of
   5–1440 min, sorted; absent means the default list. Checked by the client validator; the server's
   `validate_settings()` ignores keys it doesn't know, so older rows stay valid.

@@ -25,6 +25,7 @@ enum FeatureId {
   onboarding('Onboarding'),
   alarmsHealth('A0 alarms + Notification health'),
   wakeUpAlarm('W1 Wake Up alarm'),
+  alarmDevice('W1 Alarm sounds on'),
   wakeUpCard('W2 Wake Up card'),
   wakeUpCheck('W3 Wake Up Check'),
   startNudge('A0 Start nudge'),

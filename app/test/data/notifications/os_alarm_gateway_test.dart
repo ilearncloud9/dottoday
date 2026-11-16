@@ -78,7 +78,7 @@ void main() {
     final gateway = _gateway(HealthPlatform.android);
     expect(await gateway.sync([_alarm]), isNull);
     expect(await gateway.test(_alarm), isFalse);
-    await gateway.disarmAll();
+    expect(await gateway.disarmAll(), isFalse);
   });
 
   test('the Mac and the web never call the channel', () async {
@@ -86,7 +86,7 @@ void main() {
     final gateway = _gateway(HealthPlatform.mac);
     expect(await gateway.sync([_alarm]), isEmpty);
     expect(await gateway.test(_alarm), isFalse);
-    await gateway.disarmAll();
+    expect(await gateway.disarmAll(), isTrue);
     expect(calls, isEmpty);
   });
 

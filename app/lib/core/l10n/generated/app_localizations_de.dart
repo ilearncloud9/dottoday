@@ -1586,6 +1586,41 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Jetzt löschen';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return '„$title“ jetzt löschen?';
+  }
+
+  @override
+  String get trashDeleteNowBody =>
+      'Danach lässt es sich nicht mehr wiederherstellen.';
+
+  @override
+  String get trashDeleteNowAction => 'Löschen';
+
+  @override
+  String get trashEmptyTitle => 'Papierkorb leeren?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben werden gelöscht.',
+      one: '1 Aufgabe wird gelöscht.',
+    );
+    return '$_temp0 Danach lassen sie sich nicht mehr wiederherstellen.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Papierkorb leeren';
+
+  @override
+  String get trashEmptied => 'Papierkorb geleert';
+
+  @override
   String get settingsAbout => 'Über';
 
   @override
@@ -2859,7 +2894,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Zieh sie am Faden entlang oder zieh an ihren Rändern, um die Dauer zu ändern. Lange drücken, um mehrere auszuwählen.';
+      'Zieh sie am Faden entlang an jede Stelle, auch über eine andere Aufgabe. Öffne sie › Dauer, um die Länge zu ändern. Lange drücken, um mehrere auszuwählen.';
 
   @override
   String get helpLateQ => 'Ich bin spät dran. Kann sich alles verschieben?';
@@ -5956,7 +5991,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Anbieten, den Tag zu verschieben, wenn ich nach Plan aufstehe';
 
   @override
-  String get wakeUpLateAfterRow => 'Ab';
+  String get wakeUpLateOfferAfterRow => 'Anbieten nach';
 
   @override
   String wakeUpCardGreeting(String date) {
@@ -6034,6 +6069,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein Anstoß, wenn ein paar Minuten nach dem Aufstehen noch nichts begonnen hat';
 
   @override
+  String get wakeUpCheckAfterRow => 'Prüfen nach';
+
+  @override
   String get wakeUpCheckAsRow => 'Als';
 
   @override
@@ -6097,6 +6135,61 @@ class AppLocalizationsDe extends AppLocalizations {
   String notifWindDownNudgeNoDot(String length, String time) {
     return 'Jetzt zur Ruhe kommen: $length bis $time.';
   }
+
+  @override
+  String timeNextDay(String time) {
+    return '$time, am nächsten Tag';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'Wecker klingelt auf';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Android-Smartphone';
+
+  @override
+  String get deviceAndroidTablet => 'Android-Tablet';
+
+  @override
+  String deviceThis(String device) {
+    return 'Dieses Gerät ($device)';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Bereit';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Bereit · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'Wartet auf Abgleich';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Wecker auf diesem Gerät aus';
+
+  @override
+  String get alarmDeviceNone => 'Kein Gerät klingelt';
+
+  @override
+  String get alarmDeviceOffline => 'Offline';
+
+  @override
+  String get alarmDeviceNote =>
+      'Nur dieses eine Smartphone oder Tablet klingelt zum Aufwachen. Mac und Web klingeln nie.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Webbrowser';
 
   @override
   String settingsWindDownFrom(String time, String wake) {

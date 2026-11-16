@@ -101,6 +101,51 @@ final class DriftTrashService implements TrashService {
   }
 
   @override
+  Future<Result<int, AppFailure>> deleteNow(
+    String userId,
+    Set<String> ids,
+  ) async {
+    final cutoff = _cutoff;
+    return _expire(userId, [
+      for (final o in await _find(userId, ids))
+        if (o.deletedAt != null && !o.deletedAt!.isBefore(cutoff)) o,
+    ]);
+  }
+
+  @override
+  Future<Result<int, AppFailure>> emptyTrash(String userId) async =>
+      _expire(userId, await watchTrash(userId).first);
+
+  /// One write-path transaction that ages [trashed] (and their subtasks)
+  /// out of Trash. Not a local `DELETE`: a hard delete the server never
+  /// hears of would come back from another device (docs/04 §4); the
+  /// tombstone syncs and `purgeTombstones` removes it once clean.
+  Future<Result<int, AppFailure>> _expire(
+    String userId,
+    List<Occurrence> trashed,
+  ) async {
+    if (trashed.isEmpty) return const Ok(0);
+    // Twice the window, so a Trash list opened a while ago (its cutoff is
+    // fixed when it starts watching) drops the rows too.
+    final expired = _clock.nowUtc().subtract(TrashService.retention * 2);
+    final subtasks = await _subtasks.findForOccurrences(userId, {
+      for (final o in trashed) o.id,
+    });
+    final result = await _writes.apply(
+      WriteBatch(
+        userId: userId,
+        occurrences: [for (final o in trashed) o.copyWith(deletedAt: expired)],
+        subtasks: [
+          for (final s in subtasks.map(subtaskFromRow))
+            if (s.deletedAt == null || s.deletedAt!.isAfter(expired))
+              s.copyWith(deletedAt: expired),
+        ],
+      ),
+    );
+    return result.map((_) => trashed.length);
+  }
+
+  @override
   Future<Result<int, AppFailure>> purgeExpired(String userId) async {
     try {
       final removed = await purgeTombstones(

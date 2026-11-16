@@ -77,6 +77,11 @@ abstract class Settings with _$Settings {
     // time rings like an alarm on phones. A missing key reads as off, so an
     // upgrade rings nothing new (15 §11); onboarding offers it on.
     @Default(false) bool wakeUpAlarm,
+    // "Alarm sounds on" (ED-084, docs/15 §9a): the one device (its
+    // `devices.id`) that arms Wake Up. Null until one is chosen: every
+    // phone then rings as before, and the first one to sync with the alarm
+    // on claims it, so an upgrade silences nobody.
+    String? alarmDeviceId,
     // Settings › Wake Up alarm (15 §9, M17.2): its sound (null = the Start
     // sound), a different start-tier cue each day, Android's volume ramp,
     // and snooze (length in minutes; limit 0 = no limit).

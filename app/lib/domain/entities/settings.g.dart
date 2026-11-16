@@ -65,6 +65,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   rollUnfinished: json['rollUnfinished'] as bool? ?? false,
   windDownReminder: json['windDownReminder'] as bool? ?? true,
   wakeUpAlarm: json['wakeUpAlarm'] as bool? ?? false,
+  alarmDeviceId: json['alarmDeviceId'] as String?,
   wakeUpSoundId: json['wakeUpSoundId'] as String?,
   wakeUpVarySound: json['wakeUpVarySound'] as bool? ?? false,
   wakeUpRotationIds:
@@ -162,6 +163,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'rollUnfinished': instance.rollUnfinished,
   'windDownReminder': instance.windDownReminder,
   'wakeUpAlarm': instance.wakeUpAlarm,
+  'alarmDeviceId': instance.alarmDeviceId,
   'wakeUpSoundId': instance.wakeUpSoundId,
   'wakeUpVarySound': instance.wakeUpVarySound,
   'wakeUpRotationIds': instance.wakeUpRotationIds,

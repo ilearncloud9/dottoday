@@ -14,6 +14,8 @@ tags:
     # Writes ../docs/store/screenshots/ (docs/09 M8.6). Skipped unless
     # STORE_SCREENSHOTS is set; never a pass/fail gate.
   supabase:
-    # Against a local Supabase stack (`supabase start`, docs/09 M6.1): the
-    # supabase workflow runs them; the unit job excludes them. Reads
-    # SUPABASE_URL / SUPABASE_ANON_KEY / MAILPIT_URL, local defaults otherwise.
+    # Against a local Supabase stack (docs/09 M6.1): locally the isolated
+    # test stack (`tool/test_stack.sh test`, port 55321); the supabase
+    # workflow runs them on 54321 with CI=true; the unit job excludes them.
+    # SUPABASE_URL / SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY /
+    # MAILPIT_URL come from the environment only.

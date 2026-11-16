@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/day_card_scroll.dart';
 import 'package:dottoday/shared/dot/day_card_side.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -56,6 +57,7 @@ class DayCard extends StatelessWidget {
     this.footer,
     this.reality,
     this.note,
+    this.openAtNow = false,
     super.key,
   }) : side = null,
        handle = null;
@@ -70,6 +72,7 @@ class DayCard extends StatelessWidget {
     this.reality,
     this.note,
     this.handle,
+    this.openAtNow = false,
     super.key,
   }) : title = '',
        isToday = false,
@@ -90,7 +93,8 @@ class DayCard extends StatelessWidget {
   }) : isToday = false,
        reality = null,
        note = null,
-       handle = null;
+       handle = null,
+       openAtNow = false;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
@@ -117,6 +121,10 @@ class DayCard extends StatelessWidget {
   /// One line at the top of the thread, under the header (the learning
   /// caption, "nothing started yet today"; docs/13 §4.2).
   final Widget? note;
+
+  /// Today's card: open scrolled to the live task or the now marker,
+  /// clear of the floating controls (ED-336); other days open at the top.
+  final bool openAtNow;
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +159,7 @@ class DayCard extends StatelessWidget {
       // rounded corners; the header covers the top ones.
       child: Padding(
         padding: const EdgeInsets.only(bottom: DotRadii.cardLarge),
-        child: LayoutBuilder(builder: (_, box) => _body(box, header)),
+        child: LayoutBuilder(builder: (c, box) => _body(c, box, header)),
       ),
     );
   }
@@ -190,9 +198,10 @@ class DayCard extends StatelessWidget {
             // The thread keeps clear of the sheet's edge (`Main`'s inset).
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
-              child: CustomScrollView(
-                slivers: [
-                  _thread(),
+              child: _scroll(
+                context,
+                (key) => [
+                  _thread(key),
                   // The last row scrolls clear of the floating tab bar and
                   // + button (their height is in the bottom padding).
                   SliverToBoxAdapter(
@@ -212,13 +221,11 @@ class DayCard extends StatelessWidget {
   /// Header over the scrolling thread; in a very short card (a small phone
   /// with a prompt above it) the header scrolls with it instead of
   /// overflowing (M4.9).
-  Widget _body(BoxConstraints box, Widget header) {
+  Widget _body(BuildContext context, BoxConstraints box, Widget header) {
     if (box.maxHeight < _shortCard) {
-      return CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(child: header),
-          _thread(),
-        ],
+      return _scroll(
+        context,
+        (key) => [SliverToBoxAdapter(child: header), _thread(key)],
       );
     }
     return Column(
@@ -226,13 +233,26 @@ class DayCard extends StatelessWidget {
       children: [
         header,
         // Lazy: only the rows on screen are built (R-15).
-        Expanded(child: CustomScrollView(slivers: [_thread()])),
+        Expanded(child: _scroll(context, (key) => [_thread(key)])),
       ],
     );
   }
 
-  /// The day's thread (and footer), with the card's insets.
-  Widget _thread() => SliverPadding(
+  /// The card's scroll view, opened at now when [openAtNow] (ED-336).
+  Widget _scroll(BuildContext context, List<Widget> Function(GlobalKey?) of) {
+    final anchor = openAtNow ? _anchor : null;
+    return DayCardScroll(
+      anchor: anchor?.fraction,
+      clearance: MediaQuery.paddingOf(context).bottom,
+      slivers: of,
+    );
+  }
+
+  ThreadAnchor? get _anchor => nowAnchor(entries);
+
+  /// The day's thread (and footer), with the card's insets; the now row
+  /// carries [anchorKey] while the card opens at it.
+  Widget _thread(GlobalKey? anchorKey) => SliverPadding(
     // The 56 px dot fills the axis column: keep it off the card's edge.
     padding: const EdgeInsetsDirectional.fromSTEB(
       DotSpace.s,
@@ -245,7 +265,12 @@ class DayCard extends StatelessWidget {
         // The note scrolls with the thread: pinned, it would grow the
         // header past a short card at the largest text (docs/13 §4.2).
         if (note case final n?) SliverToBoxAdapter(child: n),
-        Thread.sliver(entries: entries, actions: actions),
+        Thread.sliver(
+          entries: entries,
+          actions: actions,
+          anchorIndex: openAtNow ? _anchor?.index : null,
+          anchorKey: anchorKey,
+        ),
         if (footer case final f?) SliverToBoxAdapter(child: f),
       ],
     ),

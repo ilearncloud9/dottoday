@@ -1,26 +1,110 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// The local stack (`supabase start`); CI exports its values.
-final localUrl =
-    Platform.environment['SUPABASE_URL'] ?? 'http://127.0.0.1:54321';
-final localAnonKey =
-    Platform.environment['SUPABASE_ANON_KEY'] ?? _fromCli('ANON_KEY');
+// Q9 (ED-352): these tests run only against a local stack. The isolated test
+// stack (`tool/test_stack.sh`, `dottoday-test`) serves 55321; the original
+// app's stack serves 54321 and is allowed only on CI's throw-away runner.
+const _testStackPort = 55321;
+const _ciPort = 54321;
+const _localHosts = {'127.0.0.1', 'localhost'};
+
+String _env(String name) {
+  final value = Platform.environment[name];
+  if (value == null || value.isEmpty) {
+    throw StateError(
+      '$name is not set. Run the client tests with `tool/test_stack.sh test` '
+      'or `eval "\$(tool/test_stack.sh env)"` first.',
+    );
+  }
+  return value;
+}
+
+/// Why [url] is refused, or null when it is a local test stack. Exposed for
+/// the guard's own unit test.
+String? refuseUrl(String url, {required bool ci}) {
+  final uri = Uri.tryParse(url);
+  if (uri == null || !_localHosts.contains(uri.host)) {
+    return 'host must be 127.0.0.1 or localhost';
+  }
+  if (uri.port == _testStackPort) return null;
+  if (uri.port == _ciPort && ci) return null;
+  return 'port must be $_testStackPort (tool/test_stack.sh)'
+      '${ci ? '' : ', or $_ciPort only when CI=true'}';
+}
+
+String _guarded(String name) {
+  final url = _env(name);
+  final reason = refuseUrl(url, ci: Platform.environment['CI'] == 'true');
+  if (reason != null) {
+    throw StateError('Refusing $name=$url: $reason.');
+  }
+  return url;
+}
+
+/// The local stack's API, from the environment only (no `supabase status`
+/// from the current folder, which may be the original app's stack).
+final localUrl = _guarded('SUPABASE_URL');
+final localAnonKey = _env('SUPABASE_ANON_KEY');
 
 /// The local stack's service-role key, for checks a user can't make (that
-/// rows are gone). Test-only: the app never holds it (06 §1).
-final localServiceKey =
-    Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] ??
-    _fromCli('SERVICE_ROLE_KEY');
-final _mailpit =
-    Platform.environment['MAILPIT_URL'] ?? 'http://127.0.0.1:54324';
+/// rows are gone) and for cleanup. Test-only: the app never holds it (06 §1).
+final localServiceKey = _env('SUPABASE_SERVICE_ROLE_KEY');
 
-String _fromCli(String key) {
-  final out = Process.runSync('supabase', ['status', '-o', 'json']);
-  final status = jsonDecode(out.stdout as String) as Map<String, dynamic>;
-  return status[key] as String;
+/// Mailpit of the same local stack; the sign-in mails land there.
+final _mailpit = _localHost('MAILPIT_URL');
+
+String _localHost(String name) {
+  final url = _env(name);
+  if (!_localHosts.contains(Uri.tryParse(url)?.host)) {
+    throw StateError(
+      'Refusing $name=$url: host must be 127.0.0.1 or localhost.',
+    );
+  }
+  return url;
+}
+
+final _created = <String>{};
+
+/// Call first in each file's `main`: checks the stack before any test runs and
+/// deletes the users the file created ([testEmail]) once its tests are done.
+void useLocalSupabase() {
+  setUpAll(() {
+    localUrl;
+    localAnonKey;
+    localServiceKey;
+    _mailpit;
+  });
+  tearDownAll(_deleteCreatedUsers);
+}
+
+/// A fresh address for [prefix] on the reserved `.test` domain, removed in
+/// `tearDownAll` by [useLocalSupabase].
+String testEmail(String prefix) {
+  final email = '$prefix-${DateTime.now().microsecondsSinceEpoch}@example.test';
+  _created.add(email);
+  return email;
+}
+
+Future<void> _deleteCreatedUsers() async {
+  if (_created.isEmpty) return;
+  final admin = SupabaseClient(localUrl, localServiceKey);
+  try {
+    for (var page = 1; _created.isNotEmpty; page++) {
+      final users = await admin.auth.admin.listUsers(page: page, perPage: 200);
+      if (users.isEmpty) break;
+      for (final user in users) {
+        if (_created.remove(user.email)) {
+          await admin.auth.admin.deleteUser(user.id);
+        }
+      }
+    }
+    _created.clear();
+  } finally {
+    await admin.dispose();
+  }
 }
 
 /// Rows of [table] owned by [userId], as the server holds them.

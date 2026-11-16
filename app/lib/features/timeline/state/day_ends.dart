@@ -17,11 +17,7 @@ Future<DayEnds> dayEnds(Ref ref, DateTime date) async {
   final next = DateTime(date.year, date.month, date.day + 1);
   final tomorrow = await ref.watch(timelineDataProvider(next).future);
   final location = data.day.location;
-  final configured = DayShape.on(
-    location,
-    date,
-    data.settings.boundaryFor(data.day.weekday),
-  );
+  final configured = configuredDayShape(location, date, data.settings);
   final shape = effectiveDayShape(
     location,
     date,

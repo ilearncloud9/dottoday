@@ -16,11 +16,11 @@ import 'package:timezone/timezone.dart' as tz;
 /// ADR-0017) and returns the instants it armed, which the notification
 /// path then leaves out, so a Wake Up rings exactly once (R-10).
 ///
-/// The armed instants are kept per device in `local_meta`: a background
-/// engine can't reach the gateway (Android registers its channel on the
-/// activity), and it still leaves out what the last reachable sync armed,
-/// while ringing the rest on the notification path (W1a) rather than not
-/// at all.
+/// The armed instants are kept per device in `local_meta`: an engine that
+/// can't reach the gateway still leaves out what the last reachable sync
+/// armed, while ringing the rest on the notification path (W1a) rather
+/// than not at all. On Android every engine reaches it, the background
+/// resync's included (ADR-0019).
 final class WakeUpArming {
   const WakeUpArming(
     this._gateway,
@@ -59,13 +59,8 @@ final class WakeUpArming {
     Map<String, Subtask> steps = const {},
     Set<String> startedDays = const {},
   }) async {
+    if (!profile.settings.wakeUpAlarm) return disarm();
     final known = await _read();
-    if (!profile.settings.wakeUpAlarm) {
-      if (known == null) return const {};
-      await _gateway.disarmAll();
-      await _write(null);
-      return const {};
-    }
     final explain =
         profile.settings.wakeUpCheck &&
         (await _explainCheck?.call(profile.id) ?? false);
@@ -87,6 +82,19 @@ final class WakeUpArming {
     if (armed == null) return known ?? const {};
     await _write(armed);
     return armed;
+  }
+
+  /// Disarms every Wake Up alarm this device armed, once: the switch went
+  /// off, or another device is the one that rings (ED-084). Returns what is
+  /// still armed: out of reach (a background engine), the alarms still
+  /// ring, so they stay recorded, the notification path leaves them out
+  /// and the next sync disarms them.
+  Future<Set<DateTime>> disarm() async {
+    final known = await _read();
+    if (known == null) return const {};
+    if (!await _gateway.disarmAll()) return known;
+    await _write(null);
+    return const {};
   }
 
   /// [alarms] with each morning's mission (15 §8): the mode, the alarm

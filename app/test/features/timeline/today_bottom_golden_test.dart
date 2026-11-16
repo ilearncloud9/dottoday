@@ -18,9 +18,8 @@ import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);
 
-/// The latest Wind Down a day can have: the slider's last step (a window end
-/// of `24:00` is not valid, `checkTimeWindow`), so the thread runs to the
-/// very end of the calendar day (docs/02 F1.16, R-14).
+/// A Wind Down at the slider's last step before midnight, so the thread
+/// runs to the very end of the calendar day (docs/02 F1.16, R-14).
 const _lateDay = TimeWindow(start: '07:00', end: '23:55');
 
 DateTime _berlin(int h, int m) =>

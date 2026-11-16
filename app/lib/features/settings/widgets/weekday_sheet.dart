@@ -88,11 +88,7 @@ class _Day extends StatelessWidget {
           bedLabel: l10n.settingsWindDown,
           onChanged: (w, b) => changeSettings(
             context,
-            (s) => withDayWindow(
-              s,
-              day,
-              TimeWindow(start: windowTime(w), end: windowTime(b)),
-            ),
+            (s) => withDayWindow(s, day, dayWindow(w, b)),
           ),
         ),
       ],

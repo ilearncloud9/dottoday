@@ -2388,6 +2388,54 @@ abstract class AppLocalizations {
   /// **'{title} restored'**
   String settingsRestored(String title);
 
+  /// Trash row: delete this task for good, after a confirm (F7.6, ED-336).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete now'**
+  String get trashDeleteNow;
+
+  /// Confirm before deleting one task from Trash for good (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{title}” now?'**
+  String trashDeleteNowTitle(String title);
+
+  /// Body of the Delete now confirm (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'It can\'t be restored after this.'**
+  String get trashDeleteNowBody;
+
+  /// Delete now confirm: the action button, in ink, never red (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get trashDeleteNowAction;
+
+  /// Confirm before deleting everything in Trash for good (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Trash?'**
+  String get trashEmptyTitle;
+
+  /// Body of the Empty Trash confirm with how many tasks go (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task will be deleted.} other{{count} tasks will be deleted.}} They can\'t be restored after this.'**
+  String trashEmptyBody(int count);
+
+  /// Trash sheet action under the list, and the Empty Trash confirm's button (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Trash'**
+  String get trashEmptyAction;
+
+  /// Toast after Empty Trash; no Undo (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Trash emptied'**
+  String get trashEmptied;
+
   /// Settings group caption.
   ///
   /// In en, this message translates to:
@@ -4173,7 +4221,7 @@ abstract class AppLocalizations {
   /// Help answer.
   ///
   /// In en, this message translates to:
-  /// **'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.'**
+  /// **'Drag it along the thread to any time, even over another task. Open it › Duration to change how long it is. Long-press to pick several.'**
   String get helpMoveA;
 
   /// Help question.
@@ -8898,11 +8946,11 @@ abstract class AppLocalizations {
   /// **'Offer to shift the day when I\'m up after plan'**
   String get wakeUpLateOfferRow;
 
-  /// Row: minutes after Wake Up before the shift offer shows.
+  /// Row and picker title: minutes after Wake Up before the shift offer shows. Names its setting so a screen reader can tell it from the check's (ED-337).
   ///
   /// In en, this message translates to:
-  /// **'After'**
-  String get wakeUpLateAfterRow;
+  /// **'Offer after'**
+  String get wakeUpLateOfferAfterRow;
 
   /// Wake Up card's first line; date is the weekday and date.
   ///
@@ -8987,6 +9035,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'One nudge if nothing has started a few minutes after I\'m up'**
   String get wakeUpCheckRowDetail;
+
+  /// Row and picker title: minutes after Wake Up before the Wake Up Check nudges (ED-337).
+  ///
+  /// In en, this message translates to:
+  /// **'Check after'**
+  String get wakeUpCheckAfterRow;
 
   /// Row: how the Wake Up Check comes (gentle ping or alarm).
   ///
@@ -9089,6 +9143,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wind down now for {length} before {time}.'**
   String notifWindDownNudgeNoDot(String length, String time);
+
+  /// A Wind Down after midnight: its time and that it falls the next morning (it still ends the day before).
+  ///
+  /// In en, this message translates to:
+  /// **'{time}, next day'**
+  String timeNextDay(String time);
+
+  /// Settings › Wake Up: the row naming the one device that rings Wake Up (ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm sounds on'**
+  String get settingsAlarmSoundsOn;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone'**
+  String get deviceIphone;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'iPad'**
+  String get deviceIpad;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Android phone'**
+  String get deviceAndroidPhone;
+
+  /// A device on the account's list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Android tablet'**
+  String get deviceAndroidTablet;
+
+  /// The device being used now, e.g. 'This iPhone'.
+  ///
+  /// In en, this message translates to:
+  /// **'This {device}'**
+  String deviceThis(String device);
+
+  /// Alarm sounds on: the chosen device rings Wake Up.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get alarmDeviceReady;
+
+  /// Alarm sounds on: the chosen device rings at its next Wake Up time.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready · {time}'**
+  String alarmDeviceReadyAt(String time);
+
+  /// Alarm sounds on: the chosen device hasn't synced the change yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to sync'**
+  String get alarmDeviceWaiting;
+
+  /// Alarm sounds on: the chosen device doesn't allow Dottoday's alarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms off on that device'**
+  String get alarmDeviceAlarmsOff;
+
+  /// Alarm sounds on: no device is chosen.
+  ///
+  /// In en, this message translates to:
+  /// **'No device rings'**
+  String get alarmDeviceNone;
+
+  /// Alarm sounds on: the chosen device hasn't been seen for a day.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get alarmDeviceOffline;
+
+  /// Alarm sounds on: the line under the row.
+  ///
+  /// In en, this message translates to:
+  /// **'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.'**
+  String get alarmDeviceNote;
+
+  /// A device on the account list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Mac'**
+  String get deviceMac;
+
+  /// A device on the account list, named by its kind.
+  ///
+  /// In en, this message translates to:
+  /// **'Web browser'**
+  String get deviceWeb;
 
   /// Wind Down row value when a sleep target moved it.
   ///

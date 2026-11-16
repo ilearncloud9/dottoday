@@ -9,7 +9,7 @@ Dottoday: Tagesplaner
 Dein Tag als Faden
 
 ### Promotional text
-Plane deinen Tag als Punkte auf einer Linie. Ziehen zum Verschieben, Kante ziehen für die Dauer – und alles danach mit einer Geste verschieben, wenn sich Pläne ändern.
+Plane deinen Tag als Punkte auf einer Linie. Zieh eine Aufgabe an jede Stelle – und verschieb alles danach mit einer Geste, wenn sich Pläne ändern.
 
 ### Keywords
 planer,tagesplaner,zeitplan,timeline,zeitblöcke,routine,kalender,aufgaben,to do,fokus,adhs
@@ -23,7 +23,7 @@ Dottoday macht aus deiner Aufgabenliste einen Tag, dem du folgen kannst. Dein Ta
 Beginnt deinen Morgen, beendet deinen Abend. Aufstehen kann wie ein Wecker klingeln und öffnet eine Karte mit deinem Tag; die Abendruhe richtet sich nach der ersten Aufgabe von morgen.
 
 WENN SICH DER TAG BEWEGT, BEWEG ALLES MIT
-• Zieh eine Aufgabe, um sie zu verschieben, oder ihre Kante, um die Dauer zu ändern.
+• Zieh eine Aufgabe an jede Stelle des Tages; ihre Länge stellst du unter Dauer ein.
 • Verschieb alles nach einer Aufgabe mit einer Geste oder gib der aktuellen Aufgabe 15 Minuten mehr.
 • Lange drücken, um mehrere Aufgaben zu wählen und gemeinsam zu verschieben.
 • Angeheftete Aufgaben bleiben, wo sie sind.

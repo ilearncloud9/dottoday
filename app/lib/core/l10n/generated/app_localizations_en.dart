@@ -1580,6 +1580,40 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get trashDeleteNow => 'Delete now';
+
+  @override
+  String trashDeleteNowTitle(String title) {
+    return 'Delete “$title” now?';
+  }
+
+  @override
+  String get trashDeleteNowBody => 'It can\'t be restored after this.';
+
+  @override
+  String get trashDeleteNowAction => 'Delete';
+
+  @override
+  String get trashEmptyTitle => 'Empty Trash?';
+
+  @override
+  String trashEmptyBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks will be deleted.',
+      one: '1 task will be deleted.',
+    );
+    return '$_temp0 They can\'t be restored after this.';
+  }
+
+  @override
+  String get trashEmptyAction => 'Empty Trash';
+
+  @override
+  String get trashEmptied => 'Trash emptied';
+
+  @override
   String get settingsAbout => 'About';
 
   @override
@@ -2845,7 +2879,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpMoveA =>
-      'Drag it along the thread, or drag its edges to change how long it is. Long-press to pick several.';
+      'Drag it along the thread to any time, even over another task. Open it › Duration to change how long it is. Long-press to pick several.';
 
   @override
   String get helpLateQ => 'I\'m running late. Can everything move?';
@@ -5919,7 +5953,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Offer to shift the day when I\'m up after plan';
 
   @override
-  String get wakeUpLateAfterRow => 'After';
+  String get wakeUpLateOfferAfterRow => 'Offer after';
 
   @override
   String wakeUpCardGreeting(String date) {
@@ -5997,6 +6031,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'One nudge if nothing has started a few minutes after I\'m up';
 
   @override
+  String get wakeUpCheckAfterRow => 'Check after';
+
+  @override
   String get wakeUpCheckAsRow => 'As';
 
   @override
@@ -6060,6 +6097,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String notifWindDownNudgeNoDot(String length, String time) {
     return 'Wind down now for $length before $time.';
   }
+
+  @override
+  String timeNextDay(String time) {
+    return '$time, next day';
+  }
+
+  @override
+  String get settingsAlarmSoundsOn => 'Alarm sounds on';
+
+  @override
+  String get deviceIphone => 'iPhone';
+
+  @override
+  String get deviceIpad => 'iPad';
+
+  @override
+  String get deviceAndroidPhone => 'Android phone';
+
+  @override
+  String get deviceAndroidTablet => 'Android tablet';
+
+  @override
+  String deviceThis(String device) {
+    return 'This $device';
+  }
+
+  @override
+  String get alarmDeviceReady => 'Ready';
+
+  @override
+  String alarmDeviceReadyAt(String time) {
+    return 'Ready · $time';
+  }
+
+  @override
+  String get alarmDeviceWaiting => 'Waiting to sync';
+
+  @override
+  String get alarmDeviceAlarmsOff => 'Alarms off on that device';
+
+  @override
+  String get alarmDeviceNone => 'No device rings';
+
+  @override
+  String get alarmDeviceOffline => 'Offline';
+
+  @override
+  String get alarmDeviceNote =>
+      'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.';
+
+  @override
+  String get deviceMac => 'Mac';
+
+  @override
+  String get deviceWeb => 'Web browser';
 
   @override
   String settingsWindDownFrom(String time, String wake) {

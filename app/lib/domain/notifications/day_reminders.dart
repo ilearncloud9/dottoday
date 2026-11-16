@@ -150,8 +150,9 @@ abstract final class DayReminders {
     return out;
   }
 
-  /// (local date, its Wake Up → Wind Down) for every day from [fromUtc]'s
-  /// local date until a day's Wake Up is past [toUtc].
+  /// (local date, its Wake Up → Wind Down) for every day from the day
+  /// before [fromUtc]'s local date (whose Wind Down may still be ahead,
+  /// after midnight, Q8) until a day's Wake Up is past [toUtc].
   static Iterable<(DateTime, DayShape)> _days(
     Settings settings,
     tz.Location location,
@@ -159,7 +160,7 @@ abstract final class DayReminders {
     DateTime toUtc,
   ) sync* {
     final first = utcToWallClock(location, fromUtc);
-    for (var d = 0; ; d++) {
+    for (var d = -1; ; d++) {
       final date = DateTime(first.year, first.month, first.day + d);
       final shape = DayShape.on(
         location,
