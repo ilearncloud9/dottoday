@@ -126,6 +126,21 @@ void main() {
     widths: const {'expanded'},
     build: (_) => _today(editing: _ids(['Deep work: roadmap']).single),
   );
+  // The editor floating over Today below 1160 (ED-167, ED-168).
+  goldenMatrix(
+    'today_editor_floating',
+    height: 1000,
+    widths: const {'expanded_float'},
+    build: (_) => _today(editing: _ids(['Deep work: roadmap']).single),
+  );
+  // A phone in landscape (R2-41, ED-347): H1 keeps the phone layout, the
+  // day in a 640 column.
+  goldenMatrix(
+    'today_landscape',
+    height: 402,
+    widths: const {'landscape'},
+    build: (_) => _today(),
+  );
   // Multi-select (docs/03 §3.2, R-05): two picked, the bar at the bottom.
   goldenMatrix(
     'today_selecting',

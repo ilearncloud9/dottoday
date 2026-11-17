@@ -4898,6 +4898,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,945 passing; new toast tests and goldens (iPhone, Android, wide, dark, screen reader).
 - **M18.4 done** (ED-366, ED-367, ED-368).
 
+### ED-369 · M18.5 part 1: one layout rule
+- **Date:** 2026-11-18. **Owner:** "Yes, as proposed" (M18.5 in three parts; iPad navigation in Flutter here, native in M18.6) and "Approve" on the part 1 review page (E-Responsive, E-R2-41 beside the app's goldens).
+- **Built:**
+  - `AppLayout` (`core/layout`): the window's class by width (600 / 840), H1 (usable height under 480 after safe areas, keyboard not counted: compact, never docks), and `docks` (from 1160, with Today 480 beside the 420 panel, 600 above 130 % text). Used by the shell, the editor and proposal panels, `openTask`, `openFocus`, Today's spread, the Inbox, Month and Back to Today; component sizing (sheets, toasts, banners) keeps width alone;
+  - `SidePanelFrame`: the editor and the proposal docked from 1160, floating over Today as a card below it; one tree both ways, so a resize keeps the panel's text, steps and focus and the content's scroll. The built app docked from 840;
+  - phone landscape (ED-347): the day in a 640 column, centred; a task sheet opens at full height under H1;
+  - the Mac minimum window 840 × 640 (`MainFlutterWindow.swift`, ED-169).
+- **Fixed from ED-363:** the side-by-side live row's time column shows "Now, N min left" under the range again.
+- **Moved, with plan notes:** the narrow-Mac Minimal rules (Day-column fold, narrow toolbar, short-window now-dot; ED-169, ED-170) to M19.6; the Workspace inspector's docking (C1) to M19.2; the landscape week strip in the title row to M19.1; landscape tab items side by side to M18.6.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,960 passing; new tests for the rule and the frame; new goldens `today_editor_floating` (1100) and `today_landscape` (874 × 402).
+
 ---
 
 ## Pending owner answers

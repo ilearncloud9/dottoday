@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- The layout follows the window (redesign branch): the task editor and plan proposals sit beside the day only when the window is wide enough (1160 pt, with room for the day); in narrower windows they float over it as a card, and resizing never loses what you typed or where you scrolled. A phone in landscape, or any window under 480 tall, keeps the phone layout, with the day in a readable column. On the Mac the window can now be as narrow as 840.
+
+### Changed
 - A new Undo message (redesign branch): a dark rounded bar with "Undo" in light teal (cream in dark mode). It stays put while your pointer rests on it or you move into it with the keyboard, Escape closes it, and with VoiceOver or TalkBack on it stays until you close it. If the time to undo runs out while it is open, it says so instead of offering an Undo that would not work. "Couldn't save" uses the same bar with Try again and is read out at once. When you pick several tasks, each row shows an empty or ticked circle where its done check was, and the selection card has the Concept E look.
 
 ### Changed

@@ -1,3 +1,4 @@
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -110,18 +111,22 @@ class TodayScreen extends ConsumerWidget {
                 LayoutBuilder(
                   builder: (context, box) =>
                       spread &&
-                          WidthClass.of(box.maxWidth) == WidthClass.expanded
+                          AppLayout.classOf(context, width: box.maxWidth) ==
+                              WidthClass.expanded
                       ? TodaySpread(
                           shown: shown,
                           today: today,
                           onSelect: select,
                         )
-                      : _TodayCompact(
-                          shown: shown,
-                          today: today,
-                          month: month,
-                          firstDayOfWeek: profile.settings.firstDayOfWeek,
-                          onSelect: select,
+                      : _landscape(
+                          context,
+                          _TodayCompact(
+                            shown: shown,
+                            today: today,
+                            month: month,
+                            firstDayOfWeek: profile.settings.firstDayOfWeek,
+                            onSelect: select,
+                          ),
                         ),
                 ),
                 if (selecting)
@@ -142,6 +147,18 @@ class TodayScreen extends ConsumerWidget {
     return date == null ? WakeUpCardGate(child: screen) : screen;
   }
 }
+
+/// A phone in landscape (H1, ED-347): the day in a column as wide as a
+/// readable list, centred between the safe areas, never the Workspace.
+Widget _landscape(BuildContext context, Widget day) =>
+    AppLayout.isShort(context)
+    ? Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
+          child: day,
+        ),
+      )
+    : day;
 
 /// Phones and medium widths: header, week strip (or month), all-day
 /// chips and the day pager of full-width sheets (`Main`, ADR-0015).

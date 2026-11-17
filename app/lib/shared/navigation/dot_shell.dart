@@ -1,3 +1,4 @@
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
@@ -96,7 +97,9 @@ class DotShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, box) {
-        final width = WidthClass.of(box.maxWidth);
+        // The window's class, H1 included: a short window keeps the
+        // phone's bar (ED-168).
+        final width = AppLayout.classOf(context, width: box.maxWidth);
         final shown = [
           for (final (i, d) in destinations.indexed)
             if (d.visible &&

@@ -18,6 +18,10 @@ const goldenWidths = {
   'medium': 700.0,
   'expanded': 1280.0,
   'expanded_min': 840.0,
+  // A wide window where a side panel floats (ED-167: docks from 1160).
+  'expanded_float': 1100.0,
+  // A phone in landscape (R2-41: iPhone 16 Pro, 874 × 402; H1).
+  'landscape': 874.0,
 };
 
 /// Every component golden runs in light and dark × the three width classes

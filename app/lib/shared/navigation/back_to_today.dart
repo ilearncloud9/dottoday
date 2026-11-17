@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,10 @@ class BackToToday extends StatelessWidget {
     if (!show) return child;
     return LayoutBuilder(
       builder: (context, box) {
-        if (WidthClass.of(box.maxWidth) != WidthClass.compact) return child;
+        if (AppLayout.classOf(context, width: box.maxWidth) !=
+            WidthClass.compact) {
+          return child;
+        }
         final t = DotTheme.of(context);
         return PopScope(
           canPop: false,

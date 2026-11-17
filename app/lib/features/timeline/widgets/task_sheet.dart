@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -33,7 +34,8 @@ void showTaskSheet(BuildContext context, String id) => unawaited(
     isScrollControlled: true,
     builder: (_) => DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.62,
+      // A short window has no room for a half sheet: full height (ED-347).
+      initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
       maxChildSize: 0.94,
       builder: (context, scroll) =>
           TaskSheetBody(id: id, scrollController: scroll),

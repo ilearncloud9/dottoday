@@ -1,3 +1,4 @@
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:flutter/widgets.dart';
@@ -35,8 +36,9 @@ void openTask(
   String id, {
   required VoidCallback otherwise,
 }) {
-  final width = MediaQuery.sizeOf(context).width;
-  if (WidthClass.of(width) != WidthClass.expanded) return otherwise();
+  // The window's class, H1 included (ED-168): a short window edits as a
+  // phone does.
+  if (AppLayout.classOf(context) != WidthClass.expanded) return otherwise();
   ProviderScope.containerOf(
     context,
   ).read(editingTaskProvider.notifier).open(id);

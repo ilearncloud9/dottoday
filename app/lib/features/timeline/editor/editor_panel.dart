@@ -1,11 +1,13 @@
 import 'package:dottoday/core/editing/active_proposal.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
+import 'package:dottoday/shared/layout/side_panel_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,20 +33,13 @@ class EditorPanelFrame extends ConsumerWidget {
     final proposing = ref.watch(activeProposalProvider) != null;
     // The window's class, as `openTask` decides: a task opened here
     // always shows.
-    final expanded =
-        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
+    final expanded = AppLayout.classOf(context) == WidthClass.expanded;
     if (id == null || !expanded || proposing) return child;
-    final c = DotTheme.of(context).colors;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: child),
-        VerticalDivider(width: DotSpace.hairline, color: c.outline),
-        SizedBox(
-          width: width,
-          child: TaskEditorPanel(key: ValueKey(id), id: id),
-        ),
-      ],
+    // Docked from 1160 when Today keeps its minimum, else floating over
+    // it; a resize keeps the open editor as it is (ED-167, ED-168).
+    return SidePanelFrame(
+      panel: TaskEditorPanel(key: ValueKey(id), id: id),
+      child: child,
     );
   }
 }

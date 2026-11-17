@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dottoday/core/layout/app_layout.dart';
 
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -51,8 +52,7 @@ class FocusRequest extends _$FocusRequest {
 /// openFocus(context, liveTask.id); // one tap on the live dot
 /// ```
 void openFocus(BuildContext context, String id) {
-  final width = MediaQuery.sizeOf(context).width;
-  if (WidthClass.of(width) == WidthClass.expanded) {
+  if (AppLayout.classOf(context) == WidthClass.expanded) {
     ProviderScope.containerOf(
       context,
     ).read(focusTaskProvider.notifier).open(id);

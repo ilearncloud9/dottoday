@@ -1,4 +1,5 @@
 import 'package:dottoday/core/editing/focus_task.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/focus/focus_view.dart';
@@ -47,8 +48,7 @@ class FocusFrame extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(focusTaskProvider);
-    final expanded =
-        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
+    final expanded = AppLayout.classOf(context) == WidthClass.expanded;
     final open = id != null && expanded;
     void leave() => ref.read(focusTaskProvider.notifier).close();
     // Always this shape, so the tabs underneath keep their state while

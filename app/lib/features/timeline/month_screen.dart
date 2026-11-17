@@ -1,5 +1,6 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -112,8 +113,7 @@ class _Page extends StatelessWidget {
     final locale = Localizations.localeOf(context).toLanguageTag();
     // Cards of what each day held from the expanded width; below it (the
     // route opens at any width) the phones' compact month, which fits.
-    final wide =
-        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
+    final wide = AppLayout.classOf(context) == WidthClass.expanded;
     final cells = _cells(context, locale, wide: wide);
     final lead = cells.indexWhere((c) => c != null);
     final start = weekStart(DateTime(month.year, month.month), firstDayOfWeek);

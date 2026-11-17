@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dottoday/core/editing/active_proposal.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/proposals/proposal_view.dart';
+import 'package:dottoday/shared/layout/side_panel_frame.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,8 +42,7 @@ class _ProposalHostState extends ConsumerState<ProposalHost> {
     return _Panel(child: widget.child);
   }
 
-  bool get _expanded =>
-      WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.expanded;
+  bool get _expanded => AppLayout.classOf(context) == WidthClass.expanded;
 
   Future<void> _showSheet() async {
     _sheetUp = true;
@@ -67,28 +68,21 @@ class _Panel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final c = DotTheme.of(context).colors;
     void close() => ref.read(activeProposalProvider.notifier).close();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: child),
-        VerticalDivider(width: DotSpace.hairline, color: c.outline),
-        SizedBox(
-          width: DotSize.sidePanel,
-          child: Material(
-            color: c.raised,
-            child: CallbackShortcuts(
-              bindings: {
-                const SingleActivator(LogicalKeyboardKey.escape): close,
-              },
-              // Focus starts in the panel and Tab stays there.
-              child: const FocusScope(
-                autofocus: true,
-                child: SafeArea(left: false, child: ProposalView()),
-              ),
-            ),
+    // Docked from 1160 when Today keeps its minimum, else floating over
+    // it (ED-167, ED-168).
+    return SidePanelFrame(
+      panel: Material(
+        color: c.raised,
+        child: CallbackShortcuts(
+          bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
+          // Focus starts in the panel and Tab stays there.
+          child: const FocusScope(
+            autofocus: true,
+            child: SafeArea(left: false, child: ProposalView()),
           ),
         ),
-      ],
+      ),
+      child: child,
     );
   }
 }

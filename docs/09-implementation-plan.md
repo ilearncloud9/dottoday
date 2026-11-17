@@ -640,8 +640,12 @@ Rules for every task in M18 to M22:
   - phone landscape (R2-41, ED-347);
   - touch-first web windows use the touch-tablet sizes (ED-261, ED-256);
   - Apple Pencil and Android stylus: handwriting in text fields only (T4, ED-258).
+  Split by the owner (2026-11-17), each part with its own review page and commit. iPad navigation is built in Flutter here; M18.6 swaps in the native UIKit bar for iPad and iPhone together.
+  - [x] Part 1 done 2026-11-18 (ED-369): one layout rule (600 / 840, H1, docking from 1160 with the M minimums) used by the shell and the panels; the editor and proposal float below 1160; phone landscape; the Mac minimum window 840 × 640. Moved: the narrow-Mac Minimal rules to M19.6; the Workspace inspector's rule to M19.2; the landscape week strip to M19.1; landscape tab items side by side to M18.6.
+  - [ ] Part 2: tablet navigation (iPad top tabs / sidebar, Android rail / drawer, Settings at the foot, Minimal by width), Stage Manager, foldables and the hinge, the toast at medium width.
+  - [ ] Part 3: compact mobile web's own bar, touch sizes on touch tablets and coarse-pointer web, stylus handwriting checks.
 - [ ] M18.6 Native chrome, with no new native target (ED-128):
-  - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240);
+  - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240); in landscape its items sit side by side (R2-41, ED-347; moved from M18.5);
   - Android: bottom row C in Flutter (ED-125);
   - Mac: the vibrancy sidebar with a 35 % warm tint (ED-130); native menus and context menus through one NSMenu channel (ED-239, CR-098); "Move to Trash ⌘⌫" (ED-336); SF Symbols in native chrome only (CR-014, ED-260).
   Device glass checks go to M21.
@@ -658,9 +662,10 @@ Rules for every task in M18 to M22:
 - [ ] M19.1 Today in Full:
   - iPhone and Android: E-Phones, G3-1 (ED-104);
   - opens at now, with the current task in view (ED-336);
-  - "Pull from inbox · {count}" on an empty day (ED-336).
+  - "Pull from inbox · {count}" on an empty day (ED-336);
+  - phone landscape: the week strip folds into the title row (R2-41, ED-347; moved from M18.5).
 - [ ] M19.2 Today in Full on wide screens:
-  - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184);
+  - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184), and the inspector's own docking rule: from 1160 when the week grid keeps ≥ 3 days (C1, ED-170; moved from M18.5);
   - hover and drag on web blocks (ED-116);
   - the Workspace's Day / 3 days / Week / Month tabs (ED-333; in today's app 3 days is Today's spread);
   - expanded tablets (R2-2, ED-269);
@@ -684,7 +689,8 @@ Rules for every task in M18 to M22:
   - the Now tab (phones) and Now pane (Mac and web): the horizon, the large now-dot and the orb, with Done, Focus and Need more time? (ED-066, ED-106);
   - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);
   - the minimal task sheet title (ED-216);
-  - the minimal sidebar at 200 (ED-207).
+  - the minimal sidebar at 200 (ED-207);
+  - the narrow-Mac rules for the Minimal window, moved from M18.5 part 1 because they need the Now pane and Day column built here: the Day-column fold at the computed point (≈ 1042 at 100 % text) with the "Day" edge button, the narrow toolbar below ≈ 1000, and the short-window now-dot under 720 (ED-169, ED-170).
 - [ ] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
   - cases: empty, dense, loading, error, long text and 200 % text;

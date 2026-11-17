@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
@@ -113,7 +114,9 @@ class InboxScreen extends ConsumerWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) =>
-              extras && WidthClass.of(box.maxWidth) == WidthClass.expanded
+              extras &&
+                  AppLayout.classOf(context, width: box.maxWidth) ==
+                      WidthClass.expanded
               ? _wide(context, ref, items, today, zone, time, commands)
               : narrow,
         ),

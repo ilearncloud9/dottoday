@@ -226,19 +226,40 @@ String _realityMeta(AppLocalizations l10n, ThreadTask task, ThreadReality r) {
   };
 }
 
-/// The time range in the wide layout's own column (read with the title).
+/// The time in the wide layout's own column (read with the title): the
+/// range, and "Now, 18 min left" under it in the accent at 700, as the
+/// stacked row says it on one line (E rules §5.3; R2-41 landscape).
 class _WideMeta extends StatelessWidget {
   const _WideMeta({required this.task});
 
   final ThreadTask task;
 
   @override
-  Widget build(BuildContext context) => ExcludeSemantics(
-    child: Text(switch (task.reality) {
-      final r? => _realityMeta(context.l10n, task, r),
-      null => task.timeRange,
-    }, style: DotTheme.of(context).styles.rowMeta),
-  );
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final left = task.minutesLeft;
+    return ExcludeSemantics(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(switch (task.reality) {
+            final r? => _realityMeta(l10n, task, r),
+            null => task.timeRange,
+          }, style: t.styles.rowMeta),
+          if (task.reality == null && left != null)
+            Text(
+              l10n.liveNowLeft(left),
+              style: DotType.emphasis(
+                t.styles.rowMeta.copyWith(color: t.colors.accentInk),
+                bold: true,
+                italic: false,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 /// "◔ 1 of 3   38 min left" under the live title.
