@@ -774,6 +774,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get inboxEmpty => pseudo(super.inboxEmpty);
 
   @override
+  String get inboxEmptyBody => pseudo(super.inboxEmptyBody);
+
+  @override
   String get inboxNoMatch => pseudo(super.inboxNoMatch);
 
   @override
@@ -2519,9 +2522,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get stateRetry => pseudo(super.stateRetry);
-
-  @override
-  String get stateReadFailed => pseudo(super.stateReadFailed);
 
   @override
   String get inboxSelect => pseudo(super.inboxSelect);

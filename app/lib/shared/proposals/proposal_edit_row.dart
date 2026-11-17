@@ -2,9 +2,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
-import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/proposals/proposal_change_chip.dart';
+import 'package:dottoday/shared/proposals/proposed_dot.dart';
 import 'package:flutter/material.dart';
 
 /// Clock texts a [ProposalEditRow] needs, in the user's zone and 12/24 h.
@@ -19,8 +19,8 @@ abstract interface class ProposalTimes {
   String day(DateTime utc);
 }
 
-/// One line of the change list (`B-ios-rebalance`): ghost dot and proposed
-/// dot, times, title, chip, and × when [onRemove] is given.
+/// One line of the change list (E-Phones-2, ED-150): the proposed dot,
+/// times (old ones struck), title, tag, and × when [onRemove] is given.
 class ProposalEditRow extends StatelessWidget {
   const ProposalEditRow({
     required this.edit,
@@ -41,49 +41,67 @@ class ProposalEditRow extends StatelessWidget {
     final inbox = edit.change == ProposalChange.toInbox;
     final leaves = edit.after == null && !inbox;
     final chip = _chipText(context);
+    // E-Phones-2: a 64 pt row, the proposed dot, time, title, tag, and a
+    // 32 pt outlined × in a 44 pt hit area.
     return MergeSemantics(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: DotSpace.m,
-        children: [
-          _Lanes(before: edit.before, after: inbox ? dot : edit.after),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: DotSpace.xxs,
-              children: [
-                if (!inbox) _TimeLine(edit: edit, times: times),
-                Text(
-                  dot.title,
-                  style: t.styles.rowTitle.copyWith(
-                    color: leaves ? t.colors.muted : null,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: _rowHeight),
+        child: Row(
+          spacing: DotSpace.m,
+          children: [
+            ProposedDot(dot: inbox ? dot : edit.after ?? dot, leaving: leaves),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                spacing: DotSpace.xxs,
+                children: [
+                  if (!inbox) _TimeLine(edit: edit, times: times),
+                  Text(
+                    dot.title,
+                    style: t.styles.rowTitle.copyWith(
+                      color: leaves ? t.colors.muted : null,
+                    ),
+                  ),
+                  ProposalChangeChip(
+                    text: chip,
+                    change: edit.change,
+                    color: TaskColor.fromKey(dot.colorKey),
+                  ),
+                ],
+              ),
+            ),
+            if (onRemove case final remove?)
+              IconButton(
+                onPressed: remove,
+                tooltip: context.l10n.proposalKeep(dot.title),
+                constraints: BoxConstraints.tight(
+                  const Size.square(DotTouch.min),
+                ),
+                padding: EdgeInsets.zero,
+                icon: Container(
+                  width: DotSize.sheetClose,
+                  height: DotSize.sheetClose,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: t.colors.hairlineStrong),
+                  ),
+                  child: Center(
+                    child: DotIcon(
+                      DotGlyphs.close,
+                      color: t.colors.ink2,
+                      size: DotSize.sheetCloseGlyph,
+                    ),
                   ),
                 ),
-                ProposalChangeChip(
-                  text: chip,
-                  change: edit.change,
-                  color: TaskColor.fromKey(dot.colorKey),
-                ),
-              ],
-            ),
-          ),
-          if (onRemove case final remove?)
-            IconButton(
-              onPressed: remove,
-              tooltip: context.l10n.proposalKeep(dot.title),
-              style: IconButton.styleFrom(
-                side: BorderSide(color: t.colors.outline),
               ),
-              icon: DotIcon(
-                DotGlyphs.close,
-                color: t.colors.muted,
-                size: DotSize.rowIcon,
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
+  static const double _rowHeight = 64;
 
   String _chipText(BuildContext context) {
     final l10n = context.l10n;
@@ -112,65 +130,6 @@ class ProposalEditRow extends StatelessWidget {
         edit.subtasks.where((s) => s.deletedAt == null).length,
       ),
     };
-  }
-}
-
-/// The dot now (faded) and as proposed (accent-outlined), side by side.
-class _Lanes extends StatelessWidget {
-  const _Lanes({required this.before, required this.after});
-
-  final SnapshotDot? before;
-  final SnapshotDot? after;
-
-  static const double _offset = DotSize.rowDot * 0.6;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    Widget dot(SnapshotDot d, DotState state) => TaskDot(
-      color: TaskColor.fromKey(d.colorKey),
-      icon: TaskIcon.fromKey(d.iconKey),
-      state: state,
-      label: d.title,
-      size: DotSize.macRowDot,
-    );
-    final b = before;
-    final a = after;
-    return ExcludeSemantics(
-      child: SizedBox(
-        width: DotSize.macRowDot + _offset + DotSpace.xs,
-        height: DotSize.macRowDot + DotSpace.xs,
-        child: Stack(
-          children: [
-            if (b != null)
-              Opacity(
-                opacity: TaskAlpha.ghost,
-                child: dot(b, DotState.upcoming),
-              ),
-            PositionedDirectional(
-              start: _offset,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: t.colors.accent.withValues(alpha: TaskAlpha.ghost),
-                    width: DotSize.smallDotOutline,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(DotSpace.xxs),
-                  // Leaving the day: a dashed dot, as a skipped one.
-                  child: dot(
-                    a ?? b!,
-                    a == null ? DotState.skipped : DotState.upcoming,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -223,7 +182,7 @@ class ProposalWindDownRow extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         SizedBox(
-          width: DotSize.macRowDot,
+          width: ProposedDot.extent,
           child: moon
               ? DotIcon(
                   DotGlyphs.moon,

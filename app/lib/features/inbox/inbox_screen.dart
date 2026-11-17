@@ -32,6 +32,7 @@ import 'package:dottoday/shared/dot/next_free_slot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
+import 'package:dottoday/shared/states/state_message.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -212,11 +213,19 @@ class _Body extends StatelessWidget {
           const InboxFilters(),
           const SizedBox(height: DotSpace.m),
         ],
-        if (work.count == 0 || shown.isEmpty)
+        // The state kit's empty Inbox (E-G4-7-States A5); a filter that
+        // shows nothing keeps its one quiet line.
+        if (work.count == 0)
+          StateMessage(
+            glyph: DotGlyphs.inbox,
+            title: l10n.inboxEmpty,
+            body: l10n.inboxEmptyBody,
+          )
+        else if (shown.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: DotSpace.xl),
             child: Text(
-              work.count == 0 ? l10n.inboxEmpty : l10n.inboxNoMatch,
+              l10n.inboxNoMatch,
               style: t.styles.body.copyWith(color: t.colors.muted),
               textAlign: TextAlign.center,
             ),

@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Calmer loading, empty and error screens (redesign branch): while a day loads, grey dots and bars sit on a dotted line; when something didn't load, a quiet message says your tasks are safe on this device, with Try again; an empty Inbox says what it is for. Proposed tasks in a plan show as dots in a dashed ring in their colour. A field with a mistake shows a warning icon under it, and a screen reader reads it out.
+
+### Changed
 - Sheets, chips and menus take on Concept E (redesign branch): sheets sit on the page's own warm background with white cards inside, with larger rounded corners on iPhone, a grey round Close and a bold title. Plan proposals show their origin as a small tag ("simple rules"), "new" and "no room · to the Inbox" as tags under each task, and a taller Add to day button. Chips are fully round in the accent's tint, picked ones filled with a check. Android menus use the Material menu tint.
 
 ### Changed

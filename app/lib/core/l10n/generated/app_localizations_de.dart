@@ -1035,6 +1035,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inboxEmpty => 'Eingang ist leer';
 
   @override
+  String get inboxEmptyBody =>
+      'Aufgaben ohne Uhrzeit warten hier. Tippe auf + oder füge eine Liste ein, um mehrere hinzuzufügen.';
+
+  @override
   String get inboxNoMatch => 'Nichts passt zu diesem Filter';
 
   @override
@@ -3281,10 +3285,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get stateRetry => 'Noch mal versuchen';
-
-  @override
-  String get stateReadFailed =>
-      'Konnte deine Aufgaben auf diesem Gerät nicht lesen.';
 
   @override
   String get inboxSelect => 'Auswählen';

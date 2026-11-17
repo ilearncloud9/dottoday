@@ -4,14 +4,15 @@ import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/proposals/proposal_edit_row.dart';
+import 'package:dottoday/shared/proposals/proposed_dot.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// The proposal's change list (`B-ios-rebalance`): each changed dot as it
-/// is now — faded to [TaskAlpha.ghost] — with the proposed dot over it,
-/// outlined in the accent, then the times (old ones struck), the title, a
-/// chip saying what changes, and × to keep that dot as it is. Ends at
+/// The proposal's change list (E-Phones-2, ED-150): "○ now ◌ proposed",
+/// then each proposed dot in its dashed ring, the times (old ones
+/// struck), the title, a tag saying what changes, and × to keep that dot
+/// as it is. Ends at
 /// Wind Down. The default body of `ProposalSheet`.
 class ProposalThreadList extends StatelessWidget {
   const ProposalThreadList({
@@ -141,10 +142,7 @@ class _Legend extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: DotSpace.xs,
             children: [
-              ring(
-                t.colors.muted.withValues(alpha: TaskAlpha.ghost),
-                DotSize.smallDotOutline,
-              ),
+              ring(t.colors.muted, DotSize.smallDotOutline),
               Text(l10n.proposalLegendNow, style: style),
             ],
           ),
@@ -152,7 +150,10 @@ class _Legend extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: DotSpace.xs,
             children: [
-              ring(t.colors.accent, DotSize.smallDotOutline),
+              SizedBox.square(
+                dimension: DotSize.weekDot + DotSpace.xs,
+                child: CustomPaint(painter: DashedRingPainter(t.colors.accent)),
+              ),
               Text(l10n.proposalLegendProposed, style: style),
             ],
           ),

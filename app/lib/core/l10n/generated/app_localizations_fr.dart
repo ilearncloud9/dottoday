@@ -1034,6 +1034,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get inboxEmpty => 'Boîte de réception vide';
 
   @override
+  String get inboxEmptyBody =>
+      'Les tâches sans heure attendent ici. Touchez + ou collez une liste pour en ajouter plusieurs.';
+
+  @override
   String get inboxNoMatch => 'Rien ne correspond à ce filtre';
 
   @override
@@ -3277,10 +3281,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get stateRetry => 'Réessayer';
-
-  @override
-  String get stateReadFailed =>
-      'Impossible de lire vos tâches sur cet appareil.';
 
   @override
   String get inboxSelect => 'Sélectionner';

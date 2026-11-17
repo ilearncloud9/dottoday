@@ -157,6 +157,16 @@ abstract final class DotSize {
   static const double tag = 20;
   static const double tagLarge = 24;
 
+  /// The state kit (E-G4-7-States A1, A5, A6): the icon's 56 pt circle
+  /// and 26 pt glyph; the skeleton's two bars (74 × 9 and up to 150 × 12).
+  static const double stateIcon = 56;
+  static const double stateGlyph = 26;
+
+  /// The warning beside an error at a field (15, E-G4-7-States D).
+  static const double fieldErrorGlyph = 15;
+  static const skeletonMeta = Size(74, 9);
+  static const skeletonTitle = Size(150, 12);
+
   /// A sheet's main action (E-Phones-2 "Add to day": 54 tall).
   static const double primaryButton = 54;
 

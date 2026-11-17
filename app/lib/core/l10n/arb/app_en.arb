@@ -1537,6 +1537,8 @@
   "@inboxEmpty": {
     "description": "Empty Inbox (docs/10 §5.4)."
   },
+  "inboxEmptyBody": "Tasks without a time wait here. Tap + or paste a list to add several.",
+  "@inboxEmptyBody": {"description": "Empty Inbox, the line under 'Inbox is clear' (E-G4-7-States A5): what the Inbox is for."},
   "inboxNoMatch": "Nothing here fits this filter",
   "@inboxNoMatch": {
     "description": "Inbox filter shows no tasks."
@@ -4654,10 +4656,6 @@
   "stateRetry": "Try again",
   "@stateRetry": {
     "description": "Inline error button."
-  },
-  "stateReadFailed": "Couldn't read your tasks on this device.",
-  "@stateReadFailed": {
-    "description": "Inline error when a screen could not load from the local database."
   },
   "inboxSelect": "Select",
   "@inboxSelect": {

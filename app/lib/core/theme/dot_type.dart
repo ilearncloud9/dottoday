@@ -37,6 +37,9 @@ final class DotType {
     required this.tag,
     required this.primaryButton,
     required this.chip,
+    required this.stateTitle,
+    required this.stateBody,
+    required this.fieldError,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -75,6 +78,9 @@ final class DotType {
     tag: _system(12, 20, 700, text),
     primaryButton: _manrope(17, 22, 800, text),
     chip: _manrope(14, 18, 700, text),
+    stateTitle: _manrope(20, 26, 800, text),
+    stateBody: _manrope(15, 21, 500, text),
+    fieldError: _manrope(13, 18, 600, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -187,6 +193,15 @@ final class DotType {
   /// Chip labels ("Today", "Tomorrow": 700 14 Manrope).
   final TextStyle chip;
 
+  /// A state's title, "This didn't load" (E-G4-7-States: 800 20/26).
+  final TextStyle stateTitle;
+
+  /// A state's line under the title (500 15/21; ink2 by the caller).
+  final TextStyle stateBody;
+
+  /// An error at a field (600 13 ink, E-G4-7-States D).
+  final TextStyle fieldError;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -221,6 +236,9 @@ final class DotType {
       tag: l(tag, other.tag),
       primaryButton: l(primaryButton, other.primaryButton),
       chip: l(chip, other.chip),
+      stateTitle: l(stateTitle, other.stateTitle),
+      stateBody: l(stateBody, other.stateBody),
+      fieldError: l(fieldError, other.fieldError),
     );
   }
 }

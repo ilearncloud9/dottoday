@@ -1518,6 +1518,12 @@ abstract class AppLocalizations {
   /// **'Inbox is clear'**
   String get inboxEmpty;
 
+  /// Empty Inbox, the line under 'Inbox is clear' (E-G4-7-States A5): what the Inbox is for.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks without a time wait here. Tap + or paste a list to add several.'**
+  String get inboxEmptyBody;
+
   /// Inbox filter shows no tasks.
   ///
   /// In en, this message translates to:
@@ -4787,12 +4793,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get stateRetry;
-
-  /// Inline error when a screen could not load from the local database.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t read your tasks on this device.'**
-  String get stateReadFailed;
 
   /// Inbox row menu and screen-reader action: start picking several tasks.
   ///

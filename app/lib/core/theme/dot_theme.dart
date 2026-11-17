@@ -165,6 +165,8 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
     chipTheme: parts.chip,
     menuTheme: MenuThemeData(style: parts.menu),
     popupMenuTheme: parts.popupMenu,
+    inputDecorationTheme: parts.input,
+    segmentedButtonTheme: parts.segmented,
     // Shown on a hover, not on a sweep (DotTouch.tooltipWait).
     tooltipTheme: const TooltipThemeData(waitDuration: DotTouch.tooltipWait),
     extensions: [
@@ -196,16 +198,17 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
         EdgeInsets.symmetric(horizontal: DotSpace.l),
       ),
       textStyle: WidgetStatePropertyAll(type.button),
+      // Disabled (E-G4-7-States D): the tile fill, ring-grey words.
       foregroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled)
-            ? c.muted
+            ? c.ring
             : filled
             ? c.onAccent
             : c.text,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled)
-            ? c.outline
+            ? c.tile
             : filled
             ? c.accentFill
             : c.raised,

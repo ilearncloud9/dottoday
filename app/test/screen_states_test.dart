@@ -124,8 +124,9 @@ void main() {
           await tester.pumpAndSettle();
         }
         expect(find.text("This didn't load"), findsOneWidget);
+        // E-G4-7-States A6: the one calm line, never a raw reason.
         expect(
-          find.text("Couldn't read your tasks on this device."),
+          find.text('Your tasks are safe on this device.'),
           findsOneWidget,
         );
         final before = built;

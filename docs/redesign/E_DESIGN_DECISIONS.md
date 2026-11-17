@@ -4874,6 +4874,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Moved to part 2 (owner):** the proposal's rows (`ProposalThreadList`), drawn on the board as dashed rings in the task's colour.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing.
 
+### ED-367 · M18.4 part 2: the state kit and the proposal's rows
+- **Date:** 2026-11-17. **Owner:** "Approve" on the part 2 review page (E-G4-7-States A1, A5, A6 light and dark, and the E-Phones-2 proposal, beside the app's goldens).
+- **Scope, by the split the owner approved (ED-366):** A1, A5, A6 and section D here; A2, A3, A8, A9 and A10 stay with the sync work in M20.10; A7 (Android couldn't save) moves to part 3 with the Undo toast, as the same toast.
+- **Built:**
+  - `LoadingThread` (A1): grey 34 pt dots in 54 pt rows with a short and a long bar, on a 2 px dotted thread; bars shrink in a narrow slot;
+  - `StateMessage`: a glyph in a 56 pt sunk circle, the title 800 20/26, the line 500 15/21 ink2, one tonal 44 pt action;
+  - `ErrorState` (A6) on it: "This didn't load", "Your tasks are safe on this device.", Try again; a failure with its own words shows those. The string `stateReadFailed` is removed;
+  - the empty Inbox (A5) on it, with the new string `inboxEmptyBody` (en, de, fr, es); a filter that shows nothing keeps its line;
+  - the proposal's rows (moved from part 1): `ProposedDot`, the 34 pt ahead dot in a 2 px dashed ring in the task's ring colour at 53 %; 64 pt rows; a 32 pt outlined × in 44 pt; the faded "before" dot removed (struck times remain); the legend's proposed mark dashed;
+  - section D: disabled buttons on the tile fill with ring-grey words; segmented choices on a pill track, the pick on the card colour at 700, the rest 600 ink2; errors at a field with `FieldError` (warning glyph, 600 13 ink, announced) and a 2 px ink line.
+- **Known difference:** the Repeat picker turns the segment check off, so its pick shows by weight and colour, not a check; still never colour alone.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing; goldens regenerated where this part changes them.
+
 ---
 
 ## Pending owner answers

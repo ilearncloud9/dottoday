@@ -1034,6 +1034,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get inboxEmpty => 'La bandeja está vacía';
 
   @override
+  String get inboxEmptyBody =>
+      'Las tareas sin hora esperan aquí. Toca + o pega una lista para añadir varias.';
+
+  @override
   String get inboxNoMatch => 'Nada encaja con este filtro';
 
   @override
@@ -3273,10 +3277,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get stateRetry => 'Reintentar';
-
-  @override
-  String get stateReadFailed =>
-      'No se pudieron leer tus tareas en este dispositivo.';
 
   @override
   String get inboxSelect => 'Seleccionar';

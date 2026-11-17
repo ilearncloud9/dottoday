@@ -24,6 +24,10 @@ abstract final class TaskAlpha {
   /// 35 % alpha"; `B-ios-rebalance`).
   static const ghost = 0.35;
 
+  /// A proposed dot's dashed ring (E-Phones-2 proposal: the ring colour
+  /// at `88` hex).
+  static const proposed = 0.53;
+
   /// The now-bead's outer ring, the now pill's border and the now line
   /// (Concept E §5.3).
   static const nowHalo = 0.4;

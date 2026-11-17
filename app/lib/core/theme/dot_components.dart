@@ -107,6 +107,49 @@ final class DotComponents {
     ),
   );
 
+  /// An error at a field turns its line ink and 2 px (E-G4-7-States D);
+  /// the words come from `FieldError`.
+  InputDecorationTheme get input => InputDecorationTheme(
+    errorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: c.text, width: DotSize.smallDotOutline),
+    ),
+    focusedErrorBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: c.text, width: DotSize.smallDotOutline),
+    ),
+    errorStyle: type.fieldError,
+  );
+
+  /// Segmented choices (E-G4-7-States D, "check + weight, not colour
+  /// alone"): a pill track, the picked segment on the card colour with
+  /// its check and 700, the rest 600 in ink2.
+  SegmentedButtonThemeData get segmented => SegmentedButtonThemeData(
+    style: ButtonStyle(
+      shape: const WidgetStatePropertyAll(StadiumBorder()),
+      side: const WidgetStatePropertyAll(BorderSide.none),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.selected) ? c.raised : c.tile,
+      ),
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled)
+            ? c.ring
+            : s.contains(WidgetState.selected)
+            ? c.text
+            : c.ink2,
+      ),
+      textStyle: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.selected)
+            ? type.chip
+            : type.chip.copyWith(
+                fontWeight: FontWeight.w600,
+                fontVariations: const [FontVariation.weight(_unpicked)],
+              ),
+      ),
+    ),
+  );
+
+  /// The unpicked segment's weight (600).
+  static const double _unpicked = 600;
+
   Color get _menuFill => _android ? c.menuAndroid : c.raised;
 
   double get _menuRadius => _ios

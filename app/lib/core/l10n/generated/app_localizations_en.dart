@@ -1032,6 +1032,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inboxEmpty => 'Inbox is clear';
 
   @override
+  String get inboxEmptyBody =>
+      'Tasks without a time wait here. Tap + or paste a list to add several.';
+
+  @override
   String get inboxNoMatch => 'Nothing here fits this filter';
 
   @override
@@ -3265,9 +3269,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stateRetry => 'Try again';
-
-  @override
-  String get stateReadFailed => 'Couldn\'t read your tasks on this device.';
 
   @override
   String get inboxSelect => 'Select';

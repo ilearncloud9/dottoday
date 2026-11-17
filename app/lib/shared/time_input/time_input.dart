@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
+import 'package:dottoday/shared/feedback/field_error.dart';
 import 'package:dottoday/shared/time_input/time_wheel.dart';
 import 'package:flutter/material.dart';
 
@@ -139,7 +140,7 @@ class _TimeInputState extends State<TimeInput> {
       decoration: InputDecoration(
         labelText: widget.label ?? l10n.timeInputLabel,
         hintText: l10n.timeInputHint,
-        errorText: _invalid ? l10n.timeInputInvalid : null,
+        error: _invalid ? FieldError(l10n.timeInputInvalid) : null,
         suffixIcon: widget.showWheel
             ? IconButton(
                 onPressed: _openWheel,

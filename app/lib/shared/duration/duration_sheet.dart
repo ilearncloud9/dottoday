@@ -5,6 +5,7 @@ import 'package:dottoday/domain/time/duration_text.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/shared/duration/duration_preview.dart';
 import 'package:dottoday/shared/duration/preset_chips.dart';
+import 'package:dottoday/shared/feedback/field_error.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +166,7 @@ class _DurationSheetState extends State<_DurationSheet> {
     decoration: InputDecoration(
       labelText: l10n.durationTypeLabel,
       hintText: l10n.durationCustomHint,
-      errorText: _invalid ? l10n.durationCustomInvalid : null,
+      error: _invalid ? FieldError(l10n.durationCustomInvalid) : null,
     ),
   );
 }

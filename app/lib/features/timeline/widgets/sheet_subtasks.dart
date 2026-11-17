@@ -18,6 +18,7 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/subtask_row.dart';
+import 'package:dottoday/shared/feedback/field_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -126,8 +127,8 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     textInputAction: TextInputAction.done,
     decoration: InputDecoration(
       hintText: context.l10n.sheetNewSubtask,
-      errorText: switch (_addFailure) {
-        final f? => failureMessage(context.l10n, f),
+      error: switch (_addFailure) {
+        final f? => FieldError(failureMessage(context.l10n, f)),
         null => null,
       },
     ),
