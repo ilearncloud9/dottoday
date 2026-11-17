@@ -733,7 +733,7 @@ Rules for every task in M18 to M22:
   - five steps, with no Layout step;
   - the 13+ note on Hello, "Dottoday is for people aged 13+.";
   - the "Later, when it helps" cards, each shown once and dismissible: day 2 "Want it simpler?", after three tasks "Make it a habit", the first Wind Down "Close the day", a second device "Sign in to sync".
-- [ ] M20.12 Accounts (CR-160, ED-193, ED-222). **Blocked** until [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merges and the owner approves the account screens (not yet drawn). Acceptance criteria are in handoff § CR-160.
+- [ ] M20.12 Accounts (CR-160, ED-193, ED-222). **Blocked** until [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merges into this branch (merged to main 2026-11-16; the main merge waits for the build session to commit). The account screens are approved: the E-CR160 boards, ED-222 to ED-230 (owner, 2026-11-17, ED-362). Acceptance criteria are in handoff § CR-160.
 - [ ] M20.13 The rest:
   - This week, Calendars, App lock, Help and about, web install, and the de/fr copy decisions (R2-24, ED-326, ED-327);
   - Android parity (R2-29, ED-332);

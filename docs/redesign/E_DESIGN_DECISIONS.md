@@ -4816,6 +4816,12 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - **Order: foundations first.** The owner first chose a Today and task sheet pilot, then withdrew it before any pilot work began ("i want to go back to pilot decision as i would like to follow the previous plan"). The build follows the plan's order: M18.3 to M18.8, then M19 from Today (M19.1).
 - **Guiding question rule:** the owner asked for clarifying questions instead of assumptions ("make sure to ask clarifying questions and don't assume").
 
+### ED-362 · The E-CR160 boards are the approved account screens for M20.12
+- **Date:** 2026-11-17. **Owner:** "Yes, use them", answering whether the existing E-CR160 boards (ED-222 to ED-230) count as the approved account screens for M20.12, or must be redrawn in Concept E first.
+- **Decision:** E-CR160 (ED-222 to ED-230) is the approved design for the account screens: A1, A2, A3, B1 and Settings › Account "Choose settings", on iPhone, Android and Mac/web. They are not redrawn. M20.12 builds them on top of CR-160's screens, with the acceptance criteria in E_IMPLEMENTATION_HANDOFF § CR-160.
+- **Still pending:** merging origin/main (CR-160, PR #75, merged to main 2026-11-16) into redesign/design-lab. It waits for the running build session to commit its work. M20.12 is unblocked once that merge lands.
+- Nothing built or committed.
+
 ### ED-363 · M18.3 part 1: the Concept E day thread
 - **Date:** 2026-11-17. **Owner:** "1A and 2A" before the build, and "Approve all four" after the M18.3 review page (board E-Phones Today frame 01, light and dark, beside the app's Today golden).
 - **Owner's choices:**
