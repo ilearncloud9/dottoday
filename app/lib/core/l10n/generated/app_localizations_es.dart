@@ -4090,6 +4090,29 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get threadEarlier => 'Antes';
+
+  @override
+  String get threadEarlierLabel => 'Antes, tareas hechas';
+
+  @override
+  String get threadOutsideBeforePlain => 'Antes de despertar';
+
+  @override
+  String get threadOutsideAfterPlain => 'Después de la desconexión';
+
+  @override
+  String get threadFoldShow => 'Mostrar';
+
+  @override
+  String get threadFoldHide => 'Ocultar';
+
+  @override
+  String threadNowTask(String title) {
+    return 'Ahora: $title';
+  }
+
+  @override
   String get shortcutPickTask => 'Seleccionar la tarea anterior o siguiente';
 
   @override

@@ -170,9 +170,10 @@ class NowRow extends StatelessWidget {
                 child: Text(
                   now.time,
                   // 700 13/18 in the accent (E rules §5.3).
-                  style: t.styles.threadMeta.copyWith(
-                    color: c.accent,
-                    fontWeight: FontWeight.w700,
+                  style: DotType.emphasis(
+                    t.styles.threadMeta.copyWith(color: c.accent),
+                    bold: true,
+                    italic: false,
                   ),
                 ),
               ),

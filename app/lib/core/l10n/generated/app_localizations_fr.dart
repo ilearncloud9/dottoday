@@ -4099,6 +4099,29 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get threadEarlier => 'Plus tôt';
+
+  @override
+  String get threadEarlierLabel => 'Plus tôt, tâches terminées';
+
+  @override
+  String get threadOutsideBeforePlain => 'Avant le réveil';
+
+  @override
+  String get threadOutsideAfterPlain => 'Après la détente';
+
+  @override
+  String get threadFoldShow => 'Afficher';
+
+  @override
+  String get threadFoldHide => 'Masquer';
+
+  @override
+  String threadNowTask(String title) {
+    return 'Maintenant : $title';
+  }
+
+  @override
   String get shortcutPickTask => 'Sélectionner la tâche précédente ou suivante';
 
   @override

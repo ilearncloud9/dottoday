@@ -14,6 +14,7 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
+import 'package:dottoday/features/timeline/state/earlier_fold.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -129,7 +130,8 @@ class DayPage extends ConsumerWidget {
                     ),
           )
         : null;
-    final entries = threadEntries(
+    final minimal = watchSimplified(ref, FeatureId.threadOutside);
+    final threaded = threadEntries(
       blocks: reality?.blocks ?? blocks,
       shape: shape,
       nowUtc: now,
@@ -141,7 +143,17 @@ class DayPage extends ConsumerWidget {
       reality: reality?.reality,
       // Today's one thing rings on today only (docs/15 §8).
       oneThingId: date == today ? ref.watch(todayOneThingIdProvider) : null,
+      outsideCounted: !minimal,
     );
+    // Today folds its done tasks into Earlier on Minimal phones and on the
+    // Mac/web card; Full phones keep their rows (ED-164, docs/14 §3).
+    final fold = date == today && side == null && (!sheet || minimal);
+    final entries = fold
+        ? foldEarlier(
+            threaded,
+            open: ref.watch(earlierOpenProvider).contains(date),
+          )
+        : threaded;
     final actions = _actions(
       context,
       ref,
@@ -258,6 +270,8 @@ class DayPage extends ConsumerWidget {
               allDayStartUtc: data.day.startUtc,
             ),
       selectedIds: picked.day == date ? picked.ids : const {},
+      onEarlier: (open) =>
+          ref.read(earlierOpenProvider.notifier).set(date, open: open),
       onSelect: (id) =>
           ref.read(taskSelectionProvider.notifier).toggle(date, id),
       // Minimal keeps the caps as labels (docs/14 §3).

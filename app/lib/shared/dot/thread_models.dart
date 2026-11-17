@@ -131,7 +131,12 @@ final class ThreadOutside extends ThreadEntry {
     required this.tasks,
     required this.windDown,
     this.open = false,
+    this.counted = true,
   });
+
+  /// "1 task before Wake Up" (Full); false: "Before Wake Up", no count
+  /// (Minimal, ED-246).
+  final bool counted;
 
   /// In start order.
   final List<ThreadTask> tasks;
@@ -143,6 +148,29 @@ final class ThreadOutside extends ThreadEntry {
   final bool open;
 }
 
+/// The Earlier fold (ED-164): done tasks before now, folded into one quiet
+/// row at the top of the rest of today. No count; up to three [dots] in
+/// the folded tasks' colours. Folded ([open] false), the tasks are left
+/// out of the entries; open, they follow in their own rows.
+final class ThreadEarlier extends ThreadEntry {
+  const ThreadEarlier({
+    required this.dots,
+    required this.first,
+    required this.last,
+    this.open = false,
+  });
+
+  /// The first three folded tasks' colours, in thread order.
+  final List<TaskColor> dots;
+
+  /// The first and last folded task's colour: the thread runs in [first]
+  /// into the open rows, and leaves the folded row in [last].
+  final TaskColor first;
+  final TaskColor last;
+
+  final bool open;
+}
+
 /// Every task of [entries], folded ones included, in thread order.
 Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
   for (final e in entries) {
@@ -151,7 +179,11 @@ Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
         yield task;
       case ThreadOutside(:final tasks):
         yield* tasks;
-      case ThreadCap() || ThreadGap() || ThreadOverlap() || ThreadNow():
+      case ThreadCap() ||
+          ThreadGap() ||
+          ThreadOverlap() ||
+          ThreadNow() ||
+          ThreadEarlier():
         break;
     }
   }
@@ -285,7 +317,11 @@ ThreadAnchor? nowAnchor(List<ThreadEntry> entries) {
     (e) => switch (e) {
       ThreadTaskEntry(:final task) => live(task),
       ThreadOutside(:final tasks) => tasks.any(live),
-      ThreadCap() || ThreadGap() || ThreadOverlap() || ThreadNow() => false,
+      ThreadCap() ||
+      ThreadGap() ||
+      ThreadOverlap() ||
+      ThreadNow() ||
+      ThreadEarlier() => false,
     },
   );
   if (task >= 0) return (index: task, fraction: 0);
@@ -324,6 +360,11 @@ List<TaskColor?> threadSolid(List<ThreadEntry> entries) {
         out.add(behind ? tasks.firstOrNull?.color : null);
       case ThreadCap() || ThreadGap() || ThreadNow():
         out.add(behind || e is ThreadNow ? last : null);
+      case ThreadEarlier(:final open, :final first, last: final leaves):
+        // Open, the thread runs on into the first folded row; folded, it
+        // leaves in the last folded task's colour (E-Earlier).
+        out.add(behind ? (open ? first : leaves) : null);
+        if (!open) last = leaves;
       case ThreadOverlap() || ThreadOutside():
         out.add(null);
     }

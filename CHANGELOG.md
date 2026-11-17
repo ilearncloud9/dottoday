@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Finished tasks fold away on Today (redesign branch): in the minimal layout on phones, and on today's card on a Mac or the web, the tasks you've done before now fold into one quiet "Earlier" row with their colour dots. Show opens it and Hide folds it again; reopening a task puts it back at its time. Tasks before Wake Up or after Wind Down fold the same way, and the minimal layout drops the count ("After Wind Down"). When a task ends and the now marker moves on, it slides to its new row (it jumps with Reduce Motion), and a screen reader says the new current task once.
+
+### Changed
 - The day thread takes on Concept E (redesign branch): finished tasks are solid dots and the thread behind now is solid in their colours, while the rest of the day is dotted. The current task sits on a card with "Now, 18 min left"; Done is its circle, and +15 min and Shift the rest are in the task's sheet. A small bead with the time marks now. Overlaps read "Overlap · 10:30–11:00". Finished titles turn grey instead of being struck through. Calendar events have no done circle.
 
 ### Changed

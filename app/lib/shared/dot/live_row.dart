@@ -202,9 +202,11 @@ class _NowMeta extends StatelessWidget {
           TextSpan(text: line.substring(0, at)),
           TextSpan(
             text: now,
-            style: TextStyle(
-              color: DotTheme.of(context).colors.accentInk,
-              fontWeight: FontWeight.w700,
+            // Manrope is variable: bold needs the wght axis too.
+            style: DotType.emphasis(
+              TextStyle(color: DotTheme.of(context).colors.accentInk),
+              bold: true,
+              italic: false,
             ),
           ),
           TextSpan(text: line.substring(at + now.length)),

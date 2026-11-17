@@ -1,5 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/bead_hop.dart';
+import 'package:dottoday/shared/dot/fold_row.dart';
 import 'package:dottoday/shared/dot/live_row.dart';
 import 'package:dottoday/shared/dot/shift_chip.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
@@ -14,6 +16,7 @@ import 'package:dottoday/shared/dot/thread_select.dart';
 import 'package:flutter/material.dart';
 
 export 'thread_drag.dart' show ThreadDrag;
+export 'thread_fold.dart' show foldEarlier;
 export 'thread_models.dart';
 export 'thread_pieces.dart' show DashedPillPainter, GapStyle;
 
@@ -28,6 +31,7 @@ final class ThreadActions {
     this.onRunningLate,
     this.onAddHere,
     this.onCap,
+    this.onEarlier,
     this.drag,
     this.selectedIds = const {},
     this.onSelect,
@@ -51,6 +55,10 @@ final class ThreadActions {
 
   /// A cap was tapped: true for Wind Down, false for Wake Up (R-17).
   final ValueChanged<bool>? onCap;
+
+  /// The Earlier row was shown (true) or hidden (ED-164); the caller keeps
+  /// the choice and re-folds the entries.
+  final ValueChanged<bool>? onEarlier;
 
   /// Long-press drag onto any time of the day (R-05, ADR-0015); null = no
   /// drag.
@@ -130,6 +138,15 @@ class _ThreadState extends State<Thread> {
   /// slot out once the drag scrolls it away.
   OverlayEntry? _chip;
 
+  /// The moving now (ED-246, ED-364).
+  final _hops = BeadHops();
+
+  @override
+  void didUpdateWidget(Thread old) {
+    super.didUpdateWidget(old);
+    _hops.update(context, old.entries, widget.entries);
+  }
+
   @override
   void dispose() {
     _settle();
@@ -167,19 +184,26 @@ class _ThreadState extends State<Thread> {
     final box = widget.side
         ? entries.lastIndexWhere((e) => e is ThreadGap && e.addable)
         : -1;
+    _hops.built();
+    final closing = _hops.closingAt;
+    Widget row(int n) {
+      if (n == closing) {
+        return _hops.departing(() => setState(() => _hops.closingAt = null));
+      }
+      final i = closing != null && n > closing ? n - 1 : n;
+      return _keyed(i, _entry(entries[i], solid[i], dropBox: i == box));
+    }
+
+    final count = entries.length + (closing == null ? 0 : 1);
     if (widget.sliver) {
       return SliverList.builder(
-        itemCount: entries.length,
-        itemBuilder: (_, i) =>
-            _keyed(i, _entry(entries[i], solid[i], dropBox: i == box)),
+        itemCount: count,
+        itemBuilder: (_, n) => row(n),
       );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final (i, e) in entries.indexed)
-          _keyed(i, _entry(e, solid[i], dropBox: i == box)),
-      ],
+      children: [for (var n = 0; n < count; n++) row(n)],
     );
   }
 
@@ -209,9 +233,10 @@ class _ThreadState extends State<Thread> {
         _gap(e, solid, dropBox: dropBox),
       ),
       ThreadGap() => _gap(e, solid, dropBox: dropBox),
-      ThreadNow() => NowRow(now: e, solid: solid),
+      ThreadNow() => _hops.arriving(NowRow(now: e, solid: solid)),
       ThreadTaskEntry(:final task) => _task(task, solid: solid),
       ThreadOverlap() => OverlapRow(overlap: e),
+      ThreadEarlier() => EarlierRow(earlier: e, onToggle: a.onEarlier),
       ThreadOutside(:final tasks) => OutsideRow(
         zone: e,
         taskRow: _task,

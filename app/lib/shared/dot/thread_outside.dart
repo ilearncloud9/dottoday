@@ -1,14 +1,17 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/shared/dot/task_row.dart';
+import 'package:dottoday/shared/dot/fold_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
+import 'package:dottoday/shared/dot/thread_fold.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:flutter/material.dart';
 
-/// The folded "outside hours" zone (docs/02 F1.15, R-17): one row, "2 tasks
-/// before Wake Up" above the sun cap or "1 task after Wind Down" below the
-/// moon cap, that unfolds into the tasks' own rows. Folded by default so
-/// the day keeps its shape; unfolded when it holds the live task.
+/// The folded "outside hours" zone (docs/02 F1.15, R-17; ED-246, ED-345):
+/// a [FoldRow], "2 tasks before Wake Up" above the sun cap or "1 task
+/// after Wind Down" below the moon cap ("Before Wake Up" with no count in
+/// Minimal), with the tasks' colour dots. It unfolds into the tasks' own
+/// rows. Folded by default so the day keeps its shape; unfolded when it
+/// holds the live task.
 class OutsideRow extends StatefulWidget {
   const OutsideRow({
     required this.zone,
@@ -57,36 +60,26 @@ class _OutsideRowState extends State<OutsideRow> {
   Widget _header(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final n = widget.zone.tasks.length;
-    final label = widget.zone.windDown
-        ? l10n.threadOutsideAfter(n)
-        : l10n.threadOutsideBefore(n);
-    void toggle() => setState(() => _open = !_open);
-    return Semantics(
-      button: true,
-      expanded: _open,
+    final zone = widget.zone;
+    final n = zone.tasks.length;
+    // Full counts; Minimal does not (ED-246).
+    final label = switch ((zone.windDown, zone.counted)) {
+      (true, true) => l10n.threadOutsideAfter(n),
+      (true, false) => l10n.threadOutsideAfterPlain,
+      (false, true) => l10n.threadOutsideBefore(n),
+      (false, false) => l10n.threadOutsideBeforePlain,
+    };
+    return FoldRow(
       label: label,
-      onTap: toggle,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: toggle,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.android),
-          child: ThreadRowFrame(
-            piece: const FreePiece(),
-            dot: DotIcon(
-              _open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-              color: t.colors.muted,
-              size: DotSize.rowIcon,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-              child: Text(label, style: t.styles.stripWeekday),
-            ),
-          ),
-        ),
-      ),
+      spoken: label,
+      dots: [
+        for (final task in zone.tasks.take(earlierDots))
+          t.tasks[task.color].color,
+      ],
+      open: _open,
+      onToggle: (open) => setState(() => _open = open),
+      // Open, the dotted thread runs from its dot into the rows (E-R2-39).
+      piece: _open ? const CapPiece(below: true) : const BlankPiece(),
     );
   }
 }

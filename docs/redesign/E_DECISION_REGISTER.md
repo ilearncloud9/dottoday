@@ -1278,3 +1278,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-17, ED-361:** how the build runs: approval per step, new canvas boards for missing designs, current motion timings, native parts per platform, foundations first (M18.3 to M18.8, then M19).
 - **2026-11-17, ED-362:** the E-CR160 boards (ED-222 to ED-230) are the approved account screens for M20.12; no redraw. The main merge (CR-160, PR #75) still waits for the build session to commit.
 - **2026-11-17, ED-363:** M18.3 part 1, the Concept E day thread (dots, thread, caps, now card without buttons, now-bead, knot, free time). Approved; the folds, the bead slide and the Alarms off tag stay open in M18.3.
+- **2026-11-17, ED-364:** M18.3 part 2: the Earlier fold, the Before Wake Up / After Wind Down rows (no count in Minimal), the moving now as a 200 ms row hop under fixed rows (option A) with a polite announcement. The Alarms off tag moved to M20.8. Approved; M18.3 done.

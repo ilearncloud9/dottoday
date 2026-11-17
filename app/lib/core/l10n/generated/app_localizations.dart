@@ -6012,6 +6012,48 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 task after Wind Down} other{{count} tasks after Wind Down}}'**
   String threadOutsideAfter(int count);
 
+  /// Earlier fold (ED-164): the one row done tasks before now fold into on Minimal Today and the Mac/web Day column. No count.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get threadEarlier;
+
+  /// Screen-reader name of the Earlier fold row (ED-164).
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier, done tasks'**
+  String get threadEarlierLabel;
+
+  /// Minimal layout's folded row above the Wake Up cap (ED-246): no count.
+  ///
+  /// In en, this message translates to:
+  /// **'Before Wake Up'**
+  String get threadOutsideBeforePlain;
+
+  /// Minimal layout's folded row below the Wind Down cap (ED-246): no count.
+  ///
+  /// In en, this message translates to:
+  /// **'After Wind Down'**
+  String get threadOutsideAfterPlain;
+
+  /// Fold row action (ED-164): unfolds the rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get threadFoldShow;
+
+  /// Fold row action (ED-164): folds the rows away.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get threadFoldHide;
+
+  /// Polite screen-reader announcement when the current task changes (ED-246): the new live task's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Now: {title}'**
+  String threadNowTask(String title);
+
   /// Keyboard shortcut sheet, Today: ↑ / ↓ pick a task along the day (docs/02 F1.17).
   ///
   /// In en, this message translates to:

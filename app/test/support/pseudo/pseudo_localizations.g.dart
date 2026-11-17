@@ -3162,6 +3162,27 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.threadOutsideAfter(count));
 
   @override
+  String get threadEarlier => pseudo(super.threadEarlier);
+
+  @override
+  String get threadEarlierLabel => pseudo(super.threadEarlierLabel);
+
+  @override
+  String get threadOutsideBeforePlain => pseudo(super.threadOutsideBeforePlain);
+
+  @override
+  String get threadOutsideAfterPlain => pseudo(super.threadOutsideAfterPlain);
+
+  @override
+  String get threadFoldShow => pseudo(super.threadFoldShow);
+
+  @override
+  String get threadFoldHide => pseudo(super.threadFoldHide);
+
+  @override
+  String threadNowTask(String title) => pseudo(super.threadNowTask(title));
+
+  @override
   String get shortcutPickTask => pseudo(super.shortcutPickTask);
 
   @override

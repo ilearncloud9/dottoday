@@ -75,6 +75,7 @@ void main() {
           ThreadOutside(:final tasks) => 'outside${tasks.length}',
           ThreadOverlap() => 'overlap',
           ThreadNow() => 'now',
+          ThreadEarlier() => 'earlier',
         },
     ];
     expect(order, [
@@ -131,6 +132,7 @@ void main() {
             '${windDown ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
           ThreadOverlap() => 'overlap',
           ThreadNow() => 'now',
+          ThreadEarlier() => 'earlier',
         },
     ];
 
@@ -274,6 +276,7 @@ void main() {
           ThreadCap() => 'cap',
           ThreadOutside() => 'outside',
           ThreadNow() => 'now',
+          ThreadEarlier() => 'earlier',
         },
     ];
     expect(kinds, [

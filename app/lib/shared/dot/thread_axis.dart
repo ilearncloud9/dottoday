@@ -85,6 +85,12 @@ final class CapPiece extends AxisPiece {
   final Color? color;
 }
 
+/// No thread through the row: the fold rows outside the caps, where the
+/// thread has not started or has ended (E-R2-39).
+final class BlankPiece extends AxisPiece {
+  const BlankPiece();
+}
+
 /// Paints one row's share of the thread down the centre of the axis.
 final class ThreadAxisPainter extends CustomPainter {
   const ThreadAxisPainter({
@@ -122,6 +128,8 @@ final class ThreadAxisPainter extends CustomPainter {
         _now(canvas, Offset(x, h / 2));
       case OverlapPiece() && final p:
         _overlap(canvas, x, h, p);
+      case BlankPiece():
+        break;
       case CapPiece(:final below, :final color):
         below
             ? _line(canvas, x, h / 2, h, color)

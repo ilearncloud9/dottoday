@@ -140,6 +140,13 @@ abstract final class DotSize {
   static const double threadRowFree = 28;
   static const double threadRowNow = 26;
 
+  /// A fold row (ED-164: Earlier, Before Wake Up, After Wind Down): 48
+  /// high, its 24 px dots overlapping by half with a 2 px ground ring.
+  static const double foldRow = 48;
+  static const double foldDot = 24;
+  static const double foldDotStep = 12;
+  static const double foldDotRing = 2;
+
   /// The now card's least height on Full Today (ED-104; Android draws 82).
   static const double nowCard = 80;
 

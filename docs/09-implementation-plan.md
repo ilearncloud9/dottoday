@@ -612,16 +612,16 @@ Rules for every task in M18 to M22:
   - text always fits (ED-183).
 - [x] M18.2 Dark tokens. Done 2026-11-16 (ED-359): P1 ground, cards, text, secondary, divider, the T2-B thread, teal `#5BC4B8` with ink `#0C2523`, success `#82CF9F`, and the nine dark task fills (ED-175) as a second value per colour in `palette.json`; dark ring tracks and the Mac D1 sidebar come with their components (M18.3, M18.6). Originally listed: P1 surfaces, the 12 dark task colours, dark now-ring tracks at 25 %, Mac D1 sidebar (ED-173 to ED-181, ED-212). The theme is restored before first paint on web (handoff G4-6).
 - [x] M18.1–M18.2 redone as foundation step 1, 2026-11-17 (ED-360): the full Concept E token set from the board measurements, staged names, the board-match and Concept E name guards.
-- [ ] M18.3 Thread components:
+- [x] M18.3 Thread components:
   - the day thread and dots: now ring (ED-198), ahead ring (ED-199, ED-217), calendar-event dot (ED-200), caps (ED-201), the repeat marker (ED-208), the overlap knot;
   - the Now card (ED-202, ED-209);
   - the Earlier fold (ED-164);
   - the before-Wake-Up and after-Wind-Down folds (ED-246, ED-345);
   - the moving now (ED-246);
-  - the "Alarms off" device tag (ED-205, ED-213).
+  - ~~the "Alarms off" device tag (ED-205, ED-213)~~ moved to M20.8 with the alarm device picker it lives in (owner, 2026-11-17).
   Goldens against E-Phones, E-Earlier and E-DF2 at three widths, light and dark.
   - [x] Part 1 done 2026-11-17 (ED-363): the dots, the thread, caps, the now card (no buttons, 2A), the now-bead row, the knot and free time, on every screen (1A); goldens against E-Phones Today.
-  - [ ] Part 2: the Earlier fold, the Before Wake Up / After Wind Down rows, the bead's slide, the Alarms off tag, the repeat marker; goldens against E-Earlier and E-DF2.
+  - [x] Part 2 done 2026-11-17 (ED-364): the Earlier fold, the Before Wake Up / After Wind Down rows (no count in Minimal), the moving now as a 200 ms row hop (option A, fixed rows) with a polite announcement, the repeat marker checked; goldens against E-Earlier, E-Earlier-Dark and E-R2-39.
 - [ ] M18.4 Shared components:
   - one `ProposalSheet`, full screen on phones (ED-150);
   - the state and accessibility kit for empty, loading, error, offline and permission states (ED-186, E-G4-7-States);
@@ -726,7 +726,8 @@ Rules for every task in M18 to M22:
   - Settings pages and the dial (ED-084), with tablets (R2-18, ED-311);
   - the alarm, option B "The thread wakes up" (R2-19, ED-314), with tablet missions that need no movement and Catch the dot "Tap the blue circle" (ED-336);
   - the explainer (R2-38, ED-344);
-  - Wind Down after midnight, on the day model from #81.
+  - Wind Down after midnight, on the day model from #81;
+  - the "Alarms off" device tag in the alarm device picker, "Alarms off for Dottoday · fix it on the iPad" (ED-205, ED-213; moved from M18.3 by the owner, 2026-11-17).
 - [ ] M20.9 Notifications and system surfaces: task alerts, the Wind Down summary, Reminders, health and the test alarm (R2-20, ED-317); widgets, Live Activity, the menu bar and controls reading `DaySnapshot` only (R2-17, ED-309). These are visual changes only; delivery stays exactly-once (R-10). Also the Mac Now mini window, Window › Show Now ⌥⌘0: a native non-activating panel fed by the day snapshot and the status-item channel, with Need More Time +5 / +15 / +30 (ED-066, CR-042, CR-097, ED-260). It is not a second Flutter window and not a new target.
 - [ ] M20.10 Data safety and sync:
   - Data and privacy, Export and backups, import and restore, Trash with Delete now and Empty Trash (R2-21, ED-319, ED-336);

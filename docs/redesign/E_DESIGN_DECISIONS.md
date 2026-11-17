@@ -4844,6 +4844,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Still open in M18.3:** the Earlier fold (ED-164), the Before Wake Up / After Wind Down rows in Concept E style (ED-246, ED-345), the bead's once-a-minute slide (ED-246), the "Alarms off" device tag (ED-205, ED-213), the repeat marker check (ED-208), and goldens against E-Earlier and E-DF2.
 - **Checks:** `flutter analyze` clean; `flutter test --exclude-tags supabase` all passing; goldens regenerated.
 
+### ED-364 · M18.3 part 2: the folds and the moving now
+- **Date:** 2026-11-17. **Owner:** "Yes, move it" (the Alarms off tag to M20.8), then "A, approve" on the part 2 review page (boards E-Earlier, E-Earlier-Dark frame 1, E-R2-39 frame 3, beside the app's goldens).
+- **Owner's choices:**
+  - **Alarms off tag (ED-205, ED-213):** moved to M20.8, built with the alarm device picker it lives in.
+  - **Q1, A: the moving now under fixed rows.** ED-246 B was drawn on a thread whose rows were as tall as their time. With fixed rows (ED-363) a minute tick moves nothing but the pill's time; the bead changes rows only when a task starts or ends. Then its old row closes and its new one opens, 200 ms ease-out (`DotMotion.base`). Reduce Motion jumps. A hop first seen after the app was away (no build for 90 s) jumps too: no catch-up animation.
+  - **Q2:** where the fold applies, the view starts at the fold with no Wake Up cap, the Full Mac/web card included, as E-Earlier frame 8 draws it. Side days keep their caps.
+- **Built:**
+  - `FoldRow`, the Earlier fold component: 48 pt, up to three 24 pt dots overlapping by 12 with a 2 pt ground ring, the label 700 15 secondary, "Show ⌄" / "Hide ⌃" 700 13 in the accent ink. A button with its expanded state; Tab reaches it, Space or Return toggles, → opens, ← closes.
+  - The Earlier fold (ED-164): `foldEarlier` folds done tasks behind now into one `ThreadEarlier` row with no count; the Wake Up cap and the free time behind now are left out; a reopened, missed or early-done task keeps its row. Folded, the thread leaves the row in the last done colour; open, it runs through it into the first. Today folds on Minimal phones and on the Mac/web card (the Mac Day column comes in M19); Full phone Today keeps its rows; other days never fold. Open or folded is kept per day while the app runs (`earlierOpenProvider`), not stored.
+  - Before Wake Up / After Wind Down (ED-246, ED-345): `OutsideRow` uses `FoldRow` with the tasks' colour dots; Minimal drops the count ("Before Wake Up", "After Wind Down"); open, a dotted thread runs from its dot into the rows.
+  - The moving now as in Q1 (`BeadHops`), and one polite announcement, "Now: Deep work: roadmap", when the live task changes; focus never moves.
+  - Strings: `threadEarlier`, `threadEarlierLabel`, `threadOutsideBeforePlain`, `threadOutsideAfterPlain`, `threadFoldShow`, `threadFoldHide`, `threadNowTask` (en, de, fr, es).
+- **Fixed from part 1:** Manrope is a variable font, so 700 needs its weight axis too. The now pill's time and the now card's "Now, 18 min left" rendered at 400 and are 700 now.
+- **Checked, no change:** the repeat marker (ED-208) is the loop icon after the time.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing; 36 new goldens (`thread_earlier`, `thread_earlier_open`, `thread_outside_plain`), 236 regenerated.
+
 ---
 
 ## Pending owner answers

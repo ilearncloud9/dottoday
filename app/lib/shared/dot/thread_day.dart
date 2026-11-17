@@ -34,7 +34,8 @@ const minGapMinutes = 15;
 /// before an earlier one ends follows a [ThreadOverlap] (ADR-0015). Tasks that end by Wake
 /// Up or start at Wind Down or later fold into a [ThreadOutside] row before
 /// the sun cap or after the moon cap (F1.15); a task across a cap stays
-/// inline.
+/// inline. [outsideCounted] false drops the count from those rows
+/// ("Before Wake Up", Minimal, ED-246).
 ///
 /// Each task's state comes from its status and [nowUtc]: done and skipped
 /// as stored; live while now is inside it; missed once it ended undone;
@@ -59,6 +60,7 @@ List<ThreadEntry> threadEntries({
   bool showFreeTime = true,
   Map<String, ThreadReality>? reality,
   String? oneThingId,
+  bool outsideCounted = true,
 }) {
   final sorted = [
     for (final o in blocks)
@@ -76,7 +78,11 @@ List<ThreadEntry> threadEntries({
   );
   final (:before, :inside, :after) = _split(sorted, shape);
   final out = <ThreadEntry>[
-    ?_outside(before.map(task).toList(), windDown: false),
+    ?_outside(
+      before.map(task).toList(),
+      windDown: false,
+      counted: outsideCounted,
+    ),
     ThreadCap.wake(format.time(shape.wakeUtc)),
   ];
   final overlaps = _overlaps(inside);
@@ -94,7 +100,13 @@ List<ThreadEntry> threadEntries({
   _placeNow(out, shape, nowUtc, format);
   out
     ..add(ThreadCap.bed(format.time(shape.bedUtc)))
-    ..addAll([?_outside(after.map(task).toList(), windDown: true)]);
+    ..addAll([
+      ?_outside(
+        after.map(task).toList(),
+        windDown: true,
+        counted: outsideCounted,
+      ),
+    ]);
   return out;
 }
 
@@ -145,12 +157,16 @@ _split(List<Occurrence> sorted, DayShape shape) => (
 );
 
 /// [tasks] as a folded row, or null when there are none.
-ThreadOutside? _outside(List<ThreadTask> tasks, {required bool windDown}) =>
-    tasks.isEmpty
+ThreadOutside? _outside(
+  List<ThreadTask> tasks, {
+  required bool windDown,
+  required bool counted,
+}) => tasks.isEmpty
     ? null
     : ThreadOutside(
         tasks: tasks,
         windDown: windDown,
+        counted: counted,
         open: tasks.any((t) => t.state == DotState.live),
       );
 
