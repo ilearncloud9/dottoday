@@ -58,6 +58,9 @@ final class DotPalette {
     required this.scrim,
     required this.grabber,
     required this.menuAndroid,
+    required this.toast,
+    required this.onToast,
+    required this.toastAction,
     required this.shadow,
   });
 
@@ -104,6 +107,10 @@ final class DotPalette {
     scrim: Color(0x4D241F2B),
     grabber: Color(0x4D3C3C43),
     menuAndroid: Color(0xFFF7EFF4),
+    // The Undo toast (E-R2-7, ED-280): ink, cream words, light-teal action.
+    toast: Color(0xFF2E2836),
+    onToast: Color(0xFFFBF7F1),
+    toastAction: Color(0xFFA3E2D9),
     shadow: Color(0xFF241F2B),
   );
 
@@ -149,6 +156,9 @@ final class DotPalette {
     scrim: Color(0x99000000),
     grabber: Color(0x4DEBEBF5),
     menuAndroid: Color(0xFF37313A),
+    toast: Color(0xFFF3ECE4),
+    onToast: Color(0xFF171416),
+    toastAction: Color(0xFF0B4642),
     shadow: Color(0xFF000000),
   );
 
@@ -193,5 +203,8 @@ final class DotPalette {
       scrim,
       grabber,
       menuAndroid,
+      toast,
+      onToast,
+      toastAction,
       shadow;
 }

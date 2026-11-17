@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- A new Undo message (redesign branch): a dark rounded bar with "Undo" in light teal (cream in dark mode). It stays put while your pointer rests on it or you move into it with the keyboard, Escape closes it, and with VoiceOver or TalkBack on it stays until you close it. If the time to undo runs out while it is open, it says so instead of offering an Undo that would not work. "Couldn't save" uses the same bar with Try again and is read out at once. When you pick several tasks, each row shows an empty or ticked circle where its done check was, and the selection card has the Concept E look.
+
+### Changed
 - Calmer loading, empty and error screens (redesign branch): while a day loads, grey dots and bars sit on a dotted line; when something didn't load, a quiet message says your tasks are safe on this device, with Try again; an empty Inbox says what it is for. Proposed tasks in a plan show as dots in a dashed ring in their colour. A field with a mistake shows a warning icon under it, and a screen reader reads it out.
 
 ### Changed

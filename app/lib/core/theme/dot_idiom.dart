@@ -30,3 +30,12 @@ OutlinedBorder dotChipShape(BuildContext context) =>
     : RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.chipAndroid),
       );
+
+/// Whether this runs as an Apple app (iPhone, iPad, Mac), not the web:
+/// the Undo toast's 16 corners and 400 width there, the M3 snackbar's
+/// elsewhere (E-R2-7).
+bool appleChrome(BuildContext context) {
+  final platform = Theme.of(context).platform;
+  return !kIsWeb &&
+      (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
+}

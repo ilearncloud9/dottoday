@@ -33,8 +33,12 @@ void main() {
     );
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
+    // The toast runs the window itself (ED-281: it waits while held), so
+    // the messenger never times it out on its own.
     final bar = tester.widget<SnackBar>(find.byType(SnackBar));
-    expect(bar.duration, UndoService.window);
+    expect(bar.persist, isTrue);
+    await tester.pump(UndoService.window ~/ 2);
+    expect(find.text('Moved'), findsOneWidget);
     expect(find.text('Moved'), findsOneWidget);
     await tester.tap(find.text('Undo'));
     expect(undone, 1);

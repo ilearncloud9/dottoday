@@ -150,6 +150,33 @@ final class DotComponents {
   /// The unpicked segment's weight (600).
   static const double _unpicked = 600;
 
+  /// The Undo toast (E-R2-7, ED-280/281): ink surface, cream words and a
+  /// light-teal action (cream and dark teal in dark); 16 on Apple, the M3
+  /// snackbar's 8 elsewhere. The words and action are drawn by `UndoToast`.
+  SnackBarThemeData get snackBar => SnackBarThemeData(
+    backgroundColor: c.toast,
+    contentTextStyle: type.toast.copyWith(color: c.onToast),
+    actionTextColor: c.toastAction,
+    closeIconColor: c.onToast,
+    behavior: SnackBarBehavior.floating,
+    elevation: _menuLift,
+    insetPadding: const EdgeInsets.fromLTRB(
+      DotSpace.l,
+      DotSpace.s,
+      DotSpace.l,
+      DotSpace.s,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(
+        _apple ? DotRadii.toast : DotRadii.toastMaterial,
+      ),
+    ),
+  );
+
+  bool get _apple =>
+      !kIsWeb &&
+      (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
+
   Color get _menuFill => _android ? c.menuAndroid : c.raised;
 
   double get _menuRadius => _ios

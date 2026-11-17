@@ -167,6 +167,7 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
     popupMenuTheme: parts.popupMenu,
     inputDecorationTheme: parts.input,
     segmentedButtonTheme: parts.segmented,
+    snackBarTheme: parts.snackBar,
     // Shown on a hover, not on a sweep (DotTouch.tooltipWait).
     tooltipTheme: const TooltipThemeData(waitDuration: DotTouch.tooltipWait),
     extensions: [

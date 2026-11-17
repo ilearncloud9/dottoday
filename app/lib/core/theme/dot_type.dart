@@ -40,6 +40,7 @@ final class DotType {
     required this.stateTitle,
     required this.stateBody,
     required this.fieldError,
+    required this.toast,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -81,6 +82,7 @@ final class DotType {
     stateTitle: _manrope(20, 26, 800, text),
     stateBody: _manrope(15, 21, 500, text),
     fieldError: _manrope(13, 18, 600, text),
+    toast: _manrope(15, 20, 600, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -202,6 +204,10 @@ final class DotType {
   /// An error at a field (600 13 ink, E-G4-7-States D).
   final TextStyle fieldError;
 
+  /// The Undo toast's words (600 15/20, E-R2-7); its action is the bold
+  /// of it.
+  final TextStyle toast;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -239,6 +245,7 @@ final class DotType {
       stateTitle: l(stateTitle, other.stateTitle),
       stateBody: l(stateBody, other.stateBody),
       fieldError: l(fieldError, other.fieldError),
+      toast: l(toast, other.toast),
     );
   }
 }

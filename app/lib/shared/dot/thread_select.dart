@@ -102,9 +102,11 @@ class _SelectableTaskRowState extends State<SelectableTaskRow> {
           child: Stack(
             children: [
               AbsorbPointer(child: child),
+              // Where the done circle sits (a 48 box at the row's end).
               PositionedDirectional(
                 end: 0,
                 top: 0,
+                bottom: 0,
                 child: _Check(selected: selected),
               ),
             ],
@@ -115,6 +117,10 @@ class _SelectableTaskRowState extends State<SelectableTaskRow> {
   }
 }
 
+/// The pick mark in the done circle's place (E-R2-6, ED-277): the same
+/// 28 pt ring, filled in the accent with a check when picked, so the
+/// state never relies on colour alone. A row without a done circle (a
+/// calendar event) still gets the ring.
 class _Check extends StatelessWidget {
   const _Check({required this.selected});
 
@@ -123,30 +129,28 @@ class _Check extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
-    return Container(
-      width: DotTouch.min,
-      height: DotTouch.min,
-      alignment: Alignment.center,
-      // Opaque, so the done circle under it never shows through.
-      color: selected ? Color.alphaBlend(c.accentTint, c.raised) : c.raised,
-      child: Container(
-        width: DotSize.rowIcon + DotSpace.s,
-        height: DotSize.rowIcon + DotSpace.s,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: selected ? c.accentFill : c.raised,
-          border: selected
-              ? null
-              : Border.all(color: c.outline, width: DotSize.smallDotOutline),
+    return SizedBox(
+      width: DotTouch.android,
+      child: Center(
+        child: Container(
+          width: DotSize.doneCircle,
+          height: DotSize.doneCircle,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: selected ? c.accentFill : null,
+            border: selected
+                ? null
+                : Border.all(color: c.ring, width: DotSize.doneRing),
+          ),
+          child: selected
+              ? DotIcon(
+                  DotGlyphs.check,
+                  color: c.onAccent,
+                  size: DotSize.rowIcon - DotSpace.xs,
+                  active: true,
+                )
+              : null,
         ),
-        child: selected
-            ? DotIcon(
-                DotGlyphs.check,
-                color: c.onAccent,
-                size: DotSize.rowIcon - DotSpace.xs,
-                active: true,
-              )
-            : null,
       ),
     );
   }

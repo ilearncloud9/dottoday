@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/shared/feedback/banner_strip.dart';
+import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/feedback/undo_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 /// A write that didn't land, shown on the sheet that still holds what was
 /// typed, with Try again (M8.5b, R-08 "never silent data loss"). A
@@ -54,16 +60,35 @@ class SaveFailureFrame extends StatelessWidget {
   );
 }
 
-/// [failure] as a snackbar with Try again, for a write whose sheet has
-/// already gone (the editor's last flush on dismiss).
+/// [failure] in the toast with Try again, for a write whose sheet has
+/// already gone (the editor's last flush on dismiss; E-G4-7-States A7):
+/// said assertively, as a failed save must be heard (D3).
 void showSaveFailureSnack(
   ScaffoldMessengerState messenger,
   AppLocalizations l10n,
   AppFailure failure, {
   required VoidCallback onRetry,
-}) => messenger.showSnackBar(
-  SnackBar(
-    content: Text(failureMessage(l10n, failure)),
-    action: SnackBarAction(label: l10n.stateRetry, onPressed: onRetry),
-  ),
-);
+}) {
+  final text = failureMessage(l10n, failure);
+  final context = messenger.context;
+  messenger.showSnackBar(
+    dotToast(
+      messenger,
+      UndoToast(
+        message: text,
+        action: l10n.stateRetry,
+        onAction: onRetry,
+        onClose: messenger.hideCurrentSnackBar,
+        window: UndoService.window,
+      ),
+    ),
+  );
+  unawaited(
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      text,
+      Directionality.of(context),
+      assertiveness: Assertiveness.assertive,
+    ),
+  );
+}

@@ -64,6 +64,9 @@ final class DotColors {
     required this.scrim,
     required this.grabber,
     required this.menuAndroid,
+    required this.toast,
+    required this.onToast,
+    required this.toastAction,
     required this.shadow,
   });
 
@@ -201,6 +204,12 @@ final class DotColors {
   /// Android menus (M3 menu on E-Phones-2).
   final Color menuAndroid;
 
+  /// The Undo toast (E-R2-7, ED-280): its surface, words and action; the
+  /// other way round in dark (cream, with dark teal).
+  final Color toast;
+  final Color onToast;
+  final Color toastAction;
+
   /// Base colour of elevation shadows (see `DotElevation`).
   final Color shadow;
 
@@ -285,6 +294,9 @@ final class DotColors {
       scrim: l(scrim, other.scrim),
       grabber: l(grabber, other.grabber),
       menuAndroid: l(menuAndroid, other.menuAndroid),
+      toast: l(toast, other.toast),
+      onToast: l(onToast, other.onToast),
+      toastAction: l(toastAction, other.toastAction),
       shadow: l(shadow, other.shadow),
     );
   }
@@ -365,6 +377,9 @@ DotColors _resolve(Brightness brightness, Color accent) {
     scrim: p.scrim,
     grabber: p.grabber,
     menuAndroid: p.menuAndroid,
+    toast: p.toast,
+    onToast: p.onToast,
+    toastAction: p.toastAction,
     shadow: p.shadow,
   );
 }

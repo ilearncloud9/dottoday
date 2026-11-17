@@ -4887,6 +4887,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Known difference:** the Repeat picker turns the segment check off, so its pick shows by weight and colour, not a check; still never colour alone.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing; goldens regenerated where this part changes them.
 
+### ED-368 · M18.4 part 3: the Undo toast and the selection card; M18.4 done
+- **Date:** 2026-11-17. **Owner:** "Approve" on the part 3 review page (E-R2-7 and E-R2-6 boards, E-G4-7-States A7, beside the app's goldens).
+- **Built:**
+  - the toast from the theme: `toast` `#2E2836` / `#F3ECE4`, `onToast` `#FBF7F1` / `#171416`, `toastAction` `#A3E2D9` / `#0B4642`; 600 15 words, a 700 action; 16 corners on iPhone, iPad and Mac, 8 on Android and the web; from the medium width 400 wide (440 off Apple platforms), centred. Every message toast takes it;
+  - `UndoToast`, ED-281's build checks: the 30 s window waits while hovered or focused; Escape closes; with a screen reader on it stays and shows Close; no countdown. The service's token still expires 30 s after the change (R-11): if that happens while held, the toast says `failureUndoExpired` with Close only;
+  - couldn't save (A7): the same toast with Try again, announced assertively (D3);
+  - the selection card (ED-278): radius 26, a hairline edge, the floating shadow, "N selected" at 700 17, actions 52 tall; actions and strings unchanged;
+  - the pick mark (fixed from ED-363): in the done circle's place, a 28 pt ring or a filled check; while selecting, rows leave out their done circles; calendar events get the ring.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,945 passing; new toast tests and goldens (iPhone, Android, wide, dark, screen reader).
+- **M18.4 done** (ED-366, ED-367, ED-368).
+
 ---
 
 ## Pending owner answers

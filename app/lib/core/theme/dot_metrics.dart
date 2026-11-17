@@ -67,6 +67,14 @@ abstract final class DotRadii {
   /// The now pill (9, E rules §5.3).
   static const double nowPill = 9;
 
+  /// The Undo toast: 16 on Apple platforms, the M3 snackbar's 8 elsewhere
+  /// (E-R2-7).
+  static const double toast = 16;
+  static const double toastMaterial = 8;
+
+  /// The selection card (E-R2-6, 26).
+  static const double selectionCard = 26;
+
   /// The tip pill (20).
   static const double tip = 20;
   static const double pill = 999;
@@ -166,6 +174,15 @@ abstract final class DotSize {
   static const double fieldErrorGlyph = 15;
   static const skeletonMeta = Size(74, 9);
   static const skeletonTitle = Size(150, 12);
+
+  /// The Undo toast (E-R2-7): at least 52 tall; on wide screens 400 wide
+  /// on Apple platforms and 440 (the M3 snackbar) elsewhere.
+  static const double toast = 52;
+  static const double toastWide = 400;
+  static const double toastWideMaterial = 440;
+
+  /// A selection card action, icon over label (E-R2-6: 52 tall).
+  static const double selectionAction = 52;
 
   /// A sheet's main action (E-Phones-2 "Add to day": 54 tall).
   static const double primaryButton = 54;

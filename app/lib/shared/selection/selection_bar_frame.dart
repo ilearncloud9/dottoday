@@ -11,8 +11,8 @@ import 'package:flutter/services.dart';
 /// greys it out.
 typedef SelectionAction = ({Widget icon, String label, VoidCallback? onTap});
 
-/// The multi-select bar (docs/03 §3.2, R-05; M3b.7, shared with the Inbox
-/// in M3f.9c): "3 selected" with ×, then the actions in a row. Escape
+/// The multi-select card (docs/03 §3.2, R-05; E-R2-6, ED-278; shared with
+/// the Inbox): "3 selected" with ×, then the actions, icon over label. Escape
 /// closes; the count is a live region.
 class SelectionBarFrame extends StatelessWidget {
   const SelectionBarFrame({
@@ -35,15 +35,21 @@ class SelectionBarFrame extends StatelessWidget {
       child: Focus(
         autofocus: true,
         child: Padding(
-          padding: const EdgeInsets.all(DotSpace.s),
+          padding: const EdgeInsets.symmetric(
+            horizontal: DotSpace.s + DotSpace.xxs,
+            vertical: DotSpace.s,
+          ),
+          // E-R2-6 (ED-278): the card at 26, a hairline edge, the floating
+          // shadow, 6 inside.
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: t.colors.raised,
-              borderRadius: BorderRadius.circular(DotRadii.card),
+              borderRadius: BorderRadius.circular(DotRadii.selectionCard),
+              border: Border.all(color: t.colors.outline),
               boxShadow: DotElevation.floating,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(DotSpace.xs),
+              padding: const EdgeInsets.all(DotSpace.xs + DotSpace.xxs),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -59,7 +65,7 @@ class SelectionBarFrame extends StatelessWidget {
                           liveRegion: true,
                           child: Text(
                             l10n.selectionCount(count),
-                            style: t.styles.cardTitle,
+                            style: t.styles.rowTitle,
                           ),
                         ),
                       ),
@@ -95,7 +101,9 @@ class _Action extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(DotRadii.card),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: DotTouch.android),
+            constraints: const BoxConstraints(
+              minHeight: DotSize.selectionAction,
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
               child: Column(
@@ -104,7 +112,7 @@ class _Action extends StatelessWidget {
                   icon,
                   Text(
                     label,
-                    style: t.styles.caption,
+                    style: t.styles.caption.copyWith(color: t.colors.text),
                     textAlign: TextAlign.center,
                   ),
                 ],

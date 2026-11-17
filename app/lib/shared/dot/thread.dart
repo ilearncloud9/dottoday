@@ -295,10 +295,13 @@ class _ThreadState extends State<Thread> {
     final a = widget.actions;
     final drag = a.drag;
     final onSelect = a.onSelect;
+    // While selecting a tap picks, so the pick ring takes the done
+    // circle's place (E-R2-6).
+    final onDone = a.selectedIds.isEmpty ? a.onToggleDone : null;
     Widget row = task.state == DotState.live
         ? LiveRow(
             task: task,
-            onToggleDone: _bind(a.onToggleDone, task),
+            onToggleDone: _bind(onDone, task),
             onOpen: _open(task),
             onFocus: _bind(a.onFocus, task),
             onUnstick: _answer(a.onUnstick, task),
@@ -310,7 +313,7 @@ class _ThreadState extends State<Thread> {
             solid: solid,
             dotSize: widget.side ? DotSize.macRowDot : DotSize.threadDot,
             doneCircle: !widget.side,
-            onToggleDone: _bind(a.onToggleDone, task),
+            onToggleDone: _bind(onDone, task),
             onOpen: _open(task),
             // Smallest step's Start opens Focus, which records the start.
             onStart: _bind(a.onFocus, task),

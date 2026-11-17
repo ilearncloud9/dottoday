@@ -622,7 +622,7 @@ Rules for every task in M18 to M22:
   Goldens against E-Phones, E-Earlier and E-DF2 at three widths, light and dark.
   - [x] Part 1 done 2026-11-17 (ED-363): the dots, the thread, caps, the now card (no buttons, 2A), the now-bead row, the knot and free time, on every screen (1A); goldens against E-Phones Today.
   - [x] Part 2 done 2026-11-17 (ED-364): the Earlier fold, the Before Wake Up / After Wind Down rows (no count in Minimal), the moving now as a 200 ms row hop (option A, fixed rows) with a polite announcement, the repeat marker checked; goldens against E-Earlier, E-Earlier-Dark and E-R2-39.
-- [ ] M18.4 Shared components:
+- [x] M18.4 Shared components:
   - one `ProposalSheet`, full screen on phones (ED-150);
   - the state and accessibility kit for empty, loading, error, offline and permission states (ED-186, E-G4-7-States);
   - the Undo toast and snackbar (R2-7, ED-281);
@@ -631,7 +631,7 @@ Rules for every task in M18 to M22:
   Split by the owner (2026-11-17), each part with its own review page and commit. The sync status words, Sync sheet, conflict review, Undo, Keep both and the web storage screens on E-G4-7-States stay in M20.10; native menus (iOS Day pull-down, Mac NSMenu) come with M18.5 / M19.
   - [x] Part 1 done 2026-11-17 (ED-366): sheets on the page ground with cards inside, the shared sheet header, the proposal's chrome, tags, chips and Flutter menus from the theme.
   - [x] Part 2 done 2026-11-17 (ED-367): the loading skeleton, "This didn't load" and the empty Inbox (A1, A5, A6), the section D state examples, and the proposal's rows as dashed rings; A2, A3, A8 to A10 stay in M20.10.
-  - [ ] Part 3: the Undo toast and the selection bar, with ED-281's build checks, and A7 (Android couldn't save) as the same toast.
+  - [x] Part 3 done 2026-11-17 (ED-368): the Undo toast with ED-281's build checks, couldn't save (A7) in the same toast, the selection card in E, and the pick mark in the done circle's place.
 - [ ] M18.5 Adaptive shell:
   - width classes 600 / 840, with the editor docking from 1160 (ED-167) and the H1 short-height and M docking rules (ED-168);
   - the Mac minimum window of 840 × 640 with the narrow Day fold (ED-169, ED-170);
