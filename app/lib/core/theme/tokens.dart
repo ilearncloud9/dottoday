@@ -56,6 +56,8 @@ final class DotPalette {
     required this.swipeMove,
     required this.success,
     required this.scrim,
+    required this.grabber,
+    required this.menuAndroid,
     required this.shadow,
   });
 
@@ -66,7 +68,8 @@ final class DotPalette {
     chip: Color(0xFFEDE7DF),
     tile: Color(0xFFF1ECE4),
     control: Color(0xFFECE5DC),
-    sheet: Color(0xFFFFFDF9),
+    // Sheets sit on the page ground, cards inside (owner, ED-366).
+    sheet: Color(0xFFFBF7F1),
     avatar: Color(0xFFE7DFEF),
     canvas: Color(0xFFEFE7DB),
     ink: Color(0xFF241F2B),
@@ -99,6 +102,8 @@ final class DotPalette {
     swipeMove: Color(0xFF6A6273),
     success: Color(0xFF2FA37A),
     scrim: Color(0x4D241F2B),
+    grabber: Color(0x4D3C3C43),
+    menuAndroid: Color(0xFFF7EFF4),
     shadow: Color(0xFF241F2B),
   );
 
@@ -109,7 +114,7 @@ final class DotPalette {
     chip: Color(0xFF2F2A30),
     tile: Color(0xFF2F2A30),
     control: Color(0xFF37313A),
-    sheet: Color(0xFF2F2A30),
+    sheet: Color(0xFF171416),
     avatar: Color(0xFF37313A),
     canvas: Color(0xFF28232A),
     ink: Color(0xFFF3ECE4),
@@ -142,6 +147,8 @@ final class DotPalette {
     swipeMove: Color(0xFF636366),
     success: Color(0xFF82CF9F),
     scrim: Color(0x99000000),
+    grabber: Color(0x4DEBEBF5),
+    menuAndroid: Color(0xFF37313A),
     shadow: Color(0xFF000000),
   );
 
@@ -184,5 +191,7 @@ final class DotPalette {
       swipeMove,
       success,
       scrim,
+      grabber,
+      menuAndroid,
       shadow;
 }

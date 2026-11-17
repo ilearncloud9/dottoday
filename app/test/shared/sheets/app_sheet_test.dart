@@ -106,7 +106,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pumpWidget(_host((_) {}, mode: ThemeMode.dark));
       await tester.pumpAndSettle();
-      final dark = DotTheme.dark().extension<DotTheme>()!.colors.raised;
+      final dark = DotTheme.dark().extension<DotTheme>()!.colors.sheet;
       final surface = tester
           .widgetList<Material>(
             find.ancestor(

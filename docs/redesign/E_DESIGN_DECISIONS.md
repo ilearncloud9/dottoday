@@ -4860,6 +4860,20 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked, no change:** the repeat marker (ED-208) is the loop icon after the time.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing; 36 new goldens (`thread_earlier`, `thread_earlier_open`, `thread_outside_plain`), 236 regenerated.
 
+### ED-366 · M18.4 part 1: sheets, the proposal, chips, tags and menus
+- **Date:** 2026-11-17. **Owner:** "Yes, as proposed" (M18.4 in three parts; the sync screens of E-G4-7-States stay in M20.10, native menus come with M18.5 / M19), "A, as the boards" (the sheet colour), and "Approve, rows in part 2" after the part 1 review page.
+- **Sheet colour (A):** sheets sit on the page ground, `#FBF7F1` light and `#171416` dark, with cards inside in `#FFFDF9` / `#28232A`, as every E-Phones-2 frame draws them. This replaces ED-174's `#2F2A30` sheet level and the `#FFFDF9` in rules §7.1 for sheets; the `sheet` token now holds the ground values.
+- **Built:**
+  - sheets from the theme: iPhone 38 top corners and the system grabber (36 × 5, 30 %); Android 28 and a 32 × 4 `#8A8494` handle; the scrim; a soft shadow; dialogs and wide popovers on the same ground with radius 28;
+  - `SheetHeader` for every titled sheet: iPhone 800 24 Manrope with Close as a 32 pt `control` circle in 44 pt; Android 400 22 in the system face with a plain cross in 48 dp; an optional 500 14 line and tag;
+  - `ProposalSheet` (ED-150): the header with its origin as a 24 tall tag, the card at 22 (iPhone) / 16 (Android), Add to day 54 tall at 800 17 with the check first, Discard, the footnote; it already opened at the large detent;
+  - `DotTag`, and `ProposalChangeChip` in the tag's shape: 20 tall, fully round, 700 12; to the Inbox and untouched in the quiet grey; resized and moved keep their tints;
+  - chips from the theme: 34 tall, fully round, 700 14 Manrope; picked in the accent with a white check, the rest tonal; hit areas 44 / 48;
+  - Flutter menus from the theme: Android `#F7EFF4` (dark `#37313A`) at 22, iPhone 26, Mac and web 10. `dotMenuStyle` removed.
+- **Tests:** goldens render real shadows (flutter_test drew them as hard black edges) and use their own platform's theme (`DotTheme.light/dark` take an optional platform). 944 goldens regenerated.
+- **Moved to part 2 (owner):** the proposal's rows (`ProposalThreadList`), drawn on the board as dashed rings in the task's colour.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing.
+
 ---
 
 ## Pending owner answers

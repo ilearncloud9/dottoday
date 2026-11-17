@@ -1,7 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/round_more_button.dart';
-import 'package:dottoday/shared/menus/dot_menu_style.dart';
 import 'package:flutter/material.dart';
 
 /// Width of the menu (`A-ios-add-time-menu`): its end lines up with the
@@ -73,7 +72,6 @@ class _TimeMenuState extends State<TimeMenu> {
         -(_menuWidth - DotTouch.android),
         DotSpace.xs,
       ),
-      style: dotMenuStyle(context),
       menuChildren: [
         _item(
           t,

@@ -628,6 +628,10 @@ Rules for every task in M18 to M22:
   - the Undo toast and snackbar (R2-7, ED-281);
   - sheets, menus, chips, the selection bar (R2-6, ED-279) and tags.
   Every one meets 44 pt / 48 dp hit areas (rules §6.4, CR-100).
+  Split by the owner (2026-11-17), each part with its own review page and commit. The sync status words, Sync sheet, conflict review, Undo, Keep both and the web storage screens on E-G4-7-States stay in M20.10; native menus (iOS Day pull-down, Mac NSMenu) come with M18.5 / M19.
+  - [x] Part 1 done 2026-11-17 (ED-366): sheets on the page ground with cards inside, the shared sheet header, the proposal's chrome, tags, chips and Flutter menus from the theme.
+  - [ ] Part 2: the state kit, E-G4-7-States sections A and D, and the proposal's rows as dashed rings in the task's colour (moved from part 1 by the owner).
+  - [ ] Part 3: the Undo toast and the selection bar, with ED-281's build checks.
 - [ ] M18.5 Adaptive shell:
   - width classes 600 / 840, with the editor docking from 1160 (ED-167) and the H1 short-height and M docking rules (ED-168);
   - the Mac minimum window of 840 × 640 with the narrow Day fold (ED-169, ED-170);

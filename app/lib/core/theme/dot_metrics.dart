@@ -60,6 +60,10 @@ abstract final class DotRadii {
   /// Workspace blocks (18).
   static const double block = 18;
 
+  /// A card inside a sheet (E-Phones-2): 22 on iPhone, 16 on Android.
+  static const double sheetCard = 22;
+  static const double sheetCardAndroid = 16;
+
   /// The now pill (9, E rules §5.3).
   static const double nowPill = 9;
 
@@ -139,6 +143,22 @@ abstract final class DotSize {
   static const double threadRowCap = 44;
   static const double threadRowFree = 28;
   static const double threadRowNow = 26;
+
+  /// Sheet chrome (E-Phones-2): the iOS grabber 36 × 5, the Android
+  /// handle 32 × 4, and the iOS close button's 32 pt circle with a 14 pt
+  /// cross (its hit area stays 44).
+  static const grabber = Size(36, 5);
+  static const handleAndroid = Size(32, 4);
+  static const sheetClose = 32.0;
+  static const sheetCloseGlyph = 14.0;
+
+  /// A tag ("new", "no room · to the Inbox", "simple rules"): 20 or 24
+  /// tall, fully round.
+  static const double tag = 20;
+  static const double tagLarge = 24;
+
+  /// A sheet's main action (E-Phones-2 "Add to day": 54 tall).
+  static const double primaryButton = 54;
 
   /// A fold row (ED-164: Earlier, Before Wake Up, After Wind Down): 48
   /// high, its 24 px dots overlapping by half with a 2 px ground ring.

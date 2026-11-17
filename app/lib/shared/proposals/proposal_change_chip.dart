@@ -4,7 +4,8 @@ import 'package:dottoday/shared/dot/overlap_knot.dart';
 import 'package:flutter/material.dart';
 
 /// What changes, tinted by kind (`B-ios-rebalance`): moves in the accent,
-/// length in amber, leaving the day in rose, untouched in grey. Colour is
+/// length in amber, leaving the day in rose, untouched and to the Inbox in
+/// the quiet grey, in the tag's shape (E-Phones-2). Colour is
 /// never the only signal: the text says it. An overlap leads with the knot
 /// (ADR-0015): this task's strand, and a muted one for the other.
 class ProposalChangeChip extends StatelessWidget {
@@ -33,29 +34,33 @@ class ProposalChangeChip extends StatelessWidget {
       ),
       ProposalChange.untouched ||
       ProposalChange.overlaps ||
-      ProposalChange.toInbox => (t.colors.threadAhead, t.colors.muted),
+      // The quiet grey tag of E-Phones-2 ("no room · to the Inbox").
+      ProposalChange.toInbox => (t.colors.control, t.colors.ink2),
       _ => (t.colors.accentTint, t.colors.accentInk),
     };
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: fill,
-        borderRadius: const BorderRadius.all(Radius.circular(DotRadii.pill)),
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: DotSpace.m,
-          vertical: DotSpace.xxs,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.xs,
-          children: [
-            if (change == ProposalChange.overlaps)
-              OverlapKnot(first: t.tasks[color].color, second: t.colors.muted),
-            Flexible(
-              child: Text(text, style: t.styles.rowMeta.copyWith(color: ink)),
-            ),
-          ],
+    // The tag's shape (DotTag, E-Phones-2): 20 tall, fully round, 700 12.
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: DotSize.tag),
+      child: DecoratedBox(
+        decoration: ShapeDecoration(color: fill, shape: const StadiumBorder()),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.symmetric(
+            horizontal: DotSpace.s,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: DotSpace.xs,
+            children: [
+              if (change == ProposalChange.overlaps)
+                OverlapKnot(
+                  first: t.tasks[color].color,
+                  second: t.colors.muted,
+                ),
+              Flexible(
+                child: Text(text, style: t.styles.tag.copyWith(color: ink)),
+              ),
+            ],
+          ),
         ),
       ),
     );

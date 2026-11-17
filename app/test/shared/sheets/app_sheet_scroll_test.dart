@@ -46,7 +46,7 @@ void main() {
       await tester.pumpWidget(_host());
       await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
-      final close = find.widgetWithIcon(IconButton, Icons.close);
+      final close = find.byTooltip('Close');
       final before = tester.getRect(close);
 
       await tester.scrollUntilVisible(

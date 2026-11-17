@@ -1,14 +1,16 @@
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/chips/dot_tag.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
+import 'package:dottoday/shared/sheets/sheet_header.dart';
 import 'package:flutter/material.dart';
 
 /// B3 (11 §0): the one sheet every model- or rule-made change is shown in
 /// before anything is written — Break it down, brain-dump, Rebalance,
 /// routines, the reality thread (CLAUDE.md §11 "Proposal rule"). Chrome
-/// from `B-ios-break-it-down` / `B-ios-rebalance`: title with an origin
-/// chip and ×, a subtitle, the [body] in a card, optional [options],
+/// from E-Phones-2 (ED-150): the sheet title with an origin tag and Close,
+/// a subtitle, the [body] in a card, optional [options],
 /// Accept, Discard, and "Nothing is saved until you accept".
 ///
 /// Values and callbacks only: the caller writes on [onAccept]. Used as a
@@ -76,28 +78,46 @@ class ProposalSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Header(title: title, originLabel: originLabel, onClose: onDiscard),
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            DotSpace.l,
+            DotSpace.m,
+            DotSpace.s,
+            DotSpace.m,
+          ),
+          child: SheetHeader(
+            title: title,
+            subtitle: subtitle,
+            tag: switch (originLabel) {
+              final o? => DotTag(o, large: true),
+              null => null,
+            },
+            onClose: onDiscard,
+          ),
+        ),
         if (failure case final f?)
           SaveFailureBanner(failure: f, onRetry: onAccept ?? () {}),
         Flexible(
           child: SingleChildScrollView(
             padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: DotSpace.page,
+              horizontal: DotSpace.l,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: DotSpace.l,
               children: [
-                if (subtitle case final s?)
-                  Text(s, style: t.styles.body.copyWith(color: t.colors.muted)),
                 ?hint,
                 ?lead,
                 DecoratedBox(
                   decoration: BoxDecoration(
                     color: t.colors.raised,
                     border: Border.all(color: t.colors.outline),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(DotRadii.cardLarge),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        DotIdiom.of(context) == DotIdiom.cupertino
+                            ? DotRadii.sheetCard
+                            : DotRadii.sheetCardAndroid,
+                      ),
                     ),
                   ),
                   child: Padding(
@@ -127,85 +147,6 @@ class ProposalSheet extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.title,
-    required this.originLabel,
-    required this.onClose,
-  });
-
-  final String title;
-  final String? originLabel;
-  final VoidCallback onClose;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(
-        DotSpace.page,
-        DotSpace.s,
-        DotSpace.s,
-        DotSpace.s,
-      ),
-      child: Row(
-        spacing: DotSpace.s,
-        children: [
-          // A Wrap, so the chip moves under the title rather than
-          // overflowing at large text (docs/10 §5.4; M14.2).
-          Expanded(
-            child: Wrap(
-              spacing: DotSpace.s,
-              runSpacing: DotSpace.xs,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(title, style: t.styles.pageTitle),
-                ),
-                if (originLabel case final o?) _OriginChip(o),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: onClose,
-            tooltip: context.l10n.sheetClose,
-            icon: DotIcon(DotGlyphs.close, color: t.colors.text),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// "on-device" in an accent tint (`B-ios-break-it-down`).
-class _OriginChip extends StatelessWidget {
-  const _OriginChip(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: t.colors.accentTint,
-        borderRadius: const BorderRadius.all(Radius.circular(DotRadii.pill)),
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: DotSpace.m,
-          vertical: DotSpace.xs,
-        ),
-        child: Text(
-          label,
-          style: t.styles.rowMeta.copyWith(color: t.colors.accentInk),
-        ),
-      ),
-    );
-  }
-}
-
 class _Actions extends StatelessWidget {
   const _Actions({
     required this.acceptLabel,
@@ -225,9 +166,9 @@ class _Actions extends StatelessWidget {
     final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
-        DotSpace.page,
         DotSpace.l,
-        DotSpace.page,
+        DotSpace.l,
+        DotSpace.l,
         DotSpace.l,
       ),
       child: Column(
@@ -236,7 +177,11 @@ class _Actions extends StatelessWidget {
         children: [
           FilledButton.icon(
             onPressed: onAccept,
-            iconAlignment: IconAlignment.end,
+            // E-Phones-2: 54 tall, 800 17, the check before the words.
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(DotSize.primaryButton),
+              textStyle: t.styles.primaryButton,
+            ),
             icon: DotIcon(DotGlyphs.check, color: t.colors.onAccent),
             label: Text(acceptLabel),
           ),

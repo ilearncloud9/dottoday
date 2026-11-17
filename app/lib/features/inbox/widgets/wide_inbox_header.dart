@@ -8,7 +8,6 @@ import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_routines_button.dart';
 import 'package:dottoday/shared/dot/count_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/menus/dot_menu_style.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -104,7 +103,6 @@ class _SortButton extends ConsumerWidget {
       InboxSort.fit => l10n.inboxSortFit,
     };
     return MenuAnchor(
-      style: dotMenuStyle(context),
       menuChildren: [
         for (final s in InboxSort.values)
           MenuItemButton(

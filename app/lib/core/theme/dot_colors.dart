@@ -62,6 +62,8 @@ final class DotColors {
     required this.destructive,
     required this.swipeMove,
     required this.scrim,
+    required this.grabber,
+    required this.menuAndroid,
     required this.shadow,
   });
 
@@ -125,7 +127,7 @@ final class DotColors {
   /// Mac capsules and Close buttons; dark menus and popovers.
   final Color control;
 
-  /// Dark sheet level (light sheets are [raised]).
+  /// Sheets: the page ground, with cards inside (E-Phones-2, ED-366).
   final Color sheet;
 
   /// Profile circle.
@@ -192,6 +194,12 @@ final class DotColors {
 
   /// Modal dimming.
   final Color scrim;
+
+  /// The iOS sheet grabber (the system's, 30 %).
+  final Color grabber;
+
+  /// Android menus (M3 menu on E-Phones-2).
+  final Color menuAndroid;
 
   /// Base colour of elevation shadows (see `DotElevation`).
   final Color shadow;
@@ -275,6 +283,8 @@ final class DotColors {
       destructive: l(destructive, other.destructive),
       swipeMove: l(swipeMove, other.swipeMove),
       scrim: l(scrim, other.scrim),
+      grabber: l(grabber, other.grabber),
+      menuAndroid: l(menuAndroid, other.menuAndroid),
       shadow: l(shadow, other.shadow),
     );
   }
@@ -353,6 +363,8 @@ DotColors _resolve(Brightness brightness, Color accent) {
     destructive: p.destructive,
     swipeMove: p.swipeMove,
     scrim: p.scrim,
+    grabber: p.grabber,
+    menuAndroid: p.menuAndroid,
     shadow: p.shadow,
   );
 }

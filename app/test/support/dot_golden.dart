@@ -63,34 +63,43 @@ void goldenMatrix(
             ..physicalSize = Size(width, height) * ratio
             ..devicePixelRatio = ratio;
           addTearDown(tester.view.reset);
-          final app = goldenApp(
-            build(cell),
-            theme: theme,
-            platform: platform,
-            textScale: scale,
-            rtl: rtl,
-          );
-          // Overrides scope the whole app, so sheets opened on the root
-          // navigator by `act` see the same providers.
-          await tester.pumpWidget(
-            overrides == null
-                ? app
-                : ProviderScope(overrides: overrides, child: app),
-          );
-          await tester.pumpAndSettle();
-          if (act != null) {
-            await act(tester);
+          // Real shadows, as on a device: flutter_test draws them as hard
+          // black edges, which reads as an outline the boards don't have.
+          // flutter_test checks the flag before teardowns run, so it is
+          // restored at the end of the body.
+          debugDisableShadows = false;
+          try {
+            final app = goldenApp(
+              build(cell),
+              theme: theme,
+              platform: platform,
+              textScale: scale,
+              rtl: rtl,
+            );
+            // Overrides scope the whole app, so sheets opened on the root
+            // navigator by `act` see the same providers.
+            await tester.pumpWidget(
+              overrides == null
+                  ? app
+                  : ProviderScope(overrides: overrides, child: app),
+            );
             await tester.pumpAndSettle();
+            if (act != null) {
+              await act(tester);
+              await tester.pumpAndSettle();
+            }
+            // matchesGoldenFile on a finder always captures at ratio 1, so
+            // render the frame's boundary at this cell's ratio ourselves.
+            final boundary = tester.renderObject<RenderRepaintBoundary>(
+              find.byKey(GoldenFrame.boundaryKey),
+            );
+            final image = await tester.runAsync(
+              () => boundary.toImage(pixelRatio: ratio),
+            );
+            await expectLater(image, matchesGoldenFile('goldens/$file'));
+          } finally {
+            debugDisableShadows = true;
           }
-          // matchesGoldenFile on a finder always captures at ratio 1, so
-          // render the frame's boundary at this cell's ratio ourselves.
-          final boundary = tester.renderObject<RenderRepaintBoundary>(
-            find.byKey(GoldenFrame.boundaryKey),
-          );
-          final image = await tester.runAsync(
-            () => boundary.toImage(pixelRatio: ratio),
-          );
-          await expectLater(image, matchesGoldenFile('goldens/$file'));
         });
       }
     }
@@ -106,7 +115,9 @@ Widget goldenApp(
   double textScale = 1,
   bool rtl = false,
 }) {
-  final data = theme == 'dark' ? DotTheme.dark() : DotTheme.light();
+  final data = theme == 'dark'
+      ? DotTheme.dark(DotAccent.fallback, platform)
+      : DotTheme.light(DotAccent.fallback, platform);
   return MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: data.copyWith(platform: platform),

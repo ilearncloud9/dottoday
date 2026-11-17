@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Sheets, chips and menus take on Concept E (redesign branch): sheets sit on the page's own warm background with white cards inside, with larger rounded corners on iPhone, a grey round Close and a bold title. Plan proposals show their origin as a small tag ("simple rules"), "new" and "no room · to the Inbox" as tags under each task, and a taller Add to day button. Chips are fully round in the accent's tint, picked ones filled with a check. Android menus use the Material menu tint.
+
+### Changed
 - Finished tasks fold away on Today (redesign branch): in the minimal layout on phones, and on today's card on a Mac or the web, the tasks you've done before now fold into one quiet "Earlier" row with their colour dots. Show opens it and Hide folds it again; reopening a task puts it back at its time. Tasks before Wake Up or after Wind Down fold the same way, and the minimal layout drops the count ("After Wind Down"). When a task ends and the now marker moves on, it slides to its new row (it jumps with Reduce Motion), and a screen reader says the new current task once.
 
 ### Changed

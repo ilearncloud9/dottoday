@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/sheets/sheet_header.dart';
 import 'package:flutter/material.dart';
 
 /// Widest an [AppSheet] popover gets on large screens.
@@ -95,7 +95,6 @@ class AppSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
     final insets = MediaQuery.viewInsetsOf(context).bottom;
     final title = this.title;
     // The title row stays put and only the body scrolls: scrolled with it,
@@ -115,7 +114,13 @@ class AppSheet extends StatelessWidget {
                 DotSpace.l,
                 0,
               ),
-              child: _TitleRow(title: title, style: t),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(bottom: DotSpace.m),
+                child: SheetHeader(
+                  title: title,
+                  onClose: () => Navigator.of(context).maybePop(),
+                ),
+              ),
             ),
           Flexible(
             child: SingleChildScrollView(
@@ -127,35 +132,6 @@ class AppSheet extends StatelessWidget {
               ),
               child: child,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TitleRow extends StatelessWidget {
-  const _TitleRow({required this.title, required this.style});
-
-  final String title;
-  final DotTheme style;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: DotSpace.m),
-      child: Row(
-        children: [
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(title, style: style.styles.cardTitle),
-            ),
-          ),
-          IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
-            tooltip: context.l10n.sheetClose,
-            icon: const Icon(Icons.close),
           ),
         ],
       ),

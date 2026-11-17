@@ -31,6 +31,12 @@ final class DotType {
     required this.threadMeta,
     required this.promptTitle,
     required this.choiceTitle,
+    required this.sheetTitle,
+    required this.sheetTitleAndroid,
+    required this.sheetSubtitle,
+    required this.tag,
+    required this.primaryButton,
+    required this.chip,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -63,6 +69,12 @@ final class DotType {
     // Decision screens from CR-160 (main, PR #75), in the Concept E content face.
     promptTitle: _manrope(22, 28, 700, text),
     choiceTitle: _manrope(17, 22, 700, text),
+    sheetTitle: _manrope(24, 30, 800, text),
+    sheetTitleAndroid: _system(22, 28, 400, text),
+    sheetSubtitle: _system(14, 19, 500, muted),
+    tag: _system(12, 20, 700, text),
+    primaryButton: _manrope(17, 22, 800, text),
+    chip: _manrope(14, 18, 700, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -157,6 +169,24 @@ final class DotType {
   /// An option's title on a decision screen (B1, G1; 17/700).
   final TextStyle choiceTitle;
 
+  /// The iOS sheet title (E-Phones-2: 800 24/30).
+  final TextStyle sheetTitle;
+
+  /// The Android sheet title (E-Phones-2: 400 22/28).
+  final TextStyle sheetTitleAndroid;
+
+  /// The line under a sheet title (500 14, secondary).
+  final TextStyle sheetSubtitle;
+
+  /// Tags and the origin chip ("new", "simple rules": 700 12); colour by the caller.
+  final TextStyle tag;
+
+  /// A sheet's main action, "Add to day" (800 17 on a 54 tall pill).
+  final TextStyle primaryButton;
+
+  /// Chip labels ("Today", "Tomorrow": 700 14 Manrope).
+  final TextStyle chip;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -185,6 +215,12 @@ final class DotType {
       threadMeta: l(threadMeta, other.threadMeta),
       promptTitle: l(promptTitle, other.promptTitle),
       choiceTitle: l(choiceTitle, other.choiceTitle),
+      sheetTitle: l(sheetTitle, other.sheetTitle),
+      sheetTitleAndroid: l(sheetTitleAndroid, other.sheetTitleAndroid),
+      sheetSubtitle: l(sheetSubtitle, other.sheetSubtitle),
+      tag: l(tag, other.tag),
+      primaryButton: l(primaryButton, other.primaryButton),
+      chip: l(chip, other.chip),
     );
   }
 }

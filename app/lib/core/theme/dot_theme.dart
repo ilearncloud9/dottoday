@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_colors.dart';
+import 'package:dottoday/core/theme/dot_components.dart';
 import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:dottoday/core/theme/dot_motion.dart';
 import 'package:dottoday/core/theme/dot_type.dart';
@@ -56,16 +57,27 @@ final class DotTheme extends ThemeExtension<DotTheme> {
   ///
   /// One instance per accent and platform: `MaterialApp` animates between unequal
   /// themes, so a fresh copy on every rebuild would re-run that animation.
-  static ThemeData light([DotAccent accent = DotAccent.fallback]) =>
-      _cache[(accent, Brightness.light, defaultTargetPlatform)] ??= _build(
-        DotColors.light(accent),
-      );
+  /// [platform] defaults to the running one; goldens pass theirs so the
+  /// per-platform sheets and menus match the idiom they draw.
+  static ThemeData light([
+    DotAccent accent = DotAccent.fallback,
+    TargetPlatform? platform,
+  ]) => _themed(DotColors.light(accent), accent, platform);
 
   /// Dark [ThemeData] with [accent] (Settings › Look); cached like [light].
-  static ThemeData dark([DotAccent accent = DotAccent.fallback]) =>
-      _cache[(accent, Brightness.dark, defaultTargetPlatform)] ??= _build(
-        DotColors.dark(accent),
-      );
+  static ThemeData dark([
+    DotAccent accent = DotAccent.fallback,
+    TargetPlatform? platform,
+  ]) => _themed(DotColors.dark(accent), accent, platform);
+
+  static ThemeData _themed(
+    DotColors c,
+    DotAccent accent,
+    TargetPlatform? platform,
+  ) {
+    final p = platform ?? defaultTargetPlatform;
+    return _cache[(accent, c.brightness, p)] ??= _build(c, p);
+  }
 
   /// Keyed by platform too: ThemeData captures the target platform (and with
   /// it the §4 chrome idiom) when it is built.
@@ -98,14 +110,16 @@ final class DotTheme extends ThemeExtension<DotTheme> {
   }
 }
 
-ThemeData _build(DotColors c) {
+ThemeData _build(DotColors c, TargetPlatform platform) {
   // Snackbars and tooltips sit on the inverse surface: the other mode's
   // raised surface and text, so their contrast is already tested.
   final inverse = c.isDark ? DotColors.light() : DotColors.dark();
   final type = DotType.withColors(text: c.text, muted: c.muted);
   final scheme = _scheme(c, inverse);
+  final parts = DotComponents(c, type, platform);
   return ThemeData(
     useMaterial3: true,
+    platform: platform,
     brightness: c.brightness,
     colorScheme: scheme,
     scaffoldBackgroundColor: c.surface,
@@ -144,28 +158,13 @@ ThemeData _build(DotColors c) {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(foregroundColor: c.accentInk),
     ),
-    // Sheets and dialogs take the raised surface from the theme, not from
-    // the caller, so an open sheet follows a light/dark switch (M3c.6).
-    bottomSheetTheme: BottomSheetThemeData(
-      showDragHandle: true,
-      backgroundColor: c.raised,
-      modalBackgroundColor: c.raised,
-      surfaceTintColor: Colors.transparent,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(DotRadii.sheet),
-        ),
-      ),
-    ),
-    dialogTheme: DialogThemeData(
-      // A question never spans a wide window (CR-160 B7 gate, G2).
-      constraints: const BoxConstraints(
-        minWidth: DotSize.dialogMin,
-        maxWidth: DotSize.promptWidth,
-      ),
-      backgroundColor: c.raised,
-      surfaceTintColor: Colors.transparent,
-    ),
+    // Sheets, dialogs, chips and menus (M18.4): from the theme, not the
+    // caller, so an open sheet follows a light/dark switch (M3c.6).
+    bottomSheetTheme: parts.sheet,
+    dialogTheme: parts.dialog,
+    chipTheme: parts.chip,
+    menuTheme: MenuThemeData(style: parts.menu),
+    popupMenuTheme: parts.popupMenu,
     // Shown on a hover, not on a sweep (DotTouch.tooltipWait).
     tooltipTheme: const TooltipThemeData(waitDuration: DotTouch.tooltipWait),
     extensions: [
