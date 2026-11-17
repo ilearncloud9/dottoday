@@ -630,6 +630,12 @@ abstract class AppLocalizations {
   /// **'share {duration}'**
   String threadOverlapShareTime(String duration);
 
+  /// Beside the knot between two overlapping thread rows: 'Overlap · 10:30–11:00' (E-Phones Today).
+  ///
+  /// In en, this message translates to:
+  /// **'Overlap · {range}'**
+  String threadOverlapRange(String range);
+
   /// Screen-reader label of a task row: title and time range.
   ///
   /// In en, this message translates to:
@@ -719,6 +725,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes, plural, =1{1 min left} other{{minutes} min left}}'**
   String liveMinutesLeft(int minutes);
+
+  /// The now card's time line after the range: 'Now, 18 min left' (Concept E E-Phones Today).
+  ///
+  /// In en, this message translates to:
+  /// **'Now, {minutes, plural, =1{1 min left} other{{minutes} min left}}'**
+  String liveNowLeft(int minutes);
 
   /// Live row button: mark the current task done.
   ///

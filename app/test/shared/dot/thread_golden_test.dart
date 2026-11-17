@@ -50,8 +50,6 @@ const _actions = ThreadActions(
   onOpen: _noop,
   onFocus: _noop,
   onUnstick: _noAnswer,
-  onExtend: _noop,
-  onShiftRest: _noop,
   onAddHere: _noop,
 );
 
@@ -181,6 +179,7 @@ const _overlap = <ThreadEntry>[
     aboveTitle: 'Run',
     belowTitle: 'Sleep',
     minutes: 15,
+    range: '23:20 – 23:35',
   ),
   ThreadTaskEntry(
     ThreadTask(

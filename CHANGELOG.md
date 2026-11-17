@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- The day thread takes on Concept E (redesign branch): finished tasks are solid dots and the thread behind now is solid in their colours, while the rest of the day is dotted. The current task sits on a card with "Now, 18 min left"; Done is its circle, and +15 min and Shift the rest are in the task's sheet. A small bead with the time marks now. Overlaps read "Overlap · 10:30–11:00". Finished titles turn grey instead of being struck through. Calendar events have no done circle.
+
+### Changed
 - Concept E's full colour set (redesign branch): dark cards and sheets are lighter, as the approved dark boards draw them; links, chips and focus rings use Concept E's own teal shades; the indigo, coral and violet accents and every task colour take their Concept E shades; titles, tabs and section headers use each platform's own font (Roboto on the web).
 
 ### Changed

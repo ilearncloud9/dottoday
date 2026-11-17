@@ -9,9 +9,11 @@ import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/material.dart';
 
-/// The current task, expanded (docs/10 §3 `LiveRow`, `Main`): conic dot,
-/// solid segment down to the now-marker, subtask ring "1 of 3", "38 min
-/// left", and Done / +15 min / Shift the rest.
+/// The now card (E rules §5.3, ED-104; E-Phones Today): the 45 ring on
+/// the thread, "9:00–11:00 AM · Now, 18 min left", the title at 19/700
+/// and the done circle, on a card that covers the thread. Full Today has
+/// no buttons on it (owner, M18.3): Done is the circle, the rest is in
+/// the task sheet. Minimal keeps Running late (docs/14 §4).
 class LiveRow extends StatelessWidget {
   const LiveRow({
     required this.task,
@@ -19,9 +21,8 @@ class LiveRow extends StatelessWidget {
     this.onOpen,
     this.onFocus,
     this.onUnstick,
-    this.onExtend,
-    this.onShiftRest,
     this.onRunningLate,
+    this.solid,
     super.key,
   });
 
@@ -36,43 +37,39 @@ class LiveRow extends StatelessWidget {
   /// The Unstick answer (11 B3, M10.7); null hides the row.
   final ValueChanged<String>? onUnstick;
 
-  /// +15 min.
-  final VoidCallback? onExtend;
-
-  /// Moves every later task by the overrun (R-04).
-  final VoidCallback? onShiftRest;
-
-  /// Running late (minimal layout, docs/14 §4): drawn instead of +15 and
-  /// Shift the rest.
+  /// Running late (minimal layout, docs/14 §4); null: no button.
   final VoidCallback? onRunningLate;
+
+  /// The colour the thread arrives in (from `threadSolid`).
+  final TaskColor? solid;
 
   @override
   Widget build(BuildContext context) {
+    final tasks = DotTheme.of(context).tasks;
     return ThreadRowFrame(
+      card: true,
+      minHeight: DotSize.nowCard,
       piece: SegmentPiece(
-        color: task.color.color,
+        color: tasks[task.color].color,
         state: task.state,
-        dotSize: DotSize.threadDot,
-        progress: task.progress,
+        above: switch (solid) {
+          final c? => tasks[c].color,
+          null => null,
+        },
         ghost: task.reality?.ghost,
       ),
-      dot: taskRowDot(
-        context,
-        task,
-        DotSize.threadDot,
-        onOpen,
-        onFocus: onFocus,
-      ),
+      dot: taskRowDot(context, task, DotSize.liveDot, onOpen, onFocus: onFocus),
       trailing: onToggleDone == null
           ? null
           : DoneCircle(
               color: task.color,
               done: false,
+              live: true,
               title: task.title,
               onTap: onToggleDone,
             ),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: DotSpace.xl),
+        padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
         child: LayoutBuilder(builder: (context, box) => _body(box.maxWidth)),
       ),
     );
@@ -84,20 +81,22 @@ class LiveRow extends StatelessWidget {
     final wide = width >= DotSize.wideThreadRowFrom;
     final column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: DotSpace.m,
+      spacing: DotSpace.s,
       children: [
         _Summary(task: task, onOpen: onOpen, showMeta: !wide),
         // Smallest step (M10.6): only the first step, and Start.
         if (task.smallestStep case final text?)
           SmallestStepLine(text: text, onStart: onFocus),
         if (onUnstick case final answer?) UnstickLine(onAnswer: answer),
-        // A read-only thread (the Inbox's Drop onto today) wires none.
-        if (onToggleDone != null || onExtend != null)
-          _Actions(
-            onDone: onToggleDone,
-            onExtend: onExtend,
-            onShiftRest: onShiftRest,
-            onRunningLate: onRunningLate,
+        if (onRunningLate case final late?)
+          Builder(
+            builder: (context) => Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: OutlinedButton(
+                onPressed: late,
+                child: Text(context.l10n.runningLate),
+              ),
+            ),
           ),
       ],
     );
@@ -128,10 +127,13 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final meta = switch ((task.reality, task.duration)) {
-      (final r?, _) => _realityMeta(l10n, task, r),
-      (null, final d?) => l10n.liveMeta(task.timeRange, d),
-      (null, null) => task.timeRange,
+    final now = switch ((task.reality, task.minutesLeft)) {
+      (null, final left?) => l10n.liveNowLeft(left),
+      _ => null,
+    };
+    final range = switch (task.reality) {
+      final r? => _realityMeta(l10n, task, r),
+      null => task.timeRange,
     };
     final rowLabel = taskRowLabel(l10n, task);
     final summary = Semantics(
@@ -150,10 +152,12 @@ class _Summary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: DotSpace.xxs,
           children: [
-            if (showMeta) Text(meta, style: t.styles.rowMeta),
+            if (showMeta)
+              _NowMeta(range: range, now: now, style: t.styles.threadMeta),
             Text(task.title, style: t.styles.liveRowTitle),
             if (task.oneThing) Text(l10n.oneThingMeta, style: t.styles.rowMeta),
-            _Progress(task: task),
+            if (task.hasSubtasks || task.reality?.note != null)
+              _Progress(task: task),
           ],
         ),
       ),
@@ -172,6 +176,41 @@ class _Summary extends StatelessWidget {
           style: t.styles.rowMeta.copyWith(color: t.colors.muted),
         ),
       ],
+    );
+  }
+}
+
+/// "9:00–11:00 AM · **Now, 18 min left**" (E rules §5.3): the range, then
+/// the time left in the accent at 700.
+class _NowMeta extends StatelessWidget {
+  const _NowMeta({required this.range, required this.style, this.now});
+
+  final String range;
+  final String? now;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final now = this.now;
+    if (now == null) return Text(range, style: style);
+    final line = context.l10n.liveMeta(range, now);
+    final at = line.lastIndexOf(now);
+    if (at < 0) return Text(line, style: style);
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: line.substring(0, at)),
+          TextSpan(
+            text: now,
+            style: TextStyle(
+              color: DotTheme.of(context).colors.accentInk,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(text: line.substring(at + now.length)),
+        ],
+      ),
+      style: style,
     );
   }
 }
@@ -229,46 +268,10 @@ class _Progress extends StatelessWidget {
               ),
             ],
           ),
-        // The Reality thread says how long it has run instead (11 C3).
+        // The Reality thread says how long it has run (11 C3); the plan's
+        // time left is on the meta line (E rules §5.3).
         if (task.reality?.note case final ran?)
-          Text(ran, style: t.styles.stripWeekday)
-        else if (task.minutesLeft case final left?)
-          Text(l10n.liveMinutesLeft(left), style: t.styles.stripWeekday),
-      ],
-    );
-  }
-}
-
-class _Actions extends StatelessWidget {
-  const _Actions({
-    this.onDone,
-    this.onExtend,
-    this.onShiftRest,
-    this.onRunningLate,
-  });
-
-  final VoidCallback? onDone;
-  final VoidCallback? onExtend;
-  final VoidCallback? onShiftRest;
-  final VoidCallback? onRunningLate;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Wrap(
-      spacing: DotSpace.s,
-      runSpacing: DotSpace.s,
-      children: [
-        FilledButton(onPressed: onDone, child: Text(l10n.liveDone)),
-        if (onRunningLate case final late?)
-          OutlinedButton(onPressed: late, child: Text(l10n.runningLate))
-        else ...[
-          OutlinedButton(onPressed: onExtend, child: Text(l10n.liveExtend)),
-          OutlinedButton(
-            onPressed: onShiftRest,
-            child: Text(l10n.liveShiftRest),
-          ),
-        ],
+          Text(ran, style: t.styles.stripWeekday),
       ],
     );
   }

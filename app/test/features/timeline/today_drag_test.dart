@@ -68,10 +68,16 @@ void main() {
         find.textContaining('stopped at Lunch with Sam (pinned)'),
         findsOneWidget,
       );
-      expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsNothing);
+      expect(
+        find.textContaining('9:00 AM – 11:00 AM · Now', findRichText: true),
+        findsNothing,
+      );
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
-      expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
+      expect(
+        find.textContaining('9:00 AM – 11:00 AM · Now', findRichText: true),
+        findsOneWidget,
+      );
     });
 
     group('"Calendar events too" (M7.6)', () {
@@ -110,7 +116,10 @@ void main() {
           settings: settings,
         );
         expect(await dragStandup(tester), isTrue);
-        expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsNothing);
+        expect(
+          find.textContaining('9:00 AM – 11:00 AM · Now', findRichText: true),
+          findsNothing,
+        );
       });
 
       testWidgets('a read-only or repeating one stays, and no chip shows', (
@@ -126,7 +135,10 @@ void main() {
           readOnlyCalendarIds: {event.id},
         );
         expect(await dragStandup(tester), isFalse);
-        expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
+        expect(
+          find.textContaining('9:00 AM – 11:00 AM · Now', findRichText: true),
+          findsOneWidget,
+        );
       });
     });
 

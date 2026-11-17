@@ -153,14 +153,15 @@ void main() {
       );
       expect(
         [DotSize.rowDot, DotSize.liveDot, DotSize.liveRing, DotSize.dayDot],
-        [36, 42, 5, 44],
+        [36, 45, 5.5, 44],
       );
       expect(
         [DotSize.macRowDot, DotSize.pickerDot, DotSize.weekDot],
         [26, 22, 8],
       );
-      expect([DotSize.segment, DotSize.freeLine], [6, 2]);
-      expect([DotSize.nowMarker, DotSize.nowHalo], [16, 4]);
+      // Concept E: a 4 px thread, 4 px dots ahead (E rules §5.2).
+      expect([DotSize.segment, DotSize.freeLine], [4, 4]);
+      expect([DotSize.nowMarker, DotSize.nowHalo], [16, 1]);
       expect([DotTouch.min, DotTouch.android], [44, 48]);
     });
 

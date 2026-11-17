@@ -239,6 +239,15 @@ void main() {
     expect(find.text('Moved 2 tasks'), findsOneWidget);
   });
 
+  // +15 min lives in the sheet only since the now card lost its buttons
+  // (M18.3, E-Phones Today).
+  testWidgets('+15 min extends the task, with Undo', (tester) async {
+    await _openDeepWork(tester);
+    await tester.tap(_inSheet(find.text('+15 min')));
+    await tester.pumpAndSettle();
+    expect(find.text('Undo'), findsOneWidget);
+  });
+
   group('/task/:id (06 §9)', () {
     testWidgets('a known id shows the task', (tester) async {
       final rows = demoDayRows(_date);

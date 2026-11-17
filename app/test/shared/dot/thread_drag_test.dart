@@ -240,7 +240,8 @@ void main() {
     await tester.pumpWidget(_thread(log));
     final g = await tester.startGesture(tester.getCenter(find.text('Write')));
     await tester.pump(DotTouch.liftDelay + const Duration(milliseconds: 50));
-    await g.moveBy(const Offset(0, 30));
+    // Within its own 54 px row (E rules §5.2).
+    await g.moveBy(const Offset(0, 15));
     await tester.pump();
     await g.up();
     await tester.pumpAndSettle();

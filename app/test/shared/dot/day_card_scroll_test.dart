@@ -28,8 +28,7 @@ ThreadTask _task(int i, DotState state) => ThreadTask(
 List<ThreadEntry> _day({bool live = true, bool marker = false}) => [
   const ThreadCap.wake('6:00'),
   for (var i = 0; i < 20; i++) ThreadTaskEntry(_task(i, DotState.done)),
-  if (marker)
-    const ThreadGap(minutes: 60, startLabel: '20:00', nowFraction: 0.5),
+  if (marker) const ThreadNow('20:30'),
   ThreadTaskEntry(_task(20, live ? DotState.live : DotState.upcoming)),
   for (var i = 21; i < 26; i++) ThreadTaskEntry(_task(i, DotState.upcoming)),
   const ThreadCap.bed('23:00'),

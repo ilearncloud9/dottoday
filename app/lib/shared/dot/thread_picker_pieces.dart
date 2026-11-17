@@ -97,7 +97,7 @@ class PickerDay extends StatelessWidget {
       piece: const FreePiece(),
       hairline: t.colors.threadAhead,
       accent: t.colors.accent,
-      accentTint: t.colors.accentTint,
+      card: t.colors.raised,
     ),
   );
 
@@ -117,14 +117,15 @@ class PickerDay extends StatelessWidget {
               Positioned.fill(
                 child: CustomPaint(
                   painter: ThreadAxisPainter(
+                    // A block's own colour down its length.
                     piece: SegmentPiece(
                       color: t.tasks[b.color].color,
+                      above: t.tasks[b.color].color,
                       state: DotState.upcoming,
-                      dotSize: DotSize.pickerDot,
                     ),
                     hairline: t.colors.threadAhead,
                     accent: t.colors.accent,
-                    accentTint: t.colors.accentTint,
+                    card: t.colors.raised,
                   ),
                 ),
               ),

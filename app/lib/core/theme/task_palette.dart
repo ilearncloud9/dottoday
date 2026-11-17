@@ -24,6 +24,12 @@ abstract final class TaskAlpha {
   /// 35 % alpha"; `B-ios-rebalance`).
   static const ghost = 0.35;
 
+  /// The now-bead's outer ring, the now pill's border and the now line
+  /// (Concept E §5.3).
+  static const nowHalo = 0.4;
+  static const nowPill = 0.3;
+  static const nowLine = 0.28;
+
   /// All-day chip and selected-icon backgrounds (`Main`, `A-ios-add-what`),
   /// the same strength as the accent tint.
   static const tintLight = 0.12;
@@ -39,6 +45,7 @@ final class TaskSwatch {
     required this.ink,
     required this.tint,
     required this.glyph,
+    required this.check,
   });
 
   /// Dot outline, icon, live segment and the filled done dot (§2.1).
@@ -59,10 +66,10 @@ final class TaskSwatch {
   /// lifted (dark) only as far as 3:1 for graphics needs (§7.4, ADR-0015).
   final Color glyph;
 
-  /// The tick on a filled done circle (ADR-0015): white on every task
-  /// colour in both themes, as in the reference; the struck title and the
-  /// circle's checked state carry "done" without it (§7.4).
-  Color get check => DotPrimitives.white;
+  /// The tick on a filled done circle and the icon on a done dot (E rules
+  /// §4.4): white in light, the ground's ink in dark, and ink on amber in
+  /// both themes (CR-162, ED-196).
+  final Color check;
 
   /// Segment of an upcoming task.
   Color get upcomingSegment => color.withValues(alpha: TaskAlpha.upcoming);
@@ -91,6 +98,11 @@ final class TaskPalette {
           colors.isDark ? c.dark : c.ring,
           colors,
           alpha,
+          check: colors.isDark
+              ? colors.ground
+              : c == TaskColor.amber
+              ? colors.ink
+              : DotPrimitives.white,
         ),
     ]);
   }
@@ -108,6 +120,7 @@ final class TaskPalette {
         ink: Color.lerp(this[c].ink, other[c].ink, t)!,
         tint: Color.lerp(this[c].tint, other[c].tint, t)!,
         glyph: Color.lerp(this[c].glyph, other[c].glyph, t)!,
+        check: Color.lerp(this[c].check, other[c].check, t)!,
       ),
   ]);
 }
@@ -116,8 +129,9 @@ TaskSwatch _swatch(
   Color color,
   Color ring,
   DotColors colors,
-  double tintAlpha,
-) {
+  double tintAlpha, {
+  required Color check,
+}) {
   final tint = Color.alphaBlend(
     color.withValues(alpha: tintAlpha),
     colors.raised,
@@ -125,6 +139,7 @@ TaskSwatch _swatch(
   return TaskSwatch(
     color: color,
     ring: ring,
+    check: check,
     ink: inkFor(
       color,
       backgrounds: [colors.surface, colors.raised, tint],

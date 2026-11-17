@@ -72,8 +72,6 @@ void main() {
     final (actions, _, repo) = await _pump(tester);
     final before = repo.rows;
     actions.onToggleDone!(gone);
-    actions.onExtend!(gone);
-    actions.onShiftRest!(gone);
     actions.onUnstick!(gone, 'Open the doc');
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);

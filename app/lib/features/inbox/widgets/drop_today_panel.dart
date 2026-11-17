@@ -90,10 +90,8 @@ class DropTodayPanel extends StatelessWidget {
   List<ThreadEntry> _withFits(List<ThreadEntry> entries) => [
     for (final e in entries)
       switch (e) {
-        // Only what is left of a gap counts once now is inside it.
-        ThreadGap(addable: true) => switch (_fitting(
-          (e.minutes * (1 - (e.nowFraction ?? 0))).floor(),
-        )) {
+        // A gap with now inside is split at the bead (E rules §5.3).
+        ThreadGap(addable: true) => switch (_fitting(e.minutes)) {
           final o? => e.fitting(o.title),
           null => e,
         },

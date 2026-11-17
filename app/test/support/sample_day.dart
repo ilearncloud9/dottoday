@@ -32,7 +32,6 @@ const mainThread = <ThreadEntry>[
       subtasksDone: 1,
       subtasksTotal: 3,
       // Runs 15 min into the next task, so "Shift the rest" is on.
-      overrunMinutes: 15,
     ),
   ),
   ThreadTaskEntry(

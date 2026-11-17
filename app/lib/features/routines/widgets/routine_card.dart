@@ -143,14 +143,15 @@ class RoutineMiniThread extends StatelessWidget {
           CustomPaint(
             size: Size(DotSize.pickerDot, _segment(i.durationMin)),
             painter: ThreadAxisPainter(
+              // A step's own colour down its length (a preview, not now).
               piece: SegmentPiece(
-                color: TaskColor.fromKey(i.colorKey).color,
+                color: t.tasks[TaskColor.fromKey(i.colorKey)].color,
+                above: t.tasks[TaskColor.fromKey(i.colorKey)].color,
                 state: DotState.upcoming,
-                dotSize: 0,
               ),
               hairline: t.colors.threadAhead,
               accent: t.colors.accent,
-              accentTint: t.colors.accentTint,
+              card: t.colors.raised,
             ),
           ),
         ],

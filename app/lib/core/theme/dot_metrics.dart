@@ -18,6 +18,12 @@ abstract final class DotSpace {
   /// Side margin of Mac/web pages (`A-mac-today-alt1-spread`).
   static const double pageExpanded = 64;
 
+  /// The now pill's side padding (E rules §5.3: 0 7).
+  static const double nowPill = 7;
+
+  /// The now card's side margin on the thread (E rules §5.3: 0 10).
+  static const double nowCard = 10;
+
   /// Hairline outline width (`0 0 0 1px outline`, §2.3).
   static const double hairline = 1;
 
@@ -53,6 +59,9 @@ abstract final class DotRadii {
 
   /// Workspace blocks (18).
   static const double block = 18;
+
+  /// The now pill (9, E rules §5.3).
+  static const double nowPill = 9;
 
   /// The tip pill (20).
   static const double tip = 20;
@@ -101,38 +110,59 @@ abstract final class DotSize {
 
   static const double rowDot = 36;
 
-  /// A task's dot on the day thread (ADR-0015, the Structured-sized row):
-  /// the live dot is the same size, its progress ring drawn inside.
-  static const double threadDot = 56;
+  /// A task's dot on the phone day thread: ahead, calendar and concurrent
+  /// now (Concept E §5.1); a done dot is [threadDoneDot].
+  static const double threadDot = 34;
 
-  /// The done circle at a thread row's end (ADR-0015).
+  /// A done task's solid dot on the phone day thread (Concept E §5.1).
+  static const double threadDoneDot = 32;
+
+  /// The Wake Up / Wind Down caps on the phone thread (ED-201).
+  static const double threadCap = 34;
+
+  /// The done circle at a thread row's end (ADR-0015), and its open ring
+  /// (E rules §4.4: 2.5).
   static const double doneCircle = 28;
+  static const double doneRing = 2.5;
 
-  /// A day-thread row grows this much per minute of its task, from
-  /// [threadRowMin] (what a row's dot and text need anyway) to
-  /// [threadRowMax], so a long task reads long without a 3-hour block
-  /// filling the screen (ADR-0015).
-  static const double threadPerMinute = 1.6;
-  static const double threadRowMin = 88;
-  static const double threadRowMax = 288;
+  /// Concept E's fixed phone row heights (§5.2): rows no longer stretch
+  /// with their task's length.
+  static const double threadRowDone = 48;
+  static const double threadRowAhead = 54;
+  static const double threadRowCap = 44;
+  static const double threadRowFree = 28;
+  static const double threadRowNow = 26;
 
-  /// The knot row between two overlapping tasks (ADR-0015), and how far
-  /// each strand swings off the thread.
-  static const double overlapRow = 56;
-  static const double knotSway = 10;
-  static const double knotStroke = 4;
+  /// The now card's least height on Full Today (ED-104; Android draws 82).
+  static const double nowCard = 80;
+
+  /// The knot row between two overlapping tasks (§5.4), and the knot's
+  /// sway and stroke.
+  static const double overlapRow = 26;
+  static const double knotSway = 6;
+  static const double knotStroke = 3.5;
 
   /// The knot as a mark beside text (picker caption, proposals), and its
   /// stroke.
   static const double knotMark = 20;
   static const double knotMarkWidth = 14;
   static const double knotMarkStroke = 2.5;
-  static const double liveDot = 42;
-  static const double liveRing = 5;
 
-  /// Outline of an upcoming dot (2.5 at row size, 2 in pickers / Mac rows).
-  static const double dotOutline = 2.5;
+  /// The now card's ring (ED-104): 45 with a 5.5 stroke.
+  static const double liveDot = 45;
+  static const double liveRing = 5.5;
+
+  /// An ahead dot's inset ring (ED-199): 4 on standard phone dots, 3.5
+  /// on dots under 30, 2.5 on dots of 16 and under.
+  static const double dotOutline = 4;
+  static const double midDotOutline = 3.5;
+  static const double tinyDotOutline = 2.5;
+
+  /// A 2 px stroke: focus rings (ED-211) and selected outlines.
   static const double smallDotOutline = 2;
+
+  /// A calendar event's ring (ED-200): 2.5, or 2 on dots of 16 and under.
+  static const double calendarOutline = 2.5;
 
   /// Today's one thing (docs/15 §8): a thin accent ring just outside the
   /// dot, its fill and state unchanged.
@@ -176,15 +206,17 @@ abstract final class DotSize {
   static const double ghostRing = 24;
   static const double ghostRingShift = 10;
 
-  /// Coloured segment of a task on the thread (Watch 5).
-  static const double segment = 6;
+  /// The thread's width, solid and dotted alike (Concept E §5.2).
+  static const double segment = 4;
 
-  /// Dotted free-time line.
-  static const double freeLine = 2;
+  /// The dotted thread's dot.
+  static const double freeLine = 4;
 
-  /// Now-marker dot and its halo.
+  /// The now-bead (§5.3): 16 with a 2 px card-coloured border and a 1 px
+  /// accent ring at 40 %.
   static const double nowMarker = 16;
-  static const double nowHalo = 4;
+  static const double nowBorder = 2;
+  static const double nowHalo = 1;
 
   /// Icon inside a row dot / a 24-unit nav icon. A dot of any size keeps
   /// this share of its diameter for the icon.

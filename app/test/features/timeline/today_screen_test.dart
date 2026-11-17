@@ -11,7 +11,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
-import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
 void main() {
@@ -199,7 +198,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  group('done, live and shift (M3b.3)', () {
+  group('done and live (M3b.3)', () {
     testWidgets('the done circle marks done with Undo', (tester) async {
       await pumpToday(tester);
       await tester.tap(find.bySemanticsLabel('Team standup'));
@@ -217,52 +216,17 @@ void main() {
       await pumpToday(tester, ticks: ticks.stream);
       ticks.add(todayTestNow);
       await tester.pumpAndSettle();
-      expect(find.text('98 min left'), findsOneWidget);
+      // On the now card's time line (E rules §5.3).
+      Finder left(int m) =>
+          find.textContaining('Now, $m min left', findRichText: true);
+      expect(left(98), findsOneWidget);
       ticks.add(todayTestNow.add(const Duration(minutes: 1)));
       await tester.pumpAndSettle();
-      expect(find.text('97 min left'), findsOneWidget);
+      expect(left(97), findsOneWidget);
     });
 
-    testWidgets('+15 min extends the live task, with Undo', (tester) async {
-      await pumpToday(tester, size: const Size(390, 1200));
-      await tester.tap(find.text('+15 min'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Deep work: roadmap now ends at 11:15 AM'),
-        findsOneWidget,
-      );
-      expect(find.text('9:00 AM – 11:15 AM · 2 h 15'), findsOneWidget);
-      await tester.tap(find.text('Undo'));
-      await tester.pumpAndSettle();
-      expect(find.text('9:00 AM – 11:00 AM · 2 h'), findsOneWidget);
-    });
-
-    testWidgets('Shift the rest moves later tasks up to the pinned one', (
-      tester,
-    ) async {
-      await pumpToday(tester, size: const Size(390, 1400));
-      // Design review (10:30) sits 30 min inside Deep work (until 11:00).
-      await tester.tap(find.text('Shift the rest'));
-      await tester.pumpAndSettle();
-      expect(
-        find.text('Moved 2 tasks · stopped at Lunch with Sam (pinned)'),
-        findsOneWidget,
-      );
-      expect(find.text('11:00 AM – 11:45 AM'), findsOneWidget);
-      expect(find.text('12:00 PM – 12:30 PM'), findsOneWidget);
-    });
-
-    testWidgets('Shift the rest is off when nothing overlaps', (tester) async {
-      final rows = [
-        for (final o in demoDayRows(todayTestDate))
-          if (o.title != 'Design review') o,
-      ];
-      await pumpToday(tester, rows: rows, size: const Size(390, 1200));
-      final shift = tester.widget<OutlinedButton>(
-        find.widgetWithText(OutlinedButton, 'Shift the rest'),
-      );
-      expect(shift.onPressed, isNull);
-    });
+    // +15 min and Shift the rest left the now card (M18.3, E-Phones
+    // Today): the task sheet carries them and its tests cover them.
   });
 
   testWidgets('an empty day says what to do', (tester) async {

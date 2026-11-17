@@ -16,8 +16,6 @@ void _noop(Object? _) {}
 const _actions = ThreadActions(
   onToggleDone: _noop,
   onOpen: _noop,
-  onExtend: _noop,
-  onShiftRest: _noop,
   onAddHere: _noop,
 );
 

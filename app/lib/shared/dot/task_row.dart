@@ -28,10 +28,15 @@ class TaskRow extends StatelessWidget {
     this.onUnstick,
     this.dotSize = DotSize.threadDot,
     this.doneCircle = true,
+    this.solid,
     super.key,
   });
 
   final ThreadTask task;
+
+  /// The colour the thread arrives in when this row is behind now (from
+  /// `threadSolid`); null draws it dotted, ahead (E rules §5.2).
+  final TaskColor? solid;
 
   /// The round done circle at the end; the spread's side days have none
   /// (`A-mac-today-alt1-spread`): their tasks are marked done in the sheet.
@@ -52,15 +57,27 @@ class TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tasks = DotTheme.of(context).tasks;
+    final done = task.state == DotState.done;
     return ThreadRowFrame(
       piece: SegmentPiece(
-        color: task.color.color,
+        color: tasks[task.color].color,
         state: task.state,
-        dotSize: dotSize,
+        above: switch (solid) {
+          final c? => tasks[c].color,
+          null => null,
+        },
         ghost: task.reality?.ghost,
       ),
-      dot: taskRowDot(context, task, dotSize, onOpen),
-      trailing: !doneCircle || onToggleDone == null
+      // Done dots are a size smaller (E rules §5.1).
+      dot: taskRowDot(
+        context,
+        task,
+        done && dotSize == DotSize.threadDot ? DotSize.threadDoneDot : dotSize,
+        onOpen,
+      ),
+      // A calendar event is read-only: no done check (E rules §4.4).
+      trailing: !doneCircle || onToggleDone == null || task.imported
           ? null
           : DoneCircle(
               color: task.color,
@@ -79,23 +96,19 @@ class TaskRow extends StatelessWidget {
               onTap: onOpen,
               borderRadius: BorderRadius.circular(DotRadii.card),
               child: Padding(
-                padding: EdgeInsets.only(
-                  bottom: task.smallestStep == null && onUnstick == null
-                      ? DotSpace.xl
-                      : DotSpace.xs,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
                 child: _Text(task: task, large: dotSize >= DotSize.threadDot),
               ),
             ),
           ),
           if (task.smallestStep case final text?)
             Padding(
-              padding: const EdgeInsets.only(bottom: DotSpace.l),
+              padding: const EdgeInsets.only(bottom: DotSpace.s),
               child: SmallestStepLine(text: text, onStart: onStart),
             ),
           if (onUnstick case final answer?)
             Padding(
-              padding: const EdgeInsets.only(bottom: DotSpace.l),
+              padding: const EdgeInsets.only(bottom: DotSpace.s),
               child: UnstickLine(onAnswer: answer),
             ),
         ],
@@ -129,6 +142,7 @@ Widget taskRowDot(
     onTap: onFocus ?? onOpen,
     tapHint: onFocus != null ? l10n.focusOpenHint : l10n.dotOpenHint,
     oneThing: task.oneThing,
+    calendar: task.imported,
   );
 }
 
@@ -182,10 +196,9 @@ class _Text extends StatelessWidget {
     );
     final title = Text(
       task.title,
+      // Done reads grey, never struck through (E rules §4.4).
       style: (large ? t.styles.threadTitle : t.styles.rowTitle).copyWith(
         color: done || task.state == DotState.skipped ? muted : null,
-        decoration: done ? TextDecoration.lineThrough : null,
-        decorationColor: muted,
       ),
     );
     final note = switch (task.reality?.note) {
@@ -227,7 +240,8 @@ class _Text extends StatelessWidget {
 }
 
 /// Lays out one thread row: [dot] on the axis over the [piece] painted
-/// down it, [child] beside it and an optional [trailing] control.
+/// down it, [child] beside it and an optional [trailing] control, all
+/// centred on the row (E rules §5.2), which is at least [minHeight] tall.
 /// Geometry is directional, so the thread runs down the start edge in RTL.
 class ThreadRowFrame extends StatelessWidget {
   const ThreadRowFrame({
@@ -235,6 +249,8 @@ class ThreadRowFrame extends StatelessWidget {
     required this.child,
     this.dot,
     this.trailing,
+    this.minHeight = 0,
+    this.card = false,
     super.key,
   });
 
@@ -242,31 +258,30 @@ class ThreadRowFrame extends StatelessWidget {
   final Widget child;
   final Widget? dot;
   final Widget? trailing;
+  final double minHeight;
+
+  /// The now card (E rules §5.3): the row sits on a card that reaches
+  /// [DotSpace.nowCard] past each side and covers the thread.
+  final bool card;
 
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
-    return Stack(
-      children: [
-        PositionedDirectional(
-          start: 0,
-          top: 0,
-          bottom: 0,
-          width: threadAxisWidth,
-          child: CustomPaint(
-            painter: ThreadAxisPainter(
-              piece: piece,
-              hairline: c.threadAhead,
-              accent: c.accent,
-              accentTint: Color.alphaBlend(c.accentTint, c.raised),
-              ghostSide: Directionality.of(context) == TextDirection.rtl
-                  ? 1
-                  : -1,
-            ),
-          ),
+    return CustomPaint(
+      painter: _AxisAtStart(
+        ThreadAxisPainter(
+          piece: piece,
+          hairline: c.threadAhead,
+          accent: c.accent,
+          card: c.raised,
+          ghostSide: Directionality.of(context) == TextDirection.rtl ? 1 : -1,
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        rtl: Directionality.of(context) == TextDirection.rtl,
+        card: card ? (fill: c.raised, edge: c.hairline) : null,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: minHeight),
+        child: Row(
           children: [
             SizedBox(
               width: threadAxisWidth,
@@ -277,7 +292,50 @@ class ThreadRowFrame extends StatelessWidget {
             ?trailing,
           ],
         ),
-      ],
+      ),
     );
   }
+}
+
+/// Paints [axis] in the [threadAxisWidth] column at the row's start edge.
+/// With [card], the now card over it: radius 24, a 1 px inset hairline.
+final class _AxisAtStart extends CustomPainter {
+  const _AxisAtStart(this.axis, {required this.rtl, this.card});
+
+  final ThreadAxisPainter axis;
+  final bool rtl;
+  final ({Color fill, Color edge})? card;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..translate(rtl ? size.width - threadAxisWidth : 0, 0);
+    axis.paint(canvas, Size(threadAxisWidth, size.height));
+    canvas.restore();
+    final card = this.card;
+    if (card == null) return;
+    final box = RRect.fromRectAndRadius(
+      Rect.fromLTRB(
+        -DotSpace.nowCard,
+        0,
+        size.width + DotSpace.nowCard,
+        size.height,
+      ),
+      const Radius.circular(DotRadii.cardLarge),
+    );
+    canvas
+      ..drawRRect(box, Paint()..color = card.fill)
+      ..drawRRect(
+        box.deflate(DotSpace.hairline / 2),
+        Paint()
+          ..color = card.edge
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = DotSpace.hairline,
+      );
+  }
+
+  @override
+  bool shouldRepaint(_AxisAtStart old) =>
+      old.rtl != rtl || old.card != card || axis.shouldRepaint(old.axis);
 }

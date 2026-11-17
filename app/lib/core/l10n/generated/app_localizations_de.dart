@@ -349,6 +349,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String threadOverlapRange(String range) {
+    return 'Überschneidung · $range';
+  }
+
+  @override
   String rowLabel(String title, String range) {
     return '$title, $range';
   }
@@ -421,6 +426,17 @@ class AppLocalizationsDe extends AppLocalizations {
       one: 'noch 1 min',
     );
     return '$_temp0';
+  }
+
+  @override
+  String liveNowLeft(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'noch $minutes min',
+      one: 'noch 1 min',
+    );
+    return 'Jetzt, $_temp0';
   }
 
   @override

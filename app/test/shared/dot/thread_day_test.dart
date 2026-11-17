@@ -74,6 +74,7 @@ void main() {
           ThreadTaskEntry(:final task) => task.id,
           ThreadOutside(:final tasks) => 'outside${tasks.length}',
           ThreadOverlap() => 'overlap',
+          ThreadNow() => 'now',
         },
     ];
     expect(order, [
@@ -83,6 +84,7 @@ void main() {
       'chores',
       'gap30',
       'deep',
+      'now',
       'mail',
       'gap60',
       'lunch',
@@ -103,9 +105,9 @@ void main() {
     expect(_task(e, 'lunch').recurring, isTrue);
   });
 
-  test('overlapping tasks: start order, no gap, live overrun (F1.13)', () {
+  test('overlapping tasks: start order, no gap (F1.13)', () {
     // Recorded in PRD F1.13: the thread lists overlaps one under the other
-    // in start order; the live one carries how far it runs into the next.
+    // in start order.
     final e = _entries(clock.nowUtc(), [
       _o('read', 10, 30, 30),
       _o('deep', 9, 0, 120),
@@ -116,7 +118,6 @@ void main() {
         if (x is ThreadTaskEntry) x.task.id else if (x is ThreadGap) 'gap',
     ];
     expect(rows.take(3), ['deep', 'read', 'call']);
-    expect(_task(e, 'deep').overrunMinutes, 30);
   });
 
   group('outside hours (F1.15)', () {
@@ -129,6 +130,7 @@ void main() {
           ThreadOutside(:final windDown, :final tasks) =>
             '${windDown ? 'after' : 'before'}:${tasks.map((t) => t.id).join(',')}',
           ThreadOverlap() => 'overlap',
+          ThreadNow() => 'now',
         },
     ];
 
@@ -143,6 +145,8 @@ void main() {
       expect(shape(e), [
         'before:early,dawn',
         'wake',
+        'gap',
+        'now',
         'gap',
         'mail',
         'gap',
@@ -165,7 +169,8 @@ void main() {
         _o('wakeup', 6, 30, 60),
         _o('film', 21, 30, 60),
       ]);
-      expect(shape(e), ['wake', 'wakeup', 'gap', 'film', 'bed']);
+      // Now (10:22) splits the free time (E rules §5.3).
+      expect(shape(e), ['wake', 'wakeup', 'gap', 'now', 'gap', 'film', 'bed']);
     });
 
     test('the zone holding the live task starts unfolded', () {
@@ -198,30 +203,34 @@ void main() {
     expect(deep.timeRange, '9:00 – 11:00');
   });
 
-  test(
-    'past gaps are plain, future gaps are add-here, now sits in its gap',
-    () {
-      clock.now = _at(11, 45);
-      final gaps = _entries(
-        clock.nowUtc(),
-        day,
-      ).whereType<ThreadGap>().toList();
-      expect(gaps.map((g) => g.addable), [false, false, true, true, true]);
-      expect(gaps[2].nowFraction, closeTo(0.25, 1e-9));
-      expect(gaps[2].startLabel, '11:30');
-      expect(gaps.where((g) => g.nowFraction != null), hasLength(1));
-    },
-  );
+  test('past gaps are plain, future gaps are add-here, now splits its gap', () {
+    clock.now = _at(11, 45);
+    final e = _entries(clock.nowUtc(), day);
+    final gaps = e.whereType<ThreadGap>().toList();
+    expect(gaps.map((g) => g.addable), [false, false, false, true, true, true]);
+    expect(gaps[2].startLabel, '11:30');
+    expect(gaps[3].startLabel, '11:45');
+    final bead = e.indexWhere((x) => x is ThreadNow);
+    expect(e[bead - 1], same(gaps[2]));
+    expect(e[bead + 1], same(gaps[3]));
+    expect((e[bead] as ThreadNow).time, '11:45');
+  });
 
-  test('overrun: how far the live task runs into the next task to do', () {
-    final overlapping = [
-      ...day,
-      _o('review', 10, 30, 30),
-      _o('doneEarly', 10, 0, 15, status: OccurrenceStatus.done),
-    ];
-    final now = clock.nowUtc();
-    expect(_task(_entries(now, overlapping), 'deep').overrunMinutes, 30);
-    expect(_task(_entries(now, day), 'deep').overrunMinutes, 0);
+  test('the now-bead follows the live tasks (E rules §5.3)', () {
+    final e = _entries(clock.nowUtc(), day);
+    final bead = e.indexWhere((x) => x is ThreadNow);
+    expect(e[bead - 1], isA<ThreadTaskEntry>());
+    expect((e[bead - 1] as ThreadTaskEntry).task.state, DotState.live);
+    expect(e.whereType<ThreadNow>(), hasLength(1));
+  });
+
+  test('the thread is solid behind the bead and dotted after it', () {
+    final e = _entries(clock.nowUtc(), day);
+    final solid = threadSolid(e);
+    final bead = e.indexWhere((x) => x is ThreadNow);
+    expect(solid[bead], isNotNull);
+    expect(solid.skip(bead + 1), everyElement(isNull));
+    expect(solid.first, isNotNull, reason: 'Wake Up, behind now');
   });
 
   test('travel time shows on the row and is not free (M7.5, R-17)', () {
@@ -232,8 +241,9 @@ void main() {
     expect(_task(e, 'dentist').travel, '30 min');
     expect(_task(e, 'mail').travel, isNull);
     final gaps = e.whereType<ThreadGap>().map((g) => g.minutes).toList();
-    // 7:00–11:00, then 11:30–12:00 (12:00–12:30 is the trip), then to 22:00.
-    expect(gaps, [240, 30, 525]);
+    // 7:00–11:00 split at now (10:22), then 11:30–12:00 (12:00–12:30 is
+    // the trip), then to 22:00.
+    expect(gaps, [202, 38, 30, 525]);
   });
 
   test('an empty day is one free gap between the caps', () {
@@ -263,6 +273,7 @@ void main() {
           ThreadGap() => 'gap',
           ThreadCap() => 'cap',
           ThreadOutside() => 'outside',
+          ThreadNow() => 'now',
         },
     ];
     expect(kinds, [

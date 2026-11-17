@@ -617,6 +617,8 @@ Rules for every task in M18 to M22:
   - the moving now (ED-246);
   - the "Alarms off" device tag (ED-205, ED-213).
   Goldens against E-Phones, E-Earlier and E-DF2 at three widths, light and dark.
+  - [x] Part 1 done 2026-11-17 (ED-363): the dots, the thread, caps, the now card (no buttons, 2A), the now-bead row, the knot and free time, on every screen (1A); goldens against E-Phones Today.
+  - [ ] Part 2: the Earlier fold, the Before Wake Up / After Wind Down rows, the bead's slide, the Alarms off tag, the repeat marker; goldens against E-Earlier and E-DF2.
 - [ ] M18.4 Shared components:
   - one `ProposalSheet`, full screen on phones (ED-150);
   - the state and accessibility kit for empty, loading, error, offline and permission states (ED-186, E-G4-7-States);

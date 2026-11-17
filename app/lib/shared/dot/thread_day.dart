@@ -38,7 +38,8 @@ const minGapMinutes = 15;
 ///
 /// Each task's state comes from its status and [nowUtc]: done and skipped
 /// as stored; live while now is inside it; missed once it ended undone;
-/// upcoming otherwise. Gaps from now on are "add here" targets.
+/// upcoming otherwise. Gaps from now on are "add here" targets. On today
+/// a [ThreadNow] marks now: after the live tasks, or where it falls.
 ///
 /// With [reality] (the Reality thread, 11 C3) [blocks] carry the times
 /// tasks really ran, every task is decorated (a missing id gets an empty
@@ -83,19 +84,14 @@ List<ThreadEntry> threadEntries({
   for (final (i, o) in inside.indexed) {
     // Travel time before a task is not free (R-17, docs/04 §5).
     _gap(out, cursor, footprintStart(o), nowUtc, format, showFreeTime);
-    if (overlaps[i] case final earlier?) out.add(_overlap(earlier, o));
-    final t = task(o);
-    // Overrun counts any later task, outside hours too.
-    out.add(
-      ThreadTaskEntry(
-        t.state == DotState.live
-            ? _withOverrun(t, o, sorted.skip(sorted.indexOf(o) + 1))
-            : t,
-      ),
-    );
+    if (overlaps[i] case final earlier?) {
+      out.add(_overlap(earlier, o, format));
+    }
+    out.add(ThreadTaskEntry(task(o)));
     if (o.endUtc!.isAfter(cursor)) cursor = o.endUtc!;
   }
   _gap(out, cursor, shape.bedUtc, nowUtc, format, showFreeTime);
+  _placeNow(out, shape, nowUtc, format);
   out
     ..add(ThreadCap.bed(format.time(shape.bedUtc)))
     ..addAll([?_outside(after.map(task).toList(), windDown: true)]);
@@ -116,7 +112,7 @@ List<Occurrence?> _overlaps(List<Occurrence> sorted) {
 }
 
 /// The knot between [earlier] and [o], which starts inside it.
-ThreadOverlap _overlap(Occurrence earlier, Occurrence o) {
+ThreadOverlap _overlap(Occurrence earlier, Occurrence o, ThreadFormat format) {
   final end = o.endUtc!.isBefore(earlier.endUtc!) ? o.endUtc! : earlier.endUtc!;
   return ThreadOverlap(
     above: TaskColor.fromKey(earlier.colorKey),
@@ -124,6 +120,7 @@ ThreadOverlap _overlap(Occurrence earlier, Occurrence o) {
     aboveTitle: earlier.title,
     belowTitle: o.title,
     minutes: end.difference(o.startUtc!).inMinutes,
+    range: format.range(format.time(o.startUtc!), format.time(end)),
   );
 }
 
@@ -165,9 +162,16 @@ void _gap(
   ThreadFormat format,
   bool labelled,
 ) {
+  // Now inside free time: the bead splits it into what is behind and what
+  // is still ahead (E rules §5.3).
+  if (now.isAfter(from) && now.isBefore(to)) {
+    _gap(out, from, now, now, format, labelled);
+    out.add(ThreadNow(format.time(now)));
+    _gap(out, now, to, now, format, labelled);
+    return;
+  }
   final minutes = to.difference(from).inMinutes;
   if (minutes < minGapMinutes) return;
-  final inside = !now.isBefore(from) && now.isBefore(to);
   out.add(
     ThreadGap(
       minutes: minutes,
@@ -175,11 +179,33 @@ void _gap(
       addable: to.isAfter(now),
       startUtc: from,
       labelled: labelled,
-      nowFraction: inside
-          ? now.difference(from).inSeconds / to.difference(from).inSeconds
-          : null,
     ),
   );
+}
+
+/// Puts the now-bead (E rules §5.3) after the live tasks, or before the
+/// first task still ahead, when now is inside the waking day and no free
+/// time placed it already.
+void _placeNow(
+  List<ThreadEntry> out,
+  DayShape shape,
+  DateTime now,
+  ThreadFormat format,
+) {
+  if (now.isBefore(shape.wakeUtc) || !now.isBefore(shape.bedUtc)) return;
+  if (out.any((e) => e is ThreadNow)) return;
+  final bead = ThreadNow(format.time(now));
+  final live = out.lastIndexWhere(
+    (e) => e is ThreadTaskEntry && e.task.state == DotState.live,
+  );
+  if (live >= 0) return out.insert(live + 1, bead);
+  bool ahead(ThreadEntry e) =>
+      e is ThreadTaskEntry && (e.task.startUtc?.isAfter(now) ?? false);
+  var at = out.indexWhere(ahead);
+  if (at < 0) at = out.lastIndexWhere((e) => e is ThreadCap);
+  // A knot belongs with the task under it.
+  if (at > 0 && out[at - 1] is ThreadOverlap) at--;
+  out.insert(at, bead);
 }
 
 ThreadTask _task(
@@ -227,46 +253,6 @@ ThreadTask _task(
     startUtc: start,
     minutes: o.durationMin,
     oneThing: oneThing,
-  );
-}
-
-/// [task] with how far [live] runs into the first later task that is
-/// still to do (done and skipped ones free their time).
-ThreadTask _withOverrun(
-  ThreadTask task,
-  Occurrence live,
-  Iterable<Occurrence> later,
-) {
-  final next = later
-      .where((o) => o.status == OccurrenceStatus.planned)
-      .firstOrNull;
-  if (next == null) return task;
-  final overrun = live.endUtc!.difference(next.startUtc!).inMinutes;
-  if (overrun <= 0) return task;
-  return ThreadTask(
-    id: task.id,
-    title: task.title,
-    color: task.color,
-    icon: task.icon,
-    state: task.state,
-    timeRange: task.timeRange,
-    duration: task.duration,
-    pinned: task.pinned,
-    recurring: task.recurring,
-    imported: task.imported,
-    progress: task.progress,
-    minutesLeft: task.minutesLeft,
-    subtasksDone: task.subtasksDone,
-    subtasksTotal: task.subtasksTotal,
-    smallestStep: task.smallestStep,
-    unstick: task.unstick,
-    reality: task.reality,
-    overrunMinutes: overrun,
-    movable: task.movable,
-    travel: task.travel,
-    startUtc: task.startUtc,
-    minutes: task.minutes,
-    oneThing: task.oneThing,
   );
 }
 

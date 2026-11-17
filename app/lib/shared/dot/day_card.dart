@@ -253,11 +253,12 @@ class DayCard extends StatelessWidget {
   /// The day's thread (and footer), with the card's insets; the now row
   /// carries [anchorKey] while the card opens at it.
   Widget _thread(GlobalKey? anchorKey) => SliverPadding(
-    // The 56 px dot fills the axis column: keep it off the card's edge.
+    // Concept E's 20 gutter (E rules §5.2: thread centre at 44); the now
+    // card reaches 10 past it on each side.
     padding: const EdgeInsetsDirectional.fromSTEB(
-      DotSpace.s,
+      DotSpace.page,
       DotSpace.xs,
-      DotSpace.xs,
+      DotSpace.page,
       0,
     ),
     sliver: SliverMainAxisGroup(

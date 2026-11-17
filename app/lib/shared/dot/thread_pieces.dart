@@ -1,49 +1,61 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/inbox_beside.dart';
-import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
-/// The Wake Up or Wind Down cap at either end of the thread: a [TaskDot]
-/// like every task's (sun, sleepy moon), with its time beside it. With
-/// [onTap] the dot and the time open the time editor (R-17).
+/// The Wake Up or Wind Down cap at either end of the thread (E rules
+/// §5.2): a sun on a warm disc or a moon on a lilac one, with its time
+/// beside it. The thread starts at the sun's centre and ends at the
+/// moon's. With [onTap] the dot and the time open the time editor (R-17).
 class CapRow extends StatelessWidget {
   const CapRow({
     required this.cap,
-    this.size = DotSize.threadDot,
+    this.size = DotSize.threadCap,
+    this.solid,
     this.onTap,
     super.key,
   });
 
   final ThreadCap cap;
 
-  /// The row dots' size on this thread ([DotSize.threadDot], or
-  /// [DotSize.macRowDot] on the spread's side days).
+  /// [DotSize.threadCap], or [DotSize.macRowDot] on the spread's side days.
   final double size;
+
+  /// The thread's colour beside the cap when that stretch is behind now
+  /// (from `threadSolid`); null: dotted.
+  final TaskColor? solid;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final c = t.colors;
     final l10n = context.l10n;
     final windDown = cap.windDown;
     final label = windDown
         ? l10n.threadBed(cap.time)
         : l10n.threadWake(cap.time);
     return ThreadRowFrame(
-      piece: CapPiece(below: !windDown, iconExtent: size),
-      dot: TaskDot(
-        color: windDown ? TaskColor.violet : TaskColor.amber,
-        icon: windDown ? TaskIcon.sleepyMoon : TaskIcon.sun,
-        state: DotState.upcoming,
-        label: label,
+      minHeight: size == DotSize.threadCap ? DotSize.threadRowCap : 0,
+      piece: CapPiece(
+        below: !windDown,
+        color: switch (solid) {
+          final s? => t.tasks[s].color,
+          null => null,
+        },
+      ),
+      dot: _CapDot(
+        glyph: (windDown ? TaskIcon.sleepyMoon : TaskIcon.sun).glyph!,
+        fill: windDown ? c.windCap : c.wakeCap,
+        ink: windDown ? c.windIcon : c.wakeIcon,
         size: size,
+        label: label,
+        hint: l10n.capEditHint,
         onTap: onTap,
-        tapHint: l10n.capEditHint,
       ),
       // The dot carries the label and the tap for screen readers.
       child: ExcludeSemantics(
@@ -55,10 +67,127 @@ class CapRow extends StatelessWidget {
             height: size,
             child: Align(
               alignment: AlignmentDirectional.centerStart,
-              // Caps and gaps read at the weekday size in `Main` (≈ 13 muted).
               child: Text(label, style: t.styles.stripWeekday),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A cap's disc: [fill] with the [glyph] in [ink] (§5.1: 19 in 34).
+class _CapDot extends StatelessWidget {
+  const _CapDot({
+    required this.glyph,
+    required this.fill,
+    required this.ink,
+    required this.size,
+    required this.label,
+    required this.hint,
+    this.onTap,
+  });
+
+  final DotGlyph glyph;
+  final Color fill;
+  final Color ink;
+  final double size;
+  final String label;
+  final String hint;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final disc = DecoratedBox(
+      decoration: BoxDecoration(color: fill, shape: BoxShape.circle),
+      child: SizedBox.square(
+        dimension: size,
+        child: Center(
+          child: DotIcon(glyph, color: ink, size: size * 19 / 34, bold: true),
+        ),
+      ),
+    );
+    return Semantics(
+      button: onTap != null,
+      label: label,
+      onTapHint: onTap == null ? null : hint,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: onTap == null
+          ? disc
+          : InkResponse(
+              onTap: onTap,
+              radius: DotTouch.android / 2,
+              child: SizedBox.square(
+                dimension: DotTouch.android,
+                child: Center(child: disc),
+              ),
+            ),
+    );
+  }
+}
+
+/// Now on today's thread (E rules §5.3): the bead on the thread, the time
+/// in a pill beside it and a hairline to the row's end.
+class NowRow extends StatelessWidget {
+  const NowRow({required this.now, this.solid, super.key});
+
+  final ThreadNow now;
+
+  /// The thread's colour above the bead (from `threadSolid`).
+  final TaskColor? solid;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    return Semantics(
+      label: context.l10n.timelineNow(now.time),
+      excludeSemantics: true,
+      child: ThreadRowFrame(
+        minHeight: DotSize.threadRowNow,
+        piece: NowPiece(
+          color: switch (solid) {
+            final s? => t.tasks[s].color,
+            null => null,
+          },
+        ),
+        child: Row(
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: c.raised,
+                borderRadius: BorderRadius.circular(DotRadii.nowPill),
+                border: Border.all(
+                  color: c.accent.withValues(alpha: TaskAlpha.nowPill),
+                  width: DotSize.nowHalo,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DotSpace.nowPill,
+                ),
+                child: Text(
+                  now.time,
+                  // 700 13/18 in the accent (E rules §5.3).
+                  style: t.styles.threadMeta.copyWith(
+                    color: c.accent,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                height: DotSize.nowHalo,
+                margin: const EdgeInsetsDirectional.only(
+                  start: DotSpace.s,
+                  end: DotSpace.xl,
+                ),
+                color: c.accent.withValues(alpha: TaskAlpha.nowLine),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -85,10 +214,15 @@ class GapRow extends StatelessWidget {
     this.onAdd,
     this.style = GapStyle.pill,
     this.dayLabel = '',
+    this.solid,
     super.key,
   });
 
   final ThreadGap gap;
+
+  /// The thread's colour through the gap when it is behind now (from
+  /// `threadSolid`); null: dotted.
+  final TaskColor? solid;
   final ValueChanged<ThreadGap>? onAdd;
   final GapStyle style;
 
@@ -99,9 +233,15 @@ class GapRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return ThreadRowFrame(
-      piece: FreePiece(nowFraction: gap.nowFraction),
+      minHeight: DotSize.threadRowFree,
+      piece: FreePiece(
+        color: switch (solid) {
+          final s? => t.tasks[s].color,
+          null => null,
+        },
+      ),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: DotSpace.l),
+        padding: const EdgeInsets.symmetric(vertical: DotSpace.xxs),
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: _label(context, t.styles.stripWeekday),
@@ -132,6 +272,7 @@ class GapRow extends StatelessWidget {
           null when InboxBeside.of(context) => l10n.threadDropInbox(duration),
           null => l10n.threadAddHere(duration),
         },
+        free: l10n.threadFree(duration),
         semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
         style: text,
         onTap: tap,
@@ -185,16 +326,22 @@ class _DropBox extends StatelessWidget {
   }
 }
 
-/// The dashed "+ 1 h free · add here" pill (`Main`).
+/// "1 h 30 free · add here" (E-Phones Today): the free time in the
+/// secondary colour, what to do with it in the accent. The tap area is the
+/// 44 pt touch target however short the row draws.
 class _AddHere extends StatelessWidget {
   const _AddHere({
     required this.label,
+    required this.free,
     required this.semantics,
     required this.style,
     this.onTap,
   });
 
   final String label;
+
+  /// "1 h 30 free", the start of [label] in every language.
+  final String free;
   final String semantics;
   final TextStyle style;
   final VoidCallback? onTap;
@@ -202,27 +349,30 @@ class _AddHere extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
+    final action = label.startsWith(free) ? label.substring(free.length) : '';
     return Semantics(
       button: true,
       label: semantics,
       excludeSemantics: true,
       child: InkWell(
         onTap: onTap,
-        customBorder: const StadiumBorder(),
-        child: CustomPaint(
-          painter: DashedPillPainter(color: c.threadAhead),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: DotTouch.android),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: DotSpace.s,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotTouch.min),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text.rich(
+              TextSpan(
+                text: action.isEmpty ? label : free,
                 children: [
-                  DotIcon(DotGlyphs.add, color: c.muted, size: DotSize.rowIcon),
-                  Flexible(child: Text(label, style: style)),
+                  if (action.isNotEmpty)
+                    TextSpan(
+                      text: action,
+                      style: TextStyle(color: c.accentInk),
+                    ),
                 ],
               ),
+              style: style,
             ),
           ),
         ),

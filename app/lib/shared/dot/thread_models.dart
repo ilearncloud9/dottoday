@@ -25,7 +25,6 @@ final class ThreadTask {
     this.minutesLeft,
     this.subtasksDone = 0,
     this.subtasksTotal = 0,
-    this.overrunMinutes = 0,
     this.movable = true,
     this.travel,
     this.smallestStep,
@@ -92,10 +91,6 @@ final class ThreadTask {
   final int subtasksDone;
   final int subtasksTotal;
 
-  /// Live task only: how far it runs into the next task. "Shift the rest"
-  /// moves the later tasks by this much and is off when it is 0 (R-04).
-  final int overrunMinutes;
-
   /// Long-press picks it up to drag (§6). Pinned tasks stay put (R-17).
   final bool movable;
 
@@ -156,7 +151,7 @@ Iterable<ThreadTask> threadTasks(List<ThreadEntry> entries) sync* {
         yield task;
       case ThreadOutside(:final tasks):
         yield* tasks;
-      case ThreadCap() || ThreadGap() || ThreadOverlap():
+      case ThreadCap() || ThreadGap() || ThreadOverlap() || ThreadNow():
         break;
     }
   }
@@ -171,7 +166,12 @@ final class ThreadOverlap extends ThreadEntry {
     required this.aboveTitle,
     required this.belowTitle,
     required this.minutes,
+    required this.range,
   });
+
+  /// The shared stretch, "10:30–11:00": the row reads "Overlap ·
+  /// 10:30–11:00" (E-Phones Today).
+  final String range;
 
   /// The earlier task it runs into (the one ending last) and its title.
   final TaskColor above;
@@ -185,13 +185,21 @@ final class ThreadOverlap extends ThreadEntry {
   final int minutes;
 }
 
+/// Now on today's thread (E rules §5.3, ED-246): the bead with the time
+/// in a pill, after the live tasks or where now falls in free time.
+final class ThreadNow extends ThreadEntry {
+  const ThreadNow(this.time);
+
+  /// Formatted clock time, "10:42".
+  final String time;
+}
+
 /// Free time between tasks (docs/10 §6 "Free gaps are drop targets").
 final class ThreadGap extends ThreadEntry {
   const ThreadGap({
     required this.minutes,
     required this.startLabel,
     this.addable = false,
-    this.nowFraction,
     this.startUtc,
     this.labelled = true,
     this.fits,
@@ -204,9 +212,6 @@ final class ThreadGap extends ThreadEntry {
 
   /// Future gaps carry "N h free · add here"; past ones just "N h free".
   final bool addable;
-
-  /// Where the now-marker sits in this gap (0–1), if now is inside it.
-  final double? nowFraction;
 
   /// The instant the gap opens, for drops (feature-supplied).
   final DateTime? startUtc;
@@ -231,7 +236,6 @@ final class ThreadGap extends ThreadEntry {
     minutes: minutes,
     startLabel: startLabel,
     addable: addable,
-    nowFraction: nowFraction,
     startUtc: startUtc,
     labelled: labelled,
     fits: title,
@@ -273,22 +277,71 @@ final class DropShift {
 typedef ThreadAnchor = ({int index, double fraction});
 
 /// The live task's row (a folded zone holding it included) or else the
-/// free gap with the now marker; null when the thread shows neither, e.g.
-/// any day but today. Today opens scrolled to it (ED-336).
+/// now-bead's row; null when the thread shows neither, e.g. any day but
+/// today. Today opens scrolled to it (ED-336).
 ThreadAnchor? nowAnchor(List<ThreadEntry> entries) {
   bool live(ThreadTask t) => t.state == DotState.live;
   final task = entries.indexWhere(
     (e) => switch (e) {
       ThreadTaskEntry(:final task) => live(task),
       ThreadOutside(:final tasks) => tasks.any(live),
-      ThreadCap() || ThreadGap() || ThreadOverlap() => false,
+      ThreadCap() || ThreadGap() || ThreadOverlap() || ThreadNow() => false,
     },
   );
   if (task >= 0) return (index: task, fraction: 0);
+  final now = entries.indexWhere((e) => e is ThreadNow);
+  return now < 0 ? null : (index: now, fraction: 0.5);
+}
+
+/// For each of [entries], the task colour the thread runs in where it is
+/// solid (behind now, E rules §5.2), or null where it runs dotted ahead.
+///
+/// A task row's value is the colour the thread arrives in (the task
+/// before it, or its own for the first); a gap's, the now-bead's and Wind
+/// Down's the last task's; Wake Up's the first task's. Behind now means
+/// before the [ThreadNow]; a day without one is behind now up to its last
+/// done, missed or live task, or wholly when no task is still ahead.
+///
+/// ```dart
+/// threadSolid([wake, run, gap, now, lunch, bed]);
+/// // [coral, coral, coral, coral, null, null]
+/// ```
+List<TaskColor?> threadSolid(List<ThreadEntry> entries) {
+  final tasks = [
+    for (final e in entries)
+      if (e case ThreadTaskEntry(:final task)) task,
+  ];
+  final end = _behindNowEnd(entries, tasks);
+  final out = <TaskColor?>[];
+  TaskColor? last;
   for (final (i, e) in entries.indexed) {
-    if (e case ThreadGap(:final nowFraction?)) {
-      return (index: i, fraction: nowFraction);
+    final behind = i < end;
+    switch (e) {
+      case ThreadTaskEntry(:final task):
+        out.add(behind ? last ?? task.color : null);
+        last = task.color;
+      case ThreadCap(windDown: false):
+        out.add(behind ? tasks.firstOrNull?.color : null);
+      case ThreadCap() || ThreadGap() || ThreadNow():
+        out.add(behind || e is ThreadNow ? last : null);
+      case ThreadOverlap() || ThreadOutside():
+        out.add(null);
     }
   }
-  return null;
+  return out;
+}
+
+int _behindNowEnd(List<ThreadEntry> entries, List<ThreadTask> tasks) {
+  final now = entries.indexWhere((e) => e is ThreadNow);
+  if (now >= 0) return now;
+  if (tasks.isEmpty) return 0;
+  bool behind(ThreadTask t) => switch (t.state) {
+    DotState.done || DotState.missed || DotState.live => true,
+    DotState.upcoming || DotState.skipped => false,
+  };
+  if (!tasks.any((t) => t.state == DotState.upcoming)) {
+    return tasks.any(behind) ? entries.length : 0;
+  }
+  return entries.lastIndexWhere((e) => e is ThreadTaskEntry && behind(e.task)) +
+      1;
 }

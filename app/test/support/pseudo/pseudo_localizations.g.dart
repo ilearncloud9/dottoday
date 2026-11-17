@@ -293,6 +293,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.threadOverlapShareTime(duration));
 
   @override
+  String threadOverlapRange(String range) =>
+      pseudo(super.threadOverlapRange(range));
+
+  @override
   String rowLabel(String title, String range) =>
       pseudo(super.rowLabel(title, range));
 
@@ -341,6 +345,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String liveMinutesLeft(int minutes) => pseudo(super.liveMinutesLeft(minutes));
+
+  @override
+  String liveNowLeft(int minutes) => pseudo(super.liveNowLeft(minutes));
 
   @override
   String get liveDone => pseudo(super.liveDone);

@@ -13,7 +13,6 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
-import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
@@ -98,38 +97,6 @@ ThreadActions dayThreadActions(
       );
     },
     onRunningLate: onRunningLate,
-    onExtend: (id) async {
-      final o = find(id);
-      if (o == null) return;
-      final end = o.endUtc!.add(const Duration(minutes: 15));
-      report(
-        await extendTask(ref, o),
-        (_) => l10n.snackExtended(o.title, timeText(end)),
-        (token) => token,
-      );
-    },
-    onShiftRest: (id) async {
-      final live = find(id);
-      if (live == null) return;
-      final overrun = overrunOf(live, blocks);
-      if (overrun <= 0) return;
-      // More than two behind it: a proposal first (11 C1, M11.1).
-      if (rebalanceShiftRest(context, blocks, live, overrun)) return;
-      report(
-        await shiftRest(ref, day: blocks, live: live, overrunMinutes: overrun),
-        (v) {
-          final (_, r) = v;
-          final pin = switch (r.blockedById) {
-            final id? => find(id),
-            null => null,
-          };
-          return pin == null
-              ? l10n.snackShifted(r.movedIds.length)
-              : l10n.snackShiftedPartial(r.movedIds.length, pin.title);
-        },
-        (v) => v.$1,
-      );
-    },
   );
 }
 

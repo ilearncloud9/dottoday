@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/live_row.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -36,17 +37,17 @@ Widget _thread({
 );
 
 void main() {
-  testWidgets('caps are task dots that report Wake Up / Wind Down taps', (
+  testWidgets('caps are sun and moon discs that report their taps', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
     final log = <bool>[];
     await tester.pumpWidget(_thread(actions: ThreadActions(onCap: log.add)));
-    final dots = tester.widgetList<TaskDot>(
+    // E rules §5.2: a disc in the cap colour, no task dot.
+    expect(
       find.descendant(of: find.byType(CapRow), matching: find.byType(TaskDot)),
+      findsNothing,
     );
-    expect(dots.map((d) => d.icon), [TaskIcon.sun, TaskIcon.sleepyMoon]);
-    expect(dots.map((d) => d.size), everyElement(DotSize.threadDot));
     expect(
       tester.getSemantics(find.bySemanticsLabel('Wake Up · 7:00')),
       matchesSemantics(
@@ -74,17 +75,13 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('dot, done circle, row and live buttons report the task', (
-    tester,
-  ) async {
+  testWidgets('dot, done circles, row and gap report the task', (tester) async {
     final log = <String>[];
     await tester.pumpWidget(
       _thread(
         actions: ThreadActions(
           onToggleDone: (id) => log.add('done $id'),
           onOpen: (id) => log.add('open $id'),
-          onExtend: (id) => log.add('extend $id'),
-          onShiftRest: (id) => log.add('shift $id'),
           onAddHere: (g) => log.add('add ${g.startLabel}'),
         ),
       ),
@@ -92,24 +89,28 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Reply to email, upcoming'));
     await tester.tap(find.byType(DoneCircle).first);
     await tester.tap(find.text('Reply to email'));
-    await tester.tap(find.text('+15 min'));
-    await tester.tap(find.text('Shift the rest'));
-    await tester.tap(find.text('Done'));
+    // The now card has no buttons on Full Today (E-Phones Today, M18.3).
+    expect(find.text('+15 min'), findsNothing);
+    expect(find.text('Shift the rest'), findsNothing);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(LiveRow),
+        matching: find.byType(DoneCircle),
+      ),
+    );
     await tester.tap(find.text('1 h free · add here'));
     expect(log, [
       'open mail',
       // The first circle is the done Run's: it stays, so a tap undoes it.
       'done run',
       'open mail',
-      'extend deep',
-      'shift deep',
       'done deep',
       'add 11:30',
     ]);
   });
 
   // One tap on the live dot opens Focus (11 A3, docs/09 M10.5); its done
-  // circle and Done still tick it; other dots open, never tick (ADR-0015).
+  // circle still ticks it; other dots open, never tick (ADR-0015).
   testWidgets('the live dot opens Focus; other dots never tick', (
     tester,
   ) async {
@@ -126,7 +127,12 @@ void main() {
       find.bySemanticsLabel('Deep work: roadmap, live, 38 minutes left'),
     );
     await tester.tap(find.bySemanticsLabel('Reply to email, upcoming'));
-    await tester.tap(find.text('Done'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(LiveRow),
+        matching: find.byType(DoneCircle),
+      ),
+    );
     expect(log, ['focus deep', 'done deep']);
   });
 
@@ -334,6 +340,7 @@ void main() {
                 aboveTitle: 'Run',
                 belowTitle: 'Sleep',
                 minutes: 15,
+                range: '23:20 – 23:35',
               ),
               ThreadTaskEntry(row('Sleep', TaskColor.violet)),
               const ThreadCap.bed('23:45'),
@@ -342,10 +349,8 @@ void main() {
         ),
       ),
     );
-    expect(
-      find.textContaining('Run and Sleep share 15 min', findRichText: true),
-      findsOneWidget,
-    );
+    expect(find.text('Overlap · 23:20 – 23:35'), findsOneWidget);
+    expect(find.bySemanticsLabel('Run and Sleep share 15 min'), findsOneWidget);
     // Every dot, the two tasks' included, is as wide as it is tall.
     for (final dot in find.byType(TaskDot).evaluate()) {
       final size = (dot.renderObject! as RenderBox).size;
@@ -353,10 +358,12 @@ void main() {
     }
   });
 
-  testWidgets('done titles are struck through', (tester) async {
+  testWidgets('done titles read grey, never struck (E rules §4.4)', (
+    tester,
+  ) async {
     await tester.pumpWidget(_thread());
     final style = tester.widget<Text>(find.text('Morning run')).style!;
-    expect(style.decoration, TextDecoration.lineThrough);
+    expect(style.decoration, isNot(TextDecoration.lineThrough));
   });
 
   testWidgets('200 % text: rows grow, nothing overflows or ellipsises', (
@@ -385,8 +392,6 @@ void main() {
           actions: ThreadActions(
             onToggleDone: (_) {},
             onOpen: (_) {},
-            onExtend: (_) {},
-            onShiftRest: (_) {},
             onAddHere: (_) {},
           ),
         ),

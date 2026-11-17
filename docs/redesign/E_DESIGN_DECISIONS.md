@@ -4816,6 +4816,28 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - **Order: foundations first.** The owner first chose a Today and task sheet pilot, then withdrew it before any pilot work began ("i want to go back to pilot decision as i would like to follow the previous plan"). The build follows the plan's order: M18.3 to M18.8, then M19 from Today (M19.1).
 - **Guiding question rule:** the owner asked for clarifying questions instead of assumptions ("make sure to ask clarifying questions and don't assume").
 
+### ED-363 · M18.3 part 1: the Concept E day thread
+- **Date:** 2026-11-17. **Owner:** "1A and 2A" before the build, and "Approve all four" after the M18.3 review page (board E-Phones Today frame 01, light and dark, beside the app's Today golden).
+- **Owner's choices:**
+  - **1A:** the new thread replaces the old one on every screen at once. A Today that is half Concept A (header, strip, tab bar) and half Concept E (thread) until M19 is accepted.
+  - **2A:** the now card on Full Today has no Done, +15 min or Shift the rest buttons, as the board draws it. Done is the row's circle; +15 min and Shift the rest stay in the task sheet. Minimal keeps Running late (docs/14 §4).
+  - **Q1:** the knot row reads "Overlap · 10:30–11:00" (new string `threadOverlapRange`). The screen reader still hears both tasks ("Run and Sleep share 15 min").
+  - **Q2:** "add here" rows keep a 44 pt tap height, where the board draws free rows 28 (CLAUDE.md §5 touch targets).
+  - **Q3:** the now card keeps the "1 of 3" subtask line when the task has subtasks; the board's task has none.
+  - **Q4:** the done check sits about 11 pt further in than on the board, so the now card keeps its 10 pt margin inside the 20 gutter. M19 rebuilds the row edges with the page.
+- **Built (rules §4.4, §5.1 to §5.4):**
+  - dots: done 32 solid with the icon in `TaskSwatch.check` (white; the ground in dark; ink on amber, ED-196); ahead and calendar 34 with 4 / 3.5 / 2.5 px inset rings by size; the now ring 45 at 5.5 over a 20 % (dark 25 %) track; calendar events in the event recipe (ED-200); skipped dashed;
+  - the thread: 48 px dot column, centre 44 from the screen edge, 4 px solid behind now with each row's upper half in the previous task's colour, 4 px dots ahead in `threadAhead`;
+  - fixed row heights: cap 44, done 48, ahead 54, now card 80 minimum, free 28, knot 26, bead 26;
+  - caps: the sun on `wakeCap`, the moon on `windCap`, 34 (ED-201); the thread starts and ends at their centres;
+  - the now card: margin 10, radius 24, 1 px hairline, time line "9:00–11:00 AM · Now, 18 min left" (new string `liveNowLeft`), title 19/700, the done check in the task's colour;
+  - the now-bead row (`ThreadNow`): 16 px bead with a card-coloured border and a 40 % accent ring, the time pill and line; after the live tasks, or splitting free time where now falls in a gap;
+  - the done check: 28 with a 2.5 ring (grey ahead, task colour for now), solid when done; done titles grey, no strike-through; calendar events have no done check;
+  - free time: "1 h 30 free · add here" as text, the action in the accent; the dashed pill is gone.
+- **Removed (2A):** the now card's button row, the thread's `onExtend` / `onShiftRest` actions and Today's wiring for them, `ThreadTask.overrunMinutes`, the gap's `nowFraction` (the bead replaces it), and the role `onTaskFill` (replaced by `TaskSwatch.check`). The task sheet's +15 min gained a test.
+- **Still open in M18.3:** the Earlier fold (ED-164), the Before Wake Up / After Wind Down rows in Concept E style (ED-246, ED-345), the bead's once-a-minute slide (ED-246), the "Alarms off" device tag (ED-205, ED-213), the repeat marker check (ED-208), and goldens against E-Earlier and E-DF2.
+- **Checks:** `flutter analyze` clean; `flutter test --exclude-tags supabase` all passing; goldens regenerated.
+
 ---
 
 ## Pending owner answers

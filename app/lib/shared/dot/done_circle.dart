@@ -2,20 +2,25 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
-/// The round done circle at a row's end (`Main`, ADR-0015): a ring in the
-/// task's [color] that fills with a white tick once [done]; tapping it again
-/// undoes it. The row keeps its place either way.
+/// The round done circle at a row's end (ADR-0015, E rules §4.4): a 2.5 px
+/// ring, grey ahead and in the task's [color] for the [live] task, that
+/// fills with the task's colour and a white tick once [done]; tapping it
+/// again undoes it. The row keeps its place either way.
 class DoneCircle extends StatelessWidget {
   const DoneCircle({
     required this.color,
     required this.done,
     required this.title,
+    this.live = false,
     this.onTap,
     super.key,
   });
 
   final TaskColor color;
   final bool done;
+
+  /// The task under way: its ring is in the task's colour.
+  final bool live;
 
   /// The task's title, for the screen reader ("Boom, checked").
   final String title;
@@ -48,17 +53,20 @@ class DoneCircle extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: done ? swatch.color : null,
-                border: Border.all(
-                  color: swatch.color,
-                  width: DotSize.dotOutline,
-                ),
+                border: done
+                    ? null
+                    : Border.all(
+                        color: live ? swatch.color : t.colors.ring,
+                        width: DotSize.doneRing,
+                      ),
               ),
               child: done
                   ? Center(
                       child: DotIcon(
                         DotGlyphs.check,
                         color: swatch.check,
-                        size: size * DotSize.rowIcon / DotSize.rowDot,
+                        // A 15 check in the 28 circle (E rules §6).
+                        size: size * 15 / 28,
                         bold: true,
                       ),
                     )
