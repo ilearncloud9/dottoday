@@ -12,6 +12,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Dottoday';
 
   @override
+  String get navShowSidebar => 'Show sidebar';
+
+  @override
+  String get navHideSidebar => 'Hide sidebar';
+
+  @override
+  String get navMenu => 'Menu';
+
+  @override
   String get failureStorage => 'Couldn\'t save on this device. Try again.';
 
   @override

@@ -4909,6 +4909,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Moved, with plan notes:** the narrow-Mac Minimal rules (Day-column fold, narrow toolbar, short-window now-dot; ED-169, ED-170) to M19.6; the Workspace inspector's docking (C1) to M19.2; the landscape week strip in the title row to M19.1; landscape tab items side by side to M18.6.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,960 passing; new tests for the rule and the frame; new goldens `today_editor_floating` (1100) and `today_landscape` (874 × 402).
 
+### ED-370 · M18.5 part 2: tablet navigation
+- **Date:** 2026-11-18. **Owner:** "Approve" on the part 2 review page (E-R2-1, E-R2-31 beside the app's goldens).
+- **Built (E-R2-1, ED-267, ED-334):**
+  - medium on iPad: `TopTabsShell`, the main places as a capsule of top tabs (current on the card colour in bold), the sidebar button opening every place over the content with Settings at its foot, add at the end; Flutter until M18.6 swaps in the native bar;
+  - medium on Android and the web: the M3 rail on the sunk surface, the menu opening the drawer of places, add as the tonal rounded-square FAB, the pill behind the current icon, Settings at the foot;
+  - expanded: `SidebarShell`, a 216 sidebar (Dottoday, the places 44 pt on iPad / 48 dp elsewhere, Settings at the foot) folding to the rail and back for the session;
+  - `ShellDestination.foot`: Settings sits at the foot of the rail and sidebar, never a tab beside the places (phones keep their tab until M18.7);
+  - foldables: half open with a horizontal fold is a short window (H1, compact); a hinge with a gap keeps the content to one side (`DisplayFeatureSubScreen`);
+  - the toast from the medium width centred on the content beside the rail or the sidebar.
+- **Moved, with plan notes:** the Workspace's list (Plan, Calendar views, Review) to M19.2, the Calendar place to M20.1, Minimal's places by width (ED-266) to M19.6, the sidebar's sync line to M20.10.
+- **Strings:** `navShowSidebar`, `navHideSidebar`, `navMenu` (en, de, fr, es). **Glyphs:** `sidebar`, `menu`.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,967 passing; shell tests per class and platform, the drawer, folding, tabletop and hinge; toast goldens now 520 tall (300 is a short window).
+
 ---
 
 ## Pending owner answers

@@ -3,13 +3,28 @@ import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
 
-/// Medium and expanded shell (`A-mac-today-alt1-spread`): a left rail of
-/// 16-radius tiles, Settings pinned to the bottom, hairline divider.
+/// The rail (E-R2-1): Android and web at medium width, and the folded
+/// sidebar when expanded. A [menu] button on top opens the full list (the
+/// Android drawer) or shows the sidebar again; then add, the places, and
+/// the foot places (Settings) at the bottom.
 class DotRailShell extends StatelessWidget {
-  const DotRailShell({required this.bar, required this.body, super.key});
+  const DotRailShell({
+    required this.bar,
+    required this.body,
+    this.menu,
+    this.drawer,
+    super.key,
+  });
 
   final ShellBar bar;
   final Widget body;
+
+  /// The top button: its glyph, its name and what it does.
+  final ({DotGlyph glyph, String label, VoidCallback? onTap})? menu;
+
+  /// The list the menu opens over the content (the Android drawer); null
+  /// when the menu does something else.
+  final Widget? drawer;
 
   /// Rail width (`A-mac-*`: ≈ 77 pt).
   static const double width = 80;
@@ -18,13 +33,15 @@ class DotRailShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     final items = bar.items;
-    // The last destination (Settings) sits at the foot of the rail.
-    final top = items.length - 1;
+    final menu = this.menu;
     return Scaffold(
+      drawer: drawer,
       body: Row(
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
+              // E-R2-1 3b: the rail on the sunk surface.
+              color: c.sunk,
               border: BorderDirectional(
                 end: BorderSide(color: c.outline, width: DotSpace.hairline),
               ),
@@ -38,13 +55,25 @@ class DotRailShell extends StatelessWidget {
                   child: Column(
                     spacing: DotSpace.s,
                     children: [
+                      if (menu != null)
+                        Builder(
+                          builder: (context) => IconButton(
+                            onPressed:
+                                menu.onTap ??
+                                () => Scaffold.of(context).openDrawer(),
+                            tooltip: menu.label,
+                            icon: DotIcon(menu.glyph, color: c.ink2),
+                          ),
+                        ),
                       if (bar.onAdd case final onAdd?)
                         AddDraggable(
                           child: _RailAdd(onAdd: onAdd, label: bar.addLabel),
                         ),
-                      for (var i = 0; i < top; i++) _tile(i),
+                      for (final (i, d) in items.indexed)
+                        if (!d.foot) _tile(i),
                       const Spacer(),
-                      _tile(top),
+                      for (final (i, d) in items.indexed)
+                        if (d.foot) _tile(i),
                     ],
                   ),
                 ),
@@ -87,42 +116,51 @@ class _RailTile extends StatelessWidget {
       label: destination.semanticLabel,
       excludeSemantics: true,
       onTap: onTap,
-      child: Material(
-        color: selected
-            ? Color.alphaBlend(c.accentTint, c.surface)
-            : Colors.transparent,
+      // M3 rail (E-R2-1 3b): a pill behind the current place's icon, its
+      // name under it in bold (never colour alone).
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(DotRadii.railItem),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(DotRadii.railItem),
-          child: SizedBox(
-            width: _size,
-            height: _size,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: DotSpace.xxs,
-              children: [
-                ShellIcon(
-                  destination: destination,
-                  active: selected,
-                  color: selected ? c.accent : c.text,
+        child: SizedBox(
+          width: _size,
+          height: _size,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: DotSpace.xs,
+            children: [
+              Container(
+                width: _pill.width,
+                height: _pill.height,
+                decoration: ShapeDecoration(
+                  color: selected ? c.tonalAndroid : Colors.transparent,
+                  shape: const StadiumBorder(),
                 ),
-                Text(
-                  destination.label,
-                  maxLines: 1,
-                  style: t.styles
-                      .androidTab(
-                        selected ? t.styles.tabLabelActive : t.styles.tabLabel,
-                      )
-                      .copyWith(color: selected ? c.accentInk : c.muted),
+                child: Center(
+                  child: ShellIcon(
+                    destination: destination,
+                    active: selected,
+                    color: selected ? c.onTonalAndroid : c.ink2,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Text(
+                destination.label,
+                maxLines: 1,
+                style: t.styles
+                    .androidTab(
+                      selected ? t.styles.tabLabelActive : t.styles.tabLabel,
+                    )
+                    .copyWith(color: selected ? c.text : c.muted),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
+  /// The M3 rail's active indicator.
+  static const _pill = Size(56, 32);
 }
 
 class _RailAdd extends StatelessWidget {
@@ -136,14 +174,18 @@ class _RailAdd extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     return Padding(
       padding: const EdgeInsets.only(bottom: DotSpace.s),
+      // The M3 FAB on the rail: a rounded square in the tonal colour.
       child: IconButton.filled(
         onPressed: onAdd,
         tooltip: label,
         style: IconButton.styleFrom(
-          backgroundColor: c.accent,
+          backgroundColor: c.tonalAndroid,
           minimumSize: const Size.square(DotTouch.android + DotSpace.s),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(DotRadii.fabAndroid),
+          ),
         ),
-        icon: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
+        icon: DotIcon(DotGlyphs.add, color: c.onTonalAndroid, active: true),
       ),
     );
   }

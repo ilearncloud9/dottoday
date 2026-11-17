@@ -4,6 +4,12 @@
   "@appTitle": {
     "description": "App name shown in the OS task switcher, window title and browser tab."
   },
+  "navShowSidebar": "Show sidebar",
+  "@navShowSidebar": {"description": "Tablet, Mac and web: the button that shows the sidebar of places (E-R2-1)."},
+  "navHideSidebar": "Hide sidebar",
+  "@navHideSidebar": {"description": "Tablet, Mac and web: the button that folds the sidebar to the rail (E-R2-1)."},
+  "navMenu": "Menu",
+  "@navMenu": {"description": "Android rail: opens the drawer with every place (E-R2-1)."},
   "failureStorage": "Couldn't save on this device. Try again.",
   "@failureStorage": {
     "description": "Local database read/write failed."

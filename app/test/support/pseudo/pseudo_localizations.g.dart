@@ -13,6 +13,15 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get appTitle => pseudo(super.appTitle);
 
   @override
+  String get navShowSidebar => pseudo(super.navShowSidebar);
+
+  @override
+  String get navHideSidebar => pseudo(super.navHideSidebar);
+
+  @override
+  String get navMenu => pseudo(super.navMenu);
+
+  @override
   String get failureStorage => pseudo(super.failureStorage);
 
   @override

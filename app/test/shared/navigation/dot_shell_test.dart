@@ -1,9 +1,13 @@
+import 'dart:ui' show DisplayFeature, DisplayFeatureState, DisplayFeatureType;
+
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:dottoday/shared/navigation/dot_sidebar.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
+import 'package:dottoday/shared/navigation/tablet_shells.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -85,23 +89,47 @@ void main() {
     expect(find.text('Week'), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-  testWidgets('medium: rail with the phone set and an add button', (
-    tester,
-  ) async {
+  testWidgets('medium on Android and the web: the rail, its menu opens the '
+      'drawer with every place (E-R2-1)', (tester) async {
     await _size(tester, 700);
     await tester.pumpWidget(_shell());
     expect(find.byType(DotRailShell), findsOneWidget);
     expect(find.text('Week'), findsNothing);
     expect(find.byTooltip('Add task'), findsOneWidget);
-  });
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+    expect(find.byType(Drawer), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(Drawer), matching: find.text('Settings')),
+      findsOneWidget,
+    );
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
-  testWidgets('expanded: the same rail on every platform, Week included', (
+  testWidgets('iPad at medium: top tabs without Settings; the sidebar button '
+      'shows every place, Settings at the foot (E-R2-1 1b, 1c)', (
     tester,
   ) async {
+    await _size(tester, 820, 1180);
+    await tester.pumpWidget(_shell());
+    expect(find.byType(TopTabsShell), findsOneWidget);
+    expect(find.text('Settings'), findsNothing);
+    expect(find.byTooltip('Add task'), findsOneWidget);
+    await tester.tap(find.byTooltip('Show sidebar'));
+    await tester.pumpAndSettle();
+    expect(_order(tester, find.byType(Drawer)), [
+      'Today',
+      'Inbox',
+      'Search',
+      'Settings',
+    ]);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('expanded: the sidebar of places, Settings at its foot; it '
+      'folds to the rail and back (ED-267)', (tester) async {
     await _size(tester, 1280);
     await tester.pumpWidget(_shell());
-    expect(find.byType(DotRailShell), findsOneWidget);
-    expect(_order(tester, find.byType(DotRailShell)), [
+    expect(find.byType(SidebarShell), findsOneWidget);
+    expect(_order(tester, find.byType(DotSidebar)), [
       'Today',
       'Inbox',
       'Week',
@@ -109,7 +137,43 @@ void main() {
       'Settings',
     ]);
     expect(find.byTooltip('Add task'), findsNothing);
+    await tester.tap(find.byTooltip('Hide sidebar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(DotRailShell), findsOneWidget);
+    await tester.tap(find.byTooltip('Show sidebar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(DotSidebar), findsOneWidget);
   }, variant: TargetPlatformVariant.all());
+
+  testWidgets('a foldable half open on a table gets the phone layout '
+      '(ED-334)', (tester) async {
+    await _size(tester, 841, 760);
+    tester.view.displayFeatures = [
+      const DisplayFeature(
+        bounds: Rect.fromLTRB(0, 380, 841, 380),
+        type: DisplayFeatureType.fold,
+        state: DisplayFeatureState.postureHalfOpened,
+      ),
+    ];
+    addTearDown(tester.view.resetDisplayFeatures);
+    await tester.pumpWidget(_shell());
+    expect(find.byType(MaterialBarShell), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('nothing crosses a hinge with a gap (ED-334)', (tester) async {
+    await _size(tester, 1114, 705);
+    tester.view.displayFeatures = [
+      const DisplayFeature(
+        bounds: Rect.fromLTRB(540, 0, 574, 705),
+        type: DisplayFeatureType.hinge,
+        state: DisplayFeatureState.postureFlat,
+      ),
+    ];
+    addTearDown(tester.view.resetDisplayFeatures);
+    await tester.pumpWidget(_shell(body: const ColoredBox(color: Colors.red)));
+    final body = tester.getRect(find.byType(ColoredBox).last);
+    expect(body.right <= 540 || body.left >= 574, isTrue);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
   group('Inbox badge (F3.3)', () {
     for (final (name, width, platform) in [

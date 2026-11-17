@@ -1,6 +1,9 @@
 {
   "@@locale": "es",
   "appTitle": "Dottoday",
+  "navShowSidebar": "Mostrar barra lateral",
+  "navHideSidebar": "Ocultar barra lateral",
+  "navMenu": "Menú",
   "failureStorage": "No se pudo guardar en este dispositivo. Inténtalo de nuevo.",
   "failureNetworkOffline": "Estás sin conexión. Los cambios se guardan en este dispositivo y se sincronizarán más tarde.",
   "failureNetworkTimeout": "El servidor tardó demasiado en responder. Inténtalo de nuevo.",

@@ -171,6 +171,7 @@ List<ShellDestination> shellDestinations(
       ),
       ShellTab.settings => ShellDestination(
         glyph: DotGlyphs.settings,
+        foot: true,
         label: l10n.navSettings,
       ),
     },

@@ -95,6 +95,9 @@ abstract final class DotSize {
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
 
+  /// The sidebar of places on tablets, Mac and web (rules §6.2: 216).
+  static const double sidebar = 216;
+
   /// The right-hand panel at the expanded width: the task editor
   /// (`A-mac-editor`: 640 of 2000 px at 1280) and proposals (docs/10 §4).
   static const double sidePanel = 420;

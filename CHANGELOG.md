@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Tablets and wide windows get their own navigation (redesign branch): an iPad window of medium width shows tabs across the top with a sidebar button; an Android tablet shows the Material rail with a menu that opens every place; wide windows show a sidebar of places with Settings at the bottom, which folds to the rail. A foldable half open on a table uses the phone layout, nothing is drawn across a hinge, and the Undo message sits beside the navigation rather than under it.
+
+### Changed
 - The layout follows the window (redesign branch): the task editor and plan proposals sit beside the day only when the window is wide enough (1160 pt, with room for the day); in narrower windows they float over it as a card, and resizing never loses what you typed or where you scrolled. A phone in landscape, or any window under 480 tall, keeps the phone layout, with the day in a readable column. On the Mac the window can now be as narrow as 840.
 
 ### Changed

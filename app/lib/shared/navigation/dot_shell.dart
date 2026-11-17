@@ -1,9 +1,11 @@
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
+import 'package:dottoday/shared/navigation/tablet_shells.dart';
 import 'package:flutter/material.dart';
 
 /// One top-level destination (docs/10 §3: the nav set is fixed).
@@ -17,7 +19,12 @@ final class ShellDestination {
     this.badge,
     this.badgeLabel,
     this.onDropTask,
+    this.foot = false,
   });
+
+  /// Sits at the foot of the rail and sidebar, never a tab beside the
+  /// places (Settings, ED-238, ED-267).
+  final bool foot;
 
   /// A dragged task let go on this destination (the Inbox: unschedule it,
   /// ADR-0015); null takes no drops.
@@ -47,10 +54,10 @@ final class ShellDestination {
   String get semanticLabel => (badge ?? 0) > 0 ? badgeLabel ?? label : label;
 }
 
-/// The app shell by width class (docs/10 §4), never by platform:
-/// compact = tab bar + add button, medium = rail + add, expanded = the
-/// Mac/web rail with every destination. Within compact, [DotIdiom] picks
-/// the iPhone pill bar or the Material bar (§4 allowed idioms).
+/// The app shell by the window's class (E-R2-1, ED-267), never by device:
+/// compact = the phone's bar and add; medium = the iPad's top tabs, or the
+/// rail with its drawer; expanded = the sidebar of places, folding to the
+/// rail. [DotIdiom] picks the platform's own form within a class.
 class DotShell extends StatelessWidget {
   const DotShell({
     required this.destinations,
@@ -118,6 +125,11 @@ class DotShell extends StatelessWidget {
               : onAdd,
           addLabel: addLabel,
         );
+        // Nothing crosses a hinge with a gap: the content keeps to one
+        // side of it (ED-334).
+        final body = AppLayout.hasHinge(context)
+            ? DisplayFeatureSubScreen(child: this.body)
+            : this.body;
         final shell = switch ((width, DotIdiom.of(context))) {
           (WidthClass.compact, DotIdiom.cupertino) => PillTabShell(
             bar: bar,
@@ -127,7 +139,24 @@ class DotShell extends StatelessWidget {
             bar: bar,
             body: body,
           ),
-          (_, _) => DotRailShell(bar: bar, body: body),
+          // Medium (E-R2-1, ED-267): the iPad's top tabs, the rail with
+          // its drawer elsewhere.
+          (WidthClass.medium, DotIdiom.cupertino) => TopTabsShell(
+            bar: bar,
+            body: body,
+          ),
+          (WidthClass.medium, DotIdiom.material) => DotRailShell(
+            bar: bar,
+            body: body,
+            menu: (
+              glyph: DotGlyphs.menu,
+              label: context.l10n.navMenu,
+              onTap: null,
+            ),
+            drawer: placesDrawer(context, bar),
+          ),
+          // Expanded: the sidebar of places, folding to the rail.
+          (WidthClass.expanded, _) => SidebarShell(bar: bar, body: body),
         };
         final onTrash = onTrashTask;
         if (onTrash == null) return shell;

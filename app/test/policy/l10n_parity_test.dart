@@ -51,6 +51,7 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'navMenu', // « Menu » is French
     'deviceIphone', // product names
     'deviceIpad',
     'deviceMac',

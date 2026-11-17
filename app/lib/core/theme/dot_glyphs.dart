@@ -144,6 +144,12 @@ abstract final class DotGlyphs {
   static const rollForward = DotGlyph('M3 12h14M13 7l5 5-5 5M21 5v14');
   static const dottedLine = DotGlyph('M12 4h.01M12 9h.01M12 14h.01M12 19h.01');
   static const sort = DotGlyph('M3 6h18M6 12h12M10 18h4');
+
+  /// Show or hide the sidebar (iPad, Mac and web; E-R2-1).
+  static final sidebar = DotGlyph('${_r(3, 5, 18, 14, 2.5)}M9 5v14');
+
+  /// The Android rail's menu: opens the drawer (E-R2-1).
+  static const menu = DotGlyph('M4 7h16M4 12h16M4 17h16');
   static const undo = DotGlyph('M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4');
 
   /// A row of dots: a week of days ("Pick from the week").

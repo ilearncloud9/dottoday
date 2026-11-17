@@ -1,0 +1,164 @@
+import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:flutter/material.dart';
+
+/// The list of places (E-R2-1, ED-267): the app's name with the sidebar
+/// button, every place, and Settings at the foot, never a tab. Drawn in
+/// the expanded sidebar, the Android drawer and the iPad's sidebar over
+/// the content. [onPicked] runs after a place is chosen (a drawer closes).
+class DotSidebar extends StatelessWidget {
+  const DotSidebar({
+    required this.bar,
+    this.onToggle,
+    this.onPicked,
+    super.key,
+  });
+
+  final ShellBar bar;
+
+  /// The sidebar button beside the name: hides the sidebar (expanded) or
+  /// closes the drawer; null draws none.
+  final VoidCallback? onToggle;
+  final VoidCallback? onPicked;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final items = bar.items;
+    Widget row(int i) => _SidebarRow(
+      destination: items[i],
+      selected: i == bar.selected,
+      onTap: () {
+        bar.onSelect(i);
+        onPicked?.call();
+      },
+    );
+    final toggle = onToggle;
+    return ColoredBox(
+      color: t.colors.canvas,
+      child: SafeArea(
+        right: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DotSpace.s + DotSpace.xxs,
+            vertical: DotSpace.s,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: DotTouch.min),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.only(
+                          start: DotSpace.s,
+                        ),
+                        child: Semantics(
+                          header: true,
+                          child: Text(l10n.appTitle, style: t.styles.cardTitle),
+                        ),
+                      ),
+                    ),
+                    if (bar.onAdd case final onAdd?)
+                      IconButton.filled(
+                        onPressed: onAdd,
+                        tooltip: bar.addLabel,
+                        style: IconButton.styleFrom(
+                          backgroundColor: t.colors.accent,
+                        ),
+                        icon: DotIcon(
+                          DotGlyphs.add,
+                          color: t.colors.onAccent,
+                          active: true,
+                        ),
+                      ),
+                    if (toggle != null)
+                      IconButton(
+                        onPressed: toggle,
+                        tooltip: l10n.navHideSidebar,
+                        icon: DotIcon(DotGlyphs.sidebar, color: t.colors.ink2),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: DotSpace.s),
+              for (final (i, d) in items.indexed)
+                if (!d.foot) row(i),
+              const Spacer(),
+              for (final (i, d) in items.indexed)
+                if (d.foot) row(i),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One place: its icon and name, 44 pt / 48 dp high; the current one on the
+/// accent's tint in bold (never colour alone).
+class _SidebarRow extends StatelessWidget {
+  const _SidebarRow({
+    required this.destination,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final ShellDestination destination;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    final label = selected
+        ? DotType.emphasis(
+            t.styles.body.copyWith(color: c.accentInk),
+            bold: true,
+            italic: false,
+          )
+        : t.styles.body;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: destination.semanticLabel,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: Material(
+        color: selected ? c.accentTint : Colors.transparent,
+        borderRadius: BorderRadius.circular(DotRadii.railItem),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DotRadii.railItem),
+          // 44 pt on iPad, 48 dp elsewhere (rules §6.4).
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: DotIdiom.of(context) == DotIdiom.cupertino
+                  ? DotTouch.min
+                  : DotTouch.android,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
+              child: Row(
+                spacing: DotSpace.m,
+                children: [
+                  ShellIcon(
+                    destination: destination,
+                    active: selected,
+                    color: selected ? c.accentInk : c.ink2,
+                  ),
+                  Expanded(child: Text(destination.label, style: label)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

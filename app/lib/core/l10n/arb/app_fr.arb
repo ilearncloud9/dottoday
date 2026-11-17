@@ -1,6 +1,9 @@
 {
   "@@locale": "fr",
   "appTitle": "Dottoday",
+  "navShowSidebar": "Afficher la barre latérale",
+  "navHideSidebar": "Masquer la barre latérale",
+  "navMenu": "Menu",
   "failureStorage": "Impossible d'enregistrer sur cet appareil. Réessayez.",
   "failureNetworkOffline": "Vous êtes hors ligne. Les modifications sont enregistrées sur cet appareil et seront synchronisées plus tard.",
   "failureNetworkTimeout": "Le serveur met trop de temps à répondre. Réessayez.",

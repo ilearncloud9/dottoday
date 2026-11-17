@@ -642,7 +642,7 @@ Rules for every task in M18 to M22:
   - Apple Pencil and Android stylus: handwriting in text fields only (T4, ED-258).
   Split by the owner (2026-11-17), each part with its own review page and commit. iPad navigation is built in Flutter here; M18.6 swaps in the native UIKit bar for iPad and iPhone together.
   - [x] Part 1 done 2026-11-18 (ED-369): one layout rule (600 / 840, H1, docking from 1160 with the M minimums) used by the shell and the panels; the editor and proposal float below 1160; phone landscape; the Mac minimum window 840 × 640. Moved: the narrow-Mac Minimal rules to M19.6; the Workspace inspector's rule to M19.2; the landscape week strip to M19.1; landscape tab items side by side to M18.6.
-  - [ ] Part 2: tablet navigation (iPad top tabs / sidebar, Android rail / drawer, Settings at the foot, Minimal by width), Stage Manager, foldables and the hinge, the toast at medium width.
+  - [x] Part 2 done 2026-11-18 (ED-370): tablet navigation (iPad top tabs / sidebar, Android rail / drawer, Settings at the foot), Stage Manager by window width, foldables (tabletop compact, nothing across a hinge), the toast centred on the content at medium width. The shells carry today's places (Today, Inbox, Week, Search, Settings); the Workspace's own list (Plan, Calendar views, Review) arrives with M19.2, the Calendar place with M20.1, Minimal's places by width (Now · Inbox · Calendar · Search, ED-266) with M19.6, and the sidebar's sync line with M20.10.
   - [ ] Part 3: compact mobile web's own bar, touch sizes on touch tablets and coarse-pointer web, stylus handwriting checks.
 - [ ] M18.6 Native chrome, with no new native target (ED-128):
   - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240); in landscape its items sit side by side (R2-41, ED-347; moved from M18.5);
@@ -689,7 +689,7 @@ Rules for every task in M18 to M22:
   - the Now tab (phones) and Now pane (Mac and web): the horizon, the large now-dot and the orb, with Done, Focus and Need more time? (ED-066, ED-106);
   - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);
   - the minimal task sheet title (ED-216);
-  - the minimal sidebar at 200 (ED-207);
+  - the minimal sidebar at 200 (ED-207), and Minimal's places by width on tablets: Now · Inbox · Calendar · Search at medium and expanded (R2-1a, ED-266; moved from M18.5);
   - the narrow-Mac rules for the Minimal window, moved from M18.5 part 1 because they need the Now pane and Day column built here: the Day-column fold at the computed point (≈ 1042 at 100 % text) with the "Day" edge button, the narrow toolbar below ≈ 1000, and the short-window now-dot under 720 (ED-169, ED-170).
 - [ ] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;

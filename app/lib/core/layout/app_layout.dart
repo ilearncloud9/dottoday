@@ -1,3 +1,5 @@
+import 'dart:ui' show DisplayFeatureState, DisplayFeatureType;
+
 import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:flutter/widgets.dart';
 
@@ -40,8 +42,26 @@ abstract final class AppLayout {
   static bool isShort(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final padding = MediaQuery.paddingOf(context);
-    return size.height - padding.top - padding.bottom < shortHeight;
+    if (size.height - padding.top - padding.bottom < shortHeight) return true;
+    // A foldable half open on a table: each half is a short window, so
+    // the phone layout (ED-168, ED-334).
+    return MediaQuery.displayFeaturesOf(context).any(
+      (f) =>
+          f.state == DisplayFeatureState.postureHalfOpened &&
+          f.bounds.width > f.bounds.height,
+    );
   }
+
+  /// A hinge with a gap running down the window (ED-099, ED-334): no pane
+  /// or text may cross it, so the content keeps to one side. A flat fold
+  /// with no gap is ordinary screen.
+  static bool hasHinge(BuildContext context) =>
+      MediaQuery.displayFeaturesOf(context).any(
+        (f) =>
+            f.type == DisplayFeatureType.hinge &&
+            f.bounds.width > 0 &&
+            f.bounds.height > f.bounds.width,
+      );
 
   /// Whether a [DotSize.sidePanel] panel docks beside content [available]
   /// wide (the panel's own slot included): the window is at least

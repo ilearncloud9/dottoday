@@ -108,6 +108,24 @@ abstract class AppLocalizations {
   /// **'Dottoday'**
   String get appTitle;
 
+  /// Tablet, Mac and web: the button that shows the sidebar of places (E-R2-1).
+  ///
+  /// In en, this message translates to:
+  /// **'Show sidebar'**
+  String get navShowSidebar;
+
+  /// Tablet, Mac and web: the button that folds the sidebar to the rail (E-R2-1).
+  ///
+  /// In en, this message translates to:
+  /// **'Hide sidebar'**
+  String get navHideSidebar;
+
+  /// Android rail: opens the drawer with every place (E-R2-1).
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get navMenu;
+
   /// Local database read/write failed.
   ///
   /// In en, this message translates to:

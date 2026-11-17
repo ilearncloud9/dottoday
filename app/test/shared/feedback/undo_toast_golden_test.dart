@@ -44,13 +44,13 @@ void main() {
   setUpAll(loadAppFonts);
   goldenMatrix(
     'undo_toast',
-    height: 300,
+    height: 520,
     build: (_) => const _Page(),
     act: _show,
   );
   goldenMatrix(
     'undo_toast_android',
-    height: 300,
+    height: 520,
     platform: TargetPlatform.android,
     widths: const {'compact', 'expanded'},
     build: (_) => const _Page(),
@@ -58,7 +58,7 @@ void main() {
   );
   goldenMatrix(
     'undo_toast_reader',
-    height: 300,
+    height: 520,
     widths: const {'compact'},
     build: (_) => const _Page(reader: true),
     act: _show,

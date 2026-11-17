@@ -12,6 +12,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appTitle => 'Dottoday';
 
   @override
+  String get navShowSidebar => 'Seitenleiste zeigen';
+
+  @override
+  String get navHideSidebar => 'Seitenleiste ausblenden';
+
+  @override
+  String get navMenu => 'Menü';
+
+  @override
   String get failureStorage =>
       'Konnte auf diesem Gerät nicht speichern. Versuch es noch mal.';
 

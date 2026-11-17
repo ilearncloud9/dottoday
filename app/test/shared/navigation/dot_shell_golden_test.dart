@@ -40,6 +40,13 @@ void main() {
     platform: TargetPlatform.android,
     build: (_) => const _Shell(),
   );
+  // iPad portrait at medium (E-R2-1 1b): the top tabs.
+  goldenMatrix(
+    'shell_ipad',
+    height: 1180,
+    widths: const {'medium'},
+    build: (_) => const _Shell(),
+  );
   goldenMatrix(
     'shell_rail',
     height: 800,

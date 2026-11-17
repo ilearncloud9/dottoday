@@ -1,6 +1,9 @@
 {
   "@@locale": "de",
   "appTitle": "Dottoday",
+  "navShowSidebar": "Seitenleiste zeigen",
+  "navHideSidebar": "Seitenleiste ausblenden",
+  "navMenu": "Menü",
   "failureStorage": "Konnte auf diesem Gerät nicht speichern. Versuch es noch mal.",
   "failureNetworkOffline": "Du bist offline. Änderungen werden auf diesem Gerät gespeichert und später synchronisiert.",
   "failureNetworkTimeout": "Der Server hat zu lange gebraucht. Versuch es noch mal.",
