@@ -52,7 +52,7 @@ final class DotIntentsProvider
   }
 }
 
-String _$dotIntentsHash() => r'd32f7c5cb0354c4ee3429b565131263b6bd2922c';
+String _$dotIntentsHash() => r'cdee753cf347ae80bb25adea47ff04e3c6c8bd00';
 
 /// Where this platform's surfaces queue actions (docs/09 M9.2). On the
 /// Mac only the share extension does (M12.4), through the same channel
@@ -157,4 +157,4 @@ final class ActionQueueDrainerProvider
 }
 
 String _$actionQueueDrainerHash() =>
-    r'a1899f4b795d98849873c92c154efb5e0e3db39f';
+    r'1b6cee522a0eee00981be1a49727f44d30b865a2';

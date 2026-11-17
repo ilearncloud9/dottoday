@@ -7,8 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 List<AppFailure> _all() => [
   const StorageFailure(),
+  const StorageFullFailure(),
+  const ImportStorageFullFailure(),
   for (final k in NetworkFailureKind.values) NetworkFailure(k),
   const AuthFailure(),
+  const SignedOutHereOnlyFailure(),
   for (final f in ValidationField.values)
     for (final r in ValidationRule.values) ValidationFailure(f, r),
   for (final e in EntityKind.values) ...[
@@ -51,4 +54,13 @@ void main() {
       }
     },
   );
+
+  test('an import that fills the disk says so (CR-160 B8)', () async {
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(
+      failureMessage(l10n, const ImportStorageFullFailure()),
+      'There isn’t enough storage space to import this backup. Nothing '
+      'was changed. Free up some space and try again.',
+    );
+  });
 }

@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
+import 'package:dottoday/data/snapshot/snapshot_providers.dart';
 import 'package:dottoday/data/snapshot/wind_down_snapshot.dart';
+import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../domain/fixtures.dart';
@@ -79,5 +84,49 @@ void main() {
     h.clock.now = DateTime.utc(2026, 10, 22, 3);
     await windDown.arm(userId);
     expect(timers, isEmpty);
+  });
+
+  group('a change of owner (CR-160 I7)', () {
+    test(
+      'cancelled: the armed timer stops, a late fire writes nothing',
+      () async {
+        await windDown.arm(userId);
+        final before = h.sink.written.length;
+        windDown.cancel();
+        expect(timers.single.cancelled, isTrue);
+        // A timer callback already queued when the owner changed.
+        timers.single.fire();
+        await pumpEventQueue();
+        expect(h.sink.written.length, before);
+      },
+    );
+
+    test('cancelled while the day was read: nothing is armed', () async {
+      final arming = windDown.arm(userId);
+      windDown.cancel();
+      await arming;
+      expect(timers, isEmpty);
+    });
+
+    test('a new owner gets a new instance (the old one is disposed)', () {
+      final container = ProviderContainer(
+        overrides: [
+          clockProvider.overrideWithValue(h.clock),
+          daySnapshotWriterProvider.overrideWithValue(
+            DaySnapshotWriter(
+              clock: h.clock,
+              occurrences: DriftOccurrenceRepository(h.db),
+              profile: () async => profileFixture(),
+              sink: h.sink,
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      final first = container.read(windDownSnapshotProvider);
+      container.read(ownerEpochProvider.notifier).next();
+      final second = container.read(windDownSnapshotProvider);
+      expect(identical(first, second), isFalse);
+    });
   });
 }

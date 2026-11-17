@@ -20,17 +20,37 @@ object IntentQueueBridge {
         channel = MethodChannel(messenger, "dottoday/intents").apply {
             setMethodCallHandler { call, result ->
                 when (call.method) {
-                    "readQueue" -> result.success(prefs.getString(DotQueue.KEY, null))
+                    "readQueue" -> {
+                        // Any plaintext left by an earlier version is sealed
+                        // first; the app gets the words opened (CR-160 I1).
+                        DotQueue.sealPlaintext(prefs)
+                        result.success(DotQueue.readOpened(prefs))
+                    }
                     "removeQueued" -> {
                         val ids = call.argument<List<String>>("ids")?.toSet() ?: emptySet()
-                        DotActionReceiver.remove(prefs, ids, call.argument<Boolean>("unreadable") == true)
+                        DotActionReceiver.remove(prefs, ids)
                         result.success(null)
                     }
-                    else -> result.notImplemented()
+                    "publishOwner" -> {
+                        call.argument<String>("owner")?.let { DotActionReceiver.publishOwner(prefs, it) }
+                        result.success(null)
+                    }
+                    else -> if (debugHooks?.invoke(call, result, prefs) != true) result.notImplemented()
                 }
             }
         }
     }
+
+    /**
+     * Debug builds only (CR-160 I1): set by `QueueDebugHooks` from the debug
+     * source set (android/app/src/debug), which profile and release builds
+     * don't compile, so nothing ever sets it there. Lets
+     * integration_test/queue_cipher_test.dart drive the real queue code.
+     */
+    @Volatile
+    var debugHooks: (
+        (io.flutter.plugin.common.MethodCall, MethodChannel.Result, android.content.SharedPreferences) -> Boolean
+    )? = null
 
     fun detach() {
         channel = null

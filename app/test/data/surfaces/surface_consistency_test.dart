@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/live_activity/live_activity_sink.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
@@ -141,6 +142,7 @@ void main() {
       profile: () async => profileFixture(),
       snapshot: () => throw UnimplementedError(),
       untitled: (_) => 'Untitled',
+      ownerOf: (id) => taskOwnerOf(h.db, id),
     );
     await writes.apply(
       WriteBatch(

@@ -10,6 +10,7 @@ import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/device_calendar_writer.dart';
 import 'package:dottoday/data/daos/calendar_links_dao.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/calendar/calendar_series_sender.dart';
@@ -120,10 +121,21 @@ class WriteBackController extends _$WriteBackController {
 
   @override
   WriteBackState build() {
+    // A change of owner starts over (CR-160): the failed and clashing items
+    // and what was tried are the previous owner's, and the banner must not
+    // count them. Following resumes for the owner now shown.
+    ref.watch(ownerEpochProvider);
     ref.onDispose(() {
       _timer?.cancel();
       unawaited(_watch?.cancel());
     });
+    _attempted.clear();
+    _failed.clear();
+    _clashes.clear();
+    _pending = const [];
+    _watch = null;
+    _userId = null;
+    if (_started) _listen();
     return const WriteBackState();
   }
 
@@ -132,13 +144,15 @@ class WriteBackController extends _$WriteBackController {
   void start() {
     if (_started) return;
     _started = true;
-    // Sign-in re-keys the profile: follow its id.
-    ref.listen(
-      currentProfileProvider,
-      (_, next) => _follow(next.value?.id),
-      fireImmediately: true,
-    );
+    _listen();
   }
+
+  // Sign-in re-keys the profile: follow its id.
+  void _listen() => ref.listen(
+    currentProfileProvider,
+    (_, next) => _follow(next.value?.id),
+    fireImmediately: true,
+  );
 
   /// Sends what is waiting now (before an import reads the calendars).
   Future<void> flush() {
@@ -200,6 +214,7 @@ class WriteBackController extends _$WriteBackController {
     List<PendingWriteBack> items,
     WriteBackPrefer prefer,
   ) async {
+    final epoch = ref.read(ownerEpochProvider);
     try {
       final profile = await ref.read(currentProfileProvider.future);
       final untitled = lookupAppLocalizations(
@@ -208,6 +223,8 @@ class WriteBackController extends _$WriteBackController {
       final report = await ref
           .read(calendarWriteBackProvider)
           .push(items, untitled: untitled, prefer: prefer);
+      // The owner changed while sending: these ids aren't the banner's now.
+      if (!ref.mounted || ref.read(ownerEpochProvider) != epoch) return;
       for (final p in items) {
         final id = p.link.id;
         final failed = report.failed.contains(id);
@@ -221,6 +238,7 @@ class WriteBackController extends _$WriteBackController {
       ref
           .read(loggerProvider)
           .warn('calendar.write_back_failed', error: e, stackTrace: s);
+      if (!ref.mounted || ref.read(ownerEpochProvider) != epoch) return;
       for (final p in items) {
         _failed.add(p.link.id);
         _attempted[p.link.id] = p.signature;

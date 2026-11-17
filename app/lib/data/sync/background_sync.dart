@@ -1,4 +1,5 @@
 import 'package:dottoday/core/logging/logger.dart';
+import 'package:dottoday/data/sync/pull_guard.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 
@@ -33,6 +34,13 @@ final class BackgroundSync {
       _logger.info(
         'sync.background_done',
         fields: {'pulled': run.pulled, 'pushed': run.pushed},
+      );
+      return true;
+    } on PullRefusedException catch (e) {
+      // The account changed or is being deleted: nothing written (CR-160).
+      _logger.info(
+        'sync.background_refused_pull',
+        fields: {'reason': e.reason},
       );
       return true;
     } on SyncGatewayException catch (e, s) {

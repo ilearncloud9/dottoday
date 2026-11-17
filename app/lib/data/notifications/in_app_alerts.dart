@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'in_app_alerts.g.dart';
@@ -11,8 +12,13 @@ part 'in_app_alerts.g.dart';
 /// Newest last; the banner shows it until acted on or dismissed.
 @Riverpod(keepAlive: true)
 class InAppAlerts extends _$InAppAlerts {
+  // Emptied at every change of owner (CR-160 I5): a banner carries the
+  // previous owner's task title.
   @override
-  List<OsNotification> build() => const [];
+  List<OsNotification> build() {
+    ref.watch(ownerEpochProvider);
+    return const [];
+  }
 
   void add(OsNotification n) => state = [
     for (final o in state)

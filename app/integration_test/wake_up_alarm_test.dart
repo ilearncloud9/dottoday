@@ -119,6 +119,50 @@ void main() {
     expect(await armed(), isFalse);
   });
 
+  // CR-160 (Wake Up audit): the gentle check carries the old owner's task
+  // title; a change of owner disarms everything (`OwnerSwitch` →
+  // `WakeUpArming.disarmAll` → this channel's disarmAll), the check too.
+  testWidgets('a change of owner calls off an armed check', (tester) async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    await startApp(tester);
+    const id = 'wakeup:2099-01-02';
+    Future<bool?> armed() =>
+        _channel.invokeMethod<bool>('checkArmed', {'id': id});
+    await _channel.invokeMethod<Object>('sync', {
+      'alarms': [
+        {
+          'id': id,
+          'fireAtMs': DateTime.now().millisecondsSinceEpoch + 3000,
+          'sound': 'start_bells',
+          'title': 'Wake Up',
+          'body': 'Device check',
+          'stop': "I'm up",
+          'snooze': 'Snooze',
+          'snoozeMin': 9,
+          'snoozeLimit': 3,
+          'rampSec': 15,
+          'minimal': false,
+          'checkMin': 10,
+          'checkTitle': 'Start Run?',
+          'checkBody': 'Tap to start.',
+          'checkStart': 'Start',
+          'checkTarget': '',
+          'checkLoud': false,
+        },
+      ],
+      'started': <String>[],
+    });
+    await waitUntil(
+      tester,
+      () async => await _ringing() == id,
+      timeout: const Duration(seconds: 30),
+    );
+    await _channel.invokeMethod<void>('perform', {'action': 'stop', 'id': id});
+    expect(await armed(), isTrue);
+    await _channel.invokeMethod<void>('disarmAll');
+    expect(await armed(), isFalse, reason: 'the next owner never sees it');
+  });
+
   // Missions (docs/15 §8): on a mission morning "I'm up" opens the mission
   // and re-arms the alarm a minute out; the screen in use pushes it out;
   // the app's dismiss ends it and arms the check. "Only after a snooze"

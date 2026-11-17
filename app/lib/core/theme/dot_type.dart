@@ -29,34 +29,41 @@ final class DotType {
     required this.dayCaption,
     required this.threadTitle,
     required this.threadMeta,
+    required this.promptTitle,
+    required this.choiceTitle,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
-  factory DotType.withColors({required Color text, required Color muted}) =>
-      DotType(
-        // Chrome in the platform's own face (E §3.3, decision C).
-        pageTitle: _system(28, 34, 700, text),
-        pageTitleExpanded: _system(30, 36, 700, text),
-        topBarTitle: _system(24, 32, 400, text),
-        // Section headers: E has no uppercase captions (menu headers 13/18).
-        caption: _system(13, 18, 600, muted),
-        cardTitle: _manrope(15, 20, 700, text),
-        rowTitle: _manrope(17, 21, 700, text),
-        liveRowTitle: _manrope(19, 24, 700, text),
-        rowMeta: _manrope(13, 18, 400, muted),
-        body: _manrope(15, 22, 400, text),
-        button: _manrope(15, 20, 700, text),
-        tabLabel: _system(10, 12, 500, muted),
-        tabLabelActive: _system(10, 12, 600, text),
-        stripDate: _manrope(18, 22, 600, text),
-        stripWeekday: _system(13, 16, 500, muted),
-        monthDate: _manrope(15, 20, 500, text),
-        dayTitle: _system(28, 34, 700, text, tracking: -0.01),
-        // E summary line, 700 15/20 secondary.
-        dayCaption: _manrope(15, 20, 700, muted),
-        threadTitle: _manrope(17, 21, 700, text),
-        threadMeta: _manrope(13, 18, 400, muted),
-      );
+  factory DotType.withColors({
+    required Color text,
+    required Color muted,
+  }) => DotType(
+    // Chrome in the platform's own face (E §3.3, decision C).
+    pageTitle: _system(28, 34, 700, text),
+    pageTitleExpanded: _system(30, 36, 700, text),
+    topBarTitle: _system(24, 32, 400, text),
+    // Section headers: E has no uppercase captions (menu headers 13/18).
+    caption: _system(13, 18, 600, muted),
+    cardTitle: _manrope(15, 20, 700, text),
+    rowTitle: _manrope(17, 21, 700, text),
+    liveRowTitle: _manrope(19, 24, 700, text),
+    rowMeta: _manrope(13, 18, 400, muted),
+    body: _manrope(15, 22, 400, text),
+    button: _manrope(15, 20, 700, text),
+    tabLabel: _system(10, 12, 500, muted),
+    tabLabelActive: _system(10, 12, 600, text),
+    stripDate: _manrope(18, 22, 600, text),
+    stripWeekday: _system(13, 16, 500, muted),
+    monthDate: _manrope(15, 20, 500, text),
+    dayTitle: _system(28, 34, 700, text, tracking: -0.01),
+    // E summary line, 700 15/20 secondary.
+    dayCaption: _manrope(15, 20, 700, muted),
+    threadTitle: _manrope(17, 21, 700, text),
+    threadMeta: _manrope(13, 18, 400, muted),
+    // Decision screens from CR-160 (main, PR #75), in the Concept E content face.
+    promptTitle: _manrope(22, 28, 700, text),
+    choiceTitle: _manrope(17, 22, 700, text),
+  );
 
   static const fontFamily = 'Manrope';
 
@@ -143,6 +150,13 @@ final class DotType {
   /// A day-thread row's time range (13/400, muted, E row time).
   final TextStyle threadMeta;
 
+  /// A decision screen's or prompt's title: sign out, delete, the account
+  /// choices (CR-160 boards A1–A3, B1, G1, D1; 22/700).
+  final TextStyle promptTitle;
+
+  /// An option's title on a decision screen (B1, G1; 17/700).
+  final TextStyle choiceTitle;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -169,6 +183,8 @@ final class DotType {
       dayCaption: l(dayCaption, other.dayCaption),
       threadTitle: l(threadTitle, other.threadTitle),
       threadMeta: l(threadMeta, other.threadMeta),
+      promptTitle: l(promptTitle, other.promptTitle),
+      choiceTitle: l(choiceTitle, other.choiceTitle),
     );
   }
 }

@@ -61,3 +61,65 @@ test('append keeps what is already queued', async () => {
   await q.append(caches, base, { id: 'b' });
   assert.deepEqual((await q.read(caches, base)).map((e) => e.id), ['a', 'b']);
 });
+
+// CR-160 I7: the worker stamps the owner the app published, or nobody.
+function memoryCaches() {
+  const store = new Map();
+  return {
+    store,
+    open: async () => ({
+      match: async (url) => (store.has(url) ? new Response(store.get(url)) : undefined),
+      put: async (url, response) => store.set(url, await response.text()),
+    }),
+  };
+}
+
+test('append stamps the published owner and guest session', async () => {
+  const caches = memoryCaches();
+  const base = 'https://dottoday.app/';
+  const ownerUrl = new URL('__snapshot/queue_owner.json', base).href;
+  await q.append(caches, base, { id: 'none-yet' });
+  caches.store.set(ownerUrl, JSON.stringify({ v: 1, owner: 'A', guest_session: 's1' }));
+  await q.append(caches, base, { id: 'a' });
+  caches.store.set(ownerUrl, JSON.stringify({ v: 1, switching: true }));
+  await q.append(caches, base, { id: 'mid-switch' });
+  const list = await q.read(caches, base);
+  assert.deepEqual(list.map((e) => [e.id, e.owner, e.guest_session]), [
+    ['none-yet', undefined, undefined],
+    ['a', 'A', 's1'],
+    ['mid-switch', undefined, undefined],
+  ]);
+});
+
+test('appends at once all survive (Web Locks turn by turn)', async () => {
+  const caches = memoryCaches();
+  const base = 'https://dottoday.app/';
+  let tail = Promise.resolve();
+  const saved = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  Object.defineProperty(globalThis, 'navigator', {
+    configurable: true,
+    value: { locks: { request: (_name, body) => (tail = tail.then(() => body())) } },
+  });
+  try {
+    await Promise.all(Array.from({ length: 20 }, (_, i) => q.append(caches, base, { id: `e${i}` })));
+    assert.equal((await q.read(caches, base)).length, 20);
+  } finally {
+    if (saved) Object.defineProperty(globalThis, 'navigator', saved);
+    else delete globalThis.navigator;
+  }
+});
+
+test('refused while deleting, when full or unreadable: nothing queued', async () => {
+  const caches = memoryCaches();
+  const base = 'https://dottoday.app/';
+  const ownerUrl = new URL('__snapshot/queue_owner.json', base).href;
+  const queueUrl = new URL('__snapshot/actions.json', base).href;
+  caches.store.set(ownerUrl, JSON.stringify({ v: 1, refuse: true }));
+  assert.equal(await q.append(caches, base, { id: 'r' }), false);
+  caches.store.set(ownerUrl, JSON.stringify({ v: 1, owner: 'A' }));
+  caches.store.set(queueUrl, JSON.stringify(Array.from({ length: 500 }, (_, i) => ({ id: `e${i}` }))));
+  assert.equal(await q.append(caches, base, { id: 'full' }), false);
+  caches.store.set(queueUrl, '{not json');
+  assert.equal(await q.append(caches, base, { id: 'x' }), false);
+  assert.equal(caches.store.get(queueUrl), '{not json', 'never overwritten');
+});

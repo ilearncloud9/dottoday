@@ -4,4 +4,12 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Debug builds only (CR-160 I1): the queue's integration-test hooks
+         (intents/QueueDebugHooks.kt, in this source set only). -->
+    <application>
+        <provider
+            android:name=".intents.QueueDebugHooks"
+            android:authorities="${applicationId}.queuedebug"
+            android:exported="false"/>
+    </application>
 </manifest>

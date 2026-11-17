@@ -47,7 +47,10 @@ DeviceReporter deviceReporter(Ref ref) {
         settings: latest.settings.copyWith(alarmDeviceId: id),
         updatedAt: ref.read(clockProvider).nowUtc(),
       );
-      await ref
+      // Through the container: the write path depends on this reporter
+      // (via NotificationSync), so `ref.read` is a CircularDependencyError
+      // in debug builds; reading it when the claim runs is not a cycle.
+      await ref.container
           .read(writeUseCaseProvider)
           .apply(WriteBatch(userId: next.id, profile: next));
     },

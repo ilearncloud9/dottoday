@@ -16,7 +16,7 @@ set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a4","role":"authenticated"}';
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"occurrences","id":"20000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"title":"Run","actual_start_utc":"2026-10-21T07:42:00Z","actual_end_utc":"2026-10-21T08:16:00Z","duration_from_steps":"true"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a4","entity":"occurrences","id":"20000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"title":"Run","actual_start_utc":"2026-10-21T07:42:00Z","actual_end_utc":"2026-10-21T08:16:00Z","duration_from_steps":"true"}}]'::jsonb)$$,
          pg_temp.hlc(-60000)),
   'A pushes actual start/end and duration_from_steps');
 select results_eq(
@@ -25,14 +25,14 @@ select results_eq(
   'actual timestamps applied');
 
 select lives_ok(
-  format($$select public.sync_push('[{"entity":"subtasks","id":"30000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"occurrence_id":"20000000-0000-0000-0000-0000000004a1","title":"Stretch","duration_min":"2"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a4","entity":"subtasks","id":"30000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"occurrence_id":"20000000-0000-0000-0000-0000000004a1","title":"Stretch","duration_min":"2"}}]'::jsonb)$$,
          pg_temp.hlc(-50000)),
   'A pushes a step with a 2 min duration');
 select is((select duration_min from public.subtasks where id = '30000000-0000-0000-0000-0000000004a1'), 2,
   'step duration applied');
 
 select throws_ok(
-  format($$select public.sync_push('[{"entity":"subtasks","id":"30000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"duration_min":"0"}}]'::jsonb)$$,
+  format($$select public.sync_push('[{"owner":"00000000-0000-0000-0000-0000000000a4","entity":"subtasks","id":"30000000-0000-0000-0000-0000000004a1","hlc":"%s","fields":{"duration_min":"0"}}]'::jsonb)$$,
          pg_temp.hlc(-40000)),
   '23514', null, 'a 0 min step is refused');
 select throws_ok(

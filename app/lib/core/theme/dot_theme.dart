@@ -158,6 +158,11 @@ ThemeData _build(DotColors c) {
       ),
     ),
     dialogTheme: DialogThemeData(
+      // A question never spans a wide window (CR-160 B7 gate, G2).
+      constraints: const BoxConstraints(
+        minWidth: DotSize.dialogMin,
+        maxWidth: DotSize.promptWidth,
+      ),
       backgroundColor: c.raised,
       surfaceTintColor: Colors.transparent,
     ),

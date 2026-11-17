@@ -171,13 +171,15 @@ object WakeUpAlarms {
         return true
     }
 
-    /** Stops and forgets every alarm: the Wake Up switch went off. */
+    /** Stops and forgets every alarm and gentle check: the Wake Up switch
+     * went off, or the owner changed (CR-160). */
     fun disarmAll(context: Context) {
         load(context).forEach { alarms(context).cancel(ring(context, it.id)) }
         save(context, emptyList())
         context.getSystemService(android.app.NotificationManager::class.java)
             .cancel(WakeUpActions.SNOOZED_NOTE)
         WakeUpRingService.stop(context)
+        WakeUpChecks.cancelAll(context)
     }
 
     /** After a reboot or an update: arms again what is still ahead. */

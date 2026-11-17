@@ -44,9 +44,17 @@ abstract interface class AccountService {
   /// on every other device (docs/06 §2 "Sign out everywhere").
   Future<Result<void, AppFailure>> signOut({bool everywhere = false});
 
-  /// Deletes the account and its synced data (docs/06 §6); the device keeps
-  /// its local copy.
-  Future<Result<void, AppFailure>> deleteAccount();
+  /// Deletes the account and its synced data (docs/06 §6); its copy on this
+  /// device is then removed (CR-160 policy §4: export first is the only
+  /// recovery).
+  /// [expectedRevision] is the server revision D1's review verified
+  /// (CR-160 W2): the server deletes only at that revision.
+  /// [ReviewChangedFailure]: the server changed since (nothing deleted).
+  /// `NetworkFailure(timeout)`: the outcome is unknown (the account may be
+  /// deleted, or frozen until a retry finishes it); never "not deleted".
+  Future<Result<void, AppFailure>> deleteAccount({
+    required int expectedRevision,
+  });
 }
 
 /// "Bringing your tasks… 120 of 300".

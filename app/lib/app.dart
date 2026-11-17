@@ -12,13 +12,16 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
+import 'package:dottoday/data/notifications/reminder_refusal.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/pwa/tab_live_dot.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/features/auth/account_gate_view.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
+import 'package:dottoday/features/notifications/reminder_refusal_snack.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
@@ -56,6 +59,17 @@ class DottodayApp extends ConsumerWidget {
     }
     ref.listen(focusRequestProvider, (_, r) {
       if (r != null) _openFocus(router, r.id);
+    });
+    // A reminder action refused while an account was being deleted (CR-160
+    // §4): the generic "couldn't save", never a silent success; an open
+    // D1 dialog says it itself.
+    ref.listen(reminderRefusalProvider, (_, r) {
+      if (r == null) return;
+      showReminderRefusal(
+        ref,
+        router.routerDelegate.navigatorKey.currentState?.overlay?.context,
+        r,
+      );
     });
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -95,9 +109,13 @@ class DottodayApp extends ConsumerWidget {
                     child: DatabaseGate(
                       // The optional app lock over everything else (M5.8).
                       child: LockGate(
-                        // First run on this device (M4).
-                        child: OnboardingGate(
-                          child: child ?? const SizedBox.shrink(),
+                        // After a change of owner: signed out, guest work,
+                        // settings, an unfinished removal (CR-160).
+                        child: AccountGateView(
+                          // First run on this device (M4).
+                          child: OnboardingGate(
+                            child: child ?? const SizedBox.shrink(),
+                          ),
                         ),
                       ),
                     ),

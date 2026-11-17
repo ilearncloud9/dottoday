@@ -3,6 +3,7 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/calendar/calendar_importer.dart';
 import 'package:dottoday/data/calendar/drift_calendar_source_repository.dart';
 import 'package:dottoday/data/mappers/entity_mappers.dart';
+import 'package:dottoday/data/owners/deletion_seal.dart';
 import 'package:dottoday/data/sync/requeue.dart';
 import 'package:dottoday/domain/calendar/calendar_import_plan.dart';
 import 'package:dottoday/domain/calendar/calendar_import_rules.dart';
@@ -146,6 +147,17 @@ void main() {
     expect(dirty.every((r) => !r.dirty), isTrue);
   });
 
+  test('nothing is imported for an account being deleted; after, it is '
+      '(CR-160 policy §4)', () async {
+    await sealForDeletion(h.db, userId);
+    expect(await run(), const Err<void, AppFailure>(StorageFailure()));
+    expect(await imported(), isEmpty);
+    expect(await h.db.select(h.db.calendarLinks).get(), isEmpty);
+    await unsealDeletion(h.db, userId);
+    expect(await run(), isA<Ok<void, AppFailure>>());
+    expect(await imported(), isNotEmpty);
+  });
+
   test('a second run changes nothing', () async {
     await run();
     final before = await imported();
@@ -254,7 +266,7 @@ void main() {
     'a re-sync after sign-in to another account leaves imports out',
     () async {
       await run();
-      await h.db.transaction(() => requeueAll(h.db, h.hlc));
+      await h.db.transaction<void>(() => requeueOwner(h.db, userId, h.hlc));
       final queued = await h.changeLog();
       expect(queued, isNotEmpty, reason: 'the profile is queued');
       expect(queued.where((c) => c.entity == 'occurrences'), isEmpty);

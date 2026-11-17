@@ -10,11 +10,14 @@ import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
+import 'package:dottoday/data/db/app_database.dart';
+import 'package:dottoday/data/db/database_providers.dart';
 import 'package:dottoday/data/intents/intent_providers.dart';
 import 'package:dottoday/data/intents/no_action_queue_store.dart';
 import 'package:dottoday/data/notifications/notification_sync.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/refresh/daily_refresh.dart';
 import 'package:dottoday/data/refresh/refresh_providers.dart';
@@ -34,6 +37,7 @@ import 'package:dottoday/domain/notifications/notification_planner.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/repositories/series_repository.dart';
 import 'package:dottoday/domain/trash/trash_service.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,6 +69,9 @@ final class _Gateway implements NotificationGateway {
 
   @override
   Future<void> apply(NotificationDiff diff) async {}
+
+  @override
+  Future<void> clearAll() async {}
 }
 
 void main() {
@@ -151,6 +158,10 @@ void main() {
         notificationSyncProvider.overrideWithValue(sync),
         dailyRefreshProvider.overrideWithValue(refresh),
         actionQueueStoreProvider.overrideWithValue(const NoActionQueueStore()),
+        // Read to publish the queue's owner (CR-160 I7).
+        appDatabaseProvider.overrideWithValue(
+          AppDatabase(NativeDatabase.memory()),
+        ),
         windDownSnapshotProvider.overrideWithValue(
           WindDownSnapshot(
             clock: FakeClock(DateTime.utc(2026, 10, 21)),
@@ -241,6 +252,17 @@ void main() {
     await tester.pump(const Duration(hours: 5));
     await tester.pumpAndSettle();
     verify(() => backup.runDailyIfDue(testUserId)).called(2);
+  });
+
+  testWidgets('another owner shown runs it again (CR-160 I7)', (tester) async {
+    await pump(tester);
+    await tester.pumpAndSettle();
+    expect(gateway.resyncs, 1);
+    ProviderScope.containerOf(
+      tester.element(find.byType(SizedBox)),
+    ).read(ownerEpochProvider.notifier).next();
+    await tester.pumpAndSettle();
+    expect(gateway.resyncs, 2);
   });
 
   testWidgets('a Mac wake or a clock change runs it at once', (tester) async {

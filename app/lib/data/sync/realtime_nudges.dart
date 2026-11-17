@@ -52,8 +52,20 @@ final class RealtimeNudges {
   /// The longest wait between reopenings.
   final Duration retryMax;
 
-  /// The nudges; listening opens the feed, cancelling closes it.
-  Stream<void> stream() {
+  /// The nudges; listening opens the feed, cancelling closes it. Each
+  /// listen opens a feed of its own: sync listens again at every sign-in
+  /// after a sign-out (CR-160 criterion 11, found on macOS: a second
+  /// listen threw and the next account never synced by itself).
+  Stream<void> stream() => Stream.multi((out) {
+    final sub = _feed().listen(
+      out.add,
+      onError: out.addError,
+      onDone: out.close,
+    );
+    out.onCancel = sub.cancel;
+  });
+
+  Stream<void> _feed() {
     // Closed by its own onCancel, when sync stops listening.
     // ignore: close_sinks
     late final StreamController<void> out;

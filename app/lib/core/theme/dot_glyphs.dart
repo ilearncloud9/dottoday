@@ -50,6 +50,13 @@ abstract final class DotGlyphs {
 
   // Interface.
   static const check = DotGlyph('M5 12.5l4.5 4.5L19 7.5');
+
+  /// Changes not yet in the account (CR-160 A2): a cloud with an arrow
+  /// into it.
+  static const cloudSync = DotGlyph(
+    'M6.5 17h10.4a3.8 3.8 0 0 0 .4-7.6A5.5 5.5 0 0 0 6.9 8.3 4.4 4.4 0 0 0 '
+    '6.5 17zM12 10.5v4.5M9.8 12.8l2.2 2.2 2.2-2.2',
+  );
   static const chevronDown = DotGlyph('M6 9l6 6 6-6');
   static const chevronUp = DotGlyph('M6 15l6-6 6 6');
   static const chevronLeft = DotGlyph('M15 6l-6 6 6 6');
@@ -121,6 +128,9 @@ abstract final class DotGlyphs {
   static final help = DotGlyph(
     '${_c(12, 12, 9)}M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01',
   );
+
+  /// Settled, nothing to do (CR-160 G1b): a check in a ring.
+  static final checkCircle = DotGlyph('${_c(12, 12, 9)}M8 12.5l2.8 2.8L16 9.8');
   static final info = DotGlyph('${_c(12, 12, 9)}M12 11v6M12 7h.01');
   static const trash = DotGlyph(
     'M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6'

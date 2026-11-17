@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 
 /// What a feature looks like in minimal mode (docs/14 §3).
@@ -34,6 +35,11 @@ enum FeatureVisibility {
 /// ```
 final class LayoutPolicy {
   const LayoutPolicy(this.layout);
+
+  /// The policy [settings] ask for: B1 (CR-160) compares two profiles'
+  /// layouts through it, never through the flag itself.
+  factory LayoutPolicy.forSettings(Settings settings) =>
+      LayoutPolicy(settings.uiLayout);
 
   /// The layout this policy answers for.
   final UiLayout layout;

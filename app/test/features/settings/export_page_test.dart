@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
@@ -73,6 +74,23 @@ void main() {
     expect(find.textContaining("Couldn't save or share"), findsOneWidget);
   });
 
+  testWidgets('an export too large to restore says so; nothing handed over, '
+      'never "Exported" (CR-160 Stage B0)', (tester) async {
+    await pump(tester);
+    exports.failure = const ExportTooLargeFailure();
+    await _tap(tester, 'Everything (JSON)');
+    expect(
+      find.text(
+        'This export is too large for Dottoday to restore using the current '
+        'import format. No restorable export was created.',
+      ),
+      findsOneWidget,
+    );
+    expect(files.delivered, isEmpty);
+    expect(find.text('Exported'), findsNothing);
+    await expectA11yGuidelines(tester);
+  });
+
   testWidgets('import says what it replaces; nothing before Replace', (
     tester,
   ) async {
@@ -80,7 +98,7 @@ void main() {
     files.picked = PickedBytes(utf8.encode(text));
     await pump(tester);
     await _tap(tester, 'Import a backup…');
-    expect(files.pickLimits, [maxImportBytes]);
+    expect(files.picks, 1);
     expect(find.text('Replace your tasks with this backup?'), findsOneWidget);
     expect(find.textContaining('has 3 tasks'), findsOneWidget);
     expect(find.textContaining('moves to Trash'), findsOneWidget);

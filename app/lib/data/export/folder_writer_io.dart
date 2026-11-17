@@ -19,3 +19,19 @@ Future<void> writeToFolder(String folder, List<ExportFile> files) async {
     }
   }
 }
+
+/// Copies each prepared file ([files]: name, temporary path) into [folder]
+/// (Mac, CR-160 B7), the same way: `.part`, then renamed into place.
+Future<void> copyIntoFolder(String folder, List<(String, String)> files) async {
+  for (final (name, path) in files) {
+    final target = File('$folder${Platform.pathSeparator}$name');
+    final part = File('${target.path}.part');
+    try {
+      await File(path).copy(part.path);
+      await part.rename(target.path);
+    } on FileSystemException {
+      if (part.existsSync()) await part.delete();
+      rethrow;
+    }
+  }
+}

@@ -149,7 +149,7 @@ final class DeviceReporterProvider
   }
 }
 
-String _$deviceReporterHash() => r'f823a10cb28a205abd11572bf863be867b5ab648';
+String _$deviceReporterHash() => r'e634e9bc87cbf4acbedd2b1228db24fbc15dce1c';
 
 /// [userId]'s devices as last seen, most recent first.
 

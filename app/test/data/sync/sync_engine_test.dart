@@ -1,4 +1,4 @@
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
@@ -179,50 +179,73 @@ void main() {
     expect(bRows.map((r) => r.id).toSet(), ids);
   });
 
-  test('signing in re-keys the device profile, its rows and outbox', () async {
-    final c = SyncDevice(server, _t, name: 'c');
-    addTearDown(c.close);
-    // Tasks made before there was an account.
-    await c.h.writes.apply(
-      WriteBatch(
-        userId: 'device-local',
-        profile: profileFixture().copyWith(id: 'device-local'),
-        occurrences: [occurrenceFixture().copyWith(userId: 'device-local')],
-      ),
-    );
-    expect(await adoptAccount(c.h.db, _account, c.h.hlc), 'device-local');
-    expect((await c.h.db.select(c.h.db.profiles).get()).single.id, _account);
-    final row = (await c.h.db.select(c.h.db.occurrences).get()).single;
-    expect(row.userId, _account);
-    final log = await c.h.db.select(c.h.db.changeLog).get();
-    expect(
-      log.where((r) => r.entity == 'profiles').map((r) => r.entityId).toSet(),
-      {_account},
-    );
-    // And they go up under the account.
-    await c.sync();
-    expect(server.table('occurrences'), hasLength(1));
-    expect(server.table('profiles').keys, [_account]);
-    expect(
-      await adoptAccount(c.h.db, _account, c.h.hlc),
-      isNull,
-      reason: 'once',
-    );
-  });
+  test(
+    'a guest who chose to bring its tasks: the tasks move once, the guest stays',
+    () async {
+      final c = SyncDevice(server, _t, name: 'c');
+      addTearDown(c.close);
+      // Tasks made before there was an account.
+      await c.h.writes.apply(
+        WriteBatch(
+          userId: 'device-local',
+          profile: profileFixture().copyWith(id: 'device-local'),
+          occurrences: [occurrenceFixture().copyWith(userId: 'device-local')],
+        ),
+      );
+      expect(await c.signIn(_account), OwnerChange.guestChoiceNeeded);
+      expect(
+        await c.signIn(_account, choice: GuestChoice.bringIn),
+        OwnerChange.newAccount,
+      );
+      // The task moved; the guest keeps its own profile (never re-keyed).
+      final profiles = await c.h.db.select(c.h.db.profiles).get();
+      expect(
+        profiles.map((p) => p.id),
+        unorderedEquals(['device-local', _account]),
+      );
+      final row = (await c.h.db.select(c.h.db.occurrences).get()).single;
+      expect(row.userId, _account);
+      final log = await c.h.db.select(c.h.db.changeLog).get();
+      expect(
+        log
+            .where((r) => r.entity == 'occurrences')
+            .map((r) => r.ownerId)
+            .toSet(),
+        {_account},
+      );
+      expect(
+        log.where((r) => r.ownerId == _account).map((r) => r.entityId).toSet(),
+        {_account, row.id},
+      );
+      // And they go up under the account.
+      await c.sync();
+      expect(server.table('occurrences'), hasLength(1));
+      expect(server.table('profiles').keys, [_account]);
+      expect(await c.signIn(_account), OwnerChange.unchanged, reason: 'once');
+    },
+  );
 
-  // M6.5: the account this device synced with was deleted (or another
-  // signs in): its server has none of the rows, the outbox was emptied.
-  test('another account: everything on the device goes up again', () async {
+  // CR-160 (ED-193): this used to assert the leak, everything on the
+  // device going up to the next account. Now nothing of A's crosses.
+  test('another account signs in: none of the first account goes up', () async {
     await a.write([_task('Dentist')]);
     await a.sync();
-    expect(await a.outboxSize(), 0);
+    await a.write([_task('Dentist, moved')]); // pending for A
     const other = '01928c3e-0000-7000-8000-0000000000ee';
     final next = FakeSyncServer(other);
-    expect(await adoptAccount(a.h.db, other, a.h.hlc), _account);
-    expect(await a.outboxSize(), greaterThan(0));
-    await SyncDevice.engineFor(a, next).run(other);
-    expect(next.table('occurrences').keys, [occurrenceFixture().id]);
+    expect(await a.signIn(other), OwnerChange.newAccount);
+    final run = await SyncDevice.engineFor(a, next).run(other);
+    expect(next.table('occurrences'), isEmpty);
     expect(next.table('profiles').keys, [other]);
+    expect(run.pushed, greaterThan(0), reason: "B's own new profile");
+    // A's row and its pending edit are still A's, still waiting.
+    final row = (await a.h.db.select(a.h.db.occurrences).get()).single;
+    expect(row.userId, _account);
+    final pending = await a.h.db.select(a.h.db.changeLog).get();
+    expect(
+      pending.where((c) => c.entity == 'occurrences').map((c) => c.ownerId),
+      everyElement(_account),
+    );
   });
 
   test('pages: more rows than a page all arrive', () async {

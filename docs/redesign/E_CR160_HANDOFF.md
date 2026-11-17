@@ -1,6 +1,6 @@
 # E-CR160 implementation handoff (ED-231)
 
-- **Status:** design COMPLETE for A1, A2 (both states), A3, B1 and the "Choose settings" return path (ED-222 to ED-230, CR-173 resolved). **CR-160 stays CRITICAL — OPEN — RELEASE BLOCKER.**
+- **Status:** design COMPLETE for A1, A2 (both states), A3, B1 and the "Choose settings" return path (ED-222 to ED-230, CR-173 resolved). **CR-160 CLOSED by the owner 2026-11-16** ([ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merged to main; accepted limits and the remaining production step, `docs/cr-160-rollout.md`, are in `docs/cr-160-verification.md` § "Owner close-out 2026-11-16"). These boards are the approved account screens for M20.12 (ED-362).
 - **This file proves no acceptance criterion.** Finished mockups do not satisfy criterion 2 (safe sign-out) or criterion 7 (no silent settings replacement). Only the build's checks in `docs/cr-160-verification.md` can do that, and on 2026-11-09 they read:
   - criterion 2: PARTIAL (I7 share-extension race and the misleading offline error are still open);
   - criterion 7: PASS (automated) only. B1 has not been tapped on any platform run.

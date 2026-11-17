@@ -8,6 +8,16 @@
 (function (scope) {
   const CACHE = 'dottoday-day-snapshot';
   const PATH = '__snapshot/actions.json';
+  // Whom entries are stamped with, as the app publishes it (CR-160 I7;
+  // lib/domain/intents/action_queue_store.dart encodeQueueOwner).
+  const OWNER_PATH = '__snapshot/queue_owner.json';
+  // The Web Lock the app's remove and publish take too
+  // (lib/data/snapshot/web/snapshot_store_web.dart withQueueLock).
+  const LOCK = 'dottoday-action-queue';
+  // Most entries and bytes; past either a new entry is refused, never an
+  // older one evicted (queueCapacity in action_queue_store.dart).
+  const CAPACITY = 500;
+  const MAX_BYTES = 1000000;
 
   // RFC 9562 UUID v7: 48-bit Unix ms, version 7, variant 10, random rest.
   function uuidV7(nowMs, random) {
@@ -41,25 +51,68 @@
   }
 
   async function read(caches, base) {
+    return (await stored(caches, base)) || [];
+  }
+
+  // The stored array; [] when there is none, null when it can't be read
+  // (then nothing is written over it, CR-160 I7).
+  async function stored(caches, base) {
     const cache = await caches.open(CACHE);
     const hit = await cache.match(new URL(PATH, base).href);
     if (!hit) return [];
     try {
       const list = await hit.json();
-      return Array.isArray(list) ? list : [];
+      return Array.isArray(list) ? list : null;
     } catch (_) {
-      return [];
+      return null;
     }
   }
 
-  async function append(caches, base, entry) {
-    const list = await read(caches, base);
-    list.push(entry);
-    const cache = await caches.open(CACHE);
-    await cache.put(new URL(PATH, base).href, new Response(JSON.stringify(list), {
-      headers: { 'content-type': 'application/json' },
-    }));
+  // [entry] with the owner [marker] names (its id and guest session), or
+  // as it is while a change of owner is under way or before the app
+  // published one: the app then keeps it and never applies it.
+  function stamp(entry, marker) {
+    if (!marker || marker.switching === true || marker.refuse === true ||
+        typeof marker.owner !== 'string' || !marker.owner) {
+      return entry;
+    }
+    const out = { ...entry, owner: marker.owner };
+    if (typeof marker.guest_session === 'string') out.guest_session = marker.guest_session;
+    return out;
   }
 
-  scope.dottodayActionQueue = { uuidV7, fromNotification, read, append };
+  async function readOwner(caches, base) {
+    const cache = await caches.open(CACHE);
+    const hit = await cache.match(new URL(OWNER_PATH, base).href);
+    if (!hit) return null;
+    try { return await hit.json(); } catch (_) { return null; }
+  }
+
+  function locked(body) {
+    const locks = scope.navigator && scope.navigator.locks;
+    return locks ? locks.request(LOCK, body) : body();
+  }
+
+  // Appends [entry], stamped with the published owner, under the queue's
+  // lock, so the app's read-then-write never overwrites it. Resolves false,
+  // queuing nothing, while the app refuses (an account being deleted), when
+  // the queue is full or can't be read: the caller opens the app instead.
+  function append(caches, base, entry) {
+    return locked(async () => {
+      const marker = await readOwner(caches, base);
+      if (marker && marker.refuse === true) return false;
+      const list = await stored(caches, base);
+      if (!list || list.length >= CAPACITY) return false;
+      list.push(stamp(entry, marker));
+      const body = JSON.stringify(list);
+      if (body.length > MAX_BYTES) return false;
+      const cache = await caches.open(CACHE);
+      await cache.put(new URL(PATH, base).href, new Response(body, {
+        headers: { 'content-type': 'application/json' },
+      }));
+      return true;
+    });
+  }
+
+  scope.dottodayActionQueue = { uuidV7, fromNotification, read, append, stamp };
 })(self);

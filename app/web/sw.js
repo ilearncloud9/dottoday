@@ -108,8 +108,8 @@ self.addEventListener('notificationclick', (event) => {
     // Done (and +15) need no tab: queue for the next one (M9.2d).
     const entry = self.dottodayActionQueue.fromNotification(
       message.action, message.payload, await readSnapshot(), Date.now());
-    if (entry) {
-      await self.dottodayActionQueue.append(caches, self.registration.scope, entry);
+    // Refused (an account being deleted) or full: the app opens instead.
+    if (entry && await self.dottodayActionQueue.append(caches, self.registration.scope, entry)) {
       return;
     }
     // Delivered when the opened page says it is listening.

@@ -50,8 +50,8 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 **Still open · owner decision:** .  
 **Still open · design fix:** CR-048, CR-069, CR-081, CR-082, CR-083, CR-084.  
 **Still open · verification:** CR-121.  
-**Still open · implementation:** CR-042, CR-068, CR-087, CR-097, CR-098, CR-104, CR-106, CR-142, CR-158, CR-159, CR-160, CR-161, CR-163, CR-164. CR-160 stays **CRITICAL — OPEN — RELEASE BLOCKER**.  
-**Round 2:** none. At the close-out (ED-335) 12 became Resolved (CR-076 to CR-080, CR-085, CR-086, CR-088 to CR-090, CR-094, CR-127), 6 design fix and 1 implementation (CR-087, waiting on CR-160).
+**Still open · implementation:** CR-042, CR-068, CR-087, CR-097, CR-098, CR-104, CR-106, CR-142, CR-158, CR-159, CR-160, CR-161, CR-163, CR-164. **CR-160 CLOSED 2026-11-16** (owner close-out, PR #75 merged; `docs/cr-160-verification.md`); it stays listed until M20.12 builds its screens on this branch.  
+**Round 2:** none. At the close-out (ED-335) 12 became Resolved (CR-076 to CR-080, CR-085, CR-086, CR-088 to CR-090, CR-094, CR-127), 6 design fix and 1 implementation (CR-087; its CR-160 wait ended 2026-11-16 when PR #75 merged, and the account screens are approved as E-CR160, ED-362).
 
 **Notes from the reconciliation:**
 - The main tables below were never updated after Addenda 1–3. CR-032, CR-034, CR-036, CR-043, CR-109 and CR-110 still show their old status there; the addenda and this section supersede it.
@@ -151,7 +151,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-084 | This week, Past days, year strip | Still open · design fix | Day review, Week in review and ‹ stepping (G2-12 · ED-099); year strip in Round 2 (ED-166) · **Round 2 close-out (ED-335):** This week drawn (R2-14, R2-24, R2-28); Past days and the year strip still undrawn |
 | CR-085 | Low-energy screen | Resolved | G4-1 · ED-166 · **Round 2 close-out (ED-335):** R2-22 (ED-322) |
 | CR-086 | Wake Up family and notifications | Resolved | Settings, alarm and device picker drawn (ED-084); card, Check, missions, notifications in Round 2 stage 3 (ED-166) · **Round 2 close-out (ED-335):** R2-19 (ED-314), R2-20 (ED-317) |
-| CR-087 | Account, sync, data, Trash | Still open · implementation | Sync states (G4-7 · ED-186, ED-187, direction only, not merged); account screens (ED-222 to ED-230); recovery, app lock, export, backups, import, Trash in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Sync, data and Trash drawn (R2-8, R2-21, R2-28, R2-30); account screens wait on CR-160 |
+| CR-087 | Account, sync, data, Trash | Still open · implementation | Sync states (G4-7 · ED-186, ED-187, direction only, not merged); account screens (ED-222 to ED-230); recovery, app lock, export, backups, import, Trash in Round 2 (ED-166) · **Round 2 close-out (ED-335):** Sync, data and Trash drawn (R2-8, R2-21, R2-28, R2-30); account screens wait on CR-160 · **2026-11-17:** CR-160 closed (PR #75 merged, 2026-11-16) and the account screens approved as E-CR160 (ED-362); M20.12 builds them |
 | CR-088 | System surfaces | Resolved | G4-1 · ED-166 stage 3 · **Round 2 close-out (ED-335):** R2-17 (ED-309), Android shortcuts R2-29 (ED-332) |
 | CR-089 | Onboarding | Resolved | G4-1 · ED-166 stage 3 · **Round 2 close-out (ED-335):** R2-16 (ED-305) |
 | CR-090 | Duplicate-day picker, Copy-day confirmation | Resolved | G4-1 · ED-166 · **Round 2 close-out (ED-335):** R2-22, R2-29, R2-30 (ED-322, ED-332, ED-333) |
@@ -224,7 +224,7 @@ Implementation and device testing are outside these dispositions: a Resolved ent
 | CR-157 | Narrow toolbar overflow | Resolved | ED-183 |
 | CR-158 | Expired session shows generic error | Still open · implementation | Design shows Sign in again (E-G4-7-States A10; G4-7 Q1 · ED-187, direction only). App unchanged |
 | CR-159 | Web storage not persistent | Still open · implementation | Design closed: G4-7 Q2 · ED-188 to ED-192. Not built |
-| CR-160 | Cross-account data leak | Still open · implementation | **CRITICAL · RELEASE BLOCKER** (ED-193). Screens designed (ED-222 to ED-231); criteria 2 and 7 not met in the build |
+| CR-160 | Cross-account data leak | Closed 2026-11-16 (owner) · M20.12 builds the E screens | Was **CRITICAL · RELEASE BLOCKER** (ED-193). PR #75 merged to main and into this branch; all 12 criteria PASS with accepted limits (`docs/cr-160-verification.md` § "Owner close-out 2026-11-16"). Screens approved as E-CR160 (ED-222 to ED-231, ED-362) |
 | CR-161 | Conflict Undo | Still open · implementation | Design approved: G4-7 Q3 · ED-194. Not built |
 | CR-162 | Dark amber glyph | Resolved | ED-196 (device tests PENDING) |
 | CR-163 | Keep both for notes | Still open · implementation | Design approved: G4-7 Q4 · ED-195, ED-196. Not built |

@@ -1,5 +1,5 @@
-import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/sync/stable_ids.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -71,11 +71,13 @@ const maxStarters = 5;
 
 /// [picked] as planned one-off tasks on the day [shape] covers (tomorrow,
 /// so today stays as it is), in time order. [titleOf] gives each its
-/// title in the user's language.
+/// title in the user's language. Ids are [starterTaskId]s of the day, so
+/// onboarding twice (another device, or as a guest later adopted) never
+/// plants the same starter twice (CR-160 criterion 8).
 ///
 /// ```dart
 /// starterTasks(picked: {StarterHabit.lunch}, titleOf: l10n…, shape: tomorrow,
-///   zone: berlin, userId: id, nowUtc: now, ids: ids).single.title;
+///   zone: berlin, userId: id, nowUtc: now).single.title;
 /// ```
 List<Occurrence> starterTasks({
   required Iterable<StarterHabit> picked,
@@ -84,12 +86,13 @@ List<Occurrence> starterTasks({
   required tz.Location zone,
   required String userId,
   required DateTime nowUtc,
-  required IdGenerator ids,
 }) {
+  final wake = tz.TZDateTime.from(shape.wakeUtc, zone);
+  final day = DateTime(wake.year, wake.month, wake.day);
   final rows = [
     for (final h in picked.take(maxStarters))
       Occurrence(
-        id: ids.newId(),
+        id: starterTaskId(userId, h, day),
         userId: userId,
         title: titleOf(h),
         colorKey: h.colorKey,

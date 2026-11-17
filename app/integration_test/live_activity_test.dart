@@ -3,11 +3,13 @@
 // ends it at once and, through the action queue, ticks the task in the
 // database; +15 moves the task's end once. iOS only.
 import 'package:dottoday/core/ids/id_generator.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/intents/action_queue_store.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -62,7 +64,27 @@ void main() {
     }
     await waitUntil(tester, () async => (await stored()).durationMin == 45);
 
-    await _channel.invokeMethod<void>('perform', {'kind': 'done', 'id': id});
+    // CR-160 I7: while Dottoday refuses (an account being deleted), Done
+    // saves nothing and the activity stays as it was: no false success.
+    const intents = MethodChannel('dottoday/intents');
+    await intents.invokeMethod<void>('publishOwner', {
+      'owner': encodeQueueMarker(const QueueRefusing()),
+    });
+    final queueBefore = await intents.invokeMethod<String>('readQueue');
+    final refused = await _channel.invokeMethod<bool>('perform', {
+      'kind': 'done',
+      'id': id,
+    });
+    expect(refused, isFalse);
+    expect(await _active(), contains(id));
+    expect(await intents.invokeMethod<String>('readQueue'), queueBefore);
+    await container.read(ownerSwitchProvider).publishShownOwner();
+
+    final queued = await _channel.invokeMethod<bool>('perform', {
+      'kind': 'done',
+      'id': id,
+    });
+    expect(queued, isTrue);
     expect(await _active(), isNot(contains(id)));
     await waitUntil(
       tester,

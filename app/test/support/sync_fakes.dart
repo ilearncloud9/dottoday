@@ -16,6 +16,13 @@ final class FakeSyncService implements SyncService {
   final resolved = <(String, ConflictChoice)>[];
   var synced = 0;
 
+  /// What D1's verification finds (verified at revision 0 by default).
+  Future<DeletionCheck> Function(String owner) verify = (_) async =>
+      const DeletionVerified(serverRevision: 0, generation: 0);
+
+  /// The owners verified, in order.
+  final verified = <String>[];
+
   @override
   Stream<SyncStatus> watch() async* {
     yield _last;
@@ -42,4 +49,10 @@ final class FakeSyncService implements SyncService {
   @override
   Stream<RestoreProgress> watchRestore() =>
       Stream.value(const RestoreProgress(done: 0, total: 0));
+
+  @override
+  Future<DeletionCheck> verifyForDeletion(String owner) {
+    verified.add(owner);
+    return verify(owner);
+  }
 }

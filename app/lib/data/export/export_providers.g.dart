@@ -93,4 +93,52 @@ final class ExportServiceProvider
   }
 }
 
-String _$exportServiceHash() => r'48e0c3d696bdf5023c1774066ffd78d327622e22';
+String _$exportServiceHash() => r'dd1a5bd712a739077b9752eee9f81b28bde2b2df';
+
+/// A multipart export's part target (§4: 10 MB). Tests shrink it so a
+/// small account exports as a set.
+
+@ProviderFor(exportPartTarget)
+final exportPartTargetProvider = ExportPartTargetProvider._();
+
+/// A multipart export's part target (§4: 10 MB). Tests shrink it so a
+/// small account exports as a set.
+
+final class ExportPartTargetProvider extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
+  /// A multipart export's part target (§4: 10 MB). Tests shrink it so a
+  /// small account exports as a set.
+  ExportPartTargetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'exportPartTargetProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$exportPartTargetHash();
+
+  @$internal
+  @override
+  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  int create(Ref ref) {
+    return exportPartTarget(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+}
+
+String _$exportPartTargetHash() => r'b2fcdb1131dca7d5b1ed9b1779723fe18e303c73';

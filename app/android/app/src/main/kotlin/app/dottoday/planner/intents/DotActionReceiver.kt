@@ -29,7 +29,11 @@ class DotActionReceiver : BroadcastReceiver() {
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                perform(prefs(context), kind, occurrenceId, plannedEnd, System.currentTimeMillis())
+                // Refused (an account being deleted, or full): nothing queued,
+                // nothing shown as done (CR-160 I7).
+                if (!perform(prefs(context), kind, occurrenceId, plannedEnd, System.currentTimeMillis())) {
+                    return@launch
+                }
                 OngoingDot.afterAction(context, kind, occurrenceId)
                 redraw(context)
                 IntentQueueBridge.notifyQueued()
@@ -70,17 +74,23 @@ class DotActionReceiver : BroadcastReceiver() {
             )
         }
 
-        /** Appends to the queue and patches the snapshot, in one commit. */
+        /**
+         * Appends to the queue and patches the snapshot, in one commit; false,
+         * with nothing queued or patched, when the queue refuses it.
+         */
         fun perform(
             prefs: SharedPreferences,
             kind: DotActionKind,
             occurrenceId: String,
             plannedEndMs: Long?,
             nowMs: Long,
-        ) = synchronized(DotQueue) {
-            val queue = prefs.getString(DotQueue.KEY, null)
-                ?.let { runCatching { JSONArray(it) }.getOrNull() } ?: JSONArray()
-            queue.put(JsonMaps.fromValue(DotQueue.entry(kind, nowMs, occurrenceId, plannedEndMs)))
+        ): Boolean = synchronized(DotQueue) {
+            val queue = DotQueue.parse(prefs.getString(DotQueue.KEY, null)) ?: return@synchronized false
+            val entry = DotQueue.entry(kind, nowMs, occurrenceId, plannedEndMs)
+            val marker = prefs.getString(DotQueue.OWNER_KEY, null)
+            if (!DotQueue.accepts(queue, marker, entry)) return@synchronized false
+            // The owner shown when it was tapped (CR-160 I7).
+            queue.put(JsonMaps.fromValue(DotQueue.stamp(entry, marker)))
             val edit = prefs.edit().putString(DotQueue.KEY, queue.toString())
             prefs.getString(DotQueue.SNAPSHOT_KEY, null)
                 ?.let { runCatching { JsonMaps.toMap(JSONObject(it)) }.getOrNull() }
@@ -90,20 +100,24 @@ class DotActionReceiver : BroadcastReceiver() {
         }
 
         /**
-         * The app's drain removes what it settled (and, with [unreadable],
-         * entries without an id) in one step under the same lock as
-         * [perform], so an action queued meanwhile is never lost.
+         * The app's drain removes what it settled in one step under the same
+         * lock as [perform], so an action queued meanwhile is never lost.
+         * Entries without an id stay (CR-160 I7: never discarded unread).
          */
-        fun remove(prefs: SharedPreferences, ids: Set<String>, unreadable: Boolean) = synchronized(DotQueue) {
+        fun remove(prefs: SharedPreferences, ids: Set<String>) = synchronized(DotQueue) {
             val queue = prefs.getString(DotQueue.KEY, null)
                 ?.let { runCatching { JSONArray(it) }.getOrNull() } ?: return@synchronized
             val kept = JSONArray()
             for (i in 0 until queue.length()) {
                 val id = (queue.opt(i) as? JSONObject)?.optString("id", "")?.takeIf { it.isNotEmpty() }
-                val drop = if (id == null) unreadable else id in ids
-                if (!drop) kept.put(queue.opt(i))
+                if (id == null || id !in ids) kept.put(queue.opt(i))
             }
             prefs.edit().putString(DotQueue.KEY, kept.toString()).commit()
+        }
+
+        /** The app's published owner, under the lock [perform] stamps under (CR-160 I7). */
+        fun publishOwner(prefs: SharedPreferences, marker: String) = synchronized(DotQueue) {
+            prefs.edit().putString(DotQueue.OWNER_KEY, marker).commit()
         }
 
         private suspend fun redraw(context: Context) {

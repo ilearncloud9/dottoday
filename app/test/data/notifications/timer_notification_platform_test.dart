@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/timer_notification_platform.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -84,5 +86,82 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(got.single.actionId, 'done');
     expect(await platform.launchTap(), isNull);
+  });
+
+  group('a change of owner (CR-160 I3, I6)', () {
+    testWidgets('clearAll drops every timer and closes what is shown', (
+      tester,
+    ) async {
+      final shown = <int>[];
+      var closed = 0;
+      final platform = TimerNotificationPlatform(
+        clock: FakeClock(start),
+        show: (x) async {
+          shown.add(x.id);
+          return true;
+        },
+        onInApp: (_) => fail('permission was granted'),
+        closeShown: () async => closed++,
+      );
+      await platform.schedule(n(1, 5));
+      await platform.schedule(n(2, 10));
+      await platform.clearAll();
+      await tester.pump(const Duration(minutes: 20));
+      expect(shown, isEmpty);
+      expect(closed, 1);
+      expect(await platform.pending(), isEmpty);
+    });
+
+    testWidgets('a disposed platform never fires, however late', (
+      tester,
+    ) async {
+      final shown = <int>[];
+      final platform = TimerNotificationPlatform(
+        clock: FakeClock(start),
+        show: (x) async {
+          shown.add(x.id);
+          return true;
+        },
+        onInApp: (_) => fail('the old owner reached the banner'),
+      )..dispose();
+      await platform.schedule(n(1, 5));
+      await tester.pump(const Duration(minutes: 20));
+      expect(shown, isEmpty);
+      expect(await platform.pending(), isEmpty);
+    });
+
+    testWidgets('disposed while posting: no in-app banner after', (
+      tester,
+    ) async {
+      final posting = Completer<bool>();
+      final platform = TimerNotificationPlatform(
+        clock: FakeClock(start),
+        show: (_) => posting.future,
+        onInApp: (_) => fail('the old owner reached the banner'),
+      );
+      await platform.schedule(n(1, 1));
+      await tester.pump(const Duration(minutes: 2));
+      platform.dispose();
+      posting.complete(false);
+      await tester.pump();
+    });
+
+    testWidgets('timers armed before dispose are cancelled with it', (
+      tester,
+    ) async {
+      final shown = <int>[];
+      final platform = TimerNotificationPlatform(
+        clock: FakeClock(start),
+        show: (x) async {
+          shown.add(x.id);
+          return true;
+        },
+        onInApp: (_) {},
+      );
+      await platform.schedule(n(1, 5));
+      platform.dispose();
+      await tester.pump(const Duration(minutes: 20));
+      expect(shown, isEmpty);
+    });
   });
 }

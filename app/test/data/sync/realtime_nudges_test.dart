@@ -53,6 +53,18 @@ void main() {
     expect(feeds.single.closed, isTrue);
   });
 
+  // Sync listens again at every sign-in after a sign-out (CR-160): a
+  // single-subscription stream threw there, found on macOS.
+  test('listening again after a cancel opens a new feed', () async {
+    await sub.cancel();
+    sub = nudges.stream().listen((_) => nudged++);
+    expect(feeds, hasLength(2));
+    expect(feeds.first.closed, isTrue);
+    feeds.last.onChange();
+    await pumpEventQueue();
+    expect(nudged, 1);
+  });
+
   // Joining is reported before the server's change feed is live; a change
   // in between is never announced, so "live" nudges too (found against the
   // local stack, tool/sync/realtime_live_check_test.dart).

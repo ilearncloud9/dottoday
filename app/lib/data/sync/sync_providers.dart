@@ -6,8 +6,10 @@ import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/db/database_providers.dart';
+import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/sync/account_adoption.dart';
+import 'package:dottoday/data/sync/account_owners.dart';
+import 'package:dottoday/data/sync/deletion_verifier.dart';
 import 'package:dottoday/data/sync/drift_conflict_store.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/server_clock.dart';
@@ -15,6 +17,7 @@ import 'package:dottoday/data/sync/supabase_sync_gateway.dart';
 import 'package:dottoday/data/sync/sync_engine.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/profile/local_profile_service.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,6 +44,10 @@ final class LocalOnlySyncService implements SyncService {
   @override
   Stream<RestoreProgress> watchRestore() =>
       Stream.value(const RestoreProgress(done: 0, total: 0));
+
+  @override
+  Future<DeletionCheck> verifyForDeletion(String owner) async =>
+      const DeletionUnverified(AuthFailure());
 }
 
 /// This device's clock against the server's, from fresh access tokens
@@ -63,20 +70,43 @@ SyncService syncService(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   final clock = ref.watch(clockProvider);
   final gateway = SupabaseSyncGateway(client);
+  final engine = SyncEngine(
+    db: db,
+    gateway: gateway,
+    hlc: ref.watch(sharedHlcProvider),
+    clock: clock,
+    clockOffset: () => ref.read(serverClockProvider)?.offset,
+  );
+  final verifier = DeletionVerifier(
+    engine: engine,
+    gateway: gateway,
+    db: db,
+    logger: ref.watch(loggerProvider),
+  );
   final service = EngineSyncService(
-    engine: SyncEngine(
-      db: db,
-      gateway: gateway,
-      hlc: ref.watch(sharedHlcProvider),
-      clock: clock,
-      clockOffset: () => ref.read(serverClockProvider)?.offset,
-    ),
-    accounts: _accountIds(client),
+    engine: engine,
+    verify: verifier.verify,
+    accounts: accountIdChanges(client),
     adopt: (id) async {
-      // Rows now belong to the account: the profile is read again.
-      if (await adoptAccount(db, id, ref.read(sharedHlcProvider)) != null) {
-        ref.invalidate(localProfileProvider);
-      }
+      final zone = await ref.read(deviceTimeZoneProvider.future);
+      final language = ref.read(deviceLanguageProvider);
+      // The switch around the sign-in step: what widgets and the share
+      // extension queued for the owner shown is applied first, and every
+      // screen, reminder and widget follows another owner (CR-160 I7, I8).
+      final result = await ref
+          .read(ownerSwitchProvider)
+          .signIn(
+            () => signInOwner(
+              db,
+              id,
+              ref.read(sharedHlcProvider),
+              freshProfile: (account) =>
+                  freshAccountProfile(account, zone, language, clock.nowUtc()),
+            ),
+          );
+      // The guest's tasks wait for the person's choice (CR-160): not
+      // shown under the account, not synced, until it is recorded.
+      return result.change != OwnerChange.guestChoiceNeeded;
     },
     conflicts: DriftConflictStore(
       db: db,
@@ -94,7 +124,7 @@ SyncService syncService(Ref ref) {
 }
 
 /// The signed-in account's id, or null; distinct.
-Stream<String?> _accountIds(SupabaseClient client) async* {
+Stream<String?> accountIdChanges(SupabaseClient client) async* {
   String? last = client.auth.currentUser?.id;
   yield last;
   await for (final s in client.auth.onAuthStateChange) {

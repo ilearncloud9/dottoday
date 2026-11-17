@@ -34,6 +34,19 @@ enum ActionOutcome {
 
   /// The write failed; the action stays queued for the next drain.
   failed,
+
+  /// Queued for another owner than the one shown (CR-160 I7): nothing
+  /// written, it stays queued until its owner is shown again.
+  notOwner,
+
+  /// An Add task whose id another owner's row already holds: nothing
+  /// written; kept, since its text may be the only copy (CR-160 I7).
+  foreign,
+
+  /// Done, +15 or Start for a task another owner holds: permanently
+  /// invalid for the owner it was queued for. Nothing written; dropped
+  /// once the outcome is recorded (CR-160 I7, owner 2026-11-09).
+  droppedForeign,
 }
 
 /// The five B6 intents (docs/11 §0, docs/09 M9.2), defined once. Widgets,
@@ -43,7 +56,9 @@ enum ActionOutcome {
 /// snapshot and notifications follow.
 ///
 /// Ids come from the surface and are only trusted for the current profile
-/// (06 §7): a lookup under another account finds nothing.
+/// (06 §7): a lookup under another account finds nothing. An entry is
+/// applied only for the owner it was queued for, and its write commits only
+/// while that owner is still the one shown (CR-160 I7).
 final class DotIntents {
   DotIntents({
     required Clock clock,
@@ -53,6 +68,7 @@ final class DotIntents {
     required Future<Profile> Function() profile,
     required Future<DaySnapshot> Function() snapshot,
     required String Function(String languageCode) untitled,
+    required Future<String?> Function(String id) ownerOf,
     IdGenerator ids = const UuidV7Generator(),
   }) : _clock = clock,
        _writes = writes,
@@ -61,6 +77,7 @@ final class DotIntents {
        _profile = profile,
        _snapshot = snapshot,
        _untitled = untitled,
+       _ownerOf = ownerOf,
        _ids = ids;
 
   final Clock _clock;
@@ -70,25 +87,32 @@ final class DotIntents {
   final Future<Profile> Function() _profile;
   final Future<DaySnapshot> Function() _snapshot;
   final String Function(String languageCode) _untitled;
+
+  /// The owner of the task or repeat [id] under any owner, or null.
+  final Future<String?> Function(String id) _ownerOf;
   final IdGenerator _ids;
 
   /// `WhatsNext`: the day snapshot, rewritten now, so every surface agrees
   /// with the answer ([DaySnapshot.current], [DaySnapshot.next]).
   Future<DaySnapshot> whatsNext() => _snapshot();
 
-  /// Runs [action] now, as a fresh queue entry (in-process callers: the
-  /// Mac menu bar, the app's own intent handlers).
-  Future<ActionOutcome> run(DotAction action) => apply(
+  /// Runs [action] now, as a fresh queue entry for the owner shown
+  /// (in-process callers: the Mac menu bar, the app's own intent handlers).
+  Future<ActionOutcome> run(DotAction action) async => apply(
     QueuedAction(
       id: _ids.newId(),
       createdAtUtc: _clock.nowUtc(),
       action: action,
+      owner: (await _profile()).id,
     ),
   );
 
-  /// Applies [queued]; safe to call again with the same entry.
+  /// Applies [queued] for its own owner only; safe to call again with the
+  /// same entry. An entry with no owner, or another owner than the one
+  /// shown, is [ActionOutcome.notOwner]: never applied here.
   Future<ActionOutcome> apply(QueuedAction queued) async {
     final profile = await _profile();
+    if (queued.owner != profile.id) return ActionOutcome.notOwner;
     return switch (queued.action) {
       final AddTask a => _addTask(profile, queued.id, a),
       MarkDone(:final occurrenceId) => _change(
@@ -108,7 +132,7 @@ final class DotIntents {
 
   Future<ActionOutcome> _addFifteen(String userId, AddFifteen a) async {
     final task = await _live(userId, a.occurrenceId);
-    if (task == null) return ActionOutcome.droppedMissing;
+    if (task == null) return _missing(userId, a.occurrenceId);
     // Compared in whole milliseconds: what every surface carries (a stored
     // time has no microseconds; one made in the app may).
     final end = task.endUtc!.millisecondsSinceEpoch;
@@ -133,7 +157,7 @@ final class DotIntents {
     Occurrence? Function(Occurrence) change,
   ) async {
     final task = await _live(userId, id);
-    if (task == null) return ActionOutcome.droppedMissing;
+    if (task == null) return _missing(userId, id);
     final changed = change(task);
     if (changed == null) return ActionOutcome.alreadyApplied;
     return _write(WriteBatch(userId: userId, occurrences: [changed]));
@@ -149,6 +173,7 @@ final class DotIntents {
         await _series.findById(profile.id, id) != null) {
       return ActionOutcome.alreadyApplied;
     }
+    if (await _isForeign(profile.id, id)) return ActionOutcome.foreign;
     final now = _clock.nowUtc();
     final parsed = const QuickAddParser().parse(
       text,
@@ -197,13 +222,29 @@ final class DotIntents {
     );
   }
 
+  /// Gone for [userId]: dropped when nobody holds it (deleted, purged);
+  /// when another owner does, the reference is invalid for [userId] for
+  /// good. Either way nothing is written to anyone's task.
+  Future<ActionOutcome> _missing(String userId, String id) async =>
+      await _isForeign(userId, id)
+      ? ActionOutcome.droppedForeign
+      : ActionOutcome.droppedMissing;
+
+  Future<bool> _isForeign(String userId, String id) async {
+    final owner = await _ownerOf(id);
+    return owner != null && owner != userId;
+  }
+
   Future<Occurrence?> _live(String userId, String id) async {
     final task = await _occurrences.findById(userId, id);
     return task == null || task.deletedAt != null ? null : task;
   }
 
+  // Only while the owner is shown, checked in the write's own transaction:
+  // a change of owner between the check above and the commit fails the
+  // write, and the action stays queued for its owner (CR-160 I7).
   Future<ActionOutcome> _write(WriteBatch batch) async =>
-      switch (await _writes.apply(batch)) {
+      switch (await _writes.apply(batch.whileShown())) {
         Ok() => ActionOutcome.applied,
         Err() => ActionOutcome.failed,
       };

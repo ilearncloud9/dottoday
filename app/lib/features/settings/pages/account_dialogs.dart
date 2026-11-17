@@ -34,54 +34,17 @@ Future<void> renameProfile(BuildContext context, String current) async {
   }
 }
 
-/// "Delete your account?": true only once the confirm word is typed
-/// (docs/06 §6: deleting is never one tap).
-/// What the delete-account dialog came back with.
-enum DeleteChoice { delete, exportFirst, cancel }
-
-/// "Delete account?" with the typed word (06 §6), and "Export my data
-/// first" (docs/09 M6.5) for keeping a copy before it goes.
-Future<DeleteChoice> confirmDeleteAccount(BuildContext context) async {
-  final l10n = context.l10n;
-  final typed = await showDialog<String>(
-    context: context,
-    builder: (_) => _TextDialog(
-      title: l10n.accountDeleteTitle,
-      body: l10n.accountDeleteBody(l10n.accountDeleteWord),
-      action: l10n.accountDelete,
-      mustMatch: l10n.accountDeleteWord,
-      extra: (l10n.accountDeleteExportFirst, _exportFirst),
-    ),
-  );
-  if (typed == _exportFirst) return DeleteChoice.exportFirst;
-  return typed?.trim() == l10n.accountDeleteWord
-      ? DeleteChoice.delete
-      : DeleteChoice.cancel;
-}
-
-/// Not something a person types: the extra action's result.
-const _exportFirst = '\u0000export'; // l10n-ignore: a sentinel, never shown
-
-/// A dialog with one field; with [mustMatch], the action stays off until
-/// the field holds it. Owns its controller for the dialog's life.
+/// A dialog with one field. Owns its controller for the dialog's life.
 class _TextDialog extends StatefulWidget {
   const _TextDialog({
     required this.title,
     required this.action,
     this.initial = '',
-    this.body,
-    this.mustMatch,
-    this.extra,
   });
 
   final String title;
   final String action;
   final String initial;
-  final String? body;
-  final String? mustMatch;
-
-  /// A third action: (label, what the dialog returns).
-  final (String, String)? extra;
 
   @override
   State<_TextDialog> createState() => _TextDialogState();
@@ -89,8 +52,7 @@ class _TextDialog extends StatefulWidget {
 
 /// A leaf: only the field.
 class _TextDialogState extends State<_TextDialog> {
-  late final _text = TextEditingController(text: widget.initial)
-    ..addListener(() => setState(() {}));
+  late final _text = TextEditingController(text: widget.initial);
 
   @override
   void dispose() {
@@ -98,45 +60,25 @@ class _TextDialogState extends State<_TextDialog> {
     super.dispose();
   }
 
-  bool get _ok =>
-      widget.mustMatch == null || _text.text.trim() == widget.mustMatch;
-
-  void _submit() {
-    if (_ok) Navigator.of(context).pop(_text.text);
-  }
+  void _submit() => Navigator.of(context).pop(_text.text);
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return AlertDialog(
       title: Text(widget.title),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (widget.body case final body?) Text(body),
-          TextField(
-            controller: _text,
-            autofocus: true,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (_) => _submit(),
-          ),
-        ],
+      content: TextField(
+        controller: _text,
+        autofocus: true,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => _submit(),
       ),
       actions: [
-        if (widget.extra case (final label, final value))
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(value),
-            child: Text(label),
-          ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(l10n.editorCancel),
         ),
-        FilledButton(
-          onPressed: _ok ? _submit : null,
-          child: Text(widget.action),
-        ),
+        FilledButton(onPressed: _submit, child: Text(widget.action)),
       ],
     );
   }

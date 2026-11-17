@@ -85,6 +85,22 @@ final class ServerPushMirror implements NotificationPlatform {
     await _guard((t) => _store.remove(t.subscriptionId, [id]));
   }
 
+  /// The tab's timers and shown notifications, then this browser's
+  /// not-yet-sent server copies (CR-160 I3). Called before signing out,
+  /// while the session can still delete them; a server error is logged
+  /// and never blocks the switch.
+  @override
+  Future<void> clearAll() async {
+    await _inner.clearAll();
+    try {
+      final t = await _target();
+      if (t != null) await _store.clearPending(t.subscriptionId);
+    } on Object {
+      // The event only: the error may quote the request (CLAUDE.md §4).
+      _logger.warn('push.clear_failed');
+    }
+  }
+
   @override
   Future<void> schedule(OsNotification n) async {
     await _inner.schedule(n);

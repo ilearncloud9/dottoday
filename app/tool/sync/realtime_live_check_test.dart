@@ -70,6 +70,7 @@ void main() {
 
   Future<void> push() => gateway.push([
     PushChange(
+      owner: client.auth.currentUser!.id,
       entity: 'occurrences',
       id: _uuid(random),
       hlc: _hlc(),

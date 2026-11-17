@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 /// migration 0016): a local cache for "Alarm sounds on", refreshed from the
 /// server and holding this install's own row. Not in the outbox: each
 /// install writes only its own row, straight to the server. Times are epoch
-/// milliseconds, UTC. Schema 18.
+/// milliseconds, UTC. Schema 23.
 @DataClassName('DeviceRow')
 @TableIndex(name: 'devices_user', columns: {#userId})
 class DevicesTable extends Table {

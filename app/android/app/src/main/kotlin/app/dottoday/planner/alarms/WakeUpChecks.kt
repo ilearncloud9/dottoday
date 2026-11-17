@@ -39,6 +39,7 @@ object WakeUpChecks {
             return
         }
         alarms(context).setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending(context, alarm))
+        remember(context, alarm.id)
     }
 
     /** Calls off the checks of [days] (`yyyy-MM-dd`): those days began. */
@@ -51,7 +52,43 @@ object WakeUpChecks {
             WakeUpAlarms.disarm(context, checkId(id))
             notes(context).cancel(id.hashCode())
         }
+        forget(context, days.map { "wakeup:$it" })
     }
+
+    /**
+     * Calls off every gentle check, pending or showing (CR-160: a change of
+     * owner). Each carries its task's title and a link to it, and is neither
+     * in [WakeUpAlarms]'s list nor a notification the app's plugin tracks,
+     * so a switch would otherwise leave the old owner's check behind. Loud
+     * checks are alarms: [WakeUpAlarms.disarmAll] stops those.
+     */
+    fun cancelAll(context: Context) {
+        val ids = remembered(context)
+        for (id in ids) {
+            val pending = pending(context, WakeUpAlarm.blank(id))
+            alarms(context).cancel(pending)
+            pending.cancel()
+            notes(context).cancel(id.hashCode())
+        }
+        prefs(context).edit().remove(ARMED).apply()
+    }
+
+    /** The ids of gentle checks armed and not yet called off. */
+    private fun remembered(context: Context): Set<String> =
+        prefs(context).getStringSet(ARMED, emptySet()).orEmpty()
+
+    private fun remember(context: Context, id: String) {
+        // Newest first and few: one check a day, kept two weeks at most.
+        val ids = (remembered(context) + id).sortedDescending().take(14).toSet()
+        prefs(context).edit().putStringSet(ARMED, ids).apply()
+    }
+
+    private fun forget(context: Context, ids: Collection<String>) {
+        prefs(context).edit().putStringSet(ARMED, remembered(context) - ids.toSet()).apply()
+    }
+
+    private fun prefs(context: Context) =
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** Whether [id]'s gentle check is armed (the device test). */
     fun armed(context: Context, id: String): Boolean = PendingIntent.getBroadcast(
@@ -114,6 +151,8 @@ object WakeUpChecks {
 
     private fun notes(context: Context) = context.getSystemService(NotificationManager::class.java)
 
+    private const val PREFS = "wake_up_checks"
+    private const val ARMED = "armed"
     private const val EXTRA_TITLE = "title"
     private const val EXTRA_BODY = "body"
     private const val EXTRA_START = "start"

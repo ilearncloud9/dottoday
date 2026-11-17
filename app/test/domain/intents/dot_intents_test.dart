@@ -1,3 +1,4 @@
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/snapshot/day_snapshot_writer.dart';
@@ -32,7 +33,7 @@ void main() {
   QueuedAction queued(
     DotAction action, {
     String id = '01928c3e-0000-7000-8000-00000000a000',
-  }) => QueuedAction(id: id, createdAtUtc: _now, action: action);
+  }) => QueuedAction(id: id, createdAtUtc: _now, action: action, owner: userId);
 
   setUp(() async {
     h = WriteHarness(_now);
@@ -58,6 +59,7 @@ void main() {
         sink: h.sink,
       ).write(userId),
       untitled: (_) => 'Untitled',
+      ownerOf: (id) => taskOwnerOf(h.db, id),
     );
   });
   tearDown(() => h.dispose());
@@ -165,6 +167,7 @@ void main() {
       final shared = decodeQueuedAction({
         'id': id,
         'at_ms': _now.millisecondsSinceEpoch,
+        'owner': userId,
         'kind': 'add_task',
         'shared': true,
         'text': 'Dentist tomorrow 3pm 20m https://dentist.example/booking',

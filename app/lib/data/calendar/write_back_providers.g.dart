@@ -260,7 +260,7 @@ final class WriteBackControllerProvider
 }
 
 String _$writeBackControllerHash() =>
-    r'955358fd6bccb6cfd893821f03251377d8299ee5';
+    r'aea3c91adf1f5619bfa58c8db4906da50067ab8f';
 
 /// Sends edits of imported events back as they happen (a short pause
 /// first, so typing a title sends once), and keeps what needs the person

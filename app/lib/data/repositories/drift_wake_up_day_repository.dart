@@ -1,26 +1,37 @@
+import 'package:dottoday/data/daos/profiles_dao.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/domain/repositories/wake_up_day_repository.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:drift/drift.dart';
 
-/// [WakeUpDayRepository] over `wake_up_days` (docs/15 §3, schema 10).
+/// [WakeUpDayRepository] over `wake_up_days` (docs/15 §3, schema 10): the
+/// shown owner's mornings only (schema 22, CR-160 Wake Up audit). Alarm
+/// events are folded in before a change of owner (`OwnerSwitch`), so they
+/// land with the owner whose alarm rang.
 final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   const DriftWakeUpDayRepository(this._db);
 
   final AppDatabase _db;
 
   @override
-  Stream<WakeUpDay?> watch(String date) => (_db.select(
-    _db.wakeUpDaysTable,
-  )..where((d) => d.date.equals(date))).watchSingleOrNull().map(_toDay);
+  Stream<WakeUpDay?> watch(String date) async* {
+    final owner = await _owner();
+    yield* (_db.select(_db.wakeUpDaysTable)
+          ..where((d) => d.ownerId.equals(owner) & d.date.equals(date)))
+        .watchSingleOrNull()
+        .map(_toDay);
+  }
 
   @override
   Future<WakeUpDay?> lastAlarm() async {
     final t = _db.wakeUpDaysTable;
+    final owner = await _owner();
     final row =
         await (_db.select(t)
               ..where(
-                (d) => d.rangAtUtc.isNotNull() | d.stoppedAtUtc.isNotNull(),
+                (d) =>
+                    d.ownerId.equals(owner) &
+                    (d.rangAtUtc.isNotNull() | d.stoppedAtUtc.isNotNull()),
               )
               ..orderBy([(d) => OrderingTerm.desc(d.date)])
               ..limit(1))
@@ -31,9 +42,12 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   @override
   Future<List<WakeUpDay>> recentStops(int limit) async {
     final t = _db.wakeUpDaysTable;
+    final owner = await _owner();
     final rows =
         await (_db.select(t)
-              ..where((d) => d.stoppedAtUtc.isNotNull())
+              ..where(
+                (d) => d.ownerId.equals(owner) & d.stoppedAtUtc.isNotNull(),
+              )
               ..orderBy([(d) => OrderingTerm.desc(d.date)])
               ..limit(limit))
             .get();
@@ -43,11 +57,12 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   @override
   Future<void> applyEvents(List<AlarmEvent> events) =>
       _db.transaction(() async {
+        final owner = await _owner();
         for (final event in events) {
           final date = event.date;
           if (date == null) continue;
-          final day = await _read(date) ?? WakeUpDay(date: date);
-          await _write(applyAlarmEvent(day, event));
+          final day = await _read(owner, date) ?? WakeUpDay(date: date);
+          await _write(owner, applyAlarmEvent(day, event));
         }
       });
 
@@ -68,29 +83,39 @@ final class DriftWakeUpDayRepository implements WakeUpDayRepository {
   @override
   Future<List<DateTime>> missionSkipsSince(DateTime sinceUtc) async {
     final t = _db.wakeUpDaysTable;
+    final owner = await _owner();
     final rows =
         await (_db.select(t)..where(
-              (d) => d.missionSkippedAtUtc.isBiggerThanValue(_ms(sinceUtc)!),
+              (d) =>
+                  d.ownerId.equals(owner) &
+                  d.missionSkippedAtUtc.isBiggerThanValue(_ms(sinceUtc)!),
             ))
             .get();
     return [for (final r in rows) ?_utc(r.missionSkippedAtUtc)];
   }
 
   Future<void> _update(String date, WakeUpDay Function(WakeUpDay) change) =>
-      _db.transaction(
-        () async => _write(change(await _read(date) ?? WakeUpDay(date: date))),
-      );
+      _db.transaction(() async {
+        final owner = await _owner();
+        final day = await _read(owner, date) ?? WakeUpDay(date: date);
+        await _write(owner, change(day));
+      });
 
-  Future<WakeUpDay?> _read(String date) async => _toDay(
-    await (_db.select(
-      _db.wakeUpDaysTable,
-    )..where((d) => d.date.equals(date))).getSingleOrNull(),
+  /// The shown owner; '' (rows no one sees) when none is shown.
+  Future<String> _owner() async =>
+      (await ProfilesDao(_db).findActive())?.id ?? '';
+
+  Future<WakeUpDay?> _read(String owner, String date) async => _toDay(
+    await (_db.select(_db.wakeUpDaysTable)
+          ..where((d) => d.ownerId.equals(owner) & d.date.equals(date)))
+        .getSingleOrNull(),
   );
 
-  Future<void> _write(WakeUpDay day) => _db
+  Future<void> _write(String owner, WakeUpDay day) => _db
       .into(_db.wakeUpDaysTable)
       .insertOnConflictUpdate(
         WakeUpDaysTableCompanion.insert(
+          ownerId: Value(owner),
           date: day.date,
           rangAtUtc: Value(_ms(day.rangAtUtc)),
           stoppedAtUtc: Value(_ms(day.stoppedAtUtc)),

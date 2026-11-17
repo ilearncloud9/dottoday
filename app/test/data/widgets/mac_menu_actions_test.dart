@@ -1,3 +1,4 @@
+import 'package:dottoday/data/intents/queue_owners.dart';
 import 'package:dottoday/data/repositories/drift_occurrence_repository.dart';
 import 'package:dottoday/data/repositories/drift_series_repository.dart';
 import 'package:dottoday/data/widgets/mac_menu_actions.dart';
@@ -78,6 +79,7 @@ void main() {
         profile: () async => profileFixture(),
         snapshot: () => throw UnimplementedError(),
         untitled: (_) => 'Untitled',
+        ownerOf: (id) => taskOwnerOf(h.db, id),
       ),
       channel: _channel,
     );
