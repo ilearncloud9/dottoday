@@ -4,6 +4,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -99,6 +100,19 @@ void main() {
     await tester.pumpAndSettle();
     // A swipe down, or the scrim.
     await tester.tapAt(const Offset(195, 20));
+    await tester.pumpAndSettle();
+    expect(find.byType(BottomSheet), findsNothing);
+    expect(address(), AppRoutes.today);
+  });
+
+  testWidgets('Esc closes the sheet and removes ?task= (Mac, web)', (
+    tester,
+  ) async {
+    await pump(tester, const Size(390, 900));
+    router.go('/today?task=${task.id}');
+    await tester.pumpAndSettle();
+    expect(find.byType(BottomSheet), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byType(BottomSheet), findsNothing);
     expect(address(), AppRoutes.today);

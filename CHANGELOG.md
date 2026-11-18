@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On phones Settings is no longer a tab (redesign branch): tap your profile at the top right of Today, and Back takes you where you were. The phone date title is shorter, like "Wed, Nov 18".
+
+### Changed
 - The address now shows the day, week or month on screen (redesign branch): on the web, Back and Forward step through the days you looked at and Refresh keeps your place. A link to a day opens it inside the Today tab.
 
 ### Changed

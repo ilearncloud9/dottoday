@@ -1,5 +1,6 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -17,6 +18,7 @@ import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/shared/dot/day_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/navigation/settings_button.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,20 +73,33 @@ class TodayHeader extends ConsumerWidget {
                   monthOpen: monthOpen,
                 ),
               ),
-              if (low)
-                LowEnergySwitch(
-                  onChanged: (on) => toggleLowEnergy(context, on: on),
-                )
-              else if (date != today)
+              if (!low && date != today)
                 TodayPill(onTap: onToday)
-              else if (extras)
+              else if (!low && extras)
                 TodayDot(today: today),
               TodayMenu(date: date, today: today),
+              // Phones: Settings behind the profile (ED-238); wider
+              // windows keep it at the foot of the rail or sidebar.
+              if (AppLayout.classOf(context) == WidthClass.compact)
+                const SettingsButton(),
             ],
           ),
+          // Low energy's switch sits by its caption: the top row has the
+          // title, ⋯ and Settings (ED-238) and no room for it on a phone.
           if (low)
-            _Caption(
-              l10n.lowEnergyCaption(DateFormat.MMMEd(locale).format(date)),
+            Row(
+              children: [
+                Expanded(
+                  child: _Caption(
+                    l10n.lowEnergyCaption(
+                      DateFormat.MMMEd(locale).format(date),
+                    ),
+                  ),
+                ),
+                LowEnergySwitch(
+                  onChanged: (on) => toggleLowEnergy(context, on: on),
+                ),
+              ],
             )
           else if (!monthOpen && extras)
             DayNumbers(date: date),
@@ -100,8 +115,11 @@ class TodayHeader extends ConsumerWidget {
     final otherMonth = month.year != today.year || month.month != today.month;
     if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
     // The date, as Structured's header (ADR-0015); the spread keeps the
-    // greeting (dayTitle).
-    return DateFormat.yMMMMd(locale).format(date);
+    // greeting (dayTitle). Phones share the row with ⋯ and Settings
+    // (ED-238), so the short date, as E-Phones draws it (ED-040).
+    return AppLayout.classOf(context) == WidthClass.compact
+        ? DateFormat.MMMEd(locale).format(date)
+        : DateFormat.yMMMMd(locale).format(date);
   }
 }
 

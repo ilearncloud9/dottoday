@@ -10536,6 +10536,12 @@ abstract class AppLocalizations {
   /// **'Forward'**
   String get shortcutForward;
 
+  /// Phones: the profile circle in the top row that opens Settings (ED-238); its name for screen readers and its tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings and account'**
+  String get settingsAndAccount;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

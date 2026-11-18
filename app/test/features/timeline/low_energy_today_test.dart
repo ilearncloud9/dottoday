@@ -16,7 +16,7 @@ void main() {
   testWidgets("Today's ⋯ turns it on until tomorrow's Wake Up", (tester) async {
     await pumpToday(tester);
     expect(
-      find.textContaining('October 21, 2026', findRichText: true),
+      find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
     await tester.tap(find.byTooltip('More options'));
@@ -62,7 +62,7 @@ void main() {
     );
     // Past Wake Up it is the next day.
     expect(
-      find.textContaining('October 22, 2026', findRichText: true),
+      find.textContaining('Thu, Oct 22', findRichText: true),
       findsOneWidget,
     );
   });

@@ -1739,6 +1739,7 @@
   "settingsSingleKeysHint": "Les touches comme 1–4, n et t marchent sans ⌘ ni Ctrl. Désactivez-les si elles gênent le contrôle vocal.",
   "menuForward": "Suivant",
   "shortcutForward": "Suivant",
+  "settingsAndAccount": "Réglages et compte",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",
   "taskIconCategoryFitness": "Forme et sport",

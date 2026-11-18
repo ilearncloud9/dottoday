@@ -7227,6 +7227,8 @@
   "@menuForward": {"description": "Mac Go menu: forward to the place Back left (⌘], ED-095)."},
   "shortcutForward": "Forward",
   "@shortcutForward": {"description": "Shortcut list row (ED-095)."},
+  "settingsAndAccount": "Settings and account",
+  "@settingsAndAccount": {"description": "Phones: the profile circle in the top row that opens Settings (ED-238); its name for screen readers and its tooltip."},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

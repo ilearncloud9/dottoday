@@ -122,11 +122,15 @@ class DotShell extends StatelessWidget {
         // The window's class, H1 included: a short window keeps the
         // phone's bar (ED-168).
         final width = AppLayout.classOf(context, width: box.maxWidth);
+        // Phones list no Settings: it opens from the profile in the top
+        // row (ED-238). The iPad's native tabs keep it, in the sidebar.
+        final padNative = this.native?.kind == NativeBarKind.pad;
         final shown = [
           for (final (i, d) in destinations.indexed)
             if (d.visible &&
                 (width == WidthClass.expanded || !d.expandedOnly) &&
-                (width != WidthClass.compact || compactBar))
+                (width != WidthClass.compact || compactBar) &&
+                !(width == WidthClass.compact && d.foot && !padNative))
               i,
         ];
         final bar = ShellBar(

@@ -7054,6 +7054,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shortcutForward => 'Adelante';
 
   @override
+  String get settingsAndAccount => 'Ajustes y cuenta';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

@@ -63,9 +63,8 @@ List<String> _order(WidgetTester tester, Finder within) {
 }
 
 void main() {
-  testWidgets('iPhone compact: pill bar with 4 tabs and the add dot', (
-    tester,
-  ) async {
+  testWidgets('iPhone compact: pill bar with 3 tabs and the add dot; '
+      'Settings is behind the profile, not a tab (ED-238)', (tester) async {
     await _size(tester, 390);
     await tester.pumpWidget(_shell());
     expect(find.byType(PillTabShell), findsOneWidget);
@@ -73,7 +72,6 @@ void main() {
       'Today',
       'Inbox',
       'Search',
-      'Settings',
     ]);
     expect(find.bySemanticsLabel('Add a task'), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
@@ -227,15 +225,15 @@ void main() {
     final taps = <int>[];
     await tester.pumpWidget(_shell(onSelect: taps.add));
     await tester.tap(find.text('Search'));
-    await tester.tap(find.text('Settings'));
-    expect(taps, [3, 4]);
+    await tester.tap(find.text('Inbox'));
+    expect(taps, [3, 1]);
   });
 
   testWidgets('Week selected at phone width lights no tab', (tester) async {
     await _size(tester, 390);
     final handle = tester.ensureSemantics();
     await tester.pumpWidget(_shell(selected: 2));
-    for (final l in ['Today', 'Inbox', 'Search', 'Settings']) {
+    for (final l in ['Today', 'Inbox', 'Search']) {
       expect(
         tester.getSemantics(find.bySemanticsLabel(l)),
         isSemantics(isSelected: false, isButton: true),

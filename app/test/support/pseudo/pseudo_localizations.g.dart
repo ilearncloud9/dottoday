@@ -5565,6 +5565,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get shortcutForward => pseudo(super.shortcutForward);
 
   @override
+  String get settingsAndAccount => pseudo(super.settingsAndAccount);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

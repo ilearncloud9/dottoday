@@ -61,9 +61,10 @@ void main() {
     (
       'phone',
       const Size(390, 844),
-      'October 22, 2026',
-      'October 20, 2026',
-      'October 21, 2026',
+      // The phone's title is the short date (ED-040).
+      'Thu, Oct 22',
+      'Tue, Oct 20',
+      'Wed, Oct 21',
     ),
     ('spread', const Size(1280, 900), 'Thursday', 'Tuesday', 'Good morning'),
   ]) {

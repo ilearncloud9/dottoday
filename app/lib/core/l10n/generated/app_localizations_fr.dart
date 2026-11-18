@@ -7073,6 +7073,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortcutForward => 'Suivant';
 
   @override
+  String get settingsAndAccount => 'Réglages et compte';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

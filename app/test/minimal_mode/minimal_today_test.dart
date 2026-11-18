@@ -108,7 +108,7 @@ Tappable? _classify(String label, Rect rect, Rect? add) => switch (label) {
   'More options' => Tappable.headerMenu,
   'Done' => Tappable.done,
   'Running late' => Tappable.runningLate,
-  'Show month' || 'Hide month' || 'October 21, 2026' => Tappable.dayNav,
+  'Show month' || 'Hide month' || 'Wed, Oct 21' => Tappable.dayNav,
   _ when _weekday.hasMatch(label) => Tappable.dayNav,
   _ when label.startsWith('Later') => Tappable.later,
   // The done circle reads the title; the dot reads it with its state.

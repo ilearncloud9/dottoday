@@ -85,9 +85,10 @@ void main() {
     expect(find.byType(NativeBarShell), findsOneWidget);
     expect(find.byType(PillTabShell), findsNothing);
     final shown = bar.configured.last;
+    // Settings is behind the profile on phones, not a tab (ED-238).
     expect(
       [for (final d in shown.items) d.label],
-      ['Today', 'Inbox', 'Search', 'Settings'],
+      ['Today', 'Inbox', 'Search'],
     );
     expect(shown.selected, 0);
     expect(shown.items[1].badge, 2);

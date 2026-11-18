@@ -5043,6 +5043,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked in the browser** (web build): strip taps `#/day/2026-11-20`, `#/day/2026-11-19`; Back, Back, Forward; Refresh keeps the 20th; Week › `#/week/2026-11-23` at desktop width.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,045 passing (5 local-Supabase suites need a stack); the Today goldens unchanged; new address checks on Today, Week and Month and `show_place_test.dart`.
 
+### ED-382 · M18.7 part 4a: Settings behind the profile on phones
+- **Date:** 2026-11-18. **Owner:** "Approve, start 4b" on the part 4a review page, accepting its two layout changes. Part 4 is split: 4a phones and web, 4b the Mac's Settings window.
+- **Built (ED-238 G2-3 A, ED-234, ED-235):**
+  - "Settings and account": the profile's circle at the end of Today's top row at phone width (44 pt / 48 dp, named for screen readers); it remembers the address it was pressed on, and Settings' Back button and Android Back return there. Minimal phones have it too, beside the Day menu's Settings (ED-093);
+  - the phone bars (iPhone pill and native row, Android toolbar, mobile web) list Today · Inbox · Search; on a Settings page none is selected. The iPad's native tabs keep Settings in their sidebar; tablets, Mac and web keep it at the foot of the rail or sidebar;
+  - one `ProfileAvatar` for Settings' header and the button;
+  - Esc closes the task sheet and removes `?task=` (app sheets already closed on Esc at every width).
+- **Layout changes the button forced (owner accepted):** Today's phone title is the short date, "Wed, Nov 18 ⌄", as E-Phones draws it (ED-040), because the long date wrapped; Low energy's switch sits on the second line beside its caption. The Sync-and-profile glass capsule (ED-034) and its spacing come with M19.1.
+- **Checked:** iPhone 17 Pro simulator (iOS 26.5): three native tabs, the profile opens Settings, Back returns to Today. Android and devices: M21.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,041 passing (5 local-Supabase suites need a stack); new `settings_button_test.dart` and the Esc test; 152 goldens regenerated for the intended change.
+
 ---
 
 ## Pending owner answers

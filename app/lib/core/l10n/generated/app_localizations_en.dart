@@ -7018,6 +7018,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutForward => 'Forward';
 
   @override
+  String get settingsAndAccount => 'Settings and account';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

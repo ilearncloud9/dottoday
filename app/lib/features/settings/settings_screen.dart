@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/settings_return.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -18,6 +20,7 @@ import 'package:dottoday/features/settings/widgets/learning_group.dart';
 import 'package:dottoday/features/settings/widgets/look_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_group.dart';
+import 'package:dottoday/shared/settings/profile_avatar.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
@@ -48,7 +51,11 @@ class SettingsScreen extends ConsumerWidget {
     }
     final s = profile.settings;
     final minimal = watchSimplified(ref, FeatureId.notifications);
-    return Scaffold(
+    // Phones open Settings from the profile, not a tab (ED-238): Back and
+    // its button return to where it was opened.
+    final phone = AppLayout.classOf(context) == WidthClass.compact;
+    void back() => context.go(ref.read(settingsReturnProvider.notifier).take());
+    final page = Scaffold(
       key: _key,
       body: SafeArea(
         child: Align(
@@ -70,6 +77,11 @@ class SettingsScreen extends ConsumerWidget {
                 DotSpace.fabClearance,
               ),
               children: [
+                if (phone)
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: BackButton(onPressed: back),
+                  ),
                 _Header(
                   profile: profile,
                   sync:
@@ -92,6 +104,14 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+    if (!phone) return page;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (popped, _) {
+        if (!popped) back();
+      },
+      child: page,
     );
   }
 }
@@ -196,18 +216,7 @@ class _Header extends StatelessWidget {
               : l10n.settingsAccount,
           hint: l10n.settingsAccount,
           excludeSemantics: true,
-          child: CircleAvatar(
-            radius: DotSize.dayDot / 2,
-            backgroundColor: t.colors.accentTint,
-            child: hasName
-                ? Text(
-                    name.characters.first.toUpperCase(),
-                    style: t.styles.cardTitle.copyWith(
-                      color: t.colors.accentInk,
-                    ),
-                  )
-                : DotIcon(DotGlyphs.person, color: t.colors.accentInk),
-          ),
+          child: ProfileAvatar(name: hasName ? name : ''),
         ),
       ],
     );

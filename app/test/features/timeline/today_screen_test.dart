@@ -20,7 +20,7 @@ void main() {
     final handle = tester.ensureSemantics();
     await pumpToday(tester);
     expect(
-      find.textContaining('October 21, 2026', findRichText: true),
+      find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
     // The day's numbers sit under the title (ADR-0015).
@@ -54,7 +54,7 @@ void main() {
     await tester.tap(find.text('Fri'));
     await tester.pumpAndSettle();
     expect(
-      find.textContaining('October 23, 2026', findRichText: true),
+      find.textContaining('Fri, Oct 23', findRichText: true),
       findsOneWidget,
     );
   });
@@ -64,7 +64,7 @@ void main() {
     await tester.fling(find.byType(DayCard).first, const Offset(-300, 0), 1000);
     await tester.pumpAndSettle();
     expect(
-      find.textContaining('October 22, 2026', findRichText: true),
+      find.textContaining('Thu, Oct 22', findRichText: true),
       findsOneWidget,
     );
   });
@@ -72,7 +72,7 @@ void main() {
   testWidgets('/day/:date opens that day', (tester) async {
     await pumpToday(tester, date: DateTime(2026, 12, 14));
     expect(
-      find.textContaining('December 14, 2026', findRichText: true),
+      find.textContaining('Mon, Dec 14', findRichText: true),
       findsOneWidget,
     );
   });
@@ -80,7 +80,7 @@ void main() {
   testWidgets('/day/<today> is today: no Today pill', (tester) async {
     await pumpToday(tester, date: parseRouteDate('2026-10-21'));
     expect(
-      find.textContaining('October 21, 2026', findRichText: true),
+      find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
     expect(find.widgetWithText(OutlinedButton, 'Today'), findsNothing);
@@ -89,7 +89,7 @@ void main() {
   testWidgets('/day/:date past the pager\'s reach opens today', (tester) async {
     await pumpToday(tester, date: parseRouteDate('2028-01-01'));
     expect(
-      find.textContaining('October 21, 2026', findRichText: true),
+      find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
     expect(find.byType(DayCard), findsWidgets);
@@ -99,9 +99,7 @@ void main() {
     tester,
   ) async {
     await pumpToday(tester);
-    await tester.tap(
-      find.textContaining('October 21, 2026', findRichText: true),
-    );
+    await tester.tap(find.textContaining('Wed, Oct 21', findRichText: true));
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
     expect(find.byType(WeekStrip), findsNothing);
@@ -118,9 +116,7 @@ void main() {
     tester,
   ) async {
     await pumpToday(tester, size: const Size(390, 1000));
-    await tester.tap(
-      find.textContaining('October 21, 2026', findRichText: true),
-    );
+    await tester.tap(find.textContaining('Wed, Oct 21', findRichText: true));
     await tester.pumpAndSettle();
     expect(find.text('October · 1 of 31 days planned'), findsOneWidget);
     expect(find.text('Sep · Oct · Nov'), findsOneWidget);
@@ -151,7 +147,7 @@ void main() {
     await tester.tap(find.widgetWithText(OutlinedButton, 'Today'));
     await tester.pumpAndSettle();
     expect(
-      find.textContaining('October 21, 2026', findRichText: true),
+      find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
   });
@@ -187,9 +183,7 @@ void main() {
         const FakeAccessibilityFeatures(disableAnimations: true);
     addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     await pumpToday(tester);
-    await tester.tap(
-      find.textContaining('October 21, 2026', findRichText: true),
-    );
+    await tester.tap(find.textContaining('Wed, Oct 21', findRichText: true));
     await tester.pump();
     await tester.pump();
     expect(find.byType(MonthGrid), findsOneWidget);

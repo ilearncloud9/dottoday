@@ -84,6 +84,7 @@ class TodayScreen extends ConsumerWidget {
         d == today ? AppRoutes.today : AppRoutes.day(d),
       );
     }
+
     ref.listen(
       taskSelectionProvider,
       (before, now) => announceSelection(context, before, now),
