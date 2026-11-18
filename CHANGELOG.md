@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Added
+- With a keyboard on iPad, holding ⌘ shows Dottoday's menus with their shortcuts, and the shortcuts work (redesign branch). On Android, Meta+/ lists Dottoday's shortcuts in the system's Keyboard Shortcuts list.
+
+### Added
 - New keyboard shortcuts on every platform (redesign branch): New Brain Dump ⇧⌘N, Paste as Tasks ⇧⌘V, Back ⌘[, Search ⌘F, Show Less or Everything ⇧⌘L, Copy Day as Text ⇧⌘C, and Done ⌘D, Move To ⇧⌘M and Focus ⇧⌘F on a picked task (Ctrl off Apple). In Minimal, ⌘3 opens the calendar and ⌘4 Search. On the web, single keys (1–4, n, t, [ ], / and more) replace the keys the browser keeps, and Settings can turn them off.
 
 ### Changed

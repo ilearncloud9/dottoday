@@ -5010,6 +5010,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked in the Mac app** (keys sent through Accessibility, which the owner turned on): ⌘/, ⌘3, ⌘→ then ⌘T, ⌘F, ⇧⌘N, ⇧⌘L, Minimal ⌘3, ⌘[, ⌘1. The Mac app's data was backed up and restored (checksums equal).
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` passing apart from the 5 local-Supabase suites; new `keyboard_scheme_test.dart`, Mac menu key test, ⌘D / ⇧⌘M / ⇧⌘F on a picked task. The backup fixture records the new setting's default; the icon names were moved back to the end of the language files by their generator; the pseudo-locale was regenerated.
 
+### ED-379 · M18.7 part 2: the app's menus in the iPad menu bar and Android's shortcut list
+- **Date:** 2026-11-18. **Owner:** "Approve, start part 3" on the part 2 review page (E-R2-10's system lists beside the app in the iPadOS 26.5 simulator and the Android tablet emulator, API 37). Earlier the same day: "Yes, delete app/build" when the disk filled during the Android run.
+- **Built (R2-10, ED-287, ED-288, ED-095):**
+  - one list of the app's menus, `app_menus.dart`: the Mac menu bar draws it with the system's own items (About, Services, Hide, Quit, Full Screen, Window), and `app_native_menus.dart` sends it to iPadOS and Android over `dottoday/key_menus` when it changes (a language or layout switch);
+  - iPad (and iPhone with a keyboard): `KeyMenusBridge.swift` builds UIKit menus from it, Settings… ⌘, in the app menu, File, Edit and View items first in theirs, Go as its own menu after View, with a `UIKeyCommand` per key. A choice comes back as `select` with its id, and Flutter runs the same handler as the Mac. Undo, Redo and Delete stay the system's for text;
+  - iPadOS's own Find held ⌘F, and UIKit dropped all of the app's menus over the repeated key: the system Find item is removed (it works only on UIKit text views, which Flutter doesn't use); ⌘F is Search (ED-095);
+  - Android: `KeyMenus.kt` fills `onProvideKeyboardShortcuts` with the commands that have keys, grouped by menu, Ctrl and Shift; the keys stay Flutter's.
+- **Checked:** iPadOS 26.5 simulator (iPad Pro 13"): the menu bar's Dottoday, File, View and Go menus with their keys; Go › Search opened Search and the native tabs followed. Android tablet emulator (API 37): Meta+/ lists Dottoday's groups. Holding ⌘ with a hardware keyboard and a physical Android keyboard: M21. The Mac menu bar's labels and keys are covered by its tests on the shared list.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` passing apart from the 5 local-Supabase suites; new `app_native_menus_test.dart`.
+
 ---
 
 ## Pending owner answers

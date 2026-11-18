@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:dottoday/app_menus.dart';
+import 'package:dottoday/app_native_menus.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
-import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -12,20 +12,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// The Mac menu bar (docs/07 macOS, docs/09 M5.5): File, Edit, View, Go and
-/// Window around the same commands as the keyboard table, so each command
-/// still has one implementation (`appCommandHandlers`).
-///
-/// ⌘1–4 name the layout's places, and the keyboard scheme's commands
-/// (ED-095) carry their keys: File › New Brain Dump… ⇧⌘N and Paste as
-/// Tasks ⇧⌘V, Edit › Copy Day as Text ⇧⌘C, View › Show Less ⇧⌘L, Go ›
-/// Back ⌘[, Today ⌘T and Search ⌘F.
-///
-/// Keys a text field also uses (⌘Z, ⇧⌘Z, ⌫, ⌘← ⌘→) are listed without
-/// native key equivalents: a menu equivalent takes the key before Flutter
-/// sees it and would break typing. Flutter's own bindings keep handling
-/// those keys. Edit's items act on a focused text field first, as native
-/// Edit menus do (M8.6b). Other platforms get no menu bar.
+/// The app's menus where the platform shows them (docs/07 macOS, docs/09
+/// M5.5, R2-10): the Mac's menu bar; the iPad's menu bar while ⌘ is held
+/// and Android's Keyboard Shortcuts Helper, both from [NativeKeyMenus].
+/// One list, `appMenus`, so each command keeps one implementation
+/// (`appCommandHandlers`). The web has no menu bar.
 class AppMenuBar extends ConsumerWidget {
   const AppMenuBar({
     required this.router,
@@ -43,199 +34,100 @@ class AppMenuBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!shown) return child;
-    final l10n = context.l10n;
-    final minimal = watchSimplified(ref, FeatureId.navigation);
+    if (kIsWeb) return child;
+    final platform = defaultTargetPlatform;
+    if (platform != TargetPlatform.macOS &&
+        platform != TargetPlatform.iOS &&
+        platform != TargetPlatform.android) {
+      return child;
+    }
+    final menus = appMenus(
+      l10n: context.l10n,
+      router: router,
+      handlers: handlers,
+      ref: ref,
+      minimal: watchSimplified(ref, FeatureId.navigation),
+    );
+    if (platform != TargetPlatform.macOS) {
+      return NativeKeyMenus(menus: menus, child: child);
+    }
     return PlatformMenuBar(
-      menus: [
-        _app(l10n),
-        PlatformMenu(
-          label: l10n.menuFile,
-          menus: [
-            _command(l10n.menuNewTask, AppCommand.quickAdd),
-            _command(l10n.menuNewBrainDump, AppCommand.newBrainDump),
-            _command(l10n.menuPasteAsTasks, AppCommand.pasteAsTasks),
-            PlatformMenuItem(
-              label: l10n.menuExport,
-              onSelected: () =>
-                  router.go(AppRoutes.settingsPage(SettingsPage.export)),
-            ),
-          ],
-        ),
-        PlatformMenu(
-          label: l10n.menuEdit,
-          menus: [
-            PlatformMenuItemGroup(
-              members: [
-                _edit(
-                  l10n.menuUndo,
-                  (_) => const UndoTextIntent(SelectionChangedCause.keyboard),
-                  () => unawaited(undoLast(ref)),
-                ),
-                _edit(
-                  l10n.menuRedo,
-                  (_) => const RedoTextIntent(SelectionChangedCause.keyboard),
-                  () => unawaited(redoLast(ref)),
-                ),
-              ],
-            ),
-            _edit(
-              l10n.menuDelete,
-              // Native Delete removes a field's selection, never a letter.
-              (field) => field.textEditingValue.selection.isCollapsed
-                  ? null
-                  : const DeleteCharacterIntent(forward: true),
-              () => _sendToFocus(const TrashTaskIntent()),
-            ),
-            PlatformMenuItem(
-              label: l10n.menuCopyDayText,
-              shortcut: _key(LogicalKeyboardKey.keyC, shift: true),
-              onSelected: () => _sendToFocus(const CopyDayIntent()),
-            ),
-          ],
-        ),
-        PlatformMenu(
-          label: l10n.menuView,
-          menus: [
-            // ⌘1–4 by the layout's places (ED-095).
-            PlatformMenuItemGroup(
-              members: [
-                _command(l10n.navToday, AppCommand.goToday),
-                _command(l10n.navInbox, AppCommand.goInbox),
-                _command(
-                  minimal ? l10n.menuCalendar : l10n.navWeek,
-                  AppCommand.goWeek,
-                ),
-                _command(
-                  minimal ? l10n.navSearch : l10n.menuMonth,
-                  AppCommand.goMonth,
-                ),
-              ],
-            ),
-            _command(
-              minimal ? l10n.menuShowEverything : l10n.menuShowLess,
-              AppCommand.toggleLayout,
-            ),
-            _command(l10n.menuShortcuts, AppCommand.showShortcuts),
-            const PlatformProvidedMenuItem(
-              type: PlatformProvidedMenuItemType.toggleFullScreen,
-            ),
-          ],
-        ),
-        PlatformMenu(
-          label: l10n.menuGo,
-          menus: [
-            _command(l10n.menuBack, AppCommand.back),
-            _onFocus(l10n.menuPreviousDay, const ShowDayIntent(-1)),
-            _onFocus(l10n.menuNextDay, const ShowDayIntent(1)),
-            _command(l10n.navToday, AppCommand.today),
-            _command(l10n.navSearch, AppCommand.search),
-          ],
-        ),
-        PlatformMenu(
-          label: l10n.menuWindow,
-          menus: const [
-            PlatformProvidedMenuItem(
-              type: PlatformProvidedMenuItemType.minimizeWindow,
-            ),
-            PlatformProvidedMenuItem(
-              type: PlatformProvidedMenuItemType.zoomWindow,
-            ),
-            PlatformProvidedMenuItem(
-              type: PlatformProvidedMenuItemType.arrangeWindowsInFront,
-            ),
-          ],
-        ),
-      ],
+      menus: [for (final m in menus) _mac(m)],
       child: child,
     );
   }
 
-  PlatformMenu _app(AppLocalizations l10n) => PlatformMenu(
-    label: l10n.appTitle,
-    menus: [
-      const PlatformMenuItemGroup(
-        members: [
-          PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.about),
-        ],
-      ),
-      PlatformMenuItemGroup(
-        members: [
-          PlatformMenuItem(
-            label: l10n.menuSettings,
-            shortcut: AppShortcuts.activator(
-              TargetPlatform.macOS,
-              LogicalKeyboardKey.comma,
+  /// [menu] with the Mac's own items: About, Services, Hide and Quit
+  /// around the app menu, Full Screen in View, the Window menu's items.
+  static PlatformMenu _mac(AppMenu menu) {
+    final groups = [
+      for (final g in menu.groups)
+        PlatformMenuItemGroup(members: [for (final c in g) _item(c)]),
+    ];
+    final members = switch (menu.kind) {
+      AppMenuKind.app => <PlatformMenuItem>[
+        const PlatformMenuItemGroup(
+          members: [
+            PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.about),
+          ],
+        ),
+        ...groups,
+        const PlatformMenuItemGroup(
+          members: [
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.servicesSubmenu,
             ),
-            onSelected: () => router.go(AppRoutes.settings),
-          ),
-        ],
-      ),
-      const PlatformMenuItemGroup(
-        members: [
-          PlatformProvidedMenuItem(
-            type: PlatformProvidedMenuItemType.servicesSubmenu,
-          ),
-        ],
-      ),
-      const PlatformMenuItemGroup(
-        members: [
-          PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.hide),
-          PlatformProvidedMenuItem(
-            type: PlatformProvidedMenuItemType.hideOtherApplications,
-          ),
-          PlatformProvidedMenuItem(
-            type: PlatformProvidedMenuItemType.showAllApplications,
-          ),
-        ],
-      ),
-      const PlatformMenuItemGroup(
-        members: [
-          PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.quit),
-        ],
-      ),
-    ],
-  );
-
-  /// A command from the keyboard table, with its key as the equivalent.
-  PlatformMenuItem _command(String label, AppCommand command) {
-    final combo = AppShortcuts.table[command];
-    return PlatformMenuItem(
-      label: label,
-      shortcut: combo == null
-          ? null
-          : AppShortcuts.activator(
-              TargetPlatform.macOS,
-              combo.key,
-              shift: combo.shift,
+          ],
+        ),
+        const PlatformMenuItemGroup(
+          members: [
+            PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.hide),
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.hideOtherApplications,
             ),
-      onSelected: handlers[command],
-    );
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.showAllApplications,
+            ),
+          ],
+        ),
+        const PlatformMenuItemGroup(
+          members: [
+            PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.quit),
+          ],
+        ),
+      ],
+      AppMenuKind.view => <PlatformMenuItem>[
+        ...groups,
+        const PlatformProvidedMenuItem(
+          type: PlatformProvidedMenuItemType.toggleFullScreen,
+        ),
+      ],
+      AppMenuKind.window => const <PlatformMenuItem>[
+        PlatformProvidedMenuItem(
+          type: PlatformProvidedMenuItemType.minimizeWindow,
+        ),
+        PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.zoomWindow),
+        PlatformProvidedMenuItem(
+          type: PlatformProvidedMenuItemType.arrangeWindowsInFront,
+        ),
+      ],
+      AppMenuKind.file || AppMenuKind.edit || AppMenuKind.go => groups,
+    };
+    return PlatformMenu(label: menu.label, menus: members);
   }
 
-  /// Sent to whatever has focus (Today's day keys handle it).
-  PlatformMenuItem _onFocus(String label, Intent intent) =>
-      PlatformMenuItem(label: label, onSelected: () => _sendToFocus(intent));
-
-  /// An Edit item: the focused text field's own [text] intent (none =
-  /// nothing to do there), else the app-level [app] command (M8.6b).
-  PlatformMenuItem _edit(
-    String label,
-    Intent? Function(EditableTextState field) text,
-    VoidCallback app,
-  ) => PlatformMenuItem(
-    label: label,
-    onSelected: () {
-      final field = focusedTextField();
-      if (field == null) return app();
-      final intent = text(field);
-      if (intent != null) _sendToFocus(intent);
+  static PlatformMenuItem _item(MenuCommand c) => PlatformMenuItem(
+    label: c.label,
+    shortcut: switch (c.key) {
+      final key? => AppShortcuts.activator(
+        TargetPlatform.macOS,
+        key,
+        shift: c.shift,
+      ),
+      null => null,
     },
+    onSelected: c.onSelected,
   );
-
-  /// The primary modifier with [key], as a Mac menu equivalent.
-  SingleActivator _key(LogicalKeyboardKey key, {bool shift = false}) =>
-      AppShortcuts.activator(TargetPlatform.macOS, key, shift: shift);
 }
 
 /// ⌘Z / Ctrl+Z undoes the last change (Edit › Undo, M5.5) and ⇧⌘Z /
@@ -286,25 +178,4 @@ final class _OutsideFields<T extends Intent> extends Action<T> {
     run();
     return null;
   }
-}
-
-/// Sends [intent] to whatever has focus; nothing when no one handles it.
-void _sendToFocus(Intent intent) {
-  final context = primaryFocus?.context;
-  if (context != null) Actions.maybeInvoke(context, intent);
-}
-
-/// Reverts the newest undoable change, if it is still in its window.
-Future<void> undoLast(WidgetRef ref) async {
-  final undo = ref.read(undoServiceProvider);
-  final token = undo.latest;
-  if (token != null) await undo.undo(token);
-}
-
-/// Re-applies the change the last undo reverted, if still in its window
-/// (Edit › Redo, ⇧⌘Z; M8.6b).
-Future<void> redoLast(WidgetRef ref) async {
-  final undo = ref.read(undoServiceProvider);
-  final token = undo.redoable;
-  if (token != null) await undo.redo(token);
 }

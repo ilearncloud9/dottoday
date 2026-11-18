@@ -661,6 +661,7 @@ Rules for every task in M18 to M22:
   - switching Full ↔ Minimal mid-action (ED-100).
   Split by the owner (2026-11-18) in five parts, each with its own review page and commit: 1 the keyboard scheme; 2 the tablet keyboard overlays; 3 web routes A′ with `?task=`, Back / Forward / Refresh; 4 Settings from its native place (the Mac's in a second native window, owner's choice) with Back and dismiss; 5 Full ↔ Minimal mid-action.
   - [x] Part 1 done 2026-11-18 (ED-378): the ED-095 keys on every keyboard, Minimal's ⌘1–4, the web's single keys with an off switch (WCAG 2.1.4), the Mac menu bar's new items, the ⌘/ list per platform. Moved: ⌘K / k to the Search-or-run palette; ⇧⌘T / g Go to Date to M19 (R2-36); ⌥⌘I, ⌃⌘S and ⌥⌘0 to M19.2 / M19.6; ⌘] Forward to part 3.
+  - [x] Part 2 done 2026-11-18 (ED-379): one list of the app's menus for the Mac menu bar, the iPad's menu bar (⌘ held) with key commands, and Android's Keyboard Shortcuts Helper (R2-10). Device checks with real keyboards: M21.
 - [ ] M18.8 Acceptance and ship-check. The existing screens run on the new tokens on all four targets with nothing lost (parity matrix); component goldens and semantics tests pass; CHANGELOG. **STOP for the owner.**
 
 ## Milestone 19 — First vertical slice: Today → Add → Edit/reschedule → Complete → Change day → Reopen (Prompt F)

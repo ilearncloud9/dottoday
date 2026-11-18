@@ -87,6 +87,22 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CalendarSeriesBridge") {
       CalendarSeriesBridge.shared.attach(to: registrar.messenger())
     }
+    // The menus and key commands of a hardware keyboard (R2-10).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "KeyMenusBridge") {
+      KeyMenusBridge.shared.attach(to: registrar.messenger())
+    }
+  }
+
+  /// The app's menus in the iPad's menu bar (⌘ held) and their key
+  /// commands, built from Flutter's list (KeyMenusBridge).
+  override func buildMenu(with builder: UIMenuBuilder) {
+    super.buildMenu(with: builder)
+    KeyMenusBridge.shared.build(builder)
+  }
+
+  /// A menu command or its key: Flutter runs it.
+  @objc func dottodayMenuCommand(_ sender: UICommand) {
+    if let id = sender.propertyList as? String { KeyMenusBridge.shared.select(id) }
   }
 }
 

@@ -12,12 +12,15 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.view.KeyboardShortcutGroup
+import android.view.Menu
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import app.dottoday.planner.calendar.CalendarSeries
 import app.dottoday.planner.alarms.MissionSensors
 import app.dottoday.planner.intents.IntentQueueBridge
+import app.dottoday.planner.keys.KeyMenus
 import app.dottoday.planner.intents.ShareIntake
 import app.dottoday.planner.intents.OngoingDot
 import app.dottoday.planner.focus.DeepWork
@@ -67,6 +70,16 @@ class MainActivity : FlutterFragmentActivity() {
         SystemEvents.watchCalendars()
     }
 
+    // The Keyboard Shortcuts Helper (Meta+/) lists Dottoday's keys (R2-10).
+    override fun onProvideKeyboardShortcuts(
+        data: MutableList<KeyboardShortcutGroup>,
+        menu: Menu?,
+        deviceId: Int,
+    ) {
+        super.onProvideKeyboardShortcuts(data, menu, deviceId)
+        data.addAll(KeyMenus.groups())
+    }
+
     override fun onPause() {
         SpeechBridge.stop()
         super.onPause()
@@ -103,6 +116,7 @@ class MainActivity : FlutterFragmentActivity() {
         MissionSensors.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         HapticsBridge.attach(this, flutterEngine.dartExecutor.binaryMessenger)
         CalendarSeries.attach(this, flutterEngine.dartExecutor.binaryMessenger)
+        KeyMenus.attach(flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/ongoing")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
