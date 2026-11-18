@@ -88,9 +88,7 @@ void main() {
             weekdayNarrow: d.weekday.substring(0, 1),
             date: d.date,
             label: d.label,
-            completion: d.completion,
             isToday: d.isToday,
-            isPast: d.isPast,
           ),
       ];
       await tester.pumpWidget(

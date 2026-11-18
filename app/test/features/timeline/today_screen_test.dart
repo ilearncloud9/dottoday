@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
@@ -16,19 +17,18 @@ import '../../support/today_harness.dart';
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('opens on today: date title, day dot, numbers', (tester) async {
+  testWidgets('opens on today: date title, numbers, Sync', (tester) async {
     final handle = tester.ensureSemantics();
     await pumpToday(tester);
     expect(
       find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
-    // The day's numbers sit under the title (ADR-0015).
-    expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
-    expect(
-      find.bySemanticsLabel(RegExp(r'^Day \d+ % through')),
-      findsOneWidget,
-    );
+    // The day's numbers sit under the title (E-Phones, ED-040).
+    expect(find.textContaining(RegExp(r'^\d+ of \d+ done · ')), findsOneWidget);
+    // Sync in the top row says its state in words (R-08); no day dot.
+    expect(find.bySemanticsLabel('Sync'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(r'^Day \d+ % through')), findsNothing);
     expect(
       find.bySemanticsLabel(
         RegExp(r'Deep work: roadmap, live, \d+ minutes left'),
@@ -83,7 +83,7 @@ void main() {
       find.textContaining('Wed, Oct 21', findRichText: true),
       findsOneWidget,
     );
-    expect(find.widgetWithText(OutlinedButton, 'Today'), findsNothing);
+    expect(find.byType(TodayBack), findsNothing);
   });
 
   testWidgets('/day/:date past the pager\'s reach opens today', (tester) async {
@@ -95,7 +95,7 @@ void main() {
     expect(find.byType(DayCard), findsWidgets);
   });
 
-  testWidgets('the caption chevron and the strip handle open the month', (
+  testWidgets('the title and a pull on the strip open the month', (
     tester,
   ) async {
     await pumpToday(tester);
@@ -103,11 +103,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
     expect(find.byType(WeekStrip), findsNothing);
-    // The month's own handle, then the one on the day sheet (ADR-0015).
+    // The month's own handle closes it; pulling the strip down opens it
+    // again (E-Phones: no handle on the day).
     await tester.tap(find.byType(PullHandle).first);
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsNothing);
-    await tester.drag(find.byType(PullHandle).first, const Offset(0, 120));
+    expect(find.byType(PullHandle), findsNothing);
+    await tester.fling(find.byType(WeekStrip), const Offset(0, 120), 800);
     await tester.pumpAndSettle();
     expect(find.byType(MonthGrid), findsOneWidget);
   });
@@ -126,14 +128,11 @@ void main() {
     );
     await tester.tap(find.byTooltip('Next month'));
     await tester.pumpAndSettle();
-    expect(
-      find.textContaining('November 2026', findRichText: true),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Nov 2026', findRichText: true), findsOneWidget);
     expect(find.text('Oct · Nov · Dec'), findsOneWidget);
   });
 
-  testWidgets('a future free day: Today pill and the empty-day actions', (
+  testWidgets('a future free day: ‹ Today and the empty day in the thread', (
     tester,
   ) async {
     await pumpToday(
@@ -141,10 +140,13 @@ void main() {
       date: DateTime(2026, 12, 14),
       size: const Size(390, 1000),
     );
-    expect(find.text('Today'), findsWidgets);
-    expect(find.text('Add to this day'), findsWidgets);
-    expect(find.text('Copy a day…'), findsWidgets);
-    await tester.tap(find.widgetWithText(OutlinedButton, 'Today'));
+    expect(find.byType(TodayBack), findsOneWidget);
+    // 7:00 AM to 10:00 PM, all free.
+    expect(find.text('15 h free'), findsOneWidget);
+    expect(find.text('Add a task'), findsOneWidget);
+    expect(find.text('Drop a routine'), findsOneWidget);
+    expect(find.text('Copy a day…'), findsOneWidget);
+    await tester.tap(find.byType(TodayBack));
     await tester.pumpAndSettle();
     expect(
       find.textContaining('Wed, Oct 21', findRichText: true),
@@ -173,7 +175,7 @@ void main() {
     expect(find.text('Morning run'), findsWidgets);
     await tester.tap(find.text('Undo'));
     await tester.pumpAndSettle();
-    expect(find.text('Add to this day'), findsWidgets);
+    expect(find.text('Add a task'), findsWidgets);
   });
 
   testWidgets('reduced motion: the month opens without animating', (
@@ -223,12 +225,16 @@ void main() {
     // Today): the task sheet carries them and its tests cover them.
   });
 
-  testWidgets('an empty day says what to do', (tester) async {
-    await pumpToday(tester, rows: const []);
+  testWidgets('an empty day says what to do, in its free time', (tester) async {
+    await pumpToday(tester, rows: const [], size: const Size(390, 1000));
     expect(
-      find.text('Nothing planned · pull the strip to plan or tap +'),
-      findsWidgets,
+      find.text(
+        'A clear day. Add what matters, drop in a routine, '
+        'or bring something over from your Inbox.',
+      ),
+      findsOneWidget,
     );
+    expect(find.text('Add a task'), findsOneWidget);
   });
 
   testWidgets('the dot opens the task; the circle ticks it in place '
@@ -290,7 +296,7 @@ void main() {
       expect(asked.single.startUtc, DateTime.utc(2026, 10, 21, 9, 15));
     });
 
-    testWidgets('"Add to this day" opens Add on that day', (tester) async {
+    testWidgets('"Add a task" opens Add on that day', (tester) async {
       final asked = <AddTaskIntent>[];
       await pumpToday(
         tester,
@@ -298,7 +304,7 @@ void main() {
         size: const Size(390, 1000),
         onAddTask: asked.add,
       );
-      final add = find.text('Add to this day').hitTestable();
+      final add = find.text('Add a task').hitTestable();
       await tester.ensureVisible(add.first);
       await tester.tap(add.first);
       await tester.pump();

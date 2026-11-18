@@ -716,7 +716,7 @@
   "@dayCardTodaySuffix": {
     "description": "Appended to the day card title on today (Main: 'Wednesday · Today')."
   },
-  "dayCardSummary": "{done} of {total} · {planned} planned",
+  "dayCardSummary": "{done} of {total} done · {planned} planned",
   "@dayCardSummary": {
     "description": "Day card numbers, e.g. '2 of 7 · 5 h 45 planned' (Main).",
     "placeholders": {
@@ -840,21 +840,6 @@
   "@todayAllDay": {
     "description": "Screen-reader label of the all-day chips row."
   },
-  "stripDayLabel": "{day}, {done} of {total} done",
-  "@stripDayLabel": {
-    "description": "Screen-reader label of a week-strip day with tasks.",
-    "placeholders": {
-      "day": {
-        "type": "String"
-      },
-      "done": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "monthFooterPlanned": "{month} · {count} of {days} days planned",
   "@monthFooterPlanned": {
     "description": "Footer under this month's grid (A-ios-today-month).",
@@ -945,6 +930,18 @@
   "emptyCopyDay": "Copy a day…",
   "@emptyCopyDay": {
     "description": "Empty day: copy another day's tasks here (Duplicate day)."
+  },
+  "emptyDayBody": "A clear day. Add what matters, drop in a routine, or bring something over from your Inbox.",
+  "@emptyDayBody": {
+    "description": "Empty day (E-Phones): the line under the free time."
+  },
+  "emptyAddTask": "Add a task",
+  "@emptyAddTask": {
+    "description": "Empty day: the main action, opens Add on this day."
+  },
+  "emptyDropRoutine": "Drop a routine",
+  "@emptyDropRoutine": {
+    "description": "Empty day: opens Routines to drop one on this day."
   },
   "copyDayTitle": "Copy which day?",
   "@copyDayTitle": {

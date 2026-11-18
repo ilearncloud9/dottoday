@@ -266,12 +266,7 @@ void main() {
               WeekStrip(
                 days: [
                   for (var i = 0; i < 7; i++)
-                    StripDay(
-                      weekday: 'D$i',
-                      date: '${i + 1}',
-                      label: 'day $i',
-                      completion: const Completion.none(),
-                    ),
+                    StripDay(weekday: 'D$i', date: '${i + 1}', label: 'day $i'),
                 ],
                 selected: 0,
                 onDropTask: (id, i) => drops.add('$id $i'),
@@ -322,12 +317,7 @@ void main() {
               WeekStrip(
                 days: [
                   for (var i = 0; i < 7; i++)
-                    StripDay(
-                      weekday: 'D$i',
-                      date: '${i + 1}',
-                      label: 'day $i',
-                      completion: const Completion.none(),
-                    ),
+                    StripDay(weekday: 'D$i', date: '${i + 1}', label: 'day $i'),
                 ],
                 selected: 0,
                 onSelect: picked.add,

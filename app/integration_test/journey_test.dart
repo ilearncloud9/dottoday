@@ -17,7 +17,8 @@ import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
-import 'package:dottoday/features/timeline/widgets/today_header.dart';
+import 'package:dottoday/features/timeline/widgets/day_titles.dart';
+import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:flutter/foundation.dart';
@@ -99,8 +100,8 @@ void main() {
     // Late in the evening "9:30pm" is tomorrow's and Today follows the new
     // task there; come back to today, where the standup is.
     await tester.pump(const Duration(seconds: 1));
-    if (tester.any(find.byType(TodayPill))) {
-      await tapOn(tester, find.byType(TodayPill));
+    if (tester.any(_toToday)) {
+      await tapOn(tester, _toToday);
       await rest(tester);
     }
 
@@ -211,7 +212,7 @@ Future<Finder> _pagerTomorrow(WidgetTester tester) async {
     const Offset(-300, 0),
     1500,
   );
-  await until(tester, find.byType(TodayPill));
+  await until(tester, _toToday);
   await rest(tester);
   return shownCard(tester);
 }
@@ -220,7 +221,7 @@ Future<Finder> _pagerTomorrow(WidgetTester tester) async {
 /// raised card in the middle (`A-mac-today-alt1-spread`).
 Future<Finder> _spreadTomorrow(WidgetTester tester) async {
   await tapOn(tester, find.byTooltip('Next day'));
-  await until(tester, find.byType(TodayPill));
+  await until(tester, _toToday);
   await rest(tester);
   return shownCard(tester);
 }
@@ -260,3 +261,8 @@ Future<void> _dragWithShift(
   await tester.pump();
   if (mouse) await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
 }
+
+/// Back to today: phones' "‹ Today" (M19.1), the Mac/web spread's pill.
+final _toToday = find.byWidgetPredicate(
+  (w) => w is TodayBack || w is TodayPill,
+);

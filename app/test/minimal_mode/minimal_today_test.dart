@@ -169,7 +169,7 @@ void main() {
       rows: const [],
       settings: const Settings(uiLayout: UiLayout.minimal, use24h: false),
     );
-    expect(find.text('Add to this day'), findsNothing);
+    expect(find.text('Add a task'), findsNothing);
     expect(find.text('Copy a day…'), findsNothing);
     expect(find.byType(LaterRow, skipOffstage: false), findsOneWidget);
   });

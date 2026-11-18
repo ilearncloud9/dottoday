@@ -2,7 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
-import 'package:dottoday/features/timeline/widgets/today_header.dart';
+import 'package:dottoday/features/timeline/widgets/day_titles.dart';
 import 'package:dottoday/shared/dot/week_summary_strip.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/foundation.dart';

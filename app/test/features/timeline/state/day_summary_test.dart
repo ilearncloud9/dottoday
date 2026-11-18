@@ -1,7 +1,7 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
-import 'package:dottoday/features/timeline/widgets/today_header.dart';
+import 'package:dottoday/features/timeline/widgets/day_titles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../domain/fixtures.dart';

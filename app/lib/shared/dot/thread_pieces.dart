@@ -216,10 +216,14 @@ class GapRow extends StatelessWidget {
     this.style = GapStyle.pill,
     this.dayLabel = '',
     this.solid,
+    this.body,
     super.key,
   });
 
   final ThreadGap gap;
+
+  /// In place of the label: an empty day's free time (E-Phones).
+  final Widget? body;
 
   /// The thread's colour through the gap when it is behind now (from
   /// `threadSolid`); null: dotted.
@@ -242,10 +246,12 @@ class GapRow extends StatelessWidget {
         },
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: DotSpace.xxs),
+        padding: EdgeInsets.symmetric(
+          vertical: body == null ? DotSpace.xxs : DotSpace.xxl,
+        ),
         child: Align(
           alignment: AlignmentDirectional.centerStart,
-          child: _label(context, t.styles.stripWeekday),
+          child: body ?? _label(context, t.styles.stripWeekday),
         ),
       ),
     );

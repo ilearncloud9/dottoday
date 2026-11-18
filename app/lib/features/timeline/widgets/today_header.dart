@@ -1,34 +1,25 @@
-import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
-import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/time/day_dot_geometry.dart';
-import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/domain/time/wind_down.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
-import 'package:dottoday/features/timeline/state/day_ends.dart';
-import 'package:dottoday/features/timeline/state/day_summary.dart';
-import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
+import 'package:dottoday/features/timeline/widgets/day_numbers.dart';
+import 'package:dottoday/features/timeline/widgets/day_titles.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
-import 'package:dottoday/shared/dot/day_dot.dart';
-import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/navigation/settings_button.dart';
-import 'package:dottoday/shared/time/time_labels.dart';
+import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' as tz;
 
-/// Today's header (ADR-0015, after Structured's): the date as the title,
-/// "October 25, 2026 ⌄" (tap: month), with the day dot (or "● Today" away
-/// from today) and ⋯ on the same line; the day's numbers under it.
-/// Minimal (docs/14 §4): the date and ⋯ only, no day dot, no numbers.
+/// Today's header (E-Phones, ED-040): the date as the title, "Wed, Oct 21
+/// ⌄" (tap: month), with "‹ Today" before it away from today and ⋯, Sync
+/// and the profile after it; the day's numbers under it.
+/// Minimal (docs/14 §4): the date, ⋯ and the profile, no numbers.
 class TodayHeader extends ConsumerWidget {
   const TodayHeader({
     required this.date,
@@ -55,6 +46,7 @@ class TodayHeader extends ConsumerWidget {
     final locale = Localizations.localeOf(context).toLanguageTag();
     final low = date == today && watchLowEnergy(ref);
     final extras = watchOnScreen(ref, FeatureId.headerExtras);
+    final short = AppLayout.isShort(context);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
@@ -65,24 +57,63 @@ class TodayHeader extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _TitleButton(
-                  title: _title(context, ref, locale),
-                  monthOpen: monthOpen,
-                ),
-              ),
-              if (!low && date != today)
-                TodayPill(onTap: onToday)
-              else if (!low && extras)
-                TodayDot(today: today),
-              TodayMenu(date: date, today: today),
-              // Phones: Settings behind the profile (ED-238); wider
-              // windows keep it at the foot of the rail or sidebar.
-              if (AppLayout.classOf(context) == WidthClass.compact)
-                const SettingsButton(),
-            ],
+          LayoutBuilder(
+            builder: (context, box) {
+              final title = _title(context, ref, locale);
+              final back = !low && date != today;
+              final heading = _TitleButton(title: title, monthOpen: monthOpen);
+              final buttons = [
+                // The Day menu stays ⋯ until its Day ▾ chip (M20.3).
+                TodayMenu(date: date, today: today),
+                // Sync and the profile (ED-034); Settings sits behind the
+                // profile on phones only (ED-238).
+                TodayTopActions(sync: extras),
+              ];
+              // Away from today, "‹ Today" leads the row (ED-034, ED-040).
+              final lead = [if (back) TodayBack(onTap: onToday)];
+              if (short) {
+                return Row(
+                  spacing: DotSpace.xs,
+                  children: [
+                    ...lead,
+                    heading,
+                    // Phone landscape: the numbers beside the title
+                    // (ED-347).
+                    Expanded(
+                      child: !low && !monthOpen && extras
+                          ? DayNumbers(date: date)
+                          : const SizedBox.shrink(),
+                    ),
+                    ...buttons,
+                  ],
+                );
+              }
+              final room =
+                  box.maxWidth - _reserved(context, back: back, sync: extras);
+              if (_TitleButton.fits(context, title, room)) {
+                return Row(
+                  spacing: DotSpace.xs,
+                  children: [
+                    ...lead,
+                    Expanded(child: heading),
+                    ...buttons,
+                  ],
+                );
+              }
+              // Too long beside the buttons (another day's date, larger
+              // text): the buttons keep the top row and the title takes
+              // its own line, never broken mid-word (rules §12.1).
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    spacing: DotSpace.xs,
+                    children: [...lead, const Spacer(), ...buttons],
+                  ),
+                  heading,
+                ],
+              );
+            },
           ),
           // Low energy's switch sits by its caption: the top row has the
           // title, ⋯ and Settings (ED-238) and no room for it on a phone.
@@ -101,7 +132,7 @@ class TodayHeader extends ConsumerWidget {
                 ),
               ],
             )
-          else if (!monthOpen && extras)
+          else if (!monthOpen && extras && !short)
             DayNumbers(date: date),
         ],
       ),
@@ -113,7 +144,13 @@ class TodayHeader extends ConsumerWidget {
       return lowEnergyTitle(context, ref);
     }
     final otherMonth = month.year != today.year || month.month != today.month;
-    if (monthOpen && otherMonth) return DateFormat.yMMMM(locale).format(month);
+    if (monthOpen && otherMonth) {
+      // Phones share the row with ‹ Today, ⋯ and the capsule: "Dec 2026",
+      // so the month never breaks mid-word.
+      return AppLayout.classOf(context) == WidthClass.compact
+          ? DateFormat.yMMM(locale).format(month)
+          : DateFormat.yMMMM(locale).format(month);
+    }
     // The date, as Structured's header (ADR-0015); the spread keeps the
     // greeting (dayTitle). Phones share the row with ⋯ and Settings
     // (ED-238), so the short date, as E-Phones draws it (ED-040).
@@ -123,166 +160,38 @@ class TodayHeader extends ConsumerWidget {
   }
 }
 
-/// "Good morning, Kody" on today, else the weekday: the Mac/web spread's
-/// title (`A-mac-today-alt1-spread`). The phone header shows the date
-/// instead (ADR-0015); the spread has the room for both.
-String dayTitle(
-  BuildContext context,
-  WidgetRef ref, {
-  required DateTime date,
-  required DateTime today,
+/// [style] as a Text would draw it: over the inherited style, which holds
+/// the face a platform style leaves to the system.
+TextStyle _inherited(BuildContext context, TextStyle style) =>
+    DefaultTextStyle.of(context).style.merge(style);
+
+/// The top row's width besides the title: "‹ Today" when shown, ⋯, and
+/// Sync and the profile, from their own sizes (44 pt / 48 dp targets).
+double _reserved(
+  BuildContext context, {
+  required bool back,
+  required bool sync,
 }) {
-  final locale = Localizations.localeOf(context).toLanguageTag();
-  if (date != today) return DateFormat.EEEE(locale).format(date);
-  final profile = ref.watch(currentProfileProvider).value;
-  final now =
-      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
-  final zone = profile == null ? tz.UTC : tz.getLocation(profile.tzId);
-  final part = dayPart(tz.TZDateTime.from(now, zone).hour);
-  final name = profile?.displayName?.trim() ?? '';
-  final l10n = context.l10n;
-  return name.isEmpty
-      ? l10n.todayGreeting(part)
-      : l10n.todayGreetingName(part, name);
-}
-
-/// ICU select key of the greeting for a local [hour]: before noon,
-/// before 17:00, or later.
-String dayPart(int hour) => hour < 12
-    ? 'morning' // l10n-ignore: ICU select key
-    : hour < 17
-    ? 'afternoon' // l10n-ignore: ICU select key
-    : 'evening'; // l10n-ignore: ICU select key
-
-/// "Take it easy, Kody" (low-energy mode, `B-ios-low-energy`).
-String lowEnergyTitle(BuildContext context, WidgetRef ref) {
-  final name = ref.watch(currentProfileProvider).value?.displayName?.trim();
-  final l10n = context.l10n;
-  return name == null || name.isEmpty
-      ? l10n.lowEnergyGreeting
-      : l10n.lowEnergyGreetingName(name);
-}
-
-/// The day dot: how far today is through Wake Up → Wind Down.
-class TodayDot extends ConsumerWidget {
-  const TodayDot({required this.today, super.key});
-
-  final DateTime today;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(timelineDataProvider(today)).value;
-    final ends = ref.watch(dayEndsProvider(today)).value;
-    final now =
-        ref.watch(minuteTickProvider).value ??
-        ref.watch(clockProvider).nowUtc();
-    final geometry = ends == null || data == null
-        ? const DayDotGeometry.filled(0)
-        : dayDotGeometry(
-            wakeUtc: ends.shape.wakeUtc,
-            windDownUtc: ends.shape.bedUtc,
-            nextWakeUtc: ends.nextWakeUtc,
-            nowUtc: now,
-            night: data.settings.showNightArc,
-          );
-    final night = ends == null
-        ? null
-        : context.l10n.nightLabel(
-            formatDurationShort(
-              context.l10n,
-              nightMinutes(ends.shape.bedUtc, ends.nextWakeUtc),
-            ),
-          );
-    return Padding(
-      padding: const EdgeInsets.all(DotSpace.xs),
-      // The header's line also holds the date and ⋯ (ADR-0015).
-      child: DayDot(
-        geometry: geometry,
-        nightLabel: geometry.hasNight ? night : null,
-        size: DotSize.headerDayDot,
-      ),
-    );
-  }
-}
-
-/// "● Today" (`A-ios-future-month`): one tap back to the current date
-/// (03 §2).
-class TodayPill extends StatelessWidget {
-  const TodayPill({required this.onTap, super.key});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final c = t.colors;
-    return OutlinedButton.icon(
-      onPressed: onTap,
-      icon: Container(
-        width: DotSize.tabDot,
-        height: DotSize.tabDot,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: c.accent),
-      ),
-      label: Text(
-        context.l10n.todayPill,
-        style: t.styles.button.copyWith(color: c.accentInk),
-      ),
-    );
-  }
-}
-
-/// "0 of 15 · 22 h 55 planned" under Today's title (ADR-0015: moved up
-/// from the day card's header row, so the sheet below is all thread).
-class DayNumbers extends ConsumerWidget {
-  const DayNumbers({required this.date, super.key});
-
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(timelineDataProvider(date)).value;
-    if (data == null) return const SizedBox.shrink();
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final s = daySummaryOf(
-      data.blocks,
-      DayShape.on(
-        data.day.location,
-        date,
-        data.settings.boundaryFor(data.day.weekday),
-      ),
-    );
-    final style = t.styles.dayCaption.copyWith(letterSpacing: 0);
-    final numbers = Text(
-      s.total == 0
-          ? l10n.dayCardNothing(formatDurationShort(l10n, s.freeMinutes))
-          : l10n.dayCardSummary(
-              s.done,
-              s.total,
-              formatDurationShort(l10n, s.plannedMinutes),
-            ),
-      style: style,
-    );
-    // An early tomorrow moved Wind Down (docs/15 W4): say so, once, here.
-    final ends = ref.watch(dayEndsProvider(date)).value;
-    if (ends == null || !ends.derived) return numbers;
-    String at(DateTime utc) => timeOfUtc(
-      context,
-      data.day.location,
-      utc,
-      use24h: use24hFor(context, data.settings.use24h),
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        numbers,
-        Text(
-          l10n.todayWindDownFooter(at(ends.nextWakeUtc), at(ends.shape.bedUtc)),
-          style: style,
-        ),
-      ],
-    );
-  }
+  final t = DotTheme.of(context);
+  final glass = DotIdiom.of(context) == DotIdiom.cupertino;
+  final target = glass ? DotTouch.min : DotTouch.android;
+  final phone = AppLayout.classOf(context) == WidthClass.compact;
+  final pill = back
+      ? textWidth(
+              context,
+              context.l10n.todayPill,
+              _inherited(context, t.styles.button),
+            ) +
+            DotSize.rowIcon +
+            DotSpace.xxs +
+            DotSpace.s +
+            DotSpace.m
+      : 0.0;
+  final actions = sync
+      ? DotTouch.android + (phone ? target : 0) + (glass ? 2 * DotSpace.xxs : 0)
+      : (phone ? target : 0.0);
+  final gaps = DotSpace.xs * (back ? 3 : 2);
+  return pill + DotTouch.android + actions + gaps;
 }
 
 /// The title, which opens the month (the chevron says which way).
@@ -292,11 +201,25 @@ class _TitleButton extends ConsumerWidget {
   final String title;
   final bool monthOpen;
 
+  /// Whether [title] and its chevron fit [width] on one line.
+  static bool fits(BuildContext context, String title, double width) {
+    final t = DotTheme.of(context);
+    final android = DotIdiom.of(context) != DotIdiom.cupertino;
+    final style = android ? t.styles.topBarTitle : t.styles.dayTitle;
+    final chevron =
+        (android ? DotSize.headerGlyphAndroid : DotSize.rowIcon) + DotSpace.xs;
+    return textWidth(context, title, _inherited(context, style)) + chevron <=
+        width;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final style = t.styles.dayTitle;
+    // E-Phones: iPhone's 28 bold title with a teal chevron (ED-040);
+    // Android's top app bar title, 24 regular, with an ink arrow.
+    final android = DotIdiom.of(context) != DotIdiom.cupertino;
+    final style = android ? t.styles.topBarTitle : t.styles.dayTitle;
     return Semantics(
       button: true,
       header: true,
@@ -324,9 +247,11 @@ class _TitleButton extends ConsumerWidget {
                     ),
                     child: DotIcon(
                       monthOpen ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-                      color: t.colors.text,
-                      size: DotSize.rowIcon,
-                      bold: true,
+                      color: android ? t.colors.ink : t.colors.accent,
+                      size: android
+                          ? DotSize.headerGlyphAndroid
+                          : DotSize.rowIcon,
+                      bold: !android,
                     ),
                   ),
                 ),

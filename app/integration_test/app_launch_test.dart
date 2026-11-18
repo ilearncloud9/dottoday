@@ -65,7 +65,10 @@ void main() {
 
     await _pumpUntil(tester, find.byType(DayCard));
     // The day's numbers sit under Today's title now (ADR-0015).
-    await _pumpUntil(tester, find.textContaining(RegExp(r'^\d+ of \d+ · ')));
-    expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
+    await _pumpUntil(
+      tester,
+      find.textContaining(RegExp(r'^\d+ of \d+ done · ')),
+    );
+    expect(find.textContaining(RegExp(r'^\d+ of \d+ done · ')), findsOneWidget);
   });
 }

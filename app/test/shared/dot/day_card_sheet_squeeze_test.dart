@@ -47,10 +47,9 @@ Future<void> _pump(WidgetTester tester, double height, double scale) async {
             alignment: Alignment.topCenter,
             child: SizedBox(
               height: height,
-              child: DayCard.sheet(
+              child: DayCard.page(
                 entries: _entries,
                 openAtNow: false,
-                handle: const SizedBox(height: 24, width: 40),
                 reality: RealityToggle(on: false, onChanged: (_) {}),
               ),
             ),

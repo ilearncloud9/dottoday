@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Changed
+- Today on phones has Concept E's look (redesign branch): the date with Sync and your profile at the top right, a simpler week strip, and the day straight on the page with no sheet. Pull the strip down, or tap the date, for the month. Sync now shows on phones and says how it stands.
+- An empty day shows its free hours with Add a task, Drop a routine, Pull from inbox and Copy a day right in the day (redesign branch).
+- In landscape the week strip folds into the title row (redesign branch).
+
 ### Fixed
 - On a small phone with the keyboard up, the top of the day sheet no longer runs past its edge: it scrolls with the day instead (redesign branch).
 - A tip shown just as the app restarted (after onboarding or a layout switch) no longer raises an error in the background (redesign branch).

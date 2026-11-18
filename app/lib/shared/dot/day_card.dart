@@ -59,19 +59,18 @@ class DayCard extends StatelessWidget {
     this.note,
     this.openAtNow = false,
     super.key,
-  }) : side = null,
-       handle = null;
+  }) : side = null;
 
-  /// Today's day as a full-width sheet (ADR-0015): top corners rounded, no
-  /// title row (the screen header carries the day and its numbers), the
-  /// [handle] centred at the top, then the thread.
-  const DayCard.sheet({
+  /// Today's day on the page itself (E-Phones, M19.1): no raised sheet and
+  /// no handle (the strip and the title open the month), no title row
+  /// (the screen's header carries the day and its numbers); the Plan /
+  /// Reality switch, when shown, over the thread.
+  const DayCard.page({
     required this.entries,
     this.actions = const ThreadActions(),
     this.footer,
     this.reality,
     this.note,
-    this.handle,
     this.openAtNow = false,
     super.key,
   }) : title = '',
@@ -93,18 +92,14 @@ class DayCard extends StatelessWidget {
   }) : isToday = false,
        reality = null,
        note = null,
-       handle = null,
        openAtNow = false;
 
   /// "Wednesday", or "Monday 14 Dec" away from this week.
   final String title;
   final bool isToday;
 
-  /// The header's numbers; null on [DayCard.sheet].
+  /// The header's numbers; null on [DayCard.page].
   final DaySummary? summary;
-
-  /// On [DayCard.sheet]: the month pull handle at the top.
-  final Widget? handle;
   final List<ThreadEntry> entries;
   final ThreadActions actions;
 
@@ -140,7 +135,7 @@ class DayCard extends StatelessWidget {
       );
     }
     final numbers = summary;
-    if (numbers == null) return _sheet(context, c);
+    if (numbers == null) return _page(context);
     final header = _Header(
       title: title,
       isToday: isToday,
@@ -164,11 +159,10 @@ class DayCard extends StatelessWidget {
     );
   }
 
-  /// [DayCard.sheet]: the handle and the Plan / Reality switch pinned over
-  /// the scrolling thread, on a sheet that runs to the bottom edge.
-  Widget _sheet(BuildContext context, DotColors c) {
+  /// [DayCard.page]: the Plan / Reality switch, when shown, pinned over
+  /// the scrolling thread, straight on the page.
+  Widget _page(BuildContext context) {
     final top = [
-      ?handle,
       if (reality case final r?)
         Padding(
           padding: const EdgeInsetsDirectional.only(end: DotSpace.l),
@@ -178,32 +172,15 @@ class DayCard extends StatelessWidget {
           ),
         ),
     ];
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.raised,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(DotRadii.sheet),
-        ),
-        // No outline: the sheet runs to the screen's bottom edge under the
-        // tab bar, and a bottom or side line would show there (ADR-0015).
-        boxShadow: DotElevation.sheet,
-      ),
-      child: LayoutBuilder(
-        builder: (context, box) => _sheetBody(context, box, [
-          if (top.isEmpty) const SizedBox(height: DotSpace.l) else ...top,
-        ]),
-      ),
+    return LayoutBuilder(
+      builder: (context, box) => _pageBody(context, box, top),
     );
   }
 
-  /// The sheet's pinned [top] over its thread. Squeezed below [_shortCard]
+  /// The page's pinned [top] over its thread. Squeezed below [_shortCard]
   /// (a keyboard and a prompt over a small phone), [top] scrolls with the
   /// thread instead of overflowing, as the card's header does (M4.9).
-  Widget _sheetBody(
-    BuildContext context,
-    BoxConstraints box,
-    List<Widget> top,
-  ) {
+  Widget _pageBody(BuildContext context, BoxConstraints box, List<Widget> top) {
     List<Widget> thread(GlobalKey? key) => [
       _thread(key),
       // The last row scrolls clear of the floating tab bar and + button

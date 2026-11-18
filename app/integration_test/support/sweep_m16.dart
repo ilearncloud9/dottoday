@@ -68,15 +68,20 @@ Future<void> sweepM16(
   closeSheets();
   await rest();
 
-  // The first dot on screen opens its sheet, in its minimal form (a dot
-  // scrolled off screen would take the tap elsewhere, e.g. a hint row).
+  // The first dot on screen that isn't live opens its sheet, in its
+  // minimal form; the live dot opens Focus instead, and which task is live
+  // depends on the time of day (a dot scrolled off screen would take the
+  // tap elsewhere, e.g. a hint row).
+  final sheetDot = find.byWidgetPredicate(
+    (w) => w is TaskDot && w.onTap != null && w.state != DotState.live,
+  );
   await tester.dragUntilVisible(
-    find.byType(TaskDot).hitTestable().first,
+    sheetDot.hitTestable().first,
     find.byType(DayCard).first,
     const Offset(0, 300),
   );
   await rest();
-  await tester.tap(find.byType(TaskDot).hitTestable().first);
+  await tester.tap(sheetDot.hitTestable().first);
   await until(find.text('Delete'));
   await rest();
   await shot('minimal_task_sheet');

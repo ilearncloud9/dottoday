@@ -1,6 +1,7 @@
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/phone_week.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
@@ -22,7 +23,11 @@ final appScreens = RouteScreens(
   shell: (context, shell) => AppShell(shell: shell),
   today: (_) => const InboxSidebarFrame(child: TodayScreen()),
   inbox: (_) => const InboxScreen(),
-  week: (_) => const InboxSidebarFrame(child: WeekScreen()),
+  // Phones have no Week (Concept E): their /week opens Today (M19.1).
+  week: (_) => const PhoneWeek(
+    to: AppRoutes.today,
+    child: InboxSidebarFrame(child: WeekScreen()),
+  ),
   search: (_) => const SearchScreen(),
   settings: (_) => const SettingsScreen(),
   // Routines (M11.4) belongs to its own feature; a push's extra is the
@@ -31,7 +36,10 @@ final appScreens = RouteScreens(
       ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
       : settingsPageFor(page),
   month: (_) => const MonthScreen(),
-  weekOn: (_, date) => InboxSidebarFrame(child: WeekScreen(date: date)),
+  weekOn: (_, date) => PhoneWeek(
+    to: AppRoutes.day(date),
+    child: InboxSidebarFrame(child: WeekScreen(date: date)),
+  ),
   monthOn: (_, month) => MonthScreen(month: month),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   focus: (_, id) => FocusScreen(id: id),

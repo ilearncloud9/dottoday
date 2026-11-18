@@ -488,7 +488,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String dayCardSummary(int done, int total, String planned) {
-    return '$done de $total · $planned planificado';
+    return '$done de $total hechas · $planned planificado';
   }
 
   @override
@@ -560,11 +560,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get todayAllDay => 'Todo el día';
 
   @override
-  String stripDayLabel(String day, int done, int total) {
-    return '$day, $done de $total hechas';
-  }
-
-  @override
   String monthFooterPlanned(String month, int count, int days) {
     return '$month · $count de $days días planificados';
   }
@@ -615,6 +610,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get emptyCopyDay => 'Copiar un día…';
+
+  @override
+  String get emptyDayBody =>
+      'Un día libre. Añade lo que importa, pon una rutina o trae algo de la bandeja.';
+
+  @override
+  String get emptyAddTask => 'Añadir una tarea';
+
+  @override
+  String get emptyDropRoutine => 'Poner una rutina';
 
   @override
   String get copyDayTitle => '¿Qué día copiar?';

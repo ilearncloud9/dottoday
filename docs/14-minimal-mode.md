@@ -145,7 +145,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 **Matrix notes from the M16 inventory (30 Oct 2026).** Where a row above was written before the code it describes:
 
 - *Today thread.* Since ADR-0015 a dot looks the same before and after Done; a task is marked done by its row's `DoneCircle` (filled, title struck), and tapping the dot opens the task. Minimal keeps this; "past dots fade" is withdrawn.
-- *Week strip.* The strip's own 8 px completion dots are hidden too, not just the month's: both are done ratios.
+- *Week strip.* Concept E draws the strip without completion dots in both layouts (E-Phones, M19.1); Simplified now means the month opens without its per-day dots.
 - *Mac Week / Month.* The Mac View menu already lists Week and Month; minimal removes Week from the rail only.
 - *Task sheet.* Tomorrow and Later reuse the Wind Down review's "Move to tomorrow" / "Send to Inbox" actions; Delete reuses the editor footer's delete (its confirm and Undo unchanged).
 - *Shift the rest / Running late.* Minimal's live row shows Done and Running late (the existing sheet); +15 and Shift the rest move under the sheet's More.

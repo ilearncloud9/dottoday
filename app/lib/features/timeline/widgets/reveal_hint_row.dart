@@ -73,22 +73,43 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
       onDismiss: () =>
           unawaited(dismissHint(ProviderScope.containerOf(context), pick.hint)),
     );
+    // E-Phones draws Full's tip on a tinted bar, 16 in from the edges; it
+    // keeps the 48 height its two targets need (the board's 40 / 44).
+    // E-PhonesMinimal draws no tip: Minimal's stays plain until M19.6.
+    if (!watchOnScreen(ref, FeatureId.headerExtras)) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
+        child: link ? _withLink(context, hint) : hint,
+      );
+    }
+    final bar = DecoratedBox(
+      decoration: BoxDecoration(
+        color: DotTheme.of(context).colors.sunk,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+      ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(start: DotSpace.l),
+        child: hint,
+      ),
+    );
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
-      child: link
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                hint,
-                TextButton(
-                  onPressed: () => unawaited(showWakeUpExplainSheet(context)),
-                  child: Text(l10n.wakeUpSeeHowItWorks),
-                ),
-              ],
-            )
-          : hint,
+      // 12 under the strip, as E-Phones spaces it.
+      padding: const EdgeInsets.fromLTRB(DotSpace.l, DotSpace.m, DotSpace.l, 0),
+      child: link ? _withLink(context, bar) : bar,
     );
   }
+
+  /// [hint] with "See how it works" under it (the Wake Up promise).
+  Widget _withLink(BuildContext context, Widget hint) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      hint,
+      TextButton(
+        onPressed: () => unawaited(showWakeUpExplainSheet(context)),
+        child: Text(context.l10n.wakeUpSeeHowItWorks),
+      ),
+    ],
+  );
 
   static String _text(AppLocalizations l10n, HintId hint) => switch (hint) {
     HintId.unstick => l10n.unstickPrompt,

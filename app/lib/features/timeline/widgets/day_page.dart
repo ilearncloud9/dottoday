@@ -18,7 +18,6 @@ import 'package:dottoday/features/timeline/state/earlier_fold.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/cap_time_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
@@ -30,7 +29,6 @@ import 'package:dottoday/features/timeline/widgets/today_learning.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
-import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -39,7 +37,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// One page of the Today pager: [date]'s thread on a [DayCard.sheet]
+/// One page of the Today pager: [date]'s thread on a [DayCard.page]
 /// (`Main`, ADR-0015);
 /// with [side], a day beside the card on the Mac/web spread (M3e.1).
 class DayPage extends ConsumerWidget {
@@ -47,7 +45,7 @@ class DayPage extends ConsumerWidget {
     required this.date,
     required this.today,
     this.side,
-    this.sheet = false,
+    this.page = false,
     super.key,
   });
 
@@ -55,10 +53,10 @@ class DayPage extends ConsumerWidget {
   final DateTime today;
   final SideDay? side;
 
-  /// The phones' pager page: a full-width [DayCard.sheet] whose numbers
-  /// live in the screen header (ADR-0015). Off, the Mac/web spread's
-  /// titled card.
-  final bool sheet;
+  /// The phones' pager page: the thread straight on the page
+  /// ([DayCard.page], E-Phones) whose numbers live in the screen header.
+  /// Off, the Mac/web spread's titled card.
+  final bool page;
 
   /// How far a drop looks for a task dragged in from another day: a week
   /// either way, as hovering a week-strip day pages there mid-drag
@@ -147,19 +145,29 @@ class DayPage extends ConsumerWidget {
     );
     // Today folds its done tasks into Earlier on Minimal phones and on the
     // Mac/web card; Full phones keep their rows (ED-164, docs/14 §3).
-    final fold = date == today && side == null && (!sheet || minimal);
+    final fold = date == today && side == null && (!page || minimal);
     final entries = fold
         ? foldEarlier(
             threaded,
             open: ref.watch(earlierOpenProvider).contains(date),
           )
         : threaded;
+    // Full phones draw an empty day's free time as E-Phones does: the
+    // free hours, a line and the actions inside the thread (M19.1).
+    // Minimal keeps its quiet line (docs/14 §3, M19.6); past days too.
+    final emptyActions = !watchSimplified(ref, FeatureId.emptyDayActions);
+    final emptyBody =
+        page && summary.total == 0 && !date.isBefore(today) && emptyActions;
     final actions = _actions(
       context,
       ref,
       data,
       format.time,
       drag: reality == null,
+      // Today's free time left after now; another day's whole day.
+      emptyDay: emptyBody
+          ? (minutes) => EmptyDayBody(date: date, freeMinutes: minutes)
+          : null,
     );
     if (side case final s?) {
       return DayCard.side(
@@ -181,20 +189,15 @@ class DayPage extends ConsumerWidget {
     final footer = _footer(
       blocks,
       summary.total == 0,
-      emptyActions: !watchSimplified(ref, FeatureId.emptyDayActions),
-      later: sheet && watchSimplified(ref, FeatureId.inbox),
+      inThread: emptyBody,
+      emptyActions: emptyActions,
+      later: page && watchSimplified(ref, FeatureId.inbox),
     );
-    final card = sheet
-        ? DayCard.sheet(
+    final card = page
+        ? DayCard.page(
             entries: entries,
             actions: actions,
             footer: footer,
-            handle: PullHandle(
-              open: ref.watch(
-                todaySelectionProvider.select((v) => v.monthOpen),
-              ),
-              onPull: ref.read(todaySelectionProvider.notifier).toggleMonth,
-            ),
             reality: toggle,
             note: note,
             openAtNow: date == today,
@@ -245,6 +248,7 @@ class DayPage extends ConsumerWidget {
     TimelineData data,
     String Function(DateTime utc) time, {
     required bool drag,
+    Widget Function(int freeMinutes)? emptyDay,
   }) {
     final picked = ref.watch(taskSelectionProvider);
     final s = data.settings;
@@ -253,6 +257,7 @@ class DayPage extends ConsumerWidget {
       ref,
       blocks: data.blocks,
       timeText: time,
+      emptyDay: emptyDay,
       drag: !drag
           ? null
           : dayThreadDrag(
@@ -317,21 +322,25 @@ class DayPage extends ConsumerWidget {
   ///
   /// Minimal (docs/14 §3): no empty-day actions ([emptyActions] false), and
   /// from today on the thread ends in the [LaterRow] ([later]).
+  /// Below the thread. [inThread]: the empty day's line and actions are
+  /// already in the thread's free time, so only Later is left here.
   Widget? _footer(
     List<Occurrence> blocks,
     bool empty, {
+    required bool inThread,
     required bool emptyActions,
     required bool later,
   }) {
     final oneOffs = blocks.any((o) => o.seriesId == null);
     if (date.isBefore(today)) return empty ? const EmptyDayLine() : null;
+    if (inThread) return later ? const LaterRow() : null;
     final actions = emptyActions && !oneOffs;
     if (!actions && !later) return empty ? const EmptyDayLine() : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (empty) const EmptyDayLine(),
-        if (actions) EmptyDayActions(date: date),
+        if (actions) EmptyDayActions(date: date, inset: true),
         if (later) const LaterRow(),
       ],
     );

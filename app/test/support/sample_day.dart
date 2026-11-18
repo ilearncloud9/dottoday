@@ -92,47 +92,16 @@ const mainThread = <ThreadEntry>[
 
 /// The week strip of `Main`: Sun 18 – Sat 24, today Wednesday.
 const mainWeek = <StripDay>[
-  StripDay(
-    weekday: 'Sun',
-    date: '18',
-    label: 'Sunday 18',
-    completion: Completion.of(1),
-  ),
-  StripDay(
-    weekday: 'Mon',
-    date: '19',
-    label: 'Monday 19',
-    completion: Completion.of(0.75),
-  ),
-  StripDay(
-    weekday: 'Tue',
-    date: '20',
-    label: 'Tuesday 20',
-    completion: Completion.of(1),
-  ),
+  StripDay(weekday: 'Sun', date: '18', label: 'Sunday 18'),
+  StripDay(weekday: 'Mon', date: '19', label: 'Monday 19'),
+  StripDay(weekday: 'Tue', date: '20', label: 'Tuesday 20'),
   StripDay(
     weekday: 'Wed',
     date: '21',
     label: 'Wednesday 21, today',
-    completion: Completion.of(0.3),
     isToday: true,
   ),
-  StripDay(
-    weekday: 'Thu',
-    date: '22',
-    label: 'Thursday 22',
-    completion: Completion.none(),
-  ),
-  StripDay(
-    weekday: 'Fri',
-    date: '23',
-    label: 'Friday 23',
-    completion: Completion.none(),
-  ),
-  StripDay(
-    weekday: 'Sat',
-    date: '24',
-    label: 'Saturday 24',
-    completion: Completion.none(),
-  ),
+  StripDay(weekday: 'Thu', date: '22', label: 'Thursday 22'),
+  StripDay(weekday: 'Fri', date: '23', label: 'Friday 23'),
+  StripDay(weekday: 'Sat', date: '24', label: 'Saturday 24'),
 ];

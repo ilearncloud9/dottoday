@@ -37,7 +37,6 @@ class RoutineDayStrip extends StatelessWidget {
             label: context.l10n.routineDropOnDay(
               DateFormat.MMMMEEEEd(locale).format(d),
             ),
-            completion: const Completion.none(),
             isToday: d == today,
           ),
       ],

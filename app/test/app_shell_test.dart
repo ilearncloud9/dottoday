@@ -113,7 +113,9 @@ void main() {
 
   testWidgets('iPhone add dot invokes Quick Add', (tester) async {
     await _pump(tester, width: 390);
-    await tester.tap(find.bySemanticsLabel('Add a task'));
+    // The bar's +, drawn over the page after it, not an empty day's own
+    // "Add a task" in the thread (M19.1).
+    await tester.tap(find.bySemanticsLabel('Add a task').last);
     expect(_quickAdds, 1);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

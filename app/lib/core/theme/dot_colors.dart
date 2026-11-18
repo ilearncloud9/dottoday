@@ -69,6 +69,9 @@ final class DotColors {
     required this.onToast,
     required this.toastAction,
     required this.barAndroid,
+    required this.glassTop,
+    required this.glassBottom,
+    required this.glassEdge,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -220,6 +223,12 @@ final class DotColors {
   /// Android's floating toolbar and its + (ED-125): solid here, frosted
   /// at [ChromeAlpha] on Android 12+.
   final Color barAndroid;
+
+  /// The iPhone glass capsule's fill, top to bottom, over its blur, and
+  /// its light top edge (ED-034).
+  final Color glassTop;
+  final Color glassBottom;
+  final Color glassEdge;
   final Color fabAndroid;
 
   /// Base colour of elevation shadows (see `DotElevation`).
@@ -311,6 +320,9 @@ final class DotColors {
       onToast: l(onToast, other.onToast),
       toastAction: l(toastAction, other.toastAction),
       barAndroid: l(barAndroid, other.barAndroid),
+      glassTop: l(glassTop, other.glassTop),
+      glassBottom: l(glassBottom, other.glassBottom),
+      glassEdge: l(glassEdge, other.glassEdge),
       fabAndroid: l(fabAndroid, other.fabAndroid),
       shadow: l(shadow, other.shadow),
     );
@@ -397,6 +409,9 @@ DotColors _resolve(Brightness brightness, Color accent) {
     onToast: p.onToast,
     toastAction: p.toastAction,
     barAndroid: p.barAndroid,
+    glassTop: p.glassTop,
+    glassBottom: p.glassBottom,
+    glassEdge: p.glassEdge,
     fabAndroid: p.fabAndroid,
     shadow: p.shadow,
   );

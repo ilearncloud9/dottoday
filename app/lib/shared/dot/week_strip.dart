@@ -27,10 +27,8 @@ final class StripDay {
     required this.weekday,
     required this.date,
     required this.label,
-    this.completion,
     this.weekdayNarrow,
     this.isToday = false,
-    this.isPast = false,
   });
 
   /// "Wed".
@@ -43,21 +41,15 @@ final class StripDay {
   /// "21".
   final String date;
 
-  /// Screen-reader label, e.g. "Wednesday 21 October, 2 of 7 done".
+  /// Screen-reader label, e.g. "Wednesday 21 October".
   final String label;
-
-  /// The day's completion dot; null draws none (minimal mode, docs/14 §3:
-  /// a done ratio is a number that judges).
-  final Completion? completion;
   final bool isToday;
-
-  /// Past dates read muted (`Main`).
-  final bool isPast;
 }
 
-/// Seven days with their completion dots (docs/10 §3 `WeekStrip`, `Main`):
-/// filled when done, conic when partly, outline ahead; the selected column
-/// is filled (ADR-0015) and the pull handle under it opens the month.
+/// Seven days (E-Phones): on iPhone a letter over the date, on Android
+/// "Mon" over it; the selected day filled. Concept E draws no completion
+/// dot here (M19.1); the pull handle under it opens the month where one
+/// is shown.
 class WeekStrip extends StatelessWidget {
   const WeekStrip({
     required this.days,
@@ -92,7 +84,7 @@ class WeekStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = DotTheme.of(context).styles.stripWeekday;
+    final style = DotTheme.of(context).styles.stripWeekdayAndroid;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -215,19 +207,7 @@ class _Column extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final c = t.colors;
-    // The selected day is filled in the text colour, its labels in the
-    // surface colour (ADR-0015, as Structured's selected date).
-    final on = selected && !hovered ? c.raised : null;
-    final label = t.styles.stripWeekday.copyWith(
-      color: on ?? (day.isToday ? c.accentInk : null),
-    );
-    // Only the weekday turns accent on today; the date stays text, muted
-    // for days already gone (`Main`).
-    final date = t.styles.stripDate.copyWith(
-      color: on ?? (day.isPast ? c.muted : null),
-    );
+    final android = DotIdiom.of(context) != DotIdiom.cupertino;
     return Semantics(
       button: onTap != null,
       selected: selected,
@@ -239,31 +219,100 @@ class _Column extends StatelessWidget {
         borderRadius: BorderRadius.circular(DotRadii.card),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: DotSpace.xxs),
-          padding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
           constraints: const BoxConstraints(minHeight: DotTouch.android),
           decoration: hovered
               ? BoxDecoration(
-                  color: c.accentTint,
-                  borderRadius: BorderRadius.circular(DotRadii.card),
-                )
-              : selected
-              ? BoxDecoration(
-                  color: c.text,
+                  color: DotTheme.of(context).colors.accentTint,
                   borderRadius: BorderRadius.circular(DotRadii.card),
                 )
               : null,
-          child: Column(
-            spacing: DotSpace.xxs,
-            children: [
-              Text(
-                narrow ? day.weekdayNarrow ?? day.weekday : day.weekday,
-                style: label,
-              ),
-              Text(day.date, style: date),
-              if (day.completion case final c?) CompletionDot(completion: c),
-            ],
+          alignment: Alignment.center,
+          child: android ? _android(context) : _iphone(context),
+        ),
+      ),
+    );
+  }
+
+  /// iPhone (E-Phones): the weekday's letter over the date in a 34 circle;
+  /// today's letter and date teal; the selected day filled, teal on today
+  /// and ink elsewhere.
+  Widget _iphone(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    final filled = selected && !hovered;
+    final fill = day.isToday ? c.accent : c.ink;
+    final strong = day.isToday || filled;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: DotSpace.xs,
+      children: [
+        Text(
+          day.weekdayNarrow ?? day.weekday,
+          style: t.styles.stripLetter.copyWith(
+            color: day.isToday ? c.accent : null,
+            fontWeight: day.isToday ? FontWeight.w600 : null,
           ),
         ),
+        Container(
+          width: DotSize.stripCircle,
+          height: DotSize.stripCircle,
+          alignment: Alignment.center,
+          decoration: filled
+              ? BoxDecoration(color: fill, shape: BoxShape.circle)
+              : null,
+          child: Text(
+            day.date,
+            style: t.styles.stripDate.copyWith(
+              color: filled
+                  ? (day.isToday ? c.onAccent : c.surface)
+                  : day.isToday
+                  ? c.accent
+                  : null,
+              fontWeight: strong ? FontWeight.w600 : null,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Android (E-Phones): "Mon" over the date; the selected day in a tonal
+  /// 52 × 60 pill, its date bold.
+  Widget _android(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    final filled = selected && !hovered;
+    final on = filled ? c.onTonalAndroid : null;
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: DotSize.stripPillWidth,
+        minHeight: DotSize.stripPillHeight,
+      ),
+      decoration: filled
+          ? BoxDecoration(
+              color: c.tonalAndroid,
+              borderRadius: BorderRadius.circular(DotRadii.stripPillAndroid),
+            )
+          : null,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: DotSpace.xxs,
+        children: [
+          Text(
+            narrow ? day.weekdayNarrow ?? day.weekday : day.weekday,
+            style: t.styles.stripWeekdayAndroid.copyWith(
+              color: on ?? (day.isToday ? c.accent : null),
+            ),
+          ),
+          Text(
+            day.date,
+            style: t.styles.stripDateAndroid.copyWith(
+              color: on ?? (day.isToday ? c.accent : null),
+              fontWeight: filled ? FontWeight.w700 : null,
+            ),
+          ),
+        ],
       ),
     );
   }

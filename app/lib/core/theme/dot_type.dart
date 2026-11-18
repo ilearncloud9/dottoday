@@ -25,6 +25,7 @@ final class DotType {
     required this.stripDate,
     required this.monthDate,
     required this.stripWeekday,
+    required this.stripLetter,
     required this.dayTitle,
     required this.dayCaption,
     required this.threadTitle,
@@ -33,6 +34,10 @@ final class DotType {
     required this.choiceTitle,
     required this.sheetTitle,
     required this.sheetTitleAndroid,
+    required this.stripDateAndroid,
+    required this.badge,
+    required this.emptyTitle,
+    required this.stripWeekdayAndroid,
     required this.sheetSubtitle,
     required this.tag,
     required this.primaryButton,
@@ -62,8 +67,10 @@ final class DotType {
     button: _manrope(15, 20, 700, text),
     tabLabel: _system(10, 12, 500, muted),
     tabLabelActive: _system(10, 12, 600, text),
-    stripDate: _manrope(18, 22, 600, text),
+    // E-Phones' week strip: the iPhone date in a 34 circle.
+    stripDate: _manrope(17, 22, 500, text),
     stripWeekday: _system(13, 16, 500, muted),
+    stripLetter: _system(12, 14, 400, muted),
     monthDate: _manrope(15, 20, 500, text),
     dayTitle: _system(28, 34, 700, text, tracking: -0.01),
     // E summary line, 700 15/20 secondary.
@@ -75,6 +82,12 @@ final class DotType {
     choiceTitle: _manrope(17, 22, 700, text),
     sheetTitle: _manrope(24, 30, 800, text),
     sheetTitleAndroid: _system(22, 28, 400, text),
+    stripDateAndroid: _manrope(16, 19, 500, text),
+    // A count on an icon (Sync's conflicts, E-Phones): 11/700.
+    badge: _system(11, 13, 700, text),
+    // An empty day's free time, "16 h free" (E-Phones): 28/800.
+    emptyTitle: _manrope(28, 34, 800, text),
+    stripWeekdayAndroid: _system(12, 14, 500, muted),
     sheetSubtitle: _system(14, 19, 500, muted),
     tag: _system(12, 20, 700, text),
     primaryButton: _manrope(17, 22, 800, text),
@@ -155,6 +168,9 @@ final class DotType {
   /// Week-strip weekday names (≈ 13/500 muted, `Main`).
   final TextStyle stripWeekday;
 
+  /// The iPhone week strip's weekday letter (E-Phones): 12/400.
+  final TextStyle stripLetter;
+
   /// Today's title, "October 21, 2026" (28/34/700, E §3.3 date title):
   /// one line with the day dot and ⋯ on a 390 pt phone.
   final TextStyle dayTitle;
@@ -182,6 +198,16 @@ final class DotType {
 
   /// The Android sheet title (E-Phones-2: 400 22/28).
   final TextStyle sheetTitleAndroid;
+
+  /// Android's week strip (E-Phones): the date 16/500, "Mon" 12/500.
+  final TextStyle stripDateAndroid;
+
+  /// A count badge on an icon (E-Phones' Sync): 11/700.
+  final TextStyle badge;
+
+  /// An empty day's "16 h free" in the thread (E-Phones): 28/800.
+  final TextStyle emptyTitle;
+  final TextStyle stripWeekdayAndroid;
 
   /// The line under a sheet title (500 14, secondary).
   final TextStyle sheetSubtitle;
@@ -230,6 +256,7 @@ final class DotType {
       stripDate: l(stripDate, other.stripDate),
       monthDate: l(monthDate, other.monthDate),
       stripWeekday: l(stripWeekday, other.stripWeekday),
+      stripLetter: l(stripLetter, other.stripLetter),
       dayTitle: l(dayTitle, other.dayTitle),
       dayCaption: l(dayCaption, other.dayCaption),
       threadTitle: l(threadTitle, other.threadTitle),
@@ -238,6 +265,10 @@ final class DotType {
       choiceTitle: l(choiceTitle, other.choiceTitle),
       sheetTitle: l(sheetTitle, other.sheetTitle),
       sheetTitleAndroid: l(sheetTitleAndroid, other.sheetTitleAndroid),
+      stripDateAndroid: l(stripDateAndroid, other.stripDateAndroid),
+      badge: l(badge, other.badge),
+      emptyTitle: l(emptyTitle, other.emptyTitle),
+      stripWeekdayAndroid: l(stripWeekdayAndroid, other.stripWeekdayAndroid),
       sheetSubtitle: l(sheetSubtitle, other.sheetSubtitle),
       tag: l(tag, other.tag),
       primaryButton: l(primaryButton, other.primaryButton),

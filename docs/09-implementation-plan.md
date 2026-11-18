@@ -672,7 +672,7 @@ Rules for every task in M18 to M22:
 
 ## Milestone 19 — First vertical slice: Today → Add → Edit/reschedule → Complete → Change day → Reopen (Prompt F)
 
-- [ ] M19.1 Today in Full:
+- [x] M19.1 Today in Full. Done 2026-11-18 (ED-386): the E-Phones top row, strip, day on the page, empty day and tip bar on iPhone and Android, landscape's folded strip, phones' /week to Today; the Day ▾ chip stays M20.3, the Calendar tab M20.1, Minimal M19.6. Originally:
   - iPhone and Android: E-Phones, G3-1 (ED-104);
   - opens at now, with the current task in view (ED-336);
   - "Pull from inbox · {count}" on an empty day (ED-336);

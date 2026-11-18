@@ -35,6 +35,7 @@ final class ThreadActions {
     this.drag,
     this.selectedIds = const {},
     this.onSelect,
+    this.emptyDay,
   });
 
   final ValueChanged<String>? onToggleDone;
@@ -71,6 +72,12 @@ final class ThreadActions {
   /// Adds or removes a task: long-press without moving, Shift/⌘-click, or
   /// the screen reader's "Select" action. Null = no multi-select.
   final ValueChanged<String>? onSelect;
+
+  /// A day with no tasks (E-Phones' empty day): what fills its free time
+  /// in place of "N h free · add here", in the last gap that can take a
+  /// task, given that gap's minutes. The gap keeps its dotted line and
+  /// stays a drop target.
+  final Widget Function(int freeMinutes)? emptyDay;
 }
 
 /// The day as a vertical thread (docs/10 §1, §3 `Thread`): sun cap, task
@@ -184,6 +191,11 @@ class _ThreadState extends State<Thread> {
     final box = widget.side
         ? entries.lastIndexWhere((e) => e is ThreadGap && e.addable)
         : -1;
+    final empty =
+        widget.actions.emptyDay != null &&
+            !entries.any((e) => e is ThreadTaskEntry)
+        ? entries.lastIndexWhere((e) => e is ThreadGap && e.addable)
+        : -1;
     _hops.built();
     final closing = _hops.closingAt;
     Widget row(int n) {
@@ -191,7 +203,10 @@ class _ThreadState extends State<Thread> {
         return _hops.departing(() => setState(() => _hops.closingAt = null));
       }
       final i = closing != null && n > closing ? n - 1 : n;
-      return _keyed(i, _entry(entries[i], solid[i], dropBox: i == box));
+      return _keyed(
+        i,
+        _entry(entries[i], solid[i], dropBox: i == box, empty: i == empty),
+      );
     }
 
     final count = entries.length + (closing == null ? 0 : 1);
@@ -216,7 +231,12 @@ class _ThreadState extends State<Thread> {
   };
 
   /// The row for [e]; [solid] is its colour from [threadSolid].
-  Widget _entry(ThreadEntry e, TaskColor? solid, {required bool dropBox}) {
+  Widget _entry(
+    ThreadEntry e,
+    TaskColor? solid, {
+    required bool dropBox,
+    bool empty = false,
+  }) {
     final a = widget.actions;
     final drag = a.drag;
     return switch (e) {
@@ -230,9 +250,9 @@ class _ThreadState extends State<Thread> {
       ThreadGap(:final span?) when drag != null => _droppable(
         span,
         drag,
-        _gap(e, solid, dropBox: dropBox),
+        _gap(e, solid, dropBox: dropBox, empty: empty),
       ),
-      ThreadGap() => _gap(e, solid, dropBox: dropBox),
+      ThreadGap() => _gap(e, solid, dropBox: dropBox, empty: empty),
       ThreadNow() => _hops.arriving(NowRow(now: e, solid: solid)),
       ThreadTaskEntry(:final task) => _task(task, solid: solid),
       ThreadOverlap() => OverlapRow(overlap: e),
@@ -276,18 +296,23 @@ class _ThreadState extends State<Thread> {
   ThreadTask? _taskOf(String id) =>
       threadTasks(widget.entries).where((t) => t.id == id).firstOrNull;
 
-  Widget _gap(ThreadGap gap, TaskColor? solid, {required bool dropBox}) =>
-      GapRow(
-        gap: gap,
-        solid: solid,
-        onAdd: widget.actions.onAddHere,
-        dayLabel: widget.dayLabel,
-        style: dropBox
-            ? GapStyle.dropBox
-            : widget.side
-            ? GapStyle.plain
-            : GapStyle.pill,
-      );
+  Widget _gap(
+    ThreadGap gap,
+    TaskColor? solid, {
+    required bool dropBox,
+    bool empty = false,
+  }) => GapRow(
+    gap: gap,
+    solid: solid,
+    body: empty ? widget.actions.emptyDay?.call(gap.minutes) : null,
+    onAdd: widget.actions.onAddHere,
+    dayLabel: widget.dayLabel,
+    style: dropBox
+        ? GapStyle.dropBox
+        : widget.side
+        ? GapStyle.plain
+        : GapStyle.pill,
+  );
 
   /// A task row with selection and drag around it, as far as enabled;
   /// [solid] is the colour the thread arrives in behind now.

@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:flutter/material.dart' show kMinInteractiveDimension;
 import 'package:flutter/painting.dart';
 
@@ -91,6 +92,9 @@ abstract final class DotRadii {
 
   /// Chips on Android: fully round, as every Concept E chip (§6.3).
   static const double chipAndroid = pill;
+
+  /// Android's selected day in the week strip: a tonal pill (E-Phones).
+  static const double stripPillAndroid = 22;
 }
 
 /// Dot and thread sizes (docs/10 §2.3).
@@ -98,6 +102,31 @@ abstract final class DotSize {
   /// Widest a single list column grows on Mac/web before it centres
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
+
+  /// The iPhone's glass capsule in Today's top row (ED-034): 48 tall (the
+  /// board's 44 plus 4, so Sync keeps the 48 target the device sweep
+  /// checks), with the 32 profile circle and a 20 Sync glyph (Android's
+  /// bare glyph is 22).
+  static const double capsule = 48;
+  static const double capsuleAvatar = 32;
+  static const double headerGlyph = 20;
+  static const double headerGlyphAndroid = 22;
+
+  /// Sync's state dot (rules §4, 8 px with a 2 px ring) and its count
+  /// badge (E-Phones, 20).
+  static const double syncDot = 8;
+  static const double syncDotRing = 2;
+  static const double badge = 20;
+
+  /// The week strip's day (E-Phones): iPhone a 34 circle; Android a 52 × 60
+  /// tonal pill around the selected day's name and date.
+  static const double stripCircle = 34;
+  static const double stripPillWidth = 52;
+  static const double stripPillHeight = 60;
+
+  /// An empty day's actions (E-Phones): 46 tall, up to 250 wide.
+  static const double emptyAction = 46;
+  static const double emptyActionWidth = 250;
 
   /// Android's floating toolbar (ED-125): 72 tall, 36 round, 16 from the
   /// start, 24 above the bottom, the + 56 beside it 8 away.
@@ -359,6 +388,17 @@ abstract final class DotElevation {
   static const floating = [
     BoxShadow(color: Color(0x1F241F2B), offset: Offset(0, 10), blurRadius: 30),
   ];
+
+  /// The iPhone glass capsule (ED-034): `0 4 12` at 8 % and a 0.5 px edge
+  /// at 10 %, in the theme's shadow colour (ink light, black dark).
+  static List<BoxShadow> capsule(DotColors c) => [
+    BoxShadow(color: c.shadow.withValues(alpha: 0.1), spreadRadius: 0.5),
+    BoxShadow(
+      color: c.shadow.withValues(alpha: 0.08),
+      offset: const Offset(0, 4),
+      blurRadius: 12,
+    ),
+  ];
 }
 
 /// Width classes that pick the shell (docs/10 §4). Layout adapts by these,
@@ -393,4 +433,7 @@ abstract final class ChromeAlpha {
 
   /// The frost's blur radius (24 on the board; sigma is half of it).
   static const double blur = 24;
+
+  /// The iPhone glass capsule's blur (16 on E-Phones, ED-034).
+  static const double glassBlur = 16;
 }

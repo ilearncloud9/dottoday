@@ -69,7 +69,7 @@ void main() {
   testWidgets('opens on today with its header numbers', (tester) async {
     await tester.pumpWidget(_pager());
     expect(find.text('Wednesday · Today'), findsOneWidget);
-    expect(find.text('2 of 7 · 5 h 45 planned'), findsWidgets);
+    expect(find.text('2 of 7 done · 5 h 45 planned'), findsWidgets);
   });
 
   testWidgets('a day fills the width: no peek, no page dots (ADR-0015)', (

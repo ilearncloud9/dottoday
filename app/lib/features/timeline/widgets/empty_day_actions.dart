@@ -7,17 +7,62 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
-import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// What to do with a free day (`A-ios-future-month`): add to it, pull from
-/// the inbox, or copy another day onto it.
-class EmptyDayActions extends ConsumerWidget {
-  const EmptyDayActions({required this.date, super.key});
+/// An empty day's free time in the thread (E-Phones, M19.1): "16 h free",
+/// a line on what to do with it, then [EmptyDayActions].
+class EmptyDayBody extends StatelessWidget {
+  const EmptyDayBody({
+    required this.date,
+    required this.freeMinutes,
+    super.key,
+  });
 
   final DateTime date;
+  final int freeMinutes;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
+            l10n.threadFree(formatDurationShort(l10n, freeMinutes)),
+            style: t.styles.emptyTitle,
+          ),
+        ),
+        const SizedBox(height: DotSpace.xs),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: DotSize.emptyActionWidth),
+          child: Text(
+            l10n.emptyDayBody,
+            style: t.styles.body.copyWith(color: t.colors.secondary),
+          ),
+        ),
+        const SizedBox(height: DotSpace.l),
+        EmptyDayActions(date: date),
+      ],
+    );
+  }
+}
+
+/// What to do with a free day (E-Phones): Add a task, Drop a routine and
+/// Pull from inbox · n as 46-tall pills, Add filled; "Copy a day…"
+/// quieter under them (kept by the owner, M19.1). With [inset] they line
+/// up with the thread's titles below its last row (a day of repeats only).
+class EmptyDayActions extends ConsumerWidget {
+  const EmptyDayActions({required this.date, this.inset = false, super.key});
+
+  final DateTime date;
+  final bool inset;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,6 +70,45 @@ class EmptyDayActions extends ConsumerWidget {
     final inbox = openItems(
       ref.watch(inboxItemsProvider).value ?? const [],
     ).length;
+    final column = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: DotSize.emptyActionWidth),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: DotSpace.nowCard,
+        children: [
+          _Action(
+            primary: true,
+            label: l10n.emptyAddTask,
+            // Add opens on this day (M3c.5).
+            onTap: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
+          ),
+          _Action(
+            label: l10n.emptyDropRoutine,
+            // Routines, dropping on this day (M11.4).
+            onTap: () => unawaited(
+              context.push(
+                AppRoutes.settingsPage(SettingsPage.routines),
+                extra: date,
+              ),
+            ),
+          ),
+          if (inbox > 0)
+            _Action(
+              label: l10n.emptyPullInbox(inbox),
+              onTap: () => context.go(AppRoutes.inbox),
+            ),
+          _Quiet(
+            label: l10n.emptyCopyDay,
+            onTap: () => unawaited(showCopyDaySheet(context, target: date)),
+          ),
+        ],
+      ),
+    );
+    final aligned = Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: column,
+    );
+    if (!inset) return aligned;
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSize.liveDot + DotSpace.xl,
@@ -32,84 +116,88 @@ class EmptyDayActions extends ConsumerWidget {
         DotSpace.l,
         0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: DotSpace.s,
-        children: [
-          _Action(
-            dashed: true,
-            glyph: DotGlyphs.add,
-            label: l10n.emptyAddToDay,
-            // Add opens on this day (M3c.5).
-            onTap: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
-          ),
-          if (inbox > 0)
-            _Action(
-              glyph: DotGlyphs.inbox,
-              label: l10n.emptyPullInbox(inbox),
-              onTap: () => context.go(AppRoutes.inbox),
-            ),
-          _Action(
-            glyph: DotGlyphs.calendar,
-            label: l10n.emptyCopyDay,
-            onTap: () => unawaited(showCopyDaySheet(context, target: date)),
-          ),
-        ],
-      ),
+      child: aligned,
     );
   }
 }
 
+/// One of the empty day's pills: filled teal for the main action, a card
+/// with a hairline for the others.
 class _Action extends StatelessWidget {
   const _Action({
-    required this.glyph,
     required this.label,
     required this.onTap,
-    this.dashed = false,
+    this.primary = false,
   });
 
-  final DotGlyph glyph;
   final String label;
   final VoidCallback onTap;
-  final bool dashed;
+  final bool primary;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    final content = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: DotTouch.android),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.s,
-          children: [
-            DotIcon(glyph, color: c.text, size: DotSize.rowIcon),
-            Flexible(child: Text(label, style: t.styles.rowTitle)),
-          ],
-        ),
-      ),
-    );
     return Semantics(
       button: true,
       label: label,
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: dashed ? Colors.transparent : c.raised,
-        shape: dashed
+        color: primary ? c.accent : c.card,
+        shape: primary
             ? const StadiumBorder()
-            : StadiumBorder(side: BorderSide(color: c.outline)),
+            : StadiumBorder(side: BorderSide(color: c.hairline)),
         child: InkWell(
           onTap: onTap,
           customBorder: const StadiumBorder(),
-          child: dashed
-              ? CustomPaint(
-                  painter: DashedPillPainter(color: c.threadAhead),
-                  child: content,
-                )
-              : content,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: DotSize.emptyAction),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: t.styles.button.copyWith(
+                    color: primary ? c.onAccent : c.ink,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Copy a day…": a text action under the pills.
+class _Quiet extends StatelessWidget {
+  const _Quiet({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotTouch.android),
+          child: Center(
+            child: Text(
+              label,
+              style: t.styles.button.copyWith(color: t.colors.accentText),
+            ),
+          ),
         ),
       ),
     );

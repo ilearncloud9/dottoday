@@ -16,6 +16,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/reveal_hint_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 /// Today at 09:22 in Berlin on the demo day (T1, `Main`).
@@ -25,6 +26,7 @@ Widget _today({
   Set<String>? picked,
   String? editing,
   String? oneThing,
+  bool hints = false,
 }) => ProviderScope(
   overrides: [
     if (editing != null)
@@ -36,6 +38,8 @@ Widget _today({
       ),
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),
+      // No hint retired: Today's tip row shows (M19.1's tinted bar).
+      revealHints: hints ? FakeRevealHintRepository([]) : null,
       learningMeta: captionPutAway(DateTime(2026, 10, 21)),
       occurrences: FakeOccurrenceRepository(
         demoDayRows(DateTime(2026, 10, 21)),
@@ -166,5 +170,36 @@ void main() {
       date: DateTime(2026, 12, 14),
       view: (monthOpen: true, month: null),
     ),
+  );
+  // E-Phones' Android Today (M19.1): the top app bar's title, Sync and the
+  // profile bare, "Wed" over the date with a tonal pill.
+  goldenMatrix(
+    'today_android',
+    height: 844,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    build: (_) => _today(),
+  );
+  // E-Phones' empty day in the thread, away from today (M19.1): "‹ Today",
+  // the free hours, the line and the actions; iPhone and Android.
+  for (final (name, platform) in [
+    ('today_empty_day', TargetPlatform.iOS),
+    ('today_empty_day_android', TargetPlatform.android),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 1000,
+      widths: const {'compact'},
+      platform: platform,
+      build: (_) => _today(date: DateTime(2026, 12, 14)),
+    );
+  }
+  // Full's tip on E-Phones' tinted bar (M19.1), with 200 % text and RTL.
+  goldenMatrix(
+    'today_hint',
+    height: 844,
+    widths: const {'compact'},
+    a11yVariants: true,
+    build: (_) => _today(hints: true),
   );
 }

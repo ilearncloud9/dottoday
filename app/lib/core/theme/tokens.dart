@@ -63,6 +63,9 @@ final class DotPalette {
     required this.onToast,
     required this.toastAction,
     required this.barAndroid,
+    required this.glassTop,
+    required this.glassBottom,
+    required this.glassEdge,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -119,6 +122,11 @@ final class DotPalette {
     toastAction: Color(0xFFA3E2D9),
     // Android's floating toolbar and + (ED-125), before their frost.
     barAndroid: Color(0xFFF2EBE2),
+    // The iPhone's glass capsules (ED-034), as E-Phones draws them: a
+    // top-to-bottom fill over the blur and a light top edge.
+    glassTop: Color(0x9EFFFFFF),
+    glassBottom: Color(0x70FFFDF9),
+    glassEdge: Color(0xE6FFFFFF),
     fabAndroid: Color(0xFFCFE8E4),
     shadow: Color(0xFF241F2B),
   );
@@ -171,6 +179,9 @@ final class DotPalette {
     onToast: Color(0xFF171416),
     toastAction: Color(0xFF0B4642),
     barAndroid: Color(0xFF2B262A),
+    glassTop: Color(0x19FFFFFF),
+    glassBottom: Color(0xB82B262A),
+    glassEdge: Color(0x25FFFFFF),
     fabAndroid: Color(0xFF2B262A),
     shadow: Color(0xFF000000),
   );
@@ -221,6 +232,9 @@ final class DotPalette {
       onToast,
       toastAction,
       barAndroid,
+      glassTop,
+      glassBottom,
+      glassEdge,
       fabAndroid,
       shadow;
 }

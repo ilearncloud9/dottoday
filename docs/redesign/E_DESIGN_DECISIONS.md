@@ -5085,6 +5085,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Noted for the owner:** on phones Settings opens only from Today's profile; on the web, single keys off leaves 1–4 and N without a key. Two sweep runs were cut short by the test simulator shutting down mid-run, cause not found.
 - **M18 done** (ED-357 to ED-385). Next: M19, the first vertical slice.
 
+### ED-386 · M19.1: Today in Full on phones, as E-Phones draws it
+- **Date:** 2026-11-18. **Owner:** "Follow the board" (the day on the page, no raised sheet), "Drop the ring", "Drop them, as drawn" (strip dots), "One part"; for the empty day "Board's three + Copy a day"; the tip bar at no preference, on Claude's recommendation; then "Approve, commit" on the review page.
+- **Built (E-Phones frames 1, 5 and the empty day; G3-1, ED-104; ED-034; ED-040; ED-336; ED-347):**
+  - top row: iPhone's 28 bold date with a teal chevron, Android's 24 top-app-bar title; Sync and the profile in one glass capsule on iPhone (48 tall: the board's 44 plus 4, so Sync keeps the device sweep's 48 target), bare on Android; at the medium width Sync alone. The day ring leaves Today's header (Week and the Mac spread keep it, M19.2); ⋯ stays until the Day ▾ chip (M20.3). Away from today "‹ Today" leads the row; a title that does not fit beside the buttons moves under them, never broken mid-word, and an open month reads "Dec 2026" on phones;
+  - Sync: the board's glyph, a teal dot while synced, a badge counting changes that need you, its state in words for a screen reader (R-08), a tap opens the Sync sheet; the per-state icons and words stay in M20.10;
+  - summary "2 of 13 done · 10 h planned" (en/de/fr/es);
+  - week strip: iPhone a letter over a 34 circle, today teal, another picked day ink; Android "Wed" over the date in a 52 × 60 tonal pill; no completion dots in either layout (docs/14 note updated); a pull down on the strip opens the month;
+  - the day straight on the page (`DayCard.page`): no raised sheet, no handle; the Plan / Reality switch stays over the thread;
+  - empty day inside the thread's free time: the free hours (today: what is left after now), the board's line, Add a task, Drop a routine, Pull from inbox · n, then Copy a day… (kept, no other way to it); days of repeats only keep the actions under the thread; Minimal unchanged (M19.6);
+  - Today's tip on the board's tinted bar (Full only: E-PhonesMinimal draws none);
+  - phone landscape: the strip folds into the title row, the numbers beside the title;
+  - phones' `/week` opens Today on that date (`PhoneWeek`; phones have no Week in Concept E, Calendar is M20.1).
+- **Tokens:** glass top, bottom and edge colours (light and dark), the capsule shadow, capsule, strip and empty-day sizes, strip, badge and empty-title type, the sync glyph.
+- **Checks:** `dart analyze --fatal-infos` and `dart format` clean; 7,079 tests pass and the 5 Supabase suites pass on the isolated stack (11; pgTAP 238/238); new `today_e_phones_test.dart`, `phone_week_test.dart` and Android, empty-day and tip goldens; goldens regenerated for the intended change. iPhone 17 Pro simulator by hand and the device suite's `journey`, `app_launch` and `sweep` (55 shots, 39 accessibility-tree checks). Android devices: M21.
+- **Found on the way:** the title fit measured with the test font (now the inherited style); Sync's 44 pt target failed the sweep's 48 floor; the sweep's Minimal leg could tap the live dot (Focus) depending on the hour; the shared caption style was briefly changed and restored (`stripLetter` added instead).
+
 ---
 
 ## Pending owner answers

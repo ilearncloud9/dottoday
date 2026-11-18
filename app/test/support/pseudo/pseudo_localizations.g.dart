@@ -439,10 +439,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get todayAllDay => pseudo(super.todayAllDay);
 
   @override
-  String stripDayLabel(String day, int done, int total) =>
-      pseudo(super.stripDayLabel(day, done, total));
-
-  @override
   String monthFooterPlanned(String month, int count, int days) =>
       pseudo(super.monthFooterPlanned(month, count, days));
 
@@ -480,6 +476,15 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get emptyCopyDay => pseudo(super.emptyCopyDay);
+
+  @override
+  String get emptyDayBody => pseudo(super.emptyDayBody);
+
+  @override
+  String get emptyAddTask => pseudo(super.emptyAddTask);
+
+  @override
+  String get emptyDropRoutine => pseudo(super.emptyDropRoutine);
 
   @override
   String get copyDayTitle => pseudo(super.copyDayTitle);

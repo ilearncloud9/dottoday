@@ -813,7 +813,7 @@ abstract class AppLocalizations {
   /// Day card numbers, e.g. '2 of 7 · 5 h 45 planned' (Main).
   ///
   /// In en, this message translates to:
-  /// **'{done} of {total} · {planned} planned'**
+  /// **'{done} of {total} done · {planned} planned'**
   String dayCardSummary(int done, int total, String planned);
 
   /// Day card numbers for an empty day (A-ios-future-month).
@@ -894,12 +894,6 @@ abstract class AppLocalizations {
   /// **'All day'**
   String get todayAllDay;
 
-  /// Screen-reader label of a week-strip day with tasks.
-  ///
-  /// In en, this message translates to:
-  /// **'{day}, {done} of {total} done'**
-  String stripDayLabel(String day, int done, int total);
-
   /// Footer under this month's grid (A-ios-today-month).
   ///
   /// In en, this message translates to:
@@ -971,6 +965,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy a day…'**
   String get emptyCopyDay;
+
+  /// Empty day (E-Phones): the line under the free time.
+  ///
+  /// In en, this message translates to:
+  /// **'A clear day. Add what matters, drop in a routine, or bring something over from your Inbox.'**
+  String get emptyDayBody;
+
+  /// Empty day: the main action, opens Add on this day.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task'**
+  String get emptyAddTask;
+
+  /// Empty day: opens Routines to drop one on this day.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a routine'**
+  String get emptyDropRoutine;
 
   /// Title of the sheet that picks the day to copy.
   ///

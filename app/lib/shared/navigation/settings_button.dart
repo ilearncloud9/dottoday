@@ -13,7 +13,11 @@ import 'package:go_router/go_router.dart';
 /// remembers the address it was pressed on, so Settings' Back returns
 /// there. 44 pt / 48 dp.
 class SettingsButton extends ConsumerWidget {
-  const SettingsButton({super.key});
+  const SettingsButton({this.avatar = DotSize.dayDot, super.key});
+
+  /// The profile circle's diameter inside the 44 / 48 target: 32 in
+  /// Today's capsule (E-Phones), 44 elsewhere.
+  final double avatar;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +46,9 @@ class SettingsButton extends ConsumerWidget {
           },
           child: SizedBox.square(
             dimension: size,
-            child: Center(child: ProfileAvatar(name: name)),
+            child: Center(
+              child: ProfileAvatar(name: name, size: avatar),
+            ),
           ),
         ),
       ),

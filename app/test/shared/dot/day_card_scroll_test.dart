@@ -55,7 +55,7 @@ Future<void> _pump(
           padding: EdgeInsets.only(bottom: _controls),
         ).copyWith(disableAnimations: reduce),
         child: Scaffold(
-          body: DayCard.sheet(entries: entries, openAtNow: openAtNow),
+          body: DayCard.page(entries: entries, openAtNow: openAtNow),
         ),
       ),
     ),

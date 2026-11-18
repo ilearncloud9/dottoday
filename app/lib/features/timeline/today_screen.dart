@@ -223,13 +223,17 @@ class _TodayCompact extends ConsumerWidget {
             onSelect: onSelect,
             onMonth: ref.read(todaySelectionProvider.notifier).showMonth,
           ),
-          strip: TodayWeekStrip(
-            shown: shown,
-            today: today,
-            firstDayOfWeek: firstDayOfWeek,
-            monthOpen: view.monthOpen,
-            onSelect: onSelect,
-          ),
+          // Phone landscape folds the strip into the title row (ED-347):
+          // the title opens the month there.
+          strip: AppLayout.isShort(context)
+              ? const SizedBox.shrink()
+              : TodayWeekStrip(
+                  shown: shown,
+                  today: today,
+                  firstDayOfWeek: firstDayOfWeek,
+                  monthOpen: view.monthOpen,
+                  onSelect: onSelect,
+                ),
         ),
         AllDayChips(date: shown),
         TodayPrompt(
@@ -251,7 +255,7 @@ class _TodayCompact extends ConsumerWidget {
                 initialIndex: _index(base, shown),
                 onChanged: (i) => onSelect(_day(base, i)),
                 itemBuilder: (context, i) =>
-                    DayPage(date: _day(base, i), today: today, sheet: true),
+                    DayPage(date: _day(base, i), today: today, page: true),
               ),
             ),
           ),
