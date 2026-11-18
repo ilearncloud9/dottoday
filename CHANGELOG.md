@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On iPhone the tab bar and the + are now Apple's own (redesign branch): Liquid Glass on iOS 26, the system material bar on earlier versions, with the + beside the bar. The bar steps aside while a sheet or dialog is open.
+
+### Changed
 - Android phones get a floating bottom toolbar with the + beside it (redesign branch), frosted over the day on Android 12 and later and solid on older versions or with high contrast. The + is now called "Add a task" for screen readers on every platform. On iPhone the Add field's keyboard shows a plain "return" key, which still adds the task.
 
 ### Changed

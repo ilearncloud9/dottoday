@@ -19,6 +19,7 @@ import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
 import 'package:dottoday/data/notifications/sound_licenses.dart';
 import 'package:dottoday/data/observability/sentry_reporting.dart';
+import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -81,6 +82,8 @@ Future<void> bootstrap({List<Override> overrides = const []}) async {
         router = buildRouter(
           appScreens,
           onAuthCallback: callbacks.deliver,
+          // The iPhone's native row hides under sheets and dialogs.
+          observers: [NativeBarObserver()],
           // After the frame that shows Today, so the sheet has a navigator.
           onAdd: () => WidgetsBinding.instance.addPostFrameCallback(
             (_) => openQuickAdd(router),

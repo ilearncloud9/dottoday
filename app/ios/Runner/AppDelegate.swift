@@ -81,6 +81,9 @@ import workmanager_apple
       SystemEventsBridge.shared.attach(to: registrar.messenger())
     }
     // Whole-series edits of repeating calendar events (docs/02 F5.7).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "NativeTabBar") {
+      NativeTabBar.shared.attach(to: registrar.messenger())
+    }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CalendarSeriesBridge") {
       CalendarSeriesBridge.shared.attach(to: registrar.messenger())
     }

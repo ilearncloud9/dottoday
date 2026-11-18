@@ -4941,6 +4941,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Moved:** the Android Day button above the toolbar to M20.3 (no Day button yet); iPhone's hold hint and Android's menu role on the + to M19.3, with the menus they describe.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; the Android shell test checks the geometry.
 
+### ED-373 · M18.6 part 2a: the native iPhone bar
+- **Date:** 2026-11-18. **Owner:** "Approve" on the part 2a review page (E-Phones iPhone Today beside the app running in the iOS 26.5 and 18.6 simulators). Part 2 is split into 2a (iPhone) and 2b (iPad, its own review).
+- **Built (ED-124, ED-128 N3 and D2, ED-132, ED-260):**
+  - `NativeTabBar.swift` (Runner target, `dottoday/native_tab_bar` channel; no new target or package): a UIKit tab bar and the + over the Flutter content. iOS 26: the system Liquid Glass capsule and a teal prominent-glass +; after every layout the bar reads the capsule's real frame and moves so it sits 6 from the + and 21 above the bottom, the + as tall as the capsule. iOS 16–25 (F2): the system material bar rounded to a 63 capsule and a solid teal +;
+  - SF Symbols in this native chrome (`tray`/`tray.fill`, `magnifyingglass`, `gearshape`/`gearshape.fill`, `calendar`); Today keeps the app's dot as a template image; teal light and dark;
+  - Flutter: the `NativeBar` seam (`shared/navigation/native_bar.dart`), `ChannelNativeBar` and `nativeBarProvider` (`data/shell`), `NativeBarShell` (a clear strip its height keeps toasts above it), and `NativeBarObserver` on the router: the row fades out while a sheet or dialog is open and returns (owner, M18.6); no native row keeps the Flutter bar.
+- **Checked in simulators:** iOS 26.5 (iPhone 17 Pro) and iOS 18.6 (iPhone 16 Pro): geometry, tab switching, the + opening Add, hiding under the Add sheet, the neutral return key. iOS 16–17 and real devices: M21.
+- **Not here:** the Day button and its UIMenu with the Day menu (M20.3); the + hold menu with Add (M19.3); Calendar with M20.1; Minimal's tabs with M19.6.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; goldens unchanged.
+
 ---
 
 ## Pending owner answers

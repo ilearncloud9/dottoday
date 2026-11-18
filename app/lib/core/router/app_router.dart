@@ -76,9 +76,11 @@ GoRouter buildRouter(
   RouteScreens screens, {
   void Function(Uri link)? onAuthCallback,
   void Function()? onAdd,
+  List<NavigatorObserver> observers = const [],
 }) {
   return GoRouter(
     initialLocation: AppRoutes.today,
+    observers: observers,
     redirect: (context, state) => _redirect(state.uri, onAuthCallback, onAdd),
     errorBuilder: (context, state) => screens.today(context),
     routes: [

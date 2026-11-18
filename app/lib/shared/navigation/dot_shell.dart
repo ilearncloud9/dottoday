@@ -4,6 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
+import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
 import 'package:dottoday/shared/navigation/tablet_shells.dart';
 import 'package:dottoday/shared/navigation/web_bar.dart';
@@ -72,11 +73,15 @@ class DotShell extends StatelessWidget {
     this.compactBar = true,
     this.addAtEveryWidth = false,
     this.frosted = false,
+    this.native,
     super.key,
   });
 
   /// Android's floating chrome may be frosted (Android 12+, ED-125).
   final bool frosted;
+
+  /// The iPhone's native row (ED-128 N3); null keeps the Flutter bar.
+  final NativeBar? native;
 
   /// False draws no tab bar at compact width, only the floating add button
   /// (minimal layout, docs/14 §4: "One floating Add button").
@@ -141,6 +146,8 @@ class DotShell extends StatelessWidget {
             bar: bar,
             body: body,
           ),
+          (WidthClass.compact, DotIdiom.cupertino) when native != null =>
+            NativeBarShell(native: native!, bar: bar, body: body),
           (WidthClass.compact, DotIdiom.cupertino) => PillTabShell(
             bar: bar,
             body: body,

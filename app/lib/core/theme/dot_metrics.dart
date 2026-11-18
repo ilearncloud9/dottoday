@@ -106,6 +106,11 @@ abstract final class DotSize {
   static const double androidFab = 56;
   static const double androidFabBottom = 32;
 
+  /// The iPhone's native row (ED-124): about 63 tall (iOS sets it), 21
+  /// from the bottom.
+  static const double nativeBar = 63;
+  static const double nativeBarEdge = 21;
+
   /// The compact web bar (E-MobileWeb): 56 tall, items 48, the current
   /// icon in a 56 × 28 box; the Add button above it 48 tall.
   static const double webBar = 56;
