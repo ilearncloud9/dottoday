@@ -91,6 +91,8 @@ class TaskDropTab extends StatelessWidget {
     return DragTarget<String>(
       onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
       onAcceptWithDetails: (d) {
+        // A layout switch mid-drag cancels it (ED-100).
+        if (!DragSession.live) return;
         AppHaptics.play(context, HapticTick.medium);
         onDropTask(d.data);
       },
@@ -126,6 +128,8 @@ class TrashDropZone extends StatelessWidget {
         return DragTarget<String>(
           onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
           onAcceptWithDetails: (d) {
+            // A layout switch mid-drag cancels it (ED-100).
+            if (!DragSession.live) return;
             AppHaptics.play(context, HapticTick.medium);
             onTrash(d.data);
           },

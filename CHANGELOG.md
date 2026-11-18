@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Fixed
+- Switching between Full and Minimal in the middle of a drag or a selection no longer applies anything (redesign branch); the day, the open task, text you were typing and Undo all carry over.
+
+### Fixed
 - On Mac, ⌘W closes the window again (redesign branch).
 
 ### Changed

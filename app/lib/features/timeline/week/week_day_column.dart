@@ -79,6 +79,8 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       },
       onLeave: (_) => setState(() => _hover = null),
       onAcceptWithDetails: (d) {
+        // A layout switch mid-drag cancels it (ED-100).
+        if (!DragSession.live) return;
         final start = _startAt(d.offset, d.data);
         setState(() => _hover = null);
         if (start != null) widget.onDrop(d.data, start);

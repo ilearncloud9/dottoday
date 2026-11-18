@@ -653,7 +653,7 @@ Rules for every task in M18 to M22:
   - [x] Part 1 done 2026-11-18 (ED-372): Android bottom row C in Flutter (ED-125), frosted on 12+ and solid on 11 and older; the + named "Add a task" (ED-240); the stock iPhone keyboard with a neutral return (ED-135). Moved: the Android Day button to M20.3; the +'s hold hint and menu role to M19.3.
   - [x] Part 2, split 2a / 2b: 2a done 2026-11-18 (ED-373), the iPhone native row with F2 checked on iOS 18.6; 2b done 2026-11-18 (ED-374), the iPad's native tabs, sidebar and +. Originally: the iPhone N3 native bottom row (UIKit tab bar, teal glass +, native Day with UIMenu; ED-124, ED-132) with F2 on iOS 16–25 (checked on iOS 18.6); the iPad's native top tabs and sidebar; landscape tab items side by side.
   - [x] Part 3, split 3a / 3b / 3c: 3a done 2026-11-18 (ED-375), native context menus through one NSMenu channel (ED-239, CR-098) with the Inbox row first, "Move to Trash ⌘⌫" (ED-336), SF Symbols in native chrome only; 3b done 2026-11-18 (ED-376), the Mac vibrancy sidebar (ED-130), solid with Reduce Transparency or Increase Contrast, the window on the app's theme; 3c done 2026-11-18 (ED-377), the full-height sidebar under the window buttons (owner, ED-376 Q3), the window still dragged by its top strip. Other menus move to the system menu as their screens are built.
-- [ ] M18.7 Navigation:
+- [x] M18.7 Navigation. Done 2026-11-18 (ED-378 to ED-384):
   - one keyboard scheme (ED-095), with ⌥⌘I for the right-hand pane (ED-218) and the tablet keyboard overlays (R2-10, ED-288);
   - web routes A′ with `?task=` (ED-097, ED-242, CR-068 browser test);
   - Settings from its native secondary place (ED-238);
@@ -664,6 +664,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2 done 2026-11-18 (ED-379): one list of the app's menus for the Mac menu bar, the iPad's menu bar (⌘ held) with key commands, and Android's Keyboard Shortcuts Helper (R2-10). Device checks with real keyboards: M21.
   - [x] Part 3, split 3a / 3b: 3a done 2026-11-18 (ED-380), links in: the new addresses, the D2 guard, rule T, `?task=` with Back / Forward / Refresh (CR-068), ⌘] Forward; 3b done 2026-11-18 (ED-381), the address follows the shown day, week and month (date steps are Back steps on the web only, owner 2026-11-18).
   - [x] Part 4, split 4a / 4b: 4a done 2026-11-18 (ED-382), Settings behind the profile on phones, no Settings tab, Back returns, Esc; 4b done 2026-11-18 (ED-383): ⌘W closes the main window; the Mac's Settings window is deferred (stable Flutter can't share the engine with a second window; owner: Settings stays a page). **Follow-up:** the Mac Settings window (ED-238) once Flutter's multi-window API is stable.
+  - [x] Part 5 done 2026-11-18 (ED-384): a Full ↔ Minimal switch cancels a drag and a selection with nothing written and keeps the date, the open task, typed text and Undo (ED-100).
 - [ ] M18.8 Acceptance and ship-check. The existing screens run on the new tokens on all four targets with nothing lost (parity matrix); component goldens and semantics tests pass; CHANGELOG. **STOP for the owner.**
 
 ## Milestone 19 — First vertical slice: Today → Add → Edit/reschedule → Complete → Change day → Reopen (Prompt F)

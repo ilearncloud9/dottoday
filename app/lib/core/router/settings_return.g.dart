@@ -50,7 +50,7 @@ final class SettingsReturnProvider
   }
 }
 
-String _$settingsReturnHash() => r'd3d42aa18ecc85c465daf716c7d544fa80c32544';
+String _$settingsReturnHash() => r'5de453a9bc63f68a98ecb5694e636f3f013e64bc';
 
 /// Where the phones' Settings goes back to (ED-238: "Back and Close return
 /// to the screen the user came from"): the address the "Settings and

@@ -3,6 +3,27 @@ import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// The drags in flight and the Full ↔ Minimal switch (ED-100): a switch
+/// mid-drag cancels the drag, so nothing is written and no Undo is made.
+/// Flutter can't stop a pointer drag, so every drop target asks [live]
+/// before it writes, and a drag begun before the last switch is refused.
+abstract final class DragSession {
+  static var _begun = 0;
+  static var _current = 0;
+  // Below every drag until the first switch: until then, every drop is
+  // live.
+  static var _voided = -1;
+
+  /// A drag began (every [HoldOrMouseDraggable] calls it).
+  static void began() => _current = ++_begun;
+
+  /// The layout switched: every drag begun so far is void.
+  static void voidAll() => _voided = _begun;
+
+  /// Whether the drag being dropped may still be written.
+  static bool get live => _current > _voided;
+}
+
 /// What a lifted task row hands its [Draggable]s.
 @immutable
 final class DragCallbacks {
@@ -47,11 +68,16 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = callbacks;
+    void started() {
+      DragSession.began();
+      c.onDragStarted();
+    }
+
     return _MouseDraggable<T>(
       data: data,
       feedback: feedback,
       childWhenDragging: childWhenDragging,
-      onDragStarted: c.onDragStarted,
+      onDragStarted: started,
       onDragUpdate: c.onDragUpdate,
       onDragEnd: c.onDragEnd,
       onDragCompleted: c.onFinished,
@@ -63,7 +89,7 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
         data: data,
         feedback: feedback,
         childWhenDragging: childWhenDragging,
-        onDragStarted: c.onDragStarted,
+        onDragStarted: started,
         onDragUpdate: c.onDragUpdate,
         onDragEnd: c.onDragEnd,
         onDragCompleted: c.onFinished,

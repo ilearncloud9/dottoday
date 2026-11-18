@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
@@ -78,6 +79,8 @@ class _SpanDropTargetState extends State<SpanDropTarget> {
         setState(() => _at = null);
       },
       onAcceptWithDetails: (d) {
+        // A layout switch mid-drag cancels it (ED-100).
+        if (!DragSession.live) return;
         w.hint.value = null;
         setState(() => _at = null);
         AppHaptics.play(context, HapticTick.medium);
@@ -227,6 +230,8 @@ class AllDayDropTarget extends StatelessWidget {
     return DragTarget<String>(
       onWillAcceptWithDetails: (d) => d.data != newTaskDragId,
       onAcceptWithDetails: (d) {
+        // A layout switch mid-drag cancels it (ED-100).
+        if (!DragSession.live) return;
         AppHaptics.play(context, HapticTick.medium);
         onAllDay(d.data);
       },

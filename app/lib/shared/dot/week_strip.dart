@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
+import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/week_strip_parts.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
@@ -180,6 +181,8 @@ class _DayDropTargetState extends State<_DayDropTarget> {
         _hover = null;
       },
       onAcceptWithDetails: (details) {
+        // A layout switch mid-drag cancels it (ED-100).
+        if (!DragSession.live) return;
         _hover?.cancel();
         _hover = null;
         AppHaptics.play(context, HapticTick.medium);

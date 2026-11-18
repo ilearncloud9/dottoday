@@ -47,7 +47,7 @@ final class TaskSelectionProvider
   }
 }
 
-String _$taskSelectionHash() => r'486c086ebe24b13182a918136cd371bd01e53053';
+String _$taskSelectionHash() => r'5245aee01d0ddeedff1ac1282f42371f77e2dfc4';
 
 /// Multi-select on the Today screen. Picking on another day starts over
 /// there: the bar acts on one day at a time.

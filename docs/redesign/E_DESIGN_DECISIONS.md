@@ -5062,6 +5062,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked in the Mac app:** ⌘W closed the window and the app quit. The spike's crash and a copy of the app macOS reopened after it were quit; the Mac app's data was restored and checked after each run (checksums equal).
 - **Checks:** `flutter analyze` clean; the Dart side is unchanged since ED-382 (`flutter test` 7,041 passing there).
 
+### ED-384 · M18.7 part 5: switching Full ↔ Minimal mid-action
+- **Date:** 2026-11-18. **Owner:** "Approve, close M18.7" on the part 5 review page.
+- **Built (ED-100):**
+  - an unfinished drag is cancelled: `DragSession` counts each drag start (in `HoldOrMouseDraggable`, which every drag uses), a switch voids every drag begun before it, and all six drop targets (the thread twice, the week strip, Week's day column, Trash, Inbox) refuse a void drop, so nothing is written and no Undo is made; the drag's Trash and Inbox targets go (`LayoutSwitchGuard` above every route). Before the first switch every drop is live;
+  - a multi-selection clears itself on a switch, applying nothing; a batch already confirmed keeps its Undo;
+  - the selected date and the open task stay: both are the address (ED-380, ED-381) and switching doesn't navigate; the open sheet redraws in its Minimal form;
+  - Undo survives the switch;
+  - unsaved text isn't dropped: the Mac/web editor writes a pending change when it closes, so a title typed just before the switch is saved and shown in Minimal's sheet; Add's draft lives outside its sheet (built). ED-100's Keep editing / Discard question isn't needed;
+  - proposal sheets are untouched by a switch and write only on Accept (proposal rule).
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,047 passing (5 local-Supabase suites need a stack); new `switch_mid_action_test.dart` (6). The full run caught that drops were refused before any switch; fixed.
+- **M18.7 done** (ED-378 to ED-384). Follow-up: the Mac Settings window (ED-383).
+
 ---
 
 ## Pending owner answers

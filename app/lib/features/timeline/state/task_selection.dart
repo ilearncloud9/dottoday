@@ -1,3 +1,5 @@
+import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'task_selection.g.dart';
@@ -11,7 +13,15 @@ typedef Picked = ({DateTime? day, Set<String> ids});
 @riverpod
 class TaskSelection extends _$TaskSelection {
   @override
-  Picked build() => (day: null, ids: const {});
+  Picked build() {
+    // Switching Full ↔ Minimal ends selecting and applies nothing; a batch
+    // already confirmed keeps its Undo (ED-100).
+    ref.listen(
+      layoutPolicyProvider.select((p) => p.isMinimal),
+      (_, _) => state = (day: null, ids: const {}),
+    );
+    return (day: null, ids: const {});
+  }
 
   /// Adds or removes [id] on [day]; the last one out ends selecting.
   void toggle(DateTime day, String id) {
