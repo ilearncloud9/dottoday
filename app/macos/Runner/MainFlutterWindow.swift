@@ -16,6 +16,7 @@ class MainFlutterWindow: NSWindow {
     flutterViewController.view.autoresizingMask = [.width, .height]
     root.view.addSubview(flutterViewController.view)
     self.contentViewController = root
+    WindowMaterialBridge.unify(self, over: flutterViewController.view)
     // Opens at 1280×800; never smaller than 840×640 (ED-169): 840 is the
     // expanded class, and 640 stays above the short-height rule's 480, so
     // the Mac never gets the phone layout.

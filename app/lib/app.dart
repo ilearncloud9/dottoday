@@ -28,7 +28,7 @@ import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
-import 'package:dottoday/shared/navigation/window_appearance.dart';
+import 'package:dottoday/shared/navigation/mac_window_chrome.dart';
 import 'package:dottoday/shared/sheets/shortcut_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +94,7 @@ class DottodayApp extends ConsumerWidget {
           onShortcuts: () => _shortcuts(router),
         );
         // The Mac window takes the app's theme (ED-176).
-        return WindowAppearance(
+        return MacWindowChrome(
           // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
           child: HapticsScope(
             enabled: settings?.inAppHapticsEnabled ?? true,

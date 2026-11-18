@@ -4985,6 +4985,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not checked live:** Reduce Transparency and Increase Contrast (system settings; covered by tests), VoiceOver and other wallpapers (M21).
 - **Checks:** `flutter analyze` clean; `dart format` clean; navigation, shell, menus, policy, core, app shell and a11y tests pass (1,334); new `sidebar_material_test.dart`, `window_material_test.dart`.
 
+### ED-377 · M18.6 part 3c: the full-height Mac sidebar under the window buttons
+- **Date:** 2026-11-18. **Owner:** Q3 A on the part 3b review (ED-376), "Doesn't drag" on the first build, then "Works, approve 3c" after the fix, on the part 3c review page (E-v1.45 Mac Full Workspace dark beside the app before and after).
+- **Built:**
+  - the Mac window's content fills it (`fullSizeContentView`) under a transparent title bar with no title, so the sidebar's material runs to the top edge with the window buttons over it, as the board draws it;
+  - `TitlebarDragStrip` (in `WindowMaterialBridge.swift`): an invisible native strip over the title bar's height, above the Flutter view and below the window buttons. Under a transparent title bar the Flutter view took the mouse, so the window couldn't be dragged (the owner's check); the strip gives drags to the window and a double click to the system's choice (zoom, minimize or nothing). It hides in full screen;
+  - the bridge reports the strip's height on `titlebar` (28 pt here, 0 in full screen, sent again on entering and leaving it); `MacWindowChrome` (was `WindowAppearance`) adds it to the top inset, so the sidebar and every page keep their controls out of the strip without knowing about it. Other targets add nothing;
+  - the window opens at 1280 × 800 for the whole window, the strip included; the minimum stays 840 × 640 (ED-169).
+- **Checked in the Mac app:** dark, the buttons over the sidebar; the owner dragged the window by the strip and double-clicked it. The Mac app's data was backed up and restored (checksums equal).
+- **Not here:** the week toolbar level with the window buttons (Today ‹ › and the date range) comes with that toolbar (M19/M20); until then the page header sits below the strip.
+- **Checks:** `flutter analyze` clean; `dart format` clean; shared, shell, policy, core, app shell and a11y tests pass (1,959); new inset tests in `window_material_test.dart` (28 pt on Mac, 0 in full screen, nothing elsewhere).
+
 ---
 
 ## Pending owner answers

@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On Mac the sidebar runs the window's full height, with the window buttons over it and no title bar (redesign branch). The window still drags by its top edge, and a double-click there does what System Settings says.
+
+### Changed
 - On Mac the sidebar shows the desktop through the system's translucent material with a warm tint (redesign branch), and turns solid with Reduce Transparency or Increase Contrast. The window now follows the app's own Light/Dark setting.
 
 ### Changed

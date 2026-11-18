@@ -1,5 +1,5 @@
 import 'package:dottoday/data/shell/window_material.dart';
-import 'package:dottoday/shared/navigation/window_appearance.dart';
+import 'package:dottoday/shared/navigation/mac_window_chrome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -82,15 +82,60 @@ void main() {
       if (call.method == 'appearance') sent.add(call.arguments);
       return null;
     });
-    await tester.pumpWidget(testApp(const WindowAppearance(child: SizedBox())));
-    await tester.pumpWidget(testApp(const WindowAppearance(child: SizedBox())));
+    await tester.pumpWidget(
+      testApp(const ProviderScope(child: MacWindowChrome(child: SizedBox()))),
+    );
+    await tester.pumpWidget(
+      testApp(const ProviderScope(child: MacWindowChrome(child: SizedBox()))),
+    );
     await tester.pumpWidget(
       testApp(
-        const WindowAppearance(child: SizedBox()),
+        const ProviderScope(child: MacWindowChrome(child: SizedBox())),
         themeMode: ThemeMode.dark,
       ),
     );
     await tester.pumpAndSettle();
     expect(sent, ['light', 'dark']);
   }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
+
+  Future<double> topInset(WidgetTester tester) async {
+    late double top;
+    await tester.pumpWidget(
+      ProviderScope(
+        child: testApp(
+          MacWindowChrome(
+            child: Builder(
+              builder: (context) {
+                top = MediaQuery.paddingOf(context).top;
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    return top;
+  }
+
+  testWidgets('the Mac content keeps clear of the transparent title bar, '
+      'and has none in full screen (ED-377)', (tester) async {
+    _mock(tester, (call) async => call.method == 'titlebar' ? 28 : null);
+    expect(await topInset(tester), 28);
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+      _channel.name,
+      _channel.codec.encodeMethodCall(const MethodCall('titlebar', 0)),
+      (_) {},
+    );
+    await tester.pump();
+    final top = MediaQuery.paddingOf(
+      tester.element(find.byType(SizedBox).last),
+    ).top;
+    expect(top, 0);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
+
+  testWidgets('other targets add nothing', (tester) async {
+    _mock(tester, (call) async => 28);
+    expect(await topInset(tester), 0);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }
