@@ -12,6 +12,11 @@ import '../../support/test_app.dart';
 
 /// The native row as the shell sees it, recording what it was told.
 final class _FakeBar implements NativeBar {
+  _FakeBar([this.kind = NativeBarKind.phone]);
+
+  @override
+  final NativeBarKind kind;
+
   final configured = <ShellBar>[];
   final visible = <bool>[];
   var removed = false;
@@ -152,5 +157,21 @@ void main() {
     await _phone(tester);
     await tester.pumpWidget(_shell(null));
     expect(find.byType(PillTabShell), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('iPad with native tabs: iPadOS draws the navigation at every '
+      'width; Flutter draws only the content (R2-1)', (tester) async {
+    for (final size in [const Size(1180, 820), const Size(820, 1180)]) {
+      tester.view
+        ..physicalSize = size
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final bar = _FakeBar(NativeBarKind.pad);
+      await tester.pumpWidget(_shell(bar));
+      await tester.pump();
+      expect(find.byType(NativeBarShell), findsOneWidget);
+      expect(find.text('Today'), findsNothing);
+      expect(bar.configured, isNotEmpty);
+    }
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

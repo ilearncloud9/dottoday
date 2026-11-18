@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On iPad (iPadOS 18 and later) the tabs and sidebar are now Apple's own (redesign branch): top tabs, a sidebar with Settings at its end, and the phone bar in small windows, with the + beside the bar at medium width.
+
+### Changed
 - On iPhone the tab bar and the + are now Apple's own (redesign branch): Liquid Glass on iOS 26, the system material bar on earlier versions, with the + beside the bar. The bar steps aside while a sheet or dialog is open.
 
 ### Changed

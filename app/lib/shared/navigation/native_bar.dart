@@ -21,9 +21,20 @@ final class NativeBarAdd extends NativeBarEvent {
   const NativeBarAdd();
 }
 
-/// The native bottom row behind a seam, so the shell stays testable; the
+/// Which native navigation the device has.
+enum NativeBarKind {
+  /// The iPhone's bottom row (ED-124).
+  phone,
+
+  /// The iPad's top tabs and sidebar, drawn by iPadOS (R2-1, iPadOS 18+).
+  pad,
+}
+
+/// The native navigation behind a seam, so the shell stays testable; the
 /// data layer implements it over the `dottoday/native_tab_bar` channel.
 abstract interface class NativeBar {
+  NativeBarKind get kind;
+
   /// Shows [items] with [selected] lit and the + named [addLabel].
   Future<void> configure(ShellBar bar);
 
@@ -74,6 +85,9 @@ class NativeBarShell extends StatefulWidget {
   final ShellBar bar;
   final Widget body;
 
+  /// The iPad's navigation sits outside the Flutter view; the iPhone's
+  /// row floats over it and needs the strip.
+
   /// The row's height and its 21 pt from the bottom (ED-124).
   static const double clearance = DotSize.nativeBar + DotSize.nativeBarEdge;
 
@@ -116,9 +130,16 @@ class _NativeBarShellState extends State<NativeBarShell> {
     );
     return Scaffold(
       extendBody: true,
-      body: widget.body,
-      // The row sits 21 above the screen's edge, not the safe area.
-      bottomNavigationBar: const SizedBox(height: NativeBarShell.clearance),
+      // The iPad's docked sidebar arrives as a side inset: content starts
+      // beside it, and the page ground carries on underneath.
+      body: widget.native.kind == NativeBarKind.pad
+          ? SafeArea(top: false, bottom: false, child: widget.body)
+          : widget.body,
+      // The row sits 21 above the screen's edge, not the safe area; the
+      // iPad's navigation is outside the Flutter view.
+      bottomNavigationBar: widget.native.kind == NativeBarKind.phone
+          ? const SizedBox(height: NativeBarShell.clearance)
+          : null,
     );
   }
 }

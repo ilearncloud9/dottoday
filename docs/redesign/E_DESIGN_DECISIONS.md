@@ -4951,6 +4951,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not here:** the Day button and its UIMenu with the Day menu (M20.3); the + hold menu with Add (M19.3); Calendar with M20.1; Minimal's tabs with M19.6.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; goldens unchanged.
 
+### ED-374 · M18.6 part 2b: the native iPad tabs, sidebar and +
+- **Date:** 2026-11-18. **Owner:** "Granted, continue" (simulator access), "A: teal + beside bar" (the + question), "Check medium first", then "Approve" on the part 2b review page (E-R2-1 row 1 beside the app on iPadOS 26.5, iPadOS 18.6 and the iPad Pro 11" at medium width).
+- **Built (ED-171, ED-265, ED-267, R2-1):**
+  - `NativeIPadTabs.swift` (Runner target; no new target or package): on iPadOS 18+ a `UITabBarController` in `.tabSidebar` mode becomes the window's root, so iPadOS draws the top tabs, the sidebar and its toggle, and the phone bar in compact windows. One container per place, made once for the app's life (UIKit refuses a container shared by two tabs; the set changes with width); the Flutter view moves into the selected one. Older iPads keep the Flutter shells;
+  - `DotFlutterViewController.swift`, the storyboard's root: it reports when a disappear has really ended, and the move into a tab says "appeared" only after that. Flutter stops drawing when told its view disappeared; telling it too early left UIKit's own end call unbalanced (the launch warning is gone on iPadOS 26.5, 18.6 and iPhone);
+  - Settings is sidebar-only and the places are fixed (`foot` on the channel), so the sidebar has no Edit. UIKit has no foot slot: Settings is the last sidebar row, and iPadOS keeps it in the top bar once opened (system behaviour);
+  - the teal + (owner's choice A, ED-124 shared button): at medium width level with the top bar at the window's trailing edge, as on 1b; in compact windows the phone geometry (bar from 21 to 6 short of the +, the + as tall as the capsule, ED-104); at expanded width none, the rule since M18.5. The + fades under a Flutter sheet, dialog or menu; the system tabs stay put and refuse taps then (hiding them gave back their safe area and the page jumped);
+  - Flutter: `NativeBarShell` keeps iPad content beside a docked sidebar (its side inset); the page ground carries on underneath.
+- **Checked in simulators:** iPadOS 26.5 (iPad Pro 13": portrait, landscape with the docked sidebar, windowed, live resizing between compact and regular, sidebar over the content), iPadOS 18.6 (iPad Air 13": portrait, landscape, menu blocking, Settings), iPadOS 26.5 iPad Pro 11" portrait (medium: tabs and +, the + opening Add and fading under it), iPhone 17 Pro launch. Dark mode on the native tabs and real devices: M21.
+- **Follow-ups:** in small iPadOS 26 windows the window controls cover the page title (the Flutter shells too); opening the sidebar over the content moves the page up as iPadOS turns the top bar into the sidebar.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 6,980 passing (5 local-Supabase suites need a running stack); new `test/data/shell/native_tab_bar_test.dart`.
+
 ---
 
 ## Pending owner answers

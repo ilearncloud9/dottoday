@@ -1287,3 +1287,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-18, ED-371:** M18.5 part 3: the compact web bar, the touch-first rule for the wide layouts' sizes, stylus handwriting kept on in every text field. Approved; M18.5 done.
 - **2026-11-18, ED-372:** M18.6 part 1: Android's floating frosted toolbar and + (solid on Android 11 and older), the + named "Add a task", iPhone's neutral return key. Approved.
 - **2026-11-18, ED-373:** M18.6 part 2a: the native iPhone tab bar and + (Liquid Glass on iOS 26 aligned to the rendered capsule, F2 on 16–25), hiding under Flutter sheets and dialogs; run in the iOS 26.5 and 18.6 simulators. Approved; the iPad follows as 2b.
+- **2026-11-18, ED-374:** M18.6 part 2b: the native iPad tabs and sidebar (iPadOS 18+), Settings sidebar-only, the teal + at medium width and in compact windows, the launch appearance warning fixed; run on iPadOS 26.5 and 18.6. Approved; M18.6 part 3 (Mac) next.

@@ -78,6 +78,8 @@
 		A18852BAB97CC5F6BDD39A88 /* WidgetSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F0B527264204D0C2F73046 /* WidgetSnapshotTests.swift */; };
 		A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */; };
 		CBB5BF469938257C7BD106F1 /* NativeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */; };
+		CB0CCED8763B32AC93CC1005 /* NativeIPadTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */; };
+		A1D0F7C2B9E4A35D6C8E1F02 /* DotFlutterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */; };
 		A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */; };
 		A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */; };
 		A3CDC9C8AF4FA1ED40ED75C6 /* DotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DCE2F7DB27897A1C8F948D /* DotStore.swift */; };
@@ -258,6 +260,8 @@
 		9BD896D8A8380B424F050F63 /* DottodayWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SpeechBridge.swift; sourceTree = "<group>"; };
 		6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeTabBar.swift; sourceTree = "<group>"; };
+		B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotFlutterViewController.swift; sourceTree = "<group>"; };
+		8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeIPadTabs.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarSeriesBridge.swift; sourceTree = "<group>"; };
 		A7FF859CE408F3EF13C10DAB /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ACF2F1CC152008A2C7D4135F /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
@@ -545,6 +549,8 @@
 				D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */,
 				6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */,
+				8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */,
+				B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */,
 				A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */,
 				38D6FFE543424C4973F4A138 /* Sounds */,
 				923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */,
@@ -952,6 +958,8 @@
 				D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */,
 				CBB5BF469938257C7BD106F1 /* NativeTabBar.swift in Sources */,
+				CB0CCED8763B32AC93CC1005 /* NativeIPadTabs.swift in Sources */,
+				A1D0F7C2B9E4A35D6C8E1F02 /* DotFlutterViewController.swift in Sources */,
 				A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */,
 				FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */,
 				02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */,

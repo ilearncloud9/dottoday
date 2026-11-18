@@ -40,13 +40,16 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
       guard let self else { return result(nil) }
       switch call.method {
       case "available":
-        // Phones only: iPad gets its own top tabs and sidebar (R2-1).
-        result(UIDevice.current.userInterfaceIdiom == .phone)
+        // The iPhone row, or the iPad's tabs and sidebar (iPadOS 18+, R2-1);
+        // nothing on older iPads, which keep Flutter's shells.
+        result(self.kind)
       case "configure":
-        self.configure(call.arguments as? [String: Any] ?? [:])
+        let args = call.arguments as? [String: Any] ?? [:]
+        if self.kind == "pad" { self.configurePad(args) } else { self.configure(args) }
         result(nil)
       case "visible":
-        self.setVisible(call.arguments as? Bool ?? true)
+        let visible = call.arguments as? Bool ?? true
+        if self.kind == "pad" { self.padSetVisible(visible) } else { self.setVisible(visible) }
         result(nil)
       case "remove":
         self.remove()
@@ -56,6 +59,36 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
       }
     }
     self.channel = channel
+  }
+
+  /// "phone", "pad" (iPadOS 18+) or nil.
+  private var kind: String? {
+    switch UIDevice.current.userInterfaceIdiom {
+    case .phone: return "phone"
+    case .pad:
+      if #available(iOS 18.0, *) { return "pad" }
+      return nil
+    default: return nil
+    }
+  }
+
+  /// The iPad's controller, made on first use (iPadOS 18+).
+  private var pad: AnyObject?
+
+  private func configurePad(_ args: [String: Any]) {
+    guard #available(iOS 18.0, *) else { return }
+    let tabs =
+      (pad as? NativeIPadTabs)
+      ?? NativeIPadTabs(
+        onSelect: { [weak self] index in self?.channel?.invokeMethod("select", arguments: index) },
+        onAdd: { [weak self] in self?.channel?.invokeMethod("add", arguments: nil) })
+    pad = tabs
+    tabs.configure(args, teal: teal)
+  }
+
+  private func padSetVisible(_ visible: Bool) {
+    guard #available(iOS 18.0, *) else { return }
+    (pad as? NativeIPadTabs)?.setVisible(visible)
   }
 
   // MARK: Building
@@ -98,27 +131,9 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
     return (bar, add)
   }
 
-  /// The + : teal prominent glass on iOS 26, a solid teal circle before.
+  /// The shared teal + (ED-124), wired to `add`.
   private func makeAdd() -> UIButton {
-    let plus = UIImage(
-      systemName: "plus",
-      withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold))
-    let button: UIButton
-    if #available(iOS 26.0, *) {
-      var config = UIButton.Configuration.prominentGlass()
-      config.image = plus
-      config.baseForegroundColor = .white
-      config.cornerStyle = .capsule
-      button = UIButton(configuration: config)
-      button.tintColor = teal
-    } else {
-      var config = UIButton.Configuration.filled()
-      config.image = plus
-      config.baseBackgroundColor = teal
-      config.baseForegroundColor = .white
-      config.cornerStyle = .capsule
-      button = UIButton(configuration: config)
-    }
+    let button = NativeAddButton.make(teal: teal)
     button.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
     return button
   }
@@ -178,17 +193,7 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
     return tab
   }
 
-  /// An SF Symbol, or "dot": the app's Today dot as a template image
-  /// (ED-260, CR-014: no SF Symbol is that glyph).
-  private func image(_ name: String) -> UIImage? {
-    if name == "dot" {
-      let size = CGSize(width: 24, height: 24)
-      return UIGraphicsImageRenderer(size: size).image { _ in
-        UIBezierPath(ovalIn: CGRect(x: 5, y: 5, width: 14, height: 14)).fill()
-      }.withRenderingMode(.alwaysTemplate)
-    }
-    return UIImage(systemName: name)
-  }
+  private func image(_ name: String) -> UIImage? { NativeSymbols.image(name) }
 
   /// Fades the row out while a Flutter sheet or dialog is open over it,
   /// and back when it closes.

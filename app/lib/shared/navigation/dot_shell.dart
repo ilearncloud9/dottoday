@@ -140,6 +140,11 @@ class DotShell extends StatelessWidget {
         final body = AppLayout.hasHinge(context)
             ? DisplayFeatureSubScreen(child: this.body)
             : this.body;
+        // iPadOS draws the iPad's navigation at every width (R2-1).
+        final native = this.native;
+        if (native != null && native.kind == NativeBarKind.pad) {
+          return NativeBarShell(native: native, bar: bar, body: body);
+        }
         final shell = switch ((width, DotIdiom.of(context))) {
           // Compact web: its own solid bar (ED-172).
           (WidthClass.compact, _) when webChrome(context) => WebBarShell(
@@ -147,7 +152,7 @@ class DotShell extends StatelessWidget {
             body: body,
           ),
           (WidthClass.compact, DotIdiom.cupertino) when native != null =>
-            NativeBarShell(native: native!, bar: bar, body: body),
+            NativeBarShell(native: native, bar: bar, body: body),
           (WidthClass.compact, DotIdiom.cupertino) => PillTabShell(
             bar: bar,
             body: body,

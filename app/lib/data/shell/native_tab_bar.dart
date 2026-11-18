@@ -9,16 +9,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'native_tab_bar.g.dart';
 
-/// The iPhone's native row (ED-128 N3) when this is an iPhone that has
-/// it; null elsewhere, in tests and if the native side is missing, and
-/// the shell keeps its Flutter bar.
+/// The native navigation when this device has one: the iPhone's row
+/// (ED-128 N3) or the iPad's tabs and sidebar (iPadOS 18+); null
+/// elsewhere, in tests and if the native side is missing, and the shell
+/// keeps its Flutter bars.
 @Riverpod(keepAlive: true)
 Future<NativeBar?> nativeBar(Ref ref) async {
   if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) return null;
-  final bar = ChannelNativeBar();
   try {
-    final available = await bar._channel.invokeMethod<bool>('available');
-    return available ?? false ? bar : null;
+    final kind = await _channel.invokeMethod<String>('available');
+    return switch (kind) {
+      'phone' => ChannelNativeBar(NativeBarKind.phone),
+      'pad' => ChannelNativeBar(NativeBarKind.pad),
+      _ => null,
+    };
   } on MissingPluginException {
     return null;
   } on PlatformException {
@@ -26,9 +30,12 @@ Future<NativeBar?> nativeBar(Ref ref) async {
   }
 }
 
-/// [NativeBar] over `dottoday/native_tab_bar` (`NativeTabBar.swift`).
+const _channel = MethodChannel('dottoday/native_tab_bar');
+
+/// [NativeBar] over `dottoday/native_tab_bar` (`NativeTabBar.swift`,
+/// `NativeIPadTabs.swift`).
 final class ChannelNativeBar implements NativeBar {
-  ChannelNativeBar() {
+  ChannelNativeBar(this.kind) {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'select':
@@ -39,7 +46,9 @@ final class ChannelNativeBar implements NativeBar {
     });
   }
 
-  final _channel = const MethodChannel('dottoday/native_tab_bar');
+  @override
+  final NativeBarKind kind;
+
   final _events = StreamController<NativeBarEvent>.broadcast();
 
   @override
@@ -50,11 +59,15 @@ final class ChannelNativeBar implements NativeBar {
     'items': [
       for (final d in bar.items)
         {
+          // Stable across languages: the place's symbol.
+          'id': _symbol(d.glyph, selected: false),
           'label': d.label,
           'semanticLabel': d.semanticLabel,
           'symbol': _symbol(d.glyph, selected: false),
           'selectedSymbol': _symbol(d.glyph, selected: true),
           'badge': d.badge ?? 0,
+          // Settings: the iPad sidebar only, never a tab (ED-265).
+          'foot': d.foot,
         },
     ],
     'selected': bar.selected,
