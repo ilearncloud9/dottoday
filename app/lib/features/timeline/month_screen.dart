@@ -13,6 +13,7 @@ import 'package:dottoday/features/timeline/state/month_cells.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
@@ -123,8 +124,11 @@ class _Page extends StatelessWidget {
         DotSpace.xl,
       ),
       children: [
-        _header(context, locale),
-        const SizedBox(height: DotSpace.l),
+        // The Workspace's toolbar names the month and steps it.
+        if (!WorkspaceScope.of(context)) ...[
+          _header(context, locale),
+          const SizedBox(height: DotSpace.l),
+        ],
         MonthGrid(
           style: wide ? MonthCellStyle.expanded : MonthCellStyle.compact,
           weekdays: [

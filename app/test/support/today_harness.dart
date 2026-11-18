@@ -28,6 +28,9 @@ Future<void> pumpToday(
   Size size = const Size(390, 844),
   ThemeMode mode = ThemeMode.light,
   DateTime? date,
+  // The Workspace's 3 days view (`/3-days/<date>`, M19.2) on [date] or
+  // today; off, Day.
+  bool threeDays = false,
   String? name = 'Kody',
   int firstDayOfWeek = 7,
   Settings? settings,
@@ -47,7 +50,11 @@ Future<void> pumpToday(
   ).copyWith(displayName: name);
   final router = GoRouter(
     // A test's day opens at its own address, as a link to it does.
-    initialLocation: date == null ? AppRoutes.today : AppRoutes.day(date),
+    initialLocation: threeDays
+        ? AppRoutes.threeDays(date ?? todayTestDate)
+        : date == null
+        ? AppRoutes.today
+        : AppRoutes.day(date),
     // Today and its days are one page, as in the app (ED-097).
     routes: [
       GoRoute(
@@ -63,6 +70,18 @@ Future<void> pumpToday(
           key: const ValueKey(AppRoutes.today),
           child: (wrap ?? (w) => w)(
             TodayScreen(date: parseRouteDate(state.pathParameters['date']!)),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.threeDaysPattern,
+        pageBuilder: (_, state) => NoTransitionPage(
+          key: const ValueKey(AppRoutes.today),
+          child: (wrap ?? (w) => w)(
+            TodayScreen(
+              date: parseRouteDate(state.pathParameters['date']!),
+              threeDays: true,
+            ),
           ),
         ),
       ),

@@ -3961,6 +3961,46 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get routinesTitle => pseudo(super.routinesTitle);
 
   @override
+  String get workspacePlan => pseudo(super.workspacePlan);
+
+  @override
+  String get workspaceCalendarViews => pseudo(super.workspaceCalendarViews);
+
+  @override
+  String get workspaceDay => pseudo(super.workspaceDay);
+
+  @override
+  String get workspaceThreeDays => pseudo(super.workspaceThreeDays);
+
+  @override
+  String get workspaceReview => pseudo(super.workspaceReview);
+
+  @override
+  String get workspaceSearchOrRun => pseudo(super.workspaceSearchOrRun);
+
+  @override
+  String workspaceTodayCount(int done, int total) =>
+      pseudo(super.workspaceTodayCount(done, total));
+
+  @override
+  String get planPanelShow => pseudo(super.planPanelShow);
+
+  @override
+  String get planPanelHide => pseudo(super.planPanelHide);
+
+  @override
+  String get planPanelPin => pseudo(super.planPanelPin);
+
+  @override
+  String get planPanelCapture => pseudo(super.planPanelCapture);
+
+  @override
+  String get planPanelCaptureHint => pseudo(super.planPanelCaptureHint);
+
+  @override
+  String get planPanelDumpNote => pseudo(super.planPanelDumpNote);
+
+  @override
   String get routinesSubtitle => pseudo(super.routinesSubtitle);
 
   @override

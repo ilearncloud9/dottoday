@@ -73,6 +73,7 @@ final class KeyMenusBridge {
     }
     var flags: UIKeyModifierFlags = .command
     if item["shift"] as? Bool == true { flags.insert(.shift) }
+    if item["alt"] as? Bool == true { flags.insert(.alternate) }
     let command = UIKeyCommand(
       title: label, action: action, input: key, modifierFlags: flags, propertyList: id)
     // Before the system's own use of the same key (⌘F's Find, ⌘[).

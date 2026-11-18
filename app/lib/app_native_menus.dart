@@ -35,6 +35,7 @@ class NativeKeyMenus extends StatefulWidget {
                     'label': c.label,
                     if (c.key case final key?) 'key': keyName(key),
                     'shift': c.shift,
+                    if (c.alt) 'alt': true,
                   },
             ],
         ],

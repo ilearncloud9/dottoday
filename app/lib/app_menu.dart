@@ -123,6 +123,7 @@ class AppMenuBar extends ConsumerWidget {
         TargetPlatform.macOS,
         key,
         shift: c.shift,
+        alt: c.alt,
       ),
       null => null,
     },

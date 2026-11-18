@@ -14,11 +14,16 @@ class SidebarShell extends StatefulWidget {
     required this.bar,
     required this.body,
     this.vibrant = false,
+    this.sidebar,
     super.key,
   });
 
   final ShellBar bar;
   final Widget body;
+
+  /// In place of the list of places (the Workspace's sidebar); it has no
+  /// fold button of its own.
+  final Widget? sidebar;
 
   /// The Mac's material shows through the sidebar (ED-130): the shell
   /// paints only the content opaque, the sidebar its tint.
@@ -53,11 +58,13 @@ class _SidebarShellState extends State<SidebarShell> {
         children: [
           SizedBox(
             width: DotSize.sidebar,
-            child: DotSidebar(
-              bar: widget.bar,
-              vibrant: vibrant,
-              onToggle: () => setState(() => _folded = true),
-            ),
+            child:
+                widget.sidebar ??
+                DotSidebar(
+                  bar: widget.bar,
+                  vibrant: vibrant,
+                  onToggle: () => setState(() => _folded = true),
+                ),
           ),
           VerticalDivider(width: DotSpace.hairline, color: c.outline),
           Expanded(

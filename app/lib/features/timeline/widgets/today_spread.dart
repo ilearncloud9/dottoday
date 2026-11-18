@@ -6,6 +6,7 @@ import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/spread_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,13 @@ class TodaySpread extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SpreadHeader(date: shown, today: today, onToday: () => onSelect(today)),
+        // The Workspace's toolbar carries the date and the Day menu.
+        if (!WorkspaceScope.of(context))
+          SpreadHeader(
+            date: shown,
+            today: today,
+            onToday: () => onSelect(today),
+          ),
         AllDayChips(date: shown),
         TodayPrompt(date: shown, today: today),
         Expanded(child: _columns(context, low: low)),

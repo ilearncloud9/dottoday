@@ -39,6 +39,7 @@ object KeyMenus {
         val code = keyCode(item["key"] as? String ?: return null) ?: return null
         var modifiers = KeyEvent.META_CTRL_ON
         if (item["shift"] == true) modifiers = modifiers or KeyEvent.META_SHIFT_ON
+        if (item["alt"] == true) modifiers = modifiers or KeyEvent.META_ALT_ON
         return KeyboardShortcutInfo(label, code, modifiers)
     }
 

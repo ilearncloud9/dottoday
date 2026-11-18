@@ -5016,6 +5016,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routinesTitle => 'Routines';
 
   @override
+  String get workspacePlan => 'Plan';
+
+  @override
+  String get workspaceCalendarViews => 'Calendar views';
+
+  @override
+  String get workspaceDay => 'Day';
+
+  @override
+  String get workspaceThreeDays => '3 days';
+
+  @override
+  String get workspaceReview => 'Review';
+
+  @override
+  String get workspaceSearchOrRun => 'Search or run';
+
+  @override
+  String workspaceTodayCount(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String get planPanelShow => 'Show Plan panel';
+
+  @override
+  String get planPanelHide => 'Hide Plan panel';
+
+  @override
+  String get planPanelPin => 'Keep the Plan panel open';
+
+  @override
+  String get planPanelCapture => 'Capture a task';
+
+  @override
+  String get planPanelCaptureHint =>
+      'With a time it lands on the grid; without, it waits here. Paste a list for several.';
+
+  @override
+  String get planPanelDumpNote => 'Nothing is added until you accept';
+
+  @override
   String get routinesSubtitle => 'Reusable slices of thread';
 
   @override

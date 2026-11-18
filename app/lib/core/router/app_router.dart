@@ -35,6 +35,7 @@ final class RouteScreens {
     required this.weekOn,
     required this.monthOn,
     required this.day,
+    required this.threeDays,
     required this.focus,
     required this.wakeUp,
     required this.mission,
@@ -61,6 +62,9 @@ final class RouteScreens {
   /// Month opening on a month (`/month/<yyyy-MM>`, ED-097).
   final Widget Function(BuildContext, DateTime month) monthOn;
   final Widget Function(BuildContext, DateTime date) day;
+
+  /// The Workspace's 3 days around a date (`/3-days/<date>`, ED-333).
+  final Widget Function(BuildContext, DateTime date) threeDays;
 
   /// Focus on a dot, full screen (M10.5).
   final Widget Function(BuildContext, String taskId) focus;
@@ -104,24 +108,6 @@ GoRouter buildRouter(
         builder: (context, state, shell) => screens.shell(context, shell),
         branches: _branches(screens),
       ),
-      // This month and another one are one page: stepping months changes
-      // the address, not the page (ED-097).
-      GoRoute(
-        path: AppRoutes.month,
-        pageBuilder: (context, _) =>
-            _samePage(_monthPage, screens.month(context)),
-      ),
-      GoRoute(
-        path: AppRoutes.monthPattern,
-        // Redirect already validated the month.
-        pageBuilder: (context, state) => _samePage(
-          _monthPage,
-          screens.monthOn(
-            context,
-            parseRouteMonth(state.pathParameters['month']!)!,
-          ),
-        ),
-      ),
       // Never shown: the redirect sends a task link to its place.
       GoRoute(path: AppRoutes.taskPattern, redirect: (_, _) => AppRoutes.today),
       GoRoute(
@@ -159,28 +145,62 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
       tab.path,
       _tabScreen(screens, tab),
       dated: switch (tab) {
-        ShellTab.today => GoRoute(
-          path: AppRoutes.dayPattern,
-          // Redirect already validated the date.
-          pageBuilder: (context, state) => _samePage(
-            _tabPage(tab),
-            screens.day(
-              context,
-              parseRouteDate(state.pathParameters['date']!)!,
+        ShellTab.today => [
+          GoRoute(
+            path: AppRoutes.dayPattern,
+            // Redirect already validated the date.
+            pageBuilder: (context, state) => _samePage(
+              _tabPage(tab),
+              screens.day(
+                context,
+                parseRouteDate(state.pathParameters['date']!)!,
+              ),
             ),
           ),
-        ),
-        ShellTab.week => GoRoute(
-          path: AppRoutes.weekDatePattern,
-          pageBuilder: (context, state) => _samePage(
-            _tabPage(tab),
-            screens.weekOn(
-              context,
-              parseRouteDate(state.pathParameters['date']!)!,
+          // The Workspace's 3 days (ED-333), on Today's page.
+          GoRoute(
+            path: AppRoutes.threeDaysPattern,
+            pageBuilder: (context, state) => _samePage(
+              _tabPage(tab),
+              screens.threeDays(
+                context,
+                parseRouteDate(state.pathParameters['date']!)!,
+              ),
             ),
           ),
-        ),
-        _ => null,
+        ],
+        ShellTab.week => [
+          // Month in the Week tab's branch, so the Workspace's sidebar
+          // stays beside it (M19.2). This month and another are one page:
+          // stepping months changes the address, not the page (ED-097).
+          GoRoute(
+            path: AppRoutes.month,
+            pageBuilder: (context, _) =>
+                _samePage(_monthPage, screens.month(context)),
+          ),
+          GoRoute(
+            path: AppRoutes.monthPattern,
+            // Redirect already validated the month.
+            pageBuilder: (context, state) => _samePage(
+              _monthPage,
+              screens.monthOn(
+                context,
+                parseRouteMonth(state.pathParameters['month']!)!,
+              ),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.weekDatePattern,
+            pageBuilder: (context, state) => _samePage(
+              _tabPage(tab),
+              screens.weekOn(
+                context,
+                parseRouteDate(state.pathParameters['date']!)!,
+              ),
+            ),
+          ),
+        ],
+        _ => const [],
       },
       children: [
         if (tab == ShellTab.settings)
@@ -233,20 +253,20 @@ FutureOr<String?> _redirect(
 StatefulShellBranch _branch(
   String path,
   WidgetBuilder builder, {
-  GoRoute? dated,
+  List<GoRoute> dated = const [],
   List<RouteBase> children = const [],
 }) {
   return StatefulShellBranch(
     routes: [
       GoRoute(
         path: path,
-        pageBuilder: dated == null
+        pageBuilder: dated.isEmpty
             ? null
             : (context, _) => _samePage(ValueKey(path), builder(context)),
-        builder: dated == null ? (context, _) => builder(context) : null,
+        builder: dated.isEmpty ? (context, _) => builder(context) : null,
         routes: children,
       ),
-      ?dated,
+      ...dated,
     ],
   );
 }

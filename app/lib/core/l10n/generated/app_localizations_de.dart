@@ -5043,6 +5043,48 @@ class AppLocalizationsDe extends AppLocalizations {
   String get routinesTitle => 'Routinen';
 
   @override
+  String get workspacePlan => 'Planen';
+
+  @override
+  String get workspaceCalendarViews => 'Kalenderansichten';
+
+  @override
+  String get workspaceDay => 'Tag';
+
+  @override
+  String get workspaceThreeDays => '3 Tage';
+
+  @override
+  String get workspaceReview => 'Rückblick';
+
+  @override
+  String get workspaceSearchOrRun => 'Suchen oder ausführen';
+
+  @override
+  String workspaceTodayCount(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String get planPanelShow => 'Planungsbereich einblenden';
+
+  @override
+  String get planPanelHide => 'Planungsbereich ausblenden';
+
+  @override
+  String get planPanelPin => 'Planungsbereich offen lassen';
+
+  @override
+  String get planPanelCapture => 'Aufgabe notieren';
+
+  @override
+  String get planPanelCaptureHint =>
+      'Mit Uhrzeit landet sie im Raster, ohne wartet sie hier. Füge eine Liste ein für mehrere.';
+
+  @override
+  String get planPanelDumpNote => 'Nichts wird hinzugefügt, bevor du zustimmst';
+
+  @override
   String get routinesSubtitle => 'Wiederverwendbare Fadenstücke';
 
   @override

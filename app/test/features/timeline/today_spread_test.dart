@@ -22,7 +22,7 @@ void main() {
   testWidgets('expanded: yesterday, today on its card, tomorrow', (
     tester,
   ) async {
-    await pumpToday(tester, size: _wide);
+    await pumpToday(tester, size: _wide, threeDays: true);
     expect(find.byType(TodaySpread), findsOneWidget);
     expect(find.byType(DayPager), findsNothing);
     expect(find.text('Good morning, Kody'), findsOneWidget);
@@ -45,7 +45,7 @@ void main() {
   testWidgets('› and ‹ step a day; away from today the pill returns', (
     tester,
   ) async {
-    await pumpToday(tester, size: _wide);
+    await pumpToday(tester, size: _wide, threeDays: true);
     await tester.tap(find.byTooltip('Next day'));
     await tester.pumpAndSettle();
     expect(find.text('Wednesday · Today'), findsOneWidget);
@@ -115,7 +115,7 @@ void main() {
       tester,
     ) async {
       final repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
-      await pumpToday(tester, size: _wide, repo: repo);
+      await pumpToday(tester, size: _wide, threeDays: true, repo: repo);
       await drag(
         tester,
         'Reply to email',
@@ -128,7 +128,7 @@ void main() {
     });
 
     testWidgets('touch without the hold does not lift', (tester) async {
-      await pumpToday(tester, size: _wide);
+      await pumpToday(tester, size: _wide, threeDays: true);
       await drag(
         tester,
         'Reply to email',
@@ -139,7 +139,7 @@ void main() {
     });
 
     testWidgets('touch after the hold still drags', (tester) async {
-      await pumpToday(tester, size: _wide);
+      await pumpToday(tester, size: _wide, threeDays: true);
       await drag(
         tester,
         'Reply to email',
@@ -153,7 +153,7 @@ void main() {
 
   testWidgets('meets a11y guidelines in both themes', (tester) async {
     for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-      await pumpToday(tester, size: _wide, mode: mode);
+      await pumpToday(tester, size: _wide, threeDays: true, mode: mode);
       await expectA11yGuidelines(tester);
     }
   });

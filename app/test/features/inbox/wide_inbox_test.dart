@@ -1,6 +1,9 @@
-import 'package:dottoday/features/inbox/inbox_sidebar.dart';
+import 'package:dottoday/app_plan_panel.dart';
+import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/inbox_row.dart';
+import 'package:dottoday/shared/workspace/plan_panel_shell.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -122,15 +125,26 @@ void main() {
     expect(_start(repo, 'Book flights')!.day, 21);
   });
 
-  testWidgets('Today gets the Inbox sidebar; a row drops onto a day', (
+  testWidgets('the Workspace Plan panel; a row drops onto a day', (
     tester,
   ) async {
     final repo = await pumpInbox(
       tester,
       size: _wide,
-      home: const InboxSidebarFrame(child: TodayScreen()),
+      home: const WorkspaceScope(
+        child: PlanPanelFrame(child: TodayScreen(threeDays: true)),
+      ),
     );
-    expect(find.text('5 unscheduled'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(PlanPanelShell),
+        matching: find.byType(InboxDraggable),
+      ),
+      findsNWidgets(5),
+    );
+    // The panel scrolls: bring the row into view first.
+    await tester.ensureVisible(find.text('Book flights'));
+    await tester.pumpAndSettle();
     await _mouseDrag(
       tester,
       find.text('Book flights'),
@@ -139,13 +153,13 @@ void main() {
     expect(_start(repo, 'Book flights')!.day, 22);
   });
 
-  testWidgets('no sidebar below the expanded width', (tester) async {
+  testWidgets('no Plan panel outside the Workspace', (tester) async {
     await pumpInbox(
       tester,
       size: const Size(800, 900),
-      home: const InboxSidebarFrame(child: TodayScreen()),
+      home: const PlanPanelFrame(child: TodayScreen(threeDays: true)),
     );
-    expect(find.text('5 unscheduled'), findsNothing);
+    expect(find.byType(PlanPanelShell), findsNothing);
   });
 
   testWidgets('meets a11y guidelines in both themes', (tester) async {

@@ -51,8 +51,8 @@ void main() {
       '/day/2026-10-20',
       'route:day:2026-10-20',
     );
-    // Week and Month on a date or month, and the places not built yet
-    // (owner, M18.7 part 3).
+    // Week and Month on a date or month, the Workspace's 3 days (M19.2)
+    // and /now, a place not built yet (owner, M18.7 part 3).
     await _goAndExpect(tester, router, '/week/2026-10-20', 'route:week');
     await _goAndExpect(tester, router, '/month/2026-10', 'route:month');
     await _goAndExpect(tester, router, '/now', 'route:today');
@@ -60,7 +60,7 @@ void main() {
       tester,
       router,
       '/3-days/2026-10-20',
-      'route:day:2026-10-20',
+      'route:3-days:2026-10-20',
     );
     router.go('/settings/privacy');
     await tester.pumpAndSettle();

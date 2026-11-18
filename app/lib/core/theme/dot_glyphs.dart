@@ -151,6 +151,14 @@ abstract final class DotGlyphs {
   static const dottedLine = DotGlyph('M12 4h.01M12 9h.01M12 14h.01M12 19h.01');
   static const sort = DotGlyph('M3 6h18M6 12h12M10 18h4');
 
+  /// The Workspace's Plan place (E-FullA-v2): a window with its panel.
+  static final plan = DotGlyph(
+    '${_r(3.5, 4.5, 17, 15, 2.5)}M9.5 4.5v15M3.5 9.5h6',
+  );
+
+  /// The Workspace's Review place (E-FullA-v2): bars on a baseline.
+  static const review = DotGlyph('M4 20V10M10 20V4M16 20v-7M22 20H2');
+
   /// Show or hide the sidebar (iPad, Mac and web; E-R2-1).
   static final sidebar = DotGlyph('${_r(3, 5, 18, 14, 2.5)}M9 5v14');
 

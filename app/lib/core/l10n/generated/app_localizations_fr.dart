@@ -5045,6 +5045,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String get routinesTitle => 'Routines';
 
   @override
+  String get workspacePlan => 'Planifier';
+
+  @override
+  String get workspaceCalendarViews => 'Vues du calendrier';
+
+  @override
+  String get workspaceDay => 'Jour';
+
+  @override
+  String get workspaceThreeDays => '3 jours';
+
+  @override
+  String get workspaceReview => 'Bilan';
+
+  @override
+  String get workspaceSearchOrRun => 'Rechercher ou lancer';
+
+  @override
+  String workspaceTodayCount(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String get planPanelShow => 'Afficher le panneau Planifier';
+
+  @override
+  String get planPanelHide => 'Masquer le panneau Planifier';
+
+  @override
+  String get planPanelPin => 'Garder le panneau Planifier ouvert';
+
+  @override
+  String get planPanelCapture => 'Noter une tâche';
+
+  @override
+  String get planPanelCaptureHint =>
+      'Avec une heure, elle va dans la grille ; sans, elle attend ici. Collez une liste pour en ajouter plusieurs.';
+
+  @override
+  String get planPanelDumpNote => 'Rien n\'est ajouté avant que vous acceptiez';
+
+  @override
   String get routinesSubtitle => 'Morceaux de fil réutilisables';
 
   @override

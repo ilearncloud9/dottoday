@@ -29,8 +29,8 @@ const _staticRoutes = {
 /// (Today, a day, Inbox, Week, Month, Search) may carry one query key,
 /// `task`, with a lowercase UUID v7 (D2); any other query is dropped and
 /// the path kept. Fragments, extra segments and foreign schemes are
-/// rejected. Places not built yet open the nearest one: `/now` Today,
-/// `/3-days/<date>` that day (owner, M18.7 part 3). This checks *format*
+/// rejected. Places not built yet open the nearest one: `/now` Today
+/// (owner, M18.7 part 3). This checks *format*
 /// only — ownership of a task ID is enforced by the repository (docs/09
 /// M4.2).
 ///
@@ -52,8 +52,13 @@ String? allowListedLocation(Uri uri) {
       final p? => (AppRoutes.settingsPage(p), false),
       null => (null, false),
     },
-    ['day' || '3-days', final date] when parseRouteDate(date) != null => (
+    ['day', final date] when parseRouteDate(date) != null => (
       '/day/$date',
+      true,
+    ),
+    // The Workspace's 3 days (ED-333, M19.2): its own view now.
+    ['3-days', final date] when parseRouteDate(date) != null => (
+      '/3-days/$date',
       true,
     ),
     ['week', final date] when parseRouteDate(date) != null => (

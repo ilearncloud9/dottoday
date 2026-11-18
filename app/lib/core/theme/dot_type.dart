@@ -37,6 +37,11 @@ final class DotType {
     required this.stripDateAndroid,
     required this.badge,
     required this.emptyTitle,
+    required this.sidebarItem,
+    required this.sidebarHint,
+    required this.sidebarSection,
+    required this.viewTab,
+    required this.planHeading,
     required this.stripWeekdayAndroid,
     required this.sheetSubtitle,
     required this.tag,
@@ -87,6 +92,15 @@ final class DotType {
     badge: _system(11, 13, 700, text),
     // An empty day's free time, "16 h free" (E-Phones): 28/800.
     emptyTitle: _manrope(28, 34, 800, text),
+    // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
+    // hints and counts 11, the "Calendar views" heading 11/600.
+    sidebarItem: _system(13, 16, 400, text),
+    sidebarHint: _system(11, 13, 400, muted),
+    sidebarSection: _system(11, 14, 600, muted),
+    // The Workspace's Day / 3 days / Week / Month tabs: 12/500.
+    viewTab: _system(12, 15, 500, muted),
+    // The Plan panel's section headings: 13/700 (E-FullA-v2).
+    planHeading: _system(13, 18, 700, text),
     stripWeekdayAndroid: _system(12, 14, 500, muted),
     sheetSubtitle: _system(14, 19, 500, muted),
     tag: _system(12, 20, 700, text),
@@ -207,6 +221,18 @@ final class DotType {
 
   /// An empty day's "16 h free" in the thread (E-Phones): 28/800.
   final TextStyle emptyTitle;
+
+  /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
+  /// or count, and a section heading.
+  final TextStyle sidebarItem;
+  final TextStyle sidebarHint;
+  final TextStyle sidebarSection;
+
+  /// The Workspace's view tabs (E-FullA-v2): 12/500.
+  final TextStyle viewTab;
+
+  /// The Plan panel's section headings (E-FullA-v2): 13/700.
+  final TextStyle planHeading;
   final TextStyle stripWeekdayAndroid;
 
   /// The line under a sheet title (500 14, secondary).
@@ -268,6 +294,11 @@ final class DotType {
       stripDateAndroid: l(stripDateAndroid, other.stripDateAndroid),
       badge: l(badge, other.badge),
       emptyTitle: l(emptyTitle, other.emptyTitle),
+      sidebarItem: l(sidebarItem, other.sidebarItem),
+      sidebarHint: l(sidebarHint, other.sidebarHint),
+      sidebarSection: l(sidebarSection, other.sidebarSection),
+      viewTab: l(viewTab, other.viewTab),
+      planHeading: l(planHeading, other.planHeading),
       stripWeekdayAndroid: l(stripWeekdayAndroid, other.stripWeekdayAndroid),
       sheetSubtitle: l(sheetSubtitle, other.sheetSubtitle),
       tag: l(tag, other.tag),

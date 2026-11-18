@@ -15,6 +15,7 @@ import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/reveal_hint_row.dart';
 import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
+import 'package:dottoday/features/timeline/widgets/today_day_wide.dart';
 import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
@@ -37,9 +38,13 @@ const pagerReachDays = 365;
 /// minimal layout (docs/14 §3).
 /// [date] opens another day (`/day/:date`); otherwise it follows today.
 class TodayScreen extends ConsumerWidget {
-  const TodayScreen({this.date, super.key});
+  const TodayScreen({this.date, this.threeDays = false, super.key});
 
   final DateTime? date;
+
+  /// The Workspace's 3 days view (`/3-days/<date>`, ED-333); off, Day.
+  /// Only the expanded width tells them apart; phones show their Today.
+  final bool threeDays;
 
   /// What Today needs before it can draw (docs/09 M3f.9b).
   static List<AsyncValue<Object?>> _inputs(WidgetRef ref) => [
@@ -67,7 +72,9 @@ class TodayScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(todaySelectionProvider);
     final key = ValueKey(
-      date == null ? 'route:today' : 'route:day:${formatRouteDate(date!)}',
+      date == null
+          ? 'route:today'
+          : 'route:${threeDays ? '3-days' : 'day'}:${formatRouteDate(date!)}',
     );
     if (waitFor(key, _inputs(ref), onRetry: () => _retry(ref)) case final w?) {
       return w;
@@ -79,9 +86,14 @@ class TodayScreen extends ConsumerWidget {
     // The address is the shown day (ED-097): today follows midnight.
     void select(DateTime d) {
       ref.read(todaySelectionProvider.notifier).followDay();
+      // 3 days keeps its view as it steps (ED-333).
       showPlace(
         GoRouter.of(context),
-        d == today ? AppRoutes.today : AppRoutes.day(d),
+        threeDays
+            ? AppRoutes.threeDays(d)
+            : d == today
+            ? AppRoutes.today
+            : AppRoutes.day(d),
       );
     }
 
@@ -121,11 +133,15 @@ class TodayScreen extends ConsumerWidget {
                       spread &&
                           AppLayout.classOf(context, width: box.maxWidth) ==
                               WidthClass.expanded
-                      ? TodaySpread(
-                          shown: shown,
-                          today: today,
-                          onSelect: select,
-                        )
+                      // The Workspace's views (ED-073, ED-333): 3 days is
+                      // the spread; Day the shown day alone.
+                      ? threeDays
+                            ? TodaySpread(
+                                shown: shown,
+                                today: today,
+                                onSelect: select,
+                              )
+                            : TodayDayWide(shown: shown, today: today)
                       : _landscape(
                           context,
                           _TodayCompact(

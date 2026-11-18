@@ -23,15 +23,21 @@ enum AppCommand {
   search,
   toggleLayout,
   showShortcuts,
+
+  /// Show or hide the Workspace's Plan panel (ED-184): ⌥⌘P on the Mac.
+  togglePlanPanel,
 }
 
 /// A key plus modifiers, relative to the platform's primary modifier
 /// (⌘ on Apple platforms, Ctrl elsewhere).
 final class KeyCombo {
-  const KeyCombo(this.key, {this.shift = false});
+  const KeyCombo(this.key, {this.shift = false, this.alt = false});
 
   final LogicalKeyboardKey key;
   final bool shift;
+
+  /// With ⌥ (Alt): the Workspace's panes, ⌥⌘P (ED-184).
+  final bool alt;
 }
 
 /// Intent carrying an [AppCommand]; handled by the nearest [Actions].
@@ -141,6 +147,7 @@ abstract final class AppShortcuts {
     AppCommand.search: KeyCombo(LogicalKeyboardKey.keyF),
     AppCommand.toggleLayout: KeyCombo(LogicalKeyboardKey.keyL, shift: true),
     AppCommand.showShortcuts: KeyCombo(LogicalKeyboardKey.slash),
+    AppCommand.togglePlanPanel: KeyCombo(LogicalKeyboardKey.keyP, alt: true),
   };
 
   /// The web's single keys (ED-095): the browser keeps ⌘/Ctrl N, T, 1–9,
@@ -176,9 +183,16 @@ abstract final class AppShortcuts {
     TargetPlatform platform,
     LogicalKeyboardKey key, {
     bool shift = false,
+    bool alt = false,
   }) {
     final meta = usesMeta(platform);
-    return SingleActivator(key, meta: meta, control: !meta, shift: shift);
+    return SingleActivator(
+      key,
+      meta: meta,
+      control: !meta,
+      shift: shift,
+      alt: alt,
+    );
   }
 
   /// How a binding reads in a hint: "⇧⌘P" with ⌘, "Ctrl+Shift+P" without
@@ -208,9 +222,8 @@ abstract final class AppShortcuts {
     }
     return {
       for (final MapEntry(key: command, value: combo) in table.entries)
-        activator(platform, combo.key, shift: combo.shift): AppCommandIntent(
-          command,
-        ),
+        activator(platform, combo.key, shift: combo.shift, alt: combo.alt):
+            AppCommandIntent(command),
     };
   }
 }

@@ -6185,6 +6185,66 @@
   "lateUsually": "{title} usually takes {duration}",
   "@lateUsually": {"description": "Running late sheet: the task at hand's usual real length, which picked the amount.", "placeholders": {"title": {"type": "String"}, "duration": {"type": "String", "example": "1 h 15"}}},
   "routinesTitle": "Routines",
+  "workspacePlan": "Plan",
+  "@workspacePlan": {
+    "description": "Workspace sidebar: the Plan place (E-FullA-v2)."
+  },
+  "workspaceCalendarViews": "Calendar views",
+  "@workspaceCalendarViews": {
+    "description": "Workspace sidebar: heading over Day, 3 days, Week, Month."
+  },
+  "workspaceDay": "Day",
+  "@workspaceDay": {
+    "description": "Workspace view: one day."
+  },
+  "workspaceThreeDays": "3 days",
+  "@workspaceThreeDays": {
+    "description": "Workspace view: yesterday, today and tomorrow."
+  },
+  "workspaceReview": "Review",
+  "@workspaceReview": {
+    "description": "Workspace sidebar: the Review place (day and week reviews)."
+  },
+  "workspaceSearchOrRun": "Search or run",
+  "@workspaceSearchOrRun": {
+    "description": "Workspace toolbar: the search field (opens Search until the command palette)."
+  },
+  "workspaceTodayCount": "{done}/{total}",
+  "@workspaceTodayCount": {
+    "description": "Workspace sidebar: today's done and planned tasks after Today, \"3/9\".",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "planPanelShow": "Show Plan panel",
+  "@planPanelShow": {
+    "description": "Workspace: the Plan panel's button and the Mac's View menu item (ED-184)."
+  },
+  "planPanelHide": "Hide Plan panel",
+  "@planPanelHide": {
+    "description": "Workspace: the Plan panel's button while it shows (ED-184)."
+  },
+  "planPanelPin": "Keep the Plan panel open",
+  "@planPanelPin": {
+    "description": "Workspace: the pin on the Plan panel brought out over the grid; it docks it (ED-184)."
+  },
+  "planPanelCapture": "Capture a task",
+  "@planPanelCapture": {
+    "description": "Plan panel: the Capture field's name (E-FullA-v2)."
+  },
+  "planPanelCaptureHint": "With a time it lands on the grid; without, it waits here. Paste a list for several.",
+  "@planPanelCaptureHint": {
+    "description": "Plan panel: the line under Capture (E-FullA-v2)."
+  },
+  "planPanelDumpNote": "Nothing is added until you accept",
+  "@planPanelDumpNote": {
+    "description": "Plan panel: beside Brain dump's Plan it (proposal rule)."
+  },
   "@routinesTitle": {"description": "Routines page title (11 C2)."},
   "routinesSubtitle": "Reusable slices of thread",
   "@routinesSubtitle": {"description": "Routines page subtitle."},

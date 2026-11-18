@@ -13,7 +13,15 @@ import 'package:flutter/services.dart';
 /// title (03 §3.3, aligned in M3c.5). Enter adds (or confirms the list);
 /// Shift+Enter starts a new line.
 class InboxAddField extends StatefulWidget {
-  const InboxAddField({required this.onSubmit, super.key});
+  const InboxAddField({
+    required this.onSubmit,
+    this.compact = false,
+    super.key,
+  });
+
+  /// The Plan panel's Capture (E-FullA-v2): "Capture a task", no + icon,
+  /// the panel's narrow text.
+  final bool compact;
 
   /// Gets the text; resolves to whether it was added (then the field
   /// clears).
@@ -83,19 +91,24 @@ class _InboxAddFieldState extends State<InboxAddField> {
               : TextInputAction.done,
           textCapitalization: TextCapitalization.sentences,
           onSubmitted: (_) => unawaited(_submit()),
-          style: t.styles.body,
+          style: widget.compact ? t.styles.sidebarItem : t.styles.body,
           decoration: InputDecoration(
-            hintText: l10n.inboxAddHint,
+            hintText: widget.compact
+                ? l10n.planPanelCapture
+                : l10n.inboxAddHint,
+            isDense: widget.compact,
             // Centred: the decoration's 48 dp minimum would stretch it.
-            prefixIcon: Center(
-              widthFactor: 1,
-              heightFactor: 1,
-              child: DotIcon(
-                DotGlyphs.add,
-                color: t.colors.text,
-                size: DotSize.rowIcon,
-              ),
-            ),
+            prefixIcon: widget.compact
+                ? null
+                : Center(
+                    widthFactor: 1,
+                    heightFactor: 1,
+                    child: DotIcon(
+                      DotGlyphs.add,
+                      color: t.colors.text,
+                      size: DotSize.rowIcon,
+                    ),
+                  ),
             filled: true,
             fillColor: t.colors.raised,
             border: OutlineInputBorder(

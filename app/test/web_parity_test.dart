@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:dottoday/app_plan_panel.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
-import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
@@ -27,8 +27,8 @@ import 'support/timeline_fakes.dart';
 // `no_platform_layout_test`.)
 
 final _screens = <String, Widget Function()>{
-  'today spread': () => const InboxSidebarFrame(child: TodayScreen()),
-  'week': () => const InboxSidebarFrame(child: WeekScreen()),
+  'today spread': () => const PlanPanelFrame(child: TodayScreen()),
+  'week': () => const PlanPanelFrame(child: WeekScreen()),
   'month': () => const MonthScreen(),
   'inbox': () => const InboxScreen(),
   'editor panel': () => const EditorPanelFrame(child: TodayScreen()),

@@ -23,6 +23,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
   VoidCallback? onToday,
   VoidCallback? onToggleLayout,
   VoidCallback? onShortcuts,
+  VoidCallback? onTogglePlanPanel,
 }) {
   void month() => unawaited(router.push<void>(AppRoutes.month));
   return {
@@ -40,6 +41,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.search: () => router.go(AppRoutes.search),
     AppCommand.toggleLayout: onToggleLayout ?? () {},
     AppCommand.showShortcuts: onShortcuts ?? () {},
+    AppCommand.togglePlanPanel: onTogglePlanPanel ?? () {},
   };
 }
 

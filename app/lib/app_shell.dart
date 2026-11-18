@@ -22,6 +22,7 @@ import 'package:dottoday/features/timeline/brain_dump/brain_dump_host.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_sidebar.dart';
 import 'package:dottoday/shared/navigation/back_to_today.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
@@ -75,6 +76,13 @@ class AppShell extends ConsumerWidget {
       frosted: ref.watch(frostedChromeProvider).value ?? false,
       native: ref.watch(nativeBarProvider).value,
       vibrantSidebar: ref.watch(sidebarVibrancyProvider).value ?? false,
+      // Full's wide sidebar is the Workspace's (E-FullA-v2, M19.2);
+      // Minimal keeps its list of places (M19.6).
+      workspaceSidebar: minimalNav
+          ? null
+          : WorkspaceSidebar(
+              vibrant: ref.watch(sidebarVibrancyProvider).value ?? false,
+            ),
       onTrashTask: drops.toTrash,
       trashLabel: l10n.inboxTrash,
       selected: shell.currentIndex,

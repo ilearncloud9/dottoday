@@ -71,7 +71,7 @@ void main() {
     height: 900,
     widths: const {'expanded'},
     overrides: _overrides(),
-    build: (_) => const TodayScreen(),
+    build: (_) => const TodayScreen(threeDays: true),
   );
   // The toggle on the plan, before Reality is picked.
   goldenMatrix(

@@ -27,6 +27,7 @@ Widget _today({
   String? editing,
   String? oneThing,
   bool hints = false,
+  bool threeDays = false,
 }) => ProviderScope(
   overrides: [
     if (editing != null)
@@ -57,8 +58,10 @@ Widget _today({
     ),
   ],
   child: editing == null
-      ? TodayScreen(date: date)
-      : EditorPanelFrame(child: TodayScreen(date: date)),
+      ? TodayScreen(date: date, threeDays: threeDays)
+      : EditorPanelFrame(
+          child: TodayScreen(date: date, threeDays: threeDays),
+        ),
 );
 
 /// A selection pinned to [view] (month open / another month).
@@ -121,7 +124,7 @@ void main() {
     'today_spread',
     height: 800,
     widths: const {'expanded', 'expanded_min'},
-    build: (_) => _today(),
+    build: (_) => _today(threeDays: true),
   );
   // E1 as the Mac/web panel (`A-mac-editor`, M3e.5).
   goldenMatrix(

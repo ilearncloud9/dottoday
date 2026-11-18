@@ -93,6 +93,9 @@ abstract final class DotRadii {
   /// Chips on Android: fully round, as every Concept E chip (§6.3).
   static const double chipAndroid = pill;
 
+  /// The Workspace sidebar's row tint with a pointer (E-FullA-v2): 8.
+  static const double sidebarRow = 8;
+
   /// Android's selected day in the week strip: a tonal pill (E-Phones).
   static const double stripPillAndroid = 22;
 }
@@ -147,6 +150,33 @@ abstract final class DotSize {
 
   /// The sidebar of places on tablets, Mac and web (rules §6.2: 216).
   static const double sidebar = 216;
+
+  /// The Workspace sidebar's rows (E-FullA-v2): 30 with a pointer (Mac,
+  /// a mouse-driven browser; WCAG 2.5.8 holds at 24, ED-260), the touch
+  /// height on tablets and touch-first web (ED-261).
+  static const double sidebarRowPointer = 30;
+
+  /// The Workspace toolbar (E-FullA-v2): 52 tall, its controls 30 with a
+  /// pointer, the search pill at least 176 wide.
+  static const double workspaceToolbar = 52;
+  static const double workspaceControl = 30;
+  static const double workspaceSearch = 176;
+
+  /// The Plan panel (rules §9.16): its section headings 30 tall, an 8 wide
+  /// edge to drag, and how far past the minimum a drag hides it.
+  static const double planHeading = 30;
+  static const double planEdge = 8;
+  static const double planHideSlack = 40;
+
+  /// The narrowest week grid the Plan panel leaves room for: 3 days of 144
+  /// and the 44 hour labels (ED-170). Narrower, the panel hides itself.
+  static const double weekGridMin = 3 * 144 + 44;
+
+  /// Window widths from which the toolbar has room for "Search or run" in
+  /// full (rules §12.3): the board's 1280 has it; touch sizes need more.
+  static const double workspaceToolbarRoom = 1100;
+  static const double workspaceToolbarTouchRoom = 1360;
+  static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor
   /// (`A-mac-editor`: 640 of 2000 px at 1280) and proposals (docs/10 §4).
@@ -358,6 +388,10 @@ abstract final class DotSize {
 /// Minimum tap targets (docs/10 §2.3): 44 pt everywhere, 48 dp on Android.
 abstract final class DotTouch {
   static const double min = 44;
+
+  /// A pointer's floor (WCAG 2.2 · 2.5.8): the Mac and a mouse-driven
+  /// browser (ED-260); touch keeps [min].
+  static const double pointer = 24;
   static const double android = kMinInteractiveDimension;
 
   /// Hold this long to pick a task up (03 §3.2 "long-press 250 ms").
@@ -387,6 +421,16 @@ abstract final class DotElevation {
   /// Tier 3 (floating bar, +, menus): `0 10 30`, ink at 12 %.
   static const floating = [
     BoxShadow(color: Color(0x1F241F2B), offset: Offset(0, 10), blurRadius: 30),
+  ];
+
+  /// The view tab raised in the Workspace's segmented control
+  /// (E-FullA-v2): `0 1 3` at 16 %.
+  static List<BoxShadow> segment(DotColors c) => [
+    BoxShadow(
+      color: c.shadow.withValues(alpha: 0.16),
+      offset: const Offset(0, 1),
+      blurRadius: 3,
+    ),
   ];
 
   /// The iPhone glass capsule (ED-034): `0 4 12` at 8 % and a 0.5 px edge

@@ -7524,6 +7524,84 @@ abstract class AppLocalizations {
   /// **'Routines'**
   String get routinesTitle;
 
+  /// Workspace sidebar: the Plan place (E-FullA-v2).
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get workspacePlan;
+
+  /// Workspace sidebar: heading over Day, 3 days, Week, Month.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar views'**
+  String get workspaceCalendarViews;
+
+  /// Workspace view: one day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get workspaceDay;
+
+  /// Workspace view: yesterday, today and tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'3 days'**
+  String get workspaceThreeDays;
+
+  /// Workspace sidebar: the Review place (day and week reviews).
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get workspaceReview;
+
+  /// Workspace toolbar: the search field (opens Search until the command palette).
+  ///
+  /// In en, this message translates to:
+  /// **'Search or run'**
+  String get workspaceSearchOrRun;
+
+  /// Workspace sidebar: today's done and planned tasks after Today, "3/9".
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String workspaceTodayCount(int done, int total);
+
+  /// Workspace: the Plan panel's button and the Mac's View menu item (ED-184).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Plan panel'**
+  String get planPanelShow;
+
+  /// Workspace: the Plan panel's button while it shows (ED-184).
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Plan panel'**
+  String get planPanelHide;
+
+  /// Workspace: the pin on the Plan panel brought out over the grid; it docks it (ED-184).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the Plan panel open'**
+  String get planPanelPin;
+
+  /// Plan panel: the Capture field's name (E-FullA-v2).
+  ///
+  /// In en, this message translates to:
+  /// **'Capture a task'**
+  String get planPanelCapture;
+
+  /// Plan panel: the line under Capture (E-FullA-v2).
+  ///
+  /// In en, this message translates to:
+  /// **'With a time it lands on the grid; without, it waits here. Paste a list for several.'**
+  String get planPanelCaptureHint;
+
+  /// Plan panel: beside Brain dump's Plan it (proposal rule).
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is added until you accept'**
+  String get planPanelDumpNote;
+
   /// Routines page subtitle.
   ///
   /// In en, this message translates to:

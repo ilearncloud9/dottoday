@@ -18,6 +18,16 @@ const _guidelines = <String, AccessibilityGuideline>{
   'labelled': labeledTapTargetGuideline,
 };
 
+/// With a pointer (the Mac, a mouse-driven browser; ED-260, ED-261): a
+/// 24 px floor and labels.
+const _pointerGuidelines = <String, AccessibilityGuideline>{
+  'pointer24': MinimumTapTargetGuideline(
+    size: Size.square(DotTouch.pointer),
+    link: 'WCAG 2.2 · 2.5.8; ED-260',
+  ),
+  'labelled': labeledTapTargetGuideline,
+};
+
 /// Collects one line per failed guideline, so a sweep reports every screen
 /// before it fails (see [expectNoA11yFindings]).
 final a11yFindings = <String>[];
@@ -28,7 +38,11 @@ Future<void> checkA11yTree(WidgetTester tester, String screen) async {
   try {
     await tester.pump();
     final failed = <String>[];
-    for (final MapEntry(:key, :value) in _guidelines.entries) {
+    // The Mac and the web sweep's mouse-driven browser use pointer sizes.
+    final rules = kIsWeb || defaultTargetPlatform == TargetPlatform.macOS
+        ? _pointerGuidelines
+        : _guidelines;
+    for (final MapEntry(:key, :value) in rules.entries) {
       final result = await value.evaluate(tester);
       if (!result.passed) failed.add('$key: ${result.reason}');
     }

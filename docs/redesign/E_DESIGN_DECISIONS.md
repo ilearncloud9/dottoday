@@ -5101,6 +5101,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** `dart analyze --fatal-infos` and `dart format` clean; 7,079 tests pass and the 5 Supabase suites pass on the isolated stack (11; pgTAP 238/238); new `today_e_phones_test.dart`, `phone_week_test.dart` and Android, empty-day and tip goldens; goldens regenerated for the intended change. iPhone 17 Pro simulator by hand and the device suite's `journey`, `app_launch` and `sweep` (55 shots, 39 accessibility-tree checks). Android devices: M21.
 - **Found on the way:** the title fit measured with the test font (now the inherited style); Sync's 44 pt target failed the sweep's 48 floor; the sweep's Minimal leg could tap the live dot (Focus) depending on the hour; the shared caption style was briefly changed and restored (`stripLetter` added instead).
 
+### ED-387 · M19.2 part 1: the Workspace sidebar, toolbar and Plan panel
+- **Date:** 2026-11-18. **Owner:** "Three parts" (M19.2), "Open Search" (the toolbar's Search or run until the palette), "Yes, existing items" (Day ▾ opens today's Day menu), "Pointer sizes, 24 floor" (Mac and mouse-driven web), "Day view on today" (the sidebar's Today; Plan the view last chosen), "Yes, build 1b next" (1a and 1b committed together), then "Approve, commit" on the review page.
+- **Built (E-FullA-v2, ED-073, ED-080, ED-184, ED-260, ED-261, ED-333):**
+  - the views are addresses: `/today` and `/day/<date>` Day, `/3-days/<date>` 3 days (a real view now, the spread), `/week/<date>`, `/month/<yyyy-MM>`; Month moves into the Week tab's branch so it keeps the shell;
+  - the Workspace sidebar in Full: Today (today's done/planned) · Plan with a fold (Inbox with its count, Routines, Brain dump) · Calendar views (Day, 3 days, Week ⌘3, Month ⌘4) · Review · Search ⌘F, Sync's line at the foot, Settings at the web's foot (the Mac's is Dottoday › Settings… ⌘,); Minimal keeps its list of places (M19.6);
+  - the toolbar over Today, Week and Month: the Plan panel button, ‹ Today ›, the date or range (a month to pick a day), Day / 3 days / Week / Month, Day ▾ (today's Day-menu items until M20.3), +, Search or run (opens Search; its icon alone in a narrow toolbar, rules §12.3); the left group wraps at large text; the screens drop their own headers there (Week keeps its cues);
+  - the Plan panel (rules §9.16): Capture, Inbox cards (drag onto a day, tap to open), Routines (a tap proposes on the shown day), Brain dump (Plan it opens Brain dump with the lines; nothing is added before Accept); docked while the week keeps 3 days, hidden by its button, brought out over the view while hidden (Esc, a click away, the pin docks it), View › Show Plan Panel ⌥⌘P; width 176–300 by its edge (past the minimum hides it), hidden state and folds kept in `local_meta`, never synced. It replaces the Concept A Inbox column (`InboxSidebarFrame` removed);
+  - sizes: pointer sizes on the Mac and mouse-driven web (30-tall rows and controls, 13 pt), the accessibility checks a 24 px floor there (WCAG 2.5.8) and keep 44 / 48 on touch; touch-first windows use 48 targets;
+  - ⌥ in the menu model: the Mac menu bar, the iPad's key commands and Android's shortcut list.
+- **Not built, by plan:** the hour grid, the inspector and Month as cards (part 2); tablets' touch values and the narrow Mac (part 3); dragging a routine onto a day and opening the panel from the grid's edge.
+- **Checks:** `dart analyze --fatal-infos` and `dart format` clean; 7,091 tests pass and the 5 Supabase suites pass on the isolated stack; new `workspace_test.dart`, `app_plan_panel_test.dart`, Mac Workspace goldens; goldens regenerated for the intended change. Not run on a Mac or in a full-width browser yet.
+
 ---
 
 ## Pending owner answers

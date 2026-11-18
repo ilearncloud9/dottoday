@@ -75,6 +75,7 @@ class DotShell extends StatelessWidget {
     this.frosted = false,
     this.native,
     this.vibrantSidebar = false,
+    this.workspaceSidebar,
     super.key,
   });
 
@@ -87,6 +88,10 @@ class DotShell extends StatelessWidget {
   /// The expanded sidebar shows the Mac's vibrant material through its
   /// tint (ED-130); false paints it solid.
   final bool vibrantSidebar;
+
+  /// The expanded width's sidebar when the app supplies its own (the
+  /// Workspace's, E-FullA-v2); null draws the list of places.
+  final Widget? workspaceSidebar;
 
   /// False draws no tab bar at compact width, only the floating add button
   /// (minimal layout, docs/14 §4: "One floating Add button").
@@ -192,6 +197,7 @@ class DotShell extends StatelessWidget {
             bar: bar,
             body: body,
             vibrant: vibrantSidebar,
+            sidebar: workspaceSidebar,
           ),
         };
         final onTrash = onTrashTask;

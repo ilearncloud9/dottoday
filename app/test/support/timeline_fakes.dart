@@ -17,6 +17,7 @@ import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/feedback/feedback_providers.dart';
+import 'package:dottoday/data/layout/plan_panel_prefs.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
@@ -608,7 +609,37 @@ List<Override> timelineOverrides({
     writeBackControllerProvider.overrideWith(
       writeBack ?? IdleWriteBackController.new,
     ),
+    // The Plan panel's memory (M19.2) without a database.
+    planPanelProvider.overrideWith(MemoryPlanPanel.new),
   ];
+}
+
+/// [PlanPanel] kept in memory, as tests have no `local_meta`.
+class MemoryPlanPanel extends PlanPanel {
+  @override
+  Future<PlanPanelPrefs> build() async => const PlanPanelPrefs();
+
+  PlanPanelPrefs get _now => state.value ?? const PlanPanelPrefs();
+
+  @override
+  Future<void> setHidden({required bool hidden}) async =>
+      state = AsyncData(_now.copyWith(hidden: hidden));
+
+  @override
+  Future<void> setWidth(double width) async => state = AsyncData(
+    _now.copyWith(
+      width: width.clamp(PlanPanelPrefs.minWidth, PlanPanelPrefs.maxWidth),
+    ),
+  );
+
+  @override
+  Future<void> toggleFold(String section) async => state = AsyncData(
+    _now.copyWith(
+      folded: _now.folded.contains(section)
+          ? ({..._now.folded}..remove(section))
+          : {..._now.folded, section},
+    ),
+  );
 }
 
 /// Trash over the fake repository: soft-deletes through [undo], so Undo

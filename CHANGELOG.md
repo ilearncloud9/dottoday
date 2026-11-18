@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On Mac and in a wide browser, Dottoday is a workspace (redesign branch): a sidebar with Today, Plan (Inbox, Routines, Brain dump), the Day, 3 days, Week and Month views, Review and Search, and one toolbar to move between days and views. Each view has its own address.
+- The Plan panel beside the calendar holds Capture, your Inbox, Routines and Brain dump (redesign branch); drag an Inbox task onto a day to plan it. Hide it, bring it back over the calendar, or press ⌥⌘P on the Mac; it remembers its width and folded sections.
+
+### Changed
 - Today on phones has Concept E's look (redesign branch): the date with Sync and your profile at the top right, a simpler week strip, and the day straight on the page with no sheet. Pull the strip down, or tap the date, for the month. Sync now shows on phones and says how it stands.
 - An empty day shows its free hours with Add a task, Drop a routine, Pull from inbox and Copy a day right in the day (redesign branch).
 - In landscape the week strip folds into the title row (redesign branch).

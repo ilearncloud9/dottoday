@@ -2,11 +2,12 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/app_plan_panel.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
-import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,14 +40,16 @@ void main() {
     },
     build: (_) => const InboxScreen(),
   );
-  // M3e.2: Today with the 300 px Inbox sidebar (`A-mac-week-alt3-board`).
+  // M19.2: Today's 3 days beside the Workspace's Plan panel (E-FullA-v2).
   goldenMatrix(
-    'today_inbox_sidebar',
+    'today_plan_panel',
     height: 800,
     widths: const {'expanded'},
     build: (_) => _inbox(
       sampleInbox(),
-      screen: const InboxSidebarFrame(child: TodayScreen()),
+      screen: const WorkspaceScope(
+        child: PlanPanelFrame(child: TodayScreen(threeDays: true)),
+      ),
     ),
   );
   // M3f.6: the Completed group open (done day, not-done button, Clear).

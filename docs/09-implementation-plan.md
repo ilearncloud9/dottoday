@@ -678,6 +678,8 @@ Rules for every task in M18 to M22:
   - "Pull from inbox · {count}" on an empty day (ED-336);
   - phone landscape: the week strip folds into the title row (R2-41, ED-347; moved from M18.5).
 - [ ] M19.2 Today in Full on wide screens:
+  Split by the owner (2026-11-18) in three parts, each with its own review page and commit: 1 the Workspace sidebar, toolbar and Plan panel; 2 the hour grid (Day, 3 days, Week), web hover and drag, the inspector and Month as cards; 3 expanded tablets and the narrow Mac.
+  - [x] Part 1 done 2026-11-18 (ED-387): the sidebar, the toolbar and the Plan panel A + B; the views as addresses; pointer sizes with a 24 px floor. Open: dragging a routine onto a day, and opening the panel from the grid's edge.
   - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184), and the inspector's own docking rule: from 1160 when the week grid keeps ≥ 3 days (C1, ED-170; moved from M18.5);
   - hover and drag on web blocks (ED-116);
   - the Workspace's Day / 3 days / Week / Month tabs (ED-333; in today's app 3 days is Today's spread);

@@ -35,12 +35,17 @@ class TodayMenu extends ConsumerWidget {
     required this.date,
     required this.today,
     this.withLate = true,
+    this.button,
     super.key,
   });
 
   final DateTime date;
   final DateTime today;
   final bool withLate;
+
+  /// The Workspace toolbar's "Day ▾" in place of ⋯ (owner, M19.2); the
+  /// items are the same until M20.3 groups them.
+  final Widget? button;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +55,10 @@ class TodayMenu extends ConsumerWidget {
     if (!watchOnScreen(ref, FeatureId.dayMenuExtras)) {
       return PopupMenuButton<void>(
         tooltip: l10n.timelineMenu,
-        icon: DotIcon(DotGlyphs.more, color: t.colors.text),
+        icon: button == null
+            ? DotIcon(DotGlyphs.more, color: t.colors.text)
+            : null,
+        child: button,
         itemBuilder: (context) => [
           PopupMenuItem<void>(
             onTap: () => setLayout(context, minimal: false),
@@ -69,7 +77,10 @@ class TodayMenu extends ConsumerWidget {
     }
     return PopupMenuButton<void>(
       tooltip: l10n.timelineMenu,
-      icon: DotIcon(DotGlyphs.more, color: t.colors.text),
+      icon: button == null
+          ? DotIcon(DotGlyphs.more, color: t.colors.text)
+          : null,
+      child: button,
       itemBuilder: (context) => [
         PopupMenuItem<void>(
           onTap: () => setLayout(context, minimal: true),

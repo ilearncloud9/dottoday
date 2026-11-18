@@ -1,3 +1,4 @@
+import 'package:dottoday/app_plan_panel.dart';
 import 'package:dottoday/app_shell.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -5,7 +6,6 @@ import 'package:dottoday/core/router/phone_week.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/inbox/inbox_screen.dart';
-import 'package:dottoday/features/inbox/inbox_sidebar.dart';
 import 'package:dottoday/features/routines/routines_page.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
@@ -16,17 +16,19 @@ import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_frame.dart';
 
 /// Composition-root wiring of routes to screens. Today and Week get the
-/// Inbox sidebar here, so no feature imports another (M3e.2).
+/// Workspace's Plan panel here, so no feature imports another (M19.2).
 final appScreens = RouteScreens(
   shell: (context, shell) => AppShell(shell: shell),
-  today: (_) => const InboxSidebarFrame(child: TodayScreen()),
+  today: (_) =>
+      const WorkspaceFrame(child: PlanPanelFrame(child: TodayScreen())),
   inbox: (_) => const InboxScreen(),
   // Phones have no Week (Concept E): their /week opens Today (M19.1).
   week: (_) => const PhoneWeek(
     to: AppRoutes.today,
-    child: InboxSidebarFrame(child: WeekScreen()),
+    child: WorkspaceFrame(child: PlanPanelFrame(child: WeekScreen())),
   ),
   search: (_) => const SearchScreen(),
   settings: (_) => const SettingsScreen(),
@@ -35,13 +37,20 @@ final appScreens = RouteScreens(
   settingsPage: (_, page, extra) => page == SettingsPage.routines
       ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
       : settingsPageFor(page),
-  month: (_) => const MonthScreen(),
+  month: (_) => const WorkspaceFrame(child: MonthScreen()),
   weekOn: (_, date) => PhoneWeek(
     to: AppRoutes.day(date),
-    child: InboxSidebarFrame(child: WeekScreen(date: date)),
+    child: WorkspaceFrame(
+      child: PlanPanelFrame(child: WeekScreen(date: date)),
+    ),
   ),
-  monthOn: (_, month) => MonthScreen(month: month),
-  day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
+  monthOn: (_, month) => WorkspaceFrame(child: MonthScreen(month: month)),
+  day: (_, date) => WorkspaceFrame(
+    child: PlanPanelFrame(child: TodayScreen(date: date)),
+  ),
+  threeDays: (_, date) => WorkspaceFrame(
+    child: PlanPanelFrame(child: TodayScreen(date: date, threeDays: true)),
+  ),
   focus: (_, id) => FocusScreen(id: id),
   wakeUp: (_) => const WakeUpCardScreen(),
   mission: (_, date, kind) =>

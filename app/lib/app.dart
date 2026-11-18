@@ -33,6 +33,7 @@ import 'package:dottoday/features/recovery/database_recovery.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
+import 'package:dottoday/features/timeline/workspace/plan_panel_state.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:dottoday/shared/navigation/mac_window_chrome.dart';
@@ -107,6 +108,8 @@ class DottodayApp extends ConsumerWidget {
           onToday: () => open.today(() => router.go(AppRoutes.today)),
           onToggleLayout: open.toggleLayout,
           onShortcuts: () => _shortcuts(router),
+          // ⌥⌘P (ED-184): the person shows or hides the Plan panel.
+          onTogglePlanPanel: () => unawaited(togglePlanPanelHidden(ref)),
         );
         // The Mac window takes the app's theme (ED-176); a view's
         // `?task=` opens the task over it (ED-097).

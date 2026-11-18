@@ -24,6 +24,7 @@ final class MenuCommand {
     this.onSelected, {
     this.key,
     this.shift = false,
+    this.alt = false,
     this.textEdit = false,
   });
 
@@ -31,6 +32,9 @@ final class MenuCommand {
   final VoidCallback? onSelected;
   final LogicalKeyboardKey? key;
   final bool shift;
+
+  /// With ⌥ too (⌥⌘P, ED-184).
+  final bool alt;
   final bool textEdit;
 }
 
@@ -67,6 +71,7 @@ List<AppMenu> appMenus({
       handlers[c],
       key: combo?.key,
       shift: combo?.shift ?? false,
+      alt: combo?.alt ?? false,
     );
   }
 
@@ -136,6 +141,8 @@ List<AppMenu> appMenus({
         ),
         command(l10n.menuShortcuts, AppCommand.showShortcuts),
       ],
+      // The Workspace's panes (ED-184); not in Minimal (M19.6).
+      if (!minimal) [command(l10n.planPanelShow, AppCommand.togglePlanPanel)],
     ]),
     AppMenu(AppMenuKind.go, l10n.menuGo, [
       [

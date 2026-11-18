@@ -3,6 +3,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
 import 'package:dottoday/features/timeline/widgets/day_titles.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/week_summary_strip.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/foundation.dart';
@@ -60,6 +61,11 @@ class WeekHeader extends StatelessWidget {
       onNext: onNext,
       today: thisWeek ? today : null,
     );
+    // In the Workspace its toolbar has the range, the views and ‹ Today ›:
+    // the week keeps its cues (Busiest, Lightest, Free, Done).
+    if (WorkspaceScope.of(context)) {
+      return WeekSummaryStrip(chips: _chips(context));
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.m,

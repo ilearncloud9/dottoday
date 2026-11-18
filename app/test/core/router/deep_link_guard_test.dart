@@ -48,7 +48,7 @@ void main() {
       // Places not built yet open the nearest one (owner, M18.7 part 3).
       '/now': '/today',
       '/now?task=$_v7': '/today?task=$_v7',
-      '/3-days/2026-10-20': '/day/2026-10-20',
+      '/3-days/2026-10-20': '/3-days/2026-10-20',
       // Any other query is dropped and the path kept (D2).
       '/today?q=1': '/today',
       '/inbox?q=1&task=$_v7': '/inbox',

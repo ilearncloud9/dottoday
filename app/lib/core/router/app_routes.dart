@@ -38,6 +38,9 @@ abstract final class AppRoutes {
   };
 
   static const dayPattern = '/day/:date';
+
+  /// The Workspace's 3 days around a date (ED-333): `/3-days/<date>`.
+  static const threeDaysPattern = '/3-days/:date';
   static const taskPattern = '/task/:id';
 
   /// Week or Month opening on a date or month (ED-097): `/week/<date>`,
@@ -71,6 +74,9 @@ abstract final class AppRoutes {
 
   /// Location for the calendar date of [date] (its y/m/d fields as given).
   static String day(DateTime date) => '/day/${formatRouteDate(date)}';
+
+  /// Location for the Workspace's 3 days around [date] (ED-333).
+  static String threeDays(DateTime date) => '/3-days/${formatRouteDate(date)}';
 
   /// Location for the task with [id] (a UUID v7).
   static String task(String id) => '/task/$id';
