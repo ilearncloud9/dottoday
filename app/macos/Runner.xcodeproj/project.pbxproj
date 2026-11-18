@@ -100,6 +100,7 @@
 		E60374A87DB10F931814C466 /* reminder_ripple.caf in Resources */ = {isa = PBXBuildFile; fileRef = 38EBA42D388480588D4B07DC /* reminder_ripple.caf */; };
 		E94046B947FF7504E95A1DE5 /* reminder_dot.caf in Resources */ = {isa = PBXBuildFile; fileRef = ABAC177963DA461E7E059CB9 /* reminder_dot.caf */; };
 		EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */; };
+		C3A1E7D24F8B6A9D0E2C5F31 /* ContextMenuBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */; };
 		EC419A2A0FF236AA1C768A15 /* clear_smile.caf in Resources */ = {isa = PBXBuildFile; fileRef = 728EA0968EB413640CA48432 /* clear_smile.caf */; };
 		EEE1F91BF9973ECC1A9EFF7A /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 768A5D1719066B54E4DE2C58 /* start_lovingly.caf */; };
 		F12789E85F477131147519B4 /* clear_turn.caf in Resources */ = {isa = PBXBuildFile; fileRef = C3523CDD2752B783BAC7CCB0 /* clear_turn.caf */; };
@@ -159,6 +160,7 @@
 /* Begin PBXFileReference section */
 		0277A5B525B6876C7DB0326B /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = ../ios/Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
 		0428686613BE33AFBECCA17F /* play_chick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_chick.caf; path = ../ios/Runner/Sounds/play_chick.caf; sourceTree = SOURCE_ROOT; };
+		D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContextMenuBridge.swift; sourceTree = "<group>"; };
 		064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntentQueueBridge.swift; sourceTree = "<group>"; };
 		084D50A246138E8BBF21F2F1 /* play_horse.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_horse.caf; path = ../ios/Runner/Sounds/play_horse.caf; sourceTree = SOURCE_ROOT; };
 		0A30A749B23C066535425C9F /* DottodayShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DottodayShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +389,7 @@
 				FD451A8BE2D7D08996B3C88E /* DotStore.swift */,
 				6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */,
 				064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */,
+				D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -823,6 +826,7 @@
 				D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */,
 				ABD355220B8FDD4C6C3DD215 /* QueueSeal.swift in Sources */,
 				EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */,
+				C3A1E7D24F8B6A9D0E2C5F31 /* ContextMenuBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

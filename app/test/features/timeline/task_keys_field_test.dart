@@ -83,4 +83,25 @@ void main() {
       'planned',
     );
   });
+
+  testWidgets('⌘⌫ trashes the pick on Mac, as its menus show (ED-162)', (
+    tester,
+  ) async {
+    final repo = await pump(tester, field: false);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.metaLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.metaLeft);
+    await tester.pumpAndSettle();
+    expect(gymGone(repo), isTrue);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
+
+  testWidgets('a focused field keeps ⌘⌫ for editing', (tester) async {
+    final repo = await pump(tester, field: true);
+    await tester.enterText(find.byType(TextField), 'Gym bag');
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.metaLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.metaLeft);
+    await tester.pumpAndSettle();
+    expect(gymGone(repo), isFalse);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 }

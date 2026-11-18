@@ -4963,6 +4963,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Follow-ups:** in small iPadOS 26 windows the window controls cover the page title (the Flutter shells too); opening the sidebar over the content moves the page up as iPadOS turns the top bar into the sidebar.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 6,980 passing (5 local-Supabase suites need a running stack); new `test/data/shell/native_tab_bar_test.dart`.
 
+### ED-375 · M18.6 part 3a: the Mac's own right-click menus and ⌘⌫
+- **Date:** 2026-11-18. **Owner:** "Yes, as proposed" (back up the Mac app's data before each Mac run and restore it after, since the redesign shares the bundle id), then "Approve, start 3b" on the part 3a review page (the Inbox row's menu in the Mac app, dark). Part 3 is split into 3a (menus and ⌘⌫) and 3b (the vibrancy sidebar).
+- **Built (ED-239, CR-098, ED-336, ED-260):**
+  - `ContextMenuBridge.swift` (Runner target; no new target or package): one `dottoday/context_menu` channel. Flutter sends the items (label, SF Symbol, enabled, key hint); the bridge pops an `NSMenu` at the click and answers with the chosen index, or nothing when dismissed. The system gives it its look, keyboard navigation, VoiceOver, Increase Contrast and dark mode;
+  - Flutter: `showContextMenu` (`shared/menus/context_menu.dart`) is the one entry point for right-click and long-press menus. The Mac app uses the system menu; the web, the other targets and a Mac build without the bridge keep Flutter's menu. `NativeContextMenu` (`data/shell`) holds the channel;
+  - the Inbox row's menu is the first user: Schedule (`calendar`), Move to Trash with the ⌘⌫ hint (`trash`), Select (`checklist.unchecked`); SF Symbols only in this native menu;
+  - ⌘⌫ moves the picked task to the Trash on Mac (`task_keys.dart`, beside Delete); a focused text field keeps ⌘⌫ for itself.
+- **Checked in the Mac app:** the Inbox row's right-click menu in dark mode, with its icons and the ⌘⌫ hint. The Mac app's data was backed up before the run and restored after (checksums equal). Other menus move to the system menu as their screens are built (M19 onwards).
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 6,986 passing (5 local-Supabase suites need a running stack); new `test/shared/menus/context_menu_test.dart`, two ⌘⌫ tests in `task_keys_field_test.dart`.
+
 ---
 
 ## Pending owner answers

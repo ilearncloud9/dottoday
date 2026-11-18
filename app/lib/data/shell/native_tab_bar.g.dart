@@ -8,16 +8,18 @@ part of 'native_tab_bar.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The iPhone's native row (ED-128 N3) when this is an iPhone that has
-/// it; null elsewhere, in tests and if the native side is missing, and
-/// the shell keeps its Flutter bar.
+/// The native navigation when this device has one: the iPhone's row
+/// (ED-128 N3) or the iPad's tabs and sidebar (iPadOS 18+); null
+/// elsewhere, in tests and if the native side is missing, and the shell
+/// keeps its Flutter bars.
 
 @ProviderFor(nativeBar)
 final nativeBarProvider = NativeBarProvider._();
 
-/// The iPhone's native row (ED-128 N3) when this is an iPhone that has
-/// it; null elsewhere, in tests and if the native side is missing, and
-/// the shell keeps its Flutter bar.
+/// The native navigation when this device has one: the iPhone's row
+/// (ED-128 N3) or the iPad's tabs and sidebar (iPadOS 18+); null
+/// elsewhere, in tests and if the native side is missing, and the shell
+/// keeps its Flutter bars.
 
 final class NativeBarProvider
     extends
@@ -27,9 +29,10 @@ final class NativeBarProvider
           FutureOr<NativeBar?>
         >
     with $FutureModifier<NativeBar?>, $FutureProvider<NativeBar?> {
-  /// The iPhone's native row (ED-128 N3) when this is an iPhone that has
-  /// it; null elsewhere, in tests and if the native side is missing, and
-  /// the shell keeps its Flutter bar.
+  /// The native navigation when this device has one: the iPhone's row
+  /// (ED-128 N3) or the iPad's tabs and sidebar (iPadOS 18+); null
+  /// elsewhere, in tests and if the native side is missing, and the shell
+  /// keeps its Flutter bars.
   NativeBarProvider._()
     : super(
         from: null,
@@ -55,4 +58,4 @@ final class NativeBarProvider
   }
 }
 
-String _$nativeBarHash() => r'b813eb2504cbf42c3969d7008fa8854b1794fde8';
+String _$nativeBarHash() => r'c097952d224f20a025b503962a6ae7f91af8b3ea';

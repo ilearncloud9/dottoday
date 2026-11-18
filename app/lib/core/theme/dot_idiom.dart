@@ -40,6 +40,11 @@ bool appleChrome(BuildContext context) {
       (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
 }
 
+/// Whether this is the Mac app (not the web on a Mac): its right-click
+/// menus are the system's own (ED-239).
+bool macApp(BuildContext context) =>
+    !kIsWeb && Theme.of(context).platform == TargetPlatform.macOS;
+
 /// Whether this is the web build: compact web gets its own solid bar,
 /// never the iOS glass bar or the Android toolbar (ED-172).
 bool webChrome(BuildContext context) => kIsWeb;

@@ -84,6 +84,9 @@ class TaskKeys extends ConsumerWidget {
             const TrashTaskIntent(),
         const SingleActivator(LogicalKeyboardKey.backspace):
             const TrashTaskIntent(),
+        // Move to Trash ⌘⌫, as the Mac menus show it (ED-162).
+        AppShortcuts.activator(p, LogicalKeyboardKey.backspace):
+            const TrashTaskIntent(),
         const SingleActivator(LogicalKeyboardKey.enter): const OpenTaskIntent(),
         const SingleActivator(LogicalKeyboardKey.space): const DoneTaskIntent(),
         const SingleActivator(LogicalKeyboardKey.escape):

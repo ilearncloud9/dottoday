@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On Mac, right-clicking an Inbox task opens the Mac's own menu (redesign branch), with icons and the ⌘⌫ hint, and ⌘⌫ moves the picked task to the Trash.
+
+### Changed
 - On iPad (iPadOS 18 and later) the tabs and sidebar are now Apple's own (redesign branch): top tabs, a sidebar with Settings at its end, and the phone bar in small windows, with the + beside the bar at medium width.
 
 ### Changed

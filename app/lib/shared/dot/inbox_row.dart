@@ -4,8 +4,10 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 
 part 'inbox_row_parts.dart';
 
@@ -133,14 +135,31 @@ class InboxRow extends StatelessWidget {
 
   Future<void> _menu(BuildContext context, Offset at) async {
     final l10n = context.l10n;
-    final picked = await showMenu<VoidCallback>(
-      context: context,
-      position: RelativeRect.fromLTRB(at.dx, at.dy, at.dx, at.dy),
-      items: [
-        PopupMenuItem(value: onSchedule, child: Text(l10n.inboxSchedule)),
-        PopupMenuItem(value: onTrash, child: Text(l10n.inboxTrash)),
+    final picked = await showContextMenu<VoidCallback>(
+      context,
+      at: at,
+      entries: [
+        ContextMenuEntry(
+          value: onSchedule,
+          label: l10n.inboxSchedule,
+          symbol: 'calendar', // l10n-ignore: SF Symbol name
+        ),
+        // "Move to Trash ⌘⌫" in every Mac context menu (ED-162, ED-336).
+        ContextMenuEntry(
+          value: onTrash,
+          label: l10n.inboxTrash,
+          symbol: 'trash', // l10n-ignore: SF Symbol name
+          shortcut: const SingleActivator(
+            LogicalKeyboardKey.backspace,
+            meta: true,
+          ),
+        ),
         if (onSelect case final select? when selected == null)
-          PopupMenuItem(value: select, child: Text(l10n.inboxSelect)),
+          ContextMenuEntry(
+            value: select,
+            label: l10n.inboxSelect,
+            symbol: 'checklist.unchecked', // l10n-ignore: SF Symbol name
+          ),
       ],
     );
     picked?.call();
