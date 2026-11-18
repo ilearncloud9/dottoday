@@ -13,12 +13,17 @@ import '../../../support/test_app.dart';
 import '../../../support/timeline_fakes.dart';
 
 /// The Mac Workspace (E-FullA-v2, M19.2 part 1a): sidebar and toolbar over
-/// Week, light and dark.
+/// Week and 3 days on the hour grid and Day on hours (part 2), light and
+/// dark.
 void main() {
   setUpAll(tz_data.initializeTimeZones);
   setUpAll(loadAppFonts);
 
-  Future<void> pump(WidgetTester tester, ThemeMode mode) async {
+  Future<void> pump(
+    WidgetTester tester,
+    ThemeMode mode, {
+    String place = '/week/2026-10-21',
+  }) async {
     tester.view
       ..physicalSize = const Size(1280, 800)
       ..devicePixelRatio = 1;
@@ -40,7 +45,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    router.go('/week/2026-10-21');
+    router.go(place);
     await tester.pumpAndSettle();
   }
 
@@ -54,6 +59,32 @@ void main() {
         await expectLater(
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/workspace_week_mac_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    testWidgets('golden: the Mac Workspace, Day, ${mode.name}', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/today/2026-10-21');
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_day_mac_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    testWidgets('golden: the Mac Workspace, 3 days, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/3-days/2026-10-21');
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_3days_mac_${mode.name}.png'),
         );
       } finally {
         debugDefaultTargetPlatformOverride = null;

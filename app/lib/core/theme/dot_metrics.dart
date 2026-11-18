@@ -168,9 +168,32 @@ abstract final class DotSize {
   static const double planEdge = 8;
   static const double planHideSlack = 40;
 
+  /// The hour grid (E-FullA-v2 Week, M19.2 part 2): 84 px an hour, the
+  /// 44 hour-label gutter, day columns at least 144 wide under a 46 header,
+  /// blocks inset 4 from their column, the 32 ring (a short task's pill is
+  /// 21 tall with a 17 dot), the 4 px thread 23 in from the column's edge,
+  /// and the 24 overlap knot.
+  static const double gridHour = 84;
+
+  /// The Day view's thread on hours (E-FullA-v2 web Day): 70 px an hour.
+  static const double gridDayHour = 70;
+  static const double gridGutter = 44;
+  static const double gridColumn = 144;
+  static const double gridHeader = 46;
+  static const double gridInset = 4;
+  static const double gridRing = 32;
+  static const double gridPill = 21;
+  static const double gridPillDot = 17;
+  static const double gridThread = 4;
+  static const double gridThreadX = 23;
+  static const double gridKnot = 24;
+
+  /// The now dot on today's thread (E-FullA-v2 Week): 14 with a 2 edge.
+  static const double gridNowDot = 14;
+
   /// The narrowest week grid the Plan panel leaves room for: 3 days of 144
   /// and the 44 hour labels (ED-170). Narrower, the panel hides itself.
-  static const double weekGridMin = 3 * 144 + 44;
+  static const double weekGridMin = 3 * gridColumn + gridGutter;
 
   /// Window widths from which the toolbar has room for "Search or run" in
   /// full (rules §12.3): the board's 1280 has it; touch sizes need more.

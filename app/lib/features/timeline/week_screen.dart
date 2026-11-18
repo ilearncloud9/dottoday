@@ -1,9 +1,8 @@
-import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/show_place.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/week/week_view.dart';
+import 'package:dottoday/features/timeline/week/days_grid.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +22,9 @@ class WeekScreen extends ConsumerWidget {
   static const _key = ValueKey('route:week');
 
   /// Try again (docs/09 M3f.9b): reload what the week needs.
-  static void _retry(WidgetRef ref, {List<DateTime> days = const []}) {
-    ref
-      ..invalidate(todayDateProvider)
-      ..invalidate(currentProfileProvider);
-    for (final d in days) {
-      ref.invalidate(timelineDataProvider(d));
-    }
-  }
+  static void _retry(WidgetRef ref) => ref
+    ..invalidate(todayDateProvider)
+    ..invalidate(currentProfileProvider);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,13 +41,6 @@ class WeekScreen extends ConsumerWidget {
       for (var i = 0; i < DateTime.daysPerWeek; i++)
         DateTime(first.year, first.month, first.day + i),
     ];
-    final dayAsync = [for (final d in days) ref.watch(timelineDataProvider(d))];
-    void retryDays() => _retry(ref, days: days);
-    if (waitFor(_key, dayAsync, onRetry: retryDays) case final w?) return w;
-    final data = [for (final a in dayAsync) a.requireValue];
-    final now =
-        ref.watch(minuteTickProvider).value ??
-        ref.watch(clockProvider).nowUtc();
     final thisWeek = weekStart(today, profile.settings.firstDayOfWeek);
     void showWeek(DateTime start) => showPlace(
       GoRouter.of(context),
@@ -64,12 +51,9 @@ class WeekScreen extends ConsumerWidget {
     return Scaffold(
       key: _key,
       body: SafeArea(
-        child: WeekView(
+        child: DaysGrid(
           days: days,
-          data: data,
-          today: today,
-          nowUtc: now,
-          profile: profile,
+          stateKey: _key,
           onPrevious: () => show(-1),
           onNext: () => show(1),
           onToday: () => showWeek(thisWeek),

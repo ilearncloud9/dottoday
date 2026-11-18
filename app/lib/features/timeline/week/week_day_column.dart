@@ -1,14 +1,19 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/week_layout.dart';
+import 'package:dottoday/features/timeline/week/grid_column_pieces.dart';
+import 'package:dottoday/features/timeline/week/grid_thread.dart';
 import 'package:dottoday/features/timeline/week/week_card.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
-/// A day column: cards by time, a dotted spine, today's tint and now line,
-/// and a drop target that shows where a dragged task would land (M3e.3).
+/// A day column of the hour grid (E-FullA-v2 Week, M19.2 part 2): its
+/// hour lines and left divider, today's tint, the thread behind the
+/// blocks, the blocks at their times (side by side where they overlap),
+/// today's now line and dot, and a drop target that shows where a dragged
+/// task would land (M3e.3).
 class WeekDayColumn extends StatefulWidget {
   const WeekDayColumn({
     required this.day,
@@ -87,7 +92,9 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       },
       builder: (context, _, _) => SizedBox(
         height: _height,
-        child: Stack(children: [..._background(context), ..._cards()]),
+        child: Stack(
+          children: [..._background(context), ..._cards(), ..._over(context)],
+        ),
       ),
     );
   }
@@ -95,31 +102,84 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
   List<Widget> _background(BuildContext context) {
     final c = DotTheme.of(context).colors;
     final day = widget.day;
-    final now = day.nowUtc;
-    final hover = _hover;
     return [
-      if (day.isToday)
-        Positioned.fill(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: c.accentTint,
-              borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-            ),
+      Positioned.fill(
+        child: CustomPaint(
+          painter: GridLines(
+            line: c.gridLine,
+            divider: c.gridDivider,
+            tint: day.isToday ? c.gridToday : null,
+            firstLine: WeekScale.leadMinutes * WeekScale.pxPerMinute,
           ),
         ),
+      ),
       Positioned(
-        left: DotSpace.l,
+        left: DotSize.gridThreadX,
         top: 0,
         bottom: 0,
-        child: CustomPaint(
-          size: Size(DotSpace.hairline * 2, _height),
-          painter: WeekSpine(color: c.threadAhead),
-        ),
+        width: DotSize.gridThread,
+        child: CustomPaint(painter: _thread(c)),
       ),
-      if (now != null) _line(c.accent, _y(now), DotSpace.hairline * 2),
+    ];
+  }
+
+  /// Over the blocks: today's now line and dot, and the drop preview.
+  List<Widget> _over(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    final now = widget.day.nowUtc;
+    final hover = _hover;
+    return [
+      if (now != null) ..._now(c, _y(now)),
       if (hover != null) ..._preview(context, hover),
     ];
   }
+
+  /// The thread through the blocks' dots (lane 0 of an overlap carries it).
+  GridThread _thread(DotColors c) {
+    final t = DotTheme.of(context);
+    final byId = {for (final task in widget.day.tasks) task.id: task};
+    final dots = <GridThreadDot>[];
+    var bottom = 0.0;
+    for (final b in _boxes()) {
+      final task = byId[b.id]!;
+      if (b.lane == 0) {
+        final pill = task.minutes < WeekScale.pillUnder;
+        dots.add((
+          y: b.top + (pill ? b.height / 2 : _ringCentre),
+          color: t.tasks[task.color].color,
+        ));
+      }
+      if (b.top + b.height > bottom) bottom = b.top + b.height;
+    }
+    final day = widget.day;
+    final now = day.nowUtc;
+    return GridThread(
+      dots: dots,
+      lastBottom: bottom,
+      nowY: now != null
+          ? _y(now)
+          : day.open
+          ? double.negativeInfinity
+          : double.infinity,
+      ahead: c.threadAhead,
+    );
+  }
+
+  /// A block's ring centre below its top: 5 in, 32 across.
+  static const _ringCentre =
+      DotSpace.xs + DotSpace.hairline + DotSize.gridRing / 2;
+
+  /// Today's stretch of the now line and the dot on its thread.
+  List<Widget> _now(DotColors c, double y) => [
+    _line(c.nowLineToday, y, DotSpace.hairline * 1.5),
+    Positioned(
+      left: DotSize.gridThreadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
+      top: y - DotSize.gridNowDot / 2,
+      width: DotSize.gridNowDot,
+      height: DotSize.gridNowDot,
+      child: const GridNowDot(),
+    ),
+  ];
 
   double _y(DateTime utc) =>
       utc.difference(widget.day.axisStartUtc).inSeconds /
@@ -137,52 +197,16 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
   List<Widget> _preview(
     BuildContext context,
     ({DateTime start, int minutes}) hover,
-  ) {
-    final t = DotTheme.of(context);
-    final top = _y(hover.start);
-    return [
-      Positioned(
-        left: 0,
-        right: 0,
-        top: top,
-        height: hover.minutes * WeekScale.pxPerMinute,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: t.colors.accentTint,
-            border: Border.all(color: t.colors.accent),
-            borderRadius: BorderRadius.circular(DotRadii.card),
-          ),
-        ),
-      ),
-      Positioned(
-        left: 0,
-        right: 0,
-        top: top - DotSpace.xl,
-        child: Center(
-          child: DecoratedBox(
-            decoration: ShapeDecoration(
-              color: t.colors.accent,
-              shape: const StadiumBorder(),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: DotSpace.s,
-                vertical: DotSpace.xxs,
-              ),
-              child: Text(
-                widget.dropLabel(hover.start, hover.minutes),
-                style: t.styles.rowMeta.copyWith(color: t.colors.onAccent),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ];
-  }
+  ) => gridDropPreview(
+    context,
+    top: _y(hover.start),
+    height: hover.minutes * WeekScale.pxPerMinute,
+    label: widget.dropLabel(hover.start, hover.minutes),
+  );
 
-  List<Widget> _cards() {
+  List<WeekCardBox> _boxes() {
     final day = widget.day;
-    final boxes = weekColumnLayout(
+    return weekColumnLayout(
       [
         for (final task in day.tasks)
           if (day.starts[task.id] case final s?)
@@ -191,8 +215,12 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       axisStartUtc: day.axisStartUtc,
       pxPerMinute: WeekScale.pxPerMinute,
       minHeight: WeekScale.minCard,
-      gap: WeekScale.gap,
     );
+  }
+
+  List<Widget> _cards() {
+    final day = widget.day;
+    final boxes = _boxes();
     final byId = {for (final task in day.tasks) task.id: task};
     final last = boxes.fold(
       0.0,
@@ -200,17 +228,22 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     );
     return [
       for (final b in boxes)
-        Positioned(
-          left: DotSpace.xs,
-          right: DotSpace.xs,
+        Positioned.fill(
           top: b.top,
-          height: b.height,
-          child: _card(byId[b.id]!, b.height),
+          bottom: null,
+          child: SizedBox(
+            height: b.height,
+            child: GridLane(
+              lane: b.lane,
+              lanes: b.lanes,
+              child: _card(byId[b.id]!, b.height, narrow: b.lanes > 1),
+            ),
+          ),
         ),
       if (day.open && last + DotSpace.xxl * 2 < _height)
         Positioned(
-          left: DotSpace.xs,
-          right: DotSpace.xs,
+          left: DotSize.gridInset,
+          right: DotSize.gridInset,
           top: last + DotSpace.l,
           child: WeekDropBox(
             text: day.freeText,
@@ -221,10 +254,11 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     ];
   }
 
-  Widget _card(ThreadTask task, double height) {
+  Widget _card(ThreadTask task, double height, {required bool narrow}) {
     final card = WeekCard(
       task: task,
       height: height,
+      narrow: narrow,
       onOpen: () => widget.onOpen(task.id),
       onCue: switch (widget.onCue) {
         final cue? => () => cue(task.id),
@@ -235,7 +269,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     return HoldOrMouseDraggable<String>(
       data: task.id,
       feedback: SizedBox(
-        width: DotSize.readableColumn / 4,
+        width: DotSize.gridColumn - DotSize.gridInset * 2,
         height: height,
         child: card,
       ),

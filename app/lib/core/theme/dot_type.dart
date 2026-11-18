@@ -42,6 +42,13 @@ final class DotType {
     required this.sidebarSection,
     required this.viewTab,
     required this.planHeading,
+    required this.gridTitle,
+    required this.gridMeta,
+    required this.gridPill,
+    required this.gridDate,
+    required this.gridDayMeta,
+    required this.gridHour,
+    required this.nowBead,
     required this.stripWeekdayAndroid,
     required this.sheetSubtitle,
     required this.tag,
@@ -101,6 +108,16 @@ final class DotType {
     viewTab: _system(12, 15, 500, muted),
     // The Plan panel's section headings: 13/700 (E-FullA-v2).
     planHeading: _system(13, 18, 700, text),
+    // The hour grid (E-FullA-v2 Week, M19.2 part 2): a block's title and
+    // time, a short task's pill, a day header's date and count, the hour
+    // labels (and weekday), and the now bead in the gutter.
+    gridTitle: _manrope(12.5, 15, 700, text),
+    gridMeta: _manrope(11, 15, 400, muted),
+    gridPill: _manrope(11, 13, 700, text),
+    gridDate: _manrope(17, 22, 800, text),
+    gridDayMeta: _manrope(12, 16, 700, muted),
+    gridHour: _manrope(11, 14, 400, muted),
+    nowBead: _manrope(11.5, 16, 700, text),
     stripWeekdayAndroid: _system(12, 14, 500, muted),
     sheetSubtitle: _system(14, 19, 500, muted),
     tag: _system(12, 20, 700, text),
@@ -233,6 +250,17 @@ final class DotType {
 
   /// The Plan panel's section headings (E-FullA-v2): 13/700.
   final TextStyle planHeading;
+
+  /// The hour grid (E-FullA-v2 Week): block title 12.5/700, time 11, pill
+  /// 11/700, header date 17/800 and count 12/700, hour label 11, now bead
+  /// 11.5/700.
+  final TextStyle gridTitle;
+  final TextStyle gridMeta;
+  final TextStyle gridPill;
+  final TextStyle gridDate;
+  final TextStyle gridDayMeta;
+  final TextStyle gridHour;
+  final TextStyle nowBead;
   final TextStyle stripWeekdayAndroid;
 
   /// The line under a sheet title (500 14, secondary).
@@ -299,6 +327,13 @@ final class DotType {
       sidebarSection: l(sidebarSection, other.sidebarSection),
       viewTab: l(viewTab, other.viewTab),
       planHeading: l(planHeading, other.planHeading),
+      gridTitle: l(gridTitle, other.gridTitle),
+      gridMeta: l(gridMeta, other.gridMeta),
+      gridPill: l(gridPill, other.gridPill),
+      gridDate: l(gridDate, other.gridDate),
+      gridDayMeta: l(gridDayMeta, other.gridDayMeta),
+      gridHour: l(gridHour, other.gridHour),
+      nowBead: l(nowBead, other.nowBead),
       stripWeekdayAndroid: l(stripWeekdayAndroid, other.stripWeekdayAndroid),
       sheetSubtitle: l(sheetSubtitle, other.sheetSubtitle),
       tag: l(tag, other.tag),

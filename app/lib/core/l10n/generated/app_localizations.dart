@@ -2610,12 +2610,6 @@ abstract class AppLocalizations {
   /// **' · Tomorrow'**
   String get dayCardTomorrowSuffix;
 
-  /// Side-day summary of a past day on the Mac/web spread, e.g. '7 of 7'.
-  ///
-  /// In en, this message translates to:
-  /// **'{done} of {total}'**
-  String spreadDoneOf(int done, int total);
-
   /// Side-day summary of a future day on the Mac/web spread, e.g. '4 planned'.
   ///
   /// In en, this message translates to:
@@ -2639,18 +2633,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next day'**
   String get spreadNextDay;
-
-  /// Dashed drop target at the end of a future day on the Mac/web spread.
-  ///
-  /// In en, this message translates to:
-  /// **'drop here to plan'**
-  String get spreadDropToPlan;
-
-  /// Screen-reader label of the spread's drop target.
-  ///
-  /// In en, this message translates to:
-  /// **'Drop a task here to plan it on {day}'**
-  String spreadDropToPlanLabel(String day);
 
   /// A future free gap on the wide Mac/web Today card.
   ///
@@ -2871,8 +2853,20 @@ abstract class AppLocalizations {
   /// Today's Week column heading: 'Wed · today'.
   ///
   /// In en, this message translates to:
-  /// **'{day} · today'**
+  /// **'{day} · Today'**
   String weekTodayDay(String day);
+
+  /// An hour-grid day header's count on a past day: '4 done'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done'**
+  String gridDayDone(String count);
+
+  /// Today's hour-grid header: '3 of 9 · 7 h 40' (done of all, time planned).
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} · {planned}'**
+  String gridTodayCount(String done, String total, String planned);
 
   /// Week/Month switch on the Week board.
   ///

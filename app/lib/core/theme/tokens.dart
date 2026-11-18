@@ -66,6 +66,8 @@ final class DotPalette {
     required this.glassTop,
     required this.glassBottom,
     required this.glassEdge,
+    required this.gridLine,
+    required this.gridDivider,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -127,6 +129,9 @@ final class DotPalette {
     glassTop: Color(0x9EFFFFFF),
     glassBottom: Color(0x70FFFDF9),
     glassEdge: Color(0xE6FFFFFF),
+    // The hour grid (E-FullA-v2 Week): hour lines at 6 %, day dividers 7 %.
+    gridLine: Color(0x0F241F2B),
+    gridDivider: Color(0x12241F2B),
     fabAndroid: Color(0xFFCFE8E4),
     shadow: Color(0xFF241F2B),
   );
@@ -182,6 +187,8 @@ final class DotPalette {
     glassTop: Color(0x19FFFFFF),
     glassBottom: Color(0xB82B262A),
     glassEdge: Color(0x25FFFFFF),
+    gridLine: Color(0x14FFF5EB),
+    gridDivider: Color(0x17FFF5EB),
     fabAndroid: Color(0xFF2B262A),
     shadow: Color(0xFF000000),
   );
@@ -235,6 +242,29 @@ final class DotPalette {
       glassTop,
       glassBottom,
       glassEdge,
+      gridLine,
+      gridDivider,
       fabAndroid,
       shadow;
+}
+
+/// Accent alphas on the hour grid (E-FullA-v2 Week; dark on its -Dark
+/// board).
+abstract final class GridAlpha {
+  /// Today's column (light 3.5 %, dark 4 %).
+  static const today = 0.035;
+  static const todayDark = 0.04;
+
+  /// Today's day header.
+  static const todayHead = 0.05;
+
+  /// The now line across every day, and on today's column.
+  static const nowLine = 0.22;
+  static const nowLineToday = 0.65;
+
+  /// The now bead's 1 px edge in the gutter.
+  static const nowBeadEdge = 0.3;
+
+  /// Where a dragged task would land.
+  static const drop = 0.07;
 }

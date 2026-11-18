@@ -72,6 +72,8 @@ final class DotColors {
     required this.glassTop,
     required this.glassBottom,
     required this.glassEdge,
+    required this.gridLine,
+    required this.gridDivider,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -229,6 +231,10 @@ final class DotColors {
   final Color glassTop;
   final Color glassBottom;
   final Color glassEdge;
+
+  /// The hour grid's hour lines and day dividers (E-FullA-v2 Week).
+  final Color gridLine;
+  final Color gridDivider;
   final Color fabAndroid;
 
   /// Base colour of elevation shadows (see `DotElevation`).
@@ -260,6 +266,20 @@ final class DotColors {
   Color get tonal => accentTint;
 
   bool get isDark => brightness == Brightness.dark;
+
+  /// Today's column on the hour grid, its header, the now line across the
+  /// grid and its stronger stretch on today (E-FullA-v2 Week).
+  Color get gridToday =>
+      accent.withValues(alpha: isDark ? GridAlpha.todayDark : GridAlpha.today);
+  Color get gridTodayHead => accent.withValues(alpha: GridAlpha.todayHead);
+  Color get nowLine => accent.withValues(alpha: GridAlpha.nowLine);
+  Color get nowLineToday => accent.withValues(alpha: GridAlpha.nowLineToday);
+
+  /// The now bead's edge in the gutter (E-FullA-v2 Week).
+  Color get nowBeadEdge => accent.withValues(alpha: GridAlpha.nowBeadEdge);
+
+  /// Where a dragged task would land on the hour grid.
+  Color get gridDrop => accent.withValues(alpha: GridAlpha.drop);
 
   /// The night on a day dot (docs/15 W6): [text] over [surface] at 12 %
   /// (light) or 18 % (dark), opaque. Faint by design, never a warning.
@@ -323,6 +343,8 @@ final class DotColors {
       glassTop: l(glassTop, other.glassTop),
       glassBottom: l(glassBottom, other.glassBottom),
       glassEdge: l(glassEdge, other.glassEdge),
+      gridLine: l(gridLine, other.gridLine),
+      gridDivider: l(gridDivider, other.gridDivider),
       fabAndroid: l(fabAndroid, other.fabAndroid),
       shadow: l(shadow, other.shadow),
     );
@@ -412,6 +434,8 @@ DotColors _resolve(Brightness brightness, Color accent) {
     glassTop: p.glassTop,
     glassBottom: p.glassBottom,
     glassEdge: p.glassEdge,
+    gridLine: p.gridLine,
+    gridDivider: p.gridDivider,
     fabAndroid: p.fabAndroid,
     shadow: p.shadow,
   );

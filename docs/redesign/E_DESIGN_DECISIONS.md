@@ -5113,6 +5113,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not built, by plan:** the hour grid, the inspector and Month as cards (part 2); tablets' touch values and the narrow Mac (part 3); dragging a routine onto a day and opening the panel from the grid's edge.
 - **Checks:** `dart analyze --fatal-infos` and `dart format` clean; 7,091 tests pass and the 5 Supabase suites pass on the isolated stack; new `workspace_test.dart`, `app_plan_panel_test.dart`, Mac Workspace goldens; goldens regenerated for the intended change. Not run on a Mac or in a full-width browser yet.
 
+### ED-388 · M19.2 part 2a: the hour grid
+- **Date:** 2026-11-19. **Owner:** "Three: grid, drag, inspector+Month" (part 2 split as 2a, 2b, 2c), "Days that fit, scroll for more" (Week), "Click: inspector; double-click: editor" (for 2c), "The thread on hours, as drawn" (Day), "Week's blocks, wider columns" (3 days), then "Approve, commit" on the review page.
+- **Built (E-FullA-v2 Week and web Day, E-R2-30, ED-333):**
+  - one hour grid for Week and 3 days: 84 px an hour, the 44 hour gutter (wider at large text), columns of at least 144 that share the width and scroll sideways when the days don't fit; day headers (weekday, date, "4 done" / "3 planned"; today tinted, its date in the accent circle, "3 of 9 · 7 h 40"); 3 days' headers from E-R2-30 ("Monday 2 November · Yesterday" over "4 of 4 done");
+  - per column: hour lines and divider, today's tint, the 4 px thread behind the blocks (solid in the task colours to now, dotted ahead), blocks as tall as their time with the 32 ring on the thread, a 21-tall pill under 30 min, overlapping tasks side by side in lanes; the now line across the grid, stronger on today with its dot, its time in the gutter; the grid opens two hours above now; a drop shows a dashed accent box with the day and time;
+  - 3 days replaces the spread (yesterday, the shown day, tomorrow); ‹ › and Go › Next / Previous Day keep 3 days; low-energy mode still shows today's next dot alone;
+  - Day: the thread on hours at 70 px an hour (tasks and free gaps at least as tall as their time, each hour labelled once in the gutter with its line), under a header line with the day's counts, Wake Up and Wind Down; the thread keeps 640 wide.
+- **Removed (replaced by the grid in this commit):** the 3-day spread, the side-day columns (`DayCard.side`), the thread's side mode and its "drop here to plan" box, three unused strings; Week's capacity rings and the Busiest / Lightest tags under the headers (the cue chips stay).
+- **Open, asked on the review page:** the "Drop a task here" boxes under each open day (not on the board); Day's rows keep the Mac row layout rather than the board's stacked time; now is its own row under the live card on Day.
+- **Checks:** `dart analyze` and `dart format` clean; all non-golden tests pass (the 5 Supabase suites need the stack); 92 expanded-width goldens re-baselined; new `day_hours_test`, lane tests in `week_layout_test`, `today_three_days_test`, Workspace goldens for Day, 3 days and Week. Not run on a Mac or in a full-width browser yet.
+
 ---
 
 ## Pending owner answers

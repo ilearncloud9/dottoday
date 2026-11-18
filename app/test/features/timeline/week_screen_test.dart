@@ -80,18 +80,16 @@ Future<void> _ctrl(WidgetTester tester, LogicalKeyboardKey key) async {
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('this week: days, capacity rings, summary chips', (tester) async {
+  testWidgets('this week: days, their counts, summary chips', (tester) async {
     await _pump(tester);
     expect(find.text('This week'), findsOneWidget);
     expect(find.textContaining('October 18 – 24'), findsOneWidget);
-    expect(find.text('Wed · today'), findsOneWidget);
+    // The hour grid's headers (E-FullA-v2 Week): today's count and time.
+    expect(find.text('Wed · Today'), findsOneWidget);
+    expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsOneWidget);
     expect(find.text('Busiest · Tue · 6 h 30'), findsOneWidget);
     expect(find.text('Lightest · Sun · 1 h 15'), findsOneWidget);
-    expect(find.text('Busiest'), findsOneWidget);
-    expect(find.text('Lightest'), findsOneWidget);
     expect(find.textContaining('Free · '), findsOneWidget);
-    expect(find.bySemanticsLabel(RegExp('planned of .* awake')), findsWidgets);
-    expect(find.text('98 min left'), findsOneWidget);
     expect(find.textContaining('Drop a task here'), findsWidgets);
   });
 

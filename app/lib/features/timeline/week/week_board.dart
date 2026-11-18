@@ -1,193 +1,198 @@
-import 'package:dottoday/core/l10n/l10n.dart';
+import 'dart:math' as math;
+
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
+import 'package:dottoday/features/timeline/week/grid_gutter.dart';
+import 'package:dottoday/features/timeline/week/grid_headers.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
-import 'package:dottoday/shared/dot/capacity_ring.dart';
-import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/dot/thread.dart' show hourGutter;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-/// The Week board's columns (`A-mac-week-alt3-board`): a header per day
-/// (weekday, date, free time, `CapacityRing`, Busiest / Lightest), then
-/// the hour axis and the seven [columns], scrolling together under it.
-class WeekBoard extends StatelessWidget {
+/// The hour grid (E-FullA-v2 Week, M19.2 part 2) for Week and 3 days: a
+/// header per day, the hour labels in a 44 gutter, and the day [columns]
+/// at 84 px an hour. Columns share the width but never go under 144; when
+/// the days don't fit they scroll sideways under their headers (owner,
+/// M19.2: the days that fit, scroll for more). On today the now line runs
+/// across the grid with its time in the gutter.
+class WeekBoard extends StatefulWidget {
   const WeekBoard({
     required this.loads,
-    required this.summary,
     required this.today,
     required this.hourLabels,
     required this.axisMinutes,
     required this.columns,
+    this.nowY,
+    this.nowText,
+    this.long = false,
     super.key,
   });
 
   final List<DayLoad> loads;
-  final WeekSummary summary;
   final DateTime today;
 
-  /// "7 AM", "10 AM" … every three hours down the axis.
+  /// "7 AM", "8 AM" … for every whole hour of the axis.
   final List<String> hourLabels;
   final int axisMinutes;
   final List<Widget> columns;
 
-  static const double _gutter = 56;
+  /// Now, in px down the axis, and its time ("10:42"), when today shows.
+  final double? nowY;
+  final String? nowText;
 
-  /// Below this the board scrolls sideways rather than squeeze its days.
-  static const double _minWidth = 840;
+  /// 3 days' headers (E-R2-30): "Monday 2 November · Yesterday" over
+  /// "4 of 4 done".
+  final bool long;
+
+  @override
+  State<WeekBoard> createState() => _WeekBoardState();
+}
+
+/// A leaf: the scroll positions only.
+class _WeekBoardState extends State<WeekBoard> {
+  late final ScrollController _down;
+  final _across = ScrollController();
+  final _heads = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Opens with now a little below the top (two hours above it).
+    final now = widget.nowY;
+    _down = ScrollController(
+      initialScrollOffset: now == null
+          ? 0
+          : math.max(0, now - DotSize.gridHour * 2),
+    );
+    _across.addListener(() {
+      if (_heads.hasClients) _heads.jumpTo(_across.offset);
+    });
+  }
+
+  @override
+  void dispose() {
+    _down.dispose();
+    _across.dispose();
+    _heads.dispose();
+    super.dispose();
+  }
+
+  double get _height => widget.axisMinutes * WeekScale.pxPerMinute;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
-      final board = _board(context, box.maxHeight);
-      if (box.maxWidth >= _minWidth) return board;
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: SizedBox(width: _minWidth, child: board),
+      final gutter = hourGutter(context);
+      final room = box.maxWidth - gutter;
+      final n = widget.columns.length;
+      final width = math.max(DotSize.gridColumn, room / n);
+      return ColoredBox(
+        color: DotTheme.of(context).colors.canvas,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: box.maxHeight.isFinite
+                    ? box.maxHeight / 2
+                    : double.infinity,
+              ),
+              child: _headers(context, width),
+            ),
+            Expanded(child: _grid(context, width)),
+          ],
+        ),
       );
     },
   );
 
-  /// [height] caps the day headers at half the board: at 200 % text on a
-  /// short phone they would otherwise push the hour grid off the bottom
-  /// (M18.1). Over the cap the header row scrolls by itself and stays put.
-  Widget _board(BuildContext context, double height) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: height.isFinite ? height / 2 : double.infinity,
-        ),
-        child: SingleChildScrollView(child: _headers(context)),
+  /// The day headers over the columns, moving sideways with them; a
+  /// hairline under them. At large text they grow and scroll themselves.
+  Widget _headers(BuildContext context, double width) {
+    final c = DotTheme.of(context).colors;
+    return DecoratedBox(
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: c.hairline)),
       ),
-      Expanded(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(top: DotSpace.m),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: _gutter,
-                child: _HourLabels(labels: hourLabels, minutes: axisMinutes),
-              ),
-              for (final c in columns) Expanded(child: c),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-
-  Widget _headers(BuildContext context) => Row(
-    children: [
-      const SizedBox(width: _gutter),
-      for (final d in loads)
-        Expanded(
-          child: _DayHeader(
-            load: d,
-            isToday: d.date == today,
-            tag: identical(d, summary.busiest)
-                ? context.l10n.weekBusiestTag
-                : identical(d, summary.lightest)
-                ? context.l10n.weekLightestTag
-                : null,
-          ),
-        ),
-    ],
-  );
-}
-
-class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.load, required this.isToday, this.tag});
-
-  final DayLoad load;
-  final bool isToday;
-  final String? tag;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final c = t.colors;
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final day = DateFormat.E(locale).format(load.date);
-    final ink = isToday ? c.accentInk : null;
-    String length(int m) => formatDurationShort(l10n, m);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DotSpace.xs),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: DotSpace.xs,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Semantics(
-                  header: true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: SingleChildScrollView(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(width: hourGutter(context)),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _heads,
+                scrollDirection: Axis.horizontal,
+                physics: const NeverScrollableScrollPhysics(),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        isToday ? l10n.weekTodayDay(day) : day,
-                        style: t.styles.rowMeta.copyWith(color: ink),
-                      ),
-                      Text(
-                        DateFormat.d(locale).format(load.date),
-                        style: t.styles.cardTitle.copyWith(color: ink),
-                      ),
+                      for (final d in widget.loads)
+                        SizedBox(
+                          width: width,
+                          child: widget.long
+                              ? GridLongHeader(load: d, today: widget.today)
+                              : GridDayHeader(load: d, today: widget.today),
+                        ),
                     ],
                   ),
                 ),
               ),
-              CapacityRing(
-                share: load.share,
-                plannedMinutes: load.plannedMinutes,
-                label: l10n.capacityRingLabel(
-                  length(load.plannedMinutes),
-                  length(load.awakeMinutes),
-                ),
-              ),
-            ],
-          ),
-          Wrap(
-            spacing: DotSpace.xs,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(
-                l10n.weekDayFree(length(load.freeMinutes)),
-                style: t.styles.rowMeta,
-              ),
-              if (tag case final text?) WeekTag(text: text, accent: isToday),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
-/// "7 AM", "10 AM" … beside the axis, every three hours.
-class _HourLabels extends StatelessWidget {
-  const _HourLabels({required this.labels, required this.minutes});
-
-  final List<String> labels;
-  final int minutes;
-
-  static const _every = 180;
-
-  @override
-  Widget build(BuildContext context) {
-    final style = DotTheme.of(context).styles.rowMeta;
-    return SizedBox(
-      height: minutes * WeekScale.pxPerMinute,
-      child: Stack(
-        children: [
-          for (final (i, label) in labels.indexed)
-            Positioned(
-              top: i * _every * WeekScale.pxPerMinute,
-              right: DotSpace.s,
-              child: ExcludeSemantics(child: Text(label, style: style)),
+  Widget _grid(BuildContext context, double width) {
+    final c = DotTheme.of(context).colors;
+    final now = widget.nowY;
+    return SingleChildScrollView(
+      controller: _down,
+      child: SizedBox(
+        height: _height,
+        child: Stack(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: hourGutter(context),
+                  child: GridHourLabels(labels: widget.hourLabels),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: _across,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (final col in widget.columns)
+                          SizedBox(width: width, height: _height, child: col),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-        ],
+            if (now != null) ...[
+              Positioned(
+                left: hourGutter(context),
+                right: 0,
+                top: now,
+                height: DotSpace.hairline,
+                child: IgnorePointer(child: ColoredBox(color: c.nowLine)),
+              ),
+              if (widget.nowText case final text?)
+                Positioned(
+                  left: DotSpace.xxs + DotSpace.hairline,
+                  top: now - DotSpace.s,
+                  child: GridNowBead(text: text),
+                ),
+            ],
+          ],
+        ),
       ),
     );
   }

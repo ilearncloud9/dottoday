@@ -3,11 +3,20 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
-/// The Week board's scale (`A-mac-week-alt3-board`: 36 px an hour).
+/// The hour grid's scale (E-FullA-v2 Week: 84 px an hour, a short task
+/// a 21 tall pill).
 abstract final class WeekScale {
-  static const double pxPerMinute = .6;
-  static const double minCard = 32;
-  static const double gap = DotSpace.xs;
+  static const double pxPerMinute = DotSize.gridHour / Duration.minutesPerHour;
+  static const double minCard = DotSize.gridPill;
+
+  /// Shorter than this a task is a one-line pill (a 30 min task is a 42
+  /// tall block, E-FullA-v2's Dentist).
+  static const int pillUnder = 30;
+
+  /// The axis starts half an hour before its first whole hour, so that
+  /// hour's label and line clear the day headers (E-FullA-v2: 7 AM 42
+  /// below them).
+  static const int leadMinutes = 30;
 }
 
 /// One day as the board draws it.
@@ -93,50 +102,33 @@ class WeekDropBox extends StatelessWidget {
   }
 }
 
-/// The dotted spine down a day column.
-final class WeekSpine extends CustomPainter {
-  const WeekSpine({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = color;
-    for (var y = 0.0; y < size.height; y += DotSpace.s) {
-      canvas.drawCircle(Offset(size.width / 2, y), size.width / 2, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(WeekSpine old) => old.color != color;
-}
-
-/// "Busiest" / "Lightest" under a day's free time.
-class WeekTag extends StatelessWidget {
-  const WeekTag({required this.text, this.accent = false, super.key});
+/// The cue line: quiet accent text (11 §D, no warning colour).
+class GridCueLine extends StatelessWidget {
+  const GridCueLine({super.key, required this.text, required this.onTap});
 
   final String text;
-
-  /// Tinted when on today's column.
-  final bool accent;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final c = t.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: accent ? c.accentTint : c.outline,
-        borderRadius: BorderRadius.circular(DotRadii.chipAndroid),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: DotSpace.xs,
-          vertical: DotSpace.xxs,
-        ),
-        child: Text(
-          text,
-          style: t.styles.rowMeta.copyWith(color: accent ? c.accentInk : null),
+    return Semantics(
+      button: true,
+      label: text,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: DotSpace.s,
+            vertical: DotSpace.xxs,
+          ),
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: t.styles.gridMeta.copyWith(color: t.colors.accentText),
+          ),
         ),
       ),
     );

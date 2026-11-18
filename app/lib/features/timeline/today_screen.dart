@@ -20,7 +20,7 @@ import 'package:dottoday/features/timeline/widgets/today_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
 import 'package:dottoday/features/timeline/widgets/today_month.dart';
 import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
-import 'package:dottoday/features/timeline/widgets/today_spread.dart';
+import 'package:dottoday/features/timeline/widgets/today_three_days.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
@@ -133,10 +133,10 @@ class TodayScreen extends ConsumerWidget {
                       spread &&
                           AppLayout.classOf(context, width: box.maxWidth) ==
                               WidthClass.expanded
-                      // The Workspace's views (ED-073, ED-333): 3 days is
-                      // the spread; Day the shown day alone.
+                      // The Workspace's views (ED-073, ED-333): 3 days on
+                      // the hour grid; Day the shown day alone.
                       ? threeDays
-                            ? TodaySpread(
+                            ? TodayThreeDays(
                                 shown: shown,
                                 today: today,
                                 onSelect: select,

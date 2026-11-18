@@ -1732,11 +1732,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dayCardTomorrowSuffix => ' · Morgen';
 
   @override
-  String spreadDoneOf(int done, int total) {
-    return '$done von $total';
-  }
-
-  @override
   String spreadPlanned(int count) {
     return '$count geplant';
   }
@@ -1751,14 +1746,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get spreadNextDay => 'Nächster Tag';
-
-  @override
-  String get spreadDropToPlan => 'zum Planen hier ablegen';
-
-  @override
-  String spreadDropToPlanLabel(String day) {
-    return 'Leg eine Aufgabe hier ab, um sie für $day zu planen';
-  }
 
   @override
   String threadDropInbox(String duration) {
@@ -1942,7 +1929,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String weekTodayDay(String day) {
-    return '$day · heute';
+    return '$day · Heute';
+  }
+
+  @override
+  String gridDayDone(String count) {
+    return '$count erledigt';
+  }
+
+  @override
+  String gridTodayCount(String done, String total, String planned) {
+    return '$done von $total · $planned';
   }
 
   @override

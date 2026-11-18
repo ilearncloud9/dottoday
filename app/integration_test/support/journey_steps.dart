@@ -59,11 +59,10 @@ Future<void> scrollTo(
   expect(finder, findsWidgets);
 }
 
-/// The day card shown now: the spread's raised card (its neighbours are
-/// side days), or on the pager the card nearest the middle of the screen
-/// (neighbours stay built either side).
+/// The day card shown now: on the pager the card nearest the middle of
+/// the screen (neighbours stay built either side), or the Day view's one.
 Finder shownCard(WidgetTester tester) {
-  final raised = find.byWidgetPredicate((w) => w is DayCard && w.side == null);
+  final raised = find.byType(DayCard);
   final count = raised.evaluate().length;
   final middle =
       tester.view.physicalSize.width / tester.view.devicePixelRatio / 2;

@@ -41,6 +41,7 @@ class WeekView extends ConsumerWidget {
     required this.onNext,
     required this.onToday,
     required this.onMonth,
+    this.cues = true,
     super.key,
   });
 
@@ -53,6 +54,10 @@ class WeekView extends ConsumerWidget {
   final VoidCallback onNext;
   final VoidCallback onToday;
   final VoidCallback onMonth;
+
+  /// The week's header and cue chips (Busiest, Lightest, Free, Done);
+  /// 3 days shows the grid alone (E-R2-30).
+  final bool cues;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,51 +76,56 @@ class WeekView extends ConsumerWidget {
     ];
     final summary = WeekSummary.of(loads);
     final (first, last) = _axisHours(shapes, data, zone);
-    final axisMinutes = (last - first) * Duration.minutesPerHour;
+    final axisMinutes =
+        (last - first) * Duration.minutesPerHour + WeekScale.leadMinutes * 2;
+    final todayAt = days.indexOf(today);
+    final axisStart = todayAt < 0 ? null : _axisStart(zone, today, first);
+    final use24h = use24hFor(context, profile.settings.use24h);
     final board = WeekBoard(
       loads: loads,
-      summary: summary,
       today: today,
       hourLabels: _labels(context, first, last),
       axisMinutes: axisMinutes,
+      nowY: axisStart == null
+          ? null
+          : nowUtc.difference(axisStart).inSeconds /
+                Duration.secondsPerMinute *
+                WeekScale.pxPerMinute,
+      nowText: timeOfUtc(context, zone, nowUtc, use24h: use24h),
+      long: !cues,
       columns: [
         for (final (i, d) in data.indexed)
           _column(context, ref, d, shapes[i], loads[i], first, axisMinutes),
       ],
     );
+    if (!cues) return _keys(board);
+    // The header (or, in the Workspace, the cue chips) over the grid; the
+    // grid runs to the content's edges (E-FullA-v2 Week).
     return _keys(
-      Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          DotSpace.xxl,
-          DotSpace.xl,
-          DotSpace.xl,
-          0,
-        ),
-        child: LayoutBuilder(
-          builder: (context, box) => Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.l,
-            children: [
-              // At large text the header may be taller than the window:
-              // it gets half and scrolls itself, the board keeps the rest
-              // (M3f.9b).
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: box.maxHeight / 2),
-                child: SingleChildScrollView(
-                  child: WeekHeader(
-                    days: days,
-                    today: today,
-                    summary: summary,
-                    onPrevious: onPrevious,
-                    onNext: onNext,
-                    onToday: onToday,
-                    onMonth: onMonth,
-                  ),
+      LayoutBuilder(
+        builder: (context, box) => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // At large text the header may be taller than the window: it
+            // gets half and scrolls itself, the grid keeps the rest
+            // (M3f.9b).
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: box.maxHeight / 2),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(DotSpace.m),
+                child: WeekHeader(
+                  days: days,
+                  today: today,
+                  summary: summary,
+                  onPrevious: onPrevious,
+                  onNext: onNext,
+                  onToday: onToday,
+                  onMonth: onMonth,
                 ),
               ),
-              Expanded(child: board),
-            ],
-          ),
+            ),
+            Expanded(child: board),
+          ],
         ),
       ),
     );
@@ -173,14 +183,21 @@ class WeekView extends ConsumerWidget {
     return (first, last <= first ? first + 1 : last);
   }
 
+  /// Every whole hour of the axis, "7 AM" … (the last one too).
   List<String> _labels(BuildContext context, int first, int last) {
     final locale = Localizations.localeOf(context).toLanguageTag();
     final format = DateFormat.j(locale);
     return [
-      for (var h = first; h < last; h += 3)
+      for (var h = first; h <= last && h < 24; h++)
         format.format(DateTime(2026, 1, 1, h)),
     ];
   }
+
+  /// The axis' top on [date]: half an hour before [firstHour] (DST-aware).
+  static DateTime _axisStart(tz.Location zone, DateTime date, int firstHour) =>
+      ClockTime(firstHour, 0)
+          .onDate(zone, date)
+          .subtract(const Duration(minutes: WeekScale.leadMinutes));
 
   Widget _column(
     BuildContext context,
@@ -208,7 +225,7 @@ class WeekView extends ConsumerWidget {
             if (o.startUtc case final s?)
               o.id: (startUtc: s, minutes: o.durationMin),
         },
-        axisStartUtc: ClockTime(firstHour, 0).onDate(zone, date),
+        axisStartUtc: _axisStart(zone, date, firstHour),
         isToday: isToday,
         open: !date.isBefore(today),
         freeText: formatDurationShort(l10n, load.freeMinutes),

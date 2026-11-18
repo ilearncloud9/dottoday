@@ -1363,10 +1363,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dayCardTomorrowSuffix => pseudo(super.dayCardTomorrowSuffix);
 
   @override
-  String spreadDoneOf(int done, int total) =>
-      pseudo(super.spreadDoneOf(done, total));
-
-  @override
   String spreadPlanned(int count) => pseudo(super.spreadPlanned(count));
 
   @override
@@ -1378,13 +1374,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get spreadNextDay => pseudo(super.spreadNextDay);
-
-  @override
-  String get spreadDropToPlan => pseudo(super.spreadDropToPlan);
-
-  @override
-  String spreadDropToPlanLabel(String day) =>
-      pseudo(super.spreadDropToPlanLabel(day));
 
   @override
   String threadDropInbox(String duration) =>
@@ -1511,6 +1500,13 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String weekTodayDay(String day) => pseudo(super.weekTodayDay(day));
+
+  @override
+  String gridDayDone(String count) => pseudo(super.gridDayDone(count));
+
+  @override
+  String gridTodayCount(String done, String total, String planned) =>
+      pseudo(super.gridTodayCount(done, total, planned));
 
   @override
   String get weekViewWeek => pseudo(super.weekViewWeek);

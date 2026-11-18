@@ -2588,18 +2588,6 @@
   "@dayCardTomorrowSuffix": {
     "description": "After the weekday on the spread's next-day column (Mac/web Today)."
   },
-  "spreadDoneOf": "{done} of {total}",
-  "@spreadDoneOf": {
-    "description": "Side-day summary of a past day on the Mac/web spread, e.g. '7 of 7'.",
-    "placeholders": {
-      "done": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "spreadPlanned": "{count} planned",
   "@spreadPlanned": {
     "description": "Side-day summary of a future day on the Mac/web spread, e.g. '4 planned'.",
@@ -2631,19 +2619,6 @@
   "spreadNextDay": "Next day",
   "@spreadNextDay": {
     "description": "Tooltip of the › button on the Mac/web spread."
-  },
-  "spreadDropToPlan": "drop here to plan",
-  "@spreadDropToPlan": {
-    "description": "Dashed drop target at the end of a future day on the Mac/web spread."
-  },
-  "spreadDropToPlanLabel": "Drop a task here to plan it on {day}",
-  "@spreadDropToPlanLabel": {
-    "description": "Screen-reader label of the spread's drop target.",
-    "placeholders": {
-      "day": {
-        "type": "String"
-      }
-    }
   },
   "threadDropInbox": "{duration} free · drop an inbox task here",
   "@threadDropInbox": {
@@ -2952,11 +2927,35 @@
       }
     }
   },
-  "weekTodayDay": "{day} · today",
+  "weekTodayDay": "{day} · Today",
   "@weekTodayDay": {
     "description": "Today's Week column heading: 'Wed · today'.",
     "placeholders": {
       "day": {
+        "type": "String"
+      }
+    }
+  },
+  "gridDayDone": "{count} done",
+  "@gridDayDone": {
+    "description": "An hour-grid day header's count on a past day: '4 done'.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "gridTodayCount": "{done} of {total} · {planned}",
+  "@gridTodayCount": {
+    "description": "Today's hour-grid header: '3 of 9 · 7 h 40' (done of all, time planned).",
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "planned": {
         "type": "String"
       }
     }

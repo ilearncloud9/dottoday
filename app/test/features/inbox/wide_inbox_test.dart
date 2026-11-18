@@ -145,11 +145,18 @@ void main() {
     // The panel scrolls: bring the row into view first.
     await tester.ensureVisible(find.text('Book flights'));
     await tester.pumpAndSettle();
-    await _mouseDrag(
-      tester,
-      find.text('Book flights'),
-      find.text('drop here to plan'),
+    // Onto tomorrow's column on the hour grid, below its header.
+    final g = await tester.startGesture(
+      tester.getCenter(find.text('Book flights')),
+      kind: PointerDeviceKind.mouse,
     );
+    await g.moveBy(const Offset(0, 20));
+    await tester.pump();
+    final head = tester.getCenter(find.textContaining('· Tomorrow'));
+    await g.moveTo(head + const Offset(0, 300));
+    await tester.pump();
+    await g.up();
+    await tester.pumpAndSettle();
     expect(_start(repo, 'Book flights')!.day, 22);
   });
 

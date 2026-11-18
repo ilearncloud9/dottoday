@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The Workspace's Day view at the expanded width (ED-073, ED-333): the
-/// shown day alone, its card centred at a readable width. Part 2 of
-/// M19.2 draws it on the hour grid; 3 days is [TodaySpread].
+/// shown day alone, its thread on the hour scale under the day's header
+/// (E-FullA-v2 web Day, M19.2 part 2); 3 days is `TodayThreeDays`.
 class TodayDayWide extends ConsumerWidget {
   const TodayDayWide({required this.shown, required this.today, super.key});
 
@@ -29,16 +29,25 @@ class TodayDayWide extends ConsumerWidget {
         AllDayChips(date: shown),
         TodayPrompt(date: shown, today: today),
         Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: DotSize.readableColumn,
-              ),
-              child: low
-                  ? LowEnergyView(today: today)
-                  : DayPage(key: ValueKey(shown), date: shown, today: today),
-            ),
-          ),
+          child: low
+              ? Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: DotSize.readableColumn,
+                    ),
+                    child: LowEnergyView(today: today),
+                  ),
+                )
+              : ColoredBox(
+                  color: DotTheme.of(context).colors.canvas,
+                  child: DayPage(
+                    key: ValueKey(shown),
+                    date: shown,
+                    today: today,
+                    page: true,
+                    hours: true,
+                  ),
+                ),
         ),
       ],
     );

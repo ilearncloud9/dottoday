@@ -7,7 +7,7 @@ const f1Rows = <String, ParityRow>{
     tests: [
       'test/shared/dot/thread_day_test.dart',
       'test/features/timeline/today_screen_test.dart',
-      'test/features/timeline/today_spread_test.dart',
+      'test/features/timeline/today_three_days_test.dart',
       'test/web_parity_test.dart',
     ],
     all: ci,
@@ -30,7 +30,7 @@ const f1Rows = <String, ParityRow>{
     macos: jMac,
     note:
         'Resize is the end grip only (M3b.5); the start moves with the task. '
-        'Touch holds 250 ms, a mouse lifts at once (`today_spread_test`).',
+        'Touch holds 250 ms, a mouse lifts at once (`today_three_days_test`).',
   ),
   'F1.3': ParityRow(
     tests: [
@@ -48,7 +48,7 @@ const f1Rows = <String, ParityRow>{
     tests: [
       'test/features/timeline/running_late_sheet_test.dart',
       'test/domain/scheduling/running_late_test.dart',
-      'test/features/timeline/today_spread_test.dart',
+      'test/features/timeline/today_three_days_test.dart',
     ],
     all: ci,
   ),
@@ -121,7 +121,7 @@ const f1Rows = <String, ParityRow>{
     tests: [
       'test/shared/dot/thread_drag_test.dart',
       'test/domain/scheduling/drag_math_test.dart',
-      'test/features/timeline/today_spread_test.dart',
+      'test/features/timeline/today_three_days_test.dart',
     ],
     all: ci,
     ios: jIos,

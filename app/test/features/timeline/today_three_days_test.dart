@@ -1,6 +1,8 @@
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
-import 'package:dottoday/features/timeline/widgets/today_spread.dart';
+import 'package:dottoday/features/timeline/week/week_board.dart';
+import 'package:dottoday/features/timeline/widgets/today_three_days.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,52 +13,54 @@ import '../../support/a11y.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';
 
-// T5, the Mac/web three-day spread (docs/09 M3e.1,
-// `A-mac-today-alt1-spread`). Wednesday 21 Oct, 09:22 in Berlin.
-// Tall enough for the day thread's stretched rows (ADR-0015).
+// 3 days on the hour grid (E-R2-30, ED-333; M19.2 part 2): yesterday,
+// today and tomorrow as Week draws them. Wednesday 21 Oct, 09:22 in
+// Berlin.
 const _wide = Size(1280, 1400);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('expanded: yesterday, today on its card, tomorrow', (
+  testWidgets('expanded: yesterday, today and tomorrow on the hour grid', (
     tester,
   ) async {
     await pumpToday(tester, size: _wide, threeDays: true);
-    expect(find.byType(TodaySpread), findsOneWidget);
+    expect(find.byType(TodayThreeDays), findsOneWidget);
+    expect(find.byType(WeekBoard), findsOneWidget);
     expect(find.byType(DayPager), findsNothing);
     expect(find.text('Good morning, Kody'), findsOneWidget);
-    expect(find.text('Wednesday, October 21 · 2 of 13 done'), findsOneWidget);
-    expect(find.text('Tuesday · Yesterday'), findsOneWidget);
-    expect(find.text('Wednesday · Today'), findsOneWidget);
-    expect(find.text('Thursday · Tomorrow'), findsOneWidget);
-    expect(find.text('Nothing planned'), findsOneWidget);
-    expect(find.text('1 planned'), findsOneWidget);
-    expect(find.text('drop here to plan'), findsOneWidget);
-    expect(find.text('Running late'), findsOneWidget);
+    expect(find.text('Tuesday, October 20 · Yesterday'), findsOneWidget);
+    expect(find.text('Wednesday, October 21 · Today'), findsOneWidget);
+    expect(find.text('Thursday, October 22 · Tomorrow'), findsOneWidget);
+    expect(find.text('2 of 13 done'), findsOneWidget);
+    expect(find.text('Reply to email'), findsOneWidget);
   });
 
   testWidgets('medium and compact keep the pager', (tester) async {
     await pumpToday(tester, size: const Size(839, 900));
-    expect(find.byType(TodaySpread), findsNothing);
+    expect(find.byType(TodayThreeDays), findsNothing);
     expect(find.byType(DayPager), findsOneWidget);
   });
 
-  testWidgets('› and ‹ step a day; away from today the pill returns', (
-    tester,
-  ) async {
+  testWidgets('Go › Next Day and Previous Day step a day', (tester) async {
+    Future<void> step(int days) async {
+      Actions.invoke(
+        tester.element(find.byType(WeekBoard)),
+        ShowDayIntent(days),
+      );
+      await tester.pumpAndSettle();
+    }
+
     await pumpToday(tester, size: _wide, threeDays: true);
-    await tester.tap(find.byTooltip('Next day'));
-    await tester.pumpAndSettle();
-    expect(find.text('Wednesday · Today'), findsOneWidget);
-    expect(find.text('Friday'), findsOneWidget);
-    expect(find.text('Running late'), findsNothing);
-    await tester.tap(find.text('Today').last);
-    await tester.pumpAndSettle();
-    expect(find.text('Good morning, Kody'), findsOneWidget);
-    await tester.tap(find.byTooltip('Previous day'));
-    await tester.pumpAndSettle();
-    expect(find.text('Monday'), findsOneWidget);
+    await step(1);
+    // Yesterday, Today and Tomorrow stay relative to today.
+    expect(find.text('Wednesday, October 21 · Today'), findsOneWidget);
+    expect(find.text('Friday, October 23'), findsOneWidget);
+    expect(find.text('Tuesday, October 20 · Yesterday'), findsNothing);
+    await step(-1);
+    await step(-1);
+    expect(find.text('Monday, October 19'), findsOneWidget);
+    expect(find.text('Tuesday, October 20 · Yesterday'), findsOneWidget);
   });
 
   testWidgets('Running late +15: a plan, then the rest of today, with Undo', (
@@ -90,22 +94,23 @@ void main() {
     expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
   });
 
-  group('drag between columns (M3e.1)', () {
+  group('drag between days (M3e.1)', () {
+    /// Drags [title] to the same height in yesterday's column.
     Future<void> drag(
       WidgetTester tester,
-      String title,
-      String gap, {
+      String title, {
       required PointerDeviceKind kind,
       Duration hold = Duration.zero,
     }) async {
-      final g = await tester.startGesture(
-        tester.getCenter(find.text(title)),
-        kind: kind,
+      final from = tester.getCenter(find.text(title));
+      final yesterday = tester.getCenter(
+        find.text('Tuesday, October 20 · Yesterday'),
       );
+      final g = await tester.startGesture(from, kind: kind);
       await tester.pump(hold);
       await g.moveBy(const Offset(0, 20));
       await tester.pump();
-      await g.moveTo(tester.getCenter(find.text(gap)));
+      await g.moveTo(Offset(yesterday.dx, from.dy));
       await tester.pump();
       await g.up();
       await tester.pumpAndSettle();
@@ -116,12 +121,7 @@ void main() {
     ) async {
       final repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
       await pumpToday(tester, size: _wide, threeDays: true, repo: repo);
-      await drag(
-        tester,
-        'Reply to email',
-        '15 h free',
-        kind: PointerDeviceKind.mouse,
-      );
+      await drag(tester, 'Reply to email', kind: PointerDeviceKind.mouse);
       expect(find.textContaining('Reply to email moved to'), findsOneWidget);
       final moved = repo.rows.singleWhere((o) => o.title == 'Reply to email');
       expect(moved.startUtc!.toUtc().day, 20);
@@ -129,12 +129,7 @@ void main() {
 
     testWidgets('touch without the hold does not lift', (tester) async {
       await pumpToday(tester, size: _wide, threeDays: true);
-      await drag(
-        tester,
-        'Reply to email',
-        '15 h free',
-        kind: PointerDeviceKind.touch,
-      );
+      await drag(tester, 'Reply to email', kind: PointerDeviceKind.touch);
       expect(find.textContaining('moved to'), findsNothing);
     });
 
@@ -143,7 +138,6 @@ void main() {
       await drag(
         tester,
         'Reply to email',
-        '15 h free',
         kind: PointerDeviceKind.touch,
         hold: DotTouch.liftDelay + const Duration(milliseconds: 50),
       );

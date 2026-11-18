@@ -8,6 +8,7 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
+import 'package:dottoday/shared/dot/thread_hours.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/thread_outside.dart';
 import 'package:dottoday/shared/dot/thread_overlap.dart';
@@ -17,8 +18,10 @@ import 'package:flutter/material.dart';
 
 export 'thread_drag.dart' show ThreadDrag;
 export 'thread_fold.dart' show foldEarlier;
+export 'thread_hours.dart'
+    show ThreadHours, ThreadHourSpan, ThreadHourMark, hourGutter;
 export 'thread_models.dart';
-export 'thread_pieces.dart' show DashedPillPainter, GapStyle;
+export 'thread_pieces.dart' show DashedPillPainter;
 
 /// Callbacks a [Thread] reports with the task's id.
 @immutable
@@ -87,10 +90,9 @@ class Thread extends StatefulWidget {
   const Thread({
     required this.entries,
     this.actions = const ThreadActions(),
-    this.side = false,
-    this.dayLabel = '',
     this.anchorIndex,
     this.anchorKey,
+    this.hours,
     super.key,
   }) : sliver = false;
 
@@ -99,10 +101,9 @@ class Thread extends StatefulWidget {
   const Thread.sliver({
     required this.entries,
     this.actions = const ThreadActions(),
-    this.side = false,
-    this.dayLabel = '',
     this.anchorIndex,
     this.anchorKey,
+    this.hours,
     super.key,
   }) : sliver = true;
 
@@ -112,18 +113,14 @@ class Thread extends StatefulWidget {
   final List<ThreadEntry> entries;
   final ThreadActions actions;
 
-  /// A side day of the Mac/web spread: [DotSize.macRowDot] rows without
-  /// the done circle, gaps that read "1 h 30 free", and the last future
-  /// one as the "drop here to plan" box (`A-mac-today-alt1-spread`).
-  final bool side;
-
-  /// The day, for the drop box's screen-reader label.
-  final String dayLabel;
-
   /// The entry that carries [anchorKey], so a scroll view can find its
   /// row (today's card opens at now, ED-336).
   final int? anchorIndex;
   final GlobalKey? anchorKey;
+
+  /// The Day view's hour scale (E-FullA-v2 web Day): rows as tall as their
+  /// time with the hours in a gutter; null, rows keep their own heights.
+  final ThreadHours? hours;
 
   @override
   State<Thread> createState() => _ThreadState();
@@ -188,9 +185,6 @@ class _ThreadState extends State<Thread> {
   Widget build(BuildContext context) {
     final entries = widget.entries;
     final solid = threadSolid(entries);
-    final box = widget.side
-        ? entries.lastIndexWhere((e) => e is ThreadGap && e.addable)
-        : -1;
     final empty =
         widget.actions.emptyDay != null &&
             !entries.any((e) => e is ThreadTaskEntry)
@@ -203,10 +197,8 @@ class _ThreadState extends State<Thread> {
         return _hops.departing(() => setState(() => _hops.closingAt = null));
       }
       final i = closing != null && n > closing ? n - 1 : n;
-      return _keyed(
-        i,
-        _entry(entries[i], solid[i], dropBox: i == box, empty: i == empty),
-      );
+      final entry = _entry(entries[i], solid[i], empty: i == empty);
+      return _keyed(i, _onHours(i, entry));
     }
 
     final count = entries.length + (closing == null ? 0 : 1);
@@ -222,6 +214,16 @@ class _ThreadState extends State<Thread> {
     );
   }
 
+  /// [row] on the hour scale, when the thread has one.
+  Widget _onHours(int i, Widget row) => switch (widget.hours) {
+    final h? => ThreadHourRow(
+      span: i < h.spans.length ? h.spans[i] : null,
+      pxPerMinute: h.pxPerMinute,
+      child: row,
+    ),
+    null => row,
+  };
+
   Widget _keyed(int i, Widget row) => switch (widget.anchorKey) {
     final key? when i == widget.anchorIndex => KeyedSubtree(
       key: key,
@@ -231,12 +233,7 @@ class _ThreadState extends State<Thread> {
   };
 
   /// The row for [e]; [solid] is its colour from [threadSolid].
-  Widget _entry(
-    ThreadEntry e,
-    TaskColor? solid, {
-    required bool dropBox,
-    bool empty = false,
-  }) {
+  Widget _entry(ThreadEntry e, TaskColor? solid, {bool empty = false}) {
     final a = widget.actions;
     final drag = a.drag;
     return switch (e) {
@@ -250,9 +247,9 @@ class _ThreadState extends State<Thread> {
       ThreadGap(:final span?) when drag != null => _droppable(
         span,
         drag,
-        _gap(e, solid, dropBox: dropBox, empty: empty),
+        _gap(e, solid, empty: empty),
       ),
-      ThreadGap() => _gap(e, solid, dropBox: dropBox, empty: empty),
+      ThreadGap() => _gap(e, solid, empty: empty),
       ThreadNow() => _hops.arriving(NowRow(now: e, solid: solid)),
       ThreadTaskEntry(:final task) => _task(task, solid: solid),
       ThreadOverlap() => OverlapRow(overlap: e),
@@ -270,7 +267,7 @@ class _ThreadState extends State<Thread> {
     return CapRow(
       cap: cap,
       solid: solid,
-      size: widget.side ? DotSize.macRowDot : DotSize.threadCap,
+      size: DotSize.threadCap,
       onTap: onCap == null ? null : () => onCap(cap.windDown),
     );
   }
@@ -296,22 +293,11 @@ class _ThreadState extends State<Thread> {
   ThreadTask? _taskOf(String id) =>
       threadTasks(widget.entries).where((t) => t.id == id).firstOrNull;
 
-  Widget _gap(
-    ThreadGap gap,
-    TaskColor? solid, {
-    required bool dropBox,
-    bool empty = false,
-  }) => GapRow(
+  Widget _gap(ThreadGap gap, TaskColor? solid, {bool empty = false}) => GapRow(
     gap: gap,
     solid: solid,
     body: empty ? widget.actions.emptyDay?.call(gap.minutes) : null,
     onAdd: widget.actions.onAddHere,
-    dayLabel: widget.dayLabel,
-    style: dropBox
-        ? GapStyle.dropBox
-        : widget.side
-        ? GapStyle.plain
-        : GapStyle.pill,
   );
 
   /// A task row with selection and drag around it, as far as enabled;
@@ -336,8 +322,7 @@ class _ThreadState extends State<Thread> {
         : TaskRow(
             task: task,
             solid: solid,
-            dotSize: widget.side ? DotSize.macRowDot : DotSize.threadDot,
-            doneCircle: !widget.side,
+            dotSize: DotSize.threadDot,
             onToggleDone: _bind(onDone, task),
             onOpen: _open(task),
             // Smallest step's Start opens Focus, which records the start.
@@ -345,7 +330,7 @@ class _ThreadState extends State<Thread> {
             onUnstick: _answer(a.onUnstick, task),
           );
     // Fixed row heights by state (E rules §5.2); the now card sets its own.
-    if (!widget.side && task.state != DotState.live) {
+    if (task.state != DotState.live) {
       row = ConstrainedBox(
         constraints: BoxConstraints(minHeight: threadRowHeight(task.state)),
         child: row,

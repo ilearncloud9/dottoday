@@ -1,14 +1,17 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
-/// A task on the Week board (`A-mac-week-alt3-board`): its dot and title,
-/// and when there is room the time ("38 min left" while live, "· skipped").
-/// Done titles are struck; the live card has the accent outline.
+/// A task on the hour grid (E-FullA-v2 Week, M19.2 part 2): a card as tall
+/// as its time with its ring on the column's thread, the title and the
+/// time. A task under half an hour is a one-line pill; a block narrowed by
+/// an overlap keeps a small ring and its title. Done titles go quiet; a
+/// calendar event is sunk with a dashed edge.
 ///
 /// A task Smallest step or Unstick asks about (M10.6, M10.7) shows that
 /// cue as the card's last line, its own tap target ([onCue]); a card too
@@ -17,6 +20,7 @@ class WeekCard extends StatelessWidget {
   const WeekCard({
     required this.task,
     required this.height,
+    this.narrow = false,
     this.onOpen,
     this.onCue,
     super.key,
@@ -24,126 +28,200 @@ class WeekCard extends StatelessWidget {
 
   final ThreadTask task;
   final double height;
+
+  /// Sharing its column with an overlapping task.
+  final bool narrow;
   final VoidCallback? onOpen;
 
   /// The cue tapped: Smallest step's Start or Unstick's question.
   final VoidCallback? onCue;
 
-  /// Tall enough for a second line.
-  static const double _twoLines = 48;
+  /// Tall enough for the cue under the title and time (an hour).
+  static const double _cueRoom = DotSize.gridHour - DotSpace.s;
 
-  /// Tall enough for the time and the cue under the title.
-  static const double _threeLines = 68;
+  bool get _pill => task.minutes < WeekScale.pillUnder;
 
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     final l10n = context.l10n;
-    final live = task.state == DotState.live;
     final cue = onCue == null ? null : weekCardCue(l10n, task);
-    final cueLine = cue != null && height >= _twoLines;
-    final timeLine = height >= (cueLine ? _threeLines : _twoLines);
+    final cueLine = cue != null && !_pill && !narrow && height >= _cueRoom;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(
+        _pill ? DotSize.gridPill / 2 : DotRadii.block,
+      ),
+    );
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: Semantics(
+            button: onOpen != null,
+            label: taskRowLabel(l10n, task),
+            excludeSemantics: true,
+            child: InkWell(onTap: onOpen, customBorder: shape, child: _lines()),
+          ),
+        ),
+        if (cueLine) GridCueLine(text: cue, onTap: onCue!),
+      ],
+    );
     return Semantics(
       container: true,
       customSemanticsActions: cue == null || cueLine
           ? null
           : {CustomSemanticsAction(label: cue): onCue!},
       child: Material(
-        color: c.raised,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(DotRadii.card),
-          side: BorderSide(
-            color: live ? c.accent : c.threadAhead,
-            width: live ? DotSize.smallDotOutline : DotSpace.hairline,
-          ),
-        ),
+        color: task.imported ? c.sunk : c.card,
+        shape: shape,
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Semantics(
-                button: onOpen != null,
-                label: taskRowLabel(l10n, task),
-                excludeSemantics: true,
-                child: InkWell(
-                  onTap: onOpen,
-                  child: _Lines(
-                    children: [
-                      _TitleLine(task: task),
-                      if (timeLine) _SecondLine(task: task),
-                    ],
-                  ),
+        child: task.imported
+            ? CustomPaint(
+                foregroundPainter: DashedPillPainter(
+                  color: c.hairlineStrong,
+                  radius: _pill ? null : DotRadii.block,
                 ),
-              ),
-            ),
-            if (cueLine) _CueLine(text: cue, onTap: onCue!),
-          ],
-        ),
+                child: body,
+              )
+            : body,
       ),
     );
   }
+
+  Widget _lines() {
+    if (_pill) return _Pill(task: task);
+    if (narrow) return _Narrow(task: task);
+    return _Block(task: task);
+  }
 }
 
-/// The cue a Week card carries for [task], if any: "Just Gather
+/// The cue a grid block carries for [task], if any: "Just Gather
 /// documents · 10 min?" or "What's the very first thing you'd physically
 /// do?".
 String? weekCardCue(AppLocalizations l10n, ThreadTask task) =>
     task.smallestStep ?? (task.unstick ? l10n.unstickPrompt : null);
 
-/// A card's text, padded; a card's height is its time, so at large text
-/// the lines clip at the card's edge (the label carries the whole reading).
-class _Lines extends StatelessWidget {
-  const _Lines({required this.children});
+/// The ring for [task] at [size], on the column's thread.
+Widget _ring(ThreadTask task, double size) => TaskDot(
+  color: task.color,
+  icon: task.icon,
+  state: task.state,
+  progress: task.progress,
+  calendar: task.imported,
+  size: size,
+  label: task.title,
+);
 
-  final List<Widget> children;
+/// Done and skipped titles go quiet (E-FullA-v2's Monday).
+Color? _titleColor(DotColors c, ThreadTask task) =>
+    task.state == DotState.done || task.state == DotState.skipped
+    ? c.secondary
+    : null;
+
+/// A block (E-FullA-v2): the 32 ring at 5, 5; title and time beside it.
+/// Its height is its time, so at large text the lines clip at its edge
+/// (the label carries the whole reading).
+class _Block extends StatelessWidget {
+  const _Block({required this.task});
+
+  final ThreadTask task;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: DotSpace.s,
-      vertical: DotSpace.xxs,
-    ),
-    child: ClipRect(
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    const pad = DotSpace.xs + DotSpace.hairline;
+    return Padding(
+      padding: const EdgeInsets.all(pad),
+      child: ClipRect(
+        child: OverflowBox(
+          alignment: Alignment.topLeft,
+          maxHeight: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xs + DotSpace.xxs,
+            children: [
+              _ring(task, DotSize.gridRing),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: DotSpace.hairline),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        task.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.styles.gridTitle.copyWith(
+                          color: _titleColor(t.colors, task),
+                        ),
+                      ),
+                      Text(
+                        _time(context.l10n, task),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.styles.gridMeta,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// "9:00 – 11:00", "18 min left" while live, "… · skipped".
+  static String _time(AppLocalizations l10n, ThreadTask task) => switch (task) {
+    ThreadTask(state: DotState.live, minutesLeft: final left?) =>
+      l10n.weekCardLeft(left),
+    ThreadTask(state: DotState.skipped) => l10n.weekCardSkipped(task.timeRange),
+    _ => task.timeRange,
+  };
+}
+
+/// A short task's pill (E-FullA-v2's Team standup): the 17 dot on the
+/// thread and one line of title.
+class _Pill extends StatelessWidget {
+  const _Pill({required this.task});
+
+  final ThreadTask task;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    // The dot's centre sits on the thread, 25 in from the column's edge.
+    const left =
+        DotSize.gridThreadX +
+        DotSize.gridThread / 2 -
+        DotSize.gridInset -
+        DotSize.gridPillDot / 2;
+    return ClipRect(
       child: OverflowBox(
-        alignment: Alignment.topLeft,
+        alignment: AlignmentDirectional.centerStart,
         maxHeight: double.infinity,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
-      ),
-    ),
-  );
-}
-
-/// The cue line: quiet accent text (11 §D, no warning colour).
-class _CueLine extends StatelessWidget {
-  const _CueLine({required this.text, required this.onTap});
-
-  final String text;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Semantics(
-      button: true,
-      label: text,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: DotSpace.s,
-            vertical: DotSpace.xxs,
+          padding: const EdgeInsetsDirectional.only(
+            start: left,
+            end: DotSpace.xs,
           ),
-          child: Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: t.styles.rowMeta.copyWith(color: t.colors.accentInk),
+          child: Row(
+            spacing: DotSpace.s - DotSpace.xxs / 2,
+            children: [
+              _ring(task, DotSize.gridPillDot),
+              Expanded(
+                child: Text(
+                  task.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.styles.gridPill.copyWith(
+                    color: _titleColor(t.colors, task),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -151,69 +229,44 @@ class _CueLine extends StatelessWidget {
   }
 }
 
-class _TitleLine extends StatelessWidget {
-  const _TitleLine({required this.task});
+/// A block narrowed by an overlap (E-FullA-v2's Call with Sam): a 20 ring
+/// and two lines of title.
+class _Narrow extends StatelessWidget {
+  const _Narrow({required this.task});
 
   final ThreadTask task;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final c = t.colors;
-    final done = task.state == DotState.done;
-    final faded = done || task.state == DotState.skipped;
-    return Row(
-      spacing: DotSpace.xs,
-      children: [
-        TaskDot(
-          color: task.color,
-          icon: task.icon,
-          state: task.state,
-          progress: task.progress,
-          size: DotSize.pickerDot,
-          label: task.title,
-        ),
-        Expanded(
-          child: Text(
-            task.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: t.styles.body.copyWith(
-              color: faded ? c.muted : null,
-              decoration: done ? TextDecoration.lineThrough : null,
-              decorationColor: c.muted,
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(DotSpace.xs),
+      child: ClipRect(
+        child: OverflowBox(
+          alignment: Alignment.topLeft,
+          maxHeight: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xs,
+            children: [
+              _ring(
+                task,
+                DotSize.gridPillDot + DotSpace.xs - DotSpace.hairline,
+              ),
+              Expanded(
+                child: Text(
+                  task.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.styles.gridPill.copyWith(
+                    color: _titleColor(t.colors, task),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
-    );
-  }
-}
-
-/// "9:00 – 11:30", "38 min left" or "3:00 – 5:00 · skipped".
-class _SecondLine extends StatelessWidget {
-  const _SecondLine({required this.task});
-
-  final ThreadTask task;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final live = task.state == DotState.live;
-    final text = switch (task) {
-      ThreadTask(state: DotState.live, minutesLeft: final left?) =>
-        l10n.weekCardLeft(left),
-      ThreadTask(state: DotState.skipped) => l10n.weekCardSkipped(
-        task.timeRange,
       ),
-      _ => task.timeRange,
-    };
-    return Text(
-      text,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: t.styles.rowMeta.copyWith(color: live ? t.colors.accentInk : null),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -13,6 +14,7 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
+import 'package:dottoday/features/timeline/state/day_hours.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/earlier_fold.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
@@ -21,6 +23,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/cap_time_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
+import 'package:dottoday/features/timeline/widgets/day_hours_header.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/later_row.dart';
 import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
@@ -38,25 +41,27 @@ import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// One page of the Today pager: [date]'s thread on a [DayCard.page]
-/// (`Main`, ADR-0015);
-/// with [side], a day beside the card on the Mac/web spread (M3e.1).
+/// (`Main`, ADR-0015); with [hours], the Workspace's Day view.
 class DayPage extends ConsumerWidget {
   const DayPage({
     required this.date,
     required this.today,
-    this.side,
     this.page = false,
+    this.hours = false,
     super.key,
   });
 
   final DateTime date;
   final DateTime today;
-  final SideDay? side;
 
   /// The phones' pager page: the thread straight on the page
   /// ([DayCard.page], E-Phones) whose numbers live in the screen header.
   /// Off, the Mac/web spread's titled card.
   final bool page;
+
+  /// The Workspace's Day view (E-FullA-v2 web Day, M19.2 part 2): the page
+  /// thread on the hour scale under the day's header line.
+  final bool hours;
 
   /// How far a drop looks for a task dragged in from another day: a week
   /// either way, as hovering a week-strip day pages there mid-drag
@@ -97,7 +102,7 @@ class DayPage extends ConsumerWidget {
       context,
       ref,
       isToday: date == today,
-      isSide: side != null,
+      isSide: false,
       hasActuals: hasActuals(blocks),
       realityOn: ref.watch(realityModeProvider),
       settings: data.settings,
@@ -145,7 +150,7 @@ class DayPage extends ConsumerWidget {
     );
     // Today folds its done tasks into Earlier on Minimal phones and on the
     // Mac/web card; Full phones keep their rows (ED-164, docs/14 §3).
-    final fold = date == today && side == null && (!page || minimal);
+    final fold = date == today && (!page || minimal);
     final entries = fold
         ? foldEarlier(
             threaded,
@@ -169,15 +174,6 @@ class DayPage extends ConsumerWidget {
           ? (minutes) => EmptyDayBody(date: date, freeMinutes: minutes)
           : null,
     );
-    if (side case final s?) {
-      return DayCard.side(
-        title: DateFormat.EEEE(_locale(context)).format(date),
-        side: s,
-        summary: summary,
-        entries: entries,
-        actions: actions,
-      );
-    }
     final toggle = offerReality
         ? RealityToggle(
             on: reality != null,
@@ -201,6 +197,16 @@ class DayPage extends ConsumerWidget {
             reality: toggle,
             note: note,
             openAtNow: date == today,
+            hours: hours
+                ? dayHours(
+                    entries,
+                    zone: data.day.location,
+                    pxPerMinute: DotSize.gridDayHour / Duration.minutesPerHour,
+                    label: (local) => DateFormat.j(
+                      _locale(context),
+                    ).format(DateTime(2026, 1, 1, local.hour)),
+                  )
+                : null,
           )
         : DayCard(
             title: _title(context),
@@ -213,6 +219,32 @@ class DayPage extends ConsumerWidget {
             note: note,
             openAtNow: date == today,
           );
+    if (hours) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          DayHoursHeader(
+            date: date,
+            isToday: date == today,
+            summary: summary,
+            wake: format.time(shape.wakeUtc),
+            windDown: format.time(shape.bedUtc),
+          ),
+          // The thread keeps a readable width from the gutter.
+          Expanded(
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: hourGutter(context) + DotSize.readableColumn,
+                ),
+                child: card,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
     final insight = reality == null
         ? null
         : realityInsight(blocks, now, learning);

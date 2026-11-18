@@ -195,26 +195,11 @@ class NowRow extends StatelessWidget {
   }
 }
 
-/// How a future gap reads (docs/10 §3 `Thread`).
-enum GapStyle {
-  /// "+ 1 h free · add here" (`Main`); on the wide Mac/web card "+ 1 h
-  /// free · drop an inbox task here" (`A-mac-today-alt1-spread`).
-  pill,
-
-  /// "1 h 30 free", as in the spread's side days.
-  plain,
-
-  /// The dashed "+ drop here to plan" box closing a future side day.
-  dropBox,
-}
-
 /// Free time between tasks; future gaps offer "add here".
 class GapRow extends StatelessWidget {
   const GapRow({
     required this.gap,
     this.onAdd,
-    this.style = GapStyle.pill,
-    this.dayLabel = '',
     this.solid,
     this.body,
     super.key,
@@ -229,10 +214,6 @@ class GapRow extends StatelessWidget {
   /// `threadSolid`); null: dotted.
   final TaskColor? solid;
   final ValueChanged<ThreadGap>? onAdd;
-  final GapStyle style;
-
-  /// The day, for the drop box's screen-reader label.
-  final String dayLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -264,71 +245,17 @@ class GapRow extends StatelessWidget {
     final plain = Text(l10n.threadFree(duration), style: text);
     if (!gap.addable) return plain;
     final tap = onAdd == null ? null : () => onAdd!(gap);
-    return switch (style) {
-      GapStyle.plain => plain,
-      GapStyle.dropBox => _DropBox(
-        label: l10n.spreadDropToPlan,
-        semantics: l10n.spreadDropToPlanLabel(dayLabel),
-        style: text,
-        onTap: tap,
-      ),
-      GapStyle.pill => _AddHere(
-        // Wide screens plan from the Inbox sidebar by dragging (M3e.2).
-        label: switch (gap.fits) {
-          final title? => l10n.threadFreeFits(duration, title),
-          null when InboxBeside.of(context) => l10n.threadDropInbox(duration),
-          null => l10n.threadAddHere(duration),
-        },
-        free: l10n.threadFree(duration),
-        semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
-        style: text,
-        onTap: tap,
-      ),
-    };
-  }
-}
-
-/// "+ drop here to plan" (`A-mac-today-alt1-spread`, tomorrow's column).
-class _DropBox extends StatelessWidget {
-  const _DropBox({
-    required this.label,
-    required this.semantics,
-    required this.style,
-    this.onTap,
-  });
-
-  final String label;
-  final String semantics;
-  final TextStyle style;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    return Semantics(
-      button: true,
-      label: semantics,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        child: CustomPaint(
-          painter: DashedPillPainter(
-            color: c.threadAhead,
-            radius: DotRadii.card,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(DotSpace.l),
-            child: Column(
-              spacing: DotSpace.xs,
-              children: [
-                DotIcon(DotGlyphs.add, color: c.muted, size: DotSize.rowIcon),
-                Text(label, style: style, textAlign: TextAlign.center),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return _AddHere(
+      // Wide screens plan from the Inbox sidebar by dragging (M3e.2).
+      label: switch (gap.fits) {
+        final title? => l10n.threadFreeFits(duration, title),
+        null when InboxBeside.of(context) => l10n.threadDropInbox(duration),
+        null => l10n.threadAddHere(duration),
+      },
+      free: l10n.threadFree(duration),
+      semantics: l10n.threadAddHereLabel(duration, gap.startLabel),
+      style: text,
+      onTap: tap,
     );
   }
 }
