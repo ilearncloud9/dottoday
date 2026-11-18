@@ -82,7 +82,7 @@ Future<FakeOccurrenceRepository> _pumpApp(
   return repo;
 }
 
-Finder get _addButton => find.byTooltip('Add task');
+Finder get _addButton => find.byTooltip('Add a task');
 
 Finder get _title => find.descendant(
   of: find.byType(AddTitleField),

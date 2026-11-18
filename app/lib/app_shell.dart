@@ -3,6 +3,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/layout/frosted_chrome.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/layout/layout_policy.dart';
@@ -69,6 +70,7 @@ class AppShell extends ConsumerWidget {
       ),
       compactBar: !minimalNav,
       addAtEveryWidth: minimalNav,
+      frosted: ref.watch(frostedChromeProvider).value ?? false,
       onTrashTask: drops.toTrash,
       trashLabel: l10n.inboxTrash,
       selected: shell.currentIndex,

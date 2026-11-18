@@ -102,7 +102,7 @@ List<(String, Rect)> _tappables(WidgetTester tester) {
 }
 
 Tappable? _classify(String label, Rect rect, Rect? add) => switch (label) {
-  'Add task' => Tappable.add,
+  'Add a task' => Tappable.add,
   // The FAB's own button node shares the Add tooltip's rect.
   '' when add != null && add.overlaps(rect) => Tappable.add,
   'More options' => Tappable.headerMenu,
@@ -140,7 +140,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     seen.addAll(_tappables(tester));
-    final add = seen.where((s) => s.$1 == 'Add task').firstOrNull?.$2;
+    final add = seen.where((s) => s.$1 == 'Add a task').firstOrNull?.$2;
     final unknown = [
       for (final (label, rect) in seen)
         if (_classify(label, rect, add) == null) label,

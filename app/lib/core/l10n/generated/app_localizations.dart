@@ -252,10 +252,10 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get navSettings;
 
-  /// Tooltip and screen-reader label for the Quick Add button.
+  /// Tooltip and screen-reader label for the + (ED-240: 'Add a task' on every platform).
   ///
   /// In en, this message translates to:
-  /// **'Add task'**
+  /// **'Add a task'**
   String get quickAddTooltip;
 
   /// Button/label that closes a sheet or popover.

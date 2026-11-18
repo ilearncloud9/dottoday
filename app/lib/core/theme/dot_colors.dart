@@ -67,6 +67,8 @@ final class DotColors {
     required this.toast,
     required this.onToast,
     required this.toastAction,
+    required this.barAndroid,
+    required this.fabAndroid,
     required this.shadow,
   });
 
@@ -210,6 +212,11 @@ final class DotColors {
   final Color onToast;
   final Color toastAction;
 
+  /// Android's floating toolbar and its + (ED-125): solid here, frosted
+  /// at [ChromeAlpha] on Android 12+.
+  final Color barAndroid;
+  final Color fabAndroid;
+
   /// Base colour of elevation shadows (see `DotElevation`).
   final Color shadow;
 
@@ -297,6 +304,8 @@ final class DotColors {
       toast: l(toast, other.toast),
       onToast: l(onToast, other.onToast),
       toastAction: l(toastAction, other.toastAction),
+      barAndroid: l(barAndroid, other.barAndroid),
+      fabAndroid: l(fabAndroid, other.fabAndroid),
       shadow: l(shadow, other.shadow),
     );
   }
@@ -380,6 +389,8 @@ DotColors _resolve(Brightness brightness, Color accent) {
     toast: p.toast,
     onToast: p.onToast,
     toastAction: p.toastAction,
+    barAndroid: p.barAndroid,
+    fabAndroid: p.fabAndroid,
     shadow: p.shadow,
   );
 }

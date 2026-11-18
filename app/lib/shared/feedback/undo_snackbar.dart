@@ -67,7 +67,23 @@ SnackBar dotToast(ScaffoldMessengerState messenger, Widget body) {
     DotSpace.xs,
   );
   if (!wide) {
-    return SnackBar(content: body, persist: true, padding: padding);
+    // Android's toolbar floats in the page: the toast sits above it
+    // (E-R2-7, ED-125).
+    final android =
+        !webChrome(context) && DotIdiom.of(context) == DotIdiom.material;
+    return SnackBar(
+      content: body,
+      persist: true,
+      padding: padding,
+      margin: android
+          ? const EdgeInsets.fromLTRB(
+              DotSpace.l,
+              0,
+              DotSpace.l,
+              DotSize.androidBar + DotSize.androidBarBottom + DotSpace.s,
+            )
+          : null,
+    );
   }
   final apple = appleChrome(context);
   final width = apple ? DotSize.toastWide : DotSize.toastWideMaterial;

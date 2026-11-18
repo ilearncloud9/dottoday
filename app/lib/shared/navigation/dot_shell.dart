@@ -71,8 +71,12 @@ class DotShell extends StatelessWidget {
     this.trashLabel = '',
     this.compactBar = true,
     this.addAtEveryWidth = false,
+    this.frosted = false,
     super.key,
   });
+
+  /// Android's floating chrome may be frosted (Android 12+, ED-125).
+  final bool frosted;
 
   /// False draws no tab bar at compact width, only the floating add button
   /// (minimal layout, docs/14 §4: "One floating Add button").
@@ -144,6 +148,7 @@ class DotShell extends StatelessWidget {
           (WidthClass.compact, DotIdiom.material) => MaterialBarShell(
             bar: bar,
             body: body,
+            frosted: frosted,
           ),
           // Medium (E-R2-1, ED-267): the iPad's top tabs, the rail with
           // its drawer elsewhere.

@@ -95,7 +95,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navSettings => 'Settings';
 
   @override
-  String get quickAddTooltip => 'Add task';
+  String get quickAddTooltip => 'Add a task';
 
   @override
   String get sheetClose => 'Close';

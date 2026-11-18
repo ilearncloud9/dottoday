@@ -61,6 +61,8 @@ final class DotPalette {
     required this.toast,
     required this.onToast,
     required this.toastAction,
+    required this.barAndroid,
+    required this.fabAndroid,
     required this.shadow,
   });
 
@@ -111,6 +113,9 @@ final class DotPalette {
     toast: Color(0xFF2E2836),
     onToast: Color(0xFFFBF7F1),
     toastAction: Color(0xFFA3E2D9),
+    // Android's floating toolbar and + (ED-125), before their frost.
+    barAndroid: Color(0xFFF2EBE2),
+    fabAndroid: Color(0xFFCFE8E4),
     shadow: Color(0xFF241F2B),
   );
 
@@ -159,6 +164,8 @@ final class DotPalette {
     toast: Color(0xFFF3ECE4),
     onToast: Color(0xFF171416),
     toastAction: Color(0xFF0B4642),
+    barAndroid: Color(0xFF2B262A),
+    fabAndroid: Color(0xFF2B262A),
     shadow: Color(0xFF000000),
   );
 
@@ -206,5 +213,7 @@ final class DotPalette {
       toast,
       onToast,
       toastAction,
+      barAndroid,
+      fabAndroid,
       shadow;
 }

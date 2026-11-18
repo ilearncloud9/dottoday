@@ -99,6 +99,13 @@ abstract final class DotSize {
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
 
+  /// Android's floating toolbar (ED-125): 72 tall, 36 round, 16 from the
+  /// start, 24 above the bottom, the + 56 beside it 8 away.
+  static const double androidBar = 72;
+  static const double androidBarBottom = 24;
+  static const double androidFab = 56;
+  static const double androidFabBottom = 32;
+
   /// The compact web bar (E-MobileWeb): 56 tall, items 48, the current
   /// icon in a 56 × 28 box; the Add button above it 48 tall.
   static const double webBar = 56;
@@ -370,4 +377,15 @@ enum WidthClass {
       : width >= mediumFrom
       ? medium
       : compact;
+}
+
+/// How much of the frosted Android chrome is its fill (ED-125): the
+/// toolbar and the Day button 72 %, the + 78 %; the rest is the blurred
+/// content behind (24 blur, 140 % saturation).
+abstract final class ChromeAlpha {
+  static const double bar = 0.72;
+  static const double fab = 0.78;
+
+  /// The frost's blur radius (24 on the board; sigma is half of it).
+  static const double blur = 24;
 }

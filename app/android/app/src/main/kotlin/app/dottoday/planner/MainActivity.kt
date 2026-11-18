@@ -134,6 +134,13 @@ class MainActivity : FlutterFragmentActivity() {
                 }
                 result.success(null)
             }
+        // Frosted chrome needs Android 12+ (RenderEffect blur, ED-125);
+        // older devices get the solid tonal fills.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/display")
+            .setMethodCallHandler { call, result ->
+                if (call.method != "frosted") return@setMethodCallHandler result.notImplemented()
+                result.success(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dottoday/power")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

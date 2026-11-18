@@ -77,7 +77,10 @@ class _InboxAddFieldState extends State<InboxAddField> {
           minLines: 1,
           maxLines: 6,
           keyboardType: TextInputType.multiline,
-          textInputAction: TextInputAction.done,
+          // iPhone: the neutral "return" (ED-135); elsewhere the IME's done.
+          textInputAction: DotIdiom.of(context) == DotIdiom.cupertino
+              ? TextInputAction.unspecified
+              : TextInputAction.done,
           textCapitalization: TextCapitalization.sentences,
           onSubmitted: (_) => unawaited(_submit()),
           style: t.styles.body,

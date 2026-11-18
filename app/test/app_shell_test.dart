@@ -102,18 +102,18 @@ void main() {
     tester,
   ) async {
     await _pump(tester, width: 412);
-    final fab = find.byType(FloatingActionButton);
+    final fab = find.byTooltip('Add a task');
     final size = tester.getSize(fab);
     expect(size.width, greaterThanOrEqualTo(44));
     expect(size.height, greaterThanOrEqualTo(44));
-    expect(find.byTooltip('Add task'), findsOneWidget);
+    expect(find.byTooltip('Add a task'), findsOneWidget);
     await tester.tap(fab);
     expect(_quickAdds, 1);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
   testWidgets('iPhone add dot invokes Quick Add', (tester) async {
     await _pump(tester, width: 390);
-    await tester.tap(find.bySemanticsLabel('Add task'));
+    await tester.tap(find.bySemanticsLabel('Add a task'));
     expect(_quickAdds, 1);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

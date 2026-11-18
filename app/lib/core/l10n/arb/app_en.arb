@@ -94,9 +94,9 @@
   "@navSettings": {
     "description": "Tab: settings."
   },
-  "quickAddTooltip": "Add task",
+  "quickAddTooltip": "Add a task",
   "@quickAddTooltip": {
-    "description": "Tooltip and screen-reader label for the Quick Add button."
+    "description": "Tooltip and screen-reader label for the + (ED-240: 'Add a task' on every platform)."
   },
   "sheetClose": "Close",
   "@sheetClose": {

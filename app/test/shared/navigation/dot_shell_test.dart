@@ -75,18 +75,21 @@ void main() {
       'Search',
       'Settings',
     ]);
-    expect(find.bySemanticsLabel('Add task'), findsOneWidget);
+    expect(find.bySemanticsLabel('Add a task'), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
-  testWidgets('Android compact: M3 NavigationBar + rounded-square FAB', (
-    tester,
-  ) async {
-    await _size(tester, 412);
+  testWidgets('Android compact: the floating toolbar 24 above the bottom, '
+      'the + beside it (ED-125)', (tester) async {
+    await _size(tester, 412, 892);
     await tester.pumpWidget(_shell());
     expect(find.byType(MaterialBarShell), findsOneWidget);
-    expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.byType(FloatingActionButton), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
     expect(find.text('Week'), findsNothing);
+    final add = tester.getRect(find.byTooltip('Add a task'));
+    final today = tester.getRect(find.text('Today'));
+    expect(add.right, 412 - 16);
+    expect(add.left, greaterThan(today.right));
+    expect(892 - add.bottom, 32);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 
   testWidgets('medium on Android and the web: the rail, its menu opens the '
@@ -95,7 +98,7 @@ void main() {
     await tester.pumpWidget(_shell());
     expect(find.byType(DotRailShell), findsOneWidget);
     expect(find.text('Week'), findsNothing);
-    expect(find.byTooltip('Add task'), findsOneWidget);
+    expect(find.byTooltip('Add a task'), findsOneWidget);
     await tester.tap(find.byTooltip('Menu'));
     await tester.pumpAndSettle();
     expect(find.byType(Drawer), findsOneWidget);
@@ -113,7 +116,7 @@ void main() {
     await tester.pumpWidget(_shell());
     expect(find.byType(TopTabsShell), findsOneWidget);
     expect(find.text('Settings'), findsNothing);
-    expect(find.byTooltip('Add task'), findsOneWidget);
+    expect(find.byTooltip('Add a task'), findsOneWidget);
     await tester.tap(find.byTooltip('Show sidebar'));
     await tester.pumpAndSettle();
     expect(_order(tester, find.byType(Drawer)), [
@@ -136,7 +139,7 @@ void main() {
       'Search',
       'Settings',
     ]);
-    expect(find.byTooltip('Add task'), findsNothing);
+    expect(find.byTooltip('Add a task'), findsNothing);
     await tester.tap(find.byTooltip('Hide sidebar'));
     await tester.pumpAndSettle();
     expect(find.byType(DotRailShell), findsOneWidget);
@@ -202,21 +205,19 @@ void main() {
       expect(find.text('99+'), findsOneWidget);
     });
 
-    testWidgets('Android: the Material bar shows and says it too', (
-      tester,
-    ) async {
+    testWidgets('Android: the floating toolbar shows the count and says it '
+        'with the place', (tester) async {
       final semantics = tester.ensureSemantics();
       await _size(tester, 412);
       await tester.pumpWidget(_shell(inbox: 2));
       expect(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byType(MaterialBarShell),
           matching: find.byType(Badge),
         ),
         findsOneWidget,
       );
-      // NavigationBar merges the icon's badge text with the label.
-      expect(find.bySemanticsLabel(RegExp(r'2\s+Inbox')), findsOneWidget);
+      expect(find.bySemanticsLabel('Inbox, 2 tasks'), findsOneWidget);
       semantics.dispose();
     }, variant: TargetPlatformVariant.only(TargetPlatform.android));
   });
@@ -306,9 +307,9 @@ void main() {
       );
       final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
       await mouse.addPointer(location: Offset.zero);
-      await mouse.moveTo(tester.getCenter(find.byTooltip('Add task')));
+      await mouse.moveTo(tester.getCenter(find.byTooltip('Add a task')));
       await tester.pump();
-      await mouse.down(tester.getCenter(find.byTooltip('Add task')));
+      await mouse.down(tester.getCenter(find.byTooltip('Add a task')));
       await mouse.up();
       await tester.pumpAndSettle();
       expect(added, 1);

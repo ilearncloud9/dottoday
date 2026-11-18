@@ -97,7 +97,10 @@ class _AddTitleFieldState extends State<AddTitleField> {
           autofocus: true,
           style: t.styles.topBarTitle,
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          // iPhone: the neutral "return" (ED-135); elsewhere the IME's done.
+          textInputAction: DotIdiom.of(context) == DotIdiom.cupertino
+              ? TextInputAction.unspecified
+              : TextInputAction.done,
           // Not one line: a pasted list keeps its line breaks (R-07).
           minLines: 1,
           maxLines: null,
