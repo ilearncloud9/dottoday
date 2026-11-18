@@ -223,3 +223,30 @@ void _retry(WidgetRef ref, {DateTime? month}) {
     ..invalidate(currentProfileProvider);
   if (month != null) ref.invalidate(monthOccurrencesProvider(month));
 }
+
+/// Month opening on [month] (`/month/<yyyy-MM>`, ED-097): it shows that
+/// month once, then steps as Month does.
+class MonthScreenOn extends ConsumerStatefulWidget {
+  const MonthScreenOn({required this.month, super.key});
+
+  final DateTime month;
+
+  @override
+  ConsumerState<MonthScreenOn> createState() => _MonthScreenOnState();
+}
+
+class _MonthScreenOnState extends ConsumerState<MonthScreenOn> {
+  @override
+  void initState() {
+    super.initState();
+    // Not during build: the selection is read by the screen below.
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(monthSelectionProvider.notifier).show(widget.month);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const MonthScreen();
+}

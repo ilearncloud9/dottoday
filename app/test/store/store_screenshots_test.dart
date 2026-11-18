@@ -20,7 +20,6 @@ import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
@@ -33,6 +32,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../support/sample_inbox.dart';
+import '../support/task_screen.dart';
 import '../support/test_l10n.dart';
 import '../support/timeline_fakes.dart';
 

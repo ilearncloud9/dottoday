@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/clock/minute_tick.dart';
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -37,7 +37,6 @@ import 'package:dottoday/shared/states/state_message.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// The Inbox (docs/10 §5.2 I1, `A-ios-inbox`): what has no time yet, a
@@ -251,7 +250,7 @@ class _Body extends StatelessWidget {
             onSchedule: () => unawaited(commands.schedule(o)),
             onTrash: () => unawaited(commands.trash(o)),
             onOpen: s.selected == null
-                ? () => unawaited(context.push(AppRoutes.task(o.id)))
+                ? () => openTask(context, o.id)
                 : s.toggle,
             selected: s.selected,
             onSelect: s.toggle,

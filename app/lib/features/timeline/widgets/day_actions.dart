@@ -13,7 +13,6 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
-import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
@@ -62,8 +61,7 @@ ThreadActions dayThreadActions(
     onSelect: onSelect,
     onCap: onCap,
     onEarlier: onEarlier,
-    onOpen: (id) =>
-        openTask(context, id, otherwise: () => showTaskSheet(context, id)),
+    onOpen: (id) => openTask(context, id),
     onFocus: (id) => openFocus(context, id),
     // Unstick (M10.7): the answer is step 1; the move count starts over.
     onUnstick: (id, answer) async {

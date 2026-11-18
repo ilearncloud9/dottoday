@@ -3,7 +3,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:flutter/material.dart';
@@ -40,11 +39,7 @@ class AllDayChips extends ConsumerWidget {
                   title: o.title,
                   swatch: t.tasks[TaskColor.fromKey(o.colorKey)],
                   icon: TaskIcon.fromKey(o.iconKey),
-                  onTap: () => openTask(
-                    context,
-                    o.id,
-                    otherwise: () => showTaskSheet(context, o.id),
-                  ),
+                  onTap: () => openTask(context, o.id),
                 ),
               ),
           ],

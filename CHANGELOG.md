@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Changed
+- An open task is now part of the address (redesign branch): on the web, Refresh keeps it open, Back closes it and Forward opens it again, and a task link opens the task over its own day. Week and Month links can name a date.
+
 ### Added
 - With a keyboard on iPad, holding ⌘ shows Dottoday's menus with their shortcuts, and the shortcuts work (redesign branch). On Android, Meta+/ lists Dottoday's shortcuts in the system's Keyboard Shortcuts list.
 

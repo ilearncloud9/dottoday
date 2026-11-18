@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -81,8 +82,7 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
                   : WakeUpCardBody(
                       model: model,
                       minimal: minimal,
-                      onOpenTask: (id) =>
-                          unawaited(context.push(AppRoutes.task(id))),
+                      onOpenTask: (id) => openTask(context, id),
                       onShift: (min) => unawaited(_shift(model, min)),
                       onStart: () => unawaited(_start(model)),
                       onLater: _close,

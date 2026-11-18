@@ -140,6 +140,7 @@ List<AppMenu> appMenus({
     AppMenu(AppMenuKind.go, l10n.menuGo, [
       [
         command(l10n.menuBack, AppCommand.back),
+        command(l10n.menuForward, AppCommand.forward),
         MenuCommand(
           l10n.menuPreviousDay,
           () => sendToFocus(const ShowDayIntent(-1)),

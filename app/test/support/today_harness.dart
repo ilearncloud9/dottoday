@@ -1,3 +1,5 @@
+import 'package:dottoday/app_task_links.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
@@ -7,6 +9,7 @@ import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import 'test_l10n.dart';
 import 'timeline_fakes.dart';
@@ -42,6 +45,16 @@ Future<void> pumpToday(
     settings:
         settings ?? Settings(use24h: false, firstDayOfWeek: firstDayOfWeek),
   ).copyWith(displayName: name);
+  final router = GoRouter(
+    initialLocation: AppRoutes.today,
+    routes: [
+      GoRoute(
+        path: AppRoutes.today,
+        builder: (_, _) => (wrap ?? (w) => w)(TodayScreen(date: date)),
+      ),
+    ],
+  );
+  addTearDown(router.dispose);
   await tester.pumpWidget(
     ProviderScope(
       overrides: timelineOverrides(
@@ -54,23 +67,24 @@ Future<void> pumpToday(
         minuteTicks: ticks,
         learningMeta: learningMeta,
       ),
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
         themeMode: mode,
         localizationsDelegates: testL10nDelegates,
         supportedLocales: testL10nLocales,
         locale: testL10nLocale,
-        // The app root handles AddTaskIntent (M3c.5); tests may listen.
+        routerConfig: router,
+        // The app root handles AddTaskIntent (M3c.5); tests may listen. A
+        // task opens through `?task=` as in the app (ED-097).
         builder: (context, child) => Actions(
           actions: {
             AddTaskIntent: CallbackAction<AddTaskIntent>(
               onInvoke: (i) => onAddTask?.call(i),
             ),
           },
-          child: child!,
+          child: TaskLinkHost(router: router, child: child!),
         ),
-        home: (wrap ?? (w) => w)(TodayScreen(date: date)),
       ),
     ),
   );

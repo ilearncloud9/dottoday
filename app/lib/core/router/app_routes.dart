@@ -40,6 +40,32 @@ abstract final class AppRoutes {
   static const dayPattern = '/day/:date';
   static const taskPattern = '/task/:id';
 
+  /// Week or Month opening on a date or month (ED-097): `/week/<date>`,
+  /// `/month/<yyyy-MM>`.
+  static const weekDatePattern = ':date';
+  static const monthPattern = '/month/:month';
+
+  /// The query key a view's address opens a task with (ED-097 D2).
+  static const taskKey = 'task';
+
+  /// [location] with task [id] open over it: `/today?task=<id>`.
+  static String withTask(String location, String id) =>
+      Uri.parse(location).replace(queryParameters: {taskKey: id}).toString();
+
+  /// The task [uri] has open, if any.
+  static String? taskOf(Uri uri) => uri.queryParameters[taskKey];
+
+  /// [uri] without its open task: the view under it.
+  /// (Only `task` passes the link guard, so the path is the whole view.)
+  static String withoutTask(Uri uri) => uri.path;
+
+  /// Location for the week around [date].
+  static String weekOf(DateTime date) => '/week/${formatRouteDate(date)}';
+
+  /// Location for [month]'s calendar (its year and month).
+  static String monthOf(DateTime month) =>
+      '/month/${formatRouteDate(month).substring(0, 7)}';
+
   /// Focus on a dot, full screen on phones (docs/09 M10.5).
   static const focusPattern = '/focus/:id';
 
@@ -116,4 +142,14 @@ DateTime? parseRouteDate(String raw) {
   final date = DateTime(y, mo, d);
   final roundTrips = date.year == y && date.month == mo && date.day == d;
   return roundTrips ? date : null;
+}
+
+final _monthPattern = RegExp(r'^(\d{4})-(\d{2})$');
+
+/// Parses a `yyyy-MM` route segment into the month's first day, or null.
+DateTime? parseRouteMonth(String raw) {
+  final m = _monthPattern.firstMatch(raw);
+  if (m == null) return null;
+  final (y, mo) = (int.parse(m[1]!), int.parse(m[2]!));
+  return mo >= 1 && mo <= 12 ? DateTime(y, mo) : null;
 }

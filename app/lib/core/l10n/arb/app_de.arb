@@ -1737,6 +1737,8 @@
   "shortcutGoSearch": "Zur Suche",
   "settingsSingleKeys": "Kurzbefehle mit einer Taste",
   "settingsSingleKeysHint": "Tasten wie 1–4, n und t funktionieren ohne ⌘ oder Strg. Schalte sie aus, wenn sie die Sprachsteuerung stören.",
+  "menuForward": "Vorwärts",
+  "shortcutForward": "Vorwärts",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

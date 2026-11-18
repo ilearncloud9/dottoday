@@ -5,6 +5,7 @@ import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_openers.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
+import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -106,7 +107,8 @@ class DottodayApp extends ConsumerWidget {
           onToggleLayout: open.toggleLayout,
           onShortcuts: () => _shortcuts(router),
         );
-        // The Mac window takes the app's theme (ED-176).
+        // The Mac window takes the app's theme (ED-176); a view's
+        // `?task=` opens the task over it (ED-097).
         return MacWindowChrome(
           // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
           child: HapticsScope(
@@ -131,7 +133,10 @@ class DottodayApp extends ConsumerWidget {
                           child: AccountGateView(
                             // First run on this device (M4).
                             child: OnboardingGate(
-                              child: child ?? const SizedBox.shrink(),
+                              child: TaskLinkHost(
+                                router: router,
+                                child: child ?? const SizedBox.shrink(),
+                              ),
                             ),
                           ),
                         ),

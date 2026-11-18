@@ -34,7 +34,8 @@ List<Occurrence> _imported(tz.Location berlin) {
   return [
     for (final (i, date) in allDayDates(event).indexed)
       Occurrence(
-        id: 'imported-$i',
+        // A UUID v7, as the import makes them: a task link carries it.
+        id: '01929a3e-7c4b-7d2a-9f10-3b5c6d7e8f9$i',
         userId: testUserId,
         title: event.title,
         colorKey: inheritColorKey(_event.calendarArgb, palette),

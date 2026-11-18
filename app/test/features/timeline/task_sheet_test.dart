@@ -3,7 +3,6 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +11,8 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
 import '../../support/focus_fakes.dart';
+import '../../support/task_screen.dart';
+import '../../support/test_app.dart';
 import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);
@@ -44,14 +45,7 @@ Future<void> _pump(
         ),
         soundPlayerProvider.overrideWithValue(_sounds),
       ],
-      child: MaterialApp(
-        theme: DotTheme.light(),
-        darkTheme: DotTheme.dark(),
-        themeMode: mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: home,
-      ),
+      child: testTaskApp(home, themeMode: mode),
     ),
   );
   await tester.pumpAndSettle();
@@ -79,12 +73,7 @@ Future<void> _pumpWith(
         occurrences: repo,
         subtasks: FakeSubtaskRepository(demoDaySubtasks(_date)),
       ),
-      child: MaterialApp(
-        theme: DotTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const TodayScreen(),
-      ),
+      child: testTaskApp(const TodayScreen()),
     ),
   );
   await tester.pumpAndSettle();

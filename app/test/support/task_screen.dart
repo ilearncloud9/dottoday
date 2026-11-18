@@ -4,8 +4,9 @@ import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// `/task/:id` (docs/07 shared): the task sheet as a page. The id is looked
-/// up under the current user only; anything else reads "not here" (06 §9).
+/// The task sheet as a page, for tests that show one task by itself. The
+/// app opens tasks over a view through `?task=` (ED-097); this frame is
+/// the page `/task/:id` used to be, kept so the goldens stay the same.
 class TaskScreen extends StatelessWidget {
   const TaskScreen({required this.id, super.key});
 

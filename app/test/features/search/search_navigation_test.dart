@@ -13,7 +13,9 @@ import '../../support/timeline_fakes.dart';
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('a result opens its task page (/task/:id)', (tester) async {
+  testWidgets('a result opens its task over Search (?task=, ED-097)', (
+    tester,
+  ) async {
     tester.view
       ..physicalSize = const Size(390, 1200)
       ..devicePixelRatio = 1;
@@ -36,11 +38,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('one-pager', findRichText: true).last);
     await tester.pumpAndSettle();
+    const id = '0199f0b0-0000-7000-8000-000000000002';
     expect(
-      find.byKey(
-        const ValueKey('route:task:0199f0b0-0000-7000-8000-000000000002'),
-      ),
-      findsOneWidget,
+      router.routeInformationProvider.value.uri.toString(),
+      '/search?task=$id',
     );
+    expect(find.byType(BottomSheet), findsOneWidget);
   });
 }

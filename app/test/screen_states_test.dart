@@ -10,7 +10,6 @@ import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import 'support/task_screen.dart';
 import 'support/timeline_fakes.dart';
 
 // Every screen has its states (docs/09 M3f.9b, 10 §5.4): loading

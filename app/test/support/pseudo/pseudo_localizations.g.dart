@@ -5559,6 +5559,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsSingleKeysHint => pseudo(super.settingsSingleKeysHint);
 
   @override
+  String get menuForward => pseudo(super.menuForward);
+
+  @override
+  String get shortcutForward => pseudo(super.shortcutForward);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

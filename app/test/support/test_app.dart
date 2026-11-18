@@ -1,14 +1,16 @@
 import 'package:dottoday/app_commands.dart';
+import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
-import 'test_l10n.dart';
 
+import 'test_l10n.dart';
 import 'timeline_fakes.dart';
 
 /// [MaterialApp.router] wired like `DottodayApp` (theme, l10n, app-wide
@@ -49,7 +51,11 @@ Widget _routerApp(
   routerConfig: router,
   builder: (context, child) => AppCommandScope(
     handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
-    child: child ?? const SizedBox.shrink(),
+    // A view's ?task= opens the task, as in the app (ED-097).
+    child: TaskLinkHost(
+      router: router,
+      child: child ?? const SizedBox.shrink(),
+    ),
   ),
 );
 
@@ -64,3 +70,30 @@ Widget testApp(Widget home, {ThemeMode themeMode = ThemeMode.light}) =>
       locale: testL10nLocale,
       home: home,
     );
+
+/// [home] at `/today` in a router app with the task link host, so a task
+/// opens through `?task=` as in the app (ED-097): the sheet below the
+/// expanded width, the panel at it.
+/// [around] wraps everything under the app, as the app root's Actions do.
+Widget testTaskApp(
+  Widget home, {
+  ThemeMode themeMode = ThemeMode.light,
+  Widget Function(Widget child)? around,
+}) {
+  final router = GoRouter(
+    initialLocation: AppRoutes.today,
+    routes: [GoRoute(path: AppRoutes.today, builder: (_, _) => home)],
+  );
+  return MaterialApp.router(
+    theme: DotTheme.light(),
+    darkTheme: DotTheme.dark(),
+    themeMode: themeMode,
+    localizationsDelegates: testL10nDelegates,
+    supportedLocales: testL10nLocales,
+    locale: testL10nLocale,
+    routerConfig: router,
+    builder: (context, child) => (around ?? (w) => w)(
+      TaskLinkHost(router: router, child: child ?? const SizedBox.shrink()),
+    ),
+  );
+}

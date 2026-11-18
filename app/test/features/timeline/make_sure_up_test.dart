@@ -3,13 +3,13 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/task_screen.dart';
 import '../../support/test_l10n.dart';
 import '../../support/timeline_fakes.dart';
 import '../../support/today_harness.dart';

@@ -7012,6 +7012,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Keys like 1–4, n and t work without ⌘ or Ctrl. Turn them off if they get in the way of voice control.';
 
   @override
+  String get menuForward => 'Forward';
+
+  @override
+  String get shortcutForward => 'Forward';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

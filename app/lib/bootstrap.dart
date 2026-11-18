@@ -17,6 +17,7 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/icon_licenses.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
+import 'package:dottoday/data/links/task_place.dart';
 import 'package:dottoday/data/notifications/sound_licenses.dart';
 import 'package:dottoday/data/observability/sentry_reporting.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
@@ -79,9 +80,12 @@ Future<void> bootstrap({List<Override> overrides = const []}) async {
     AppRestart(
       create: () {
         late final GoRouter router;
+        late final ProviderContainer container;
         router = buildRouter(
           appScreens,
           onAuthCallback: callbacks.deliver,
+          // A task link opens over its own date (rule T, ED-097).
+          taskPlace: (id) => taskLinkPlace(container, id),
           // The iPhone's native row hides under sheets and dialogs.
           observers: [NativeBarObserver()],
           // After the frame that shows Today, so the sheet has a navigator.
@@ -90,7 +94,7 @@ Future<void> bootstrap({List<Override> overrides = const []}) async {
           ),
         );
         _listenForNativeLinks(router, logger);
-        return ProviderContainer(
+        return container = ProviderContainer(
           retry: noProviderRetry,
           overrides: [
             envProvider.overrideWithValue(env),

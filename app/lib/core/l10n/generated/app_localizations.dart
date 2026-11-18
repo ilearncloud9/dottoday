@@ -10524,6 +10524,18 @@ abstract class AppLocalizations {
   /// **'Keys like 1–4, n and t work without ⌘ or Ctrl. Turn them off if they get in the way of voice control.'**
   String get settingsSingleKeysHint;
 
+  /// Mac Go menu: forward to the place Back left (⌘], ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get menuForward;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Forward'**
+  String get shortcutForward;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/core/router/deep_link_guard.dart';
@@ -30,8 +32,9 @@ final class RouteScreens {
     required this.settings,
     required this.settingsPage,
     required this.month,
+    required this.weekOn,
+    required this.monthOn,
     required this.day,
-    required this.task,
     required this.focus,
     required this.wakeUp,
     required this.mission,
@@ -51,8 +54,13 @@ final class RouteScreens {
   final Widget Function(BuildContext, SettingsPage page, Object? extra)
   settingsPage;
   final WidgetBuilder month;
+
+  /// Week opening on the week around a date (`/week/<date>`, ED-097).
+  final Widget Function(BuildContext, DateTime date) weekOn;
+
+  /// Month opening on a month (`/month/<yyyy-MM>`, ED-097).
+  final Widget Function(BuildContext, DateTime month) monthOn;
   final Widget Function(BuildContext, DateTime date) day;
-  final Widget Function(BuildContext, String taskId) task;
 
   /// Focus on a dot, full screen (M10.5).
   final Widget Function(BuildContext, String taskId) focus;
@@ -71,17 +79,25 @@ final class RouteScreens {
 /// Builds the app router. Every location passes [allowListedLocation];
 /// anything off the allow-list lands on `/today`. A sign-in callback goes
 /// to [onAuthCallback] and shows Settings › Account (M6.1). `/add` shows
-/// Today and calls [onAdd] to open Quick Add over it (M9.2c).
+/// Today and calls [onAdd] to open Quick Add over it (M9.2c). A task link,
+/// `/task/<id>`, opens over its place as [taskPlace] finds it (rule T,
+/// ED-097), replacing the link, so it is no Back step; without
+/// [taskPlace] it opens Today.
 GoRouter buildRouter(
   RouteScreens screens, {
   void Function(Uri link)? onAuthCallback,
   void Function()? onAdd,
+  Future<String> Function(String taskId)? taskPlace,
   List<NavigatorObserver> observers = const [],
 }) {
+  // The address follows push and pop too, so a task opened over a view
+  // survives Refresh and Back closes it (CR-068, ED-260).
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   return GoRouter(
     initialLocation: AppRoutes.today,
     observers: observers,
-    redirect: (context, state) => _redirect(state.uri, onAuthCallback, onAdd),
+    redirect: (context, state) =>
+        _redirect(state.uri, onAuthCallback, onAdd, taskPlace),
     errorBuilder: (context, state) => screens.today(context),
     routes: [
       StatefulShellRoute.indexedStack(
@@ -93,6 +109,14 @@ GoRouter buildRouter(
         builder: (context, state) => screens.month(context),
       ),
       GoRoute(
+        path: AppRoutes.monthPattern,
+        // Redirect already validated the month.
+        builder: (context, state) => screens.monthOn(
+          context,
+          parseRouteMonth(state.pathParameters['month']!)!,
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.dayPattern,
         // Redirect already validated the date, so parsing cannot fail here.
         builder: (context, state) => screens.day(
@@ -100,11 +124,8 @@ GoRouter buildRouter(
           parseRouteDate(state.pathParameters['date']!)!,
         ),
       ),
-      GoRoute(
-        path: AppRoutes.taskPattern,
-        builder: (context, state) =>
-            screens.task(context, state.pathParameters['id']!),
-      ),
+      // Never shown: the redirect sends a task link to its place.
+      GoRoute(path: AppRoutes.taskPattern, redirect: (_, _) => AppRoutes.today),
       GoRoute(
         path: AppRoutes.focusPattern,
         builder: (context, state) =>
@@ -137,6 +158,15 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
       tab.path,
       _tabScreen(screens, tab),
       children: [
+        if (tab == ShellTab.week)
+          GoRoute(
+            path: AppRoutes.weekDatePattern,
+            // Redirect already validated the date.
+            builder: (context, state) => screens.weekOn(
+              context,
+              parseRouteDate(state.pathParameters['date']!)!,
+            ),
+          ),
         if (tab == ShellTab.settings)
           GoRoute(
             path: ':page',
@@ -161,10 +191,11 @@ WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
   };
 }
 
-String? _redirect(
+FutureOr<String?> _redirect(
   Uri uri,
   void Function(Uri link)? onAuthCallback,
   void Function()? onAdd,
+  Future<String> Function(String taskId)? taskPlace,
 ) {
   if (isAuthCallback(uri)) {
     onAuthCallback?.call(uri);
@@ -175,6 +206,10 @@ String? _redirect(
   if (allowed == AppRoutes.add) {
     onAdd?.call();
     return AppRoutes.today;
+  }
+  final link = Uri.parse(allowed).pathSegments;
+  if (link case ['task', final id]) {
+    return taskPlace?.call(id) ?? AppRoutes.today;
   }
   return allowed == uri.toString() ? null : allowed;
 }

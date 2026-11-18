@@ -7067,6 +7067,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les touches comme 1–4, n et t marchent sans ⌘ ni Ctrl. Désactivez-les si elles gênent le contrôle vocal.';
 
   @override
+  String get menuForward => 'Suivant';
+
+  @override
+  String get shortcutForward => 'Suivant';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

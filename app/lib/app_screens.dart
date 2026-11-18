@@ -11,7 +11,6 @@ import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/review/day_review_screen.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
@@ -32,8 +31,9 @@ final appScreens = RouteScreens(
       ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
       : settingsPageFor(page),
   month: (_) => const MonthScreen(),
+  weekOn: (_, date) => InboxSidebarFrame(child: WeekScreenOn(date: date)),
+  monthOn: (_, month) => MonthScreenOn(month: month),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
-  task: (_, id) => TaskScreen(id: id),
   focus: (_, id) => FocusScreen(id: id),
   wakeUp: (_) => const WakeUpCardScreen(),
   mission: (_, date, kind) =>

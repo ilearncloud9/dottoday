@@ -5020,6 +5020,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked:** iPadOS 26.5 simulator (iPad Pro 13"): the menu bar's Dottoday, File, View and Go menus with their keys; Go › Search opened Search and the native tabs followed. Android tablet emulator (API 37): Meta+/ lists Dottoday's groups. Holding ⌘ with a hardware keyboard and a physical Android keyboard: M21. The Mac menu bar's labels and keys are covered by its tests on the shared list.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` passing apart from the 5 local-Supabase suites; new `app_native_menus_test.dart`.
 
+### ED-380 · M18.7 part 3a: links in, `?task=` with Back, Forward and Refresh
+- **Date:** 2026-11-18. **Owner:** "Nearest built screen" (addresses of places not built yet), "Keep Week tab for now" (phones' `/week` until M19.1), then "Approve, start 3b" on the part 3a review page. Part 3 is split: 3a links in, 3b the address following the shown date.
+- **Built (ED-097 A′, ED-242, CR-068):**
+  - addresses: `/week/<date>` and `/month/<yyyy-MM>` open Week and Month there; `/now` opens Today and `/3-days/<date>` that day until Now and 3 Days exist;
+  - the link guard (D2): a view (Today, a day, Inbox, Week, Month, Search) keeps exactly one `?task=` with a lowercase UUID v7; any other query is dropped and the path kept (any query used to send the link to Today);
+  - rule T: `/task/<id>` redirects to the task over its own date (Inbox without a date, Today, or `/day/<date>`), read when the link opens, in the profile's zone; gone, in the Trash or not the signed-in user's → Today, nothing said. A redirect, so no Back step. The full-screen task page is removed; tests keep its frame in `test/support` so their goldens don't change;
+  - `GoRouter.optionURLReflectsImperativeAPIs` is on (CR-068);
+  - `TaskLinkHost` above every route keeps the open task and the address in step: the panel at the expanded width, the sheet elsewhere; losing `?task=` closes it; closing it by hand is a Back step when it was opened here (the browser's own Back) and a replace when the address arrived with it. `openTask` writes `?task=`; every opener goes through it (Today, Inbox, Search, Focus, the Wake Up card, the all-day chips, the hint row, ↩); from a page that can't carry a task, rule T;
+  - ⌘] Forward in the apps reopens what ⌘[ just left; the web keeps the browser's.
+- **Found while testing:** the host sits above the Router, so its replace asks from the navigator's context; a sheet waits for the address's page before opening; the task check listens to the profile while it reads (Riverpod 3 pauses an unlistened provider). A fixture's imported events got UUID v7 ids, as the import makes them.
+- **Checked in the browser** (web build, phone width, local data): open, Refresh, Back, Forward, close by hand, `#/task/<id>` with one history entry, `#/day/<date>?task=` after Refresh, an unknown id → Today.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,043 passing (5 local-Supabase suites need a stack); new `app_task_links_test.dart`, router and guard cases.
+
 ---
 
 ## Pending owner answers

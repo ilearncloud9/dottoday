@@ -72,3 +72,28 @@ class WeekScreen extends ConsumerWidget {
     );
   }
 }
+
+/// Week opening on the week around [date] (`/week/<date>`, ED-097): it
+/// shows that week once, then steps as Week does.
+class WeekScreenOn extends ConsumerStatefulWidget {
+  const WeekScreenOn({required this.date, super.key});
+
+  final DateTime date;
+
+  @override
+  ConsumerState<WeekScreenOn> createState() => _WeekScreenOnState();
+}
+
+class _WeekScreenOnState extends ConsumerState<WeekScreenOn> {
+  @override
+  void initState() {
+    super.initState();
+    // Not during build: the selection is read by the screen below.
+    Future.microtask(() {
+      if (mounted) ref.read(weekSelectionProvider.notifier).show(widget.date);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const WeekScreen();
+}

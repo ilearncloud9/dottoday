@@ -7058,6 +7058,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Tasten wie 1–4, n und t funktionieren ohne ⌘ oder Strg. Schalte sie aus, wenn sie die Sprachsteuerung stören.';
 
   @override
+  String get menuForward => 'Vorwärts';
+
+  @override
+  String get shortcutForward => 'Vorwärts';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

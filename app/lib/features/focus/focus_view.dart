@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/focus/focus_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -21,7 +20,6 @@ import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Focus on one dot (11 A3, `B-ios-focus`, docs/09 M10.5): the 160 px
@@ -302,12 +300,7 @@ class _TopBar extends StatelessWidget {
           icon: DotIcon(DotGlyphs.more, color: t.colors.text),
           itemBuilder: (_) => [
             PopupMenuItem(
-              onTap: () => openTask(
-                context,
-                id,
-                otherwise: () =>
-                    unawaited(GoRouter.of(context).push(AppRoutes.task(id))),
-              ),
+              onTap: () => openTask(context, id),
               child: Text(l10n.focusOpenTask),
             ),
           ],

@@ -1,8 +1,8 @@
-import 'package:dottoday/core/layout/app_layout.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/deep_link_guard.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editing_task.g.dart';
@@ -25,21 +25,28 @@ class EditingTask extends _$EditingTask {
   void close() => state = null;
 }
 
-/// Opens task [id] where this width edits it: the panel at the expanded
-/// width, else [otherwise] (the phone sheet or the task page).
+/// Opens task [id] over the place on screen, through the address
+/// (ED-097): `?task=<id>` is added, one Back step, and the app's task link
+/// host shows it where this width edits it (the panel at the expanded
+/// width, the sheet elsewhere). From a page that can't carry a task (Focus,
+/// the Wake Up card), the task opens over its own date (rule T).
 ///
 /// ```dart
-/// openTask(context, id, otherwise: () => showTaskSheet(context, id));
+/// openTask(context, task.id);
 /// ```
-void openTask(
-  BuildContext context,
-  String id, {
-  required VoidCallback otherwise,
-}) {
-  // The window's class, H1 included (ED-168): a short window edits as a
-  // phone does.
-  if (AppLayout.classOf(context) != WidthClass.expanded) return otherwise();
-  ProviderScope.containerOf(
-    context,
-  ).read(editingTaskProvider.notifier).open(id);
+void openTask(BuildContext context, String id) {
+  final router = GoRouter.of(context);
+  final here = router.routerDelegate.currentConfiguration.uri;
+  final over = AppRoutes.withTask(here.path, id);
+  TaskLinks.openedHere = id;
+  router.go(
+    allowListedLocation(Uri.parse(over)) == over ? over : AppRoutes.task(id),
+  );
+}
+
+/// What the task link host needs to know about how a task was opened.
+abstract final class TaskLinks {
+  /// The task last opened from inside the app: closing it is a Back step
+  /// (a link that arrived with the task open is closed by a replace).
+  static String? openedHere;
 }

@@ -6,7 +6,6 @@ import 'package:dottoday/data/calendar/travel_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -15,6 +14,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/task_screen.dart';
 import '../../support/timeline_fakes.dart';
 
 /// An imported appointment's sheet with the TRAVEL TIME suggestion

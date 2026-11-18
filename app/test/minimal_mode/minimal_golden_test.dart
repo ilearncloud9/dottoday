@@ -16,7 +16,6 @@ import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../support/dot_golden.dart';
 import '../support/onboarding_fakes.dart';
 import '../support/reveal_hint_fakes.dart';
+import '../support/task_screen.dart';
 import '../support/timeline_fakes.dart';
 
 // docs/14 §7, M16: the five minimal screens (Today, Add, the task sheet,

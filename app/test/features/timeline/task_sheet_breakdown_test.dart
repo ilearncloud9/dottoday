@@ -1,6 +1,4 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../support/test_app.dart';
 import '../../support/timeline_fakes.dart';
 
 // The task sheet's "Break it down" (docs/09 M10.4) asks the app root for
@@ -35,19 +34,16 @@ void main() {
           subtasks: FakeSubtaskRepository(demoDaySubtasks(date)),
           profile: testProfile(settings: const Settings(use24h: false)),
         ),
-        child: MaterialApp(
-          theme: DotTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          builder: (context, child) => Actions(
+        child: testTaskApp(
+          const TodayScreen(),
+          around: (child) => Actions(
             actions: {
               BreakDownIntent: CallbackAction<BreakDownIntent>(
                 onInvoke: (i) => asked.add(i.occurrenceId),
               ),
             },
-            child: child!,
+            child: child,
           ),
-          home: const TodayScreen(),
         ),
       ),
     );

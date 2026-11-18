@@ -15,7 +15,6 @@ import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/selection_commands.dart';
-import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -301,7 +300,7 @@ final class _Keys {
   void open() {
     final id = picked.single.id;
     ref.read(taskSelectionProvider.notifier).clear();
-    openTask(context, id, otherwise: () => showTaskSheet(context, id));
+    openTask(context, id);
   }
 
   Future<void> done() async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
@@ -13,7 +14,6 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/state/hint_signals.dart';
-import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/learning/wake_up_explain_sheet.dart';
 import 'package:dottoday/shared/thinking/status_hint.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +109,7 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
     final today = widget.today;
     switch (pick.hint) {
       case HintId.unstick:
-        if (pick.taskId case final id?) showTaskSheet(context, id);
+        if (pick.taskId case final id?) openTask(context, id);
       case HintId.breakDown:
         if (pick.taskId case final id?) {
           Actions.maybeInvoke(context, BreakDownIntent(id));

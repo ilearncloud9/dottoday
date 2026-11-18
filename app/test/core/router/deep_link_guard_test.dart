@@ -37,6 +37,26 @@ void main() {
           '/wake-up/mission/2026-11-02/walk',
       '/wake-up/mission/2026-11-02/catchDot':
           '/wake-up/mission/2026-11-02/catchDot',
+      // ED-097: a view keeps one ?task=; Week and Month on a date.
+      '/today?task=$_v7': '/today?task=$_v7',
+      '/day/2026-10-20?task=$_v7': '/day/2026-10-20?task=$_v7',
+      '/inbox?task=$_v7': '/inbox?task=$_v7',
+      'dottoday://search?task=$_v7': '/search?task=$_v7',
+      '/week/2026-10-20': '/week/2026-10-20',
+      '/week/2026-10-20?task=$_v7': '/week/2026-10-20?task=$_v7',
+      '/month/2026-10': '/month/2026-10',
+      // Places not built yet open the nearest one (owner, M18.7 part 3).
+      '/now': '/today',
+      '/now?task=$_v7': '/today?task=$_v7',
+      '/3-days/2026-10-20': '/day/2026-10-20',
+      // Any other query is dropped and the path kept (D2).
+      '/today?q=1': '/today',
+      '/inbox?q=1&task=$_v7': '/inbox',
+      '/today?task=not-a-uuid': '/today',
+      '/today?task=01929A3E-7C4B-7D2A-9F10-3B5C6D7E8F90': '/today',
+      '/settings?task=$_v7': '/settings',
+      '/task/$_v7?redirect=https://evil.example': '/task/$_v7',
+      '/focus/$_v7?task=$_v7': '/focus/$_v7',
     };
     cases.forEach((input, expected) {
       test(input, () => expect(_guard(input), expected));
@@ -47,7 +67,6 @@ void main() {
     const cases = [
       '/admin',
       '/today/extra',
-      '/today?q=1',
       '/inbox#frag',
       '/day/2026-02-30',
       '/day/2026-13-01',
@@ -59,7 +78,10 @@ void main() {
       '/focus/not-a-uuid',
       '/task/${'01929a3e-7c4b-4d2a-9f10-3b5c6d7e8f90'}', // v4, not v7
       '/task/01929A3E-7C4B-7D2A-9F10-3B5C6D7E8F90', // uppercase
-      '/task/$_v7?redirect=https://evil.example',
+      '/month/2026-13',
+      '/month/2026-1',
+      '/week/2026-02-30',
+      '/3-days/x',
       '//evil.example/today',
       'https://evil.example/today',
       'javascript:alert(1)',
@@ -104,6 +126,12 @@ void main() {
     test('AppRoutes builders', () {
       expect(AppRoutes.day(DateTime(2026, 10, 20)), '/day/2026-10-20');
       expect(AppRoutes.task(_v7), '/task/$_v7');
+      expect(AppRoutes.weekOf(DateTime(2026, 10, 20)), '/week/2026-10-20');
+      expect(AppRoutes.monthOf(DateTime(2026, 10, 9)), '/month/2026-10');
+      expect(AppRoutes.withTask('/today', _v7), '/today?task=$_v7');
+      final open = Uri.parse('/day/2026-10-20?task=$_v7');
+      expect(AppRoutes.taskOf(open), _v7);
+      expect(AppRoutes.withoutTask(open), '/day/2026-10-20');
     });
   });
 }

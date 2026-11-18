@@ -5,7 +5,6 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +12,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
 import '../../support/focus_fakes.dart';
+import '../../support/task_screen.dart';
 import '../../support/timeline_fakes.dart';
 
 final _date = DateTime(2026, 10, 21);

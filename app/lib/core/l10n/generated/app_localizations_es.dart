@@ -7048,6 +7048,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Teclas como 1–4, n y t funcionan sin ⌘ ni Ctrl. Desactívalas si molestan al control por voz.';
 
   @override
+  String get menuForward => 'Adelante';
+
+  @override
+  String get shortcutForward => 'Adelante';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

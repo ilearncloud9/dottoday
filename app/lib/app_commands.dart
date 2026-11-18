@@ -34,12 +34,36 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.newBrainDump: onBrainDump ?? () {},
     AppCommand.pasteAsTasks: onPasteAsTasks ?? () {},
     AppCommand.today: onToday ?? () => router.go(AppRoutes.today),
-    // ⌘[ in the apps; the web's Back is the browser's own.
-    AppCommand.back: () {
-      if (router.canPop()) router.pop();
-    },
+    // ⌘[ / ⌘] in the apps; the web's are the browser's own.
+    AppCommand.back: () => _BackForward.back(router),
+    AppCommand.forward: () => _BackForward.forward(router),
     AppCommand.search: () => router.go(AppRoutes.search),
     AppCommand.toggleLayout: onToggleLayout ?? () {},
     AppCommand.showShortcuts: onShortcuts ?? () {},
   };
+}
+
+/// ⌘[ and ⌘] in the apps (ED-095, ED-097): Back pops the page on top and
+/// remembers it; Forward opens it again, while nothing else has moved
+/// since. The web's browser keeps its own history.
+abstract final class _BackForward {
+  static String? _left;
+  static String? _landed;
+
+  static String _here(GoRouter router) =>
+      router.routerDelegate.currentConfiguration.uri.toString();
+
+  static void back(GoRouter router) {
+    if (!router.canPop()) return;
+    _left = _here(router);
+    router.pop();
+    _landed = _here(router);
+  }
+
+  static void forward(GoRouter router) {
+    final left = _left;
+    if (left == null || _here(router) != _landed) return;
+    _left = _landed = null;
+    unawaited(router.push<void>(left));
+  }
 }

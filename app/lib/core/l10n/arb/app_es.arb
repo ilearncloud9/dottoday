@@ -1737,6 +1737,8 @@
   "shortcutGoSearch": "Ir a Buscar",
   "settingsSingleKeys": "Atajos de una tecla",
   "settingsSingleKeysHint": "Teclas como 1–4, n y t funcionan sin ⌘ ni Ctrl. Desactívalas si molestan al control por voz.",
+  "menuForward": "Adelante",
+  "shortcutForward": "Adelante",
   "taskIconCategoryPlanning": "Planificación y ritmo",
   "taskIconCategoryHealth": "Salud y cuerpo",
   "taskIconCategoryFitness": "Fitness y deporte",

@@ -39,6 +39,7 @@ List<ShortcutGroup> appShortcutGroups(
         ),
         (keys: w('/', 'F'), action: l10n.shortcutSearch),
         if (!web) (keys: k('['), action: l10n.shortcutBack),
+        if (!web) (keys: k(']'), action: l10n.shortcutForward),
         (keys: w('⇧L', 'L', shift: true), action: l10n.shortcutToggleLayout),
         (keys: k('Z'), action: l10n.shortcutUndo),
         (keys: k('Z', shift: true), action: l10n.shortcutRedo),

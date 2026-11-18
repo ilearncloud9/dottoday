@@ -3,14 +3,14 @@ import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'calendar_series_fakes.dart';
-import 'test_l10n.dart';
 
+import 'calendar_series_fakes.dart';
+import 'task_screen.dart';
+import 'test_l10n.dart';
 import 'timeline_fakes.dart';
 
 /// Opens the task page for [id] and its editor (Edit), over [repo] and

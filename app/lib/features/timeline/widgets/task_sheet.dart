@@ -26,22 +26,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Opens the task sheet for [id] (docs/10 §5.2 T4, `A-ios-task-sheet`).
-void showTaskSheet(BuildContext context, String id) => unawaited(
-  showModalBottomSheet<void>(
-    context: context,
-    // Above the iPhone's floating tab bar (M4.9: it covered Save).
-    useRootNavigator: true,
-    isScrollControlled: true,
-    builder: (_) => DraggableScrollableSheet(
-      expand: false,
-      // A short window has no room for a half sheet: full height (ED-347).
-      initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
-      maxChildSize: 0.94,
-      builder: (context, scroll) =>
-          TaskSheetBody(id: id, scrollController: scroll),
-    ),
-  ),
-);
+Future<void> showTaskSheet(BuildContext context, String id) =>
+    showModalBottomSheet<void>(
+      context: context,
+      // Named so the task link host can close it when the address loses
+      // `?task=` (Back, ED-097).
+      routeSettings: RouteSettings(name: taskSheetRouteName(id)),
+      // Above the iPhone's floating tab bar (M4.9: it covered Save).
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (_) => DraggableScrollableSheet(
+        expand: false,
+        // A short window has no room for a half sheet: full height (ED-347).
+        initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
+        maxChildSize: 0.94,
+        builder: (context, scroll) =>
+            TaskSheetBody(id: id, scrollController: scroll),
+      ),
+    );
+
+/// The route name of task [id]'s sheet.
+String taskSheetRouteName(String id) =>
+    'task-sheet:$id'; // l10n-ignore: route name
 
 /// Opens the phone editor for [id] (docs/10 §5.2 E1: "on phones the task
 /// sheet's Edit opens the same fields as a full sheet").

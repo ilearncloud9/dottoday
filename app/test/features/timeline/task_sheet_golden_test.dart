@@ -3,7 +3,6 @@
 library;
 
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/timeline/task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +10,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/dot_golden.dart';
+import '../../support/task_screen.dart';
 import '../../support/timeline_fakes.dart';
 
 /// The live task's sheet at 09:22 (T4, `A-ios-task-sheet`).
