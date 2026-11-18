@@ -6999,6 +6999,65 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get menuCalendar => 'Kalender';
+
+  @override
+  String get menuNewBrainDump => 'Neuer Gedankenspeicher …';
+
+  @override
+  String get menuPasteAsTasks => 'Als Aufgaben einfügen';
+
+  @override
+  String get menuBack => 'Zurück';
+
+  @override
+  String get menuShowLess => 'Weniger anzeigen';
+
+  @override
+  String get menuShowEverything => 'Alles anzeigen';
+
+  @override
+  String get menuCopyDayText => 'Tag als Text kopieren';
+
+  @override
+  String get shortcutBrainDump => 'Neuer Gedankenspeicher';
+
+  @override
+  String get shortcutPasteTasks => 'Eine Liste als Aufgaben einfügen';
+
+  @override
+  String get shortcutBack => 'Zurück';
+
+  @override
+  String get shortcutSearch => 'Suchen';
+
+  @override
+  String get shortcutToggleLayout => 'Weniger oder alles anzeigen';
+
+  @override
+  String get shortcutCopyDay => 'Den Tag als Text kopieren';
+
+  @override
+  String get shortcutMoveTask =>
+      'Die gewählten Aufgaben auf einen anderen Tag verschieben';
+
+  @override
+  String get shortcutFocusTask => 'Auf die gewählte Aufgabe fokussieren';
+
+  @override
+  String get shortcutGoCalendar => 'Zum Kalender';
+
+  @override
+  String get shortcutGoSearch => 'Zur Suche';
+
+  @override
+  String get settingsSingleKeys => 'Kurzbefehle mit einer Taste';
+
+  @override
+  String get settingsSingleKeysHint =>
+      'Tasten wie 1–4, n und t funktionieren ohne ⌘ oder Strg. Schalte sie aus, wenn sie die Sprachsteuerung stören.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

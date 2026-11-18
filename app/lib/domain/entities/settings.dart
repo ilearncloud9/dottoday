@@ -162,6 +162,9 @@ abstract class Settings with _$Settings {
     // so an upgrade changes no one's app; onboarding step 0 picks it for a
     // new install (minimal preselected).
     @Default(UiLayout.full) UiLayout uiLayout,
+    // The web's single-key shortcuts (ED-095: 1–4, n, t, [ ], / …), which
+    // WCAG 2.1.4 lets the user turn off (Settings › General, web only).
+    @Default(true) bool webSingleKeys,
   }) = _Settings;
 
   const Settings._();

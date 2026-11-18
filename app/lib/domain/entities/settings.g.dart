@@ -132,6 +132,7 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   ),
   uiLayout:
       $enumDecodeNullable(_$UiLayoutEnumMap, json['uiLayout']) ?? UiLayout.full,
+  webSingleKeys: json['webSingleKeys'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
@@ -208,6 +209,7 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
     const UtcMillisConverter().toJson,
   ),
   'uiLayout': _$UiLayoutEnumMap[instance.uiLayout]!,
+  'webSingleKeys': instance.webSingleKeys,
 };
 
 const _$WeekdayEnumMap = {

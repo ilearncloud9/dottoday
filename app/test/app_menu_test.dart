@@ -150,6 +150,33 @@ void main() {
     expect(calls, {AppCommand.quickAdd: 1, AppCommand.goWeek: 1});
   }, variant: _mac);
 
+  testWidgets('the keyboard scheme\'s commands carry their keys '
+      '(ED-095)', (tester) async {
+    await pump(tester);
+    final items = _flatten(sent);
+    // label: (key id, shift)
+    final keys = {
+      'New Brain Dump…': (LogicalKeyboardKey.keyN, true),
+      'Paste as Tasks': (LogicalKeyboardKey.keyV, true),
+      'Copy Day as Text': (LogicalKeyboardKey.keyC, true),
+      'Show Less': (LogicalKeyboardKey.keyL, true),
+      'Back': (LogicalKeyboardKey.bracketLeft, false),
+      'Search': (LogicalKeyboardKey.keyF, false),
+    };
+    for (final MapEntry(key: label, value: (key, shift)) in keys.entries) {
+      final item = items[label];
+      expect(item, isNotNull, reason: label);
+      expect(item!['shortcutTrigger'], key.keyId, reason: label);
+      // Command is 1 << 0 and Shift 1 << 1 in the menu channel's flags.
+      final mods = item['shortcutModifiers']! as int;
+      expect(mods & (1 << 0), isNonZero, reason: label);
+      expect(mods & (1 << 1) != 0, shift, reason: label);
+    }
+    await select(tester, 'Back');
+    await select(tester, 'Show Less');
+    expect(calls, {AppCommand.back: 1, AppCommand.toggleLayout: 1});
+  }, variant: _mac);
+
   testWidgets('Edit › Undo reverts the last undoable change', (tester) async {
     await pump(tester);
     final gym = repo.rows.firstWhere((o) => o.title == 'Gym');

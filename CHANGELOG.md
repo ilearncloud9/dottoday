@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Added
+- New keyboard shortcuts on every platform (redesign branch): New Brain Dump ⇧⌘N, Paste as Tasks ⇧⌘V, Back ⌘[, Search ⌘F, Show Less or Everything ⇧⌘L, Copy Day as Text ⇧⌘C, and Done ⌘D, Move To ⇧⌘M and Focus ⇧⌘F on a picked task (Ctrl off Apple). In Minimal, ⌘3 opens the calendar and ⌘4 Search. On the web, single keys (1–4, n, t, [ ], / and more) replace the keys the browser keeps, and Settings can turn them off.
+
 ### Changed
 - On Mac the sidebar runs the window's full height, with the window buttons over it and no title bar (redesign branch). The window still drags by its top edge, and a double-click there does what System Settings says.
 

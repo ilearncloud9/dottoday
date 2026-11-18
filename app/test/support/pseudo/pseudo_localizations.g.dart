@@ -5502,6 +5502,63 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.accountTwoSentences(first, second));
 
   @override
+  String get menuCalendar => pseudo(super.menuCalendar);
+
+  @override
+  String get menuNewBrainDump => pseudo(super.menuNewBrainDump);
+
+  @override
+  String get menuPasteAsTasks => pseudo(super.menuPasteAsTasks);
+
+  @override
+  String get menuBack => pseudo(super.menuBack);
+
+  @override
+  String get menuShowLess => pseudo(super.menuShowLess);
+
+  @override
+  String get menuShowEverything => pseudo(super.menuShowEverything);
+
+  @override
+  String get menuCopyDayText => pseudo(super.menuCopyDayText);
+
+  @override
+  String get shortcutBrainDump => pseudo(super.shortcutBrainDump);
+
+  @override
+  String get shortcutPasteTasks => pseudo(super.shortcutPasteTasks);
+
+  @override
+  String get shortcutBack => pseudo(super.shortcutBack);
+
+  @override
+  String get shortcutSearch => pseudo(super.shortcutSearch);
+
+  @override
+  String get shortcutToggleLayout => pseudo(super.shortcutToggleLayout);
+
+  @override
+  String get shortcutCopyDay => pseudo(super.shortcutCopyDay);
+
+  @override
+  String get shortcutMoveTask => pseudo(super.shortcutMoveTask);
+
+  @override
+  String get shortcutFocusTask => pseudo(super.shortcutFocusTask);
+
+  @override
+  String get shortcutGoCalendar => pseudo(super.shortcutGoCalendar);
+
+  @override
+  String get shortcutGoSearch => pseudo(super.shortcutGoSearch);
+
+  @override
+  String get settingsSingleKeys => pseudo(super.settingsSingleKeys);
+
+  @override
+  String get settingsSingleKeysHint => pseudo(super.settingsSingleKeysHint);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

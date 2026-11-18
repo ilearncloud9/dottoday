@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -66,41 +67,46 @@ class WideInbox extends ConsumerWidget {
       (o) => fitOf[o.id],
     );
     final plan = r == null ? null : () => unawaited(_autoPlan(shown, r));
+    // ⇧⌘P auto-plans (web p, a single key; ED-095).
     return CallbackShortcuts(
       bindings: {
-        AppShortcuts.activator(
-          defaultTargetPlatform,
-          LogicalKeyboardKey.keyP,
-          shift: true,
-        ): ?plan,
+        if (!webChrome(context))
+          AppShortcuts.activator(
+            defaultTargetPlatform,
+            LogicalKeyboardKey.keyP,
+            shift: true,
+          ): ?plan,
       },
-      child: Focus(
-        autofocus: true,
-        // Catches keys only; adds nothing for screen readers.
-        includeSemantics: false,
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(
-            DotSpace.xxl + DotSpace.s,
-            DotSpace.xl,
-            DotSpace.xl,
-            DotSpace.xl,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.l,
-            children: [
-              WideInboxHeader(items: items, onAutoPlan: plan),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: DotSpace.xl,
-                  children: [
-                    Expanded(child: _list(context, ref, shown, fitOf)),
-                    SizedBox(width: _panelWidth, child: panel(shown)),
-                  ],
+      child: SingleKeys(
+        bindings: {const SingleActivator(LogicalKeyboardKey.keyP): ?plan},
+        child: Focus(
+          autofocus: true,
+          // Catches keys only; adds nothing for screen readers.
+          includeSemantics: false,
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(
+              DotSpace.xxl + DotSpace.s,
+              DotSpace.xl,
+              DotSpace.xl,
+              DotSpace.xl,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: DotSpace.l,
+              children: [
+                WideInboxHeader(items: items, onAutoPlan: plan),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: DotSpace.xl,
+                    children: [
+                      Expanded(child: _list(context, ref, shown, fitOf)),
+                      SizedBox(width: _panelWidth, child: panel(shown)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

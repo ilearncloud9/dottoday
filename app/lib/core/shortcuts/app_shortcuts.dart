@@ -1,10 +1,28 @@
+import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-/// Every keyboard-invokable command in the app. Later milestones add values
+/// Every app-wide keyboard command (ED-095). Later milestones add values
 /// here (and a row in [AppShortcuts]) instead of defining their own bindings.
-enum AppCommand { goToday, goInbox, goWeek, goMonth, quickAdd, showShortcuts }
+///
+/// The four places are ⌘1–4 by position: Full has Today · Inbox · Week ·
+/// Month, Minimal Now · Inbox · Calendar · Search (`appCommandHandlers`
+/// picks the place for the layout).
+enum AppCommand {
+  goToday,
+  goInbox,
+  goWeek,
+  goMonth,
+  quickAdd,
+  newBrainDump,
+  pasteAsTasks,
+  today,
+  back,
+  search,
+  toggleLayout,
+  showShortcuts,
+}
 
 /// A key plus modifiers, relative to the platform's primary modifier
 /// (⌘ on Apple platforms, Ctrl elsewhere).
@@ -17,9 +35,12 @@ final class KeyCombo {
 
 /// Intent carrying an [AppCommand]; handled by the nearest [Actions].
 final class AppCommandIntent extends Intent {
-  const AppCommandIntent(this.command);
+  const AppCommandIntent(this.command, {this.single = false});
 
   final AppCommand command;
+
+  /// Sent by a web single key: off in text fields and when the setting is.
+  final bool single;
 }
 
 /// Open Add prefilled: an "add here" gap ([startUtc]) or "Add to this
@@ -62,6 +83,12 @@ final class ShowTodayIntent extends Intent {
   const ShowTodayIntent();
 }
 
+/// Copy the shown day as text (Edit › Copy Day as Text, ⇧⌘C, ED-095); the
+/// screen that shows a day handles it.
+final class CopyDayIntent extends Intent {
+  const CopyDayIntent();
+}
+
 /// Undo the last undoable change (Edit › Undo, M5.5); text fields keep ⌘Z
 /// for their own typing.
 final class UndoLastIntent extends Intent {
@@ -98,13 +125,43 @@ final class ShowSyncIntent extends Intent {
 /// Shortcuts(shortcuts: AppShortcuts.bindings(defaultTargetPlatform), ...)
 /// ```
 abstract final class AppShortcuts {
+  /// ⌘ (Ctrl) keys, for the apps and the Mac menu bar.
   static const Map<AppCommand, KeyCombo> table = {
     AppCommand.goToday: KeyCombo(LogicalKeyboardKey.digit1),
     AppCommand.goInbox: KeyCombo(LogicalKeyboardKey.digit2),
     AppCommand.goWeek: KeyCombo(LogicalKeyboardKey.digit3),
     AppCommand.goMonth: KeyCombo(LogicalKeyboardKey.digit4),
     AppCommand.quickAdd: KeyCombo(LogicalKeyboardKey.keyN),
+    AppCommand.newBrainDump: KeyCombo(LogicalKeyboardKey.keyN, shift: true),
+    AppCommand.pasteAsTasks: KeyCombo(LogicalKeyboardKey.keyV, shift: true),
+    AppCommand.today: KeyCombo(LogicalKeyboardKey.keyT),
+    AppCommand.back: KeyCombo(LogicalKeyboardKey.bracketLeft),
+    AppCommand.search: KeyCombo(LogicalKeyboardKey.keyF),
+    AppCommand.toggleLayout: KeyCombo(LogicalKeyboardKey.keyL, shift: true),
     AppCommand.showShortcuts: KeyCombo(LogicalKeyboardKey.slash),
+  };
+
+  /// The web's single keys (ED-095): the browser keeps ⌘/Ctrl N, T, 1–9,
+  /// ⇧N, Back and Find, so the web binds these instead, outside text
+  /// fields and while Settings › General › Single-key shortcuts is on.
+  /// Back is the browser's own; pasting a list into Add needs no key.
+  static const Map<AppCommand, ShortcutActivator> webTable = {
+    AppCommand.goToday: SingleActivator(LogicalKeyboardKey.digit1),
+    AppCommand.goInbox: SingleActivator(LogicalKeyboardKey.digit2),
+    AppCommand.goWeek: SingleActivator(LogicalKeyboardKey.digit3),
+    AppCommand.goMonth: SingleActivator(LogicalKeyboardKey.digit4),
+    AppCommand.quickAdd: SingleActivator(LogicalKeyboardKey.keyN),
+    AppCommand.newBrainDump: SingleActivator(
+      LogicalKeyboardKey.keyN,
+      shift: true,
+    ),
+    AppCommand.today: SingleActivator(LogicalKeyboardKey.keyT),
+    AppCommand.search: CharacterActivator('/'),
+    AppCommand.toggleLayout: SingleActivator(
+      LogicalKeyboardKey.keyL,
+      shift: true,
+    ),
+    AppCommand.showShortcuts: CharacterActivator('?'),
   };
 
   /// Whether ⌘ (meta) is the primary modifier on [platform]. Web reports the
@@ -132,17 +189,24 @@ abstract final class AppShortcuts {
       ? '${shift ? '⇧' : ''}⌘$key'
       : 'Ctrl+${shift ? 'Shift+' : ''}$key';
 
-  /// [table] as activators for a `Shortcuts` widget on [platform].
-  static Map<ShortcutActivator, Intent> bindings(TargetPlatform platform) {
-    final meta = usesMeta(platform);
+  /// [table] as activators for a `Shortcuts` widget on [platform]; on the
+  /// [web], [webTable] instead, plus ⌘/Ctrl / for the shortcut list.
+  static Map<ShortcutActivator, Intent> bindings(
+    TargetPlatform platform, {
+    bool web = kIsWeb,
+  }) {
+    if (web) {
+      return {
+        for (final MapEntry(key: command, value: key) in webTable.entries)
+          key: AppCommandIntent(command, single: true),
+        activator(platform, LogicalKeyboardKey.slash): const AppCommandIntent(
+          AppCommand.showShortcuts,
+        ),
+      };
+    }
     return {
       for (final MapEntry(key: command, value: combo) in table.entries)
-        SingleActivator(
-          combo.key,
-          meta: meta,
-          control: !meta,
-          shift: combo.shift,
-        ): AppCommandIntent(
+        activator(platform, combo.key, shift: combo.shift): AppCommandIntent(
           command,
         ),
     };
@@ -152,13 +216,17 @@ abstract final class AppShortcuts {
 /// Runs the handler registered for a command; commands without a handler at
 /// this level are reported as disabled so they don't consume the key.
 final class AppCommandAction extends Action<AppCommandIntent> {
-  AppCommandAction(this.handlers);
+  AppCommandAction(this.handlers, {this.singleKeys = true});
 
   final Map<AppCommand, VoidCallback> handlers;
 
+  /// The web's single-key shortcuts are on (WCAG 2.1.4 lets them be off).
+  final bool singleKeys;
+
   @override
   bool isEnabled(AppCommandIntent intent) =>
-      handlers.containsKey(intent.command);
+      handlers.containsKey(intent.command) &&
+      (!intent.single || (singleKeys && focusedTextField() == null));
 
   @override
   Object? invoke(AppCommandIntent intent) {
@@ -177,26 +245,38 @@ class AppCommandScope extends StatelessWidget {
   const AppCommandScope({
     required this.handlers,
     required this.child,
+    this.singleKeys = true,
     super.key,
   });
 
   final Map<AppCommand, VoidCallback> handlers;
   final Widget child;
 
+  /// The web's single keys are on (Settings › General).
+  final bool singleKeys;
+
   @override
   Widget build(BuildContext context) {
-    return Shortcuts(
-      shortcuts: AppShortcuts.bindings(defaultTargetPlatform),
-      child: Actions(
-        actions: {AppCommandIntent: AppCommandAction(handlers)},
-        child: Focus(
-          autofocus: true,
-          // No Tab stop. When the browser gives the view its focus back (a
-          // closed ⋯ menu dropped it), Flutter moves focus to the first
-          // traversable node; this node took it from an open popover's field,
-          // which then took no keys on the web (M12 follow-up).
-          skipTraversal: true,
-          child: child,
+    return SingleKeysOn(
+      on: singleKeys,
+      child: Shortcuts(
+        shortcuts: AppShortcuts.bindings(defaultTargetPlatform),
+        child: Actions(
+          actions: {
+            AppCommandIntent: AppCommandAction(
+              handlers,
+              singleKeys: singleKeys,
+            ),
+          },
+          child: Focus(
+            autofocus: true,
+            // No Tab stop. When the browser gives the view its focus back (a
+            // closed ⋯ menu dropped it), Flutter moves focus to the first
+            // traversable node; this node took it from an open popover's field,
+            // which then took no keys on the web (M12 follow-up).
+            skipTraversal: true,
+            child: child,
+          ),
         ),
       ),
     );

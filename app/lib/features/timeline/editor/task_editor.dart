@@ -205,7 +205,9 @@ class _FormState extends ConsumerState<_Form> {
     return CallbackShortcuts(
       bindings: {
         AppShortcuts.activator(p, LogicalKeyboardKey.keyS): _save,
-        AppShortcuts.activator(p, LogicalKeyboardKey.keyD): _toggleDone,
+        // ⌘D is the browser's bookmark key on the web (ED-095).
+        if (!webChrome(context))
+          AppShortcuts.activator(p, LogicalKeyboardKey.keyD): _toggleDone,
       },
       child: SaveFailureFrame(
         failure: _failure,

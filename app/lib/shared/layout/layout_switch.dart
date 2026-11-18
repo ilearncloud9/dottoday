@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:flutter/material.dart';
@@ -25,4 +26,11 @@ void setLayout(BuildContext context, {required bool minimal}) {
       }
     }),
   );
+}
+
+/// Show Less / Show Everything from the keyboard and the Mac View menu
+/// (⇧⌘L, web ⇧L; ED-095): the other layout than the stored one.
+void toggleLayout(BuildContext context) {
+  final layout = ProviderScope.containerOf(context).read(uiLayoutProvider);
+  setLayout(context, minimal: layout != UiLayout.minimal);
 }

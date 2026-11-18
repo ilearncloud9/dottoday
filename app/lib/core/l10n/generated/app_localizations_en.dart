@@ -6954,6 +6954,64 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get menuCalendar => 'Calendar';
+
+  @override
+  String get menuNewBrainDump => 'New Brain Dump…';
+
+  @override
+  String get menuPasteAsTasks => 'Paste as Tasks';
+
+  @override
+  String get menuBack => 'Back';
+
+  @override
+  String get menuShowLess => 'Show Less';
+
+  @override
+  String get menuShowEverything => 'Show Everything';
+
+  @override
+  String get menuCopyDayText => 'Copy Day as Text';
+
+  @override
+  String get shortcutBrainDump => 'New brain dump';
+
+  @override
+  String get shortcutPasteTasks => 'Paste a list as tasks';
+
+  @override
+  String get shortcutBack => 'Back';
+
+  @override
+  String get shortcutSearch => 'Search';
+
+  @override
+  String get shortcutToggleLayout => 'Show less or everything';
+
+  @override
+  String get shortcutCopyDay => 'Copy the day as text';
+
+  @override
+  String get shortcutMoveTask => 'Move the picked tasks to another day';
+
+  @override
+  String get shortcutFocusTask => 'Focus on the picked task';
+
+  @override
+  String get shortcutGoCalendar => 'Go to Calendar';
+
+  @override
+  String get shortcutGoSearch => 'Go to Search';
+
+  @override
+  String get settingsSingleKeys => 'Single-key shortcuts';
+
+  @override
+  String get settingsSingleKeysHint =>
+      'Keys like 1–4, n and t work without ⌘ or Ctrl. Turn them off if they get in the way of voice control.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

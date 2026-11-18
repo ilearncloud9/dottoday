@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -21,9 +22,7 @@ import 'package:dottoday/features/timeline/week/week_tasks.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -122,15 +121,12 @@ class WeekView extends ConsumerWidget {
     );
   }
 
-  /// ⌘← / ⌘→ step a week, ⌘T back to this week (Ctrl elsewhere).
+  /// ⌘← / ⌘→ step a week, ⌘T back to this week (web `[` `]` `t`).
   Widget _keys(Widget child) {
-    final p = defaultTargetPlatform;
-    return CallbackShortcuts(
-      bindings: {
-        AppShortcuts.activator(p, LogicalKeyboardKey.arrowLeft): onPrevious,
-        AppShortcuts.activator(p, LogicalKeyboardKey.arrowRight): onNext,
-        AppShortcuts.activator(p, LogicalKeyboardKey.keyT): onToday,
-      },
+    return PeriodKeys(
+      onPrevious: onPrevious,
+      onNext: onNext,
+      onCurrent: onToday,
       child: Focus(
         autofocus: true,
         // Catches keys only; adds nothing for screen readers.

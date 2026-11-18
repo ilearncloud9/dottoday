@@ -7008,6 +7008,65 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get menuCalendar => 'Calendrier';
+
+  @override
+  String get menuNewBrainDump => 'Nouveau vidage de tête…';
+
+  @override
+  String get menuPasteAsTasks => 'Coller comme tâches';
+
+  @override
+  String get menuBack => 'Retour';
+
+  @override
+  String get menuShowLess => 'Afficher moins';
+
+  @override
+  String get menuShowEverything => 'Tout afficher';
+
+  @override
+  String get menuCopyDayText => 'Copier la journée en texte';
+
+  @override
+  String get shortcutBrainDump => 'Nouveau vidage de tête';
+
+  @override
+  String get shortcutPasteTasks => 'Coller une liste comme tâches';
+
+  @override
+  String get shortcutBack => 'Retour';
+
+  @override
+  String get shortcutSearch => 'Rechercher';
+
+  @override
+  String get shortcutToggleLayout => 'Afficher moins ou tout';
+
+  @override
+  String get shortcutCopyDay => 'Copier la journée en texte';
+
+  @override
+  String get shortcutMoveTask =>
+      'Déplacer les tâches choisies vers un autre jour';
+
+  @override
+  String get shortcutFocusTask => 'Se concentrer sur la tâche choisie';
+
+  @override
+  String get shortcutGoCalendar => 'Aller au calendrier';
+
+  @override
+  String get shortcutGoSearch => 'Aller à la recherche';
+
+  @override
+  String get settingsSingleKeys => 'Raccourcis à une touche';
+
+  @override
+  String get settingsSingleKeysHint =>
+      'Les touches comme 1–4, n et t marchent sans ⌘ ni Ctrl. Désactivez-les si elles gênent le contrôle vocal.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

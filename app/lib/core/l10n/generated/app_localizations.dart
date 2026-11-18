@@ -10410,6 +10410,120 @@ abstract class AppLocalizations {
   /// **'{first} {second}'**
   String accountTwoSentences(String first, String second);
 
+  /// Mac View menu in Minimal: the month calendar (⌘3, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get menuCalendar;
+
+  /// Mac File menu: opens Brain dump (⇧⌘N, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'New Brain Dump…'**
+  String get menuNewBrainDump;
+
+  /// Mac File menu: opens Add with the clipboard's list (⇧⌘V, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Paste as Tasks'**
+  String get menuPasteAsTasks;
+
+  /// Mac Go menu: back to the previous place (⌘[, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get menuBack;
+
+  /// Mac View menu: switch to the Minimal layout (⇧⌘L, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Less'**
+  String get menuShowLess;
+
+  /// Mac View menu: switch to the Full layout (⇧⌘L, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Everything'**
+  String get menuShowEverything;
+
+  /// Mac Edit menu: copies the shown day as text (⇧⌘C, ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Day as Text'**
+  String get menuCopyDayText;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'New brain dump'**
+  String get shortcutBrainDump;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a list as tasks'**
+  String get shortcutPasteTasks;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get shortcutBack;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get shortcutSearch;
+
+  /// Shortcut list row: switch Minimal and Full (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Show less or everything'**
+  String get shortcutToggleLayout;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the day as text'**
+  String get shortcutCopyDay;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Move the picked tasks to another day'**
+  String get shortcutMoveTask;
+
+  /// Shortcut list row (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on the picked task'**
+  String get shortcutFocusTask;
+
+  /// Shortcut list row in Minimal (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Calendar'**
+  String get shortcutGoCalendar;
+
+  /// Shortcut list row in Minimal (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Search'**
+  String get shortcutGoSearch;
+
+  /// Web Settings › General: switch for keys without ⌘ or Ctrl (ED-095, WCAG 2.1.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Single-key shortcuts'**
+  String get settingsSingleKeys;
+
+  /// Web Settings › General: what Single-key shortcuts does.
+  ///
+  /// In en, this message translates to:
+  /// **'Keys like 1–4, n and t work without ⌘ or Ctrl. Turn them off if they get in the way of voice control.'**
+  String get settingsSingleKeysHint;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

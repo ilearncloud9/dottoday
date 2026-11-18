@@ -1,3 +1,5 @@
+import 'package:dottoday/core/editing/focus_task.dart';
+import 'package:dottoday/core/l10n/generated/app_localizations.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
@@ -183,6 +185,40 @@ void main() {
       );
       await _key(tester, LogicalKeyboardKey.enter);
       expect(find.byType(BottomSheet), findsOneWidget);
+      expect(_picked(tester, repo), isEmpty);
+    });
+
+    testWidgets('Ctrl+D marks the picked task done (ED-095)', (tester) async {
+      await pumpToday(tester, repo: repo);
+      await _pickNth(tester, 3);
+      await _ctrl(tester, LogicalKeyboardKey.keyD);
+      expect(
+        repo.rows.singleWhere((o) => o.title == 'Team standup').status,
+        OccurrenceStatus.done,
+      );
+    });
+
+    testWidgets('Ctrl+Shift+M opens Move To… for the picked tasks', (
+      tester,
+    ) async {
+      await pumpToday(tester, repo: repo);
+      await _pickNth(tester, 3);
+      await _ctrl(tester, LogicalKeyboardKey.keyM, shift: true);
+      final l10n = lookupAppLocalizations(const Locale('en'));
+      expect(find.text(l10n.selectionMoveTitle), findsOneWidget);
+    });
+
+    testWidgets('Ctrl+Shift+F focuses on the picked task', (tester) async {
+      // Wide: Focus fills the window through its provider (ED-286).
+      await pumpToday(tester, repo: repo, size: const Size(1280, 900));
+      await _pickNth(tester, 3);
+      final picked = _picked(tester, repo).single;
+      await _ctrl(tester, LogicalKeyboardKey.keyF, shift: true);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(TodayScreen)),
+      );
+      final id = repo.rows.singleWhere((o) => o.title == picked).id;
+      expect(container.read(focusTaskProvider), id);
       expect(_picked(tester, repo), isEmpty);
     });
   });

@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +15,11 @@ import 'package:go_router/go_router.dart';
 /// The Mac menu bar (docs/07 macOS, docs/09 M5.5): File, Edit, View, Go and
 /// Window around the same commands as the keyboard table, so each command
 /// still has one implementation (`appCommandHandlers`).
+///
+/// ⌘1–4 name the layout's places, and the keyboard scheme's commands
+/// (ED-095) carry their keys: File › New Brain Dump… ⇧⌘N and Paste as
+/// Tasks ⇧⌘V, Edit › Copy Day as Text ⇧⌘C, View › Show Less ⇧⌘L, Go ›
+/// Back ⌘[, Today ⌘T and Search ⌘F.
 ///
 /// Keys a text field also uses (⌘Z, ⇧⌘Z, ⌫, ⌘← ⌘→) are listed without
 /// native key equivalents: a menu equivalent takes the key before Flutter
@@ -38,6 +45,7 @@ class AppMenuBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (!shown) return child;
     final l10n = context.l10n;
+    final minimal = watchSimplified(ref, FeatureId.navigation);
     return PlatformMenuBar(
       menus: [
         _app(l10n),
@@ -45,6 +53,8 @@ class AppMenuBar extends ConsumerWidget {
           label: l10n.menuFile,
           menus: [
             _command(l10n.menuNewTask, AppCommand.quickAdd),
+            _command(l10n.menuNewBrainDump, AppCommand.newBrainDump),
+            _command(l10n.menuPasteAsTasks, AppCommand.pasteAsTasks),
             PlatformMenuItem(
               label: l10n.menuExport,
               onSelected: () =>
@@ -77,18 +87,34 @@ class AppMenuBar extends ConsumerWidget {
                   : const DeleteCharacterIntent(forward: true),
               () => _sendToFocus(const TrashTaskIntent()),
             ),
+            PlatformMenuItem(
+              label: l10n.menuCopyDayText,
+              shortcut: _key(LogicalKeyboardKey.keyC, shift: true),
+              onSelected: () => _sendToFocus(const CopyDayIntent()),
+            ),
           ],
         ),
         PlatformMenu(
           label: l10n.menuView,
           menus: [
+            // ⌘1–4 by the layout's places (ED-095).
             PlatformMenuItemGroup(
               members: [
                 _command(l10n.navToday, AppCommand.goToday),
                 _command(l10n.navInbox, AppCommand.goInbox),
-                _command(l10n.navWeek, AppCommand.goWeek),
-                _command(l10n.menuMonth, AppCommand.goMonth),
+                _command(
+                  minimal ? l10n.menuCalendar : l10n.navWeek,
+                  AppCommand.goWeek,
+                ),
+                _command(
+                  minimal ? l10n.navSearch : l10n.menuMonth,
+                  AppCommand.goMonth,
+                ),
               ],
+            ),
+            _command(
+              minimal ? l10n.menuShowEverything : l10n.menuShowLess,
+              AppCommand.toggleLayout,
             ),
             _command(l10n.menuShortcuts, AppCommand.showShortcuts),
             const PlatformProvidedMenuItem(
@@ -99,9 +125,11 @@ class AppMenuBar extends ConsumerWidget {
         PlatformMenu(
           label: l10n.menuGo,
           menus: [
+            _command(l10n.menuBack, AppCommand.back),
             _onFocus(l10n.menuPreviousDay, const ShowDayIntent(-1)),
             _onFocus(l10n.menuNextDay, const ShowDayIntent(1)),
-            PlatformMenuItem(label: l10n.navToday, onSelected: _goToday),
+            _command(l10n.navToday, AppCommand.today),
+            _command(l10n.navSearch, AppCommand.search),
           ],
         ),
         PlatformMenu(
@@ -205,12 +233,9 @@ class AppMenuBar extends ConsumerWidget {
     },
   );
 
-  /// On Today: back to today's date; anywhere else: to Today, which
-  /// opens on today.
-  void _goToday() {
-    _sendToFocus(const ShowTodayIntent());
-    router.go(AppRoutes.today);
-  }
+  /// The primary modifier with [key], as a Mac menu equivalent.
+  SingleActivator _key(LogicalKeyboardKey key, {bool shift = false}) =>
+      AppShortcuts.activator(TargetPlatform.macOS, key, shift: shift);
 }
 
 /// ⌘Z / Ctrl+Z undoes the last change (Edit › Undo, M5.5) and ⇧⌘Z /

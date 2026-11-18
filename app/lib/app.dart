@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
+import 'package:dottoday/app_openers.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
@@ -18,6 +21,8 @@ import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/pwa/tab_live_dot.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/features/auth/account_gate_view.dart';
 import 'package:dottoday/features/inbox/schedule_from_anywhere.dart';
 import 'package:dottoday/features/lock/lock_gate.dart';
@@ -72,6 +77,8 @@ class DottodayApp extends ConsumerWidget {
         r,
       );
     });
+    // ⌘1–4 name Minimal's places in Minimal (ED-095).
+    final minimalNav = watchSimplified(ref, FeatureId.navigation);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       onGenerateTitle: (context) => tab.title ?? context.l10n.appTitle,
@@ -88,9 +95,15 @@ class DottodayApp extends ConsumerWidget {
       routerConfig: router,
       // Above all routes so shortcuts work wherever focus is (M0.13).
       builder: (context, child) {
+        final open = AppOpeners(router);
         final handlers = appCommandHandlers(
           router,
+          minimal: minimalNav,
           onQuickAdd: () => openQuickAdd(router),
+          onBrainDump: open.brainDump,
+          onPasteAsTasks: open.pasteAsTasks,
+          onToday: () => open.today(() => router.go(AppRoutes.today)),
+          onToggleLayout: open.toggleLayout,
           onShortcuts: () => _shortcuts(router),
         );
         // The Mac window takes the app's theme (ED-176).
@@ -105,6 +118,7 @@ class DottodayApp extends ConsumerWidget {
                 handlers: handlers,
                 child: AppCommandScope(
                   handlers: handlers,
+                  singleKeys: settings?.webSingleKeys ?? true,
                   child: UndoKeys(
                     child: Actions(
                       actions: _intents(router),
@@ -203,7 +217,15 @@ void _shortcuts(GoRouter router) {
   final context =
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
-  unawaited(showShortcutSheet(context, appShortcutGroups(context.l10n)));
+  final policy = ProviderScope.containerOf(context).read(layoutPolicyProvider);
+  final minimal =
+      policy.visibility(FeatureId.navigation) == FeatureVisibility.simplified;
+  unawaited(
+    showShortcutSheet(
+      context,
+      appShortcutGroups(context.l10n, minimal: minimal),
+    ),
+  );
 }
 
 /// Search's "+ Schedule": the Inbox flow on the root overlay.

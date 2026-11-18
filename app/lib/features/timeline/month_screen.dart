@@ -2,7 +2,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
-import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/month_data.dart';
@@ -15,9 +15,7 @@ import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -52,19 +50,13 @@ class MonthScreen extends ConsumerWidget {
     void step(int months) =>
         selection.show(DateTime(month.year, month.month + months));
     final thisMonth = month.year == today.year && month.month == today.month;
-    final p = defaultTargetPlatform;
     return Scaffold(
       key: _key,
       body: SafeArea(
-        child: CallbackShortcuts(
-          bindings: {
-            AppShortcuts.activator(p, LogicalKeyboardKey.arrowLeft): () =>
-                step(-1),
-            AppShortcuts.activator(p, LogicalKeyboardKey.arrowRight): () =>
-                step(1),
-            AppShortcuts.activator(p, LogicalKeyboardKey.keyT): () =>
-                selection.show(null),
-          },
+        child: PeriodKeys(
+          onPrevious: () => step(-1),
+          onNext: () => step(1),
+          onCurrent: () => selection.show(null),
           child: Focus(
             autofocus: true,
             // Catches keys only; adds nothing for screen readers.

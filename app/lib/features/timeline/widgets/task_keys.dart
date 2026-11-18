@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:dottoday/core/editing/editing_task.dart';
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/single_keys.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -11,6 +14,7 @@ import 'package:dottoday/features/timeline/state/selection_actions.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/selection_commands.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/foundation.dart';
@@ -47,6 +51,16 @@ final class DoneTaskIntent extends Intent {
   const DoneTaskIntent();
 }
 
+/// Move To… for the picked tasks (⇧⌘M, ED-095): the selection bar's Move.
+final class MoveTaskIntent extends Intent {
+  const MoveTaskIntent();
+}
+
+/// Focus on the one picked task (⇧⌘F, web f, ED-095).
+final class FocusTaskIntent extends Intent {
+  const FocusTaskIntent();
+}
+
 /// The task keys on Today (docs/02 F1.17): ↑↓ pick the previous or next
 /// task of [day], ⌘/Ctrl+↑↓ move the picked tasks 5 min (Shift: 15),
 /// Delete or ⌫ move them to Trash, ↩ opens and Space completes the one
@@ -54,9 +68,17 @@ final class DoneTaskIntent extends Intent {
 /// so the selection bar shows and its commands apply. Keys that have nothing to act on stay with the
 /// focused control (a row's ↩ still opens it).
 class TaskKeys extends ConsumerWidget {
-  const TaskKeys({required this.day, required this.child, super.key});
+  const TaskKeys({
+    required this.day,
+    required this.today,
+    required this.child,
+    super.key,
+  });
 
   final DateTime day;
+
+  /// The local date today, for Move To…'s calendar.
+  final DateTime today;
   final Widget child;
 
   static const _step = 5;
@@ -68,8 +90,25 @@ class TaskKeys extends ConsumerWidget {
     const up = LogicalKeyboardKey.arrowUp;
     const down = LogicalKeyboardKey.arrowDown;
     final k = _Keys(context, ref, day);
+    final singleKeys = SingleKeysOn.of(context);
+    final web = webChrome(context);
     return Shortcuts(
       shortcuts: {
+        // ⌘D marks the picked task done (ED-095); the web leaves ⌘D to the
+        // browser's bookmark and uses Space.
+        if (!web)
+          AppShortcuts.activator(p, LogicalKeyboardKey.keyD):
+              const DoneTaskIntent(),
+        // Not on the web: the browser's own (ED-095 lists no web key).
+        if (!web)
+          AppShortcuts.activator(p, LogicalKeyboardKey.keyM, shift: true):
+              const MoveTaskIntent(),
+        if (!web)
+          AppShortcuts.activator(p, LogicalKeyboardKey.keyF, shift: true):
+              const FocusTaskIntent(),
+        if (web)
+          const SingleActivator(LogicalKeyboardKey.keyF):
+              const FocusTaskIntent(),
         const SingleActivator(up): const StepTaskIntent(-1),
         const SingleActivator(down): const StepTaskIntent(1),
         AppShortcuts.activator(p, up): const NudgeTaskIntent(-_step),
@@ -113,6 +152,15 @@ class TaskKeys extends ConsumerWidget {
           DoneTaskIntent: _KeyAction<DoneTaskIntent>(
             () => k.picked.length == 1,
             (_) => unawaited(k.done()),
+          ),
+          MoveTaskIntent: _KeyAction<MoveTaskIntent>(
+            () => k.picked.isNotEmpty,
+            (_) => k.move(today),
+          ),
+          FocusTaskIntent: _KeyAction<FocusTaskIntent>(
+            // The web's f is a single key: off with the setting (ED-095).
+            () => k.picked.length == 1 && (!web || singleKeys),
+            (_) => k.focus(),
           ),
           ClearPickIntent: _KeyAction<ClearPickIntent>(
             () => k.picked.isNotEmpty,
@@ -233,6 +281,21 @@ final class _Keys {
           : l10n.snackManyDeleted(rows.length),
       tokenOf: (t) => t,
     );
+  }
+
+  /// The selection bar's Move To…, on the picked tasks.
+  void move(DateTime today) => SelectionCommands(
+    context: context,
+    container: ProviderScope.containerOf(context),
+    rows: picked,
+    today: today,
+    day: day,
+  ).move?.call();
+
+  void focus() {
+    final id = picked.single.id;
+    ref.read(taskSelectionProvider.notifier).clear();
+    openFocus(context, id);
   }
 
   void open() {

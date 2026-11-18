@@ -63,6 +63,19 @@ class LookGroup extends StatelessWidget {
           below: _Accents(current: DotAccent.fromKey(settings.accent)),
         ),
         _language(context, t),
+        // Web only: its single-key shortcuts can be turned off (ED-095,
+        // WCAG 2.1.4). Settings has no General group; Look and Language
+        // is the nearest.
+        if (webChrome(context))
+          SettingsRow(
+            glyph: DotGlyphs.bolt,
+            tint: t.tasks[TaskColor.teal].ink,
+            title: l10n.settingsSingleKeys,
+            subtitle: l10n.settingsSingleKeysHint,
+            toggle: settings.webSingleKeys,
+            onToggle: (on) =>
+                changeSettings(context, (s) => s.copyWith(webSingleKeys: on)),
+          ),
       ],
     );
   }

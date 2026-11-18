@@ -4996,6 +4996,20 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not here:** the week toolbar level with the window buttons (Today ‹ › and the date range) comes with that toolbar (M19/M20); until then the page header sits below the strip.
 - **Checks:** `flutter analyze` clean; `dart format` clean; shared, shell, policy, core, app shell and a11y tests pass (1,959); new inset tests in `window_material_test.dart` (28 pt on Mac, 0 in full screen, nothing elsewhere).
 
+### ED-378 · M18.7 part 1: one keyboard scheme
+- **Date:** 2026-11-18. **Owner:** "Five parts" for M18.7 (1 keyboard scheme, 2 tablet keyboard overlays, 3 web routes A′, 4 Settings's native place with Back and dismiss, 5 Full ↔ Minimal mid-action; each with its review page and commit), "Second native window now" for the Mac Settings window in part 4, then "Approve, start part 2" on the part 1 review page.
+- **Built (ED-095, CR-143/ED-218 noted below):**
+  - the command table (`app_shortcuts.dart`) gains New Brain Dump… ⇧⌘N, Paste as Tasks ⇧⌘V (Add opens with the clipboard's list), Today ⌘T, Back ⌘[, Search ⌘F and Show Less / Show Everything ⇧⌘L; `app_openers.dart` opens the sheets on the root overlay;
+  - ⌘1–4 by layout: Full Today · Inbox · Week · Month; Minimal Today · Inbox · Calendar (the month) · Search. ⌘1 opens Today in Minimal until `/now` exists (part 3);
+  - ⌘T asks the focused screen first: Today, Week and Month go back to their current day, week or month (built behaviour, "nothing built is reassigned"); anywhere else it opens Today. The Go menu's Previous / Next Day step the week or month there;
+  - a picked task: ⌘D Done, ⇧⌘M Move To…, ⇧⌘F Focus; Today: ⇧⌘C Copy Day as Text;
+  - the web: single keys stand in for the ⌘ keys the browser keeps (1–4, n, ⇧N, t, `[` `]`, /, ?, f, p, ⇧L); ⌘D, ⇧⌘C and ⇧⌘M are left to the browser there. Single keys act only outside text fields and can be turned off: Settings › Look and Language › Single-key shortcuts, web only (WCAG 2.1.4; Settings has no General group, so it sits beside Language). Stored in the synced settings as `webSingleKeys` (the server ignores keys it doesn't know; no migration);
+  - the Mac menu bar: File › New Brain Dump…, Paste as Tasks; Edit › Copy Day as Text; View › ⌘1–4 named by layout, then Show Less / Show Everything; Go › Back, Previous / Next Day, Today ⌘T, Search ⌘F;
+  - the ⌘/ list shows each platform's keys (the web's single keys; Minimal's ⌘3 and ⌘4).
+- **Later, each with its feature:** ⌘K / k with the Search-or-run palette (not built); ⇧⌘T / g Go to Date (M19, R2-36); ⌥⌘I Inspector (M19.2) and Day Column (M19.6), ⌃⌘S Show Sidebar and ⌥⌘0 Now window (M19.2); ⌘] Forward and the web's history (part 3); the iPad and Android overlays (part 2).
+- **Checked in the Mac app** (keys sent through Accessibility, which the owner turned on): ⌘/, ⌘3, ⌘→ then ⌘T, ⌘F, ⇧⌘N, ⇧⌘L, Minimal ⌘3, ⌘[, ⌘1. The Mac app's data was backed up and restored (checksums equal).
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` passing apart from the 5 local-Supabase suites; new `keyboard_scheme_test.dart`, Mac menu key test, ⌘D / ⇧⌘M / ⇧⌘F on a picked task. The backup fixture records the new setting's default; the icon names were moved back to the end of the language files by their generator; the pseudo-locale was regenerated.
+
 ---
 
 ## Pending owner answers

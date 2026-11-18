@@ -32,6 +32,7 @@ void main() {
           Scaffold(
             body: TaskKeys(
               day: todayTestDate,
+              today: todayTestDate,
               child: field
                   ? const TextField(autofocus: true)
                   : const Focus(autofocus: true, child: SizedBox()),
