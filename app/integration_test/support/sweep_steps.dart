@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
 // The device sweeps' three steps (docs/08 §7): wait for a finder, let
@@ -33,6 +34,14 @@ Future<void> sweepRest(WidgetTester tester) async {
   for (var i = 0; i < 10; i++) {
     await tester.pump(const Duration(milliseconds: 100));
   }
+}
+
+/// Opens [path] by route. The phone tab bar is native on iPhone (M18.6)
+/// and phones reach Settings from Today's profile (M18.7), so a tab's
+/// label is not on every platform; the route is.
+Future<void> sweepGo(WidgetTester tester, String path) async {
+  GoRouter.of(tester.element(find.byType(Scaffold).first)).go(path);
+  await sweepRest(tester);
 }
 
 /// Whether a host process captures every shot (a web build driven by

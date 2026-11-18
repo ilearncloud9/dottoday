@@ -188,33 +188,62 @@ class DayCard extends StatelessWidget {
         // tab bar, and a bottom or side line would show there (ADR-0015).
         boxShadow: DotElevation.sheet,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      child: LayoutBuilder(
+        builder: (context, box) => _sheetBody(context, box, [
           if (top.isEmpty) const SizedBox(height: DotSpace.l) else ...top,
-          // Lazy: only the rows on screen are built (R-15). The list's
-          // rectangular clip sits below the rounded corners.
-          Expanded(
-            // The thread keeps clear of the sheet's edge (`Main`'s inset).
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
-              child: _scroll(
-                context,
-                (key) => [
-                  _thread(key),
-                  // The last row scrolls clear of the floating tab bar and
-                  // + button (their height is in the bottom padding).
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: MediaQuery.paddingOf(context).bottom + DotSpace.l,
-                    ),
-                  ),
-                ],
-              ),
+        ]),
+      ),
+    );
+  }
+
+  /// The sheet's pinned [top] over its thread. Squeezed below [_shortCard]
+  /// (a keyboard and a prompt over a small phone), [top] scrolls with the
+  /// thread instead of overflowing, as the card's header does (M4.9).
+  Widget _sheetBody(
+    BuildContext context,
+    BoxConstraints box,
+    List<Widget> top,
+  ) {
+    List<Widget> thread(GlobalKey? key) => [
+      _thread(key),
+      // The last row scrolls clear of the floating tab bar and + button
+      // (their height is in the bottom padding).
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: MediaQuery.paddingOf(context).bottom + DotSpace.l,
+        ),
+      ),
+    ];
+    // The thread keeps clear of the sheet's edge (`Main`'s inset).
+    Widget inset(Widget child) => Padding(
+      padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
+      child: child,
+    );
+    if (box.maxHeight < _shortCard) {
+      return _scroll(
+        context,
+        (key) => [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: top,
             ),
           ),
+          SliverPadding(
+            padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
+            sliver: SliverMainAxisGroup(slivers: thread(key)),
+          ),
         ],
-      ),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...top,
+        // Lazy: only the rows on screen are built (R-15). The list's
+        // rectangular clip sits below the rounded corners.
+        Expanded(child: inset(_scroll(context, thread))),
+      ],
     );
   }
 

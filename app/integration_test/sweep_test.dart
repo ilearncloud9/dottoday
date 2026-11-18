@@ -78,7 +78,7 @@ void main() {
     await sweepShot(binding, tester, '${_tag}_today');
     await checkA11yTree(tester, 'today');
 
-    await tester.tap(find.text('Inbox').last);
+    await sweepGo(tester, '/inbox');
     await sweepRest(tester);
     await sweepShot(binding, tester, '${_tag}_inbox');
     await checkA11yTree(tester, 'inbox');
@@ -250,7 +250,7 @@ Future<void> _searchAndSettings(
   ).popUntil((r) => r.isFirst);
   await sweepRest(tester);
 
-  await tester.tap(find.text('Search').last);
+  await sweepGo(tester, '/search');
   await sweepUntil(tester, find.byType(EditableText));
   await tester.enterText(find.byType(EditableText).first, 'work');
   await sweepRest(tester);
@@ -258,7 +258,7 @@ Future<void> _searchAndSettings(
   await sweepShot(binding, tester, '${_tag}_search');
   await checkA11yTree(tester, 'search');
 
-  await tester.tap(find.text('Settings').last);
+  await sweepGo(tester, '/settings');
   await sweepUntil(tester, find.text('DAY SHAPE'));
   await sweepRest(tester);
   await sweepShot(binding, tester, '${_tag}_settings');
@@ -314,7 +314,7 @@ Future<void> _m3f(
   await sweepShot(binding, tester, '${_tag}_sync');
   await closeSheets();
 
-  await tester.tap(find.text('Today').last);
+  await sweepGo(tester, '/today');
   await sweepUntil(tester, find.byType(DayCard));
   final button = find.widgetWithText(OutlinedButton, 'Running late');
   if (tester.any(button)) {

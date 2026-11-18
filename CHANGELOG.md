@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Fixed
+- On a small phone with the keyboard up, the top of the day sheet no longer runs past its edge: it scrolls with the day instead (redesign branch).
+- A tip shown just as the app restarted (after onboarding or a layout switch) no longer raises an error in the background (redesign branch).
+
+### Fixed
 - Switching between Full and Minimal in the middle of a drag or a selection no longer applies anything (redesign branch); the day, the open task, text you were typing and Undo all carry over.
 
 ### Fixed

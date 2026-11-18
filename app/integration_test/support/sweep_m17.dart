@@ -1,3 +1,4 @@
+import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/shared/learning/wake_up_explain_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,7 +25,8 @@ Future<void> sweepM17(
   // top of its lazy list.
   Future<void> open() async {
     router.go('/settings');
-    await until(find.text('Settings'));
+    // Its title scrolls with the page (M18.7 4a): wait on the screen.
+    await until(find.byType(SettingsScreen));
     await tester.dragUntilVisible(
       alarm,
       find.byType(Scrollable).first,
@@ -73,6 +75,9 @@ Future<void> sweepM17(
   Navigator.of(tester.element(find.text('Dawn chorus').last)).pop();
   await rest();
   if (wasOff) {
+    // Scrolled above the screen by the drag to "Sounds to vary".
+    await tester.ensureVisible(vary);
+    await rest();
     await tester.tap(vary);
     await rest();
   }

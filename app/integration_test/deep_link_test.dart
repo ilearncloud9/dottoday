@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -65,6 +66,12 @@ void main() {
       (_) {},
     );
     await _pumpUntil(tester, find.text('Deep work: roadmap'));
-    expect(find.byKey(ValueKey('route:task:$id')), findsOneWidget);
+    // M18.7 (ED-380): a task link opens the task over its own day, named
+    // in the address as `?task=`.
+    final router = GoRouter.of(tester.element(find.byType(TodayScreen)));
+    expect(
+      router.routerDelegate.currentConfiguration.uri.queryParameters['task'],
+      id,
+    );
   });
 }

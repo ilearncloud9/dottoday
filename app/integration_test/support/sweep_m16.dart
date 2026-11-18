@@ -1,10 +1,12 @@
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/timeline/widgets/later_row.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -87,7 +89,13 @@ Future<void> sweepM16(
   await until(find.text('Everything else…'));
   await rest();
   await shot('minimal_settings');
-  await tester.tap(find.text('Everything else…'));
+  // On a phone the row can sit under the floating tab bar: scroll it up
+  // clear of the bar first, as a person would.
+  final everything = find.text('Everything else…');
+  await tester.ensureVisible(everything);
+  await tester.drag(find.byType(Scrollable).first, const Offset(0, -240));
+  await rest();
+  await tester.tap(everything);
   await until(find.text('Search'));
   await rest();
   await shot('minimal_everything');
@@ -95,6 +103,13 @@ Future<void> sweepM16(
   router.go('/today');
   await rest();
   await menu('Show everything');
-  await until(find.text('Inbox'));
+  // The tab bar is native on iPhone (M18.6), so wait on the layout itself.
+  final layout = ProviderScope.containerOf(
+    tester.element(find.byType(Scaffold).first),
+  );
+  for (var i = 0; i < 100 && layout.read(layoutPolicyProvider).isMinimal; i++) {
+    await tester.pump(const Duration(milliseconds: 200));
+  }
+  expect(layout.read(layoutPolicyProvider).isMinimal, isFalse);
   await rest();
 }

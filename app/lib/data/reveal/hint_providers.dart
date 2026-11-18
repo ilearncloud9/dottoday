@@ -67,12 +67,16 @@ Future<Result<void, AppFailure>> _change(
   HintId hint,
   RevealHint Function(RevealHint h, DateTime now) change,
 ) async {
+  // Callers fire this without waiting (a hint row's first frame), and the
+  // app can restart under it (AppRestart): read the container before the
+  // first await, never after it.
+  final clock = ref.read(clockProvider);
+  final hints = ref.read(revealHintRepositoryProvider);
+  final writes = ref.read(writeUseCaseProvider);
   final profile = await readProfile(ref);
-  final now = ref.read(clockProvider).nowUtc();
+  final now = clock.nowUtc();
   final id = revealHintRowId(profile.id, hint);
-  final stored = await ref
-      .read(revealHintRepositoryProvider)
-      .findById(profile.id, id);
+  final stored = await hints.findById(profile.id, id);
   final base =
       stored ??
       RevealHint(
@@ -82,7 +86,7 @@ Future<Result<void, AppFailure>> _change(
         createdAt: now,
         updatedAt: now,
       );
-  return ref
-      .read(writeUseCaseProvider)
-      .apply(WriteBatch(userId: profile.id, revealHints: [change(base, now)]));
+  return writes.apply(
+    WriteBatch(userId: profile.id, revealHints: [change(base, now)]),
+  );
 }

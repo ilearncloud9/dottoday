@@ -5074,6 +5074,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,047 passing (5 local-Supabase suites need a stack); new `switch_mid_action_test.dart` (6). The full run caught that drops were refused before any switch; fixed.
 - **M18.7 done** (ED-378 to ED-384). Follow-up: the Mac Settings window (ED-383).
 
+### ED-385 · M18.8: acceptance and ship-check; M18 closed
+- **Date:** 2026-11-18. **Owner:** "fix all that is open before we move on to approve and close", then "Approve, close M18".
+- **Gate:** `dart analyze --fatal-infos` and `dart format` clean; 7,050 tests pass, and the 5 Supabase suites pass on the isolated test stack (11 tests; pgTAP 238/238); coverage `lib/domain` 95.9 %, overall 90.9 %; parity matrix 91 rows, 0 lost, 10 moved, each still reached on every platform it had; web, Android, macOS and iOS-simulator builds pass locally; the iOS device suite passes 11 of 11 on the iPhone 17 Pro simulator (exactness 20/20/0, AlarmKit, the design sweep with 55 shots and 39 accessibility-tree checks).
+- **Fixed at the gate:**
+  - a hint write read the app's state after an app restart had disposed it: `_change` in `hint_providers.dart` reads the container before its first await;
+  - the day sheet (`DayCard.sheet`) overflowed by 2–4 px when squeezed to about 90 px (older than M18): below the short-card height its handle and Plan / Reality switch scroll with the thread, as the card's header does (`day_card_sheet_squeeze_test.dart`);
+  - device tests still looked for Flutter tab labels and the old task page (the native iPhone bar, ED-373; `?task=`, ED-380): `app_launch`, `deep_link` and the sweep go by the address (`sweepGo`), and the sweep scrolls rows clear of the floating bar before tapping;
+  - the M18.6 plan line named an iPhone native Day menu that ED-373 moved to M20.3.
+- **Noted for the owner:** on phones Settings opens only from Today's profile; on the web, single keys off leaves 1–4 and N without a key. Two sweep runs were cut short by the test simulator shutting down mid-run, cause not found.
+- **M18 done** (ED-357 to ED-385). Next: M19, the first vertical slice.
+
 ---
 
 ## Pending owner answers

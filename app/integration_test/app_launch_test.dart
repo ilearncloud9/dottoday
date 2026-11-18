@@ -10,6 +10,7 @@ import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'pass_onboarding.dart';
@@ -47,7 +48,10 @@ void main() {
     await passOnboarding(tester);
     await _pumpUntil(tester, find.byType(TodayScreen));
     expect(find.byType(DotShell), findsOneWidget);
-    expect(find.text('Today'), findsWidgets);
+    // The tab's label is native chrome on iPhone (M18.6): the address says
+    // where the app opened.
+    final router = GoRouter.of(tester.element(find.byType(TodayScreen)));
+    expect(router.routerDelegate.currentConfiguration.uri.path, '/today');
     if (!kDebugMode) return; // The debug menu only exists in debug builds.
 
     // The header appears once the profile and today's date have loaded.
