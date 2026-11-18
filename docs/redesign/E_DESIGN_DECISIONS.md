@@ -4931,6 +4931,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; the web build compiles; new goldens `shell_web`.
 - **M18.5 done** (ED-369, ED-370, ED-371).
 
+### ED-372 · M18.6 part 1: Android's bottom row, the + and the keyboard
+- **Date:** 2026-11-18. **Owner:** "Yes, as proposed" (M18.6 in three parts; the native iPhone bar fades out under Flutter sheets and dialogs, toasts lift above it) and "Approve" on the part 1 review page (E-Phones Android Today beside the app's goldens).
+- **Built:**
+  - Android compact (ED-125): `MaterialBarShell` is the floating toolbar (72, radius 36, 16 from the start, 24 above the bottom) with the + (56, radius 16, 8 away); the current place a tonal block; frosted (fill 72 % / 78 % over a 24 blur) on Android 12+, solid tonal on 11 and older and with high contrast (`dottoday/display` channel, `frostedChromeProvider`); tokens `barAndroid`, `fabAndroid`, `ChromeAlpha`;
+  - the toast at compact Android width sits above the toolbar;
+  - the + is "Add a task" (ED-240): `quickAddTooltip` en and es renamed;
+  - the neutral "return" key on iPhone's Add and Inbox fields (ED-135); Android keeps done.
+- **Moved:** the Android Day button above the toolbar to M20.3 (no Day button yet); iPhone's hold hint and Android's menu role on the + to M19.3, with the menus they describe.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; the Android shell test checks the geometry.
+
 ---
 
 ## Pending owner answers

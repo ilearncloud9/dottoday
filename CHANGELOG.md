@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Android phones get a floating bottom toolbar with the + beside it (redesign branch), frosted over the day on Android 12 and later and solid on older versions or with high contrast. The + is now called "Add a task" for screen readers on every platform. On iPhone the Add field's keyboard shows a plain "return" key, which still adds the task.
+
+### Changed
 - Dottoday in a phone's browser gets its own bottom bar (redesign branch): a plain bar with labelled icons and an "Add" button above it, rather than imitating the iPhone or Android bars. Handwriting with an Apple Pencil or an Android stylus keeps working in every text field.
 
 ### Changed

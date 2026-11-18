@@ -650,7 +650,7 @@ Rules for every task in M18 to M22:
   - Mac: the vibrancy sidebar with a 35 % warm tint (ED-130); native menus and context menus through one NSMenu channel (ED-239, CR-098); "Move to Trash ⌘⌫" (ED-336); SF Symbols in native chrome only (CR-014, ED-260).
   Device glass checks go to M21.
   Split by the owner (2026-11-18), each part with its own review page and commit. The native iPhone bar fades out while a Flutter sheet or dialog is open (native views sit above Flutter), and toasts lift above it.
-  - [ ] Part 1: Android bottom row C in Flutter (ED-125); the + named "Add a task" everywhere with each platform's extra (ED-240); the stock iPhone keyboard with a neutral return (ED-135).
+  - [x] Part 1 done 2026-11-18 (ED-372): Android bottom row C in Flutter (ED-125), frosted on 12+ and solid on 11 and older; the + named "Add a task" (ED-240); the stock iPhone keyboard with a neutral return (ED-135). Moved: the Android Day button to M20.3; the +'s hold hint and menu role to M19.3.
   - [ ] Part 2: the iPhone N3 native bottom row (UIKit tab bar, teal glass +, native Day with UIMenu; ED-124, ED-132) with F2 on iOS 16–25 (checked on iOS 18.6); the iPad's native top tabs and sidebar; landscape tab items side by side.
   - [ ] Part 3: Mac vibrancy sidebar (ED-130), native context menus through one NSMenu channel (ED-239, CR-098), "Move to Trash ⌘⌫" (ED-336), SF Symbols in native chrome only.
 - [ ] M18.7 Navigation:
