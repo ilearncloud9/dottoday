@@ -74,6 +74,7 @@ class DotShell extends StatelessWidget {
     this.addAtEveryWidth = false,
     this.frosted = false,
     this.native,
+    this.vibrantSidebar = false,
     super.key,
   });
 
@@ -82,6 +83,10 @@ class DotShell extends StatelessWidget {
 
   /// The iPhone's native row (ED-128 N3); null keeps the Flutter bar.
   final NativeBar? native;
+
+  /// The expanded sidebar shows the Mac's vibrant material through its
+  /// tint (ED-130); false paints it solid.
+  final bool vibrantSidebar;
 
   /// False draws no tab bar at compact width, only the floating add button
   /// (minimal layout, docs/14 §4: "One floating Add button").
@@ -179,7 +184,11 @@ class DotShell extends StatelessWidget {
             drawer: placesDrawer(context, bar),
           ),
           // Expanded: the sidebar of places, folding to the rail.
-          (WidthClass.expanded, _) => SidebarShell(bar: bar, body: body),
+          (WidthClass.expanded, _) => SidebarShell(
+            bar: bar,
+            body: body,
+            vibrant: vibrantSidebar,
+          ),
         };
         final onTrash = onTrashTask;
         if (onTrash == null) return shell;

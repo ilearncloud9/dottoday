@@ -10,10 +10,19 @@ import 'package:flutter/material.dart';
 /// content. Its button folds it to the rail and the rail's brings it
 /// back, for this session (a view choice, nothing is stored).
 class SidebarShell extends StatefulWidget {
-  const SidebarShell({required this.bar, required this.body, super.key});
+  const SidebarShell({
+    required this.bar,
+    required this.body,
+    this.vibrant = false,
+    super.key,
+  });
 
   final ShellBar bar;
   final Widget body;
+
+  /// The Mac's material shows through the sidebar (ED-130): the shell
+  /// paints only the content opaque, the sidebar its tint.
+  final bool vibrant;
 
   @override
   State<SidebarShell> createState() => _SidebarShellState();
@@ -37,18 +46,25 @@ class _SidebarShellState extends State<SidebarShell> {
       );
     }
     final c = DotTheme.of(context).colors;
+    final vibrant = widget.vibrant;
     return Scaffold(
+      backgroundColor: vibrant ? Colors.transparent : null,
       body: Row(
         children: [
           SizedBox(
             width: DotSize.sidebar,
             child: DotSidebar(
               bar: widget.bar,
+              vibrant: vibrant,
               onToggle: () => setState(() => _folded = true),
             ),
           ),
           VerticalDivider(width: DotSpace.hairline, color: c.outline),
-          Expanded(child: widget.body),
+          Expanded(
+            child: vibrant
+                ? ColoredBox(color: c.surface, child: widget.body)
+                : widget.body,
+          ),
         ],
       ),
     );

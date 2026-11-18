@@ -39,6 +39,7 @@ final class DotColors {
     required this.sheet,
     required this.avatar,
     required this.canvas,
+    required this.sidebarTint,
     required this.ink2,
     required this.tertiary,
     required this.ring,
@@ -140,6 +141,10 @@ final class DotColors {
 
   /// Workspace time grid.
   final Color canvas;
+
+  /// The Mac sidebar's warm tint over the system's vibrant material
+  /// (ED-130, ED-176); [canvas] where the material can't show.
+  final Color sidebarTint;
 
   /// Body copy, Android icons, menu headers.
   final Color ink2;
@@ -276,6 +281,7 @@ final class DotColors {
       sheet: l(sheet, other.sheet),
       avatar: l(avatar, other.avatar),
       canvas: l(canvas, other.canvas),
+      sidebarTint: l(sidebarTint, other.sidebarTint),
       ink2: l(ink2, other.ink2),
       tertiary: l(tertiary, other.tertiary),
       ring: l(ring, other.ring),
@@ -361,6 +367,7 @@ DotColors _resolve(Brightness brightness, Color accent) {
     sheet: p.sheet,
     avatar: p.avatar,
     canvas: p.canvas,
+    sidebarTint: p.sidebarTint,
     ink2: p.ink2,
     tertiary: p.tertiary,
     ring: p.ring,

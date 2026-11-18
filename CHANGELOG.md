@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On Mac the sidebar shows the desktop through the system's translucent material with a warm tint (redesign branch), and turns solid with Reduce Transparency or Increase Contrast. The window now follows the app's own Light/Dark setting.
+
+### Changed
 - On Mac, right-clicking an Inbox task opens the Mac's own menu (redesign branch), with icons and the ⌘⌫ hint, and ⌘⌫ moves the picked task to the Trash.
 
 ### Changed

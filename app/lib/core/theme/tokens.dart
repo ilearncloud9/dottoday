@@ -26,6 +26,7 @@ final class DotPalette {
     required this.sheet,
     required this.avatar,
     required this.canvas,
+    required this.sidebarTint,
     required this.ink,
     required this.ink2,
     required this.secondary,
@@ -77,6 +78,9 @@ final class DotPalette {
     sheet: Color(0xFFFBF7F1),
     avatar: Color(0xFFE7DFEF),
     canvas: Color(0xFFEFE7DB),
+    // The Mac sidebar's tint over the system material (ED-130): #EFE7DB
+    // at 35 %.
+    sidebarTint: Color(0x59EFE7DB),
     ink: Color(0xFF241F2B),
     ink2: Color(0xFF4E4757),
     secondary: Color(0xFF6A6273),
@@ -129,6 +133,8 @@ final class DotPalette {
     sheet: Color(0xFF171416),
     avatar: Color(0xFF37313A),
     canvas: Color(0xFF28232A),
+    // D1, #3B2F2A at 30 % (ED-176).
+    sidebarTint: Color(0x4D3B2F2A),
     ink: Color(0xFFF3ECE4),
     ink2: Color(0xFFC7BEC4),
     secondary: Color(0xFFC7BEC4),
@@ -178,6 +184,7 @@ final class DotPalette {
       sheet,
       avatar,
       canvas,
+      sidebarTint,
       ink,
       ink2,
       secondary,

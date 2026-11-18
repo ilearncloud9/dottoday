@@ -12,10 +12,15 @@ class DotSidebar extends StatelessWidget {
     required this.bar,
     this.onToggle,
     this.onPicked,
+    this.vibrant = false,
     super.key,
   });
 
   final ShellBar bar;
+
+  /// Over the Mac's vibrant material: the warm tint instead of the solid
+  /// sidebar colour (ED-130, ED-176).
+  final bool vibrant;
 
   /// The sidebar button beside the name: hides the sidebar (expanded) or
   /// closes the drawer; null draws none.
@@ -37,7 +42,7 @@ class DotSidebar extends StatelessWidget {
     );
     final toggle = onToggle;
     return ColoredBox(
-      color: t.colors.canvas,
+      color: vibrant ? t.colors.sidebarTint : t.colors.canvas,
       child: SafeArea(
         right: false,
         child: Padding(
@@ -116,9 +121,14 @@ class _SidebarRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
+    // The dark Mac sidebar's current place reads in the primary text over
+    // its pill (ED-176); its icon keeps the accent text (I1, ED-178).
+    final ink = macApp(context) && c.brightness == Brightness.dark
+        ? c.text
+        : c.accentInk;
     final label = selected
         ? DotType.emphasis(
-            t.styles.body.copyWith(color: c.accentInk),
+            t.styles.body.copyWith(color: ink),
             bold: true,
             italic: false,
           )

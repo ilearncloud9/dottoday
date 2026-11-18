@@ -4973,6 +4973,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked in the Mac app:** the Inbox row's right-click menu in dark mode, with its icons and the ⌘⌫ hint. The Mac app's data was backed up before the run and restored after (checksums equal). Other menus move to the system menu as their screens are built (M19 onwards).
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 6,986 passing (5 local-Supabase suites need a running stack); new `test/shared/menus/context_menu_test.dart`, two ⌘⌫ tests in `task_keys_field_test.dart`.
 
+### ED-376 · M18.6 part 3b: the Mac's vibrancy sidebar
+- **Date:** 2026-11-18. **Owner:** "Approve, start 3c" on the part 3b review page (E-v1.45 Mac Full Workspace light and dark beside the Mac app), taking the three recommendations: Q1 the solid dark sidebar is `#28232A`; Q2 A, the system's material stays as it renders; Q3 A, the full-height sidebar under the window buttons is part 3c.
+- **Built (ED-130, ED-176, ED-178):**
+  - `WindowMaterialBridge.swift` (Runner target; no new target or package): the window's root is an `NSVisualEffectView` in the sidebar material (behind-window, following the window's active state), with the Flutter view on it over a clear background. One `dottoday/window_material` channel: `vibrant` (false with Reduce Transparency or Increase Contrast on), `changed` when either setting changes, and `appearance`;
+  - Flutter: the expanded sidebar paints the `sidebarTint` token over the material, `#EFE7DB` at 35 % light and `#3B2F2A` at 30 % dark; the shell paints the content opaque. Without the material the sidebar is solid `canvas` (`#EFE7DB` / `#28232A`, Q1). `sidebarVibrancyProvider` and `setWindowAppearance` live in `data/shell/window_material.dart`;
+  - the window takes the app's Light/Dark setting (`WindowAppearance` above every route), so the material and the title bar follow a theme chosen in Settings, not only the system's;
+  - the dark Mac sidebar's current place reads in the primary text `#F3ECE4` (ED-176); its icon keeps the accent text (I1 `#A3E2D9` with teal, ED-178);
+  - only the Mac app: the web, iPad and Android sidebars and the folded rail stay solid.
+- **Measured in the Mac app (this Mac):** light sidebar `#E9E6E4` (spike average 230, 227, 221), ink 12.9 : 1; dark `#514E4C`, primary text 7.1 : 1 (the board draws about `#332D32`; the material blends the desktop, Q2). The Mac app's data was backed up and restored (checksums equal).
+- **Not checked live:** Reduce Transparency and Increase Contrast (system settings; covered by tests), VoiceOver and other wallpapers (M21).
+- **Checks:** `flutter analyze` clean; `dart format` clean; navigation, shell, menus, policy, core, app shell and a11y tests pass (1,334); new `sidebar_material_test.dart`, `window_material_test.dart`.
+
 ---
 
 ## Pending owner answers
