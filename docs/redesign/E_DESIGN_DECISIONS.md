@@ -5054,6 +5054,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked:** iPhone 17 Pro simulator (iOS 26.5): three native tabs, the profile opens Settings, Back returns to Today. Android and devices: M21.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,041 passing (5 local-Supabase suites need a stack); new `settings_button_test.dart` and the Esc test; 152 goldens regenerated for the intended change.
 
+### ED-383 · M18.7 part 4b: the Mac's Settings window deferred; ⌘W closes the window
+- **Date:** 2026-11-18. **Owner:** "Same engine, two windows" (over a second engine), then, after the spike failed, "Settings stays a page", then "Commit, start part 5". Earlier: "Second native window now" (M18.7 split).
+- **Finding:** on stable Flutter 3.47.8 a second macOS window can't share the running engine. Attaching a `FlutterViewController(engine:)` for it throws "The engine already has a view controller for the implicit view": the engine is in single-view mode. Multi-view needs the engine's private `enableMultiView`, called before the main window's controller exists, and the app started with `runWidget` instead of `runApp`: the experimental windowing path. A second engine would need its own database connection, a change bridge, and care around sign-in, account deletion and imports.
+- **Decision (owner):** Settings… ⌘, keeps opening Settings in the main window, as built; ED-238's Mac entry ("its own window") waits for Flutter's stable multi-window API. The window code from this part was removed, nothing layered. **Follow-up:** the Mac Settings window, when Flutter's multi-window API is stable (plan, M18.7 part 4).
+- **Built:** ⌘W closes the main window, as on every Mac window (rules §13.3): the app's menu bar replaces the system's and has no Close item. The last window closing quits Dottoday, as it already did.
+- **Checked in the Mac app:** ⌘W closed the window and the app quit. The spike's crash and a copy of the app macOS reopened after it were quit; the Mac app's data was restored and checked after each run (checksums equal).
+- **Checks:** `flutter analyze` clean; the Dart side is unchanged since ED-382 (`flutter test` 7,041 passing there).
+
 ---
 
 ## Pending owner answers

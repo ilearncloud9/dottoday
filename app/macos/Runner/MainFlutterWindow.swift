@@ -30,4 +30,15 @@ class MainFlutterWindow: NSWindow {
 
     super.awakeFromNib()
   }
+
+  /// ⌘W closes the window, as on every Mac window (rules §13.3): the app's
+  /// menu bar replaces the system's and has no Close item to carry it.
+  override func performKeyEquivalent(with event: NSEvent) -> Bool {
+    let mods = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+    if mods == .command, event.charactersIgnoringModifiers == "w" {
+      performClose(nil)
+      return true
+    }
+    return super.performKeyEquivalent(with: event)
+  }
 }

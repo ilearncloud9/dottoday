@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 
 ## [Unreleased]
 
+### Fixed
+- On Mac, ⌘W closes the window again (redesign branch).
+
 ### Changed
 - On phones Settings is no longer a tab (redesign branch): tap your profile at the top right of Today, and Back takes you where you were. The phone date title is shorter, like "Wed, Nov 18".
 
