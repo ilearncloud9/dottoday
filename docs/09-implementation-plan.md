@@ -632,7 +632,7 @@ Rules for every task in M18 to M22:
   - [x] Part 1 done 2026-11-17 (ED-366): sheets on the page ground with cards inside, the shared sheet header, the proposal's chrome, tags, chips and Flutter menus from the theme.
   - [x] Part 2 done 2026-11-17 (ED-367): the loading skeleton, "This didn't load" and the empty Inbox (A1, A5, A6), the section D state examples, and the proposal's rows as dashed rings; A2, A3, A8 to A10 stay in M20.10.
   - [x] Part 3 done 2026-11-17 (ED-368): the Undo toast with ED-281's build checks, couldn't save (A7) in the same toast, the selection card in E, and the pick mark in the done circle's place.
-- [ ] M18.5 Adaptive shell:
+- [x] M18.5 Adaptive shell:
   - width classes 600 / 840, with the editor docking from 1160 (ED-167) and the H1 short-height and M docking rules (ED-168);
   - the Mac minimum window of 840 × 640 with the narrow Day fold (ED-169, ED-170);
   - tablet navigation by width, native per platform (ED-171, R2-1 ED-266 and ED-267), with Stage Manager, foldables and the hinge (R2-31, ED-334);
@@ -643,7 +643,7 @@ Rules for every task in M18 to M22:
   Split by the owner (2026-11-17), each part with its own review page and commit. iPad navigation is built in Flutter here; M18.6 swaps in the native UIKit bar for iPad and iPhone together.
   - [x] Part 1 done 2026-11-18 (ED-369): one layout rule (600 / 840, H1, docking from 1160 with the M minimums) used by the shell and the panels; the editor and proposal float below 1160; phone landscape; the Mac minimum window 840 × 640. Moved: the narrow-Mac Minimal rules to M19.6; the Workspace inspector's rule to M19.2; the landscape week strip to M19.1; landscape tab items side by side to M18.6.
   - [x] Part 2 done 2026-11-18 (ED-370): tablet navigation (iPad top tabs / sidebar, Android rail / drawer, Settings at the foot), Stage Manager by window width, foldables (tabletop compact, nothing across a hinge), the toast centred on the content at medium width. The shells carry today's places (Today, Inbox, Week, Search, Settings); the Workspace's own list (Plan, Calendar views, Review) arrives with M19.2, the Calendar place with M20.1, Minimal's places by width (Now · Inbox · Calendar · Search, ED-266) with M19.6, and the sidebar's sync line with M20.10.
-  - [ ] Part 3: compact mobile web's own bar, touch sizes on touch tablets and coarse-pointer web, stylus handwriting checks.
+  - [x] Part 3 done 2026-11-18 (ED-371): compact mobile web's own bar; the touch-first rule (`watchTouchContent`: iPad and Android tablets, coarse-pointer web) for the wide layouts' sizes, read by M19.2 and M19.6 when they build the Mac/web pointer sizes (the app has only the phone scale today); stylus handwriting: Flutter's text fields accept Scribble and Android stylus handwriting by default and a policy test keeps them on; checks on real devices with a Pencil and a stylus in M21.
 - [ ] M18.6 Native chrome, with no new native target (ED-128):
   - iPhone: the N3 native tab bar with + in its line (ED-124, ED-132), the native Day menu, the stock keyboard (ED-135), and the + named "Add a task" (ED-240); in landscape its items sit side by side (R2-41, ED-347; moved from M18.5);
   - Android: bottom row C in Flutter (ED-125);

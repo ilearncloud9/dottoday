@@ -72,6 +72,10 @@ abstract final class DotRadii {
   static const double toast = 16;
   static const double toastMaterial = 8;
 
+  /// The web bar's current-icon box and its Add button (E-MobileWeb).
+  static const double webIndicator = 8;
+  static const double webAdd = 12;
+
   /// The selection card (E-R2-6, 26).
   static const double selectionCard = 26;
 
@@ -94,6 +98,11 @@ abstract final class DotSize {
   /// Widest a single list column grows on Mac/web before it centres
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
+
+  /// The compact web bar (E-MobileWeb): 56 tall, items 48, the current
+  /// icon in a 56 × 28 box; the Add button above it 48 tall.
+  static const double webBar = 56;
+  static const webBarIndicator = Size(56, 28);
 
   /// The sidebar of places on tablets, Mac and web (rules §6.2: 216).
   static const double sidebar = 216;

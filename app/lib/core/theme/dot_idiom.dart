@@ -39,3 +39,7 @@ bool appleChrome(BuildContext context) {
   return !kIsWeb &&
       (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
 }
+
+/// Whether this is the web build: compact web gets its own solid bar,
+/// never the iOS glass bar or the Android toolbar (ED-172).
+bool webChrome(BuildContext context) => kIsWeb;

@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Dottoday in a phone's browser gets its own bottom bar (redesign branch): a plain bar with labelled icons and an "Add" button above it, rather than imitating the iPhone or Android bars. Handwriting with an Apple Pencil or an Android stylus keeps working in every text field.
+
+### Changed
 - Tablets and wide windows get their own navigation (redesign branch): an iPad window of medium width shows tabs across the top with a sidebar button; an Android tablet shows the Material rail with a menu that opens every place; wide windows show a sidebar of places with Settings at the bottom, which folds to the rail. A foldable half open on a table uses the phone layout, nothing is drawn across a hinge, and the Undo message sits beside the navigation rather than under it.
 
 ### Changed

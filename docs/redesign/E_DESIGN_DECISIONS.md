@@ -4922,6 +4922,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Strings:** `navShowSidebar`, `navHideSidebar`, `navMenu` (en, de, fr, es). **Glyphs:** `sidebar`, `menu`.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,967 passing; shell tests per class and platform, the drawer, folding, tabletop and hinge; toast goldens now 520 tall (300 is a short window).
 
+### ED-371 · M18.5 part 3: mobile web, touch and stylus; M18.5 done
+- **Date:** 2026-11-18. **Owner:** "Approve" on the part 3 review page (E-MobileWeb beside the app's goldens).
+- **Built:**
+  - compact web (ED-172): `WebBarShell`, its own 56 bar on the page colour with a hairline, labelled icons, the current one in a tinted 56 × 28 box in bold, "+ Add" (48 tall, radius 12) above it; picked by `webChrome` in `core/theme`;
+  - the touch-first rule (ED-256, ED-261): `watchTouchContent` (iPad and Android tablets yes, the Mac no, the web by its primary pointer through `(pointer: coarse)`, re-read on change; `primary_pointer` stub and web pair, hand-written js_interop). It changes nothing visible yet: the app has one content scale, the phone's; M19.2 and M19.6 read it when they build the pointer sizes;
+  - stylus handwriting (ED-258): Flutter's text fields accept Scribble and Android stylus handwriting by default; a policy test keeps every field from turning them off. Device checks with a Pencil and a stylus in M21.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,974 passing; the web build compiles; new goldens `shell_web`.
+- **M18.5 done** (ED-369, ED-370, ED-371).
+
 ---
 
 ## Pending owner answers

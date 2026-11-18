@@ -6,6 +6,7 @@ import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
 import 'package:dottoday/shared/navigation/tablet_shells.dart';
+import 'package:dottoday/shared/navigation/web_bar.dart';
 import 'package:flutter/material.dart';
 
 /// One top-level destination (docs/10 §3: the nav set is fixed).
@@ -131,6 +132,11 @@ class DotShell extends StatelessWidget {
             ? DisplayFeatureSubScreen(child: this.body)
             : this.body;
         final shell = switch ((width, DotIdiom.of(context))) {
+          // Compact web: its own solid bar (ED-172).
+          (WidthClass.compact, _) when webChrome(context) => WebBarShell(
+            bar: bar,
+            body: body,
+          ),
           (WidthClass.compact, DotIdiom.cupertino) => PillTabShell(
             bar: bar,
             body: body,
