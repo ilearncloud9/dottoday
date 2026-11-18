@@ -1,8 +1,8 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/show_place.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/features/timeline/state/week_selection.dart';
 import 'package:dottoday/features/timeline/week/week_view.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -14,7 +14,11 @@ import 'package:go_router/go_router.dart';
 /// board of the week around the picked day, Mac/web only (phones use the
 /// strip and the month). ⌘← / ⌘→ step a week, ⌘T comes back.
 class WeekScreen extends ConsumerWidget {
-  const WeekScreen({super.key});
+  const WeekScreen({this.date, super.key});
+
+  /// The week around [date] (`/week/<date>`); null = this week (`/week`).
+  /// The address is the shown week (ED-097).
+  final DateTime? date;
 
   static const _key = ValueKey('route:week');
 
@@ -37,7 +41,7 @@ class WeekScreen extends ConsumerWidget {
     if (waitFor(_key, base, onRetry: () => _retry(ref)) case final w?) return w;
     final today = ref.watch(todayDateProvider).requireValue;
     final profile = ref.watch(currentProfileProvider).requireValue;
-    final shown = ref.watch(weekSelectionProvider) ?? today;
+    final shown = date ?? today;
     final first = weekStart(shown, profile.settings.firstDayOfWeek);
     final days = [
       for (var i = 0; i < DateTime.daysPerWeek; i++)
@@ -50,10 +54,13 @@ class WeekScreen extends ConsumerWidget {
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
-    void show(int weeks) => ref
-        .read(weekSelectionProvider.notifier)
-        .show(DateTime(first.year, first.month, first.day + 7 * weeks));
-    final selection = ref.read(weekSelectionProvider.notifier);
+    final thisWeek = weekStart(today, profile.settings.firstDayOfWeek);
+    void showWeek(DateTime start) => showPlace(
+      GoRouter.of(context),
+      start == thisWeek ? AppRoutes.week : AppRoutes.weekOf(start),
+    );
+    void show(int weeks) =>
+        showWeek(DateTime(first.year, first.month, first.day + 7 * weeks));
     return Scaffold(
       key: _key,
       body: SafeArea(
@@ -65,35 +72,10 @@ class WeekScreen extends ConsumerWidget {
           profile: profile,
           onPrevious: () => show(-1),
           onNext: () => show(1),
-          onToday: () => selection.show(null),
+          onToday: () => showWeek(thisWeek),
           onMonth: () => context.go(AppRoutes.month),
         ),
       ),
     );
   }
-}
-
-/// Week opening on the week around [date] (`/week/<date>`, ED-097): it
-/// shows that week once, then steps as Week does.
-class WeekScreenOn extends ConsumerStatefulWidget {
-  const WeekScreenOn({required this.date, super.key});
-
-  final DateTime date;
-
-  @override
-  ConsumerState<WeekScreenOn> createState() => _WeekScreenOnState();
-}
-
-class _WeekScreenOnState extends ConsumerState<WeekScreenOn> {
-  @override
-  void initState() {
-    super.initState();
-    // Not during build: the selection is read by the screen below.
-    Future.microtask(() {
-      if (mounted) ref.read(weekSelectionProvider.notifier).show(widget.date);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => const WeekScreen();
 }

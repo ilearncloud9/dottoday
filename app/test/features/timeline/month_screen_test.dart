@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
@@ -26,7 +27,23 @@ Future<GoRouter> _pump(
   final router = GoRouter(
     initialLocation: '/month',
     routes: [
-      GoRoute(path: '/month', builder: (_, _) => const MonthScreen()),
+      // This month and another are one page, as in the app (ED-097).
+      GoRoute(
+        path: '/month',
+        pageBuilder: (_, _) => const NoTransitionPage(
+          key: ValueKey('/month'),
+          child: MonthScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/month/:month',
+        pageBuilder: (_, s) => NoTransitionPage(
+          key: const ValueKey('/month'),
+          child: MonthScreen(
+            month: parseRouteMonth(s.pathParameters['month']!),
+          ),
+        ),
+      ),
       GoRoute(path: '/week', builder: (_, _) => const Text('week page')),
       GoRoute(
         path: '/day/:date',
@@ -80,8 +97,11 @@ void main() {
     await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
     await tester.pumpAndSettle();
     expect(find.text('November 2026'), findsOneWidget);
+    // The address is the shown month (ED-097).
+    expect(router.state.uri.toString(), '/month/2026-11');
     await tester.tap(find.text('Today'));
     await tester.pumpAndSettle();
+    expect(router.state.uri.toString(), '/month');
     await tester.tap(find.bySemanticsLabel(RegExp('^Thursday, October 22')));
     await tester.pumpAndSettle();
     expect(router.state.uri.toString(), '/day/2026-10-22');

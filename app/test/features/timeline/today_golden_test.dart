@@ -154,15 +154,17 @@ void main() {
     'today_month_open',
     height: 1000,
     widths: const {'compact', 'medium'},
-    build: (_) => _today(view: (day: null, monthOpen: true, month: null)),
+    build: (_) => _today(view: (monthOpen: true, month: null)),
   );
   // T3: planning a future month, a free day picked (`A-ios-future-month`).
   goldenMatrix(
     'today_future_month',
     height: 1000,
     widths: const {'compact', 'medium', 'expanded'},
+    // The picked day is the address, `/day/2026-12-14` (ED-097).
     build: (_) => _today(
-      view: (day: DateTime(2026, 12, 14), monthOpen: true, month: null),
+      date: DateTime(2026, 12, 14),
+      view: (monthOpen: true, month: null),
     ),
   );
 }

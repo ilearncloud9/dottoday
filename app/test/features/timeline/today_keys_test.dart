@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/timeline_fakes.dart';
@@ -72,14 +73,21 @@ void main() {
       Finder title(String text) =>
           find.textContaining(text, findRichText: true);
       await pumpToday(tester, size: size);
+      // The address is the shown day (ED-097).
+      String address() => GoRouter.of(
+        tester.element(find.byType(TodayScreen)),
+      ).routerDelegate.currentConfiguration.uri.toString();
       await _ctrl(tester, LogicalKeyboardKey.arrowRight);
       expect(title(next), findsWidgets);
       expect(title(home), findsNothing);
+      expect(address(), '/day/2026-10-22');
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
       await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
       expect(title(back), findsWidgets);
+      expect(address(), '/day/2026-10-20');
       await _ctrl(tester, LogicalKeyboardKey.keyT);
       expect(title(home), findsOneWidget);
+      expect(address(), '/today');
     });
   }
 

@@ -5033,6 +5033,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked in the browser** (web build, phone width, local data): open, Refresh, Back, Forward, close by hand, `#/task/<id>` with one history entry, `#/day/<date>?task=` after Refresh, an unknown id → Today.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,043 passing (5 local-Supabase suites need a stack); new `app_task_links_test.dart`, router and guard cases.
 
+### ED-381 · M18.7 part 3b: the address follows the day, week and month
+- **Date:** 2026-11-18. **Owner:** "Web history only" (date steps are Back steps in the browser; in the apps the address changes in place and Back keeps its meaning; an ED-097 clarification), then "Approve, start part 4" on the part 3b review page.
+- **Built (ED-097 A′, "the address always shows what is on screen"):**
+  - `/today` and `/day/<date>` are one page in the Today tab; `/week` and `/week/<date>` one page in the Week tab; `/month` and `/month/<yyyy-MM>` one page. Stepping changes the address, not the page: no transition, and the tab, its bar and sidebar stay (a `/day` link used to open outside the tabs);
+  - Today, Week and Month read their date from the address; the week and month selection providers are removed, and Today's keeps only the month grid (open, which month). `/today`, `/week` and `/month` follow the clock;
+  - `showPlace` is the one way to step: on the web a new history entry; in the apps the address changes in place, and a pushed Month keeps what is under it. An open task's `?task=` is kept;
+  - Show Less / Show Everything still doesn't navigate, so it keeps the date and the open task (ED-067).
+- **Checked in the browser** (web build): strip taps `#/day/2026-11-20`, `#/day/2026-11-19`; Back, Back, Forward; Refresh keeps the 20th; Week › `#/week/2026-11-23` at desktop width.
+- **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test` 7,045 passing (5 local-Supabase suites need a stack); the Today goldens unchanged; new address checks on Today, Week and Month and `show_place_test.dart`.
+
 ---
 
 ## Pending owner answers

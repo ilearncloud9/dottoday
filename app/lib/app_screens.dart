@@ -31,8 +31,8 @@ final appScreens = RouteScreens(
       ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
       : settingsPageFor(page),
   month: (_) => const MonthScreen(),
-  weekOn: (_, date) => InboxSidebarFrame(child: WeekScreenOn(date: date)),
-  monthOn: (_, month) => MonthScreenOn(month: month),
+  weekOn: (_, date) => InboxSidebarFrame(child: WeekScreen(date: date)),
+  monthOn: (_, month) => MonthScreen(month: month),
   day: (_, date) => InboxSidebarFrame(child: TodayScreen(date: date)),
   focus: (_, id) => FocusScreen(id: id),
   wakeUp: (_) => const WakeUpCardScreen(),

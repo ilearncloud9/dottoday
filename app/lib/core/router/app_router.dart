@@ -104,24 +104,22 @@ GoRouter buildRouter(
         builder: (context, state, shell) => screens.shell(context, shell),
         branches: _branches(screens),
       ),
+      // This month and another one are one page: stepping months changes
+      // the address, not the page (ED-097).
       GoRoute(
         path: AppRoutes.month,
-        builder: (context, state) => screens.month(context),
+        pageBuilder: (context, _) =>
+            _samePage(_monthPage, screens.month(context)),
       ),
       GoRoute(
         path: AppRoutes.monthPattern,
         // Redirect already validated the month.
-        builder: (context, state) => screens.monthOn(
-          context,
-          parseRouteMonth(state.pathParameters['month']!)!,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.dayPattern,
-        // Redirect already validated the date, so parsing cannot fail here.
-        builder: (context, state) => screens.day(
-          context,
-          parseRouteDate(state.pathParameters['date']!)!,
+        pageBuilder: (context, state) => _samePage(
+          _monthPage,
+          screens.monthOn(
+            context,
+            parseRouteMonth(state.pathParameters['month']!)!,
+          ),
         ),
       ),
       // Never shown: the redirect sends a task link to its place.
@@ -151,22 +149,40 @@ GoRouter buildRouter(
   );
 }
 
-/// One branch per tab; Settings has its sub-pages (M3f.7) under it.
+/// One branch per tab; Settings has its sub-pages (M3f.7) under it. Today
+/// and Week also hold their dated addresses (`/day/<date>`,
+/// `/week/<date>`) as the same page, so stepping dates keeps the tab, its
+/// bar and its state and changes only the address (ED-097).
 List<StatefulShellBranch> _branches(RouteScreens screens) => [
   for (final tab in ShellTab.values)
     _branch(
       tab.path,
       _tabScreen(screens, tab),
-      children: [
-        if (tab == ShellTab.week)
-          GoRoute(
-            path: AppRoutes.weekDatePattern,
-            // Redirect already validated the date.
-            builder: (context, state) => screens.weekOn(
+      dated: switch (tab) {
+        ShellTab.today => GoRoute(
+          path: AppRoutes.dayPattern,
+          // Redirect already validated the date.
+          pageBuilder: (context, state) => _samePage(
+            _tabPage(tab),
+            screens.day(
               context,
               parseRouteDate(state.pathParameters['date']!)!,
             ),
           ),
+        ),
+        ShellTab.week => GoRoute(
+          path: AppRoutes.weekDatePattern,
+          pageBuilder: (context, state) => _samePage(
+            _tabPage(tab),
+            screens.weekOn(
+              context,
+              parseRouteDate(state.pathParameters['date']!)!,
+            ),
+          ),
+        ),
+        _ => null,
+      },
+      children: [
         if (tab == ShellTab.settings)
           GoRoute(
             path: ':page',
@@ -217,15 +233,29 @@ FutureOr<String?> _redirect(
 StatefulShellBranch _branch(
   String path,
   WidgetBuilder builder, {
+  GoRoute? dated,
   List<RouteBase> children = const [],
 }) {
   return StatefulShellBranch(
     routes: [
       GoRoute(
         path: path,
-        builder: (context, _) => builder(context),
+        pageBuilder: dated == null
+            ? null
+            : (context, _) => _samePage(ValueKey(path), builder(context)),
+        builder: dated == null ? (context, _) => builder(context) : null,
         routes: children,
       ),
+      ?dated,
     ],
   );
 }
+
+const _monthPage = ValueKey(AppRoutes.month);
+
+ValueKey<String> _tabPage(ShellTab tab) => ValueKey(tab.path);
+
+/// One page under several addresses: the same key, so the Navigator
+/// updates it in place, with no transition.
+Page<void> _samePage(LocalKey key, Widget child) =>
+    NoTransitionPage(key: key, child: child);

@@ -46,11 +46,25 @@ Future<void> pumpToday(
         settings ?? Settings(use24h: false, firstDayOfWeek: firstDayOfWeek),
   ).copyWith(displayName: name);
   final router = GoRouter(
-    initialLocation: AppRoutes.today,
+    // A test's day opens at its own address, as a link to it does.
+    initialLocation: date == null ? AppRoutes.today : AppRoutes.day(date),
+    // Today and its days are one page, as in the app (ED-097).
     routes: [
       GoRoute(
         path: AppRoutes.today,
-        builder: (_, _) => (wrap ?? (w) => w)(TodayScreen(date: date)),
+        pageBuilder: (_, _) => NoTransitionPage(
+          key: const ValueKey(AppRoutes.today),
+          child: (wrap ?? (w) => w)(const TodayScreen()),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.dayPattern,
+        pageBuilder: (_, state) => NoTransitionPage(
+          key: const ValueKey(AppRoutes.today),
+          child: (wrap ?? (w) => w)(
+            TodayScreen(date: parseRouteDate(state.pathParameters['date']!)),
+          ),
+        ),
       ),
     ],
   );

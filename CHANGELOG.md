@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- The address now shows the day, week or month on screen (redesign branch): on the web, Back and Forward step through the days you looked at and Refresh keeps your place. A link to a day opens it inside the Today tab.
+
+### Changed
 - An open task is now part of the address (redesign branch): on the web, Refresh keeps it open, Back closes it and Forward opens it again, and a task link opens the task over its own day. Week and Month links can name a date.
 
 ### Added

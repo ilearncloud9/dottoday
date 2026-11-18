@@ -2,6 +2,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/show_place.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -9,7 +10,6 @@ import 'package:dottoday/data/schedule/month_data.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/month_stats.dart';
 import 'package:dottoday/features/timeline/state/month_cells.dart';
-import 'package:dottoday/features/timeline/state/month_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
@@ -24,7 +24,11 @@ import 'package:intl/intl.dart';
 /// what each day held, "42 done · 5 missed · 23 ahead · busiest day Tue
 /// 13", Week | Month, ‹ Today › (⌘← ⌘T ⌘→). A day opens its Today.
 class MonthScreen extends ConsumerWidget {
-  const MonthScreen({super.key});
+  const MonthScreen({this.month, super.key});
+
+  /// The month shown (`/month/<yyyy-MM>`); null = this month (`/month`).
+  /// The address is the shown month (ED-097).
+  final DateTime? month;
 
   static const _key = ValueKey('route:month');
 
@@ -35,8 +39,8 @@ class MonthScreen extends ConsumerWidget {
     }
     final today = ref.watch(todayDateProvider).requireValue;
     final profile = ref.watch(currentProfileProvider).requireValue;
-    final month =
-        ref.watch(monthSelectionProvider) ?? DateTime(today.year, today.month);
+    final thisMonth = DateTime(today.year, today.month);
+    final month = this.month ?? thisMonth;
     final byDayAsync = ref.watch(monthOccurrencesProvider(month));
     if (waitFor(_key, [byDayAsync], onRetry: () => _retry(ref, month: month))
         case final w?) {
@@ -46,17 +50,19 @@ class MonthScreen extends ConsumerWidget {
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
-    final selection = ref.read(monthSelectionProvider.notifier);
+    void showMonth(DateTime m) => showPlace(
+      GoRouter.of(context),
+      m == thisMonth ? AppRoutes.month : AppRoutes.monthOf(m),
+    );
     void step(int months) =>
-        selection.show(DateTime(month.year, month.month + months));
-    final thisMonth = month.year == today.year && month.month == today.month;
+        showMonth(DateTime(month.year, month.month + months));
     return Scaffold(
       key: _key,
       body: SafeArea(
         child: PeriodKeys(
           onPrevious: () => step(-1),
           onNext: () => step(1),
-          onCurrent: () => selection.show(null),
+          onCurrent: () => showMonth(thisMonth),
           child: Focus(
             autofocus: true,
             // Catches keys only; adds nothing for screen readers.
@@ -71,9 +77,9 @@ class MonthScreen extends ConsumerWidget {
                 week: false,
                 onSwitch: () => context.go(AppRoutes.week),
                 onPrevious: () => step(-1),
-                onToday: () => selection.show(null),
+                onToday: () => showMonth(thisMonth),
                 onNext: () => step(1),
-                today: thisMonth ? today : null,
+                today: month == thisMonth ? today : null,
               ),
             ),
           ),
@@ -222,31 +228,4 @@ void _retry(WidgetRef ref, {DateTime? month}) {
     ..invalidate(todayDateProvider)
     ..invalidate(currentProfileProvider);
   if (month != null) ref.invalidate(monthOccurrencesProvider(month));
-}
-
-/// Month opening on [month] (`/month/<yyyy-MM>`, ED-097): it shows that
-/// month once, then steps as Month does.
-class MonthScreenOn extends ConsumerStatefulWidget {
-  const MonthScreenOn({required this.month, super.key});
-
-  final DateTime month;
-
-  @override
-  ConsumerState<MonthScreenOn> createState() => _MonthScreenOnState();
-}
-
-class _MonthScreenOnState extends ConsumerState<MonthScreenOn> {
-  @override
-  void initState() {
-    super.initState();
-    // Not during build: the selection is read by the screen below.
-    Future.microtask(() {
-      if (mounted) {
-        ref.read(monthSelectionProvider.notifier).show(widget.month);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => const MonthScreen();
 }

@@ -1,5 +1,6 @@
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/router/show_place.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -25,6 +26,7 @@ import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// How far the pager reaches each side of today (docs/10 §3 `DayPager`).
 const pagerReachDays = 365;
@@ -72,11 +74,16 @@ class TodayScreen extends ConsumerWidget {
     }
     final today = ref.watch(todayDateProvider).requireValue;
     final profile = ref.watch(currentProfileProvider).requireValue;
-    final shown = view.day ?? _reachable(date, today) ?? today;
+    final shown = _reachable(date, today) ?? today;
     final month = view.month ?? DateTime(shown.year, shown.month);
-    void select(DateTime d) => ref
-        .read(todaySelectionProvider.notifier)
-        .select(d == today && date == null ? null : d);
+    // The address is the shown day (ED-097): today follows midnight.
+    void select(DateTime d) {
+      ref.read(todaySelectionProvider.notifier).followDay();
+      showPlace(
+        GoRouter.of(context),
+        d == today ? AppRoutes.today : AppRoutes.day(d),
+      );
+    }
     ref.listen(
       taskSelectionProvider,
       (before, now) => announceSelection(context, before, now),

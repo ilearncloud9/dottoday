@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
@@ -33,19 +35,40 @@ Future<FakeOccurrenceRepository> _pump(
           settings: const Settings(use24h: false, firstDayOfWeek: 7),
         ),
       ),
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: DotTheme.light(),
         darkTheme: DotTheme.dark(),
         themeMode: mode,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const WeekScreen(),
+        routerConfig: _router(),
       ),
     ),
   );
   await tester.pumpAndSettle();
   return repo;
 }
+
+/// This week and another are one page, as in the app (ED-097); Month is
+/// a placeholder.
+GoRouter _router() => GoRouter(
+  initialLocation: '/week',
+  routes: [
+    GoRoute(
+      path: '/week',
+      pageBuilder: (_, _) =>
+          const NoTransitionPage(key: ValueKey('/week'), child: WeekScreen()),
+    ),
+    GoRoute(
+      path: '/week/:date',
+      pageBuilder: (_, s) => NoTransitionPage(
+        key: const ValueKey('/week'),
+        child: WeekScreen(date: parseRouteDate(s.pathParameters['date']!)),
+      ),
+    ),
+    GoRoute(path: '/month', builder: (_, _) => const Text('month page')),
+  ],
+);
 
 Future<void> _ctrl(WidgetTester tester, LogicalKeyboardKey key) async {
   await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
@@ -76,12 +99,19 @@ void main() {
     await _pump(tester);
     await tester.tap(find.byTooltip('Next week'));
     await tester.pumpAndSettle();
+    // The address is the shown week, by its first day (ED-097).
+    String address() => GoRouter.of(
+      tester.element(find.byType(WeekScreen)),
+    ).routerDelegate.currentConfiguration.uri.toString();
     expect(find.text('October 25 – 31'), findsOneWidget);
+    expect(address(), '/week/2026-10-25');
     await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
     await _ctrl(tester, LogicalKeyboardKey.arrowLeft);
     expect(find.text('October 11 – 17'), findsOneWidget);
+    expect(address(), '/week/2026-10-11');
     await _ctrl(tester, LogicalKeyboardKey.keyT);
     expect(find.text('This week'), findsOneWidget);
+    expect(address(), '/week');
   });
 
   testWidgets('a mouse drags a card to another day and time, with Undo', (

@@ -42,7 +42,7 @@ abstract final class AppRoutes {
 
   /// Week or Month opening on a date or month (ED-097): `/week/<date>`,
   /// `/month/<yyyy-MM>`.
-  static const weekDatePattern = ':date';
+  static const weekDatePattern = '/week/:date';
   static const monthPattern = '/month/:month';
 
   /// The query key a view's address opens a task with (ED-097 D2).
