@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On iPad, + opens Create task in a popover beside the calendar, and holding + offers Brain dump, Routine and Paste a list; on Android tablets, + offers Task, Brain dump and Routine, which open in a side sheet (redesign branch). Create task's tabs and fields are easier to tap on phones and tablets.
 - On Mac, in a browser and on wider windows, Add opens as a popover under the toolbar's + (redesign branch): type a task and the words read as a day, time or length become chips (× keeps the word as text), with a summary that says whether the time is free; pick a length, add to the Inbox instead, or press Return. In a browser the toolbar's button reads Add with its n key. Add also shows what it learned (your usual length, your best time for high-energy tasks) under the time, on phones too.
 - On iPhone and Android phones, + opens Create task full height (redesign branch): the title is ready to type, and tabs switch between a task, a brain dump and dropping a routine, each keeping what you started. Colour and icon, date, time, length, alerts, repeat, energy, steps and notes are set before the task is created; ⋯ holds sound, travel time, pinned, Add to Inbox and Break it down.
 - In a narrow Mac window or browser, the workspace toolbar stays on one line (redesign branch): search shrinks to its icon, the Day, 3 days, Week and Month tabs become one menu, and the date drops its year as room runs out.

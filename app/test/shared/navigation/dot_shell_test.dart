@@ -8,6 +8,7 @@ import 'package:dottoday/shared/navigation/dot_sidebar.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
 import 'package:dottoday/shared/navigation/tablet_shells.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -287,30 +288,36 @@ void main() {
       tester,
     ) async {
       await _size(tester, width);
-      var added = 0;
-      await tester.pumpWidget(
-        testApp(
-          Builder(
-            builder: (context) => DotShell(
-              destinations: shellDestinations(context.l10n),
-              selected: 0,
-              onSelect: (_) {},
-              onAdd: () => added++,
-              addLabel: context.l10n.quickAddTooltip,
-              addAtEveryWidth: true,
-              body: const SizedBox.expand(),
+      // A mouse: the Mac (an Android tablet's + opens its menu, E-R2-3).
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        var added = 0;
+        await tester.pumpWidget(
+          testApp(
+            Builder(
+              builder: (context) => DotShell(
+                destinations: shellDestinations(context.l10n),
+                selected: 0,
+                onSelect: (_) {},
+                onAdd: () => added++,
+                addLabel: context.l10n.quickAddTooltip,
+                addAtEveryWidth: true,
+                body: const SizedBox.expand(),
+              ),
             ),
           ),
-        ),
-      );
-      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-      await mouse.addPointer(location: Offset.zero);
-      await mouse.moveTo(tester.getCenter(find.byTooltip('Add a task')));
-      await tester.pump();
-      await mouse.down(tester.getCenter(find.byTooltip('Add a task')));
-      await mouse.up();
-      await tester.pumpAndSettle();
-      expect(added, 1);
+        );
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: Offset.zero);
+        await mouse.moveTo(tester.getCenter(find.byTooltip('Add a task')));
+        await tester.pump();
+        await mouse.down(tester.getCenter(find.byTooltip('Add a task')));
+        await mouse.up();
+        await tester.pumpAndSettle();
+        expect(added, 1);
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
     });
   }
 }

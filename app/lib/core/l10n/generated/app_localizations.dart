@@ -10662,6 +10662,18 @@ abstract class AppLocalizations {
   /// **'Paste as Tasks'**
   String get menuPasteAsTasks;
 
+  /// iPad: an item of the menu shown on holding the + (G2-8, E-R2-3): opens Add with the clipboard's lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a list'**
+  String get addMenuPasteList;
+
+  /// Screen-reader name of the + menu on tablets: Task, Brain dump, Routine (E-R2-3).
+  ///
+  /// In en, this message translates to:
+  /// **'Add options'**
+  String get addMenuLabel;
+
   /// Mac Go menu: back to the previous place (⌘[, ED-095).
   ///
   /// In en, this message translates to:

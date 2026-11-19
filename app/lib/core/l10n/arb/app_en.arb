@@ -7339,6 +7339,14 @@
   "menuNewBrainDump": "New Brain Dump…",
   "@menuNewBrainDump": {"description": "Mac File menu: opens Brain dump (⇧⌘N, ED-095)."},
   "menuPasteAsTasks": "Paste as Tasks",
+  "addMenuPasteList": "Paste a list",
+  "@addMenuPasteList": {
+    "description": "iPad: an item of the menu shown on holding the + (G2-8, E-R2-3): opens Add with the clipboard's lines."
+  },
+  "addMenuLabel": "Add options",
+  "@addMenuLabel": {
+    "description": "Screen-reader name of the + menu on tablets: Task, Brain dump, Routine (E-R2-3)."
+  },
   "@menuPasteAsTasks": {"description": "Mac File menu: opens Add with the clipboard's list (⇧⌘V, ED-095)."},
   "menuBack": "Back",
   "@menuBack": {"description": "Mac Go menu: back to the previous place (⌘[, ED-095)."},

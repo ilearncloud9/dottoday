@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -264,10 +265,14 @@ class AppCommandScope extends StatelessWidget {
     required this.handlers,
     required this.child,
     this.singleKeys = true,
+    this.onAddMode,
     super.key,
   });
 
   final Map<AppCommand, VoidCallback> handlers;
+
+  /// Add on a tab ([OpenAddIntent]), from the tablets' + menus.
+  final ValueChanged<AddMode>? onAddMode;
   final Widget child;
 
   /// The web's single keys are on (Settings › General).
@@ -284,6 +289,9 @@ class AppCommandScope extends StatelessWidget {
             AppCommandIntent: AppCommandAction(
               handlers,
               singleKeys: singleKeys,
+            ),
+            OpenAddIntent: CallbackAction<OpenAddIntent>(
+              onInvoke: (i) => onAddMode?.call(i.mode),
             ),
           },
           child: Focus(

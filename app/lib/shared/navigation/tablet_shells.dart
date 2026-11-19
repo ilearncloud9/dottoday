@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/navigation/add_menu.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/dot_sidebar.dart';
@@ -129,16 +130,19 @@ class TopTabsShell extends StatelessWidget {
                   ),
                   if (onAdd != null)
                     AddDraggable(
-                      child: IconButton.filled(
-                        onPressed: onAdd,
-                        tooltip: bar.addLabel,
-                        style: IconButton.styleFrom(
-                          backgroundColor: t.colors.accent,
-                        ),
-                        icon: DotIcon(
-                          DotGlyphs.add,
-                          color: t.colors.onAccent,
-                          active: true,
+                      child: AddMenuButton(
+                        onAdd: onAdd,
+                        builder: (onPressed) => IconButton.filled(
+                          onPressed: onPressed,
+                          tooltip: bar.addLabel,
+                          style: IconButton.styleFrom(
+                            backgroundColor: t.colors.accent,
+                          ),
+                          icon: DotIcon(
+                            DotGlyphs.add,
+                            color: t.colors.onAccent,
+                            active: true,
+                          ),
                         ),
                       ),
                     )

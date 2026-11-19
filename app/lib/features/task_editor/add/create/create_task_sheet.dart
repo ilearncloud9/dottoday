@@ -19,9 +19,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// iPhone: Cancel · ⋯ · Create task over a native segmented control.
 /// Android: × and the mode's title, then Create, over M3 segmented buttons.
 class CreateTaskSheet extends ConsumerStatefulWidget {
-  const CreateTaskSheet({required this.request, super.key});
+  const CreateTaskSheet({
+    required this.request,
+    this.mode = AddMode.task,
+    super.key,
+  });
 
   final AddRequest request;
+
+  /// The tab it opens on (the tablets' + menus, E-R2-3).
+  final AddMode mode;
 
   @override
   ConsumerState<CreateTaskSheet> createState() => _CreateTaskSheetState();
@@ -30,8 +37,8 @@ class CreateTaskSheet extends ConsumerStatefulWidget {
 class _CreateTaskSheetState extends ConsumerState<CreateTaskSheet> {
   // Leaf view state (CLAUDE.md §4): the tab shown, and those opened so
   // far; a tab is built on its first visit and kept after.
-  AddMode _mode = AddMode.task;
-  final _seen = <AddMode>{AddMode.task};
+  late AddMode _mode = widget.mode;
+  late final _seen = <AddMode>{AddMode.task, widget.mode};
 
   AddRequest get _request => widget.request;
 

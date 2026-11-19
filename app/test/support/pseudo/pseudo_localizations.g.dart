@@ -5630,6 +5630,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get menuPasteAsTasks => pseudo(super.menuPasteAsTasks);
 
   @override
+  String get addMenuPasteList => pseudo(super.addMenuPasteList);
+
+  @override
+  String get addMenuLabel => pseudo(super.addMenuLabel);
+
+  @override
   String get menuBack => pseudo(super.menuBack);
 
   @override

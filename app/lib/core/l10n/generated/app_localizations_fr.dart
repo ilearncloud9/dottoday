@@ -7141,6 +7141,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get menuPasteAsTasks => 'Coller comme tâches';
 
   @override
+  String get addMenuPasteList => 'Coller une liste';
+
+  @override
+  String get addMenuLabel => 'Options d\'ajout';
+
+  @override
   String get menuBack => 'Retour';
 
   @override

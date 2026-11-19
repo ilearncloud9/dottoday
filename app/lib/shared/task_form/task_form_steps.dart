@@ -95,10 +95,18 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
               keyboardType: TextInputType.multiline,
               style: t.styles.body,
               onChanged: widget.onNotes,
-              decoration: InputDecoration.collapsed(
-                hintText: widget.notesHint,
-                hintStyle: t.styles.body.copyWith(color: t.colors.placeholder),
-              ),
+              // A full touch target on every platform (Material's 48).
+              decoration:
+                  InputDecoration.collapsed(
+                    hintText: widget.notesHint,
+                    hintStyle: t.styles.body.copyWith(
+                      color: t.colors.placeholder,
+                    ),
+                  ).copyWith(
+                    constraints: const BoxConstraints(
+                      minHeight: DotTouch.android,
+                    ),
+                  ),
             ),
           ],
         ),

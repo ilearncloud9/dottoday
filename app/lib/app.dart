@@ -7,6 +7,7 @@ import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_openers.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/app_task_links.dart';
+import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
@@ -132,6 +133,8 @@ class DottodayApp extends ConsumerWidget {
                     child: AppCommandScope(
                       handlers: handlers,
                       singleKeys: settings?.webSingleKeys ?? true,
+                      // The tablets' + menus (E-R2-3): Add on a tab.
+                      onAddMode: (mode) => openQuickAdd(router, mode: mode),
                       child: UndoKeys(
                         child: Actions(
                           actions: _intents(router),
@@ -219,15 +222,21 @@ Locale? appLocale(String? code) {
   return match.firstOrNull;
 }
 
-/// Add from anywhere (the add button and ⌘N share this, docs/02 F2). The
+/// Add from anywhere (the add button and ⌘N share this, docs/02 F2), on
+/// its [mode]'s tab (the tablets' + menus, E-R2-3). The
 /// root navigator's overlay sits below `MaterialApp`, so the sheet gets
 /// theme, l10n and the root `ScaffoldMessenger`. [startUtc] / [day]
 /// prefill the time or the day (an "add here" gap, "Add to this day").
-void openQuickAdd(GoRouter router, {DateTime? startUtc, DateTime? day}) {
+void openQuickAdd(
+  GoRouter router, {
+  DateTime? startUtc,
+  DateTime? day,
+  AddMode mode = AddMode.task,
+}) {
   final context =
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
-  unawaited(showAddFlow(context, startUtc: startUtc, day: day));
+  unawaited(showAddFlow(context, startUtc: startUtc, day: day, mode: mode));
 }
 
 /// ⌘/: every binding, on the root overlay (M3e.6).

@@ -183,6 +183,8 @@ class TaskFormTitleField extends StatelessWidget {
         hintStyle: style.copyWith(color: t.colors.placeholder),
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
+        // A full touch target, however short the title's line (§12).
+        constraints: const BoxConstraints(minHeight: DotTouch.android),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: t.colors.outline),
         ),

@@ -69,6 +69,9 @@ abstract final class DotRadii {
   static const double popover = 14;
   static const double popoverCard = 12;
 
+  /// The iPad's Create task popover (E-R2-3, ED-271): 26.
+  static const double tabletPopover = 26;
+
   /// The inspector's fields (6) and its Done / Focus / Shift rest (10).
   static const double field = 6;
   static const double inspectorButton = 10;
@@ -249,6 +252,12 @@ abstract final class DotSize {
 
   /// The Add title box's accent outline while it has the keys (1.5).
   static const double popoverFieldStroke = 1.5;
+
+  /// Tablets' Add (E-R2-3, ED-271): the iPad's Create task popover, 400 ×
+  /// 700 at most, and Android's M3 modal side sheet, 412 wide.
+  static const double tabletAddWidth = 400;
+  static const double tabletAddHeight = 700;
+  static const double sideSheet = 412;
   static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor

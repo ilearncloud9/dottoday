@@ -87,10 +87,16 @@ Future<void> _onMac(Future<void> Function() body) async {
   }
 }
 
+/// The popover is the Mac's and the web's (tablets: add_tablet_test), so
+/// each test runs as the Mac; the platform override is reset in the body,
+/// as flutter_test checks it there.
+void _macTest(String name, WidgetTesterCallback body) =>
+    testWidgets(name, (tester) => _onMac(() => body(tester)));
+
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('opens under the toolbar +, its title focused', (tester) async {
+  _macTest('opens under the toolbar +, its title focused', (tester) async {
     await _onMac(() async {
       await _pump(tester);
       final plus = tester.getRect(_plus.first);
@@ -104,7 +110,7 @@ void main() {
     });
   });
 
-  testWidgets('⌘N opens the same popover under the +', (tester) async {
+  _macTest('⌘N opens the same popover under the +', (tester) async {
     await _onMac(() async {
       await _pump(tester);
       final plus = tester.getRect(_plus.first);
@@ -117,7 +123,7 @@ void main() {
     });
   });
 
-  testWidgets('live chips, summary and Return adds at the typed time', (
+  _macTest('live chips, summary and Return adds at the typed time', (
     tester,
   ) async {
     final repo = await _pump(tester);
@@ -136,9 +142,7 @@ void main() {
     expect(find.byType(AddPopover), findsNothing, reason: 'closed');
   });
 
-  testWidgets('a chip × keeps its word as title text (E-R2-36)', (
-    tester,
-  ) async {
+  _macTest('a chip × keeps its word as title text (E-R2-36)', (tester) async {
     final repo = await _pump(tester);
     await _open(tester);
     await _type(tester, 'Gym 6pm');
@@ -151,7 +155,7 @@ void main() {
     expect(addedRow(repo, 'Gym 6pm'), isNotNull, reason: 'the whole title');
   });
 
-  testWidgets('an overlap informs, and still adds', (tester) async {
+  _macTest('an overlap informs, and still adds', (tester) async {
     final repo = await _pump(tester);
     await _open(tester);
     // The demo day has Lunch at 12:30 (add_harness).
@@ -162,7 +166,7 @@ void main() {
     expect(addedRow(repo, 'Call Mum'), isNotNull);
   });
 
-  testWidgets('no time: Add takes the first free slot; a pill sets length', (
+  _macTest('no time: Add takes the first free slot; a pill sets length', (
     tester,
   ) async {
     final repo = await _pump(tester);
@@ -177,7 +181,7 @@ void main() {
     expect(o.startUtc!.isAfter(addNow), isTrue);
   });
 
-  testWidgets('Add to Inbox instead skips the time', (tester) async {
+  _macTest('Add to Inbox instead skips the time', (tester) async {
     final repo = await _pump(tester);
     await _open(tester);
     await _type(tester, 'Call Mum 3pm');
@@ -186,9 +190,7 @@ void main() {
     expect(addedRow(repo, 'Call Mum')!.isInbox, isTrue);
   });
 
-  testWidgets('a pasted list asks "Add 3 tasks?" and adds three', (
-    tester,
-  ) async {
+  _macTest('a pasted list asks "Add 3 tasks?" and adds three', (tester) async {
     final repo = await _pump(tester);
     await _open(tester);
     await _type(tester, 'Email Sam\nTaxes 45m\nCall the bank 4pm');
@@ -200,7 +202,7 @@ void main() {
     }
   });
 
-  testWidgets('a list that fails to save reopens; Try again adds it all', (
+  _macTest('a list that fails to save reopens; Try again adds it all', (
     tester,
   ) async {
     final fault = WriteFault()..failure = const StorageFailure();
@@ -220,7 +222,7 @@ void main() {
     expect(find.byType(AddPopover), findsNothing);
   });
 
-  testWidgets('Esc closes and keeps nothing', (tester) async {
+  _macTest('Esc closes and keeps nothing', (tester) async {
     final repo = await _pump(tester);
     final before = repo.rows.length;
     await _open(tester);
@@ -231,7 +233,7 @@ void main() {
     expect(repo.rows, hasLength(before));
   });
 
-  testWidgets('the dot opens Colour and icon', (tester) async {
+  _macTest('the dot opens Colour and icon', (tester) async {
     await _pump(tester);
     await _open(tester);
     await tester.tap(_in(find.byTooltip('Colour and icon')));
@@ -239,7 +241,7 @@ void main() {
     expect(find.text('Colour and icon'), findsWidgets);
   });
 
-  testWidgets('tabs switch modes and write nothing (ED-152)', (tester) async {
+  _macTest('tabs switch modes and write nothing (ED-152)', (tester) async {
     final repo = await _pump(tester);
     final before = repo.rows.length;
     await _open(tester);
@@ -254,30 +256,33 @@ void main() {
     expect(repo.rows, hasLength(before));
   });
 
-  testWidgets('a medium window gets the popover too', (tester) async {
-    await _pump(tester, size: const Size(700, 900));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
-    await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
-    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
-    await tester.pumpAndSettle();
-    expect(find.byType(AddPopover), findsOneWidget);
+  // Tablets get Create task in their own containers (add_tablet_test).
+  _macTest('a medium Mac window gets the popover too', (tester) async {
+    await _onMac(() async {
+      await _pump(tester, size: const Size(700, 900));
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.meta);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.meta);
+      await tester.pumpAndSettle();
+      expect(find.byType(AddPopover), findsOneWidget);
+    });
   });
 
-  testWidgets('Minimal keeps its own Add (ED-152, M19.6)', (tester) async {
+  _macTest('Minimal keeps its own Add (ED-152, M19.6)', (tester) async {
     await _pump(
       tester,
       settings: const Settings(use24h: false, uiLayout: UiLayout.minimal),
     );
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.meta);
     await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
-    await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.meta);
     await tester.pumpAndSettle();
     expect(find.byType(AddPopover), findsNothing);
     expect(find.byType(AddFlowSheet), findsOneWidget);
   });
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-    testWidgets('a11y guidelines hold, ${mode.name}', (tester) async {
+    _macTest('a11y guidelines hold, ${mode.name}', (tester) async {
       await _onMac(() async {
         await _pump(tester, mode: mode);
         await _open(tester);
@@ -287,7 +292,7 @@ void main() {
     });
   }
 
-  testWidgets('at 200 % text nothing overflows', (tester) async {
+  _macTest('at 200 % text nothing overflows', (tester) async {
     await _pump(tester, textScale: 2);
     await _open(tester);
     await _type(tester, 'Gym tomorrow 6pm 45m');

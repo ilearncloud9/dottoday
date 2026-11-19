@@ -7087,6 +7087,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuPasteAsTasks => 'Paste as Tasks';
 
   @override
+  String get addMenuPasteList => 'Paste a list';
+
+  @override
+  String get addMenuLabel => 'Add options';
+
+  @override
   String get menuBack => 'Back';
 
   @override

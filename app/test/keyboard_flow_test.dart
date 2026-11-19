@@ -8,6 +8,7 @@ import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +20,7 @@ import 'support/timeline_fakes.dart';
 
 // The core flow by keyboard only on the Mac/web layout (docs/09 M3e.6,
 // R-12): add, move between tabs, open, mark done, close, see the keys.
-// Tests run on Android, so Ctrl.
+// Run as Windows, so Ctrl.
 
 Future<void> _keys(
   WidgetTester tester,
@@ -43,61 +44,73 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   testWidgets('add, open, done and close without a pointer', (tester) async {
-    tester.view
-      ..physicalSize = const Size(1440, 1000)
-      ..devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final repo = FakeOccurrenceRepository(demoDayRows(DateTime(2026, 10, 21)));
-    final router = buildRouter(appScreens);
-    addTearDown(router.dispose);
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          onboarded,
-          routerProvider.overrideWithValue(router),
-          ...timelineOverrides(
-            now: DateTime.utc(2026, 10, 21, 7, 22),
-            occurrences: repo,
-            profile: testProfile(settings: const Settings(use24h: false)),
-          ),
-        ],
-        child: const DottodayApp(),
-      ),
-    );
-    await tester.pumpAndSettle();
+    // The Mac/web layout: Windows stands in for a mouse-driven browser
+    // (Ctrl keys, the Add popover); an Android tablet opens a side sheet.
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    try {
+      tester.view
+        ..physicalSize = const Size(1440, 1000)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final repo = FakeOccurrenceRepository(
+        demoDayRows(DateTime(2026, 10, 21)),
+      );
+      final router = buildRouter(appScreens);
+      addTearDown(router.dispose);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            onboarded,
+            routerProvider.overrideWithValue(router),
+            ...timelineOverrides(
+              now: DateTime.utc(2026, 10, 21, 7, 22),
+              occurrences: repo,
+              profile: testProfile(settings: const Settings(use24h: false)),
+            ),
+          ],
+          child: const DottodayApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    await _keys(tester, LogicalKeyboardKey.keyN, ctrl: true);
-    await tester.enterText(find.byType(EditableText).last, 'Pack bags 5pm 30m');
-    await _keys(tester, LogicalKeyboardKey.enter);
-    expect(repo.rows.where((o) => o.title == 'Pack bags'), hasLength(1));
+      await _keys(tester, LogicalKeyboardKey.keyN, ctrl: true);
+      await tester.enterText(
+        find.byType(EditableText).last,
+        'Pack bags 5pm 30m',
+      );
+      await _keys(tester, LogicalKeyboardKey.enter);
+      expect(repo.rows.where((o) => o.title == 'Pack bags'), hasLength(1));
 
-    await _keys(tester, LogicalKeyboardKey.digit2, ctrl: true);
-    expect(router.state.uri.path, '/inbox');
-    await _keys(tester, LogicalKeyboardKey.digit1, ctrl: true);
-    expect(router.state.uri.path, '/today');
+      await _keys(tester, LogicalKeyboardKey.digit2, ctrl: true);
+      expect(router.state.uri.path, '/inbox');
+      await _keys(tester, LogicalKeyboardKey.digit1, ctrl: true);
+      expect(router.state.uri.path, '/today');
 
-    for (var i = 0; i < 300 && !_onRow('Pack bags'); i++) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
+      for (var i = 0; i < 300 && !_onRow('Pack bags'); i++) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+      }
+      expect(_onRow('Pack bags'), isTrue, reason: 'Tab reaches the new task');
+      // ↩ picks it into the Workspace inspector; ↩ again opens the editor
+      // (ED-391).
+      await _keys(tester, LogicalKeyboardKey.enter);
+      expect(find.byType(WorkspaceInspector), findsOneWidget);
+      await _keys(tester, LogicalKeyboardKey.enter);
+      expect(find.byType(TaskEditorPanel), findsOneWidget);
+      await _keys(tester, LogicalKeyboardKey.keyD, ctrl: true);
+      await _keys(tester, LogicalKeyboardKey.escape);
+      expect(find.byType(TaskEditorPanel), findsNothing);
+      expect(
+        repo.rows.singleWhere((o) => o.title == 'Pack bags').status,
+        OccurrenceStatus.done,
+      );
+
+      await _keys(tester, LogicalKeyboardKey.slash, ctrl: true);
+      expect(find.text('Keyboard shortcuts'), findsOneWidget);
+      await _keys(tester, LogicalKeyboardKey.escape);
+      expect(find.text('Keyboard shortcuts'), findsNothing);
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
     }
-    expect(_onRow('Pack bags'), isTrue, reason: 'Tab reaches the new task');
-    // ↩ picks it into the Workspace inspector; ↩ again opens the editor
-    // (ED-391).
-    await _keys(tester, LogicalKeyboardKey.enter);
-    expect(find.byType(WorkspaceInspector), findsOneWidget);
-    await _keys(tester, LogicalKeyboardKey.enter);
-    expect(find.byType(TaskEditorPanel), findsOneWidget);
-    await _keys(tester, LogicalKeyboardKey.keyD, ctrl: true);
-    await _keys(tester, LogicalKeyboardKey.escape);
-    expect(find.byType(TaskEditorPanel), findsNothing);
-    expect(
-      repo.rows.singleWhere((o) => o.title == 'Pack bags').status,
-      OccurrenceStatus.done,
-    );
-
-    await _keys(tester, LogicalKeyboardKey.slash, ctrl: true);
-    expect(find.text('Keyboard shortcuts'), findsOneWidget);
-    await _keys(tester, LogicalKeyboardKey.escape);
-    expect(find.text('Keyboard shortcuts'), findsNothing);
   });
 }

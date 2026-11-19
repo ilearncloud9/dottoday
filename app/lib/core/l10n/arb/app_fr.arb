@@ -1760,6 +1760,8 @@
   "menuCalendar": "Calendrier",
   "menuNewBrainDump": "Nouveau vidage de tête…",
   "menuPasteAsTasks": "Coller comme tâches",
+  "addMenuPasteList": "Coller une liste",
+  "addMenuLabel": "Options d'ajout",
   "menuBack": "Retour",
   "menuShowLess": "Afficher moins",
   "menuShowEverything": "Tout afficher",

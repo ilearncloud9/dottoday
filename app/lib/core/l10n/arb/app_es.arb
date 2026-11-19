@@ -1760,6 +1760,8 @@
   "menuCalendar": "Calendario",
   "menuNewBrainDump": "Nueva descarga mental…",
   "menuPasteAsTasks": "Pegar como tareas",
+  "addMenuPasteList": "Pegar una lista",
+  "addMenuLabel": "Opciones para añadir",
   "menuBack": "Atrás",
   "menuShowLess": "Mostrar menos",
   "menuShowEverything": "Mostrar todo",

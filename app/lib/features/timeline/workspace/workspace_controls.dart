@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
+import 'package:dottoday/shared/navigation/add_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -267,6 +270,12 @@ class ToolbarAdd extends ConsumerWidget {
     final c = t.colors;
     final h = workspaceControlHeight(context, ref);
     final word = !macApp(context) && !watchTouchContent(context, ref);
+    // Tablets' + menus (E-R2-3): Android's on a tap, the iPad's on a hold.
+    void tap() => switch (AddMenu.onTap(context)) {
+      final menu? => unawaited(showAddMenu(context, menu)),
+      null => onTap(),
+    };
+    final hold = AddMenu.onHold(context);
     final glyph = DotIcon(
       DotGlyphs.add,
       color: c.onAccent,
@@ -279,12 +288,18 @@ class ToolbarAdd extends ConsumerWidget {
           button: true,
           label: label,
           excludeSemantics: true,
-          onTap: onTap,
+          onTap: tap,
+          onLongPress: hold == null
+              ? null
+              : () => unawaited(showAddMenu(context, hold)),
           child: Material(
             color: c.accent,
             shape: const StadiumBorder(),
             child: InkWell(
-              onTap: onTap,
+              onTap: tap,
+              onLongPress: hold == null
+                  ? null
+                  : () => unawaited(showAddMenu(context, hold)),
               customBorder: const StadiumBorder(),
               child: SizedBox(
                 width: word ? null : h + DotSpace.xs,

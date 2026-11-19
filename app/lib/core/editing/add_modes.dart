@@ -1,5 +1,17 @@
 import 'package:flutter/widgets.dart';
 
+/// Add's three modes (G2-8, ED-091): the tab Add opens on.
+enum AddMode { task, brainDump, routine }
+
+/// Opens Add on [mode]'s tab: the tablets' + menus (E-R2-3, G2-8). A
+/// button's action, not a key, so not an `AppCommand` (each of those has
+/// one binding); `AppCommandScope` handles it.
+final class OpenAddIntent extends Intent {
+  const OpenAddIntent(this.mode);
+
+  final AddMode mode;
+}
+
 /// What a Brain dump or Routine tab of Add needs: the day Add opened on,
 /// today, [done] to close Add once that tab's proposal opens, and whether
 /// it sits [embedded] in a scrolling popover (E-R2-36) rather than filling

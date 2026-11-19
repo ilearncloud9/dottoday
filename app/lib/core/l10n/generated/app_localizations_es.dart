@@ -7123,6 +7123,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get menuPasteAsTasks => 'Pegar como tareas';
 
   @override
+  String get addMenuPasteList => 'Pegar una lista';
+
+  @override
+  String get addMenuLabel => 'Opciones para añadir';
+
+  @override
   String get menuBack => 'Atrás';
 
   @override

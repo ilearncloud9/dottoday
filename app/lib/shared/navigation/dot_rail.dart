@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/navigation/add_menu.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
@@ -175,17 +176,20 @@ class _RailAdd extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: DotSpace.s),
       // The M3 FAB on the rail: a rounded square in the tonal colour.
-      child: IconButton.filled(
-        onPressed: onAdd,
-        tooltip: label,
-        style: IconButton.styleFrom(
-          backgroundColor: c.tonalAndroid,
-          minimumSize: const Size.square(DotTouch.android + DotSpace.s),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(DotRadii.fabAndroid),
+      child: AddMenuButton(
+        onAdd: onAdd,
+        builder: (onPressed) => IconButton.filled(
+          onPressed: onPressed,
+          tooltip: label,
+          style: IconButton.styleFrom(
+            backgroundColor: c.tonalAndroid,
+            minimumSize: const Size.square(DotTouch.android + DotSpace.s),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(DotRadii.fabAndroid),
+            ),
           ),
+          icon: DotIcon(DotGlyphs.add, color: c.onTonalAndroid, active: true),
         ),
-        icon: DotIcon(DotGlyphs.add, color: c.onTonalAndroid, active: true),
       ),
     );
   }

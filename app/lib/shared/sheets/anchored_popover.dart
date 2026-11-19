@@ -2,7 +2,10 @@ import 'dart:math' as math;
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/sheets/popover_border.dart';
 import 'package:flutter/material.dart';
+
+export 'popover_border.dart';
 
 /// Room kept between a popover and the window's edges.
 const double _edge = DotSpace.m;
@@ -12,6 +15,10 @@ const double _edge = DotSpace.m;
 /// the button with its arrow on the button's centre, or above it when
 /// there is more room there; the window's top end when [anchor] is null.
 /// A click outside or Esc closes it; it returns [T] when popped with one.
+///
+/// [height] fixes its height (up to the room there is), for content that
+/// fills it, as the iPad's Create task (E-R2-3); [radius] and [arrow] are
+/// the iPad's 26 and none there.
 ///
 /// ```dart
 /// await showAnchoredPopover<void>(
@@ -26,10 +33,16 @@ Future<T?> showAnchoredPopover<T>({
   required Rect? anchor,
   required double width,
   required WidgetBuilder builder,
+  double? height,
+  double radius = DotRadii.popover,
+  bool arrow = true,
 }) => Navigator.of(context).push(
   _PopoverRoute<T>(
     anchor: anchor,
     width: width,
+    height: height,
+    radius: radius,
+    arrow: arrow,
     builder: builder,
     barrierLabel: context.l10n.editorCancel,
     motion: DotTheme.of(context).motion,
@@ -40,6 +53,9 @@ class _PopoverRoute<T> extends PopupRoute<T> {
   _PopoverRoute({
     required this.anchor,
     required this.width,
+    required this.height,
+    required this.radius,
+    required this.arrow,
     required this.builder,
     required this.barrierLabel,
     required this.motion,
@@ -47,6 +63,9 @@ class _PopoverRoute<T> extends PopupRoute<T> {
 
   final Rect? anchor;
   final double width;
+  final double? height;
+  final double radius;
+  final bool arrow;
   final WidgetBuilder builder;
   final DotMotion motion;
 
@@ -80,11 +99,17 @@ class _PopoverRoute<T> extends PopupRoute<T> {
           DotTouch.min,
         );
     final place = PopoverPlace.of(at, size, pad, width);
+    final h = height;
+    final content = Builder(builder: builder);
     return CustomSingleChildLayout(
       delegate: _PopoverLayout(place),
       child: _Frame(
         place: place,
-        child: Builder(builder: builder),
+        radius: radius,
+        arrow: arrow,
+        child: h == null
+            ? content
+            : SizedBox(height: h.clamp(0, place.maxHeight), child: content),
       ),
     );
   }
@@ -182,17 +207,25 @@ class _PopoverLayout extends SingleChildLayoutDelegate {
 /// The popover's surface: the sheet colour, a hairline, the floating
 /// shadow and an arrow toward the anchor.
 class _Frame extends StatelessWidget {
-  const _Frame({required this.place, required this.child});
+  const _Frame({
+    required this.place,
+    required this.radius,
+    required this.arrow,
+    required this.child,
+  });
 
   final PopoverPlace place;
+  final double radius;
+  final bool arrow;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final shape = PopoverBorder(
-      arrowX: place.arrowX,
+      arrowX: arrow ? place.arrowX : null,
       up: place.below,
+      radius: radius,
       side: BorderSide(color: t.colors.hairline),
     );
     return Semantics(
@@ -209,7 +242,9 @@ class _Frame extends StatelessWidget {
           shape: shape,
           clipBehavior: Clip.antiAlias,
           child: Padding(
-            padding: place.below
+            padding: !arrow
+                ? EdgeInsets.zero
+                : place.below
                 ? const EdgeInsets.only(top: DotSize.popoverArrow)
                 : const EdgeInsets.only(bottom: DotSize.popoverArrow),
             child: child,
@@ -218,59 +253,4 @@ class _Frame extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A rounded rectangle with an arrow on its top ([up]) or bottom edge,
-/// centred [arrowX] from its left. The arrow lies inside the box (the
-/// body is inset by [DotSize.popoverArrow] on that side), so nothing is
-/// painted outside the popover's layout.
-@visibleForTesting
-class PopoverBorder extends ShapeBorder {
-  const PopoverBorder({
-    required this.arrowX,
-    required this.up,
-    this.side = BorderSide.none,
-  });
-
-  final double arrowX;
-  final bool up;
-  final BorderSide side;
-
-  @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
-      getOuterPath(rect, textDirection: textDirection);
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    const a = DotSize.popoverArrow;
-    final inner = up
-        ? Rect.fromLTRB(rect.left, rect.top + a, rect.right, rect.bottom)
-        : Rect.fromLTRB(rect.left, rect.top, rect.right, rect.bottom - a);
-    final body = RRect.fromRectAndRadius(
-      inner,
-      const Radius.circular(DotRadii.popover),
-    );
-    final x = rect.left + arrowX;
-    final y = up ? inner.top : inner.bottom;
-    final tip = up ? rect.top : rect.bottom;
-    final arrow = Path()
-      ..moveTo(x - a, y)
-      ..lineTo(x, tip)
-      ..lineTo(x + a, y)
-      ..close();
-    return Path.combine(PathOperation.union, Path()..addRRect(body), arrow);
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    if (side.style == BorderStyle.none) return;
-    canvas.drawPath(getOuterPath(rect), side.toPaint());
-  }
-
-  @override
-  ShapeBorder scale(double t) =>
-      PopoverBorder(arrowX: arrowX * t, up: up, side: side.scale(t));
 }

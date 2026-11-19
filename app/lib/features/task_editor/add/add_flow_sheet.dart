@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/editing/add_anchor.dart';
+import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/editing/pending_brain_dump.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
@@ -21,23 +22,27 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
 import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/side_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: Create
-/// task on phones (ED-140), the popover under the toolbar's + from medium
-/// width (E-R2-36, ED-342), and Minimal's own Add sheet at every width
-/// (ED-152, M19.6). [text] prefills the title, [startUtc] the time and
-/// [day] the day; [resume] reopens Add whose save failed, as it was
-/// (M8.5b).
+/// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N, on its
+/// [mode]'s tab: Create task on phones (ED-140); on tablets Create task
+/// in a popover under the + on iPad and in a modal side sheet on Android
+/// (E-R2-3, ED-271); the popover under the toolbar's + on the Mac and the
+/// web from medium width (E-R2-36, ED-342); and Minimal's own Add sheet at
+/// every width (ED-152, M19.6). [text] prefills the title, [startUtc] the
+/// time and [day] the day; [resume] reopens Add whose save failed, as it
+/// was (M8.5b).
 Future<void> showAddFlow(
   BuildContext context, {
   String text = '',
   DateTime? startUtc,
   DateTime? day,
   AddFlowState? resume,
+  AddMode mode = AddMode.task,
 }) {
   final request = AddRequest(
     languageCode: Localizations.localeOf(context).languageCode,
@@ -46,29 +51,61 @@ Future<void> showAddFlow(
     day: day,
     resume: resume,
   );
+  Widget create(BuildContext _) =>
+      CreateTaskSheet(request: request, mode: mode);
+  return switch (_hostOf(context)) {
+    _AddHost.minimal => showAppSheet<void>(
+      context: context,
+      fullHeight: true,
+      builder: (_) => AddFlowSheet(request: request),
+    ),
+    _AddHost.phone => showAppSheet<void>(
+      context: context,
+      fullHeight: true,
+      builder: create,
+    ),
+    _AddHost.ipad => showAnchoredPopover<void>(
+      context: context,
+      anchor: AddAnchor.current(),
+      width: DotSize.tabletAddWidth,
+      height: DotSize.tabletAddHeight,
+      radius: DotRadii.tabletPopover,
+      arrow: false,
+      builder: create,
+    ),
+    _AddHost.androidTablet => showModalSideSheet<void>(
+      context: context,
+      builder: create,
+    ),
+    _AddHost.popover => showAnchoredPopover<void>(
+      context: context,
+      anchor: AddAnchor.current(),
+      width: DotSize.addPopover,
+      builder: (_) => AddPopover(request: request, mode: mode),
+    ),
+  };
+}
+
+/// Where Add opens: by width class, then the platform's container
+/// (docs/10 §4 lets containers differ by platform; layout never does).
+enum _AddHost { minimal, phone, ipad, androidTablet, popover }
+
+_AddHost _hostOf(BuildContext context) {
   final minimal =
       ProviderScope.containerOf(
         context,
         listen: false,
       ).read(layoutPolicyProvider).visibility(FeatureId.addTask) ==
       FeatureVisibility.simplified;
+  if (minimal) return _AddHost.minimal;
   // AppLayout: a short landscape phone stays compact too (H1).
-  final phone = AppLayout.classOf(context) == WidthClass.compact;
-  if (!phone && !minimal) {
-    return showAnchoredPopover<void>(
-      context: context,
-      anchor: AddAnchor.current(),
-      width: DotSize.addPopover,
-      builder: (_) => AddPopover(request: request),
-    );
-  }
-  return showAppSheet<void>(
-    context: context,
-    fullHeight: true,
-    builder: (_) => minimal
-        ? AddFlowSheet(request: request)
-        : CreateTaskSheet(request: request),
-  );
+  if (AppLayout.classOf(context) == WidthClass.compact) return _AddHost.phone;
+  if (webChrome(context)) return _AddHost.popover;
+  return switch (Theme.of(context).platform) {
+    TargetPlatform.iOS => _AddHost.ipad,
+    TargetPlatform.android => _AddHost.androidTablet,
+    _ => _AddHost.popover,
+  };
 }
 
 /// Minimal's Add sheet (docs/14 §4, ED-152): the title and two chips,

@@ -1,12 +1,14 @@
 import 'package:dottoday/app.dart';
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_sheet.dart';
 import 'package:dottoday/features/task_editor/add/popover/add_popover.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,9 +64,11 @@ Future<FakeOccurrenceRepository> _pump(
 
 /// Opens Add with ⌘N / Ctrl+N and types [text] into its title.
 Future<void> _add(WidgetTester tester, String text) async {
-  await tester.sendKeyDownEvent(LogicalKeyboardKey.control);
+  final apple = AppShortcuts.usesMeta(defaultTargetPlatform);
+  final mod = apple ? LogicalKeyboardKey.meta : LogicalKeyboardKey.control;
+  await tester.sendKeyDownEvent(mod);
   await tester.sendKeyEvent(LogicalKeyboardKey.keyN);
-  await tester.sendKeyUpEvent(LogicalKeyboardKey.control);
+  await tester.sendKeyUpEvent(mod);
   await tester.pumpAndSettle();
   // Add's own title (the Workspace has a Capture field too).
   final add = [
@@ -83,32 +87,38 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   testWidgets('the popover: the window, explained, and "Try"', (tester) async {
-    await _pump(tester, energyHistory());
-    await _add(tester, 'Write report 3pm');
-    expect(find.byType(AddPopover), findsOneWidget);
-    expect(find.text(_best), findsOneWidget);
-    // The learned length's line sits under the time too (docs/13 §6).
-    expect(find.text('usually 1 h'), findsOneWidget);
-    // docs/13 §6: explained, and no per-title reset for an app-wide window.
-    await tester.tap(find.text(_best));
-    await tester.pumpAndSettle();
-    expect(
-      find.text(
-        'based on your last 20 finished high-energy tasks · where most started',
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('Reset for this task on this device'), findsNothing);
-    await tester.tapAt(const Offset(4, 4)); // the explanation away
-    await tester.pumpAndSettle();
-    if (find.byType(AddPopover).evaluate().isEmpty) {
+    // The popover is the Mac's and the web's; tablets get Create task.
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    try {
+      await _pump(tester, energyHistory());
       await _add(tester, 'Write report 3pm');
+      expect(find.byType(AddPopover), findsOneWidget);
+      expect(find.text(_best), findsOneWidget);
+      // The learned length's line sits under the time too (docs/13 §6).
+      expect(find.text('usually 1 h'), findsOneWidget);
+      // docs/13 §6: explained, and no per-title reset for an app-wide window.
+      await tester.tap(find.text(_best));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'based on your last 20 finished high-energy tasks · where most started',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Reset for this task on this device'), findsNothing);
+      await tester.tapAt(const Offset(4, 4)); // the explanation away
+      await tester.pumpAndSettle();
+      if (find.byType(AddPopover).evaluate().isEmpty) {
+        await _add(tester, 'Write report 3pm');
+      }
+      await tester.tap(find.text('Try 9:00 AM'));
+      await tester.pumpAndSettle();
+      // The learned length (1 h) comes along.
+      expect(find.textContaining('9:00 AM – 10:00 AM'), findsOneWidget);
+      expect(find.text('Try 9:00 AM'), findsNothing, reason: 'already there');
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
     }
-    await tester.tap(find.text('Try 9:00 AM'));
-    await tester.pumpAndSettle();
-    // The learned length (1 h) comes along.
-    expect(find.textContaining('9:00 AM – 10:00 AM'), findsOneWidget);
-    expect(find.text('Try 9:00 AM'), findsNothing, reason: 'already there');
   });
 
   testWidgets('Create task on a phone: the same line under When', (

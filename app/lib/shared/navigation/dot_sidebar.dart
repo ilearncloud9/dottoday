@@ -1,6 +1,6 @@
-import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/navigation/add_menu.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:flutter/material.dart';
 
@@ -70,9 +70,10 @@ class DotSidebar extends StatelessWidget {
                       ),
                     ),
                     if (bar.onAdd case final onAdd?)
-                      AddAnchor(
-                        child: IconButton.filled(
-                          onPressed: onAdd,
+                      AddMenuButton(
+                        onAdd: onAdd,
+                        builder: (onPressed) => IconButton.filled(
+                          onPressed: onPressed,
                           tooltip: bar.addLabel,
                           style: IconButton.styleFrom(
                             backgroundColor: t.colors.accent,

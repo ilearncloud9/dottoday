@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/task_editor/add/add_submit.dart';
 import 'package:dottoday/features/task_editor/add/create/add_mode_tabs.dart';
 import 'package:dottoday/features/task_editor/add/popover/add_popover_task.dart';
@@ -15,9 +16,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// each tab keeps its draft while another is shown and switching writes
 /// nothing. Return adds, Esc closes and keeps nothing.
 class AddPopover extends ConsumerStatefulWidget {
-  const AddPopover({required this.request, super.key});
+  const AddPopover({
+    required this.request,
+    this.mode = AddMode.task,
+    super.key,
+  });
 
   final AddRequest request;
+
+  /// The tab it opens on.
+  final AddMode mode;
 
   @override
   ConsumerState<AddPopover> createState() => _AddPopoverState();
@@ -26,8 +34,8 @@ class AddPopover extends ConsumerStatefulWidget {
 class _AddPopoverState extends ConsumerState<AddPopover> {
   // Leaf view state (CLAUDE.md §4): the tab shown and those opened so far;
   // a tab is built on its first visit and kept after.
-  AddMode _mode = AddMode.task;
-  final _seen = <AddMode>{AddMode.task};
+  late AddMode _mode = widget.mode;
+  late final _seen = <AddMode>{AddMode.task, widget.mode};
 
   AddRequest get _request => widget.request;
 
@@ -67,6 +75,7 @@ class _AddPopoverState extends ConsumerState<AddPopover> {
             AddModeTabs(
               mode: _mode,
               popover: true,
+              touch: watchTouchContent(context, ref),
               onMode: (m) => setState(() {
                 _mode = m;
                 _seen.add(m);

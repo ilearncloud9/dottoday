@@ -1760,6 +1760,8 @@
   "menuCalendar": "Kalender",
   "menuNewBrainDump": "Neuer Gedankenspeicher …",
   "menuPasteAsTasks": "Als Aufgaben einfügen",
+  "addMenuPasteList": "Liste einfügen",
+  "addMenuLabel": "Optionen zum Hinzufügen",
   "menuBack": "Zurück",
   "menuShowLess": "Weniger anzeigen",
   "menuShowEverything": "Alles anzeigen",

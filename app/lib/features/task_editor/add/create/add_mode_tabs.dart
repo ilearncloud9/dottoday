@@ -1,10 +1,8 @@
+import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-/// Add's three modes (G2-8, ED-091).
-enum AddMode { task, brainDump, routine }
 
 /// Task · Brain dump · Routine: the native control on each platform.
 class AddModeTabs extends StatelessWidget {
@@ -12,6 +10,7 @@ class AddModeTabs extends StatelessWidget {
     required this.mode,
     required this.onMode,
     this.popover = false,
+    this.touch = true,
     super.key,
   });
 
@@ -21,6 +20,10 @@ class AddModeTabs extends StatelessWidget {
   /// The Mac and web popover's tabs (E-R2-36): the sliding control on
   /// both, at the Workspace's tab size (28 tall, 12/500).
   final bool popover;
+
+  /// Touch-sized segments (48, the floor every touch target meets); the
+  /// popover's pointer tabs are 28 (E-R2-36).
+  final bool touch;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +45,16 @@ class AddModeTabs extends StatelessWidget {
     }
     final children = {
       for (final m in AddMode.values)
-        m: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: popover ? DotSpace.xs : DotSpace.s,
+        m: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: touch ? DotTouch.android : DotSize.popoverPill,
           ),
-          child: Text(
-            labels[m]!,
-            style: popover ? DotTheme.of(context).styles.viewTab : null,
+          child: Center(
+            widthFactor: 1,
+            child: Text(
+              labels[m]!,
+              style: popover ? DotTheme.of(context).styles.viewTab : null,
+            ),
           ),
         ),
     };

@@ -1,6 +1,7 @@
 import 'package:dottoday/app_add_modes.dart';
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_task_links.dart';
+import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -20,6 +21,7 @@ import 'timeline_fakes.dart';
 Widget testRouterApp(
   GoRouter router, {
   VoidCallback? onQuickAdd,
+  ValueChanged<AddMode>? onAddMode,
   ThemeMode themeMode = ThemeMode.light,
   List<Override>? overrides,
 }) => ProviderScope(
@@ -35,12 +37,13 @@ Widget testRouterApp(
           ),
         ),
       ],
-  child: _routerApp(router, onQuickAdd, themeMode),
+  child: _routerApp(router, onQuickAdd, onAddMode, themeMode),
 );
 
 Widget _routerApp(
   GoRouter router,
   VoidCallback? onQuickAdd,
+  ValueChanged<AddMode>? onAddMode,
   ThemeMode themeMode,
 ) => MaterialApp.router(
   theme: DotTheme.light(),
@@ -54,6 +57,7 @@ Widget _routerApp(
   builder: (context, child) => withAddModes(
     AppCommandScope(
       handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
+      onAddMode: onAddMode,
       // A view's ?task= opens the task, as in the app (ED-097).
       child: TaskLinkHost(
         router: router,
