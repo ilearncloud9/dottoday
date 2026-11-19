@@ -2886,12 +2886,6 @@ abstract class AppLocalizations {
   /// **'Today'**
   String get weekToday;
 
-  /// Dashed target at the end of a future day on the Week board.
-  ///
-  /// In en, this message translates to:
-  /// **'Drop a task here · {free}'**
-  String weekDropHere(String free);
-
   /// Floating label while dragging over the Week board: 'Sat · 10:00 – 11:30'.
   ///
   /// In en, this message translates to:

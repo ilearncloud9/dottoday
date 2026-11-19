@@ -1952,11 +1952,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get weekToday => 'Heute';
 
   @override
-  String weekDropHere(String free) {
-    return 'Aufgabe hier ablegen · $free';
-  }
-
-  @override
   String weekDropAt(String day, String range) {
     return '$day · $range';
   }

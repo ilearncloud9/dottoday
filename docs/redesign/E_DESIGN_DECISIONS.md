@@ -5124,6 +5124,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Open, asked on the review page:** the "Drop a task here" boxes under each open day (not on the board); Day's rows keep the Mac row layout rather than the board's stacked time; now is its own row under the live card on Day.
 - **Checks:** `dart analyze` and `dart format` clean; all non-golden tests pass (the 5 Supabase suites need the stack); 92 expanded-width goldens re-baselined; new `day_hours_test`, lane tests in `week_layout_test`, `today_three_days_test`, Workspace goldens for Day, 3 days and Week. Not run on a Mac or in a full-width browser yet.
 
+### ED-389 · M19.2 part 2a follow-up: as Concept E draws it
+- **Date:** 2026-11-19. **Owner,** on ED-388's open questions: the drop boxes and Day's rows "make sure it is like the current concept E"; now on Day: "draw both let me see", then "it should be like E-FullA-v2 web Day: the now line runs across the live card at 10:42, a dot on the thread and "10:42" in the gutter"; then "Approve, commit".
+- **Built:**
+  - no "Drop a task here" boxes on the hour grid (Week, 3 days), as E-FullA-v2 draws it; add from + or the Day menu, and drop onto any time in a column; the string is removed;
+  - the day thread's rows and the live card keep the time above the title at every width (E-FullA-v2 web Day, E-Phones); the side-by-side layout from 440 px (the old Mac spread card's) is removed, so medium windows and phone landscape stack too;
+  - on the Day view, when now falls inside the live task, the now row is not drawn: the line crosses the live card at the time, with the dot on the thread and the time in the gutter (`ThreadHours.nowIn`); the live row carries "Now, {time}" for screen readers; between tasks and on phones now keeps its own row. At large text the row grows with its text, so the line can cross the time line.
+- **Checks:** `dart analyze` and `dart format` clean; all non-golden tests pass (the 5 Supabase suites need the stack); 114 goldens re-baselined; new tests for now inside the live row and between tasks. Not run on a Mac or in a full-width browser yet.
+
 ---
 
 ## Pending owner answers

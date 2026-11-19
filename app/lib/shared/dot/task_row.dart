@@ -205,20 +205,19 @@ class _Text extends StatelessWidget {
       final n? => Text(n, style: _plan(t)),
       null => null,
     };
-    // Wide (the Mac spread's card): time beside the title; else above it.
+    final stacked = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [meta, title, ?note],
+    );
+    // The day thread's rows keep the time above the title at every width
+    // (Concept E, E-FullA-v2 web Day). Smaller wide rows put it beside.
+    if (large) return stacked;
     return LayoutBuilder(
-      builder: (context, box) =>
-          box.maxWidth >=
-              (large ? DotSize.wideThreadRowFrom : DotSize.wideRowFrom)
+      builder: (context, box) => box.maxWidth >= DotSize.wideRowFrom
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: large
-                      ? DotSize.wideThreadRowMeta
-                      : DotSize.wideRowMeta,
-                  child: meta,
-                ),
+                SizedBox(width: DotSize.wideRowMeta, child: meta),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,10 +226,7 @@ class _Text extends StatelessWidget {
                 ),
               ],
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [meta, title, ?note],
-            ),
+          : stacked,
     );
   }
 

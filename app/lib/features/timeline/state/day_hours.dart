@@ -1,3 +1,4 @@
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -16,6 +17,7 @@ ThreadHours dayHours(
   required tz.Location zone,
   required double pxPerMinute,
   required String Function(DateTime local) label,
+  DateTime? nowUtc,
 }) {
   final times = [for (final e in entries) _time(e)];
   final spans = <ThreadHourSpan?>[];
@@ -33,7 +35,42 @@ ThreadHours dayHours(
     if (!end.isAfter(t.start)) end = t.start;
     spans.add(_span(t.start, end, zone, label));
   }
-  return ThreadHours(spans: spans, pxPerMinute: pxPerMinute);
+  return ThreadHours(
+    spans: spans,
+    pxPerMinute: pxPerMinute,
+    nowIn: nowUtc == null ? null : _nowIn(entries, times, spans, nowUtc),
+  );
+}
+
+/// Now inside the live task's row: the now row right after a live task
+/// whose row holds now (E-FullA-v2 web Day).
+({int row, double at, int nowRow, String time})? _nowIn(
+  List<ThreadEntry> entries,
+  List<_Time?> times,
+  List<ThreadHourSpan?> spans,
+  DateTime now,
+) {
+  final nowRow = entries.indexWhere((e) => e is ThreadNow);
+  if (nowRow < 1) return null;
+  final row = nowRow - 1;
+  final live = entries[row];
+  final t = times[row];
+  final span = spans[row];
+  if (live is! ThreadTaskEntry ||
+      live.task.state != DotState.live ||
+      t == null ||
+      span == null ||
+      span.minutes <= 0) {
+    return null;
+  }
+  final at = now.difference(t.start).inSeconds / (span.minutes * 60);
+  if (at < 0 || at > 1) return null;
+  return (
+    row: row,
+    at: at,
+    nowRow: nowRow,
+    time: (entries[nowRow] as ThreadNow).time,
+  );
 }
 
 typedef _Time = ({DateTime start, DateTime end});

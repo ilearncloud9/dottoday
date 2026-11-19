@@ -90,7 +90,8 @@ void main() {
     expect(find.text('Busiest · Tue · 6 h 30'), findsOneWidget);
     expect(find.text('Lightest · Sun · 1 h 15'), findsOneWidget);
     expect(find.textContaining('Free · '), findsOneWidget);
-    expect(find.textContaining('Drop a task here'), findsWidgets);
+    // No drop boxes on the grid (Concept E, owner 2026-11-19).
+    expect(find.textContaining('Drop a task here'), findsNothing);
   });
 
   testWidgets('› and Ctrl+← step a week; Ctrl+T comes back', (tester) async {
@@ -120,14 +121,22 @@ void main() {
       (o) => o.title == 'Reply to email' && o.startUtc!.day == 22,
     );
     final card = find.text('Reply to email').at(2); // Thu's
-    final friday = find.textContaining('Drop a task here · 12 h');
+    // Friday's column, two hours lower than the card.
+    final friday =
+        tester.getCenter(find.text('Fri')) +
+        Offset(
+          0,
+          tester.getCenter(card).dy -
+              tester.getCenter(find.text('Fri')).dy +
+              168,
+        );
     final g = await tester.startGesture(
       tester.getCenter(card),
       kind: PointerDeviceKind.mouse,
     );
     await g.moveBy(const Offset(0, 20));
     await tester.pump();
-    await g.moveTo(tester.getCenter(friday));
+    await g.moveTo(friday);
     await tester.pump();
     expect(find.textContaining('Fri · '), findsOneWidget);
     await g.up();

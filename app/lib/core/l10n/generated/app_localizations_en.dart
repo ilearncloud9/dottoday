@@ -1943,11 +1943,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weekToday => 'Today';
 
   @override
-  String weekDropHere(String free) {
-    return 'Drop a task here · $free';
-  }
-
-  @override
   String weekDropAt(String day, String range) {
     return '$day · $range';
   }

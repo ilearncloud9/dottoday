@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:flutter/material.dart';
 
 /// The hour-label gutter (E-FullA-v2: 44), wider as text grows so "10 AM"
@@ -25,11 +27,24 @@ typedef ThreadHourSpan = ({int minutes, List<ThreadHourMark> marks});
 /// a knot) keeps the row's own height and carries no hour.
 @immutable
 final class ThreadHours {
-  const ThreadHours({required this.spans, required this.pxPerMinute});
+  const ThreadHours({
+    required this.spans,
+    required this.pxPerMinute,
+    this.nowIn,
+  });
 
   final List<ThreadHourSpan?> spans;
   final double pxPerMinute;
+
+  /// Now inside the live task's row instead of a row of its own (the
+  /// E-FullA-v2 web Day board): that row's index, how far down it now is,
+  /// the now row's index (drawn as nothing) and its time ("10:42").
+  final ({int row, double at, int nowRow, String time})? nowIn;
 }
+
+/// Now drawn across a row: the line over the card, the dot on the
+/// thread and the time in the gutter.
+typedef ThreadHourNow = ({double at, String time});
 
 /// [child] (a thread row) after the hour gutter, at least [span]'s time
 /// tall, its hours' labels in the gutter and lines behind it.
@@ -38,8 +53,12 @@ class ThreadHourRow extends StatelessWidget {
     required this.span,
     required this.pxPerMinute,
     required this.child,
+    this.now,
     super.key,
   });
+
+  /// Now inside this row (the live task's), when the thread draws it there.
+  final ThreadHourNow? now;
 
   final ThreadHourSpan? span;
   final double pxPerMinute;
@@ -59,6 +78,25 @@ class ThreadHourRow extends StatelessWidget {
       constraints: BoxConstraints(minHeight: s.minutes * pxPerMinute),
       child: row,
     );
+    if (now case final n?) {
+      row = Semantics(
+        label: context.l10n.timelineNow(n.time),
+        child: CustomPaint(
+          foregroundPainter: _Now(
+            at: n.at,
+            time: n.time,
+            gutter: gutter,
+            line: t.colors.nowLineToday,
+            dot: t.colors.accent,
+            edge: t.colors.card,
+            beadEdge: t.colors.nowBeadEdge,
+            style: t.styles.nowBead.copyWith(color: t.colors.accentText),
+            scaler: MediaQuery.textScalerOf(context),
+          ),
+          child: row,
+        ),
+      );
+    }
     if (s.marks.isEmpty) return row;
     return CustomPaint(
       painter: _Hours(
@@ -130,4 +168,83 @@ final class _Hours extends CustomPainter {
       old.scaler != scaler ||
       old.direction != direction ||
       old.gutter != gutter;
+}
+
+/// Now across the live task's row: the line, the 14 dot on the thread and
+/// the time in the gutter (E-FullA-v2 web Day: "10:42").
+final class _Now extends CustomPainter {
+  const _Now({
+    required this.at,
+    required this.time,
+    required this.gutter,
+    required this.line,
+    required this.dot,
+    required this.edge,
+    required this.beadEdge,
+    required this.style,
+    required this.scaler,
+  });
+
+  final Color beadEdge;
+  final double at;
+  final String time;
+  final double gutter;
+  final Color line;
+  final Color dot;
+  final Color edge;
+  final TextStyle style;
+  final TextScaler scaler;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final y = at * size.height;
+    canvas.drawRect(
+      Rect.fromLTWH(gutter, y, size.width - gutter, DotSpace.hairline * 1.5),
+      Paint()..color = line,
+    );
+    final centre = Offset(gutter + threadAxisWidth / 2, y);
+    canvas
+      ..drawCircle(centre, DotSize.gridNowDot / 2, Paint()..color = edge)
+      ..drawCircle(
+        centre,
+        DotSize.gridNowDot / 2 - DotSpace.xxs,
+        Paint()..color = dot,
+      );
+    final text = TextPainter(
+      text: TextSpan(text: time, style: style),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout();
+    const pad = DotSpace.xs;
+    final box = RRect.fromRectAndRadius(
+      Rect.fromLTWH(
+        gutter - text.width - pad * 3,
+        y - text.height / 2,
+        text.width + pad * 2,
+        text.height,
+      ),
+      Radius.circular(text.height / 2),
+    );
+    canvas.drawRRect(box, Paint()..color = edge);
+    canvas.drawRRect(
+      box,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = beadEdge,
+    );
+    text
+      ..paint(canvas, Offset(box.left + pad, box.top))
+      ..dispose();
+  }
+
+  @override
+  bool shouldRepaint(_Now old) =>
+      old.at != at ||
+      old.time != time ||
+      old.gutter != gutter ||
+      old.line != line ||
+      old.dot != dot ||
+      old.style != style ||
+      old.scaler != scaler;
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
@@ -20,7 +19,6 @@ import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/features/timeline/week/week_tasks.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
-import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -95,7 +93,7 @@ class WeekView extends ConsumerWidget {
       long: !cues,
       columns: [
         for (final (i, d) in data.indexed)
-          _column(context, ref, d, shapes[i], loads[i], first, axisMinutes),
+          _column(context, ref, d, shapes[i], first, axisMinutes),
       ],
     );
     if (!cues) return _keys(board);
@@ -204,7 +202,6 @@ class WeekView extends ConsumerWidget {
     WidgetRef ref,
     TimelineData d,
     DayShape shape,
-    DayLoad load,
     int firstHour,
     int axisMinutes,
   ) {
@@ -228,7 +225,6 @@ class WeekView extends ConsumerWidget {
         axisStartUtc: _axisStart(zone, date, firstHour),
         isToday: isToday,
         open: !date.isBefore(today),
-        freeText: formatDurationShort(l10n, load.freeMinutes),
         nowUtc: isToday ? nowUtc : null,
       ),
       axisMinutes: axisMinutes,
@@ -242,7 +238,6 @@ class WeekView extends ConsumerWidget {
       ),
       onDrop: (id, start) => unawaited(_move(context, ref, id, start, time)),
       onOpen: (id) => ref.read(editingTaskProvider.notifier).open(id),
-      onAdd: () => Actions.maybeInvoke(context, AddTaskIntent(day: date)),
       onCue: (id) => openWeekCue(
         context,
         ref,

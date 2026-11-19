@@ -1302,3 +1302,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-18, ED-386:** M19.1 Today in Full on phones as E-Phones draws it: the top row with Sync and the profile, the E strip without dots, the day on the page, the empty day in the thread, the tip bar, landscape's folded strip, phones' /week to Today. Approved.
 - **2026-11-18, ED-387:** M19.2 part 1: the Workspace sidebar, toolbar and Plan panel on Mac and web in Full; every view an address; pointer sizes with a 24 px floor; the Inbox column replaced. Approved.
 - **2026-11-19, ED-388:** M19.2 part 2a: Week and 3 days on one hour grid, Day as the thread on hours; the 3-day spread replaced. Approved.
+- **2026-11-19, ED-389:** M19.2 part 2a follow-up: no drop boxes on the grid, time above the title at every width, now inside the live card on Day. Approved.

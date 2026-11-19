@@ -22,7 +22,6 @@ class WeekDayColumn extends StatefulWidget {
     required this.dropLabel,
     required this.onDrop,
     required this.onOpen,
-    required this.onAdd,
     this.onCue,
     super.key,
   });
@@ -39,9 +38,6 @@ class WeekDayColumn extends StatefulWidget {
   /// Moves task [id] to [startUtc] on this day.
   final void Function(String id, DateTime startUtc) onDrop;
   final ValueChanged<String> onOpen;
-
-  /// "Drop a task here" tapped: Add on this day.
-  final VoidCallback onAdd;
 
   /// A card's Smallest step or Unstick cue tapped (M10.6, M10.7).
   final ValueChanged<String>? onCue;
@@ -222,10 +218,6 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     final day = widget.day;
     final boxes = _boxes();
     final byId = {for (final task in day.tasks) task.id: task};
-    final last = boxes.fold(
-      0.0,
-      (m, b) => b.top + b.height > m ? b.top + b.height : m,
-    );
     return [
       for (final b in boxes)
         Positioned.fill(
@@ -238,17 +230,6 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
               lanes: b.lanes,
               child: _card(byId[b.id]!, b.height, narrow: b.lanes > 1),
             ),
-          ),
-        ),
-      if (day.open && last + DotSpace.xxl * 2 < _height)
-        Positioned(
-          left: DotSize.gridInset,
-          right: DotSize.gridInset,
-          top: last + DotSpace.l,
-          child: WeekDropBox(
-            text: day.freeText,
-            onTap: widget.onAdd,
-            onTint: day.isToday,
           ),
         ),
     ];

@@ -464,7 +464,6 @@
   "weekViewWeek": "Woche",
   "weekViewMonth": "Monat",
   "weekToday": "Heute",
-  "weekDropHere": "Aufgabe hier ablegen · {free}",
   "weekDropAt": "{day} · {range}",
   "weekCardLeft": "noch {minutes} min",
   "weekCardSkipped": "{range} · übersprungen",

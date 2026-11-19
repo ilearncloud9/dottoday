@@ -13,13 +13,19 @@ void main() {
   final berlin = tz.getLocation('Europe/Berlin');
   DateTime at(int h, int m) => tz.TZDateTime(berlin, 2026, 10, 21, h, m);
 
-  ThreadEntry task(String id, int h, int m, int minutes) => ThreadTaskEntry(
+  ThreadEntry task(
+    String id,
+    int h,
+    int m,
+    int minutes, {
+    DotState state = DotState.upcoming,
+  }) => ThreadTaskEntry(
     ThreadTask(
       id: id,
       title: id,
       color: TaskColor.values.first,
       icon: TaskIcon.values.first,
-      state: DotState.upcoming,
+      state: state,
       timeRange: '',
       startUtc: at(h, m),
       minutes: minutes,
@@ -28,11 +34,12 @@ void main() {
   ThreadEntry gap(int h, int m, int minutes) =>
       ThreadGap(minutes: minutes, startLabel: '', startUtc: at(h, m));
 
-  ThreadHours hours(List<ThreadEntry> entries) => dayHours(
+  ThreadHours hours(List<ThreadEntry> entries, {DateTime? now}) => dayHours(
     entries,
     zone: berlin,
     pxPerMinute: 70 / 60,
     label: (local) => '${local.hour}',
+    nowUtc: now,
   );
 
   test('a row stands for its time and carries the hours inside it', () {
@@ -63,5 +70,29 @@ void main() {
     expect(h.spans[2]!.minutes, 30);
     expect(h.spans[0]!.marks.map((m) => m.label), ['9', '10']);
     expect(h.spans[2]!.marks, isEmpty, reason: 'each hour once');
+  });
+
+  test('now crosses the live task\'s row instead of a row of its own', () {
+    final entries = [
+      task('deep', 9, 0, 120, state: DotState.live),
+      const ThreadNow('10:42'),
+      task('call', 11, 0, 30),
+    ];
+    final now = hours(entries, now: at(10, 42)).nowIn!;
+    expect(now.row, 0);
+    expect(now.nowRow, 1);
+    expect(now.time, '10:42');
+    expect(now.at, closeTo(102 / 120, 1e-9));
+  });
+
+  test('now between tasks keeps its own row', () {
+    final entries = [
+      task('run', 7, 0, 30),
+      gap(7, 30, 30),
+      const ThreadNow('8:00'),
+      task('deep', 8, 0, 60),
+    ];
+    expect(hours(entries, now: at(8, 0)).nowIn, isNull);
+    expect(hours(entries).nowIn, isNull, reason: 'not today');
   });
 }

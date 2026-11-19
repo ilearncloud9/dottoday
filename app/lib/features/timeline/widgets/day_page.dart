@@ -205,6 +205,7 @@ class DayPage extends ConsumerWidget {
                     label: (local) => DateFormat.j(
                       _locale(context),
                     ).format(DateTime(2026, 1, 1, local.hour)),
+                    nowUtc: date == today ? now : null,
                   )
                 : null,
           )

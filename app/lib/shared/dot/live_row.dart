@@ -70,20 +70,19 @@ class LiveRow extends StatelessWidget {
             ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-        child: LayoutBuilder(builder: (context, box) => _body(box.maxWidth)),
+        child: _body(),
       ),
     );
   }
 
-  /// Wide (the Mac spread's card): the time in its own column, as on
-  /// [TaskRow]; else above the title.
-  Widget _body(double width) {
-    final wide = width >= DotSize.wideThreadRowFrom;
-    final column = Column(
+  /// The time above the title at every width (Concept E, E-FullA-v2 web
+  /// Day), then the cues.
+  Widget _body() {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.s,
       children: [
-        _Summary(task: task, onOpen: onOpen, showMeta: !wide),
+        _Summary(task: task, onOpen: onOpen),
         // Smallest step (M10.6): only the first step, and Start.
         if (task.smallestStep case final text?)
           SmallestStepLine(text: text, onStart: onFocus),
@@ -100,28 +99,14 @@ class LiveRow extends StatelessWidget {
           ),
       ],
     );
-    if (!wide) return column;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: DotSize.wideThreadRowMeta,
-          child: _WideMeta(task: task),
-        ),
-        Expanded(child: column),
-      ],
-    );
   }
 }
 
 class _Summary extends StatelessWidget {
-  const _Summary({required this.task, this.onOpen, this.showMeta = true});
+  const _Summary({required this.task, this.onOpen});
 
   final ThreadTask task;
   final VoidCallback? onOpen;
-
-  /// The time line above the title; off when [LiveRow] shows it beside.
-  final bool showMeta;
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +137,7 @@ class _Summary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: DotSpace.xxs,
           children: [
-            if (showMeta)
-              _NowMeta(range: range, now: now, style: t.styles.threadMeta),
+            _NowMeta(range: range, now: now, style: t.styles.threadMeta),
             Text(task.title, style: t.styles.liveRowTitle),
             if (task.oneThing) Text(l10n.oneThingMeta, style: t.styles.rowMeta),
             if (task.hasSubtasks || task.reality?.note != null)
@@ -224,42 +208,6 @@ String _realityMeta(AppLocalizations l10n, ThreadTask task, ThreadReality r) {
     final m? => l10n.liveMeta(range, m),
     null => range,
   };
-}
-
-/// The time in the wide layout's own column (read with the title): the
-/// range, and "Now, 18 min left" under it in the accent at 700, as the
-/// stacked row says it on one line (E rules §5.3; R2-41 landscape).
-class _WideMeta extends StatelessWidget {
-  const _WideMeta({required this.task});
-
-  final ThreadTask task;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final left = task.minutesLeft;
-    return ExcludeSemantics(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(switch (task.reality) {
-            final r? => _realityMeta(l10n, task, r),
-            null => task.timeRange,
-          }, style: t.styles.rowMeta),
-          if (task.reality == null && left != null)
-            Text(
-              l10n.liveNowLeft(left),
-              style: DotType.emphasis(
-                t.styles.rowMeta.copyWith(color: t.colors.accentInk),
-                bold: true,
-                italic: false,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 }
 
 /// "◔ 1 of 3   38 min left" under the live title.

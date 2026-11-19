@@ -215,14 +215,18 @@ class _ThreadState extends State<Thread> {
   }
 
   /// [row] on the hour scale, when the thread has one.
-  Widget _onHours(int i, Widget row) => switch (widget.hours) {
-    final h? => ThreadHourRow(
+  Widget _onHours(int i, Widget row) {
+    final h = widget.hours;
+    if (h == null) return row;
+    final now = h.nowIn;
+    if (now != null && i == now.nowRow) return const SizedBox.shrink();
+    return ThreadHourRow(
       span: i < h.spans.length ? h.spans[i] : null,
       pxPerMinute: h.pxPerMinute,
+      now: now != null && i == now.row ? (at: now.at, time: now.time) : null,
       child: row,
-    ),
-    null => row,
-  };
+    );
+  }
 
   Widget _keyed(int i, Widget row) => switch (widget.anchorKey) {
     final key? when i == widget.anchorIndex => KeyedSubtree(

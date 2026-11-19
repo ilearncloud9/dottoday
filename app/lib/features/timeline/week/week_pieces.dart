@@ -1,4 +1,3 @@
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,6 @@ final class WeekDayView {
     required this.axisStartUtc,
     required this.isToday,
     required this.open,
-    required this.freeText,
     this.nowUtc,
   });
 
@@ -45,61 +43,11 @@ final class WeekDayView {
   final DateTime axisStartUtc;
   final bool isToday;
 
-  /// Today or later: offers "Drop a task here".
+  /// Today or later: the thread runs dotted ahead.
   final bool open;
-
-  /// "12 h" free, for the drop box.
-  final String freeText;
 
   /// Draws the now line (today only).
   final DateTime? nowUtc;
-}
-
-/// "Drop a task here · 12 h": tap to add on this day.
-class WeekDropBox extends StatelessWidget {
-  const WeekDropBox({
-    required this.text,
-    required this.onTap,
-    this.onTint = false,
-    super.key,
-  });
-
-  final String text;
-  final VoidCallback onTap;
-
-  /// On today's tinted column, where muted text falls below 4.5:1.
-  final bool onTint;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final label = context.l10n.weekDropHere(text);
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const StadiumBorder(),
-        child: CustomPaint(
-          painter: DashedPillPainter(color: t.colors.threadAhead),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: DotTouch.min),
-            child: Center(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: t.styles.rowMeta.copyWith(
-                  color: onTint ? t.colors.text : null,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 /// The cue line: quiet accent text (11 §D, no warning colour).

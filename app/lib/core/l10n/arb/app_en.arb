@@ -2972,15 +2972,6 @@
   "@weekToday": {
     "description": "Button back to this week on the Week board."
   },
-  "weekDropHere": "Drop a task here · {free}",
-  "@weekDropHere": {
-    "description": "Dashed target at the end of a future day on the Week board.",
-    "placeholders": {
-      "free": {
-        "type": "String"
-      }
-    }
-  },
   "weekDropAt": "{day} · {range}",
   "@weekDropAt": {
     "description": "Floating label while dragging over the Week board: 'Sat · 10:00 – 11:30'.",

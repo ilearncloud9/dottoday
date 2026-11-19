@@ -1518,9 +1518,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get weekToday => pseudo(super.weekToday);
 
   @override
-  String weekDropHere(String free) => pseudo(super.weekDropHere(free));
-
-  @override
   String weekDropAt(String day, String range) =>
       pseudo(super.weekDropAt(day, range));
 
