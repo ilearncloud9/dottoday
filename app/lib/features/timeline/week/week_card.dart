@@ -28,6 +28,7 @@ class WeekCard extends StatefulWidget {
     required this.height,
     this.narrow = false,
     this.lifted = false,
+    this.picked = false,
     this.onOpen,
     this.onCue,
     this.onMove,
@@ -42,6 +43,9 @@ class WeekCard extends StatefulWidget {
 
   /// The copy under the pointer while it is dragged: the soft lift.
   final bool lifted;
+
+  /// In the Workspace inspector: the 2 px ink edge (E-FullA-v2).
+  final bool picked;
   final VoidCallback? onOpen;
 
   /// The cue tapped: Smallest step's Start or Unstick's question.
@@ -81,7 +85,9 @@ class _WeekCardState extends State<WeekCard> {
     );
     final hover = _hover && _eligible;
     // High contrast never leans on the fill or the shadow (ED-116).
-    final edge = MediaQuery.highContrastOf(context)
+    final edge = widget.picked
+        ? c.text
+        : MediaQuery.highContrastOf(context)
         ? c.secondary
         : hover || widget.lifted
         ? c.blockEdge
@@ -90,7 +96,10 @@ class _WeekCardState extends State<WeekCard> {
       borderRadius: radius,
       side: edge == null
           ? BorderSide.none
-          : BorderSide(color: edge, width: DotSpace.hairline),
+          : BorderSide(
+              color: edge,
+              width: widget.picked ? DotSpace.xxs : DotSpace.hairline,
+            ),
     );
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,6 +162,7 @@ class _WeekCardState extends State<WeekCard> {
     );
     return Semantics(
       button: widget.onOpen != null,
+      selected: widget.picked,
       label: taskRowLabel(l10n, _task),
       excludeSemantics: true,
       child: move == null || !_eligible

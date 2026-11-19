@@ -48,6 +48,19 @@ final class DotType {
     required this.gridDate,
     required this.gridDayMeta,
     required this.gridHour,
+    required this.monthTitle,
+    required this.monthStats,
+    required this.monthWeekday,
+    required this.monthCellDate,
+    required this.monthItem,
+    required this.monthFooter,
+    required this.inspectorTitle,
+    required this.inspectorStatus,
+    required this.inspectorLabel,
+    required this.inspectorValue,
+    required this.inspectorButton,
+    required this.inspectorChip,
+    required this.inspectorHeading,
     required this.nowBead,
     required this.stripWeekdayAndroid,
     required this.sheetSubtitle,
@@ -117,6 +130,25 @@ final class DotType {
     gridDate: _manrope(17, 22, 800, text),
     gridDayMeta: _manrope(12, 16, 700, muted),
     gridHour: _manrope(11, 14, 400, muted),
+    // Month in the Workspace (E-R2-30, ED-333): the title 26/800 and its
+    // numbers 13/500, weekday heads 11/700, a card's date 13/800, task
+    // lines 11.5/16 600, and the "N of M done" / "Light day" lines.
+    monthTitle: _manrope(26, 32, 800, text),
+    monthStats: _manrope(13, 18, 500, muted),
+    monthWeekday: _manrope(11, 14, 700, muted),
+    monthCellDate: _manrope(13, 18, 800, text),
+    monthItem: _manrope(11.5, 16, 600, text),
+    monthFooter: _manrope(11, 15, 500, muted),
+    // The Workspace inspector (E-FullA-v2): title 18/23 700, the status
+    // line 13/700, row labels 12.5 and values 12.5/500, buttons 12/700,
+    // alert chips 11.5/700, section headings 13/700.
+    inspectorTitle: _manrope(18, 23, 700, text),
+    inspectorStatus: _manrope(13, 18, 700, muted),
+    inspectorLabel: _manrope(12.5, 17, 400, muted),
+    inspectorValue: _manrope(12.5, 17, 500, text),
+    inspectorButton: _manrope(12, 16, 700, text),
+    inspectorChip: _manrope(11.5, 15, 700, text),
+    inspectorHeading: _manrope(13, 18, 700, text),
     nowBead: _manrope(11.5, 16, 700, text),
     stripWeekdayAndroid: _system(12, 14, 500, muted),
     sheetSubtitle: _system(14, 19, 500, muted),
@@ -260,6 +292,26 @@ final class DotType {
   final TextStyle gridDate;
   final TextStyle gridDayMeta;
   final TextStyle gridHour;
+
+  /// Month in the Workspace (E-R2-30): title 26/800, numbers 13/500,
+  /// weekday heads 11/700, card date 13/800, task lines 11.5/600, and the
+  /// count and Light day lines 11/500.
+  final TextStyle monthTitle;
+  final TextStyle monthStats;
+  final TextStyle monthWeekday;
+  final TextStyle monthCellDate;
+  final TextStyle monthItem;
+  final TextStyle monthFooter;
+
+  /// The Workspace inspector (E-FullA-v2): title 18/23, status 13/700,
+  /// labels and values 12.5, buttons 12/700, chips 11.5/700, headings 13.
+  final TextStyle inspectorTitle;
+  final TextStyle inspectorStatus;
+  final TextStyle inspectorLabel;
+  final TextStyle inspectorValue;
+  final TextStyle inspectorButton;
+  final TextStyle inspectorChip;
+  final TextStyle inspectorHeading;
   final TextStyle nowBead;
   final TextStyle stripWeekdayAndroid;
 
@@ -333,6 +385,19 @@ final class DotType {
       gridDate: l(gridDate, other.gridDate),
       gridDayMeta: l(gridDayMeta, other.gridDayMeta),
       gridHour: l(gridHour, other.gridHour),
+      monthTitle: l(monthTitle, other.monthTitle),
+      monthStats: l(monthStats, other.monthStats),
+      monthWeekday: l(monthWeekday, other.monthWeekday),
+      monthCellDate: l(monthCellDate, other.monthCellDate),
+      monthItem: l(monthItem, other.monthItem),
+      monthFooter: l(monthFooter, other.monthFooter),
+      inspectorTitle: l(inspectorTitle, other.inspectorTitle),
+      inspectorStatus: l(inspectorStatus, other.inspectorStatus),
+      inspectorLabel: l(inspectorLabel, other.inspectorLabel),
+      inspectorValue: l(inspectorValue, other.inspectorValue),
+      inspectorButton: l(inspectorButton, other.inspectorButton),
+      inspectorChip: l(inspectorChip, other.inspectorChip),
+      inspectorHeading: l(inspectorHeading, other.inspectorHeading),
       nowBead: l(nowBead, other.nowBead),
       stripWeekdayAndroid: l(stripWeekdayAndroid, other.stripWeekdayAndroid),
       sheetSubtitle: l(sheetSubtitle, other.sheetSubtitle),

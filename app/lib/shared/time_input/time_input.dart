@@ -30,6 +30,7 @@ class TimeInput extends StatefulWidget {
     this.use24h,
     this.showWheel = true,
     this.label,
+    this.compact = false,
     super.key,
   });
 
@@ -44,6 +45,11 @@ class TimeInput extends StatefulWidget {
 
   /// Field label; defaults to "Time".
   final String? label;
+
+  /// The Workspace inspector's small box (E-FullA-v2: 26 tall, centred,
+  /// 12.5): the label goes to screen readers only, there is no wheel, and
+  /// text that isn't a time puts the last time back.
+  final bool compact;
 
   @override
   State<TimeInput> createState() => _TimeInputState();
@@ -96,6 +102,7 @@ class _TimeInputState extends State<TimeInput> {
 
   void _commit(String text) {
     final parsed = ClockTime.parse(text);
+    if (parsed == null && widget.compact) return _showValue(_current);
     if (parsed == null) {
       setState(() => _invalid = true);
       return;
@@ -124,6 +131,7 @@ class _TimeInputState extends State<TimeInput> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.compact) return _compact(context);
     final l10n = context.l10n;
     final t = DotTheme.of(context);
     return TextField(
@@ -148,6 +156,42 @@ class _TimeInputState extends State<TimeInput> {
                 icon: const Icon(Icons.schedule),
               )
             : null,
+      ),
+    );
+  }
+
+  Widget _compact(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    final edge = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(DotRadii.field),
+      borderSide: BorderSide(color: c.hairlineStrong),
+    );
+    return Semantics(
+      label: widget.label ?? context.l10n.timeInputLabel,
+      child: TextField(
+        controller: _controller,
+        focusNode: _focus,
+        textAlign: TextAlign.center,
+        style: t.styles.inspectorValue.copyWith(
+          fontFeatures: t.styles.rowMeta.fontFeatures,
+        ),
+        keyboardType: TextInputType.datetime,
+        textInputAction: TextInputAction.done,
+        autocorrect: false,
+        enableSuggestions: false,
+        onSubmitted: _commit,
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: c.raised,
+          contentPadding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
+          border: edge,
+          enabledBorder: edge,
+          focusedBorder: edge.copyWith(
+            borderSide: BorderSide(color: c.focus, width: DotSpace.xxs),
+          ),
+        ),
       ),
     );
   }

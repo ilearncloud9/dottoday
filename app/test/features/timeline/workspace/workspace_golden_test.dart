@@ -24,6 +24,7 @@ void main() {
     WidgetTester tester,
     ThemeMode mode, {
     String place = '/week/2026-10-21',
+    bool steps = false,
   }) async {
     tester.view
       ..physicalSize = const Size(1280, 800)
@@ -41,6 +42,9 @@ void main() {
             occurrences: FakeOccurrenceRepository(
               demoDayRows(DateTime(2026, 10, 21)),
             ),
+            subtasks: steps
+                ? FakeSubtaskRepository(demoDaySubtasks(DateTime(2026, 10, 21)))
+                : null,
           ),
         ],
       ),
@@ -112,6 +116,56 @@ void main() {
         debugDefaultTargetPlatformOverride = null;
         FocusManager.instance.highlightStrategy =
             FocusHighlightStrategy.automatic;
+      }
+    });
+    // ED-170 C1: a click picks the task into the docked inspector.
+    testWidgets('golden: the inspector, ${mode.name}', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        // 3 days: the live task with its steps, as the board picks it.
+        await pump(tester, mode, place: '/3-days/2026-10-21', steps: true);
+        await tester.tap(find.textContaining('Deep work').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_inspector_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // A second click: the full editor in the inspector's place (ED-391).
+    testWidgets('golden: the editor from the grid, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode);
+        await tester.tap(find.text('Spanish lesson').first);
+        await tester.pump(const Duration(milliseconds: 50));
+        await tester.tap(find.text('Spanish lesson').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_editor_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // E-R2-30: Month as cards in the Workspace.
+    testWidgets('golden: the Mac Workspace, Month, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/month/2026-10');
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_month_mac_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
       }
     });
     testWidgets('golden: the Mac Workspace, 3 days, ${mode.name}', (

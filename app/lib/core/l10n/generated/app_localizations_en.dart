@@ -1946,6 +1946,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gridMoveDayAfter => 'Move to the day after';
 
   @override
+  String inspectorRegion(Object title) {
+    return 'Inspector: $title';
+  }
+
+  @override
+  String inspectorExtendChip(int minutes) {
+    return '+$minutes';
+  }
+
+  @override
+  String inspectorExtendLabel(int minutes) {
+    return 'Extend task by $minutes minutes';
+  }
+
+  @override
+  String get inspectorShiftRest => 'Shift rest';
+
+  @override
+  String get inspectorDate => 'Date';
+
+  @override
+  String get inspectorEnd => 'End';
+
+  @override
+  String get inspectorAddAlert => 'Add alert';
+
+  @override
+  String inspectorOverlaps(String other, String range) {
+    return 'Overlaps $other $range';
+  }
+
+  @override
+  String get inspectorShow => 'Show Inspector';
+
+  @override
+  String get inspectorHide => 'Hide Inspector';
+
+  @override
   String get weekViewWeek => 'Week';
 
   @override

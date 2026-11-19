@@ -60,11 +60,11 @@ MonthDay _cell(
   );
 }
 
-/// The cells of [month] for the expanded Mac/web [MonthGrid]
-/// (`A-mac-month`): each day's tasks in start order (done struck, ended
-/// ones "missed", the one running at [nowUtc] "now"), "N of M done" up
-/// to [today], a completion badge on days begun, and "Light day" for a
-/// day ahead with at most one task.
+/// The cells of [month] for the expanded Mac/web [MonthGrid] (E-R2-30,
+/// ED-333): each day's tasks in start order (done struck, ended ones "not
+/// done", the one running at [nowUtc] "now"), "N of M done" on every day
+/// with tasks and "Light day" on a day with none. The first and last
+/// weeks are filled with the faded days of the months either side.
 List<MonthDay?> expandedMonthCells({
   required DateTime month,
   required int firstDayOfWeek,
@@ -77,32 +77,35 @@ List<MonthDay?> expandedMonthCells({
   final first = DateTime(month.year, month.month);
   final lead = (first.weekday - firstDayOfWeek) % 7;
   final length = DateTime(month.year, month.month + 1, 0).day;
+  final trail = (7 - (lead + length) % 7) % 7;
   MonthDay cell(DateTime day) {
     final rows = [
       for (final o in byDay[day] ?? const <Occurrence>[])
         if (o.status != OccurrenceStatus.skipped) o,
     ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
     final counts = doneCounts(rows);
-    final ahead = day.isAfter(today);
     return MonthDay(
       date: dateText(day),
       label: label(day, counts),
       isPast: day.isBefore(today),
       isToday: day == today,
-      completion: ahead || rows.isEmpty
-          ? null
-          : completionOf(rows, begun: true),
       items: [for (final o in rows) _item(o, nowUtc)],
-      done: ahead ? 0 : counts.done,
-      total: ahead ? 0 : counts.total,
-      isLight: ahead && rows.length == 1,
+      done: counts.done,
+      total: counts.total,
+      isLight: rows.isEmpty,
     );
   }
 
+  MonthDay outside(DateTime day) =>
+      MonthDay(date: dateText(day), label: '', outside: true);
+
   return [
-    for (var i = 0; i < lead; i++) null,
+    for (var i = lead; i > 0; i--)
+      outside(DateTime(month.year, month.month, 1 - i)),
     for (var d = 1; d <= length; d++)
       cell(DateTime(month.year, month.month, d)),
+    for (var i = 1; i <= trail; i++)
+      outside(DateTime(month.year, month.month, length + i)),
   ];
 }
 

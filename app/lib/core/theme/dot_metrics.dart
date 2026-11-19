@@ -61,6 +61,13 @@ abstract final class DotRadii {
   /// Workspace blocks (18).
   static const double block = 18;
 
+  /// Month's day cards in the Workspace (E-R2-30): 12.
+  static const double monthCard = 12;
+
+  /// The inspector's fields (6) and its Done / Focus / Shift rest (10).
+  static const double field = 6;
+  static const double inspectorButton = 10;
+
   /// A card inside a sheet (E-Phones-2): 22 on iPhone, 16 on Android.
   static const double sheetCard = 22;
   static const double sheetCardAndroid = 16;
@@ -204,6 +211,28 @@ abstract final class DotSize {
   /// The right-hand panel at the expanded width: the task editor
   /// (`A-mac-editor`: 640 of 2000 px at 1280) and proposals (docs/10 §4).
   static const double sidePanel = 420;
+
+  /// The Workspace inspector (E-FullA-v2, ED-170 C1): 248 wide with 14
+  /// inside; its 38 ring, the 36 "Need more time?" pill with 28 chips,
+  /// the 32 Done / Focus / Shift rest buttons, the 58 label column, 26
+  /// fields, 24 alert chips, 15 subtask boxes and the 22 overlap knot. With
+  /// touch they grow to the touch height.
+  static const double inspector = 248;
+  static const double inspectorPad = 14;
+  static const double inspectorRing = 38;
+  static const double inspectorExtend = 36;
+  static const double inspectorExtendChip = 28;
+  static const double inspectorButton = 32;
+  static const double inspectorLabel = 58;
+  static const double inspectorField = 26;
+  static const double inspectorChip = 24;
+  static const double inspectorCheck = 15;
+  static const double inspectorKnot = 22;
+
+  /// The inspector's start and end boxes (46 and 50 drawn; one width), and
+  /// the Repeat field's 11 chevron.
+  static const double inspectorTime = 50;
+  static const double inspectorChevron = 11;
 
   /// A prompt dialog at medium and expanded widths, and the web's removal
   /// retry card (CR-160 boards DesktopA2, DeleteWeb, DeleteWebRetry).

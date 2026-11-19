@@ -26,6 +26,7 @@ enum AppCommand {
 
   /// Show or hide the Workspace's Plan panel (ED-184): ⌥⌘P on the Mac.
   togglePlanPanel,
+  toggleInspector,
 }
 
 /// A key plus modifiers, relative to the platform's primary modifier
@@ -148,6 +149,8 @@ abstract final class AppShortcuts {
     AppCommand.toggleLayout: KeyCombo(LogicalKeyboardKey.keyL, shift: true),
     AppCommand.showShortcuts: KeyCombo(LogicalKeyboardKey.slash),
     AppCommand.togglePlanPanel: KeyCombo(LogicalKeyboardKey.keyP, alt: true),
+    // ⌥⌘I: the right-hand pane (ED-218); the web has no key for it.
+    AppCommand.toggleInspector: KeyCombo(LogicalKeyboardKey.keyI, alt: true),
   };
 
   /// The web's single keys (ED-095): the browser keeps ⌘/Ctrl N, T, 1–9,

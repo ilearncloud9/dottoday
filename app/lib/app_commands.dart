@@ -24,6 +24,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
   VoidCallback? onToggleLayout,
   VoidCallback? onShortcuts,
   VoidCallback? onTogglePlanPanel,
+  VoidCallback? onToggleInspector,
 }) {
   void month() => unawaited(router.push<void>(AppRoutes.month));
   return {
@@ -42,6 +43,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.toggleLayout: onToggleLayout ?? () {},
     AppCommand.showShortcuts: onShortcuts ?? () {},
     AppCommand.togglePlanPanel: onTogglePlanPanel ?? () {},
+    AppCommand.toggleInspector: onToggleInspector ?? () {},
   };
 }
 

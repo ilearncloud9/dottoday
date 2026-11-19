@@ -11,7 +11,8 @@ enum MonthCellStyle {
   /// future-month planner (`A-ios-today-month`, `A-ios-future-month`).
   compact,
 
-  /// Cards with struck done titles, "missed", "N of M done" (`A-mac-month`).
+  /// Cards with struck done titles, "N of M done" and Light day, with the
+  /// days of the months either side faded (E-R2-30, ED-333).
   expanded,
 }
 
@@ -43,7 +44,9 @@ class MonthGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final rows = (days.length / 7).ceil();
-    final gap = style == MonthCellStyle.expanded ? DotSpace.s : 0.0;
+    final expanded = style == MonthCellStyle.expanded;
+    // E-R2-30: 6 between cards and under the weekday heads.
+    final gap = expanded ? DotSpace.xs + DotSpace.xxs : 0.0;
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: gap,
@@ -53,15 +56,22 @@ class MonthGrid extends StatelessWidget {
             children: [
               for (final w in weekdays)
                 Expanded(
-                  child: Text(
-                    w,
-                    textAlign: style == MonthCellStyle.compact
-                        ? TextAlign.center
-                        : TextAlign.start,
-                    style: style == MonthCellStyle.compact
-                        ? t.styles.stripWeekday
-                        : t.styles.rowTitle.copyWith(color: t.colors.muted),
-                  ),
+                  child: expanded
+                      // E-R2-30 sets the heads in capitals: "MON".
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DotSpace.s,
+                          ),
+                          child: Text(
+                            w.toUpperCase(),
+                            style: t.styles.monthWeekday,
+                          ),
+                        )
+                      : Text(
+                          w,
+                          textAlign: TextAlign.center,
+                          style: t.styles.stripWeekday,
+                        ),
                 ),
             ],
           ),
@@ -81,7 +91,7 @@ class MonthGrid extends StatelessWidget {
   Widget _cell(int i) {
     final day = i < days.length ? days[i] : null;
     if (day == null) return const Expanded(child: SizedBox.shrink());
-    final onTap = onSelect == null ? null : () => onSelect!(i);
+    final onTap = onSelect == null || day.outside ? null : () => onSelect!(i);
     return Expanded(
       child: switch (style) {
         MonthCellStyle.compact => CompactMonthCell(

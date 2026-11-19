@@ -38,3 +38,14 @@ DateTime? workspaceShownDate(String path) => switch (path.split('/')) {
   ['', 'month', final m] => parseRouteMonth(m),
   _ => null,
 };
+
+/// Whether a task picked at [path] shows in the Workspace inspector
+/// (Day, 3 days, Week; ED-170 C1): Month opens a day instead.
+///
+/// ```dart
+/// workspaceInspects('/week/2026-11-02'); // true
+/// ```
+bool workspaceInspects(String path) => switch (workspaceViewOf(path)) {
+  WorkspaceView.day || WorkspaceView.threeDays || WorkspaceView.week => true,
+  WorkspaceView.month || null => false,
+};

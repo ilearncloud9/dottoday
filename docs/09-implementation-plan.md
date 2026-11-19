@@ -683,6 +683,7 @@ Rules for every task in M18 to M22:
   - Part 2 split by the owner (2026-11-19) into 2a the hour grid, 2b web hover and drag on it (ED-116), 2c the inspector (a click picks, a double-click opens the editor) and Month as cards.
   - [x] Part 2a done 2026-11-19 (ED-388): Week and 3 days on one hour grid (columns ≥ 144, the days that fit, scroll for more), Day as the thread on hours; the 3-day spread replaced. Follow-up (ED-389): no drop boxes, the time above the title at every width, now inside the live card on Day.
   - [x] Part 2b done 2026-11-19 (ED-390): hover, focus, Alt-arrow moves and drag on the hour grid as ED-116 (flat at rest, hover tint, lift only while dragged), snapping to Settings' step; one task per drag. Open: the inspector and Month as cards (2c).
+  - [x] Part 2c done 2026-11-19 (ED-391): the Workspace inspector on Day, 3 days and Week (a click picks into `?task=`; opening the picked task opens the editor in its place; Esc, a click on free grid or ⌥⌘I puts it away; docked from 1160, a card below; every row edits and saves as you go) and Month as E-R2-30 cards. Open for part 3: the Day rows' picked edge, Month card arrow keys, expanded tablets (ED-269) and the narrow Mac.
   - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184), and the inspector's own docking rule: from 1160 when the week grid keeps ≥ 3 days (C1, ED-170; moved from M18.5);
   - hover and drag on web blocks (ED-116);
   - the Workspace's Day / 3 days / Week / Month tabs (ED-333; in today's app 3 days is Today's spread);

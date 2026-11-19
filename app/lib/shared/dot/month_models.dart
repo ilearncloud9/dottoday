@@ -41,6 +41,7 @@ final class MonthDay {
     this.isPast = false,
     this.isToday = false,
     this.isLight = false,
+    this.outside = false,
   });
 
   /// "21".
@@ -68,6 +69,10 @@ final class MonthDay {
   final bool isPast;
   final bool isToday;
 
-  /// Few tasks: "Light day" (`A-mac-month`).
+  /// Nothing planned: "Light day" (E-R2-30).
   final bool isLight;
+
+  /// A day of the month before or after, filling the first or last week
+  /// (E-R2-30): its number only, faded, no card and no tap.
+  final bool outside;
 }

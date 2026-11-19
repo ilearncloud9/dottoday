@@ -13,6 +13,8 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/workspace/inspector_pick.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
@@ -63,7 +65,11 @@ ThreadActions dayThreadActions(
     onSelect: onSelect,
     onCap: onCap,
     onEarlier: onEarlier,
-    onOpen: (id) => openTask(context, id),
+    // In the Workspace a click picks into the inspector and a second
+    // opens the editor (ED-170 C1); elsewhere it opens the task.
+    onOpen: (id) => WorkspaceScope.of(context)
+        ? InspectorPick.click(context, ref, id)
+        : openTask(context, id),
     onFocus: (id) => openFocus(context, id),
     // Unstick (M10.7): the answer is step 1; the move count starts over.
     onUnstick: (id, answer) async {

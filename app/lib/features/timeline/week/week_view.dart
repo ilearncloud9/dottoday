@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/editing/editing_task.dart';
+import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -20,6 +21,8 @@ import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/features/timeline/week/week_tasks.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/workspace/inspector_pick.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -179,6 +182,7 @@ class WeekView extends ConsumerWidget {
     final tasks = weekTasks(context, ref, d, shape, time, nowUtc: nowUtc);
     final isToday = date == today;
     final locale = Localizations.localeOf(context).toLanguageTag();
+    final workspace = WorkspaceScope.of(context);
     return WeekDayColumn(
       day: WeekDayView(
         date: date,
@@ -192,6 +196,7 @@ class WeekView extends ConsumerWidget {
         isToday: isToday,
         open: !date.isBefore(today),
         snapMinutes: profile.settings.snapMinutes,
+        pickedId: workspace ? ref.watch(inspectedTaskProvider) : null,
         nowUtc: isToday ? nowUtc : null,
       ),
       axisMinutes: axisMinutes,
@@ -210,7 +215,14 @@ class WeekView extends ConsumerWidget {
         final to = _shifted(zone, start, minutes: minutes, days: days);
         unawaited(_move(context, ref, id, to, time));
       },
-      onOpen: (id) => ref.read(editingTaskProvider.notifier).open(id),
+      // In the Workspace a click picks into the inspector and a second
+      // opens the editor (ED-170 C1).
+      onEmpty: workspace
+          ? () => ref.read(inspectedTaskProvider.notifier).close()
+          : null,
+      onOpen: (id) => workspace
+          ? InspectorPick.click(context, ref, id)
+          : ref.read(editingTaskProvider.notifier).open(id),
       onCue: (id) => openWeekCue(
         context,
         ref,

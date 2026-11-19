@@ -24,11 +24,16 @@ class WeekDayColumn extends StatefulWidget {
     required this.onOpen,
     this.onCue,
     this.onMove,
+    this.onEmpty,
     super.key,
   });
 
   final WeekDayView day;
   final int axisMinutes;
+
+  /// A click on the grid's free space: the Workspace puts its inspector
+  /// away (ED-391).
+  final VoidCallback? onEmpty;
 
   /// The task being dragged (a week's or the Inbox's).
   final Occurrence? Function(String id) find;
@@ -113,6 +118,17 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
           ),
         ),
       ),
+      // Over the painted lines (a painter takes every hit), under the
+      // blocks: a click on free grid.
+      if (widget.onEmpty case final empty?)
+        Positioned.fill(
+          child: ExcludeSemantics(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: empty,
+            ),
+          ),
+        ),
       Positioned(
         left: DotSize.gridThreadX,
         top: 0,
@@ -245,6 +261,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       height: height,
       narrow: narrow,
       lifted: lifted,
+      picked: !lifted && widget.day.pickedId == task.id,
       onOpen: () => widget.onOpen(task.id),
       onCue: switch (widget.onCue) {
         final cue? => () => cue(task.id),

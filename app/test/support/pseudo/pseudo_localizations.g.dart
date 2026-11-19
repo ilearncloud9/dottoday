@@ -1521,6 +1521,39 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get gridMoveDayAfter => pseudo(super.gridMoveDayAfter);
 
   @override
+  String inspectorRegion(Object title) => pseudo(super.inspectorRegion(title));
+
+  @override
+  String inspectorExtendChip(int minutes) =>
+      pseudo(super.inspectorExtendChip(minutes));
+
+  @override
+  String inspectorExtendLabel(int minutes) =>
+      pseudo(super.inspectorExtendLabel(minutes));
+
+  @override
+  String get inspectorShiftRest => pseudo(super.inspectorShiftRest);
+
+  @override
+  String get inspectorDate => pseudo(super.inspectorDate);
+
+  @override
+  String get inspectorEnd => pseudo(super.inspectorEnd);
+
+  @override
+  String get inspectorAddAlert => pseudo(super.inspectorAddAlert);
+
+  @override
+  String inspectorOverlaps(String other, String range) =>
+      pseudo(super.inspectorOverlaps(other, range));
+
+  @override
+  String get inspectorShow => pseudo(super.inspectorShow);
+
+  @override
+  String get inspectorHide => pseudo(super.inspectorHide);
+
+  @override
   String get weekViewWeek => pseudo(super.weekViewWeek);
 
   @override

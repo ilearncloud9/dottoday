@@ -114,18 +114,29 @@ class _Page extends StatelessWidget {
     // route opens at any width) the phones' compact month, which fits.
     final wide = AppLayout.classOf(context) == WidthClass.expanded;
     final cells = _cells(context, locale, wide: wide);
-    final lead = cells.indexWhere((c) => c != null);
+    final lead = cells.indexWhere((c) => c != null && !c.outside);
     final start = weekStart(DateTime(month.year, month.month), firstDayOfWeek);
+    final workspace = WorkspaceScope.of(context);
     return ListView(
-      padding: const EdgeInsetsDirectional.fromSTEB(
-        DotSpace.xxl,
-        DotSpace.xl,
-        DotSpace.xl,
-        DotSpace.xl,
-      ),
+      // E-R2-30: 16 × 20 inside the Workspace.
+      padding: workspace
+          ? const EdgeInsets.symmetric(
+              horizontal: DotSpace.page,
+              vertical: DotSpace.l,
+            )
+          : const EdgeInsetsDirectional.fromSTEB(
+              DotSpace.xxl,
+              DotSpace.xl,
+              DotSpace.xl,
+              DotSpace.xl,
+            ),
       children: [
-        // The Workspace's toolbar names the month and steps it.
-        if (!WorkspaceScope.of(context)) ...[
+        // In the Workspace the toolbar steps the month; the page keeps its
+        // name and numbers (E-R2-30).
+        if (workspace) ...[
+          _title(context, locale),
+          const SizedBox(height: DotSpace.m),
+        ] else ...[
           _header(context, locale),
           const SizedBox(height: DotSpace.l),
         ],
@@ -174,6 +185,25 @@ class _Page extends StatelessWidget {
             dateText: date,
             label: label,
           );
+  }
+
+  /// The Workspace's "November 2026" 26/800 over its numbers (E-R2-30).
+  Widget _title(BuildContext context, String locale) {
+    final t = DotTheme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          container: true,
+          header: true,
+          child: Text(
+            DateFormat.yMMMM(locale).format(month),
+            style: t.styles.monthTitle,
+          ),
+        ),
+        Text(_stats(context, locale), style: t.styles.monthStats),
+      ],
+    );
   }
 
   /// "October 2026", its numbers, and the controls.

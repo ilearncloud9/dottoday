@@ -5,6 +5,7 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
+import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,10 @@ void main() {
       await tester.pump();
     }
     expect(_onRow('Pack bags'), isTrue, reason: 'Tab reaches the new task');
+    // ↩ picks it into the Workspace inspector; ↩ again opens the editor
+    // (ED-391).
+    await _keys(tester, LogicalKeyboardKey.enter);
+    expect(find.byType(WorkspaceInspector), findsOneWidget);
     await _keys(tester, LogicalKeyboardKey.enter);
     expect(find.byType(TaskEditorPanel), findsOneWidget);
     await _keys(tester, LogicalKeyboardKey.keyD, ctrl: true);

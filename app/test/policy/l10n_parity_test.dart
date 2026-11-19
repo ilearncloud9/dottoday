@@ -51,6 +51,7 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'inspectorDate', // "Date"
     'navMenu', // « Menu » is French
     'deviceIphone', // product names
     'deviceIpad',
@@ -86,6 +87,7 @@ const _sameAsEnglish = {
     'inAppAlertOk',
   },
   'es': {
+    'inspectorRegion', // "Inspector: {title}"
     'deviceIphone', // product names
     'deviceIpad',
     'deviceMac',

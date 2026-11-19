@@ -1954,6 +1954,44 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gridMoveDayAfter => 'Déplacer au lendemain';
 
   @override
+  String inspectorRegion(Object title) {
+    return 'Inspecteur : $title';
+  }
+
+  @override
+  String inspectorExtendChip(int minutes) {
+    return '+$minutes';
+  }
+
+  @override
+  String inspectorExtendLabel(int minutes) {
+    return 'Prolonger la tâche de $minutes minutes';
+  }
+
+  @override
+  String get inspectorShiftRest => 'Décaler la suite';
+
+  @override
+  String get inspectorDate => 'Date';
+
+  @override
+  String get inspectorEnd => 'Fin';
+
+  @override
+  String get inspectorAddAlert => 'Ajouter une alerte';
+
+  @override
+  String inspectorOverlaps(String other, String range) {
+    return 'Chevauche $other $range';
+  }
+
+  @override
+  String get inspectorShow => 'Afficher l’inspecteur';
+
+  @override
+  String get inspectorHide => 'Masquer l’inspecteur';
+
+  @override
   String get weekViewWeek => 'Semaine';
 
   @override

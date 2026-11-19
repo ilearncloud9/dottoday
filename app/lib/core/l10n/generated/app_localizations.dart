@@ -2892,6 +2892,66 @@ abstract class AppLocalizations {
   /// **'Move to the day after'**
   String get gridMoveDayAfter;
 
+  /// Screen-reader name of the Workspace inspector showing a task.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspector: {title}'**
+  String inspectorRegion(Object title);
+
+  /// A Need more time? chip in the inspector: '+15' (minutes).
+  ///
+  /// In en, this message translates to:
+  /// **'+{minutes}'**
+  String inspectorExtendChip(int minutes);
+
+  /// Screen-reader name of a Need more time? chip (ED-163).
+  ///
+  /// In en, this message translates to:
+  /// **'Extend task by {minutes} minutes'**
+  String inspectorExtendLabel(int minutes);
+
+  /// The inspector's short Shift the rest button (E-FullA-v2).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift rest'**
+  String get inspectorShiftRest;
+
+  /// Inspector row label: the task's day.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get inspectorDate;
+
+  /// Screen-reader name of the inspector's end time field.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get inspectorEnd;
+
+  /// Inspector chip that opens the alerts editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add alert'**
+  String get inspectorAddAlert;
+
+  /// Inspector line: 'Overlaps Call with Sam 10:30–11:00'.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlaps {other} {range}'**
+  String inspectorOverlaps(String other, String range);
+
+  /// View menu item and toolbar button (⌥⌘I, ED-218).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Inspector'**
+  String get inspectorShow;
+
+  /// The toolbar button's name while the inspector shows.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Inspector'**
+  String get inspectorHide;
+
   /// Week/Month switch on the Week board.
   ///
   /// In en, this message translates to:

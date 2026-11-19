@@ -30,6 +30,7 @@ final class WeekDayView {
     required this.open,
     required this.snapMinutes,
     this.nowUtc,
+    this.pickedId,
   });
 
   final DateTime date;
@@ -52,6 +53,10 @@ final class WeekDayView {
 
   /// Draws the now line (today only).
   final DateTime? nowUtc;
+
+  /// The task in the Workspace inspector (ED-170 C1): drawn with the ink
+  /// edge (E-FullA-v2).
+  final String? pickedId;
 }
 
 /// The cue line: quiet accent text (11 §D, no warning colour).

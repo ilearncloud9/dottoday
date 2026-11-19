@@ -4,6 +4,8 @@ import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/workspace/inspector/inspector_frame.dart';
+import 'package:dottoday/features/timeline/workspace/inspector/inspector_toggle.dart';
 import 'package:dottoday/features/timeline/workspace/plan_panel_button.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_toolbar.dart';
@@ -39,8 +41,16 @@ class WorkspaceFrame extends ConsumerWidget {
           today: today,
           firstDayOfWeek: settings?.firstDayOfWeek ?? 1,
           leading: const PlanPanelButton(),
+          trailing: workspaceInspects(path) ? const InspectorToggle() : null,
         ),
-        Expanded(child: WorkspaceScope(child: child)),
+        Expanded(
+          child: WorkspaceScope(
+            child: InspectorFrame(
+              inspects: workspaceInspects(path),
+              child: child,
+            ),
+          ),
+        ),
       ],
     );
   }

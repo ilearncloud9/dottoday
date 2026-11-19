@@ -142,7 +142,11 @@ List<AppMenu> appMenus({
         command(l10n.menuShortcuts, AppCommand.showShortcuts),
       ],
       // The Workspace's panes (ED-184); not in Minimal (M19.6).
-      if (!minimal) [command(l10n.planPanelShow, AppCommand.togglePlanPanel)],
+      if (!minimal)
+        [
+          command(l10n.planPanelShow, AppCommand.togglePlanPanel),
+          command(l10n.inspectorShow, AppCommand.toggleInspector),
+        ],
     ]),
     AppMenu(AppMenuKind.go, l10n.menuGo, [
       [

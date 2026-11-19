@@ -24,6 +24,7 @@ class WorkspaceToolbar extends ConsumerWidget {
     required this.today,
     required this.firstDayOfWeek,
     this.leading,
+    this.trailing,
     super.key,
   });
 
@@ -37,6 +38,10 @@ class WorkspaceToolbar extends ConsumerWidget {
   /// The Plan panel's button, first in the row (ED-184).
   final Widget? leading;
 
+  /// The inspector's button, last in the row (E-FullA-v2), on the views
+  /// that have one; left out of a compact toolbar.
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
@@ -48,91 +53,104 @@ class WorkspaceToolbar extends ConsumerWidget {
     }
 
     final (back, ahead) = _stepLabels(l10n);
-    // Rules §12.3: a narrow toolbar shows "Search or run" as its icon.
-    final room = MediaQuery.sizeOf(context).width;
-    final compact =
-        room <
-        (watchTouchContent(context, ref)
-            ? DotSize.workspaceToolbarTouchRoom
-            : DotSize.workspaceToolbarRoom);
+    final touch = watchTouchContent(context, ref);
     // Its own Material: the bar sits above the screens' Scaffolds.
-    return Material(
-      color: t.colors.sunk,
-      shape: Border(bottom: BorderSide(color: t.colors.hairline)),
-      child: Container(
-        constraints: const BoxConstraints(minHeight: DotSize.workspaceToolbar),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: DotSpace.m,
-            vertical: DotSpace.s + DotSpace.xxs,
+    return LayoutBuilder(
+      builder: (context, box) {
+        // Rules §12.3: a narrow toolbar shows "Search or run" as its icon.
+        // Measured on the bar itself, as the window it would fill beside
+        // the sidebar, so a docked editor beside it counts (ED-391).
+        final room = box.maxWidth + DotSize.sidebar + DotSpace.hairline;
+        final compact =
+            room <
+            (touch
+                ? DotSize.workspaceToolbarTouchRoom
+                : DotSize.workspaceToolbarRoom);
+        return Material(
+          color: t.colors.sunk,
+          shape: Border(bottom: BorderSide(color: t.colors.hairline)),
+          child: Container(
+            constraints: const BoxConstraints(
+              minHeight: DotSize.workspaceToolbar,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DotSpace.m,
+                vertical: DotSpace.s + DotSpace.xxs,
+              ),
+              // Larger text or a narrow window: the left group wraps onto a
+              // second line rather than clip (rules §12.1).
+              child: Row(
+                spacing: DotSpace.s,
+                children: [
+                  Expanded(
+                    child: Wrap(
+                      spacing: DotSpace.s,
+                      runSpacing: DotSpace.xs,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        ?leading,
+                        StepGroup(
+                          backLabel: back,
+                          aheadLabel: ahead,
+                          todayLabel: l10n.navToday,
+                          onBack: () => show(view, _step(-1)),
+                          onToday: () => show(view, today),
+                          onAhead: () => show(view, _step(1)),
+                        ),
+                        DatePill(
+                          label: _dateLabel(context),
+                          onTap: () async {
+                            final picked = await showMonthDayPicker(
+                              context,
+                              initial: shown,
+                              today: today,
+                              firstDayOfWeek: firstDayOfWeek,
+                            );
+                            if (picked != null) show(view, picked);
+                          },
+                        ),
+                        ViewTabs(
+                          selected: view,
+                          labels: {
+                            WorkspaceView.day: l10n.workspaceDay,
+                            WorkspaceView.threeDays: l10n.workspaceThreeDays,
+                            WorkspaceView.week: l10n.navWeek,
+                            WorkspaceView.month: l10n.menuMonth,
+                          },
+                          onSelect: (v) => show(v, shown),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TodayMenu(
+                    date: shown,
+                    today: today,
+                    button: ToolbarPill(label: l10n.workspaceDay, menu: true),
+                  ),
+                  ToolbarAdd(
+                    label: l10n.quickAddTooltip,
+                    onTap: () => Actions.maybeInvoke(
+                      context,
+                      const AppCommandIntent(AppCommand.quickAdd),
+                    ),
+                  ),
+                  SearchField(
+                    label: l10n.workspaceSearchOrRun,
+                    hint: macApp(context)
+                        ? '⌘K' // l10n-ignore: a key cap
+                        : null,
+                    compact: compact,
+                    onTap: () => router.go(AppRoutes.search),
+                  ),
+                  // Narrow, the row keeps its room: ⌥⌘I and View still work.
+                  if (!compact) ?trailing,
+                ],
+              ),
+            ),
           ),
-          // Larger text or a narrow window: the left group wraps onto a
-          // second line rather than clip (rules §12.1).
-          child: Row(
-            spacing: DotSpace.s,
-            children: [
-              Expanded(
-                child: Wrap(
-                  spacing: DotSpace.s,
-                  runSpacing: DotSpace.xs,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    ?leading,
-                    StepGroup(
-                      backLabel: back,
-                      aheadLabel: ahead,
-                      todayLabel: l10n.navToday,
-                      onBack: () => show(view, _step(-1)),
-                      onToday: () => show(view, today),
-                      onAhead: () => show(view, _step(1)),
-                    ),
-                    DatePill(
-                      label: _dateLabel(context),
-                      onTap: () async {
-                        final picked = await showMonthDayPicker(
-                          context,
-                          initial: shown,
-                          today: today,
-                          firstDayOfWeek: firstDayOfWeek,
-                        );
-                        if (picked != null) show(view, picked);
-                      },
-                    ),
-                    ViewTabs(
-                      selected: view,
-                      labels: {
-                        WorkspaceView.day: l10n.workspaceDay,
-                        WorkspaceView.threeDays: l10n.workspaceThreeDays,
-                        WorkspaceView.week: l10n.navWeek,
-                        WorkspaceView.month: l10n.menuMonth,
-                      },
-                      onSelect: (v) => show(v, shown),
-                    ),
-                  ],
-                ),
-              ),
-              TodayMenu(
-                date: shown,
-                today: today,
-                button: ToolbarPill(label: l10n.workspaceDay, menu: true),
-              ),
-              ToolbarAdd(
-                label: l10n.quickAddTooltip,
-                onTap: () => Actions.maybeInvoke(
-                  context,
-                  const AppCommandIntent(AppCommand.quickAdd),
-                ),
-              ),
-              SearchField(
-                label: l10n.workspaceSearchOrRun,
-                hint: macApp(context) ? '⌘K' : null, // l10n-ignore: a key cap
-                compact: compact,
-                onTap: () => router.go(AppRoutes.search),
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 

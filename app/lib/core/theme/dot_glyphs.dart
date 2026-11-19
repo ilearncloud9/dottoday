@@ -162,6 +162,10 @@ abstract final class DotGlyphs {
   /// Show or hide the sidebar (iPad, Mac and web; E-R2-1).
   static final sidebar = DotGlyph('${_r(3, 5, 18, 14, 2.5)}M9 5v14');
 
+  /// Show or hide the Workspace inspector (E-FullA-v2's last toolbar
+  /// button): the pane on the other side.
+  static final inspector = DotGlyph('${_r(3, 5, 18, 14, 2.5)}M15 5v14');
+
   /// The Android rail's menu: opens the drawer (E-R2-1).
   static const menu = DotGlyph('M4 7h16M4 12h16M4 17h16');
   static const undo = DotGlyph('M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4');

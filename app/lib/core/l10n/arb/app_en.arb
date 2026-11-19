@@ -2976,6 +2976,52 @@
   "@gridMoveDayAfter": {
     "description": "Screen-reader action on an hour-grid block (Alt+Right): same time, the day after."
   },
+  "inspectorRegion": "Inspector: {title}",
+  "@inspectorRegion": {
+    "description": "Screen-reader name of the Workspace inspector showing a task."
+  },
+  "inspectorExtendChip": "+{minutes}",
+  "@inspectorExtendChip": {
+    "description": "A Need more time? chip in the inspector: '+15' (minutes).",
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  "inspectorExtendLabel": "Extend task by {minutes} minutes",
+  "@inspectorExtendLabel": {
+    "description": "Screen-reader name of a Need more time? chip (ED-163).",
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  "inspectorShiftRest": "Shift rest",
+  "@inspectorShiftRest": {
+    "description": "The inspector's short Shift the rest button (E-FullA-v2)."
+  },
+  "inspectorDate": "Date",
+  "@inspectorDate": {
+    "description": "Inspector row label: the task's day."
+  },
+  "inspectorEnd": "End",
+  "@inspectorEnd": {
+    "description": "Screen-reader name of the inspector's end time field."
+  },
+  "inspectorAddAlert": "Add alert",
+  "@inspectorAddAlert": {
+    "description": "Inspector chip that opens the alerts editor."
+  },
+  "inspectorOverlaps": "Overlaps {other} {range}",
+  "@inspectorOverlaps": {
+    "description": "Inspector line: 'Overlaps Call with Sam 10:30–11:00'.",
+    "placeholders": {
+      "other": {"type": "String"},
+      "range": {"type": "String"}
+    }
+  },
+  "inspectorShow": "Show Inspector",
+  "@inspectorShow": {
+    "description": "View menu item and toolbar button (⌥⌘I, ED-218)."
+  },
+  "inspectorHide": "Hide Inspector",
+  "@inspectorHide": {
+    "description": "The toolbar button's name while the inspector shows."
+  },
   "weekViewWeek": "Week",
   "@weekViewWeek": {
     "description": "Week/Month switch on the Week board."
