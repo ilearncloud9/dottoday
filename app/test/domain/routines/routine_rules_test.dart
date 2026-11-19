@@ -152,7 +152,10 @@ void main() {
     final step = gym.items.single;
     expect(ok(gym.copyWith(items: [step.copyWith(durationMin: 2)])), isFalse);
     expect(ok(gym.copyWith(items: [step.copyWith(title: '')])), isFalse);
-    expect(ok(gym.copyWith(items: [step.copyWith(colorKey: 'neon')])), isFalse);
+    expect(
+      ok(gym.copyWith(items: [step.copyWith(colorKey: 'Neon!')])),
+      isFalse,
+    );
     expect(ok(gym.copyWith(items: List.filled(31, step))), isFalse);
   });
 }

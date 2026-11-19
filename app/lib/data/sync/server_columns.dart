@@ -21,7 +21,15 @@ const syncedEntities = [
 /// The columns a change may set (never `id`, `user_id`, `updated_at`).
 /// `calendar_link_id` stays on the device until calendar links sync (M7).
 const pushableColumns = <String, Set<String>>{
-  'profiles': {'display_name', 'tz_id', 'locale', 'settings', 'created_at'},
+  'profiles': {
+    'display_name',
+    'tz_id',
+    'locale',
+    'settings',
+    'your_colours',
+    'accent_hex',
+    'created_at',
+  },
   'series': {
     'title',
     'notes',

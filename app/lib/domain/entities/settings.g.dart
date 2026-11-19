@@ -271,6 +271,12 @@ _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
   settings: json['settings'] == null
       ? const Settings()
       : Settings.fromJson(json['settings'] as Map<String, dynamic>),
+  yourColours:
+      (json['your_colours'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
+  accentHex: json['accent_hex'] as String?,
   createdAt: const UtcMillisConverter().fromJson(
     (json['created_at'] as num).toInt(),
   ),
@@ -285,6 +291,8 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'tz_id': instance.tzId,
   'locale': instance.locale,
   'settings': instance.settings.toJson(),
+  'your_colours': instance.yourColours,
+  'accent_hex': instance.accentHex,
   'created_at': const UtcMillisConverter().toJson(instance.createdAt),
   'updated_at': const UtcMillisConverter().toJson(instance.updatedAt),
 };

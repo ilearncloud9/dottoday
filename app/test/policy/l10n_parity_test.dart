@@ -52,6 +52,7 @@ const _sameAsEnglish = {
   },
   'fr': {
     'whenDate', // "Date…" is French too (the When picker, ED-099)
+    'colorOlive', // « Olive » (ED-161)
     'inspectorDate', // "Date"
     'navMenu', // « Menu » is French
     'deviceIphone', // product names

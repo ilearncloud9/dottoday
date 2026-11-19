@@ -55,7 +55,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every migration step (persistence-drift: forward-only).
-  static const latestSchemaVersion = 23;
+  static const latestSchemaVersion = 24;
 
   @override
   int get schemaVersion => latestSchemaVersion;
@@ -181,6 +181,12 @@ class AppDatabase extends _$AppDatabase {
       // 23 (ED-084, server 0016): the account's device list for "Alarm
       // sounds on", a local cache.
       if (from < 23) await _createTableOnce(m, devicesTable);
+      // 24 (ED-220, server 0017): the account's own colours and a custom
+      // accent; empty and null on upgrade.
+      if (from < 24) {
+        await _addColumnOnce(m, profiles, profiles.yourColours);
+        await _addColumnOnce(m, profiles, profiles.accentHex);
+      }
     },
     beforeOpen: (details) async {
       // Per-connection, never persisted: re-assert on every open. Without

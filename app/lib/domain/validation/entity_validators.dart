@@ -148,6 +148,8 @@ Validated<Profile> validateProfile(Profile profile) {
       checkTimeZone(p.tzId),
       checkRequiredText(ValidationField.locale, p.locale, max: 16),
       if (settings case Err(:final failure)) failure,
+      checkYourColours(p.yourColours, max: Profile.maxYourColours),
+      checkAccentHex(p.accentHex),
     ]),
   );
 }

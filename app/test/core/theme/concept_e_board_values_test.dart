@@ -71,6 +71,10 @@ const _tasks = <String, (Color fill, Color ring, Color dark)>{
   'violet': (Color(0xFF8B5CF6), Color(0xFF8B5CF6), Color(0xFF9672E6)),
   'rose': (Color(0xFFD9668F), Color(0xFFD75E89), Color(0xFFD9668F)),
   'slate': (Color(0xFF6E6A75), Color(0xFF6E6A75), Color(0xFF898590)),
+  // ED-161's new keys, their dark values the approved ones (ED-219).
+  'brown': (Color(0xFF8C6A4F), Color(0xFF8C6A4F), Color(0xFFA67F60)),
+  'plum': (Color(0xFF9E4F8F), Color(0xFF9E4F8F), Color(0xFFB76FA9)),
+  'olive': (Color(0xFF7F8A3A), Color(0xFF7F8A3A), Color(0xFF828E3C)),
 };
 
 Color _role(DotPalette p, String role) => switch (role) {

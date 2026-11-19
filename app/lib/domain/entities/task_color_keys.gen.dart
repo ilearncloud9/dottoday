@@ -13,6 +13,9 @@ const taskColorKeys = <String>[
   'violet',
   'rose',
   'slate',
+  'brown',
+  'plum',
+  'olive',
 ];
 
 /// Retired keys still accepted on read and sync (ADR-0007); the UI draws

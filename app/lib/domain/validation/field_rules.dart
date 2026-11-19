@@ -79,10 +79,39 @@ ValidationFailure? checkOptionalText(
   return null;
 }
 
-/// Current keys plus the retired 12-colour ones, which older devices may
-/// still sync (ADR-0007); the UI never writes a legacy key.
+/// A named key (lowercase, ≤ 24) or a custom colour's `#RRGGBB` (ED-220).
+final _colorKey = RegExp(r'^(?:[a-z]{1,24}|#[0-9A-Fa-f]{6})$');
+
+/// A stored `color_key`'s shape (ED-220): the current keys, the retired
+/// ones older devices may still sync (ADR-0007), a custom `#RRGGBB`, and a
+/// name this version doesn't ship (a newer device's palette), which is
+/// kept and drawn as the default colour, so sync and restore never drop
+/// it. Mirrors 0017_your_colours.sql.
+///
+/// ```dart
+/// checkColorKey('plum');    // null
+/// checkColorKey('#8C6A4F'); // null
+/// checkColorKey('Plum!');   // invalidFormat
+/// ```
 ValidationFailure? checkColorKey(String key) =>
-    taskColorKeys.contains(key) || legacyTaskColorKeys.contains(key)
+    taskColorKeys.contains(key) ||
+        legacyTaskColorKeys.contains(key) ||
+        _colorKey.hasMatch(key)
+    ? null
+    : _fail(ValidationField.color, ValidationRule.invalidFormat);
+
+final _hexColour = RegExp(r'^#[0-9A-Fa-f]{6}$');
+
+/// The account's own colours (ED-220): at most [max] `#RRGGBB`. Mirrors
+/// `valid_your_colours` in 0017_your_colours.sql.
+ValidationFailure? checkYourColours(List<String> colours, {required int max}) =>
+    colours.length <= max && colours.every(_hexColour.hasMatch)
+    ? null
+    : _fail(ValidationField.color, ValidationRule.invalidFormat);
+
+/// A custom accent: null or a `#RRGGBB` (ED-220, 0017).
+ValidationFailure? checkAccentHex(String? hex) =>
+    hex == null || _hexColour.hasMatch(hex)
     ? null
     : _fail(ValidationField.color, ValidationRule.invalidFormat);
 

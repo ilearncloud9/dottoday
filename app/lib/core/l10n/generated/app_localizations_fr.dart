@@ -171,6 +171,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get colorSlate => 'Ardoise';
 
   @override
+  String get colorBrown => 'Brun';
+
+  @override
+  String get colorPlum => 'Prune';
+
+  @override
+  String get colorOlive => 'Olive';
+
+  @override
+  String get colorCustom => 'Couleur personnalisée';
+
+  @override
   String get undoAction => 'Annuler';
 
   @override

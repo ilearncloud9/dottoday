@@ -170,6 +170,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colorSlate => 'Slate';
 
   @override
+  String get colorBrown => 'Brown';
+
+  @override
+  String get colorPlum => 'Plum';
+
+  @override
+  String get colorOlive => 'Olive';
+
+  @override
+  String get colorCustom => 'Custom colour';
+
+  @override
   String get undoAction => 'Undo';
 
   @override

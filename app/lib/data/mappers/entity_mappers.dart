@@ -13,7 +13,7 @@ import 'package:dottoday/domain/entities/subtask.dart';
 const occurrenceCodec = RowCodec(jsonColumns: {'alerts'});
 const seriesCodec = RowCodec(jsonColumns: {'alerts', 'subtask_template'});
 const subtaskCodec = RowCodec();
-const profileCodec = RowCodec(jsonColumns: {'settings'});
+const profileCodec = RowCodec(jsonColumns: {'settings', 'your_colours'});
 const routineCodec = RowCodec(jsonColumns: {'items'});
 const revealHintCodec = RowCodec();
 const calendarSeriesCodec = RowCodec(

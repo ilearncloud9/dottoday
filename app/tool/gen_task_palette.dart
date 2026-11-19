@@ -40,9 +40,9 @@ Future<void> writeFormatted(String source, String path) async {
 /// JSON. Throws [FormatException] on a malformed palette.
 String renderTaskPalette(Object? json) {
   final p = _Palette.parse(json);
-  final colors = p.colors.map(
-    (c) =>
-        '  ${c.key}(${_color(c.hex)}, ring: ${_color(c.ring)}, dark: ${_color(c.dark)})',
+  final colors = p.colors.indexed.map(
+    (e) =>
+        "  static const ${e.$2.key} = TaskColor._('${e.$2.key}', ${_color(e.$2.hex)}, ring: ${_color(e.$2.ring)}, dark: ${_color(e.$2.dark)}, index: ${e.$1});",
   );
   final accents = p.accents.map(
     (a) => '  ${a.key}(light: ${_color(a.light)}, dark: ${_color(a.dark)})',
@@ -54,14 +54,31 @@ String renderTaskPalette(Object? json) {
 $_header
 part of 'task_palette.dart';
 
-/// The 9 task colours in picker order, with their light and dark values
-/// (Concept E, ED-161 and ED-175). [key] is the persisted `color_key`
-/// (docs/05-data-model.md); the theme picks the value, the key never
-/// changes.
-enum TaskColor {
-${colors.join(',\n')};
+/// The task colours: the ${p.colors.length} named ones in picker order
+/// (Concept E, ED-161, ED-175), and any other as [TaskColor.custom] (ED-220). [key] is
+/// the persisted `color_key` (docs/05-data-model.md): a name, or a custom
+/// colour's `#RRGGBB`; the theme picks the values, the key never changes.
+@immutable
+final class TaskColor {
+  const TaskColor._(
+    this.key,
+    this.color, {
+    required this.ring,
+    required this.dark,
+    this.index = -1,
+  });
 
-  const TaskColor(this.color, {required this.ring, required this.dark});
+  /// Any colour (ED-220): stored as its `#RRGGBB`, its ring and dark shades
+  /// derived when drawn (ED-161), so the stored value never changes.
+  factory TaskColor.custom(Color color) => customTaskColor(color);
+
+${colors.join('\n')}
+
+  /// The named colours in picker order.
+  static const values = <TaskColor>[${p.colors.map((c) => c.key).join(', ')}];
+
+  /// Persisted `color_key` value: the name, or `#RRGGBB`.
+  final String key;
 
   /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
@@ -74,19 +91,31 @@ ${colors.join(',\n')};
   /// every dark surface).
   final Color dark;
 
+  /// Whether this is a custom colour rather than one of [values].
+  bool get isCustom => key.startsWith('#');
+
+  /// Its place in [values]; -1 for a custom colour.
+  final int index;
+
   /// Colour for new tasks and unknown keys; matches the column default.
   static const fallback = TaskColor.${p.fallback};
 
-  static final _byKey = values.asNameMap();
+  static final _byKey = {for (final c in values) c.key: c};
 
-  /// Persisted `color_key` value.
-  String get key => name;
-
-  /// Parses a stored `color_key`. Keys of the retired 12-colour palette map
-  /// to their nearest colour, anything else to [fallback], so data from an
+  /// Parses a stored `color_key`: a name, a retired name (its nearest
+  /// colour), a `#RRGGBB` custom colour, else [fallback], so data from an
   /// older or newer app never breaks rendering.
   static TaskColor fromKey(String? key) =>
-      _byKey[key] ?? _legacy[key] ?? fallback;
+      _byKey[key] ?? _legacy[key] ?? customTaskColorOf(key) ?? fallback;
+
+  @override
+  bool operator ==(Object other) => other is TaskColor && other.key == key;
+
+  @override
+  int get hashCode => key.hashCode;
+
+  @override
+  String toString() => 'TaskColor(\$key)';
 }
 
 const _legacy = <String, TaskColor>{

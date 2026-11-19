@@ -161,6 +161,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get colorSlate => pseudo(super.colorSlate);
 
   @override
+  String get colorBrown => pseudo(super.colorBrown);
+
+  @override
+  String get colorPlum => pseudo(super.colorPlum);
+
+  @override
+  String get colorOlive => pseudo(super.colorOlive);
+
+  @override
+  String get colorCustom => pseudo(super.colorCustom);
+
+  @override
   String get undoAction => pseudo(super.undoAction);
 
   @override

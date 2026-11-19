@@ -171,6 +171,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get colorSlate => 'Schiefer';
 
   @override
+  String get colorBrown => 'Braun';
+
+  @override
+  String get colorPlum => 'Pflaume';
+
+  @override
+  String get colorOlive => 'Oliv';
+
+  @override
+  String get colorCustom => 'Eigene Farbe';
+
+  @override
   String get undoAction => 'Rückgängig';
 
   @override

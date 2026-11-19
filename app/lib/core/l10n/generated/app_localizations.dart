@@ -390,6 +390,30 @@ abstract class AppLocalizations {
   /// **'Slate'**
   String get colorSlate;
 
+  /// Task colour name, for screen readers and the picker (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Brown'**
+  String get colorBrown;
+
+  /// Task colour name, for screen readers and the picker (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Plum'**
+  String get colorPlum;
+
+  /// Task colour name, for screen readers and the picker (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Olive'**
+  String get colorOlive;
+
+  /// Screen-reader name of a custom task colour (any #RRGGBB, ED-220).
+  ///
+  /// In en, this message translates to:
+  /// **'Custom colour'**
+  String get colorCustom;
+
   /// Snackbar action reverting the last change (30 s).
   ///
   /// In en, this message translates to:

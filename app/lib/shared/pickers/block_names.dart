@@ -14,4 +14,9 @@ String taskColorName(AppLocalizations l10n, TaskColor color) => switch (color) {
   TaskColor.violet => l10n.colorViolet,
   TaskColor.rose => l10n.colorRose,
   TaskColor.slate => l10n.colorSlate,
+  TaskColor.brown => l10n.colorBrown,
+  TaskColor.plum => l10n.colorPlum,
+  TaskColor.olive => l10n.colorOlive,
+  // Any other: a custom colour (ED-220).
+  _ => l10n.colorCustom,
 };

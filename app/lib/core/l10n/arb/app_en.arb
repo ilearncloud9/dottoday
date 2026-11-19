@@ -204,6 +204,22 @@
   "@colorSlate": {
     "description": "Block colour name (screen readers, picker)."
   },
+  "colorBrown": "Brown",
+  "@colorBrown": {
+    "description": "Task colour name, for screen readers and the picker (ED-161)."
+  },
+  "colorPlum": "Plum",
+  "@colorPlum": {
+    "description": "Task colour name, for screen readers and the picker (ED-161)."
+  },
+  "colorOlive": "Olive",
+  "@colorOlive": {
+    "description": "Task colour name, for screen readers and the picker (ED-161)."
+  },
+  "colorCustom": "Custom colour",
+  "@colorCustom": {
+    "description": "Screen-reader name of a custom task colour (any #RRGGBB, ED-220)."
+  },
   "undoAction": "Undo",
   "@undoAction": {
     "description": "Snackbar action reverting the last change (30 s)."

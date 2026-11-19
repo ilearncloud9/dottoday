@@ -17,10 +17,10 @@ final _themes = [
 ];
 
 void main() {
-  test('the 9 task colours and order of docs/10 §2.1', () {
+  test('the 12 task colours and order (docs/10 §2.1, ED-161)', () {
     expect(
       TaskColor.values.map((c) => c.key).join(' '),
-      'coral amber mint teal sky indigo violet rose slate',
+      'coral amber mint teal sky indigo violet rose slate brown plum olive',
     );
     // Concept E shades (ED-161, M18.1).
     expect(TaskColor.amber.color.toARGB32(), 0xFFD9A23A);

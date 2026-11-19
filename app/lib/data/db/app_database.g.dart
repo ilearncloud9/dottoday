@@ -425,6 +425,31 @@ class $ProfilesTable extends Profiles
     requiredDuringInsert: false,
     defaultValue: const Constant('{"dayBoundaries":{}}'),
   );
+  static const VerificationMeta _yourColoursMeta = const VerificationMeta(
+    'yourColours',
+  );
+  @override
+  late final GeneratedColumn<String> yourColours = GeneratedColumn<String>(
+    'your_colours',
+    aliasedName,
+    false,
+    check: () => FunctionCallExpression<bool>('json_valid', [yourColours]),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _accentHexMeta = const VerificationMeta(
+    'accentHex',
+  );
+  @override
+  late final GeneratedColumn<String> accentHex = GeneratedColumn<String>(
+    'accent_hex',
+    aliasedName,
+    true,
+    check: () => accentHex.length.equals(7),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     createdAt,
@@ -436,6 +461,8 @@ class $ProfilesTable extends Profiles
     tzId,
     locale,
     settings,
+    yourColours,
+    accentHex,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -509,6 +536,21 @@ class $ProfilesTable extends Profiles
         settings.isAcceptableOrUnknown(data['settings']!, _settingsMeta),
       );
     }
+    if (data.containsKey('your_colours')) {
+      context.handle(
+        _yourColoursMeta,
+        yourColours.isAcceptableOrUnknown(
+          data['your_colours']!,
+          _yourColoursMeta,
+        ),
+      );
+    }
+    if (data.containsKey('accent_hex')) {
+      context.handle(
+        _accentHexMeta,
+        accentHex.isAcceptableOrUnknown(data['accent_hex']!, _accentHexMeta),
+      );
+    }
     return context;
   }
 
@@ -554,6 +596,14 @@ class $ProfilesTable extends Profiles
         DriftSqlType.string,
         data['${effectivePrefix}settings'],
       )!,
+      yourColours: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}your_colours'],
+      )!,
+      accentHex: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}accent_hex'],
+      ),
     );
   }
 
@@ -578,6 +628,13 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
 
   /// `Settings` JSON (docs/05 "Settings JSON"); validated in the repository.
   final String settings;
+
+  /// The account's own colours (ED-220, server 0017): a JSON array of at
+  /// most 24 `#RRGGBB`, newest first; validated in the repository.
+  final String yourColours;
+
+  /// A custom accent's `#RRGGBB` (server 0017); null = `settings.accent`.
+  final String? accentHex;
   const ProfileRow({
     required this.createdAt,
     required this.updatedAt,
@@ -588,6 +645,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
     required this.tzId,
     required this.locale,
     required this.settings,
+    required this.yourColours,
+    this.accentHex,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -603,6 +662,10 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
     map['tz_id'] = Variable<String>(tzId);
     map['locale'] = Variable<String>(locale);
     map['settings'] = Variable<String>(settings);
+    map['your_colours'] = Variable<String>(yourColours);
+    if (!nullToAbsent || accentHex != null) {
+      map['accent_hex'] = Variable<String>(accentHex);
+    }
     return map;
   }
 
@@ -619,6 +682,10 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
       tzId: Value(tzId),
       locale: Value(locale),
       settings: Value(settings),
+      yourColours: Value(yourColours),
+      accentHex: accentHex == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accentHex),
     );
   }
 
@@ -637,6 +704,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
       tzId: serializer.fromJson<String>(json['tzId']),
       locale: serializer.fromJson<String>(json['locale']),
       settings: serializer.fromJson<String>(json['settings']),
+      yourColours: serializer.fromJson<String>(json['yourColours']),
+      accentHex: serializer.fromJson<String?>(json['accentHex']),
     );
   }
   @override
@@ -652,6 +721,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
       'tzId': serializer.toJson<String>(tzId),
       'locale': serializer.toJson<String>(locale),
       'settings': serializer.toJson<String>(settings),
+      'yourColours': serializer.toJson<String>(yourColours),
+      'accentHex': serializer.toJson<String?>(accentHex),
     };
   }
 
@@ -665,6 +736,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
     String? tzId,
     String? locale,
     String? settings,
+    String? yourColours,
+    Value<String?> accentHex = const Value.absent(),
   }) => ProfileRow(
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -675,6 +748,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
     tzId: tzId ?? this.tzId,
     locale: locale ?? this.locale,
     settings: settings ?? this.settings,
+    yourColours: yourColours ?? this.yourColours,
+    accentHex: accentHex.present ? accentHex.value : this.accentHex,
   );
   ProfileRow copyWithCompanion(ProfilesCompanion data) {
     return ProfileRow(
@@ -689,6 +764,10 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
       tzId: data.tzId.present ? data.tzId.value : this.tzId,
       locale: data.locale.present ? data.locale.value : this.locale,
       settings: data.settings.present ? data.settings.value : this.settings,
+      yourColours: data.yourColours.present
+          ? data.yourColours.value
+          : this.yourColours,
+      accentHex: data.accentHex.present ? data.accentHex.value : this.accentHex,
     );
   }
 
@@ -703,7 +782,9 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
           ..write('displayName: $displayName, ')
           ..write('tzId: $tzId, ')
           ..write('locale: $locale, ')
-          ..write('settings: $settings')
+          ..write('settings: $settings, ')
+          ..write('yourColours: $yourColours, ')
+          ..write('accentHex: $accentHex')
           ..write(')'))
         .toString();
   }
@@ -719,6 +800,8 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
     tzId,
     locale,
     settings,
+    yourColours,
+    accentHex,
   );
   @override
   bool operator ==(Object other) =>
@@ -732,7 +815,9 @@ class ProfileRow extends DataClass implements Insertable<ProfileRow> {
           other.displayName == this.displayName &&
           other.tzId == this.tzId &&
           other.locale == this.locale &&
-          other.settings == this.settings);
+          other.settings == this.settings &&
+          other.yourColours == this.yourColours &&
+          other.accentHex == this.accentHex);
 }
 
 class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
@@ -745,6 +830,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
   final Value<String> tzId;
   final Value<String> locale;
   final Value<String> settings;
+  final Value<String> yourColours;
+  final Value<String?> accentHex;
   final Value<int> rowid;
   const ProfilesCompanion({
     this.createdAt = const Value.absent(),
@@ -756,6 +843,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
     this.tzId = const Value.absent(),
     this.locale = const Value.absent(),
     this.settings = const Value.absent(),
+    this.yourColours = const Value.absent(),
+    this.accentHex = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ProfilesCompanion.insert({
@@ -768,6 +857,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
     this.tzId = const Value.absent(),
     this.locale = const Value.absent(),
     this.settings = const Value.absent(),
+    this.yourColours = const Value.absent(),
+    this.accentHex = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
@@ -782,6 +873,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
     Expression<String>? tzId,
     Expression<String>? locale,
     Expression<String>? settings,
+    Expression<String>? yourColours,
+    Expression<String>? accentHex,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -794,6 +887,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
       if (tzId != null) 'tz_id': tzId,
       if (locale != null) 'locale': locale,
       if (settings != null) 'settings': settings,
+      if (yourColours != null) 'your_colours': yourColours,
+      if (accentHex != null) 'accent_hex': accentHex,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -808,6 +903,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
     Value<String>? tzId,
     Value<String>? locale,
     Value<String>? settings,
+    Value<String>? yourColours,
+    Value<String?>? accentHex,
     Value<int>? rowid,
   }) {
     return ProfilesCompanion(
@@ -820,6 +917,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
       tzId: tzId ?? this.tzId,
       locale: locale ?? this.locale,
       settings: settings ?? this.settings,
+      yourColours: yourColours ?? this.yourColours,
+      accentHex: accentHex ?? this.accentHex,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -854,6 +953,12 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
     if (settings.present) {
       map['settings'] = Variable<String>(settings.value);
     }
+    if (yourColours.present) {
+      map['your_colours'] = Variable<String>(yourColours.value);
+    }
+    if (accentHex.present) {
+      map['accent_hex'] = Variable<String>(accentHex.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -872,6 +977,8 @@ class ProfilesCompanion extends UpdateCompanion<ProfileRow> {
           ..write('tzId: $tzId, ')
           ..write('locale: $locale, ')
           ..write('settings: $settings, ')
+          ..write('yourColours: $yourColours, ')
+          ..write('accentHex: $accentHex, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -14600,6 +14707,8 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String> tzId,
       Value<String> locale,
       Value<String> settings,
+      Value<String> yourColours,
+      Value<String?> accentHex,
       Value<int> rowid,
     });
 typedef $$ProfilesTableUpdateCompanionBuilder =
@@ -14613,6 +14722,8 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String> tzId,
       Value<String> locale,
       Value<String> settings,
+      Value<String> yourColours,
+      Value<String?> accentHex,
       Value<int> rowid,
     });
 
@@ -14902,6 +15013,16 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<String> get settings => $composableBuilder(
     column: $table.settings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get yourColours => $composableBuilder(
+    column: $table.yourColours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accentHex => $composableBuilder(
+    column: $table.accentHex,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15261,6 +15382,16 @@ class $$ProfilesTableOrderingComposer
     column: $table.settings,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get yourColours => $composableBuilder(
+    column: $table.yourColours,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accentHex => $composableBuilder(
+    column: $table.accentHex,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ProfilesTableAnnotationComposer
@@ -15300,6 +15431,14 @@ class $$ProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get settings =>
       $composableBuilder(column: $table.settings, builder: (column) => column);
+
+  GeneratedColumn<String> get yourColours => $composableBuilder(
+    column: $table.yourColours,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accentHex =>
+      $composableBuilder(column: $table.accentHex, builder: (column) => column);
 
   Expression<T> seriesTableRefs<T extends Object>(
     Expression<T> Function($$SeriesTableTableAnnotationComposer a) f,
@@ -15657,6 +15796,8 @@ class $$ProfilesTableTableManager
                 Value<String> tzId = const Value.absent(),
                 Value<String> locale = const Value.absent(),
                 Value<String> settings = const Value.absent(),
+                Value<String> yourColours = const Value.absent(),
+                Value<String?> accentHex = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion(
                 createdAt: createdAt,
@@ -15668,6 +15809,8 @@ class $$ProfilesTableTableManager
                 tzId: tzId,
                 locale: locale,
                 settings: settings,
+                yourColours: yourColours,
+                accentHex: accentHex,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -15681,6 +15824,8 @@ class $$ProfilesTableTableManager
                 Value<String> tzId = const Value.absent(),
                 Value<String> locale = const Value.absent(),
                 Value<String> settings = const Value.absent(),
+                Value<String> yourColours = const Value.absent(),
+                Value<String?> accentHex = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 createdAt: createdAt,
@@ -15692,6 +15837,8 @@ class $$ProfilesTableTableManager
                 tzId: tzId,
                 locale: locale,
                 settings: settings,
+                yourColours: yourColours,
+                accentHex: accentHex,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

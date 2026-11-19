@@ -57,7 +57,7 @@ void main() {
     });
 
     test('colour and icon keys from the allowed sets', () {
-      final color = occurrenceFixture().copyWith(colorKey: 'chartreuse');
+      final color = occurrenceFixture().copyWith(colorKey: 'Chart reuse');
       final icon = occurrenceFixture().copyWith(iconKey: 'Bad Icon');
       expect(
         _code(validateOccurrence(color)),
@@ -69,6 +69,21 @@ void main() {
         iconKey: 'fitness_center',
       );
       expect(_code(validateOccurrence(fine)), 'ok');
+    });
+
+    test('custom and newer colour keys validate (ED-220 restore, sync)', () {
+      for (final key in ['plum', '#8C6A4F', '#8c6a4f', 'chartreuse']) {
+        final o = occurrenceFixture().copyWith(colorKey: key);
+        expect(_code(validateOccurrence(o)), 'ok', reason: key);
+      }
+      for (final key in ['#8C6A4', '#8C6A4FF', 'x' * 25, '']) {
+        final o = occurrenceFixture().copyWith(colorKey: key);
+        expect(
+          _code(validateOccurrence(o)),
+          'validation.color.invalidFormat',
+          reason: key,
+        );
+      }
     });
 
     test('retired 12-colour keys still validate (ADR-0007 sync)', () {
@@ -311,6 +326,22 @@ void main() {
         profileFixture().copyWith(displayName: ' Sam '),
       );
       expect(r.when(ok: (p) => p.displayName, err: (f) => f.code), 'Sam');
+    });
+
+    test('your colours: at most 24 #RRGGBB; a custom accent (ED-220)', () {
+      final p = profileFixture();
+      final fine = p.copyWith(
+        yourColours: ['#8C6A4F', '#1a2b3c'],
+        accentHex: '#9E4F8F',
+      );
+      expect(_code(validateProfile(fine)), 'ok');
+      for (final bad in [
+        p.copyWith(yourColours: ['teal']),
+        p.copyWith(yourColours: List.filled(25, '#000000')),
+        p.copyWith(accentHex: 'gold'),
+      ]) {
+        expect(_code(validateProfile(bad)), 'validation.color.invalidFormat');
+      }
     });
 
     test('rejects long names, unknown zones, empty locale, bad settings', () {

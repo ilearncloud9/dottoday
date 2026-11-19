@@ -1,5 +1,5 @@
 {
-  "$comment": "Task colours and accents in Concept E: light fills and ahead rings (ED-155, ED-161), dark fills that are also the dark rings (ED-175). Accents (ED-360): teal is the default; indigo, coral and violet take their Concept E shades, coral the ring shade #DF6147 because its fill is under 3:1 on the ground; buttons derive a darker or lighter shade for text. Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
+  "$comment": "Task colours and accents in Concept E: light fills and ahead rings (ED-155, ED-161), dark fills that are also the dark rings (ED-175). Brown, plum and olive are ED-161's new keys (ED-219), their dark values the approved ones; a custom colour is any #RRGGBB in color_key (ED-220), not listed here. Accents (ED-360): teal is the default; indigo, coral and violet take their Concept E shades, coral the ring shade #DF6147 because its fill is under 3:1 on the ground; buttons derive a darker or lighter shade for text. Order is the picker order. Edit here, then run: dart run tool/gen_task_palette.dart",
   "default": "indigo",
   "colors": [
     { "key": "coral", "hex": "#E2725B", "ring": "#DF6147", "dark": "#E2725B" },
@@ -10,7 +10,10 @@
     { "key": "indigo", "hex": "#5B5FD6", "ring": "#5B5FD6", "dark": "#7A7EDE" },
     { "key": "violet", "hex": "#8B5CF6", "ring": "#8B5CF6", "dark": "#9672E6" },
     { "key": "rose", "hex": "#D9668F", "ring": "#D75E89", "dark": "#D9668F" },
-    { "key": "slate", "hex": "#6E6A75", "ring": "#6E6A75", "dark": "#898590" }
+    { "key": "slate", "hex": "#6E6A75", "ring": "#6E6A75", "dark": "#898590" },
+    { "key": "brown", "hex": "#8C6A4F", "ring": "#8C6A4F", "dark": "#A67F60" },
+    { "key": "plum", "hex": "#9E4F8F", "ring": "#9E4F8F", "dark": "#B76FA9" },
+    { "key": "olive", "hex": "#7F8A3A", "ring": "#7F8A3A", "dark": "#828E3C" }
   ],
   "$legacyComment": "Keys from the 12-colour palette (docs/03 §1, M1.0) that may still be stored; they render as the mapped colour and are never written by the app (ADR-0007).",
   "legacy": { "tangerine": "amber", "lime": "mint", "magenta": "rose" },

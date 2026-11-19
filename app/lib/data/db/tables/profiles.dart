@@ -15,6 +15,18 @@ class Profiles extends Table with TimestampColumns, SyncColumns {
   TextColumn get settings =>
       text().withDefault(const Constant('{"dayBoundaries":{}}'))();
 
+  /// The account's own colours (ED-220, server 0017): a JSON array of at
+  /// most 24 `#RRGGBB`, newest first; validated in the repository.
+  TextColumn get yourColours => text()
+      .withDefault(const Constant('[]'))
+      // Drift's documented column CHECK reads the column it declares.
+      // ignore: recursive_getters
+      .check(FunctionCallExpression<bool>('json_valid', [yourColours]))();
+
+  /// A custom accent's `#RRGGBB` (server 0017); null = `settings.accent`.
+  TextColumn get accentHex =>
+      text().nullable().check(accentHex.length.equals(7))();
+
   @override
   Set<Column<Object>> get primaryKey => {id};
 

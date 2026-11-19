@@ -201,10 +201,20 @@ abstract class Profile with _$Profile {
     @Default('UTC') String tzId,
     @Default('en') String locale,
     @Default(Settings()) Settings settings,
+
+    /// The account's own colours, the colour picker's "Your colours" row
+    /// (ED-220): at most [maxYourColours] `#RRGGBB`, newest first.
+    @Default(<String>[]) List<String> yourColours,
+
+    /// A custom accent's `#RRGGBB` (ED-220); null uses `settings.accent`.
+    String? accentHex,
     @UtcMillisConverter() required DateTime createdAt,
     @UtcMillisConverter() required DateTime updatedAt,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, Object?> json) =>
       _$ProfileFromJson(json);
+
+  /// How many custom colours an account keeps (server 0017).
+  static const maxYourColours = 24;
 }

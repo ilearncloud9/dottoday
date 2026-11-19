@@ -171,6 +171,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get colorSlate => 'Pizarra';
 
   @override
+  String get colorBrown => 'Marrón';
+
+  @override
+  String get colorPlum => 'Ciruela';
+
+  @override
+  String get colorOlive => 'Oliva';
+
+  @override
+  String get colorCustom => 'Color personalizado';
+
+  @override
   String get undoAction => 'Deshacer';
 
   @override

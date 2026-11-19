@@ -8,7 +8,9 @@ Server and local schemas are identical in meaning; local adds sync columns. SQL 
 
 ### `profiles`
 One per auth user. `id (= auth.users.id)`, `display_name`, `tz_id`, `locale`, `settings jsonb`
-(day boundaries per weekday, snapping, shift policy, default alerts, theme…), `created_at`, `updated_at`.
+(day boundaries per weekday, snapping, shift policy, default alerts, theme…), `your_colours jsonb`
+(the colour picker's "Your colours": at most 24 `#RRGGBB`, newest first; ED-220, 0017),
+`accent_hex` (a custom accent's `#RRGGBB`, null = `settings.accent`), `created_at`, `updated_at`.
 
 ### `series`  (a recurring task template)
 `id, user_id, title, notes, color_key, icon_key, duration_min, rrule text, dtstart_local text
@@ -271,9 +273,11 @@ sheet confirms first.
   `offsetMin` 0–1440; `subtasks` ≤ 50 per occurrence; a subtask's or template step's `duration_min` is null or 1–1440; `rrule` must parse and have `FREQ` (HOURLY or coarser — M1.2); `tz_id`
   must be a known IANA id; `color_key`/`icon_key` from the allowed sets.
 - Clarified in M1.1: `icon_key` is a lowercase snake_case token ≤ 48 chars (default `circle`) until
-  the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` must be
-  one of the 9 Concept A task colour keys or a retired 12-palette key kept for sync
-  (`task_color_keys.gen.dart`, ADR-0007, M3a.1); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm`
+  the picker set is the 26 `TaskIcon`s (M3a.2; older keys map to the nearest icon); the UI draws a plain dot for `circle` and for keys it does not know. `color_key` is
+  one of the 12 task colour keys (Concept E adds brown, plum and olive, ED-161), a retired 12-palette key kept for sync
+  (`task_color_keys.gen.dart`, ADR-0007, M3a.1), a custom colour's `#RRGGBB` (ED-220: ring and dark shades derived when
+  drawn, never stored), or any other lowercase name ≤ 24 (a newer app's palette, kept and drawn as the default, so sync and
+  restore never drop it; 0017); `settings.accent` is one of the 4 accents. Day boundaries are `HH:mm`
   with start < end (see "Wind Down after midnight" below); quiet hours may wrap past midnight. `quietHours: null` means off and is the
   default for new profiles (the example above shows the suggested window once enabled). Validation
   checks `tz_id` against the bundled IANA database, which `bootstrap()` loads before `runApp`.

@@ -838,7 +838,10 @@ $OneThingCopyWith<$Res>? get oneThing {
 /// @nodoc
 mixin _$Profile {
 
- String get id; String? get displayName; String get tzId; String get locale; Settings get settings;@UtcMillisConverter() DateTime get createdAt;@UtcMillisConverter() DateTime get updatedAt;
+ String get id; String? get displayName; String get tzId; String get locale; Settings get settings;/// The account's own colours, the colour picker's "Your colours" row
+/// (ED-220): at most [maxYourColours] `#RRGGBB`, newest first.
+ List<String> get yourColours;/// A custom accent's `#RRGGBB` (ED-220); null uses `settings.accent`.
+ String? get accentHex;@UtcMillisConverter() DateTime get createdAt;@UtcMillisConverter() DateTime get updatedAt;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -852,20 +855,20 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Profile;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.tzId, _this.tzId) || other.tzId == _this.tzId)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.tzId, _this.tzId) || other.tzId == _this.tzId)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&const DeepCollectionEquality().equals(other.yourColours, _this.yourColours)&&(identical(other.accentHex, _this.accentHex) || other.accentHex == _this.accentHex)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Profile;
-  return Object.hash(runtimeType,_this.id,_this.displayName,_this.tzId,_this.locale,_this.settings,_this.createdAt,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.displayName,_this.tzId,_this.locale,_this.settings,const DeepCollectionEquality().hash(_this.yourColours),_this.accentHex,_this.createdAt,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as Profile;
-  return 'Profile(id: ${_this.id}, displayName: ${_this.displayName}, tzId: ${_this.tzId}, locale: ${_this.locale}, settings: ${_this.settings}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
+  return 'Profile(id: ${_this.id}, displayName: ${_this.displayName}, tzId: ${_this.tzId}, locale: ${_this.locale}, settings: ${_this.settings}, yourColours: ${_this.yourColours}, accentHex: ${_this.accentHex}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -876,7 +879,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String id, String? displayName, String tzId, String locale, Settings settings,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt
+ String id, String? displayName, String tzId, String locale, Settings settings, List<String> yourColours, String? accentHex,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt
 });
 
 
@@ -893,14 +896,16 @@ class _$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = freezed,Object? tzId = null,Object? locale = null,Object? settings = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = freezed,Object? tzId = null,Object? locale = null,Object? settings = null,Object? yourColours = null,Object? accentHex = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String?,tzId: null == tzId ? _self.tzId : tzId // ignore: cast_nullable_to_non_nullable
 as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
-as Settings,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Settings,yourColours: null == yourColours ? _self.yourColours : yourColours // ignore: cast_nullable_to_non_nullable
+as List<String>,accentHex: freezed == accentHex ? _self.accentHex : accentHex // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -996,10 +1001,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings,  List<String> yourColours,  String? accentHex, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.yourColours,_that.accentHex,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -1017,10 +1022,10 @@ return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.setting
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings,  List<String> yourColours,  String? accentHex, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Profile():
-return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.yourColours,_that.accentHex,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1037,10 +1042,10 @@ return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.setting
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? displayName,  String tzId,  String locale,  Settings settings,  List<String> yourColours,  String? accentHex, @UtcMillisConverter()  DateTime createdAt, @UtcMillisConverter()  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.settings,_that.yourColours,_that.accentHex,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -1052,7 +1057,7 @@ return $default(_that.id,_that.displayName,_that.tzId,_that.locale,_that.setting
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _Profile implements Profile {
-  const _Profile({required this.id, this.displayName, this.tzId = 'UTC', this.locale = 'en', this.settings = const Settings(), @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt});
+  const _Profile({required this.id, this.displayName, this.tzId = 'UTC', this.locale = 'en', this.settings = const Settings(),  List<String> yourColours = const <String>[], this.accentHex, @UtcMillisConverter() required this.createdAt, @UtcMillisConverter() required this.updatedAt}): _yourColours = yourColours;
   factory _Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
 @override final  String id;
@@ -1060,6 +1065,19 @@ class _Profile implements Profile {
 @override@JsonKey() final  String tzId;
 @override@JsonKey() final  String locale;
 @override@JsonKey() final  Settings settings;
+/// The account's own colours, the colour picker's "Your colours" row
+/// (ED-220): at most [maxYourColours] `#RRGGBB`, newest first.
+ final  List<String> _yourColours;
+/// The account's own colours, the colour picker's "Your colours" row
+/// (ED-220): at most [maxYourColours] `#RRGGBB`, newest first.
+@override@JsonKey() List<String> get yourColours {
+  if (_yourColours is EqualUnmodifiableListView) return _yourColours;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_yourColours);
+}
+
+/// A custom accent's `#RRGGBB` (ED-220); null uses `settings.accent`.
+@override final  String? accentHex;
 @override@UtcMillisConverter() final  DateTime createdAt;
 @override@UtcMillisConverter() final  DateTime updatedAt;
 
@@ -1076,18 +1094,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.tzId, tzId) || other.tzId == tzId)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.settings, settings) || other.settings == settings)&&const DeepCollectionEquality().equals(other.yourColours, _yourColours)&&(identical(other.accentHex, accentHex) || other.accentHex == accentHex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,displayName,tzId,locale,settings,createdAt,updatedAt);
+    return Object.hash(runtimeType,id,displayName,tzId,locale,settings,const DeepCollectionEquality().hash(_yourColours),accentHex,createdAt,updatedAt);
 }
 
 @override
 String toString() {
-    return 'Profile(id: $id, displayName: $displayName, tzId: $tzId, locale: $locale, settings: $settings, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Profile(id: $id, displayName: $displayName, tzId: $tzId, locale: $locale, settings: $settings, yourColours: $yourColours, accentHex: $accentHex, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -1098,7 +1116,7 @@ abstract mixin class _$ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   factory _$ProfileCopyWith(_Profile value, $Res Function(_Profile) _then) = __$ProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? displayName, String tzId, String locale, Settings settings,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt
+ String id, String? displayName, String tzId, String locale, Settings settings, List<String> yourColours, String? accentHex,@UtcMillisConverter() DateTime createdAt,@UtcMillisConverter() DateTime updatedAt
 });
 
 
@@ -1115,14 +1133,16 @@ class __$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = freezed,Object? tzId = null,Object? locale = null,Object? settings = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = freezed,Object? tzId = null,Object? locale = null,Object? settings = null,Object? yourColours = null,Object? accentHex = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String?,tzId: null == tzId ? _self.tzId : tzId // ignore: cast_nullable_to_non_nullable
 as String,locale: null == locale ? _self.locale : locale // ignore: cast_nullable_to_non_nullable
 as String,settings: null == settings ? _self.settings : settings // ignore: cast_nullable_to_non_nullable
-as Settings,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as Settings,yourColours: null == yourColours ? _self._yourColours : yourColours // ignore: cast_nullable_to_non_nullable
+as List<String>,accentHex: freezed == accentHex ? _self.accentHex : accentHex // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

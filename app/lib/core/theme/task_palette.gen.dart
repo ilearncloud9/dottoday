@@ -3,22 +3,127 @@
 
 part of 'task_palette.dart';
 
-/// The 9 task colours in picker order, with their light and dark values
-/// (Concept E, ED-161 and ED-175). [key] is the persisted `color_key`
-/// (docs/05-data-model.md); the theme picks the value, the key never
-/// changes.
-enum TaskColor {
-  coral(Color(0xFFE2725B), ring: Color(0xFFDF6147), dark: Color(0xFFE2725B)),
-  amber(Color(0xFFD9A23A), ring: Color(0xFFAF7E22), dark: Color(0xFFD9A23A)),
-  mint(Color(0xFF4CA36B), ring: Color(0xFF469763), dark: Color(0xFF4CA36B)),
-  teal(Color(0xFF2A9D8F), ring: Color(0xFF289588), dark: Color(0xFF2A9D8F)),
-  sky(Color(0xFF4A9BD6), ring: Color(0xFF338ED1), dark: Color(0xFF4A9BD6)),
-  indigo(Color(0xFF5B5FD6), ring: Color(0xFF5B5FD6), dark: Color(0xFF7A7EDE)),
-  violet(Color(0xFF8B5CF6), ring: Color(0xFF8B5CF6), dark: Color(0xFF9672E6)),
-  rose(Color(0xFFD9668F), ring: Color(0xFFD75E89), dark: Color(0xFFD9668F)),
-  slate(Color(0xFF6E6A75), ring: Color(0xFF6E6A75), dark: Color(0xFF898590));
+/// The task colours: the 12 named ones in picker order
+/// (Concept E, ED-161, ED-175), and any other as [TaskColor.custom] (ED-220). [key] is
+/// the persisted `color_key` (docs/05-data-model.md): a name, or a custom
+/// colour's `#RRGGBB`; the theme picks the values, the key never changes.
+@immutable
+final class TaskColor {
+  const TaskColor._(
+    this.key,
+    this.color, {
+    required this.ring,
+    required this.dark,
+    this.index = -1,
+  });
 
-  const TaskColor(this.color, {required this.ring, required this.dark});
+  /// Any colour (ED-220): stored as its `#RRGGBB`, its ring and dark shades
+  /// derived when drawn (ED-161), so the stored value never changes.
+  factory TaskColor.custom(Color color) => customTaskColor(color);
+
+  static const coral = TaskColor._(
+    'coral',
+    Color(0xFFE2725B),
+    ring: Color(0xFFDF6147),
+    dark: Color(0xFFE2725B),
+    index: 0,
+  );
+  static const amber = TaskColor._(
+    'amber',
+    Color(0xFFD9A23A),
+    ring: Color(0xFFAF7E22),
+    dark: Color(0xFFD9A23A),
+    index: 1,
+  );
+  static const mint = TaskColor._(
+    'mint',
+    Color(0xFF4CA36B),
+    ring: Color(0xFF469763),
+    dark: Color(0xFF4CA36B),
+    index: 2,
+  );
+  static const teal = TaskColor._(
+    'teal',
+    Color(0xFF2A9D8F),
+    ring: Color(0xFF289588),
+    dark: Color(0xFF2A9D8F),
+    index: 3,
+  );
+  static const sky = TaskColor._(
+    'sky',
+    Color(0xFF4A9BD6),
+    ring: Color(0xFF338ED1),
+    dark: Color(0xFF4A9BD6),
+    index: 4,
+  );
+  static const indigo = TaskColor._(
+    'indigo',
+    Color(0xFF5B5FD6),
+    ring: Color(0xFF5B5FD6),
+    dark: Color(0xFF7A7EDE),
+    index: 5,
+  );
+  static const violet = TaskColor._(
+    'violet',
+    Color(0xFF8B5CF6),
+    ring: Color(0xFF8B5CF6),
+    dark: Color(0xFF9672E6),
+    index: 6,
+  );
+  static const rose = TaskColor._(
+    'rose',
+    Color(0xFFD9668F),
+    ring: Color(0xFFD75E89),
+    dark: Color(0xFFD9668F),
+    index: 7,
+  );
+  static const slate = TaskColor._(
+    'slate',
+    Color(0xFF6E6A75),
+    ring: Color(0xFF6E6A75),
+    dark: Color(0xFF898590),
+    index: 8,
+  );
+  static const brown = TaskColor._(
+    'brown',
+    Color(0xFF8C6A4F),
+    ring: Color(0xFF8C6A4F),
+    dark: Color(0xFFA67F60),
+    index: 9,
+  );
+  static const plum = TaskColor._(
+    'plum',
+    Color(0xFF9E4F8F),
+    ring: Color(0xFF9E4F8F),
+    dark: Color(0xFFB76FA9),
+    index: 10,
+  );
+  static const olive = TaskColor._(
+    'olive',
+    Color(0xFF7F8A3A),
+    ring: Color(0xFF7F8A3A),
+    dark: Color(0xFF828E3C),
+    index: 11,
+  );
+
+  /// The named colours in picker order.
+  static const values = <TaskColor>[
+    coral,
+    amber,
+    mint,
+    teal,
+    sky,
+    indigo,
+    violet,
+    rose,
+    slate,
+    brown,
+    plum,
+    olive,
+  ];
+
+  /// Persisted `color_key` value: the name, or `#RRGGBB`.
+  final String key;
 
   /// The light colour of the dot, segment and chip, before any alpha.
   final Color color;
@@ -31,19 +136,31 @@ enum TaskColor {
   /// every dark surface).
   final Color dark;
 
+  /// Whether this is a custom colour rather than one of [values].
+  bool get isCustom => key.startsWith('#');
+
+  /// Its place in [values]; -1 for a custom colour.
+  final int index;
+
   /// Colour for new tasks and unknown keys; matches the column default.
   static const fallback = TaskColor.indigo;
 
-  static final _byKey = values.asNameMap();
+  static final _byKey = {for (final c in values) c.key: c};
 
-  /// Persisted `color_key` value.
-  String get key => name;
-
-  /// Parses a stored `color_key`. Keys of the retired 12-colour palette map
-  /// to their nearest colour, anything else to [fallback], so data from an
+  /// Parses a stored `color_key`: a name, a retired name (its nearest
+  /// colour), a `#RRGGBB` custom colour, else [fallback], so data from an
   /// older or newer app never breaks rendering.
   static TaskColor fromKey(String? key) =>
-      _byKey[key] ?? _legacy[key] ?? fallback;
+      _byKey[key] ?? _legacy[key] ?? customTaskColorOf(key) ?? fallback;
+
+  @override
+  bool operator ==(Object other) => other is TaskColor && other.key == key;
+
+  @override
+  int get hashCode => key.hashCode;
+
+  @override
+  String toString() => 'TaskColor($key)';
 }
 
 const _legacy = <String, TaskColor>{

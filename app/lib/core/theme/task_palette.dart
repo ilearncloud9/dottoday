@@ -82,7 +82,8 @@ final class TaskSwatch {
   Color get doneSegment => color.withValues(alpha: TaskAlpha.done);
 }
 
-/// The 9 task colours resolved for one [DotColors].
+/// The task colours resolved for one [DotColors]: the named ones up
+/// front, a custom one (ED-220) when first drawn.
 ///
 /// ```dart
 /// final s = DotTheme.of(context).tasks[TaskColor.fromKey(task.colorKey)];
@@ -90,32 +91,41 @@ final class TaskSwatch {
 /// ```
 @immutable
 final class TaskPalette {
-  const TaskPalette._(this._swatches);
+  const TaskPalette._(this._swatches, this._custom);
 
   /// Derives [TaskSwatch.ink] and [TaskSwatch.tint] for [colors].
   factory TaskPalette.resolve(DotColors colors) {
     final alpha = colors.isDark ? TaskAlpha.tintDark : TaskAlpha.tintLight;
-    return TaskPalette._([
-      for (final c in TaskColor.values)
-        _swatch(
-          colors.isDark ? c.dark : c.color,
-          colors.isDark ? c.dark : c.ring,
-          colors,
-          alpha,
-          check: colors.isDark
-              ? colors.ground
-              : c == TaskColor.amber
-              ? colors.ink
-              : DotPrimitives.white,
-        ),
-    ]);
+    TaskSwatch of(TaskColor c) => _swatch(
+      colors.isDark ? c.dark : c.color,
+      colors.isDark ? c.dark : c.ring,
+      colors,
+      alpha,
+      check: colors.isDark
+          ? colors.ground
+          : c == TaskColor.amber || (c.isCustom && _pale(c.color))
+          ? colors.ink
+          : DotPrimitives.white,
+    );
+    final custom = <TaskColor, TaskSwatch>{};
+    return TaskPalette._(
+      [for (final c in TaskColor.values) of(c)],
+      (c) => custom.length < _customCache
+          ? custom.putIfAbsent(c, () => of(c))
+          : custom[c] ?? of(c),
+    );
   }
 
   /// Indexed by [TaskColor.index].
   final List<TaskSwatch> _swatches;
 
-  TaskSwatch operator [](TaskColor color) => _swatches[color.index];
+  /// A custom colour's swatch, resolved when first drawn.
+  final TaskSwatch Function(TaskColor) _custom;
 
+  TaskSwatch operator [](TaskColor color) =>
+      color.isCustom ? _custom(color) : _swatches[color.index];
+
+  /// Named colours blend; a custom one takes the nearer theme's.
   TaskPalette lerp(TaskPalette other, double t) => TaskPalette._([
     for (final c in TaskColor.values)
       TaskSwatch(
@@ -126,7 +136,59 @@ final class TaskPalette {
         glyph: Color.lerp(this[c].glyph, other[c].glyph, t)!,
         check: Color.lerp(this[c].check, other[c].check, t)!,
       ),
-  ]);
+  ], t < 0.5 ? _custom : other._custom);
+}
+
+/// How many custom swatches a palette keeps; a day rarely shows more.
+const _customCache = 64;
+
+/// Whether white on a custom [color] is under 3:1, so a done dot's tick
+/// uses ink, as on amber (CR-162); the named colours keep the boards'.
+bool _pale(Color color) =>
+    contrastRatio(color, DotPrimitives.white) < glyphContrastTarget;
+
+final _hexKey = RegExp(r'^#[0-9A-Fa-f]{6}$');
+final _customs = <String, TaskColor>{};
+
+/// [TaskColor.custom]: [color] made opaque, its key `#RRGGBB`.
+TaskColor customTaskColor(Color color) {
+  final rgb = color.toARGB32() & 0xFFFFFF;
+  final key = '#${rgb.toRadixString(16).padLeft(6, '0').toUpperCase()}';
+  return _customs[key] ?? _derive(key, Color(0xFF000000 | rgb));
+}
+
+/// A `#RRGGBB` [key] as a custom colour; null for anything else.
+TaskColor? customTaskColorOf(String? key) {
+  if (key == null || !_hexKey.hasMatch(key)) return null;
+  return customTaskColor(
+    Color(0xFF000000 | int.parse(key.substring(1), radix: 16)),
+  );
+}
+
+/// The derived shades (ED-161, ED-175): the light ring is [color] deepened
+/// to 3:1 on the light ground and cards; the dark fill, also its ring, is
+/// [color] lifted to 3.5:1 on every dark surface.
+TaskColor _derive(String key, Color color) {
+  const l = DotPalette.light;
+  const d = DotPalette.dark;
+  final c = TaskColor._(
+    key,
+    color,
+    ring: inkFor(
+      color,
+      backgrounds: [l.ground, l.card],
+      toward: l.ink,
+      minRatio: 3,
+    ),
+    dark: inkFor(
+      color,
+      backgrounds: [d.ground, d.card, d.chip],
+      toward: d.ink,
+      minRatio: 3.5,
+    ),
+  );
+  if (_customs.length >= _customCache) _customs.clear();
+  return _customs[key] = c;
 }
 
 TaskSwatch _swatch(
