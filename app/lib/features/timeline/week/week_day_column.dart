@@ -1,11 +1,13 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/week_layout.dart';
+import 'package:dottoday/features/timeline/week/grid_block.dart';
 import 'package:dottoday/features/timeline/week/grid_column_pieces.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/grid_thread.dart';
-import 'package:dottoday/features/timeline/week/week_card.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +61,9 @@ class WeekDayColumn extends StatefulWidget {
 class _WeekDayColumnState extends State<WeekDayColumn> {
   ({DateTime start, int minutes})? _hover;
 
-  double get _height => widget.axisMinutes * WeekScale.pxPerMinute;
+  GridScale get _scale => GridScale.of(context);
+
+  double get _height => widget.axisMinutes * _scale.pxPerMinute;
 
   DateTime? _startAt(Offset global, String id) {
     final o = widget.find(id);
@@ -68,7 +72,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     return weekDropStart(
       y: box.globalToLocal(global).dy,
       axisStartUtc: widget.day.axisStartUtc,
-      pxPerMinute: WeekScale.pxPerMinute,
+      pxPerMinute: _scale.pxPerMinute,
       axisMinutes: widget.axisMinutes,
       durationMin: o.durationMin,
       snapMinutes: widget.day.snapMinutes,
@@ -114,7 +118,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
             line: c.gridLine,
             divider: c.gridDivider,
             tint: day.isToday ? c.gridToday : null,
-            firstLine: WeekScale.leadMinutes * WeekScale.pxPerMinute,
+            firstLine: GridScale.leadMinutes * _scale.pxPerMinute,
           ),
         ),
       ),
@@ -130,7 +134,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
           ),
         ),
       Positioned(
-        left: DotSize.gridThreadX,
+        left: _scale.threadX,
         top: 0,
         bottom: 0,
         width: DotSize.gridThread,
@@ -159,9 +163,10 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     for (final b in _boxes()) {
       final task = byId[b.id]!;
       if (b.lane == 0) {
-        final pill = task.minutes < WeekScale.pillUnder;
+        final pill = task.minutes < _scale.pillUnder;
+        final live = task.state == DotState.live;
         dots.add((
-          y: b.top + (pill ? b.height / 2 : _ringCentre),
+          y: b.top + (pill ? b.height / 2 : _scale.ringCentre(live: live)),
           color: t.tasks[task.color].color,
         ));
       }
@@ -181,15 +186,11 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     );
   }
 
-  /// A block's ring centre below its top: 5 in, 32 across.
-  static const _ringCentre =
-      DotSpace.xs + DotSpace.hairline + DotSize.gridRing / 2;
-
   /// Today's stretch of the now line and the dot on its thread.
   List<Widget> _now(DotColors c, double y) => [
     _line(c.nowLineToday, y, DotSpace.hairline * 1.5),
     Positioned(
-      left: DotSize.gridThreadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
+      left: _scale.threadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
       top: y - DotSize.gridNowDot / 2,
       width: DotSize.gridNowDot,
       height: DotSize.gridNowDot,
@@ -200,7 +201,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
   double _y(DateTime utc) =>
       utc.difference(widget.day.axisStartUtc).inSeconds /
       60 *
-      WeekScale.pxPerMinute;
+      _scale.pxPerMinute;
 
   Widget _line(Color color, double y, double width) => Positioned(
     left: 0,
@@ -216,7 +217,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
   ) => gridDropPreview(
     context,
     top: _y(hover.start),
-    height: hover.minutes * WeekScale.pxPerMinute,
+    height: hover.minutes * _scale.pxPerMinute,
     label: widget.dropLabel(hover.start, hover.minutes),
   );
 
@@ -229,8 +230,8 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
             (id: task.id, startUtc: s.startUtc, minutes: s.minutes),
       ],
       axisStartUtc: day.axisStartUtc,
-      pxPerMinute: WeekScale.pxPerMinute,
-      minHeight: WeekScale.minCard,
+      pxPerMinute: _scale.pxPerMinute,
+      minHeight: _scale.minCard,
     );
   }
 
@@ -238,6 +239,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     final day = widget.day;
     final boxes = _boxes();
     final byId = {for (final task in day.tasks) task.id: task};
+    final stacked = _scale.touch;
     return [
       for (final b in boxes)
         Positioned.fill(
@@ -248,54 +250,42 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
             child: GridLane(
               lane: b.lane,
               lanes: b.lanes,
-              child: _card(byId[b.id]!, b.height, narrow: b.lanes > 1),
+              stacked: stacked,
+              child: _card(
+                byId[b.id]!,
+                b.height,
+                narrow: stacked ? b.lane > 0 : b.lanes > 1,
+                over: stacked && b.lane > 0,
+              ),
             ),
           ),
         ),
     ];
   }
 
-  Widget _card(ThreadTask task, double height, {required bool narrow}) {
-    WeekCard card({bool lifted = false}) => WeekCard(
-      task: task,
-      height: height,
-      narrow: narrow,
-      lifted: lifted,
-      picked: !lifted && widget.day.pickedId == task.id,
-      onOpen: () => widget.onOpen(task.id),
-      onCue: switch (widget.onCue) {
-        final cue? => () => cue(task.id),
-        null => null,
-      },
-      onMove: switch (widget.onMove) {
-        final move? => ({int steps = 0, int days = 0}) => move(
-          task.id,
-          steps * widget.day.snapMinutes,
-          days,
-        ),
-        null => null,
-      },
-    );
-    if (!task.movable) return card();
-    // The dragged copy is the block's own size, lifted above every block
-    // it crosses (ED-116); it appears at once, with no scale (owner,
-    // M19.2: the lift's motion stays open, §7.5).
-    return LayoutBuilder(
-      builder: (context, box) => HoldOrMouseDraggable<String>(
-        data: task.id,
-        feedback: SizedBox(
-          width: box.maxWidth,
-          height: height,
-          child: card(lifted: true),
-        ),
-        childWhenDragging: Opacity(opacity: TaskAlpha.done, child: card()),
-        callbacks: DragCallbacks(
-          onDragStarted: () {},
-          onDragUpdate: (_) {},
-          onDragEnd: (_) {},
-        ),
-        child: card(),
+  Widget _card(
+    ThreadTask task,
+    double height, {
+    required bool narrow,
+    required bool over,
+  }) => GridBlock(
+    task: task,
+    height: height,
+    narrow: narrow,
+    over: over,
+    picked: widget.day.pickedId == task.id,
+    onOpen: () => widget.onOpen(task.id),
+    onCue: switch (widget.onCue) {
+      final cue? => () => cue(task.id),
+      null => null,
+    },
+    onMove: switch (widget.onMove) {
+      final move? => ({int steps = 0, int days = 0}) => move(
+        task.id,
+        steps * widget.day.snapMinutes,
+        days,
       ),
-    );
-  }
+      null => null,
+    },
+  );
 }

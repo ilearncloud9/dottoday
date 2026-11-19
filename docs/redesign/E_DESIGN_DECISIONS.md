@@ -5161,6 +5161,23 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not in this part:** the picked row's edge on the Day view (the Day view picks and opens, but its thread rows have no selected look yet); the Month cards' arrow-key navigation (handoff line 118).
 - **Checks:** `dart analyze --fatal-infos` clean, format clean; all 2446 goldens pass (new: workspace_inspector, workspace_editor, workspace_month_mac, light and dark; Workspace and Month re-baselined); all other tests pass except the 5 Supabase suites, which need the local stack. Not yet run on a Mac or in a browser.
 
+### ED-392 · M19.2 part 3a: the Workspace at touch sizes on expanded tablets
+- **Date:** 2026-11-19. **Owner:** "Start part 3", with four answers: part 3 ships as 3a tablets and 3b the narrow Mac (with the Day rows' picked edge and Month card arrow keys); Day on tablets uses the grid's 96 an hour; long-press then drag on the tablet grid in this part; a picked Day row gets the 2 px ink edge (3b). For the half-cut line the a11y check found on Day: "Fix it in the app". Then "Approve 3a" after the review page.
+- **Touch grid (E-R2-2, ED-269),** wherever the Workspace runs at touch sizes (iPad, Android tablets, touch-first web; `watchTouchContent`, ED-261), on Week, 3 days and Day:
+  - 96 px an hour (Day too, owner); columns at least 180 under a 60 header; hour labels and day meta 13;
+  - block titles 17/21.25, times 13; rings 36, the live task's 45, at 6, 6 with 8 to the text;
+  - under 35 minutes a task is a one-line pill, title 15, at least 20 tall; its dot 28 from 44 tall and 24 below; corners at most 16;
+  - an overlap keeps the earlier block across the whole column and stacks the later one over it, one ring (36) further in to the same right edge, raised with a 1 px ring at 10 % and `0 4 12` at 12 % (`DotElevation.blockOver`); the pointer grid keeps its side-by-side lanes;
+  - the Plan panel needs 3 days of 180 (584) beside it before it docks; the inspector always floats over the grid.
+- **Both scales:** when the days don't all fit, the grid opens with today in view, the day before it at the left (E-R2-2's Tue–Thu; the narrow Mac's "Today kept in view", ED-169).
+- **Drag on touch:** hold, then drag, as on the phone thread (`DotTouch.liftDelay`), with the same snapping and Undo as the Mac; a plain swipe scrolls.
+- **Code:** `GridScale` (pointer and touch values, handed down by `GridScaleScope` from `WeekView`) replaces the fixed `WeekScale`; `GridBlock` holds the draggable block so the day column stays under 300 lines.
+- **Plan-panel rows:** E-R2-2's text says rows 60 and ED-269 says 56; the panel's Inbox and Routines cards already measure 56 or more at touch sizes, so nothing changes.
+- **Day opens between rows (owner: "Fix it in the app"):** opening at now scrolls the now row's top to the top edge, so the line above is never cut in half (at 96 an hour the a11y check read a half-cut "30 min free" against the header strip); a live task too long for its now point to show from its top still opens at the now point less 32 (ED-336). Every device.
+- **Goldens:** tests run on Android by default, so every wide grid golden without a platform now draws the touch scale: today, today_bottom, week, late_review, learning_reveal and reality re-baselined. New: tablet_week_ipad, tablet_week_android, tablet_day_ipad, tablet_inspector_ipad (light, dark).
+- **Not in this part (3b):** the narrow Mac (E-G4-3-Narrow: the 840 toolbar's Week ⌄ pop-up, the status text below 1000), the Day rows' picked edge, Month card arrow keys.
+- **Checks:** touch_grid_test (the scales, the Plan panel and inspector room, touch titles and columns, hold-then-drag with Undo); the tablet goldens; the shell a11y check at 400 and 1000, light and dark. Analyze and format clean; every test passes except the 5 Supabase suites, which need the stack. Not yet run on a real iPad or Android tablet (M21).
+
 ---
 
 ## Pending owner answers

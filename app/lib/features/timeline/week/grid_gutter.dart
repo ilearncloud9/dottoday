@@ -1,6 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/features/timeline/week/week_pieces.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:flutter/material.dart';
 
 /// "7 AM", "8 AM" … beside the hour lines, right-aligned in the gutter.
@@ -11,15 +11,16 @@ class GridHourLabels extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = DotTheme.of(context).styles.gridHour;
+    final scale = GridScale.of(context);
+    final style = scale.hourLabel(DotTheme.of(context).styles);
     final half = style.fontSize! * style.height! / 2;
     return Stack(
       children: [
         for (final (i, label) in labels.indexed)
           Positioned(
             top:
-                (WeekScale.leadMinutes + i * Duration.minutesPerHour) *
-                    WeekScale.pxPerMinute -
+                (GridScale.leadMinutes + i * Duration.minutesPerHour) *
+                    scale.pxPerMinute -
                 half,
             left: 0,
             right: DotSpace.xs + DotSpace.xxs,

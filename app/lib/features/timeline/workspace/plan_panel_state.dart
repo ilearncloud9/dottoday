@@ -17,18 +17,24 @@ class PlanPanelOut extends _$PlanPanelOut {
 }
 
 /// Whether a [content]-wide Workspace keeps a 3-day week beside a
-/// [panel]-wide Plan panel (ED-184: hidden on its own below that).
-bool planPanelHasRoom(double content, double panel) =>
-    content - panel - DotSpace.hairline >= DotSize.weekGridMin;
+/// [panel]-wide Plan panel (ED-184: hidden on its own below that); at
+/// [touch] sizes the days are 180 wide (ED-269).
+bool planPanelHasRoom(double content, double panel, {required bool touch}) =>
+    content - panel - DotSpace.hairline >=
+    (touch ? DotSize.weekGridTouchMin : DotSize.weekGridMin);
 
 /// The Workspace's width beside its sidebar.
 double workspaceContentWidth(BuildContext context) =>
     MediaQuery.sizeOf(context).width - DotSize.sidebar - DotSpace.hairline;
 
 /// Whether the panel is docked: not hidden by the person, and with room.
-bool planPanelDocked(BuildContext context, PlanPanelPrefs prefs) =>
+bool planPanelDocked(
+  BuildContext context,
+  PlanPanelPrefs prefs, {
+  required bool touch,
+}) =>
     !prefs.hidden &&
-    planPanelHasRoom(workspaceContentWidth(context), prefs.width);
+    planPanelHasRoom(workspaceContentWidth(context), prefs.width, touch: touch);
 
 /// ⌥⌘P and View › Show Plan Panel (ED-184): the person shows it if they
 /// had hidden it, else hides it.

@@ -20,11 +20,10 @@ class PlanPanelButton extends ConsumerWidget {
     final l10n = context.l10n;
     final prefs = ref.watch(planPanelProvider).value ?? const PlanPanelPrefs();
     final out = ref.watch(planPanelOutProvider);
-    final docked = planPanelDocked(context, prefs);
+    final touch = watchTouchContent(context, ref);
+    final docked = planPanelDocked(context, prefs, touch: touch);
     final pressed = docked || out;
-    final h = watchTouchContent(context, ref)
-        ? DotTouch.android
-        : DotSize.workspaceControl;
+    final h = touch ? DotTouch.android : DotSize.workspaceControl;
     void tap() {
       if (docked) {
         unawaited(ref.read(planPanelProvider.notifier).setHidden(hidden: true));

@@ -71,8 +71,11 @@ class _DayCardScrollState extends State<DayCardScroll> {
     _next();
   }
 
-  /// Scrolls the now point a little below the top, unless the row's head
-  /// already sits clear of the floating controls.
+  /// Scrolls the now row's top to the top edge, so the edge falls between
+  /// rows and never cuts the line above in half (ED-392); a live task too
+  /// long for its now point to show from there scrolls the now point a
+  /// little below the top instead. Stays put when the row's head already
+  /// sits clear of the floating controls.
   void _reveal(RenderBox row) {
     final p = _controller.position;
     final top = RenderAbstractViewport.of(row).getOffsetToReveal(row, 0).offset;
@@ -83,7 +86,8 @@ class _DayCardScrollState extends State<DayCardScroll> {
     final tail = (row.size.height - (y - top)).clamp(0.0, DotSize.threadDot);
     _settle();
     if (y >= p.pixels && y + tail <= p.pixels + clear) return;
-    final target = (y - DotSpace.xl).clamp(
+    final fits = y + tail <= top + clear;
+    final target = (fits ? top : y - DotSpace.xl).clamp(
       p.minScrollExtent,
       p.maxScrollExtent,
     );

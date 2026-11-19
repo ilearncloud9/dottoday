@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
@@ -201,7 +202,12 @@ class DayPage extends ConsumerWidget {
                 ? dayHours(
                     entries,
                     zone: data.day.location,
-                    pxPerMinute: DotSize.gridDayHour / Duration.minutesPerHour,
+                    // Touch sizes: the grid's 96 an hour (ED-269, owner).
+                    pxPerMinute:
+                        (watchTouchContent(context, ref)
+                            ? DotSize.gridTouchHour
+                            : DotSize.gridDayHour) /
+                        Duration.minutesPerHour,
                     label: (local) => DateFormat.j(
                       _locale(context),
                     ).format(DateTime(2026, 1, 1, local.hour)),

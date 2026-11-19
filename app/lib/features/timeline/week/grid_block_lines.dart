@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
@@ -54,18 +55,18 @@ class _Block extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    const pad = DotSpace.xs + DotSpace.hairline;
+    final scale = GridScale.of(context);
     return Padding(
-      padding: const EdgeInsets.all(pad),
+      padding: EdgeInsets.all(scale.blockPad),
       child: ClipRect(
         child: OverflowBox(
           alignment: Alignment.topLeft,
           maxHeight: double.infinity,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: DotSpace.xs + DotSpace.xxs,
+            spacing: scale.touch ? DotSpace.s : DotSpace.xs + DotSpace.xxs,
             children: [
-              _ring(task, DotSize.gridRing),
+              _ring(task, scale.ringFor(live: task.state == DotState.live)),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: DotSpace.hairline),
@@ -77,15 +78,15 @@ class _Block extends StatelessWidget {
                         task.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: t.styles.gridTitle.copyWith(
-                          color: _titleColor(t.colors, task),
-                        ),
+                        style: scale
+                            .title(t.styles)
+                            .copyWith(color: _titleColor(t.colors, task)),
                       ),
                       Text(
                         _time(context.l10n, task),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: t.styles.gridMeta,
+                        style: scale.meta(t.styles),
                       ),
                     ],
                   ),
@@ -117,33 +118,41 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    // The dot's centre sits on the thread, 25 in from the column's edge.
-    const left =
-        DotSize.gridThreadX +
-        DotSize.gridThread / 2 -
-        DotSize.gridInset -
-        DotSize.gridPillDot / 2;
+    final scale = GridScale.of(context);
+    return LayoutBuilder(
+      builder: (context, box) {
+        final dot = scale.pillDot(box.maxHeight);
+        // The dot's centre sits on the thread (pointer: 25 in from the
+        // column's edge).
+        final left =
+            scale.threadX +
+            DotSize.gridThread / 2 -
+            DotSize.gridInset -
+            dot / 2;
+        return _pillRow(t, scale, dot, left);
+      },
+    );
+  }
+
+  Widget _pillRow(DotTheme t, GridScale scale, double dot, double left) {
     return ClipRect(
       child: OverflowBox(
         alignment: AlignmentDirectional.centerStart,
         maxHeight: double.infinity,
         child: Padding(
-          padding: const EdgeInsetsDirectional.only(
-            start: left,
-            end: DotSpace.xs,
-          ),
+          padding: EdgeInsetsDirectional.only(start: left, end: DotSpace.xs),
           child: Row(
-            spacing: DotSpace.s - DotSpace.xxs / 2,
+            spacing: scale.touch ? DotSpace.s : DotSpace.s - DotSpace.xxs / 2,
             children: [
-              _ring(task, DotSize.gridPillDot),
+              _ring(task, dot),
               Expanded(
                 child: Text(
                   task.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: t.styles.gridPill.copyWith(
-                    color: _titleColor(t.colors, task),
-                  ),
+                  style: scale
+                      .pill(t.styles)
+                      .copyWith(color: _titleColor(t.colors, task)),
                 ),
               ),
             ],
@@ -164,8 +173,9 @@ class _Narrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final scale = GridScale.of(context);
     return Padding(
-      padding: const EdgeInsets.all(DotSpace.xs),
+      padding: EdgeInsets.all(scale.touch ? DotSpace.s : DotSpace.xs),
       child: ClipRect(
         child: OverflowBox(
           alignment: Alignment.topLeft,
@@ -176,16 +186,18 @@ class _Narrow extends StatelessWidget {
             children: [
               _ring(
                 task,
-                DotSize.gridPillDot + DotSpace.xs - DotSpace.hairline,
+                scale.touch
+                    ? DotSize.gridTouchPillDotTall
+                    : DotSize.gridPillDot + DotSpace.xs - DotSpace.hairline,
               ),
               Expanded(
                 child: Text(
                   task.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: t.styles.gridPill.copyWith(
-                    color: _titleColor(t.colors, task),
-                  ),
+                  style: scale
+                      .pill(t.styles)
+                      .copyWith(color: _titleColor(t.colors, task)),
                 ),
               ),
             ],

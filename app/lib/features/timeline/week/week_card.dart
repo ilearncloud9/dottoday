@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/week/grid_block_lines.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -28,6 +29,7 @@ class WeekCard extends StatefulWidget {
     required this.height,
     this.narrow = false,
     this.lifted = false,
+    this.over = false,
     this.picked = false,
     this.onOpen,
     this.onCue,
@@ -43,6 +45,9 @@ class WeekCard extends StatefulWidget {
 
   /// The copy under the pointer while it is dragged: the soft lift.
   final bool lifted;
+
+  /// Stacked over an earlier overlap at touch sizes (E-R2-2): raised.
+  final bool over;
 
   /// In the Workspace inspector: the 2 px ink edge (E-FullA-v2).
   final bool picked;
@@ -64,11 +69,12 @@ class _WeekCardState extends State<WeekCard> {
   bool _hover = false;
   bool _focused = false;
 
-  /// Tall enough for the cue under the title and time (an hour).
-  static const double _cueRoom = DotSize.gridHour - DotSpace.s;
-
   ThreadTask get _task => widget.task;
-  bool get _pill => _task.minutes < WeekScale.pillUnder;
+  GridScale get _scale => GridScale.of(context);
+  bool get _pill => _task.minutes < _scale.pillUnder;
+
+  /// Tall enough for the cue under the title and time (an hour).
+  double get _cueRoom => _scale.hour - DotSpace.s;
 
   /// Blocks that drag (ED-116); calendar events stay as they are.
   bool get _eligible => _task.movable && !_task.imported;
@@ -81,7 +87,7 @@ class _WeekCardState extends State<WeekCard> {
     final cueLine =
         cue != null && !_pill && !widget.narrow && widget.height >= _cueRoom;
     final radius = BorderRadius.circular(
-      _pill ? DotSize.gridPill / 2 : DotRadii.block,
+      _pill ? _scale.pillRadius(widget.height) : DotRadii.block,
     );
     final hover = _hover && _eligible;
     // High contrast never leans on the fill or the shadow (ED-116).
@@ -122,11 +128,13 @@ class _WeekCardState extends State<WeekCard> {
             )
           : body,
     );
-    if (widget.lifted) {
+    if (widget.lifted || widget.over) {
       card = DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: radius,
-          boxShadow: DotElevation.blockLift(c),
+          boxShadow: widget.lifted
+              ? DotElevation.blockLift(c)
+              : DotElevation.blockOver(c),
         ),
         child: card,
       );

@@ -6,6 +6,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
+import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -15,6 +16,7 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/grid_axis.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
@@ -63,6 +65,10 @@ class WeekView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Touch sizes on tablets and touch-first web (ED-269).
+    final scale = watchTouchContent(context, ref)
+        ? GridScale.touchSizes
+        : GridScale.pointer;
     final zone = data.first.day.location;
     final shapes = [
       for (final d in data)
@@ -79,7 +85,7 @@ class WeekView extends ConsumerWidget {
     final summary = WeekSummary.of(loads);
     final (first, last) = gridAxisHours(shapes, data, zone);
     final axisMinutes =
-        (last - first) * Duration.minutesPerHour + WeekScale.leadMinutes * 2;
+        (last - first) * Duration.minutesPerHour + GridScale.leadMinutes * 2;
     final todayAt = days.indexOf(today);
     final axisStart = todayAt < 0 ? null : _axisStart(zone, today, first);
     final use24h = use24hFor(context, profile.settings.use24h);
@@ -92,7 +98,7 @@ class WeekView extends ConsumerWidget {
           ? null
           : nowUtc.difference(axisStart).inSeconds /
                 Duration.secondsPerMinute *
-                WeekScale.pxPerMinute,
+                scale.pxPerMinute,
       nowText: timeOfUtc(context, zone, nowUtc, use24h: use24h),
       long: !cues,
       columns: [
@@ -100,7 +106,7 @@ class WeekView extends ConsumerWidget {
           _column(context, ref, d, shapes[i], first, axisMinutes),
       ],
     );
-    if (!cues) return _keys(board);
+    if (!cues) return _keys(GridScaleScope(scale: scale, child: board));
     // The header (or, in the Workspace, the cue chips) over the grid; the
     // grid runs to the content's edges (E-FullA-v2 Week).
     return _keys(
@@ -126,7 +132,9 @@ class WeekView extends ConsumerWidget {
                 ),
               ),
             ),
-            Expanded(child: board),
+            Expanded(
+              child: GridScaleScope(scale: scale, child: board),
+            ),
           ],
         ),
       ),
@@ -164,7 +172,7 @@ class WeekView extends ConsumerWidget {
   static DateTime _axisStart(tz.Location zone, DateTime date, int firstHour) =>
       ClockTime(firstHour, 0)
           .onDate(zone, date)
-          .subtract(const Duration(minutes: WeekScale.leadMinutes));
+          .subtract(const Duration(minutes: GridScale.leadMinutes));
 
   Widget _column(
     BuildContext context,

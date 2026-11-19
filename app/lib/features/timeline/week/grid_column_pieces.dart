@@ -1,19 +1,23 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
 /// Lane [lane] of [lanes] across the column, inside its 4 px insets, 6
-/// apart.
+/// apart. [stacked] (touch, E-R2-2): the first keeps the whole column and
+/// each later lane sits over it one ring further in, to the same edge.
 class GridLane extends StatelessWidget {
   const GridLane({
     super.key,
     required this.lane,
     required this.lanes,
     required this.child,
+    this.stacked = false,
   });
 
   final int lane;
   final int lanes;
+  final bool stacked;
   final Widget child;
 
   static const _gap = DotSpace.xs + DotSpace.xxs;
@@ -22,11 +26,14 @@ class GridLane extends StatelessWidget {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
       final inner = box.maxWidth - DotSize.gridInset * 2;
-      final width = (inner - _gap * (lanes - 1)) / lanes;
+      final width = stacked
+          ? inner - lane * DotSize.gridTouchRing
+          : (inner - _gap * (lanes - 1)) / lanes;
+      final start = stacked
+          ? lane * DotSize.gridTouchRing
+          : lane * (width + _gap);
       return Padding(
-        padding: EdgeInsetsDirectional.only(
-          start: DotSize.gridInset + lane * (width + _gap),
-        ),
+        padding: EdgeInsetsDirectional.only(start: DotSize.gridInset + start),
         child: Align(
           alignment: AlignmentDirectional.topStart,
           child: SizedBox(width: width, child: child),
@@ -106,12 +113,13 @@ List<Widget> gridDropPreview(
 }) {
   final t = DotTheme.of(context);
   final c = t.colors;
+  final scale = GridScale.of(context);
   return [
     Positioned(
       left: DotSize.gridInset,
       right: DotSize.gridInset,
       top: top,
-      height: height < DotSize.gridPill ? DotSize.gridPill : height,
+      height: height < scale.minCard ? scale.minCard : height,
       child: IgnorePointer(
         child: CustomPaint(
           foregroundPainter: DashedPillPainter(
@@ -132,7 +140,7 @@ List<Widget> gridDropPreview(
                 label,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: t.styles.gridPill.copyWith(color: c.accentText),
+                style: scale.pill(t.styles).copyWith(color: c.accentText),
               ),
             ),
           ),

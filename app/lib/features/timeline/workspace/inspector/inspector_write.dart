@@ -69,8 +69,14 @@ final class InspectorSizes {
 
 /// Whether the inspector docks beside a [available]-wide grid: from 1160
 /// window width, when the grid keeps 3 days of 144 and its hours (ED-170
-/// C1, 476); otherwise it floats over the grid.
-bool inspectorDocks(BuildContext context, {required double available}) {
+/// C1, 476); otherwise it floats over the grid. At [touch] sizes it always
+/// floats (E-R2-2, ED-269).
+bool inspectorDocks(
+  BuildContext context, {
+  required double available,
+  required bool touch,
+}) {
+  if (touch) return false;
   if (AppLayout.classOf(context) != WidthClass.expanded) return false;
   if (MediaQuery.sizeOf(context).width < AppLayout.dockFrom) return false;
   return available - DotSize.inspector - DotSpace.hairline >=

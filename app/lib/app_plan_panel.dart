@@ -36,10 +36,12 @@ class PlanPanelFrame extends ConsumerWidget {
     final prefs = ref.watch(planPanelProvider).value ?? const PlanPanelPrefs();
     final out = ref.watch(planPanelOutProvider);
     final view = InboxBeside(child: child);
+    final touch = watchTouchContent(context, ref);
     return LayoutBuilder(
       builder: (context, box) {
         final docked =
-            !prefs.hidden && planPanelHasRoom(box.maxWidth, prefs.width);
+            !prefs.hidden &&
+            planPanelHasRoom(box.maxWidth, prefs.width, touch: touch);
         if (docked) {
           final c = DotTheme.of(context).colors;
           return Row(

@@ -45,6 +45,11 @@ final class DotType {
     required this.gridTitle,
     required this.gridMeta,
     required this.gridPill,
+    required this.gridTitleTouch,
+    required this.gridMetaTouch,
+    required this.gridPillTouch,
+    required this.gridHourTouch,
+    required this.gridDayMetaTouch,
     required this.gridDate,
     required this.gridDayMeta,
     required this.gridHour,
@@ -127,6 +132,13 @@ final class DotType {
     gridTitle: _manrope(12.5, 15, 700, text),
     gridMeta: _manrope(11, 15, 400, muted),
     gridPill: _manrope(11, 13, 700, text),
+    // The same grid at touch sizes (E-R2-2, ED-269): titles 17, times 13,
+    // a short task's pill 15, hour labels and day meta 13.
+    gridTitleTouch: _manrope(17, 21.25, 700, text),
+    gridMetaTouch: _manrope(13, 16.25, 400, muted),
+    gridPillTouch: _manrope(15, 20, 700, text),
+    gridHourTouch: _manrope(13, 16, 400, muted),
+    gridDayMetaTouch: _manrope(13, 18, 700, muted),
     gridDate: _manrope(17, 22, 800, text),
     gridDayMeta: _manrope(12, 16, 700, muted),
     gridHour: _manrope(11, 14, 400, muted),
@@ -289,6 +301,11 @@ final class DotType {
   final TextStyle gridTitle;
   final TextStyle gridMeta;
   final TextStyle gridPill;
+  final TextStyle gridTitleTouch;
+  final TextStyle gridMetaTouch;
+  final TextStyle gridPillTouch;
+  final TextStyle gridHourTouch;
+  final TextStyle gridDayMetaTouch;
   final TextStyle gridDate;
   final TextStyle gridDayMeta;
   final TextStyle gridHour;
@@ -382,6 +399,11 @@ final class DotType {
       gridTitle: l(gridTitle, other.gridTitle),
       gridMeta: l(gridMeta, other.gridMeta),
       gridPill: l(gridPill, other.gridPill),
+      gridTitleTouch: l(gridTitleTouch, other.gridTitleTouch),
+      gridMetaTouch: l(gridMetaTouch, other.gridMetaTouch),
+      gridPillTouch: l(gridPillTouch, other.gridPillTouch),
+      gridHourTouch: l(gridHourTouch, other.gridHourTouch),
+      gridDayMetaTouch: l(gridDayMetaTouch, other.gridDayMetaTouch),
       gridDate: l(gridDate, other.gridDate),
       gridDayMeta: l(gridDayMeta, other.gridDayMeta),
       gridHour: l(gridHour, other.gridHour),

@@ -202,6 +202,25 @@ abstract final class DotSize {
   /// and the 44 hour labels (ED-170). Narrower, the panel hides itself.
   static const double weekGridMin = 3 * gridColumn + gridGutter;
 
+  /// The hour grid at touch sizes (E-R2-2, ED-269): 96 px an hour, columns
+  /// at least 180 under a 60 header; rings 36, the live task's 45; a short
+  /// task (under 35 min) is a pill at least 20 tall, its dot 28 from 44
+  /// tall and 24 below, its corners at most 16.
+  static const double gridTouchHour = 96;
+  static const double gridTouchColumn = 180;
+  static const double gridTouchHeader = 60;
+  static const double gridTouchRing = 36;
+  static const double gridTouchLiveRing = 45;
+  static const double gridTouchPill = 20;
+  static const double gridTouchPillTall = 44;
+  static const double gridTouchPillDot = 24;
+  static const double gridTouchPillDotTall = 28;
+  static const double gridTouchPillRadius = 16;
+
+  /// The narrowest touch week grid the Plan panel leaves room for: 3 days
+  /// of 180 and the hour labels (ED-269).
+  static const double weekGridTouchMin = 3 * gridTouchColumn + gridGutter;
+
   /// Window widths from which the toolbar has room for "Search or run" in
   /// full (rules §12.3): the board's 1280 has it; touch sizes need more.
   static const double workspaceToolbarRoom = 1100;
@@ -485,6 +504,17 @@ abstract final class DotElevation {
       color: c.shadow.withValues(alpha: 0.1),
       offset: const Offset(0, 8),
       blurRadius: 18,
+    ),
+  ];
+
+  /// A later overlap stacked over a block at touch sizes (E-R2-2's Call
+  /// with Sam): a 1 px ring at 10 % and `0 4 12` at 12 %.
+  static List<BoxShadow> blockOver(DotColors c) => [
+    BoxShadow(color: c.shadow.withValues(alpha: 0.1), spreadRadius: 1),
+    BoxShadow(
+      color: c.shadow.withValues(alpha: 0.12),
+      offset: const Offset(0, 4),
+      blurRadius: 12,
     ),
   ];
 

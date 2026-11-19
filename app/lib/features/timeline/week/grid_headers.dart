@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +43,7 @@ class GridDayHeader extends StatelessWidget {
       ),
       excludeSemantics: true,
       child: Container(
-        constraints: const BoxConstraints(minHeight: DotSize.gridHeader),
+        constraints: BoxConstraints(minHeight: GridScale.of(context).header),
         color: isToday ? c.gridTodayHead : null,
         padding: const EdgeInsets.symmetric(
           horizontal: DotSpace.s + DotSpace.xxs,
@@ -54,11 +55,13 @@ class GridDayHeader extends StatelessWidget {
             Text(
               isToday ? l10n.weekTodayDay(day) : day,
               style: isToday
-                  ? t.styles.gridHour.copyWith(
-                      color: c.accentText,
-                      fontWeight: FontWeight.w700,
-                    )
-                  : t.styles.gridHour,
+                  ? GridScale.of(context)
+                        .hourLabel(t.styles)
+                        .copyWith(
+                          color: c.accentText,
+                          fontWeight: FontWeight.w700,
+                        )
+                  : GridScale.of(context).hourLabel(t.styles),
             ),
             Wrap(
               spacing: DotSpace.xs + DotSpace.xxs,
@@ -71,8 +74,10 @@ class GridDayHeader extends StatelessWidget {
                 Text(
                   meta,
                   style: isToday
-                      ? t.styles.gridDayMeta.copyWith(color: c.ink2)
-                      : t.styles.gridDayMeta,
+                      ? GridScale.of(
+                          context,
+                        ).dayMeta(t.styles).copyWith(color: c.ink2)
+                      : GridScale.of(context).dayMeta(t.styles),
                 ),
               ],
             ),
@@ -118,7 +123,7 @@ class GridLongHeader extends StatelessWidget {
       label: l10n.statusHintJoin(title, meta),
       excludeSemantics: true,
       child: Container(
-        constraints: const BoxConstraints(minHeight: DotSize.gridHeader),
+        constraints: BoxConstraints(minHeight: GridScale.of(context).header),
         color: isToday ? c.gridTodayHead : null,
         padding: const EdgeInsets.symmetric(
           horizontal: DotSpace.s + DotSpace.xxs,
@@ -129,11 +134,11 @@ class GridLongHeader extends StatelessWidget {
           children: [
             Text(
               title,
-              style: t.styles.gridTitle.copyWith(
-                color: isToday ? c.accentText : null,
-              ),
+              style: GridScale.of(
+                context,
+              ).title(t.styles).copyWith(color: isToday ? c.accentText : null),
             ),
-            Text(meta, style: t.styles.gridMeta),
+            Text(meta, style: GridScale.of(context).meta(t.styles)),
           ],
         ),
       ),

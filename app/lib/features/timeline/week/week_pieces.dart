@@ -2,22 +2,6 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
-/// The hour grid's scale (E-FullA-v2 Week: 84 px an hour, a short task
-/// a 21 tall pill).
-abstract final class WeekScale {
-  static const double pxPerMinute = DotSize.gridHour / Duration.minutesPerHour;
-  static const double minCard = DotSize.gridPill;
-
-  /// Shorter than this a task is a one-line pill (a 30 min task is a 42
-  /// tall block, E-FullA-v2's Dentist).
-  static const int pillUnder = 30;
-
-  /// The axis starts half an hour before its first whole hour, so that
-  /// hour's label and line clear the day headers (E-FullA-v2: 7 AM 42
-  /// below them).
-  static const int leadMinutes = 30;
-}
-
 /// One day as the board draws it.
 @immutable
 final class WeekDayView {

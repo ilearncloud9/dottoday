@@ -4,7 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
 import 'package:dottoday/features/timeline/week/grid_gutter.dart';
 import 'package:dottoday/features/timeline/week/grid_headers.dart';
-import 'package:dottoday/features/timeline/week/week_pieces.dart';
+import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/shared/dot/thread.dart' show hourGutter;
 import 'package:flutter/material.dart';
 
@@ -61,7 +61,7 @@ class _WeekBoardState extends State<WeekBoard> {
     _down = ScrollController(
       initialScrollOffset: now == null
           ? 0
-          : math.max(0, now - DotSize.gridHour * 2),
+          : math.max(0, now - GridScale.peek(context).hour * 2),
     );
     _across.addListener(() {
       if (_heads.hasClients) _heads.jumpTo(_across.offset);
@@ -76,7 +76,7 @@ class _WeekBoardState extends State<WeekBoard> {
     super.dispose();
   }
 
-  double get _height => widget.axisMinutes * WeekScale.pxPerMinute;
+  double get _height => widget.axisMinutes * GridScale.of(context).pxPerMinute;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -84,7 +84,8 @@ class _WeekBoardState extends State<WeekBoard> {
       final gutter = hourGutter(context);
       final room = box.maxWidth - gutter;
       final n = widget.columns.length;
-      final width = math.max(DotSize.gridColumn, room / n);
+      final width = math.max(GridScale.of(context).column, room / n);
+      _showToday(width, room);
       return ColoredBox(
         color: DotTheme.of(context).colors.canvas,
         child: Column(
@@ -104,6 +105,22 @@ class _WeekBoardState extends State<WeekBoard> {
       );
     },
   );
+
+  bool _placed = false;
+
+  /// Opens with today in view when the days don't all fit, the day before
+  /// it at the left (E-R2-2: Tue–Thu, today second; ED-169 on the Mac).
+  void _showToday(double width, double room) {
+    if (_placed) return;
+    _placed = true;
+    final i = widget.loads.indexWhere((d) => d.date == widget.today);
+    if (i < 0 || (i + 1) * width <= room) return;
+    final x = math.max(0, i - 1) * width;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_across.hasClients) return;
+      _across.jumpTo(math.min(x, _across.position.maxScrollExtent));
+    });
+  }
 
   /// The day headers over the columns, moving sideways with them; a
   /// hairline under them. At large text they grow and scroll themselves.

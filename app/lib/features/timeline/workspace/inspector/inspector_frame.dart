@@ -1,6 +1,7 @@
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_write.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,13 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
         child: LayoutBuilder(
           builder: (context, box) => _layout(
             context,
-            docked: shown && inspectorDocks(context, available: box.maxWidth),
+            docked:
+                shown &&
+                inspectorDocks(
+                  context,
+                  available: box.maxWidth,
+                  touch: watchTouchContent(context, ref),
+                ),
             panel: shown ? WorkspaceInspector(key: ValueKey(id), id: id) : null,
           ),
         ),
