@@ -38,7 +38,12 @@ class StepLengthChip extends StatelessWidget {
     return Semantics(
       onTapHint: l10n.stepLengthHint(title),
       child: OutlinedButton(
-        onPressed: onChanged == null ? null : () => unawaited(_pick(context)),
+        onPressed: switch (onChanged) {
+          final change? => () => unawaited(
+            pickStepLength(context, minutes: minutes, onChanged: change),
+          ),
+          null => null,
+        },
         style: OutlinedButton.styleFrom(
           shape: dotChipShape(context),
           side: BorderSide(color: t.colors.outline),
@@ -56,21 +61,28 @@ class StepLengthChip extends StatelessWidget {
       ),
     );
   }
+}
 
-  Future<void> _pick(BuildContext context) async {
-    final l10n = context.l10n;
-    // 0 is "No time": null from the sheet means it was dismissed.
-    final picked = await showChoiceSheet<int>(
-      context,
-      title: l10n.stepLengthTitle,
-      selected: minutes ?? 0,
-      options: [
-        (value: 0, label: l10n.stepLengthNone, detail: null),
-        for (final m in stepLengthChoices)
-          (value: m, label: formatDuration(l10n, m), detail: null),
-      ],
-    );
-    if (picked == null || picked == (minutes ?? 0)) return;
-    onChanged?.call(picked == 0 ? null : picked);
-  }
+/// Picks a step's length (11 B2): "No time" or one of [stepLengthChoices];
+/// [onChanged] gets the pick (null for No time), and nothing on dismiss or
+/// the same length. The chip's tap and the quiet step row's ⋯ use it.
+Future<void> pickStepLength(
+  BuildContext context, {
+  required int? minutes,
+  required ValueChanged<int?> onChanged,
+}) async {
+  final l10n = context.l10n;
+  // 0 is "No time": null from the sheet means it was dismissed.
+  final picked = await showChoiceSheet<int>(
+    context,
+    title: l10n.stepLengthTitle,
+    selected: minutes ?? 0,
+    options: [
+      (value: 0, label: l10n.stepLengthNone, detail: null),
+      for (final m in stepLengthChoices)
+        (value: m, label: formatDuration(l10n, m), detail: null),
+    ],
+  );
+  if (picked == null || picked == (minutes ?? 0)) return;
+  onChanged(picked == 0 ? null : picked);
 }

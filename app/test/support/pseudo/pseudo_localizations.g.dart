@@ -1843,6 +1843,21 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String subtaskRemove(String title) => pseudo(super.subtaskRemove(title));
 
   @override
+  String subtaskMenu(String title) => pseudo(super.subtaskMenu(title));
+
+  @override
+  String get subtaskSetTime => pseudo(super.subtaskSetTime);
+
+  @override
+  String get taskPullUp => pseudo(super.taskPullUp);
+
+  @override
+  String editorSavedAt(String time) => pseudo(super.editorSavedAt(time));
+
+  @override
+  String get editorTimeSheet => pseudo(super.editorTimeSheet);
+
+  @override
   String subtaskReorder(String title) => pseudo(super.subtaskReorder(title));
 
   @override

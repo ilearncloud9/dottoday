@@ -1,17 +1,9 @@
 import 'dart:async';
 
-import 'package:dottoday/core/clock/clock.dart';
-import 'package:dottoday/core/clock/clock_provider.dart';
-import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/trash/trash_providers.dart';
-import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/domain/icon_guess/title_look.dart';
-import 'package:dottoday/domain/scheduling/step_lengths.dart';
-import 'package:dottoday/domain/scheduling/task_progress.dart' as progress;
+import 'package:dottoday/features/timeline/editor/editor_draft.dart';
 import 'package:dottoday/features/timeline/editor/editor_duration.dart';
 import 'package:dottoday/features/timeline/editor/editor_energy.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
@@ -19,13 +11,11 @@ import 'package:dottoday/features/timeline/editor/editor_footer.dart';
 import 'package:dottoday/features/timeline/editor/editor_notes.dart';
 import 'package:dottoday/features/timeline/editor/editor_series.dart';
 import 'package:dottoday/features/timeline/editor/editor_sound.dart';
-import 'package:dottoday/features/timeline/editor/editor_writer.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/widgets/calendar_write_line.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
-import 'package:dottoday/shared/pickers/travel_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,122 +86,33 @@ class _Form extends ConsumerStatefulWidget {
   ConsumerState<_Form> createState() => _FormState();
 }
 
-class _FormState extends ConsumerState<_Form> {
-  late Occurrence _draft = widget.task.occurrence;
-
-  /// As opened: the scope question compares the draft with it (M3f.1).
-  /// Set in initState: a lazy read would see the autosaved row.
-  late final Occurrence _opened;
-  late final _title = TextEditingController(text: _draft.title);
-  late final _look = TitleLook(widget.task.occurrence);
-  late final EditorWriter _writer;
-  late final Clock _clock;
-  late final _autosave = DraftAutosave(
-    () => _writer.write(
-      _draft,
-      keepTitle: widget.task.occurrence.title,
-      nowUtc: _clock.nowUtc(),
-      closed: () => !mounted,
-    ),
-  );
-
-  /// A failed write: shown with Try again; Save waits for one (R-08).
-  AppFailure? _failure;
+class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
+  @override
+  TaskView get task => widget.task;
 
   @override
-  void initState() {
-    super.initState();
-    _opened = widget.task.occurrence;
-    _writer = EditorWriter(
-      undo: ref.read(undoServiceProvider),
-      logger: ref.read(loggerProvider),
-    );
-    _clock = ref.read(clockProvider);
-  }
+  VoidCallback? get onClose => widget.onClose;
 
   // A step's length changed below: follow it (M10.3).
   @override
   void didUpdateWidget(covariant _Form old) {
     super.didUpdateWidget(old);
-    final next = followSteps(_draft, widget.task.subtasks);
-    if (next.durationMin == _draft.durationMin) return;
-    _draft = next; // build follows didUpdateWidget
-    _autosave.touch(_flush);
+    followStepLengths();
   }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _writer.attach(context);
-  }
-
-  @override
-  void dispose() {
-    _flush();
-    _title.dispose();
-    super.dispose();
-  }
-
-  void _change(Occurrence Function(Occurrence) edit) {
-    setState(() => _draft = edit(_draft));
-    _autosave.touch(_flush);
-  }
-
-  void _flush() => unawaited(_flushNow());
-
-  /// Writes the draft if it changed; whether everything typed is written.
-  Future<bool> _flushNow() async {
-    if (!_autosave.dirty) return true;
-    final failure = await _autosave.flush();
-    if (mounted) setState(() => _failure = failure);
-    return failure == null;
-  }
-
-  /// Save (⏎, ⌘S): write now, ask which instances of a repeating task it
-  /// applies to (M3f.1), and leave — unless the write failed.
-  void _save() => unawaited(_saveNow());
-
-  Future<void> _saveNow() async {
-    if (!await _flushNow() || !mounted) return;
-    final saved = await saveScoped(
-      context,
-      task: widget.task,
-      opened: _opened,
-      draft: _draft,
-    );
-    if (!saved || !mounted) return;
-    final close = widget.onClose;
-    close == null ? Navigator.of(context).pop() : close();
-  }
-
-  /// The Repeat row: what is typed is saved first.
-  Future<void> _repeat() async {
-    if (!await _flushNow() || !mounted) return;
-    await pickRepeat(context, task: widget.task, draft: _draft);
-  }
-
-  /// The Travel time row (M7.5, R-17).
-  Future<void> _travel() async {
-    final m = await pickTravelTime(context, current: _draft.travelBufferMin);
-    if (m != null && mounted) _change((o) => o.copyWith(travelBufferMin: m));
-  }
-
-  /// ⌘D: done, or planned again, written with the other edits.
-  void _toggleDone() => _change((o) => progress.toggleDone(o, _clock.nowUtc()));
 
   @override
   Widget build(BuildContext context) {
     final p = defaultTargetPlatform;
     return CallbackShortcuts(
       bindings: {
-        AppShortcuts.activator(p, LogicalKeyboardKey.keyS): _save,
+        AppShortcuts.activator(p, LogicalKeyboardKey.keyS): save,
         // ⌘D is the browser's bookmark key on the web (ED-095).
         if (!webChrome(context))
-          AppShortcuts.activator(p, LogicalKeyboardKey.keyD): _toggleDone,
+          AppShortcuts.activator(p, LogicalKeyboardKey.keyD): toggleDone,
       },
       child: SaveFailureFrame(
-        failure: _failure,
-        onRetry: _save,
+        failure: failure,
+        onRetry: save,
         child: _fields(context),
       ),
     );
@@ -221,7 +122,7 @@ class _FormState extends ConsumerState<_Form> {
     final navigator = Navigator.of(context);
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final zone = tz.getLocation(_draft.tzId);
+    final zone = tz.getLocation(draft.tzId);
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         DotSpace.page,
@@ -233,68 +134,68 @@ class _FormState extends ConsumerState<_Form> {
         if (widget.caption)
           Text(l10n.editorCaption.toUpperCase(), style: t.styles.caption),
         EditorTitleField(
-          controller: _title,
+          controller: title,
           autofocus: widget.autofocus,
-          onSubmitted: _save,
+          onSubmitted: save,
           onChanged: (v) =>
-              _change((o) => _look.retitle(o, v, language: l10n.localeName)),
+              change((o) => look.retitle(o, v, language: l10n.localeName)),
         ),
         const SizedBox(height: DotSpace.l),
         ColourIconBlock(
-          color: TaskColor.fromKey(_draft.colorKey),
-          icon: TaskIcon.fromKey(_draft.iconKey),
-          onColor: (c) => _change((o) => _look.pickColor(o, c.key)),
-          onIcon: (i) => _change((o) => _look.pickIcon(o, i.key)),
+          color: TaskColor.fromKey(draft.colorKey),
+          icon: TaskIcon.fromKey(draft.iconKey),
+          onColor: (c) => change((o) => look.pickColor(o, c.key)),
+          onIcon: (i) => change((o) => look.pickIcon(o, i.key)),
         ),
         const SizedBox(height: DotSpace.l),
-        if (_draft.startUtc case final start?)
+        if (draft.startUtc case final start?)
           WhenFields(
             startUtc: start,
-            endUtc: _draft.endUtc!,
+            endUtc: draft.endUtc!,
             zone: zone,
             onWhen: (start, id) =>
-                _change((o) => o.copyWith(startUtc: start, tzId: id)),
+                change((o) => o.copyWith(startUtc: start, tzId: id)),
           ),
         EditorDuration.withSteps(
-          task: _draft,
+          task: draft,
           steps: widget.task.subtasks,
-          edit: _change,
+          edit: change,
         ),
         const SizedBox(height: DotSpace.l),
         RepeatAlertRows(
           task: widget.task,
-          onRepeat: _draft.startUtc == null ? null : () => unawaited(_repeat()),
-          travelMin: _draft.travelBufferMin,
-          onTravel: _draft.startUtc == null ? null : () => unawaited(_travel()),
-          pinned: _draft.pinned,
-          onPinned: (v) => _change((o) => o.copyWith(pinned: v)),
-          onAlerts: alertsRowTap(context, widget.task, _draft, _change),
-          soundText: soundRowText(context, ref, widget.task, _draft),
-          onSound: soundRowTap(context, widget.task, _draft, _change),
+          onRepeat: draft.startUtc == null ? null : () => unawaited(repeat()),
+          travelMin: draft.travelBufferMin,
+          onTravel: draft.startUtc == null ? null : () => unawaited(travel()),
+          pinned: draft.pinned,
+          onPinned: (v) => change((o) => o.copyWith(pinned: v)),
+          onAlerts: alertsRowTap(context, widget.task, draft, change),
+          soundText: soundRowText(context, ref, widget.task, draft),
+          onSound: soundRowTap(context, widget.task, draft, change),
         ),
         const SizedBox(height: DotSpace.l),
         SheetSubtasks(task: widget.task, editing: true),
         EditorEnergy(
-          energy: _draft.energy,
-          onChanged: (e) => _change((o) => o.copyWith(energy: e)),
+          energy: draft.energy,
+          onChanged: (e) => change((o) => o.copyWith(energy: e)),
         ),
         EditorNotes(
-          notes: _draft.notes,
-          onChanged: (v) => _change((o) => o.copyWith(notes: v)),
+          notes: draft.notes,
+          onChanged: (v) => change((o) => o.copyWith(notes: v)),
         ),
-        CalendarWriteLine(linkId: _draft.calendarLinkId),
+        CalendarWriteLine(linkId: draft.calendarLinkId),
         const SizedBox(height: DotSpace.xl),
         EditorFooter(
-          task: _draft,
-          onSave: _save,
+          task: draft,
+          onSave: save,
           scopedDelete: !widget.task.repeats
               ? null
-              : () => deleteScoped(context, task: widget.task, target: _draft),
+              : () => deleteScoped(context, task: widget.task, target: draft),
           // Back to the page: the sheet below would show a task now gone.
           // The navigator is taken now: a delete that reaches a calendar
           // can outlast the editor, which closes when its task goes.
           onLeft: widget.onClose ?? () => navigator.popUntil((r) => r.isFirst),
-          beforeLeave: () => _autosave.dirty = false,
+          beforeLeave: leaving,
         ),
       ],
     );

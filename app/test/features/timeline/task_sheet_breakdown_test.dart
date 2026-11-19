@@ -50,12 +50,18 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Deep work: roadmap'));
     await tester.pumpAndSettle();
-    final button = find.descendant(
-      of: find.byType(BottomSheet),
-      matching: find.text('Break it down'),
+    // Option D (ED-086): Break it down is in ⋯; the sheet closes for the
+    // proposal (M10.4).
+    await tester.tap(
+      find.descendant(
+        of: find.byType(BottomSheet),
+        matching: find.byTooltip('More options'),
+      ),
     );
-    await tester.ensureVisible(button);
-    await tester.tap(button);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Break it down').last);
+    await tester.pumpAndSettle();
     expect(asked, [deep.id]);
+    expect(find.byType(BottomSheet), findsNothing);
   });
 }

@@ -2391,6 +2391,25 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String subtaskMenu(String title) {
+    return 'Options for $title';
+  }
+
+  @override
+  String get subtaskSetTime => 'Set a time';
+
+  @override
+  String get taskPullUp => 'Pull up for date, alerts, steps and notes';
+
+  @override
+  String editorSavedAt(String time) {
+    return 'Saved · $time';
+  }
+
+  @override
+  String get editorTimeSheet => 'Time and length';
+
+  @override
   String subtaskReorder(String title) {
     return 'Reorder $title';
   }

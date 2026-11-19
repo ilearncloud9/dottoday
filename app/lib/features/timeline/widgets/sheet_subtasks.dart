@@ -18,6 +18,7 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/subtask_row.dart';
+import 'package:dottoday/features/timeline/widgets/subtasks_header.dart';
 import 'package:dottoday/shared/feedback/field_error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,13 +28,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// (or Move up / down) to reorder, a field to add one; a repeating task
 /// can make this day's list its list for every time.
 class SheetSubtasks extends ConsumerStatefulWidget {
-  const SheetSubtasks({required this.task, this.editing = false, super.key});
+  const SheetSubtasks({
+    required this.task,
+    this.editing = false,
+    this.quiet = false,
+    super.key,
+  });
 
   final TaskView task;
 
   /// The editor's list: rename, remove, reorder, every-time. The task
   /// sheet's list ticks on tap.
   final bool editing;
+
+  /// Option D's quiet rows ([SubtaskRow.quiet]) and no header of its own:
+  /// the editor's Steps card names it.
+  final bool quiet;
 
   @override
   ConsumerState<SheetSubtasks> createState() => _SubtasksState();
@@ -63,17 +73,18 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Header(
-          done: list.where((s) => s.done).length,
-          total: list.length,
-          onAdd: () => setState(() => _adding = true),
-          onBreakDown: _offerBreakDown(context)
-              ? () => Actions.maybeInvoke(
-                  context,
-                  BreakDownIntent(widget.task.occurrence.id),
-                )
-              : null,
-        ),
+        if (!widget.quiet)
+          SubtasksHeader(
+            done: list.where((s) => s.done).length,
+            total: list.length,
+            onAdd: () => setState(() => _adding = true),
+            onBreakDown: _offerBreakDown(context)
+                ? () => Actions.maybeInvoke(
+                    context,
+                    BreakDownIntent(widget.task.occurrence.id),
+                  )
+                : null,
+          ),
         ReorderableListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -87,6 +98,7 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
                 index: i,
                 now: s == next,
                 editing: widget.editing,
+                quiet: widget.quiet,
                 onTick: () => unawaited(
                   _write([
                     tick(
@@ -108,7 +120,8 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
               ),
           ],
         ),
-        if (_adding) _newField(context),
+        // Option D: "Add a step" is always there (ED-137).
+        if (_adding || widget.quiet) _newField(context),
         if (widget.editing && widget.task.repeats && list.isNotEmpty)
           Align(
             alignment: AlignmentDirectional.centerStart,
@@ -123,10 +136,13 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
 
   Widget _newField(BuildContext context) => TextField(
     controller: _field,
-    autofocus: true,
+    // "+ Add" asks for it; option D's always-there field waits for a tap.
+    autofocus: !widget.quiet,
     textInputAction: TextInputAction.done,
     decoration: InputDecoration(
-      hintText: context.l10n.sheetNewSubtask,
+      hintText: widget.quiet
+          ? context.l10n.breakdownAddStep
+          : context.l10n.sheetNewSubtask,
       error: switch (_addFailure) {
         final f? => FieldError(failureMessage(context.l10n, f)),
         null => null,
@@ -248,56 +264,5 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
             subtasks: [for (final s in subtasks) s.copyWith(updatedAt: now)],
           ),
         );
-  }
-}
-
-/// "Subtasks · 1 of 3" and "+ Add".
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.done,
-    required this.total,
-    required this.onAdd,
-    required this.onBreakDown,
-  });
-
-  final int done;
-  final int total;
-  final VoidCallback onAdd;
-  final VoidCallback? onBreakDown;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    return Row(
-      children: [
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Text(
-              total == 0
-                  ? l10n.sheetSubtasksNone
-                  : l10n.sheetSubtasks(done, total),
-              style: t.styles.rowTitle.copyWith(color: t.colors.muted),
-            ),
-          ),
-        ),
-        if (onBreakDown case final breakDown?)
-          TextButton(
-            onPressed: breakDown,
-            child: Text(
-              l10n.breakdownAction,
-              style: t.styles.button.copyWith(color: t.colors.accentInk),
-            ),
-          ),
-        TextButton(
-          onPressed: onAdd,
-          child: Text(
-            l10n.sheetAddSubtask,
-            style: t.styles.button.copyWith(color: t.colors.accentInk),
-          ),
-        ),
-      ],
-    );
   }
 }

@@ -8,10 +8,12 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/task_d/task_d_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/note_text.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
@@ -25,25 +27,37 @@ import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Opens the task sheet for [id] (docs/10 §5.2 T4, `A-ios-task-sheet`).
-Future<void> showTaskSheet(BuildContext context, String id) =>
-    showModalBottomSheet<void>(
-      context: context,
-      // Named so the task link host can close it when the address loses
-      // `?task=` (Back, ED-097).
-      routeSettings: RouteSettings(name: taskSheetRouteName(id)),
-      // Above the iPhone's floating tab bar (M4.9: it covered Save).
-      useRootNavigator: true,
-      isScrollControlled: true,
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        // A short window has no room for a half sheet: full height (ED-347).
-        initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
-        maxChildSize: 0.94,
-        builder: (context, scroll) =>
-            TaskSheetBody(id: id, scrollController: scroll),
-      ),
-    );
+/// Opens task [id]'s sheet: option D on phones in Full (ED-086, M19.4
+/// part 4a), the task sheet (docs/10 §5.2 T4, `A-ios-task-sheet`) in
+/// Minimal (M19.6) and on wider windows until part 4d.
+Future<void> showTaskSheet(BuildContext context, String id) {
+  final minimal =
+      ProviderScope.containerOf(
+        context,
+        listen: false,
+      ).read(layoutPolicyProvider).visibility(FeatureId.taskSheet) ==
+      FeatureVisibility.simplified;
+  if (!minimal && AppLayout.classOf(context) == WidthClass.compact) {
+    return showTaskDSheet(context, id, routeName: taskSheetRouteName(id));
+  }
+  return showModalBottomSheet<void>(
+    context: context,
+    // Named so the task link host can close it when the address loses
+    // `?task=` (Back, ED-097).
+    routeSettings: RouteSettings(name: taskSheetRouteName(id)),
+    // Above the iPhone's floating tab bar (M4.9: it covered Save).
+    useRootNavigator: true,
+    isScrollControlled: true,
+    builder: (_) => DraggableScrollableSheet(
+      expand: false,
+      // A short window has no room for a half sheet: full height (ED-347).
+      initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
+      maxChildSize: 0.94,
+      builder: (context, scroll) =>
+          TaskSheetBody(id: id, scrollController: scroll),
+    ),
+  );
+}
 
 /// The route name of task [id]'s sheet.
 String taskSheetRouteName(String id) =>

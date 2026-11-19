@@ -3577,6 +3577,36 @@
       }
     }
   },
+  "subtaskMenu": "Options for {title}",
+  "@subtaskMenu": {
+    "description": "Tooltip and screen-reader name of a step's ⋯ in option D's editor (ED-086): set a time, delete.",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "subtaskSetTime": "Set a time",
+  "@subtaskSetTime": {
+    "description": "A step's ⋯ item: give the step a length (M10.3), kept from the old editor's + time (owner, M19.4)."
+  },
+  "taskPullUp": "Pull up for date, alerts, steps and notes",
+  "@taskPullUp": {
+    "description": "Hint under the option D task sheet at its medium height (ED-086)."
+  },
+  "editorSavedAt": "Saved · {time}",
+  "@editorSavedAt": {
+    "description": "Option D's bar: the task's edits were saved at {time} (ED-086).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "editorTimeSheet": "Time and length",
+  "@editorTimeSheet": {
+    "description": "Title of option D's time sheet: start, time zone, length and 'length = sum of steps' (owner, M19.4)."
+  },
   "subtaskReorder": "Reorder {title}",
   "@subtaskReorder": {
     "description": "Screen-reader label of a subtask's drag handle.",

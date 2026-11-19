@@ -15,7 +15,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// dictates at the cursor like the keyboard's mic: no commands, no pause
 /// lines (docs/09 M14.6, D6). Owns its text controller (a leaf, §4).
 class EditorNotes extends ConsumerStatefulWidget {
-  const EditorNotes({required this.notes, required this.onChanged, super.key});
+  const EditorNotes({
+    required this.notes,
+    required this.onChanged,
+    this.caption = true,
+    super.key,
+  });
+
+  /// Its "NOTES" caption; option D's Steps and Notes card names it there.
+  final bool caption;
 
   /// The draft's notes: the field starts from them, the LINKS follow them.
   final String? notes;
@@ -61,7 +69,7 @@ class _EditorNotesState extends ConsumerState<EditorNotes> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        EditorCaption(l10n.editorNotes),
+        if (widget.caption) EditorCaption(l10n.editorNotes),
         if (mic) _withMic(context) else _field(helper: l10n.editorNotesFormat),
         NoteLinks(notes: widget.notes),
       ],

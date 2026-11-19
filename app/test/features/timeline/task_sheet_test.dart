@@ -4,6 +4,8 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/widgets/sheet_tiles.dart';
+import 'package:dottoday/features/timeline/widgets/subtask_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -84,6 +86,19 @@ Future<void> _pumpWith(
 Finder _inSheet(Finder f) =>
     find.descendant(of: find.byType(BottomSheet), matching: f);
 
+/// An action tile (the top bar has its own Done).
+Finder _tile(String label) => _inSheet(
+  find.descendant(of: find.byType(SheetTile), matching: find.text(label)),
+);
+
+/// A step's box, named by its title.
+Finder _step(String title) => _inSheet(
+  find.descendant(
+    of: find.widgetWithText(SubtaskRow, title),
+    matching: find.byType(Checkbox),
+  ),
+);
+
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
@@ -91,14 +106,15 @@ void main() {
     tester,
   ) async {
     await _openDeepWork(tester);
+    // Option D on phones (ED-086): the title in place, today's range and
+    // what is left, the steps' count, the alerts and Repeat.
     expect(_inSheet(find.text('Deep work: roadmap')), findsOneWidget);
     expect(
-      _inSheet(find.textContaining('Today · 9:00 AM – 11:00 AM · 2 h')),
+      _inSheet(find.text('9:00 AM – 11:00 AM · 98 min left')),
       findsOneWidget,
     );
-    expect(_inSheet(find.textContaining('98 min left')), findsOneWidget);
-    expect(_inSheet(find.text('Subtasks · 1 of 3')), findsOneWidget);
-    expect(_inSheet(find.text('Alerts')), findsOneWidget);
+    expect(_inSheet(find.text('1 of 3')), findsOneWidget);
+    expect(_inSheet(find.text('None')), findsWidgets); // alerts, travel
     expect(_inSheet(find.text('Never')), findsOneWidget);
   });
 
@@ -106,16 +122,20 @@ void main() {
     tester,
   ) async {
     await _openDeepWork(tester);
-    await tester.tap(_inSheet(find.text('Draft milestones')));
+    // Its box: in option D a tap on the title renames the step. The steps
+    // sit below the medium detent's fold.
+    await tester.ensureVisible(_step('Draft milestones'));
     await tester.pumpAndSettle();
-    expect(_inSheet(find.text('Subtasks · 2 of 3')), findsOneWidget);
+    await tester.tap(_step('Draft milestones'));
+    await tester.pumpAndSettle();
+    expect(_inSheet(find.text('2 of 3')), findsOneWidget);
     final ticked = _subtasks.rows.firstWhere(
       (s) => s.title == 'Draft milestones',
     );
     expect(ticked.done, isTrue);
     expect(ticked.doneAt, _now); // ADR-0012: the tick time, in the same write
     expect(_subtasks.rows.where((s) => s.done), hasLength(2));
-    await tester.tap(_inSheet(find.text('Draft milestones')));
+    await tester.tap(_step('Draft milestones'));
     await tester.pumpAndSettle();
     final unticked = _subtasks.rows.firstWhere((s) => s.id == ticked.id);
     expect((unticked.done, unticked.doneAt), (false, null));
@@ -123,24 +143,26 @@ void main() {
 
   testWidgets('+ Add creates a subtask on this occurrence', (tester) async {
     await _openDeepWork(tester);
-    await tester.tap(_inSheet(find.text('+ Add')));
-    await tester.pumpAndSettle();
-    await tester.enterText(_inSheet(find.byType(TextField)), 'Book a room');
+    // Option D's "Add a step" is always there (ED-137).
+    await tester.enterText(
+      _inSheet(find.widgetWithText(TextField, 'Add a step')),
+      'Book a room',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(_inSheet(find.text('Book a room')), findsOneWidget);
-    expect(_inSheet(find.text('Subtasks · 1 of 4')), findsOneWidget);
+    expect(_inSheet(find.text('1 of 4')), findsOneWidget);
   });
 
   testWidgets('the Done tile marks done with Undo', (tester) async {
     await _openDeepWork(tester);
-    await tester.tap(_inSheet(find.text('Done')));
+    await tester.tap(_tile('Done'));
     await tester.pumpAndSettle();
     expect(find.text('Deep work: roadmap done'), findsOneWidget);
-    expect(_inSheet(find.text('Not done')), findsOneWidget);
+    expect(_tile('Not done'), findsOneWidget);
     // The Done sound (docs/12 D4); undoing it is silent.
     expect(_sounds.played.map((s) => s.id), ['done.swift']);
-    await tester.tap(_inSheet(find.text('Not done')));
+    await tester.tap(_tile('Not done'));
     await tester.pumpAndSettle();
     expect(_sounds.played, hasLength(1));
   });
@@ -223,7 +245,7 @@ void main() {
     tester,
   ) async {
     await _openDeepWork(tester);
-    await tester.tap(_inSheet(find.text('Shift')));
+    await tester.tap(_tile('Shift the rest'));
     await tester.pumpAndSettle();
     expect(find.text('Moved 2 tasks'), findsOneWidget);
   });

@@ -3486,6 +3486,36 @@ abstract class AppLocalizations {
   /// **'Remove {title}'**
   String subtaskRemove(String title);
 
+  /// Tooltip and screen-reader name of a step's ⋯ in option D's editor (ED-086): set a time, delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Options for {title}'**
+  String subtaskMenu(String title);
+
+  /// A step's ⋯ item: give the step a length (M10.3), kept from the old editor's + time (owner, M19.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Set a time'**
+  String get subtaskSetTime;
+
+  /// Hint under the option D task sheet at its medium height (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Pull up for date, alerts, steps and notes'**
+  String get taskPullUp;
+
+  /// Option D's bar: the task's edits were saved at {time} (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Saved · {time}'**
+  String editorSavedAt(String time);
+
+  /// Title of option D's time sheet: start, time zone, length and 'length = sum of steps' (owner, M19.4).
+  ///
+  /// In en, this message translates to:
+  /// **'Time and length'**
+  String get editorTimeSheet;
+
   /// Screen-reader label of a subtask's drag handle.
   ///
   /// In en, this message translates to:

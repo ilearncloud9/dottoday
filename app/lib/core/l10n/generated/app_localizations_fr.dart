@@ -2399,6 +2399,26 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String subtaskMenu(String title) {
+    return 'Options pour $title';
+  }
+
+  @override
+  String get subtaskSetTime => 'Définir une durée';
+
+  @override
+  String get taskPullUp =>
+      'Tirez vers le haut pour la date, les alertes, les étapes et les notes';
+
+  @override
+  String editorSavedAt(String time) {
+    return 'Enregistré · $time';
+  }
+
+  @override
+  String get editorTimeSheet => 'Heure et durée';
+
+  @override
   String subtaskReorder(String title) {
     return 'Réordonner $title';
   }

@@ -16,6 +16,7 @@ class TaskFormHeader extends StatelessWidget {
     required this.onLook,
     this.summary,
     this.card = false,
+    this.trailing,
     super.key,
   });
 
@@ -29,6 +30,9 @@ class TaskFormHeader extends StatelessWidget {
   final VoidCallback onLook;
   final String? summary;
   final bool card;
+
+  /// At the end: option D's done circle on a task that exists (ED-086).
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,7 @@ class TaskFormHeader extends StatelessWidget {
             ],
           ),
         ),
+        ?trailing,
       ],
     );
     return Container(

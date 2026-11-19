@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/duration/step_length_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -23,8 +24,14 @@ class SubtaskRow extends StatefulWidget {
     this.onDown,
     this.onLength,
     this.editing = true,
+    this.quiet = false,
     super.key,
   });
+
+  /// Option D's editor (owner, M19.4): the step's time as text only; Set
+  /// a time and Delete in its ⋯, and a long press drags it. Move up and
+  /// Move down stay for keyboards and screen readers.
+  final bool quiet;
 
   /// The editor's row (rename, remove, reorder); otherwise a tap anywhere
   /// ticks it (the task sheet, `TaskSheet` "tap to tick").
@@ -68,7 +75,7 @@ class _SubtaskRowState extends State<SubtaskRow> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final s = widget.subtask;
-    return Semantics(
+    final row = Semantics(
       customSemanticsActions: {
         CustomSemanticsAction(label: l10n.subtaskMoveUp): ?widget.onUp,
         CustomSemanticsAction(label: l10n.subtaskMoveDown): ?widget.onDown,
@@ -90,7 +97,8 @@ class _SubtaskRowState extends State<SubtaskRow> {
               l10n.subtaskNow,
               style: t.styles.rowMeta.copyWith(color: t.colors.accentInk),
             ),
-          if (widget.editing) ...[
+          if (widget.editing && widget.quiet) ..._quiet(t, l10n),
+          if (widget.editing && !widget.quiet) ...[
             if (widget.onLength case final onLength?)
               StepLengthChip(
                 minutes: s.durationMin,
@@ -119,6 +127,38 @@ class _SubtaskRowState extends State<SubtaskRow> {
         ],
       ),
     );
+    if (!widget.editing || !widget.quiet) return row;
+    return ReorderableDelayedDragStartListener(index: widget.index, child: row);
+  }
+
+  /// The quiet row's end: the time, if any, and ⋯ with Set a time and
+  /// Delete.
+  List<Widget> _quiet(DotTheme t, AppLocalizations l10n) {
+    final s = widget.subtask;
+    final minutes = s.durationMin;
+    return [
+      if (minutes != null)
+        Text(
+          formatDurationShort(l10n, minutes),
+          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        ),
+      PopupMenuButton<VoidCallback>(
+        tooltip: l10n.subtaskMenu(s.title),
+        icon: DotIcon(DotGlyphs.more, color: t.colors.muted),
+        onSelected: (run) => run(),
+        // The row's context: the menu's is gone once an item is picked.
+        itemBuilder: (_) => [
+          if (widget.onLength case final onLength?)
+            PopupMenuItem(
+              value: () => unawaited(
+                pickStepLength(context, minutes: minutes, onChanged: onLength),
+              ),
+              child: Text(l10n.subtaskSetTime),
+            ),
+          PopupMenuItem(value: widget.onRemove, child: Text(l10n.sheetDelete)),
+        ],
+      ),
+    ];
   }
 
   Widget _title(DotTheme t, AppLocalizations l10n) => Semantics(
