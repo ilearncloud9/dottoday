@@ -1509,6 +1509,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.gridTodayCount(done, total, planned));
 
   @override
+  String get gridMoveEarlier => pseudo(super.gridMoveEarlier);
+
+  @override
+  String get gridMoveLater => pseudo(super.gridMoveLater);
+
+  @override
+  String get gridMoveDayBefore => pseudo(super.gridMoveDayBefore);
+
+  @override
+  String get gridMoveDayAfter => pseudo(super.gridMoveDayAfter);
+
+  @override
   String get weekViewWeek => pseudo(super.weekViewWeek);
 
   @override

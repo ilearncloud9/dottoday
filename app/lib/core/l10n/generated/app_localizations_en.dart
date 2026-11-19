@@ -1934,6 +1934,18 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get gridMoveEarlier => 'Move earlier';
+
+  @override
+  String get gridMoveLater => 'Move later';
+
+  @override
+  String get gridMoveDayBefore => 'Move to the day before';
+
+  @override
+  String get gridMoveDayAfter => 'Move to the day after';
+
+  @override
   String get weekViewWeek => 'Week';
 
   @override

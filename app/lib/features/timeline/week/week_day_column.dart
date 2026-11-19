@@ -23,6 +23,7 @@ class WeekDayColumn extends StatefulWidget {
     required this.onDrop,
     required this.onOpen,
     this.onCue,
+    this.onMove,
     super.key,
   });
 
@@ -38,6 +39,9 @@ class WeekDayColumn extends StatefulWidget {
   /// Moves task [id] to [startUtc] on this day.
   final void Function(String id, DateTime startUtc) onDrop;
   final ValueChanged<String> onOpen;
+
+  /// Moves task [id] by [minutes] and [days] (Alt+arrows, ED-095 keys).
+  final void Function(String id, int minutes, int days)? onMove;
 
   /// A card's Smallest step or Unstick cue tapped (M10.6, M10.7).
   final ValueChanged<String>? onCue;
@@ -62,7 +66,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       pxPerMinute: WeekScale.pxPerMinute,
       axisMinutes: widget.axisMinutes,
       durationMin: o.durationMin,
-      snapMinutes: 15,
+      snapMinutes: widget.day.snapMinutes,
     );
   }
 
@@ -236,31 +240,45 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
   }
 
   Widget _card(ThreadTask task, double height, {required bool narrow}) {
-    final card = WeekCard(
+    WeekCard card({bool lifted = false}) => WeekCard(
       task: task,
       height: height,
       narrow: narrow,
+      lifted: lifted,
       onOpen: () => widget.onOpen(task.id),
       onCue: switch (widget.onCue) {
         final cue? => () => cue(task.id),
         null => null,
       },
+      onMove: switch (widget.onMove) {
+        final move? => ({int steps = 0, int days = 0}) => move(
+          task.id,
+          steps * widget.day.snapMinutes,
+          days,
+        ),
+        null => null,
+      },
     );
-    if (!task.movable) return card;
-    return HoldOrMouseDraggable<String>(
-      data: task.id,
-      feedback: SizedBox(
-        width: DotSize.gridColumn - DotSize.gridInset * 2,
-        height: height,
-        child: card,
+    if (!task.movable) return card();
+    // The dragged copy is the block's own size, lifted above every block
+    // it crosses (ED-116); it appears at once, with no scale (owner,
+    // M19.2: the lift's motion stays open, §7.5).
+    return LayoutBuilder(
+      builder: (context, box) => HoldOrMouseDraggable<String>(
+        data: task.id,
+        feedback: SizedBox(
+          width: box.maxWidth,
+          height: height,
+          child: card(lifted: true),
+        ),
+        childWhenDragging: Opacity(opacity: TaskAlpha.done, child: card()),
+        callbacks: DragCallbacks(
+          onDragStarted: () {},
+          onDragUpdate: (_) {},
+          onDragEnd: (_) {},
+        ),
+        child: card(),
       ),
-      childWhenDragging: Opacity(opacity: TaskAlpha.done, child: card),
-      callbacks: DragCallbacks(
-        onDragStarted: () {},
-        onDragUpdate: (_) {},
-        onDragEnd: (_) {},
-      ),
-      child: card,
     );
   }
 }

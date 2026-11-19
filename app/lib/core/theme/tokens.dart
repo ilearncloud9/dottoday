@@ -68,6 +68,7 @@ final class DotPalette {
     required this.glassEdge,
     required this.gridLine,
     required this.gridDivider,
+    required this.blockEdge,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -132,6 +133,9 @@ final class DotPalette {
     // The hour grid (E-FullA-v2 Week): hour lines at 6 %, day dividers 7 %.
     gridLine: Color(0x0F241F2B),
     gridDivider: Color(0x12241F2B),
+    // A Workspace block's edge on hover and while dragged (ED-116): ink at
+    // 10 % (dark: 13 %, E-FullA-v2-Dark).
+    blockEdge: Color(0x1A241F2B),
     fabAndroid: Color(0xFFCFE8E4),
     shadow: Color(0xFF241F2B),
   );
@@ -189,6 +193,7 @@ final class DotPalette {
     glassEdge: Color(0x25FFFFFF),
     gridLine: Color(0x14FFF5EB),
     gridDivider: Color(0x17FFF5EB),
+    blockEdge: Color(0x21FFF5EB),
     fabAndroid: Color(0xFF2B262A),
     shadow: Color(0xFF000000),
   );
@@ -244,6 +249,7 @@ final class DotPalette {
       glassEdge,
       gridLine,
       gridDivider,
+      blockEdge,
       fabAndroid,
       shadow;
 }

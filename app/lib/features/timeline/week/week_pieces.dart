@@ -28,6 +28,7 @@ final class WeekDayView {
     required this.axisStartUtc,
     required this.isToday,
     required this.open,
+    required this.snapMinutes,
     this.nowUtc,
   });
 
@@ -42,6 +43,9 @@ final class WeekDayView {
   /// The hour axis' top on this date (DST-aware).
   final DateTime axisStartUtc;
   final bool isToday;
+
+  /// The Settings snap step a drag or an Alt+arrow moves by (R-05).
+  final int snapMinutes;
 
   /// Today or later: the thread runs dotted ahead.
   final bool open;

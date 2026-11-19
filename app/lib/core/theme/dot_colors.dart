@@ -74,6 +74,7 @@ final class DotColors {
     required this.glassEdge,
     required this.gridLine,
     required this.gridDivider,
+    required this.blockEdge,
     required this.fabAndroid,
     required this.shadow,
   });
@@ -235,6 +236,10 @@ final class DotColors {
   /// The hour grid's hour lines and day dividers (E-FullA-v2 Week).
   final Color gridLine;
   final Color gridDivider;
+
+  /// A Workspace block's edge on hover and while dragged (ED-116); its
+  /// hover fill is [sunk] (#F5F1EB on the board, dark #1F1B1E).
+  final Color blockEdge;
   final Color fabAndroid;
 
   /// Base colour of elevation shadows (see `DotElevation`).
@@ -345,6 +350,7 @@ final class DotColors {
       glassEdge: l(glassEdge, other.glassEdge),
       gridLine: l(gridLine, other.gridLine),
       gridDivider: l(gridDivider, other.gridDivider),
+      blockEdge: l(blockEdge, other.blockEdge),
       fabAndroid: l(fabAndroid, other.fabAndroid),
       shadow: l(shadow, other.shadow),
     );
@@ -436,6 +442,7 @@ DotColors _resolve(Brightness brightness, Color accent) {
     glassEdge: p.glassEdge,
     gridLine: p.gridLine,
     gridDivider: p.gridDivider,
+    blockEdge: p.blockEdge,
     fabAndroid: p.fabAndroid,
     shadow: p.shadow,
   );

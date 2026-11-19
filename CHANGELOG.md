@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On Mac and in a wide browser, tasks on Week and 3 days answer the pointer and keyboard (redesign branch): hover shows a light tint, dragging lifts the task, and Alt with the arrow keys moves a focused task earlier, later or to the next or previous day, with Undo. Drags snap to the step set in Settings.
 - On Mac and in a wide browser, Week and 3 days show your tasks on an hour grid (redesign branch): blocks as tall as their time, overlaps side by side, a thread through each day and a now line across. Days that don't fit scroll sideways. Day shows its thread on an hour scale with the hours beside it, and now crosses the task you're on.
 - Task times sit above their titles at every width, including tablets and phone landscape (redesign branch).
 - On Mac and in a wide browser, Dottoday is a workspace (redesign branch): a sidebar with Today, Plan (Inbox, Routines, Brain dump), the Day, 3 days, Week and Month views, Review and Search, and one toolbar to move between days and views. Each view has its own address.

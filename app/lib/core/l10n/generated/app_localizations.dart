@@ -2868,6 +2868,30 @@ abstract class AppLocalizations {
   /// **'{done} of {total} · {planned}'**
   String gridTodayCount(String done, String total, String planned);
 
+  /// Screen-reader action on an hour-grid block (Alt+Up): move it one snap step earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Move earlier'**
+  String get gridMoveEarlier;
+
+  /// Screen-reader action on an hour-grid block (Alt+Down): move it one snap step later.
+  ///
+  /// In en, this message translates to:
+  /// **'Move later'**
+  String get gridMoveLater;
+
+  /// Screen-reader action on an hour-grid block (Alt+Left): same time, the day before.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to the day before'**
+  String get gridMoveDayBefore;
+
+  /// Screen-reader action on an hour-grid block (Alt+Right): same time, the day after.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to the day after'**
+  String get gridMoveDayAfter;
+
   /// Week/Month switch on the Week board.
   ///
   /// In en, this message translates to:

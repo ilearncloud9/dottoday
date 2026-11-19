@@ -13,6 +13,7 @@ import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/week/grid_axis.dart';
 import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
@@ -73,7 +74,7 @@ class WeekView extends ConsumerWidget {
         DayLoad.of(days[i], d.blocks, shapes[i]),
     ];
     final summary = WeekSummary.of(loads);
-    final (first, last) = _axisHours(shapes, data, zone);
+    final (first, last) = gridAxisHours(shapes, data, zone);
     final axisMinutes =
         (last - first) * Duration.minutesPerHour + WeekScale.leadMinutes * 2;
     final todayAt = days.indexOf(today);
@@ -146,41 +147,6 @@ class WeekView extends ConsumerWidget {
     );
   }
 
-  /// The earliest Wake Up or task start and the latest Wind Down or task
-  /// end of the week, in whole local hours, so every day fits one shared
-  /// axis (a 6:45 run or a late train stays on the board).
-  static (int, int) _axisHours(
-    List<DayShape> shapes,
-    List<TimelineData> data,
-    tz.Location zone,
-  ) {
-    var first = 24;
-    var last = 0;
-    void cover(DateTime startUtc, DateTime endUtc) {
-      final start = ClockTime.ofUtc(zone, startUtc);
-      final end = ClockTime.ofUtc(zone, endUtc);
-      final sameDay =
-          endUtc.difference(startUtc) < const Duration(days: 1) &&
-          (end.hour > start.hour ||
-              (end.hour == start.hour && end.minute >= start.minute));
-      if (start.hour < first) first = start.hour;
-      final through = !sameDay
-          ? 24
-          : (end.minute > 0 ? end.hour + 1 : end.hour);
-      if (through > last) last = through;
-    }
-
-    for (final s in shapes) {
-      cover(s.wakeUtc, s.bedUtc);
-    }
-    for (final d in data) {
-      for (final o in d.blocks) {
-        if (o.startUtc case final at?) cover(at, o.endUtc!);
-      }
-    }
-    return (first, last <= first ? first + 1 : last);
-  }
-
   /// Every whole hour of the axis, "7 AM" … (the last one too).
   List<String> _labels(BuildContext context, int first, int last) {
     final locale = Localizations.localeOf(context).toLanguageTag();
@@ -225,6 +191,7 @@ class WeekView extends ConsumerWidget {
         axisStartUtc: _axisStart(zone, date, firstHour),
         isToday: isToday,
         open: !date.isBefore(today),
+        snapMinutes: profile.settings.snapMinutes,
         nowUtc: isToday ? nowUtc : null,
       ),
       axisMinutes: axisMinutes,
@@ -237,6 +204,12 @@ class WeekView extends ConsumerWidget {
         ),
       ),
       onDrop: (id, start) => unawaited(_move(context, ref, id, start, time)),
+      onMove: (id, minutes, days) {
+        final start = _find(ref, id)?.startUtc;
+        if (start == null) return;
+        final to = _shifted(zone, start, minutes: minutes, days: days);
+        unawaited(_move(context, ref, id, to, time));
+      },
       onOpen: (id) => ref.read(editingTaskProvider.notifier).open(id),
       onCue: (id) => openWeekCue(
         context,
@@ -245,6 +218,25 @@ class WeekView extends ConsumerWidget {
         find: (id) => _find(ref, id),
       ),
     );
+  }
+
+  /// [startUtc] moved by [minutes], and by [days] at the same local time
+  /// (DST-safe).
+  static DateTime _shifted(
+    tz.Location zone,
+    DateTime startUtc, {
+    required int minutes,
+    required int days,
+  }) {
+    final l = tz.TZDateTime.from(startUtc, zone);
+    return tz.TZDateTime(
+      zone,
+      l.year,
+      l.month,
+      l.day + days,
+      l.hour,
+      l.minute,
+    ).add(Duration(minutes: minutes)).toUtc();
   }
 
   /// A task of this week or the Inbox.

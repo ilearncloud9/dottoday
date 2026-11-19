@@ -2960,6 +2960,22 @@
       }
     }
   },
+  "gridMoveEarlier": "Move earlier",
+  "@gridMoveEarlier": {
+    "description": "Screen-reader action on an hour-grid block (Alt+Up): move it one snap step earlier."
+  },
+  "gridMoveLater": "Move later",
+  "@gridMoveLater": {
+    "description": "Screen-reader action on an hour-grid block (Alt+Down): move it one snap step later."
+  },
+  "gridMoveDayBefore": "Move to the day before",
+  "@gridMoveDayBefore": {
+    "description": "Screen-reader action on an hour-grid block (Alt+Left): same time, the day before."
+  },
+  "gridMoveDayAfter": "Move to the day after",
+  "@gridMoveDayAfter": {
+    "description": "Screen-reader action on an hour-grid block (Alt+Right): same time, the day after."
+  },
   "weekViewWeek": "Week",
   "@weekViewWeek": {
     "description": "Week/Month switch on the Week board."

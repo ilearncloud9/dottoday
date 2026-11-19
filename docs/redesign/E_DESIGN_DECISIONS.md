@@ -5132,6 +5132,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
   - on the Day view, when now falls inside the live task, the now row is not drawn: the line crosses the live card at the time, with the dot on the thread and the time in the gutter (`ThreadHours.nowIn`); the live row carries "Now, {time}" for screen readers; between tasks and on phones now keeps its own row. At large text the row grows with its text, so the line can cross the time line.
 - **Checks:** `dart analyze` and `dart format` clean; all non-golden tests pass (the 5 Supabase suites need the stack); 114 goldens re-baselined; new tests for now inside the live row and between tasks. Not run on a Mac or in a full-width browser yet.
 
+### ED-390 · M19.2 part 2b: hover, focus, keys and drag on the hour grid
+- **Date:** 2026-11-19. **Owner:** "Go, start 2b", with four answers: the drag and the Alt-arrow moves use Settings' snap step; "Yes: Alt ↑↓ and Alt ←→"; a drag moves one task, not the ones after it; the lift appears at once, with no scale. Then "Approve, commit" after the review page.
+- **Built (Week and 3 days, ED-116 hybrid C):**
+  - flat at rest; a mouse hover tints the block to `sunk` with a `blockEdge` hairline and no lift; touch never shows hover;
+  - while dragged, a copy the block's own width lifts with `DotElevation.blockLift` over everything it crosses; the block left behind fades and the dashed drop shows where it lands; the drop moves that one task, with Undo;
+  - keyboard focus draws the 2 px `focus` ring after a 2 px `canvas` gap; Alt+↑ / Alt+↓ move by the snap step and Alt+← / Alt+→ move a day, each with Undo; screen readers get the same four as custom actions ("Move earlier", "Move later", "Move to the day before", "Move to the day after");
+  - drags snap to `Settings.snapMinutes` (5 by default), no longer a fixed 15;
+  - high contrast keeps a `secondary` edge in every state;
+  - calendar events and pinned tasks get no hover, drag or moves.
+- **Tokens:** `blockEdge` (light `#241F2B` at 10 %, dark `#FFF5EB` at 13 %), `DotElevation.blockLift`.
+- **Copy:** es "Retrasar" failed the no-shame check (it reads as running late), so es uses "Mover antes" / "Mover más tarde".
+- **Checks:** `dart analyze --fatal-infos` and `dart format` clean; all non-golden tests pass (the 5 Supabase suites need the stack); one new golden pair (`workspace_grid_states`, light and dark: focused, dragged, hovered); new tests for hover, Alt-arrow moves with Undo, the semantics actions, high contrast and the lifted copy. Not run on a Mac or in a full-width browser yet.
+
 ---
 
 ## Pending owner answers

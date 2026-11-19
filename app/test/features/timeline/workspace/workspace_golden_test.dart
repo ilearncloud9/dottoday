@@ -4,6 +4,7 @@ library;
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -74,6 +75,43 @@ void main() {
         );
       } finally {
         debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // ED-116 on the grid: Spanish lesson under the pointer, Reply to email
+    // keyboard-focused, Call the dentist dragged towards tomorrow.
+    testWidgets('golden: hover, focus and drag on the grid, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      FocusManager.instance.highlightStrategy =
+          FocusHighlightStrategy.alwaysTraditional;
+      try {
+        await pump(tester, mode, place: '/3-days/2026-10-21');
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await mouse.addPointer(location: Offset.zero);
+        Focus.of(tester.element(find.text('Reply to email'))).requestFocus();
+        await tester.pumpAndSettle();
+        final drag = await tester.startGesture(
+          tester.getCenter(find.text('Call the dentist')),
+          kind: PointerDeviceKind.mouse,
+        );
+        await drag.moveBy(const Offset(20, 20));
+        await tester.pump();
+        await drag.moveBy(const Offset(260, -40));
+        await tester.pump();
+        await mouse.moveTo(tester.getCenter(find.text('Spanish lesson')));
+        await tester.pump();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_grid_states_${mode.name}.png'),
+        );
+        await drag.up();
+        await mouse.removePointer();
+        await tester.pumpAndSettle();
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+        FocusManager.instance.highlightStrategy =
+            FocusHighlightStrategy.automatic;
       }
     });
     testWidgets('golden: the Mac Workspace, 3 days, ${mode.name}', (

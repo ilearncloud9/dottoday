@@ -1938,6 +1938,18 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get gridMoveEarlier => 'Mover antes';
+
+  @override
+  String get gridMoveLater => 'Mover más tarde';
+
+  @override
+  String get gridMoveDayBefore => 'Mover al día anterior';
+
+  @override
+  String get gridMoveDayAfter => 'Mover al día siguiente';
+
+  @override
   String get weekViewWeek => 'Semana';
 
   @override

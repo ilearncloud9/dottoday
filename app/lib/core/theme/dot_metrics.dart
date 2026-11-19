@@ -449,6 +449,16 @@ abstract final class DotElevation {
     ),
   ];
 
+  /// A Workspace block while dragged (ED-116, G3-5 option C): `0 8 18`
+  /// at 10 % under its edge, in the theme's shadow colour.
+  static List<BoxShadow> blockLift(DotColors c) => [
+    BoxShadow(
+      color: c.shadow.withValues(alpha: 0.1),
+      offset: const Offset(0, 8),
+      blurRadius: 18,
+    ),
+  ];
+
   /// The iPhone glass capsule (ED-034): `0 4 12` at 8 % and a 0.5 px edge
   /// at 10 %, in the theme's shadow colour (ink light, black dark).
   static List<BoxShadow> capsule(DotColors c) => [
