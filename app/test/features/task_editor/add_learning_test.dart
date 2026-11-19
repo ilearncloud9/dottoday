@@ -19,7 +19,7 @@ Occurrence _added(FakeOccurrenceRepository repo) => repo.rows.singleWhere(
 Future<void> _toWhen(WidgetTester tester, String text) async {
   await tester.enterText(addTitle, text);
   await tester.pump();
-  await tester.tap(find.text('Continue'));
+  await tester.tap(find.text('More'));
   await tester.pumpAndSettle();
 }
 

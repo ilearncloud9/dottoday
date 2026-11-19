@@ -1662,23 +1662,11 @@ abstract class AppLocalizations {
   /// **'{title}, {meta}'**
   String addHabitLabel(String title, String meta);
 
-  /// Add step 1 primary button.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get addContinue;
-
   /// Add step 1 secondary button: save without a time.
   ///
   /// In en, this message translates to:
   /// **'Add to Inbox instead'**
   String get addToInbox;
-
-  /// Screen-reader label of the Add step dots.
-  ///
-  /// In en, this message translates to:
-  /// **'Step {step} of {total}'**
-  String addStepOf(int step, int total);
 
   /// Add step 2: back to step 1.
   ///

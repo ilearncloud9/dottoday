@@ -78,17 +78,39 @@ final class QuickAddDraft {
       'inbox: $inbox)';
 }
 
-/// [draft]'s text without [token]'s span, spaces tidied: what the field
-/// holds after the token's chip is removed (docs/02 F2 "removable with one
-/// tap").
+/// The chips removed from [before] (kept as title text, E-R2-36: "×
+/// keeps the word"), moved to where they sit in [after] after one edit:
+/// spans before the edit stay, spans after it shift by the change in
+/// length, and a span the edit touched is dropped (it is read again).
 ///
 /// ```dart
-/// textWithout(parse('Read 9pm 45m'), timeToken); // 'Read 45m'
+/// // "Gym 6pm" with "6pm" kept as text, then "Big " typed at the start:
+/// carryIgnored('Gym 6pm', 'Big Gym 6pm', [six]); // [QuickAddToken(time, 8, 11)]
 /// ```
-String textWithout(QuickAddDraft draft, QuickAddToken token) {
-  final text = draft.text;
-  if (token.start < 0 || token.end > text.length) return text;
-  return (text.substring(0, token.start) + text.substring(token.end))
-      .replaceAll(RegExp(' {2,}'), ' ')
-      .trim();
+List<QuickAddToken> carryIgnored(
+  String before,
+  String after,
+  List<QuickAddToken> ignored,
+) {
+  if (ignored.isEmpty || before == after) return ignored;
+  final shortest = before.length < after.length ? before.length : after.length;
+  var head = 0;
+  while (head < shortest && before.codeUnitAt(head) == after.codeUnitAt(head)) {
+    head++;
+  }
+  var tail = 0;
+  while (tail < shortest - head &&
+      before.codeUnitAt(before.length - 1 - tail) ==
+          after.codeUnitAt(after.length - 1 - tail)) {
+    tail++;
+  }
+  final shift = after.length - before.length;
+  final editEnd = before.length - tail;
+  return [
+    for (final t in ignored)
+      if (t.end <= head)
+        t
+      else if (t.start >= editEnd)
+        QuickAddToken(t.kind, t.start + shift, t.end + shift),
+  ];
 }

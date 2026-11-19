@@ -64,6 +64,11 @@ abstract final class DotRadii {
   /// Month's day cards in the Workspace (E-R2-30): 12.
   static const double monthCard = 12;
 
+  /// The Mac and web popovers (E-R2-36, ED-342): 14, and the Add title
+  /// box and summary card inside one: 12.
+  static const double popover = 14;
+  static const double popoverCard = 12;
+
   /// The inspector's fields (6) and its Done / Focus / Shift rest (10).
   static const double field = 6;
   static const double inspectorButton = 10;
@@ -230,6 +235,20 @@ abstract final class DotSize {
   /// step's check box.
   static const double formRow = 60;
   static const double stepBox = 22;
+
+  /// The Mac and web Add popover (E-R2-36, ED-342): 404 wide, its arrow
+  /// 7 out, the title's ring 34, a pointer's duration pill 26 tall.
+  static const double addPopover = 404;
+  static const double popoverArrow = 7;
+
+  /// How far a popover's arrow sits from its end (E-R2-36: 349 of 404),
+  /// so the popover hangs mostly toward the start of its button.
+  static const double popoverArrowInset = 55;
+  static const double popoverRing = 34;
+  static const double popoverPill = 26;
+
+  /// The Add title box's accent outline while it has the keys (1.5).
+  static const double popoverFieldStroke = 1.5;
   static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor

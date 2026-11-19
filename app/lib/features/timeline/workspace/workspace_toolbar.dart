@@ -106,6 +106,7 @@ class WorkspaceToolbar extends ConsumerWidget {
       ),
       ToolbarAdd(
         label: l10n.quickAddTooltip,
+        text: l10n.addAdd,
         onTap: () => Actions.maybeInvoke(
           context,
           const AppCommandIntent(AppCommand.quickAdd),

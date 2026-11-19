@@ -23,12 +23,16 @@ class RoutineAddTab extends ConsumerStatefulWidget {
     required this.day,
     required this.today,
     required this.onPicked,
+    this.embedded = false,
     super.key,
   });
 
   final DateTime day;
   final DateTime today;
   final VoidCallback onPicked;
+
+  /// In the Mac and web popover: its own height, the popover scrolls.
+  final bool embedded;
 
   @override
   ConsumerState<RoutineAddTab> createState() => _RoutineAddTabState();
@@ -64,7 +68,11 @@ class _RoutineAddTabState extends ConsumerState<RoutineAddTab> {
     final routines = ref.watch(routinesProvider).value ?? const <Routine>[];
     final other = _day != widget.today && _day != _tomorrow;
     return ListView(
-      padding: const EdgeInsets.all(DotSpace.page),
+      shrinkWrap: widget.embedded,
+      physics: widget.embedded ? const NeverScrollableScrollPhysics() : null,
+      padding: widget.embedded
+          ? EdgeInsets.zero
+          : const EdgeInsets.all(DotSpace.page),
       children: [
         Wrap(
           spacing: DotSpace.s,

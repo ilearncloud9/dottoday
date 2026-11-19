@@ -1684,25 +1684,9 @@
       }
     }
   },
-  "addContinue": "Continue",
-  "@addContinue": {
-    "description": "Add step 1 primary button."
-  },
   "addToInbox": "Add to Inbox instead",
   "@addToInbox": {
     "description": "Add step 1 secondary button: save without a time."
-  },
-  "addStepOf": "Step {step} of {total}",
-  "@addStepOf": {
-    "description": "Screen-reader label of the Add step dots.",
-    "placeholders": {
-      "step": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
   },
   "addBack": "Back",
   "@addBack": {

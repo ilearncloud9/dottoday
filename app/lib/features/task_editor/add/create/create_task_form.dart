@@ -13,8 +13,10 @@ import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
+import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_pickers.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
+import 'package:dottoday/features/task_editor/add/widgets/add_learned_lines.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_routine_chips.dart';
 import 'package:dottoday/features/task_editor/add/widgets/habit_list.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -148,30 +150,45 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: DotSpace.m,
             children: [
-              TaskFormCard(
-                rows: [
-                  TaskFormRow(
-                    glyph: DotGlyphs.calendar,
-                    value: DateFormat.MMMEd(l10n.localeName).format(draft.day),
-                    trailing: dayName,
-                    onTap: () => unawaited(pick.day()),
-                  ),
-                  TaskFormRow(
-                    glyph: DotGlyphs.clock,
-                    value: range ?? l10n.addTimeCaption,
-                    trailing: length,
-                    trailingLabel: l10n.listJoin(
-                      l10n.addDurationCaption,
-                      length,
-                    ),
-                    onTap: () => unawaited(
-                      pick.time(
-                        start == null ? 9 * 60 : _minuteOf(start, zone),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TaskFormCard(
+                    rows: [
+                      TaskFormRow(
+                        glyph: DotGlyphs.calendar,
+                        value: DateFormat.MMMEd(
+                          l10n.localeName,
+                        ).format(draft.day),
+                        trailing: dayName,
+                        onTap: () => unawaited(pick.day()),
                       ),
-                    ),
-                    onTrailing: () => unawaited(pick.length()),
+                      TaskFormRow(
+                        glyph: DotGlyphs.clock,
+                        value: range ?? l10n.addTimeCaption,
+                        trailing: length,
+                        trailingLabel: l10n.listJoin(
+                          l10n.addDurationCaption,
+                          length,
+                        ),
+                        onTap: () => unawaited(
+                          pick.time(
+                            start == null
+                                ? 9 * 60
+                                : ClockTime.ofUtc(zone, start).minutesOfDay,
+                          ),
+                        ),
+                        onTrailing: () => unawaited(pick.length()),
+                      ),
+                      _alertsRow(
+                        l10n,
+                        draft,
+                        profile.settings.defaultAlerts,
+                        pick,
+                      ),
+                    ],
                   ),
-                  _alertsRow(l10n, draft, profile.settings.defaultAlerts, pick),
+                  AddLearnedLines(request: widget.request),
                 ],
               ),
               TaskFormPills(
@@ -213,11 +230,6 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
         ),
       ],
     );
-  }
-
-  static int _minuteOf(DateTime utc, tz.Location zone) {
-    final local = tz.TZDateTime.from(utc, zone);
-    return local.hour * 60 + local.minute;
   }
 
   TaskFormRow _alertsRow(

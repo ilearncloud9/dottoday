@@ -3,20 +3,14 @@ import 'dart:async';
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
-import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/quick_add/add_draft.dart';
-import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
-import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/duration_presets.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
@@ -36,23 +30,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 /// The energy window to suggest for the draft (11 C4, M11.5): only when
 /// suggestions are on and the title is one of the user's high-energy
-/// tasks.
-EnergyWindow? _energyFor(
-  ({EnergyWindow? window, int completions})? energy,
-  Settings? settings,
-  String title,
-  LearningThresholds thresholds,
-) {
-  final w = energy?.window;
-  if (w == null || settings == null || title.isEmpty) return null;
-  final on = energySuggestionsOn(
-    settings,
-    completions: energy!.completions,
-    thresholds: thresholds,
-  );
-  return on && w.knows(title) ? w : null;
-}
-
 /// Step 2 wired to the flow: the day's room, presets, the TIME and
 /// DURATION ⋯, Add / Add another.
 class AddWhenHost extends ConsumerWidget {
@@ -60,20 +37,6 @@ class AddWhenHost extends ConsumerWidget {
 
   final AddRequest request;
   final AddFlowState state;
-
-  EnergyWindow? _energy(WidgetRef ref) {
-    final settings = ref.watch(currentProfileProvider).value?.settings;
-    // C4 is Off in minimal (docs/14 §3, §6): "off" goes into the feature's
-    // own switch here, in the View; the stored choice is never written.
-    final off =
-        watchFeature(ref, FeatureId.energySuggestions) == FeatureVisibility.off;
-    return _energyFor(
-      ref.watch(energyWindowProvider).value,
-      off ? settings?.copyWith(energySuggestions: false) : settings,
-      state.draft.title,
-      ref.watch(learningThresholdsProvider),
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,7 +47,6 @@ class AddWhenHost extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return AddWhenStep(
-      energy: _energy(ref),
       thresholds: ref.watch(learningThresholdsProvider),
       // docs/13 §6: clears what this title taught, on this device.
       onResetLearning: () => ref

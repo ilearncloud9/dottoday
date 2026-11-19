@@ -11,7 +11,7 @@ import 'add_harness.dart';
 
 /// M8.5b, R-08: a write that fails (0 bytes free) never loses what was
 /// typed in Add.
-/// A window that keeps the two-step sheet when a failed save reopens it.
+/// A wide window: Minimal's sheet reopens there as on a phone.
 const _wide = Size(1280, 900);
 
 void main() {
@@ -84,30 +84,13 @@ void main() {
     expect(find.text(message), findsNothing);
   });
 
-  testWidgets('a pasted list reopens on failure; Try again adds it all', (
-    tester,
-  ) async {
-    final repo = await pumpAddHost(tester, size: _wide, writeFault: fault);
-    await tester.enterText(addTitle, 'Milk\nEggs');
-    await tester.pump();
-    await tester.tap(find.text('Add 2'));
-    await tester.pumpAndSettle();
-    expect(addedRow(repo, 'Milk'), isNull);
-    expect(titleWith('Milk\nEggs'), findsOneWidget);
-    expect(find.text(message), findsOneWidget);
-
-    fault.failure = null;
-    await tester.tap(find.text('Try again'));
-    await tester.pumpAndSettle();
-    expect(addedRow(repo, 'Milk'), isNotNull);
-    expect(addedRow(repo, 'Eggs'), isNotNull);
-    expect(find.byType(AddFlowSheet), findsNothing);
-  });
+  // A pasted list in Minimal goes to Brain dump and writes nothing; Full's
+  // list that fails to save: add_popover_test.dart.
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     for (final (name, size) in [
-      // Phones in Full reopen Create task (create_task_test.dart); this
-      // sheet reopens where it runs: Minimal, and wider windows.
+      // Minimal's sheet reopens itself at every width; Full reopens Create
+      // task (create_task_test) or the popover (add_popover_test).
       ('medium', const Size(700, 900)),
       ('expanded', _wide),
     ]) {

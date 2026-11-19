@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
@@ -24,18 +25,20 @@ class WebBarShell extends StatelessWidget {
       floatingActionButton: onAdd == null
           ? null
           : AddDraggable(
-              child: FloatingActionButton.extended(
-                onPressed: onAdd,
-                tooltip: bar.addLabel,
-                backgroundColor: c.accent,
-                foregroundColor: c.onAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(DotRadii.webAdd),
-                ),
-                icon: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
-                label: Text(
-                  context.l10n.addAdd,
-                  style: t.styles.button.copyWith(color: c.onAccent),
+              child: AddAnchor(
+                child: FloatingActionButton.extended(
+                  onPressed: onAdd,
+                  tooltip: bar.addLabel,
+                  backgroundColor: c.accent,
+                  foregroundColor: c.onAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(DotRadii.webAdd),
+                  ),
+                  icon: DotIcon(DotGlyphs.add, color: c.onAccent, active: true),
+                  label: Text(
+                    context.l10n.addAdd,
+                    style: t.styles.button.copyWith(color: c.onAccent),
+                  ),
                 ),
               ),
             ),

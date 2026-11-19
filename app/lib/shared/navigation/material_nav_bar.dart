@@ -1,5 +1,6 @@
 import 'dart:ui' show ImageFilter;
 
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
@@ -50,7 +51,9 @@ class MaterialBarShell extends StatelessWidget {
               end: DotSpace.l,
               bottom: inset + DotSize.androidFabBottom,
               child: AddDraggable(
-                child: _Add(onAdd: onAdd, label: bar.addLabel, glass: glass),
+                child: AddAnchor(
+                  child: _Add(onAdd: onAdd, label: bar.addLabel, glass: glass),
+                ),
               ),
             ),
         ],

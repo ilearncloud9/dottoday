@@ -1,36 +1,37 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/editing/pending_brain_dump.dart';
-import 'package:dottoday/core/editing/pending_routine_drop.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/validation/field_rules.dart';
+import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/add_when_host.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_sheet.dart';
+import 'package:dottoday/features/task_editor/add/popover/add_popover.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
-import 'package:dottoday/features/task_editor/add/widgets/add_routine_chips.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_what_step.dart';
-import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: a sheet on
-/// phones, a popover from medium width (the Mac/web editor panel is
-/// M3e.5). [text] prefills the title, [startUtc] the time and [day] the
-/// day; [resume] reopens a sheet whose save failed, as it was (M8.5b).
+/// Opens Add (docs/10 §3 `AddFlow`) from the add button or ⌘N: Create
+/// task on phones (ED-140), the popover under the toolbar's + from medium
+/// width (E-R2-36, ED-342), and Minimal's own Add sheet at every width
+/// (ED-152, M19.6). [text] prefills the title, [startUtc] the time and
+/// [day] the day; [resume] reopens Add whose save failed, as it was
+/// (M8.5b).
 Future<void> showAddFlow(
   BuildContext context, {
   String text = '',
@@ -45,33 +46,33 @@ Future<void> showAddFlow(
     day: day,
     resume: resume,
   );
+  final minimal =
+      ProviderScope.containerOf(
+        context,
+        listen: false,
+      ).read(layoutPolicyProvider).visibility(FeatureId.addTask) ==
+      FeatureVisibility.simplified;
+  // AppLayout: a short landscape phone stays compact too (H1).
+  final phone = AppLayout.classOf(context) == WidthClass.compact;
+  if (!phone && !minimal) {
+    return showAnchoredPopover<void>(
+      context: context,
+      anchor: AddAnchor.current(),
+      width: DotSize.addPopover,
+      builder: (_) => AddPopover(request: request),
+    );
+  }
   return showAppSheet<void>(
     context: context,
     fullHeight: true,
-    builder: (_) => _AddHost(request: request),
+    builder: (_) => minimal
+        ? AddFlowSheet(request: request)
+        : CreateTaskSheet(request: request),
   );
 }
 
-/// Phones in Full get Create task (ED-140, M19.3 part 3a); Minimal keeps
-/// its own Add sheet (ED-152), and wider windows keep this one until the
-/// Mac and web popover (3b) and tablets (3c).
-class _AddHost extends ConsumerWidget {
-  const _AddHost({required this.request});
-
-  final AddRequest request;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // AppLayout: a short landscape phone stays compact too (H1).
-    final phone = AppLayout.classOf(context) == WidthClass.compact;
-    if (phone && !watchSimplified(ref, FeatureId.addTask)) {
-      return CreateTaskSheet(request: request);
-    }
-    return AddFlowSheet(request: request);
-  }
-}
-
-/// The Add sheet's content: header and the current step.
+/// Minimal's Add sheet (docs/14 §4, ED-152): the title and two chips,
+/// Add and More (the When step).
 class AddFlowSheet extends ConsumerWidget {
   const AddFlowSheet({required this.request, super.key});
 
@@ -85,12 +86,7 @@ class AddFlowSheet extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AddHeader(
-          step: state.step,
-          onBack: () => notifier.goTo(AddStep.what),
-          // Minimal Add is one step (docs/14 §4); More is the old step 2.
-          dots: !watchSimplified(ref, FeatureId.addTask),
-        ),
+        AddHeader(step: state.step, onBack: () => notifier.goTo(AddStep.what)),
         if (state.saveFailure case final failed?)
           SaveFailureBanner(
             failure: failed.failure,
@@ -133,23 +129,13 @@ class _What extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notifier = ref.read(addFlowProvider(request).notifier);
     final profile = ref.watch(currentProfileProvider).value;
-    final settings = profile?.settings;
-    // Warm and alive for Continue's first-free-slot lookup.
+    // Warm and alive for the first-free-slot lookup.
     final room = ref.watch(dayRoomProvider(state.draft.day)).value;
-    final minimal = watchSimplified(ref, FeatureId.addTask);
-    void save({bool toInbox = false}) => unawaited(
-      saveFromSheet(
-        context,
-        request,
-        currentDraft(ref, request, state),
-        toInbox: toInbox,
-      ),
-    );
     final draft = currentDraft(ref, request, state);
     final start =
         draft.startUtc ?? (room == null ? null : firstFreeStart(room, draft));
     return AddWhatStep(
-      minimal: minimal,
+      state: state,
       whenLabel: start == null || profile == null
           ? null
           : context.l10n.addWhenChip(
@@ -157,85 +143,26 @@ class _What extends ConsumerWidget {
                 context,
                 tz.getLocation(profile.tzId),
                 start,
-                use24h: use24hFor(context, settings?.use24h),
+                use24h: use24hFor(context, profile.settings.use24h),
               ),
             ),
       lengthLabel: formatDurationShort(context.l10n, draft.length),
-      onMore: () => unawaited(_continue(ref)),
-      state: state,
-      habits: ref.watch(habitsProvider).value ?? const [],
-      routines: AddRoutineChips(
-        routines: ref.watch(routinesProvider).value ?? const [],
-        typed: state.draft.title,
-        onPick: (r) {
-          // The shell's host proposes it (routines are their own feature);
-          // Add closes so the proposal opens over the day.
-          ref
-              .read(pendingRoutineDropProvider.notifier)
-              .request(
-                RoutineDropRequest(
-                  routine: r,
-                  date: state.draft.day,
-                  today: state.draft.today,
-                ),
-              );
-          unawaited(Navigator.of(context).maybePop());
-        },
-      ),
-      use24h: use24hFor(context, settings?.use24h),
+      onMore: () => unawaited(_more(ref)),
       onType: notifier.type,
-      onPickHabit: notifier.pickHabit,
-      onColor: (c) => notifier.edit((d) => d.withColor(c.key)),
-      onIcon: (i) => notifier.edit((d) => d.withIcon(i.key)),
-      // Minimal: Enter puts the dot on the thread, in the next free slot
-      // when no time was typed (docs/14 §4).
-      onSubmit: minimal ? () => unawaited(_saveOnThread(context, ref)) : save,
+      onRemoveToken: notifier.keepAsText,
+      // Enter puts the dot on the thread, in the next free slot when no
+      // time was typed (docs/14 §4).
+      onSubmit: () => unawaited(_saveOnThread(context, ref)),
       onAnother: () => unawaited(
         addAnother(context, request, currentDraft(ref, request, state)),
       ),
-      onAddMany: () => minimal
-          ? _toBrainDump(context, ref)
-          : unawaited(
-              addManyFromSheet(
-                context,
-                request,
-                ref.read(addFlowProvider(request)).value?.text ?? state.text,
-              ),
-            ),
-      onContinue: () => unawaited(_continue(ref)),
-      onInbox: () => save(toInbox: true),
-      onBreakDown: state.draft.title.isEmpty
-          ? null
-          : () => unawaited(_breakDown(context, ref)),
-    );
-  }
-
-  /// Break it down (M10.4): accepted steps join the draft, and its length
-  /// grows to their sum; both are written with the task on Save.
-  Future<void> _breakDown(BuildContext context, WidgetRef ref) {
-    final notifier = ref.read(addFlowProvider(request).notifier);
-    final draft = currentDraft(ref, request, state);
-    return breakDown(
-      context,
-      BreakdownTarget(
-        title: draft.title,
-        durationMin: draft.length,
-        colorKey: draft.color,
-        iconKey: draft.icon,
-        onDraftAccepted: (steps) => notifier.edit((d) {
-          final next = d.withSteps(steps);
-          final total = next.stepsTotal;
-          return total == null
-              ? next
-              : next.withDuration(total.clamp(minDurationMin, maxDurationMin));
-        }),
-      ),
+      onAddMany: () => _toBrainDump(context, ref),
     );
   }
 
   /// To When; with no time yet, start in the first free slot of the day
   /// (docs/10 §6 "Add never asks for what it can infer").
-  Future<void> _continue(WidgetRef ref) async {
+  Future<void> _more(WidgetRef ref) async {
     final notifier = ref.read(addFlowProvider(request).notifier);
     final draft = currentDraft(ref, request, state);
     if (draft.startMinute == null) {
@@ -246,8 +173,8 @@ class _What extends ConsumerWidget {
     notifier.goTo(AddStep.when);
   }
 
-  /// Minimal Add's save: the typed time, else the first free slot, on the
-  /// thread (never the Inbox: that is what Later is for).
+  /// The save: the typed time, else the first free slot, on the thread
+  /// (never the Inbox: that is what Later is for).
   Future<void> _saveOnThread(BuildContext context, WidgetRef ref) async {
     var draft = currentDraft(ref, request, state);
     if (draft.startMinute == null) {
@@ -261,8 +188,8 @@ class _What extends ConsumerWidget {
     await saveFromSheet(context, request, draft);
   }
 
-  /// Several lines in minimal Add: Brain dump plans them, and nothing is
-  /// written before Accept (docs/14 §3 B4, CLAUDE.md §11).
+  /// Several lines: Brain dump plans them, and nothing is written before
+  /// Accept (docs/14 §3 B4, CLAUDE.md §11).
   void _toBrainDump(BuildContext context, WidgetRef ref) {
     final text = ref.read(addFlowProvider(request)).value?.text ?? state.text;
     ref.read(pendingBrainDumpProvider.notifier).request(text);

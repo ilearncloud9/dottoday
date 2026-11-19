@@ -188,7 +188,7 @@ Future<void> _pump(WidgetTester tester, StoreDevice d, _Shot shot) async {
   await tester.pumpAndSettle();
   if (shot.body is _AddOverToday) {
     final l10n = AppLocalizations.of(tester.element(find.byType(AddFlowSheet)));
-    await tester.tap(find.text(l10n.addContinue));
+    await tester.tap(find.text(l10n.moreOptions));
     await tester.pumpAndSettle();
   }
 }

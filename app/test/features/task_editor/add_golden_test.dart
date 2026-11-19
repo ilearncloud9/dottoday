@@ -4,6 +4,7 @@ library;
 
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
@@ -102,7 +103,9 @@ Widget addSheet(
         ..._today(),
         ...history,
       ]),
-      profile: testProfile(settings: const Settings(use24h: false)),
+      profile: testProfile(
+        settings: const Settings(use24h: false, uiLayout: UiLayout.minimal),
+      ),
       writeFault: writeFault,
     ),
     child: nested
@@ -140,19 +143,9 @@ void main() {
   tearDownAll(() => EditableText.debugDeterministicCursor = false);
 
   const shopping = AddRequest(languageCode: 'en', text: 'Go shopping');
-  // A1 (`A-ios-add-what`): "Go shopping" typed, its habit ticked.
-  goldenMatrix(
-    'add_what',
-    height: 844,
-    build: (cell) => addSheet(cell, shopping),
-  );
-  goldenMatrix(
-    'add_what_android',
-    height: 915,
-    platform: TargetPlatform.android,
-    widths: const {'compact'},
-    build: (cell) => addSheet(cell, shopping),
-  );
+  // Minimal's Add (docs/14 §4, ED-152); its first step is the minimal_add
+  // golden (minimal_golden_test). Full Add: create_task_golden_test and
+  // add_popover_golden_test.
   // Derived (M8.5b, R-08): Add another failed on a full disk; the title
   // stays, the failure shows with Try again.
   goldenMatrix(
@@ -170,9 +163,9 @@ void main() {
       writeFault: WriteFault()..failure = const StorageFailure(),
     ),
   );
-  // A2 (`A-ios-add-when`): Continue from "Go shopping 5pm".
+  // A2 (`A-ios-add-when`): More from "Go shopping 5pm".
   const when = AddRequest(languageCode: 'en', text: 'Go shopping 5pm');
-  Future<void> toWhen(WidgetTester tester) => tester.tap(find.text('Continue'));
+  Future<void> toWhen(WidgetTester tester) => tester.tap(find.text('More'));
   goldenMatrix(
     'add_when',
     height: 844,
@@ -189,7 +182,7 @@ void main() {
   );
   // A3 (`A-ios-add-duration`): DURATION ⋯ at 1 h 30 from step 2.
   Future<void> toDuration(WidgetTester tester) async {
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('1.5h'));
     await tester.pumpAndSettle();
@@ -215,7 +208,7 @@ void main() {
   );
   // A4 (`A-ios-add-time-menu`): the TIME ⋯ menu open.
   Future<void> toMenu(WidgetTester tester) async {
-    await tester.tap(find.text('Continue'));
+    await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('More time options'));
   }
@@ -248,16 +241,6 @@ void main() {
       ),
     ),
   );
-  // A new user: no habits yet, so no Suggestions; the helper shows.
-  goldenMatrix(
-    'add_what_blank',
-    height: 640,
-    widths: const {'compact'},
-    build: (cell) => ProviderScope(
-      overrides: timelineOverrides(now: DateTime.utc(2026, 10, 21, 9)),
-      child: addSheet(cell, const AddRequest(languageCode: 'en')),
-    ),
-  );
   // docs/13 §11: the learned length pre-selected ("usually 1 h 20"), and
   // its explanation open, at the largest text and in RTL too.
   const learned = AddRequest(languageCode: 'en', text: 'Write report 5pm');
@@ -271,9 +254,9 @@ void main() {
       widths: const {'compact', 'expanded'},
       a11yVariants: true,
       act: (t) async {
-        await t.ensureVisible(find.text('Continue'));
+        await t.ensureVisible(find.text('More'));
         await t.pumpAndSettle();
-        await t.tap(find.text('Continue'));
+        await t.tap(find.text('More'));
         await t.pumpAndSettle();
         if (!open) return;
         // At the largest text the line sits below the step's lazy fold:

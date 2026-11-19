@@ -3,19 +3,14 @@ import 'dart:async';
 import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/scheduling/day_room_providers.dart';
-import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
-import 'package:dottoday/features/task_editor/add/add_save.dart';
+import 'package:dottoday/features/task_editor/add/add_submit.dart';
+import 'package:dottoday/features/task_editor/add/create/add_mode_tabs.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_form.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_more.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-/// Add's three modes (G2-8, ED-091).
-enum AddMode { task, brainDump, routine }
 
 /// Create task, the phones' Add (ED-139 to ED-142, ED-152): Task · Brain
 /// dump · Routine, each keeping its draft while another is shown. Only the
@@ -42,54 +37,24 @@ class _CreateTaskSheetState extends ConsumerState<CreateTaskSheet> {
 
   void _close() => unawaited(Navigator.of(context).maybePop());
 
-  /// Create task (and Return on the title): the typed time, else the first
-  /// free slot (docs/10 §6), unless "@inbox" was typed. On success Add
-  /// closes; on failure it reopens as it was (ED-152 rule 1, M8.5b).
-  Future<void> _create() async {
-    final state = ref.read(addFlowProvider(_request)).value;
-    if (state == null) return;
-    if (QuickAddParser.lines(state.text).length > 1) return _addMany();
-    var draft = currentDraft(ref, _request, state);
-    if (draft.startMinute == null && !draft.inbox) {
-      final room = await ref.read(dayRoomProvider(draft.day).future);
-      draft = draft.withStartUtc(
-        firstFreeStart(room, draft),
-        snap: room.snapMinutes,
-      );
-    }
-    if (!mounted) return;
-    await saveFromSheet(context, _request, draft);
-  }
+  Future<void> _create() => submitAdd(context, ref, _request);
 
-  /// A pasted list goes to the proposal; nothing is written before Accept
-  /// (R-07, ED-150).
-  Future<void> _addMany() {
-    final text = ref.read(addFlowProvider(_request)).value?.text ?? '';
-    return addManyFromSheet(context, _request, text);
-  }
+  Future<void> _addMany() => submitMany(context, ref, _request);
 
-  /// Try again: the save that failed, with the draft as it is now.
-  Future<void> _retry(AddRetry retry) async {
-    final state = ref.read(addFlowProvider(_request)).value;
-    if (state == null) return;
-    return switch (retry) {
-      AddRetry.inbox => saveFromSheet(
-        context,
-        _request,
-        currentDraft(ref, _request, state),
-        toInbox: true,
-      ).then((_) {}),
-      AddRetry.many => _addMany(),
-      AddRetry.save || AddRetry.another => _create(),
-    };
-  }
+  Future<void> _retry(AddRetry retry) =>
+      retryAdd(context, ref, _request, retry);
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(addFlowProvider(_request)).value;
     if (state == null) return const SizedBox.shrink();
     final modes = AddModesScope.maybeOf(context);
-    final args = (day: state.draft.day, today: state.draft.today, done: _close);
+    final args = (
+      day: state.draft.day,
+      today: state.draft.today,
+      done: _close,
+      embedded: false,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -107,7 +72,7 @@ class _CreateTaskSheetState extends ConsumerState<CreateTaskSheet> {
               DotSpace.page,
               DotSpace.m,
             ),
-            child: _Tabs(
+            child: AddModeTabs(
               mode: _mode,
               onMode: (m) => setState(() {
                 _mode = m;
@@ -226,47 +191,6 @@ class _Header extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-/// Task · Brain dump · Routine: the native control on each platform.
-class _Tabs extends StatelessWidget {
-  const _Tabs({required this.mode, required this.onMode});
-
-  final AddMode mode;
-  final ValueChanged<AddMode> onMode;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final labels = {
-      AddMode.task: l10n.createTabTask,
-      AddMode.brainDump: l10n.dumpTitle,
-      AddMode.routine: l10n.routineDropTitle,
-    };
-    if (DotIdiom.of(context) == DotIdiom.material) {
-      return SegmentedButton<AddMode>(
-        segments: [
-          for (final m in AddMode.values)
-            ButtonSegment(value: m, label: Text(labels[m]!)),
-        ],
-        selected: {mode},
-        onSelectionChanged: (s) => onMode(s.first),
-      );
-    }
-    return CupertinoSlidingSegmentedControl<AddMode>(
-      groupValue: mode,
-      onValueChanged: (m) {
-        if (m != null) onMode(m);
-      },
-      children: {
-        for (final m in AddMode.values)
-          m: Padding(
-            padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-            child: Text(labels[m]!),
-          ),
-      },
     );
   }
 }

@@ -3,21 +3,13 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:flutter/material.dart';
 
-/// Top of the Add sheet (`A-ios-add-what`, `A-ios-add-when`): "‹ Back" on
-/// step 2, the step dots, and close.
+/// Top of Minimal's Add sheet (docs/14 §4): "‹ Back" on the When step,
+/// and close. Minimal Add is one step, so it shows no step dots.
 class AddHeader extends StatelessWidget {
-  const AddHeader({
-    required this.step,
-    required this.onBack,
-    this.dots = true,
-    super.key,
-  });
+  const AddHeader({required this.step, required this.onBack, super.key});
 
   final AddStep step;
   final VoidCallback onBack;
-
-  /// The step dots; off for minimal's one-step Add (docs/14 §4).
-  final bool dots;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +35,6 @@ class AddHeader extends StatelessWidget {
                 ),
               ),
             ),
-          if (dots)
-            _StepDots(current: step.index, total: AddStep.values.length),
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: IconButton(
@@ -53,40 +43,6 @@ class AddHeader extends StatelessWidget {
               icon: DotIcon(DotGlyphs.close, color: t.colors.text),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// The page dots: the current step is a short accent bar.
-class _StepDots extends StatelessWidget {
-  const _StepDots({required this.current, required this.total});
-
-  final int current;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    return Semantics(
-      label: context.l10n.addStepOf(current + 1, total),
-      excludeSemantics: true,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: DotSpace.xs + DotSpace.xxs,
-        children: [
-          for (var i = 0; i < total; i++)
-            AnimatedContainer(
-              duration: DotTheme.of(context).motion.base,
-              curve: DotTheme.of(context).motion.curve,
-              width: i == current ? DotSpace.l + DotSpace.xxs : DotSpace.s,
-              height: DotSpace.s,
-              decoration: BoxDecoration(
-                color: i == current ? c.accent : c.threadAhead,
-                borderRadius: BorderRadius.circular(DotRadii.pill),
-              ),
-            ),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -51,7 +52,11 @@ Future<FakeOccurrenceRepository> pumpAddHost(
       overrides: timelineOverrides(
         now: addNow,
         occurrences: repo,
-        profile: testProfile(settings: settings),
+        // The two-step sheet is Minimal's Add (ED-152): a failed save
+        // reopens it, not Full's popover or Create task.
+        profile: testProfile(
+          settings: settings.copyWith(uiLayout: UiLayout.minimal),
+        ),
         writeFault: writeFault,
         routines: routines,
       ),
@@ -65,9 +70,9 @@ Future<FakeOccurrenceRepository> pumpAddHost(
             builder: (context) => Scaffold(
               body: Center(
                 child: TextButton(
-                  // The two-step sheet itself: Minimal's Add and, until
-                  // M19.3 parts 3b and 3c, the wide windows'. Phones in
-                  // Full open Create task (create_task_test.dart).
+                  // Minimal's two-step sheet itself. Full opens Create task
+                  // on phones (create_task_test.dart) and the popover from
+                  // medium width (add_popover_test.dart).
                   onPressed: () => showAppSheet<void>(
                     context: context,
                     fullHeight: true,

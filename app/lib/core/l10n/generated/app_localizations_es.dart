@@ -1136,15 +1136,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get addContinue => 'Continuar';
-
-  @override
   String get addToInbox => 'Añadir a la bandeja';
-
-  @override
-  String addStepOf(int step, int total) {
-    return 'Paso $step de $total';
-  }
 
   @override
   String get addBack => 'Atrás';

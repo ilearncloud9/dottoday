@@ -853,13 +853,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.addHabitLabel(title, meta));
 
   @override
-  String get addContinue => pseudo(super.addContinue);
-
-  @override
   String get addToInbox => pseudo(super.addToInbox);
-
-  @override
-  String addStepOf(int step, int total) => pseudo(super.addStepOf(step, total));
 
   @override
   String get addBack => pseudo(super.addBack);

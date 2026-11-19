@@ -1,12 +1,10 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/domain/scheduling/energy_window.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/scheduling/learning_thresholds.dart';
 import 'package:dottoday/domain/scheduling/slot_fit.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
-import 'package:dottoday/features/task_editor/add/widgets/add_energy_hint.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_when_parts.dart';
 import 'package:dottoday/shared/dot/picker_caption.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
@@ -35,7 +33,6 @@ class AddWhenStep extends StatelessWidget {
     this.onEditDay,
     this.timeMenu,
     this.durationMenu,
-    this.energy,
     this.thresholds = LearningThresholds.standard,
     this.onResetLearning,
     super.key,
@@ -59,10 +56,6 @@ class AddWhenStep extends StatelessWidget {
   /// The ⋯ beside TIME (M3c.4) and DURATION (M3c.3).
   final Widget? timeMenu;
   final Widget? durationMenu;
-
-  /// The user's best window for high-energy work, when Add should suggest
-  /// it for this task (11 C4, M11.5); null says nothing.
-  final EnergyWindow? energy;
 
   /// When the start-offset caption speaks (docs/13 §2).
   final LearningThresholds thresholds;
@@ -177,13 +170,6 @@ class AddWhenStep extends StatelessWidget {
             explanation: _why(context, state.draft.learned.offsetSamples),
             style: _quiet(context),
           ),
-        ),
-      if (energy case final w?)
-        AddEnergyHint(
-          window: w,
-          text: text,
-          startMinute: state.draft.startMinute ?? 0,
-          onStart: onStart,
         ),
     ];
   }

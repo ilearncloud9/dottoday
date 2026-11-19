@@ -1,11 +1,8 @@
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
-import 'package:dottoday/features/task_editor/add/widgets/habit_list.dart';
-import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,7 +66,7 @@ void main() {
   // R-06 from the shell, the ⌘N key and a failed save's reopen run on
   // Create task, the phones' Add: create_task_test.dart.
 
-  testWidgets('typing fills time live; a chip removes its token', (
+  testWidgets('typing fills time live; a chip × keeps its word (E-R2-36)', (
     tester,
   ) async {
     final repo = await pumpAddHost(tester, rows: _history());
@@ -81,81 +78,30 @@ void main() {
     await tester.tap(find.byTooltip('Remove “9pm”'));
     await tester.pump();
     expect(find.widgetWithText(InputChip, '9pm'), findsNothing);
-    expect(find.widgetWithText(TextField, 'Read 45m'), findsOneWidget);
+    expect(find.widgetWithText(TextField, 'Read 9pm 45m'), findsOneWidget);
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    final o = _added(repo, 'Read')!;
-    expect((o.isInbox, o.durationMin), (true, 45));
+    // "9pm" is title text now, not a time: Minimal puts it in the first
+    // free slot (docs/14 §4).
+    final o = _added(repo, 'Read 9pm')!;
+    expect((o.isInbox, o.durationMin), (false, 45));
   });
 
-  testWidgets('suggestions come from habits; picking one fills it all', (
+  // Suggestions and the colour row are Create task's and the popover's now
+  // (create_task_test, add_popover_test); Minimal guesses the look.
+  testWidgets('the title guesses the icon and colour; Undo removes it', (
     tester,
   ) async {
     final repo = await pumpAddHost(tester, rows: _history());
-    expect(find.text('SUGGESTIONS'), findsOneWidget);
-    expect(find.text('usually 5:00 PM – 6:00 PM · 1 h'), findsOneWidget);
-    await tester.enterText(_title, 'shop');
-    await tester.pump();
-    expect(
-      find.descendant(
-        of: find.byType(HabitList),
-        matching: find.text('Answer emails'),
-      ),
-      findsNothing,
-    );
-    await tester.tap(find.text('Go shopping'));
-    await tester.pump();
-    expect(find.widgetWithText(TextField, 'Go shopping'), findsOneWidget);
-    // The habit the title names is the ticked one.
-    final list = tester.widget<HabitList>(find.byType(HabitList));
-    expect(list.selected?.title, 'Go shopping');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    final o = _added(repo, 'Go shopping')!;
-    expect(o.startUtc, DateTime.utc(2026, 10, 21, 15));
-    expect((o.durationMin, o.colorKey, o.iconKey), (60, 'coral', 'bag'));
-  });
-
-  testWidgets('a picked colour and icon are saved; Undo removes the task', (
-    tester,
-  ) async {
-    final repo = await pumpAddHost(tester, rows: _history());
-    await tester.enterText(_title, 'Swim 7pm');
-    await tester.tap(find.bySemanticsLabel('Teal'));
-    // The colour row scrolls rather than shrink its 44 pt targets.
-    await tester.ensureVisible(find.bySemanticsLabel('Cart'));
-    await tester.tap(find.bySemanticsLabel('Cart'));
-    await tester.pump();
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle();
-    final o = _added(repo, 'Swim')!;
-    expect((o.colorKey, o.iconKey), ('teal', 'cart'));
-    await tester.tap(find.text('Undo'));
-    await tester.pumpAndSettle();
-    expect(_added(repo, 'Swim')!.deletedAt, isNotNull);
-  });
-
-  testWidgets('the title fills the icon and colour; a pick then wins', (
-    tester,
-  ) async {
-    final repo = await pumpAddHost(tester, rows: _history());
-    ColourIconBlock look() => tester.widget(find.byType(ColourIconBlock));
-
     await tester.enterText(_title, 'Dentist 3pm');
     await tester.pump();
-    expect((look().color, look().icon), (TaskColor.rose, TaskIcon.tooth));
-
-    // The quick row: the suggested icon, then the habits' (Bag, Mail).
-    await tester.ensureVisible(find.bySemanticsLabel('Bag'));
-    await tester.tap(find.bySemanticsLabel('Bag'));
-    await tester.enterText(_title, 'Dentist checkup 3pm');
-    await tester.pump();
-    expect((look().color, look().icon), (TaskColor.rose, TaskIcon.bag));
-
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    final o = _added(repo, 'Dentist checkup')!;
-    expect((o.colorKey, o.iconKey), ('rose', 'bag'));
+    final o = _added(repo, 'Dentist')!;
+    expect((o.colorKey, o.iconKey), ('rose', 'tooth'));
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(_added(repo, 'Dentist')!.deletedAt, isNotNull);
   });
 
   testWidgets('close discards; a11y guidelines hold', (tester) async {
@@ -165,7 +111,7 @@ void main() {
     await tester.tap(find.byTooltip('Close'));
     await tester.pumpAndSettle();
     expect(_added(repo, 'Nope'), isNull);
-    expect(find.text('Continue'), findsNothing);
+    expect(find.text('More'), findsNothing);
   });
 }
 
@@ -230,7 +176,7 @@ void _a11yMatrix() {
     ]) {
       testWidgets('A1 a11y ${mode.name} $name', (tester) async {
         await _pumpHost(tester, size: size, mode: mode);
-        expect(find.text('Continue'), findsOneWidget);
+        expect(find.text('More'), findsOneWidget);
         await expectA11yGuidelines(tester);
         // The token-chip state too.
         await tester.enterText(_title, 'Go shopping 5pm 1h');
@@ -249,6 +195,6 @@ void _a11yMatrix() {
     );
     final e = tester.takeException();
     expect(e, isNull);
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('More'), findsOneWidget);
   });
 }

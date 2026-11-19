@@ -1133,15 +1133,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get addContinue => 'Continue';
-
-  @override
   String get addToInbox => 'Add to Inbox instead';
-
-  @override
-  String addStepOf(int step, int total) {
-    return 'Step $step of $total';
-  }
 
   @override
   String get addBack => 'Back';

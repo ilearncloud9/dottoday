@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
@@ -69,16 +70,18 @@ class DotSidebar extends StatelessWidget {
                       ),
                     ),
                     if (bar.onAdd case final onAdd?)
-                      IconButton.filled(
-                        onPressed: onAdd,
-                        tooltip: bar.addLabel,
-                        style: IconButton.styleFrom(
-                          backgroundColor: t.colors.accent,
-                        ),
-                        icon: DotIcon(
-                          DotGlyphs.add,
-                          color: t.colors.onAccent,
-                          active: true,
+                      AddAnchor(
+                        child: IconButton.filled(
+                          onPressed: onAdd,
+                          tooltip: bar.addLabel,
+                          style: IconButton.styleFrom(
+                            backgroundColor: t.colors.accent,
+                          ),
+                          icon: DotIcon(
+                            DotGlyphs.add,
+                            color: t.colors.onAccent,
+                            active: true,
+                          ),
                         ),
                       ),
                     if (toggle != null)

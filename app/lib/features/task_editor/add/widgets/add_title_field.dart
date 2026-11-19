@@ -10,8 +10,8 @@ import 'package:flutter/services.dart';
 const _maxInput = 10000;
 
 /// The Add title field (`A-ios-add-what`): natural language fills the time
-/// and length as you type (R-06); recognised pieces show as chips that one
-/// tap removes (docs/02 F2). Enter adds at once, Shift+Enter adds and
+/// and length as you type (R-06); recognised pieces show as chips whose ×
+/// keeps the word as title text (docs/02 F2, E-R2-36). Enter adds at once, Shift+Enter adds and
 /// starts another; a pasted list asks "Add N tasks?" (03 §3.3, M3c.5).
 ///
 /// A leaf: it owns only the controller and mirrors [text] when the flow
@@ -22,8 +22,12 @@ class AddTitleField extends StatefulWidget {
     required this.typed,
     required this.onChanged,
     required this.onSubmit,
-    required this.onAnother,
     required this.onAddMany,
+    required this.onRemoveToken,
+    this.onAnother,
+    this.style,
+    this.decoration,
+    this.frame,
     super.key,
   });
 
@@ -34,11 +38,24 @@ class AddTitleField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final VoidCallback onSubmit;
 
-  /// Shift+Enter: add, keep the sheet, start the next task.
-  final VoidCallback onAnother;
+  /// Shift+Enter: add, keep the sheet, start the next task. Without it
+  /// Shift+Enter adds as Enter does (the popover has no Add another).
+  final VoidCallback? onAnother;
 
   /// A pasted list confirmed: add every line.
   final VoidCallback onAddMany;
+
+  /// A chip's ×: the word stays as title text (E-R2-36).
+  final ValueChanged<QuickAddToken> onRemoveToken;
+
+  /// The field's text style and decoration; the sheet's labelled field
+  /// when null.
+  final TextStyle? style;
+  final InputDecoration? decoration;
+
+  /// Wraps the field alone, above its chips (the popover's box with the
+  /// dot, E-R2-36).
+  final Widget Function(Widget field)? frame;
 
   @override
   State<AddTitleField> createState() => _AddTitleFieldState();
@@ -64,9 +81,6 @@ class _AddTitleFieldState extends State<AddTitleField> {
     super.dispose();
   }
 
-  void _remove(QuickAddToken token) =>
-      widget.onChanged(textWithout(widget.typed, token));
-
   @override
   Widget build(BuildContext context) {
     final lines = QuickAddParser.lines(widget.text);
@@ -78,7 +92,7 @@ class _AddTitleFieldState extends State<AddTitleField> {
             : widget.onSubmit,
         const SingleActivator(LogicalKeyboardKey.enter, shift: true): many
             ? widget.onAddMany
-            : widget.onAnother,
+            : widget.onAnother ?? widget.onSubmit,
       },
       child: _field(context, lines),
     );
@@ -92,26 +106,30 @@ class _AddTitleFieldState extends State<AddTitleField> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        TextField(
-          controller: _controller,
-          autofocus: true,
-          style: t.styles.topBarTitle,
-          textCapitalization: TextCapitalization.sentences,
-          // iPhone: the neutral "return" (ED-135); elsewhere the IME's done.
-          textInputAction: DotIdiom.of(context) == DotIdiom.cupertino
-              ? TextInputAction.unspecified
-              : TextInputAction.done,
-          // Not one line: a pasted list keeps its line breaks (R-07).
-          minLines: 1,
-          maxLines: null,
-          inputFormatters: [LengthLimitingTextInputFormatter(_maxInput)],
-          decoration: InputDecoration(
-            labelText: l10n.addTitleLabel,
-            hintText: l10n.editorTitleHint,
+        (widget.frame ?? (f) => f)(
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            style: widget.style ?? t.styles.topBarTitle,
+            textCapitalization: TextCapitalization.sentences,
+            // iPhone: the neutral "return" (ED-135); elsewhere the IME's done.
+            textInputAction: DotIdiom.of(context) == DotIdiom.cupertino
+                ? TextInputAction.unspecified
+                : TextInputAction.done,
+            // Not one line: a pasted list keeps its line breaks (R-07).
+            minLines: 1,
+            maxLines: null,
+            inputFormatters: [LengthLimitingTextInputFormatter(_maxInput)],
+            decoration:
+                widget.decoration ??
+                InputDecoration(
+                  labelText: l10n.addTitleLabel,
+                  hintText: l10n.editorTitleHint,
+                ),
+            onChanged: widget.onChanged,
+            onSubmitted: (_) =>
+                lines.length > 1 ? widget.onAddMany() : widget.onSubmit(),
           ),
-          onChanged: widget.onChanged,
-          onSubmitted: (_) =>
-              lines.length > 1 ? widget.onAddMany() : widget.onSubmit(),
         ),
         if (lines.length > 1)
           PasteConfirm(
@@ -131,7 +149,7 @@ class _AddTitleFieldState extends State<AddTitleField> {
                 if (token.end <= widget.typed.text.length)
                   _TokenChip(
                     text: widget.typed.text.substring(token.start, token.end),
-                    onRemove: () => _remove(token),
+                    onRemove: () => widget.onRemoveToken(token),
                   ),
             ],
           ),

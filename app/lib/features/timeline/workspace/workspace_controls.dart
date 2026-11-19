@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
@@ -243,37 +244,101 @@ class ToolbarPill extends ConsumerWidget {
   }
 }
 
-/// The teal + (⌘N): Add.
+/// The teal + (⌘N): Add, where Add's popover points (E-R2-36). A
+/// mouse-driven browser draws "Add" with its `n` key cap instead.
 class ToolbarAdd extends ConsumerWidget {
-  const ToolbarAdd({required this.label, required this.onTap, super.key});
+  const ToolbarAdd({
+    required this.label,
+    required this.text,
+    required this.onTap,
+    super.key,
+  });
 
+  /// Its name for a screen reader and the tooltip ("Add a task").
   final String label;
+
+  /// The web button's word ("Add").
+  final String text;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = DotTheme.of(context).colors;
+    final t = DotTheme.of(context);
+    final c = t.colors;
     final h = workspaceControlHeight(context, ref);
-    return Tooltip(
-      message: label,
-      child: Material(
-        color: c.accent,
-        shape: const StadiumBorder(),
-        child: InkWell(
+    final word = !macApp(context) && !watchTouchContent(context, ref);
+    final glyph = DotIcon(
+      DotGlyphs.add,
+      color: c.onAccent,
+      size: DotSize.sidebarGlyph,
+    );
+    return AddAnchor(
+      child: Tooltip(
+        message: label,
+        child: Semantics(
+          button: true,
+          label: label,
+          excludeSemantics: true,
           onTap: onTap,
-          customBorder: const StadiumBorder(),
-          child: SizedBox(
-            width: h + DotSpace.xs,
-            height: h,
-            child: Center(
-              child: DotIcon(
-                DotGlyphs.add,
-                color: c.onAccent,
-                size: DotSize.sidebarGlyph,
+          child: Material(
+            color: c.accent,
+            shape: const StadiumBorder(),
+            child: InkWell(
+              onTap: onTap,
+              customBorder: const StadiumBorder(),
+              child: SizedBox(
+                width: word ? null : h + DotSpace.xs,
+                height: h,
+                child: word
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: DotSpace.m,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: DotSpace.s,
+                          children: [
+                            Text(
+                              text,
+                              style: t.styles.button.copyWith(
+                                color: c.onAccent,
+                              ),
+                            ),
+                            _KeyCap(
+                              'n', // l10n-ignore: the web's Add key cap
+                              color: c.onAccent,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Center(child: glyph),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// A key on the Add button, drawn as the board's light key cap.
+class _KeyCap extends StatelessWidget {
+  const _KeyCap(this.cap, {required this.color});
+
+  final String cap;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(DotRadii.field),
+        border: Border.all(color: color),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: DotSpace.xs),
+        child: Text(cap, style: t.styles.rowMeta.copyWith(color: color)),
       ),
     );
   }

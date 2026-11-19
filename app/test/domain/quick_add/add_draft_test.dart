@@ -161,16 +161,36 @@ void main() {
     expect(d.startUtc, DateTime.utc(2026, 10, 21, 16));
   });
 
-  test('textWithout drops a token and tidies spaces', () {
-    final typed = _parse('Read 9pm 45m');
-    final time = typed.tokens.firstWhere(
-      (t) => t.kind == QuickAddTokenKind.time,
-    );
-    expect(textWithout(typed, time), 'Read 45m');
-    expect(
-      textWithout(typed, const QuickAddToken(QuickAddTokenKind.time, 0, 99)),
-      'Read 9pm 45m',
-    );
+  group('carryIgnored (a removed chip keeps its word, E-R2-36)', () {
+    const six = QuickAddToken(QuickAddTokenKind.time, 4, 7);
+
+    test('the word stays title text and is no longer a time', () {
+      final typed = switch (const QuickAddParser().parse(
+        'Gym 6pm',
+        QuickAddContext(
+          nowUtc: _now,
+          tzId: 'Europe/Berlin',
+          language: QuickAddLanguage.en,
+        ),
+        ignored: const [six],
+      )) {
+        Ok(:final value) => value,
+        Err(:final failure) => throw StateError('$failure'),
+      };
+      expect((typed.title, typed.minuteOfDay), ('Gym 6pm', null));
+    });
+
+    test('typing before it shifts it; after it, keeps it', () {
+      expect(carryIgnored('Gym 6pm', 'Big Gym 6pm', const [six]), const [
+        QuickAddToken(QuickAddTokenKind.time, 8, 11),
+      ]);
+      expect(carryIgnored('Gym 6pm', 'Gym 6pm 45m', const [six]), const [six]);
+    });
+
+    test('an edit inside it drops it, so it is read again', () {
+      expect(carryIgnored('Gym 6pm', 'Gym 7pm', const [six]), isEmpty);
+      expect(carryIgnored('Gym 6pm', 'Gym', const [six]), isEmpty);
+    });
   });
 
   group('toRows', () {

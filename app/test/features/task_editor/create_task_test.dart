@@ -4,10 +4,12 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/routines/widgets/routine_add_tab.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/create/create_task_sheet.dart';
+import 'package:dottoday/shared/proposals/proposal_sheet.dart';
 import 'package:dottoday/shared/task_form/task_form_header.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ Future<FakeOccurrenceRepository> _pumpApp(
   Settings settings = const Settings(use24h: false),
   double textScale = 1,
   ThemeMode mode = ThemeMode.light,
+  List<Occurrence>? rows,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 844)
@@ -37,7 +40,7 @@ Future<FakeOccurrenceRepository> _pumpApp(
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
   addTearDown(tester.view.reset);
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-  final repo = FakeOccurrenceRepository(demoTimed());
+  final repo = FakeOccurrenceRepository(rows ?? demoTimed());
   final router = buildRouter(appScreens);
   addTearDown(router.dispose);
   await tester.pumpWidget(
@@ -258,6 +261,68 @@ void main() {
     } finally {
       debugDefaultTargetPlatformOverride = null;
     }
+  });
+
+  testWidgets('a habit suggestion fills it all (below the empty form)', (
+    tester,
+  ) async {
+    final shopping = [
+      for (final day in [14, 7])
+        Occurrence(
+          id: '01928c3e-0000-7000-8000-0000000001$day',
+          userId: testUserId,
+          title: 'Go shopping',
+          colorKey: 'coral',
+          iconKey: 'bag',
+          startUtc: DateTime.utc(2026, 10, day, 15),
+          tzId: 'Europe/Berlin',
+          durationMin: 60,
+          createdAt: DateTime.utc(2026, 10),
+          updatedAt: DateTime.utc(2026, 10),
+        ),
+    ];
+    final repo = await _pumpApp(tester, rows: shopping);
+    await _open(tester);
+    await tester.ensureVisible(_in(find.text('Go shopping')));
+    await tester.pumpAndSettle();
+    await tester.tap(_in(find.text('Go shopping')));
+    await tester.pumpAndSettle();
+    expect(find.widgetWithText(TextField, 'Go shopping'), findsOneWidget);
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+    final o = repo.rows.firstWhere(
+      (o) =>
+          o.title == 'Go shopping' &&
+          o.createdAt.isAfter(DateTime.utc(2026, 10, 21)),
+    );
+    expect(o.startUtc, DateTime.utc(2026, 10, 21, 15));
+    expect((o.durationMin, o.colorKey, o.iconKey), (60, 'coral', 'bag'));
+  });
+
+  // Add › Routines (docs/09 M11.4, 11 C2), below the empty form: a tap
+  // hands the routine and the draft's day to the shell's host (which
+  // proposes it) and closes Add; typing a title puts them away.
+  testWidgets('routine chips drop on the draft day; a title hides them', (
+    tester,
+  ) async {
+    final repo = await _pumpApp(tester);
+    final before = repo.rows.length;
+    await _open(tester);
+    final chip = _in(find.bySemanticsLabel('Drop routine Gym day'));
+    await tester.ensureVisible(chip);
+    await tester.pumpAndSettle();
+    await tester.tap(chip);
+    await tester.pumpAndSettle();
+    expect(find.byType(CreateTaskSheet), findsNothing, reason: 'Add closed');
+    // The shell's host proposes it at once; nothing before Accept.
+    expect(find.byType(ProposalSheet), findsOneWidget);
+    expect(repo.rows, hasLength(before));
+    await tester.tap(find.text('Discard').last);
+    await tester.pumpAndSettle();
+    await _open(tester);
+    await tester.enterText(_title, 'gym');
+    await tester.pump();
+    expect(_in(find.bySemanticsLabel('Drop routine Gym day')), findsNothing);
   });
 
   testWidgets('Minimal keeps its own Add sheet (ED-152)', (tester) async {

@@ -102,9 +102,13 @@ final class AddFlowState {
     required this.language,
     this.step = AddStep.what,
     this.saveFailure,
+    this.ignored = const [],
   });
 
   final AddDraft draft;
+
+  /// Chips the user removed: their words stay title text (E-R2-36).
+  final List<QuickAddToken> ignored;
 
   /// The title field as typed.
   final String text;
@@ -114,14 +118,19 @@ final class AddFlowState {
   /// The last save, when it failed; the draft above is what it tried.
   final AddSaveFailure? saveFailure;
 
-  AddFlowState copyWith({AddDraft? draft, String? text, AddStep? step}) =>
-      AddFlowState(
-        draft: draft ?? this.draft,
-        text: text ?? this.text,
-        language: language,
-        step: step ?? this.step,
-        saveFailure: saveFailure,
-      );
+  AddFlowState copyWith({
+    AddDraft? draft,
+    String? text,
+    AddStep? step,
+    List<QuickAddToken>? ignored,
+  }) => AddFlowState(
+    draft: draft ?? this.draft,
+    text: text ?? this.text,
+    language: language,
+    step: step ?? this.step,
+    saveFailure: saveFailure,
+    ignored: ignored ?? this.ignored,
+  );
 
   /// This state with [failure] showing (null clears it).
   AddFlowState withFailure(AddSaveFailure? failure) => AddFlowState(
@@ -130,6 +139,7 @@ final class AddFlowState {
     language: language,
     step: step,
     saveFailure: failure,
+    ignored: ignored,
   );
 }
 
@@ -178,6 +188,16 @@ class AddFlow extends _$AddFlow {
     final s = _now;
     if (s == null || s.text == text) return;
     state = AsyncData(_typed(s, text));
+  }
+
+  /// A chip's ×: its word stays in the title as text and is no longer
+  /// read as a day, time or length (E-R2-36 "Chips are reversible").
+  void keepAsText(QuickAddToken token) {
+    final s = _now;
+    if (s == null) return;
+    state = AsyncData(
+      _typed(s.copyWith(ignored: [...s.ignored, token]), s.text),
+    );
   }
 
   /// Takes [habit]'s title, time, length, colour and icon.
@@ -232,6 +252,7 @@ class AddFlow extends _$AddFlow {
   }
 
   AddFlowState _typed(AddFlowState s, String text) {
+    final ignored = carryIgnored(s.text, text, s.ignored);
     final parsed = const QuickAddParser().parse(
       text,
       QuickAddContext(
@@ -239,6 +260,7 @@ class AddFlow extends _$AddFlow {
         tzId: s.draft.tzId,
         language: s.language,
       ),
+      ignored: ignored,
     );
     // Over-long input (06 §7) keeps the last good parse; the field's
     // maxLength stops it before that.
@@ -253,6 +275,7 @@ class AddFlow extends _$AddFlow {
         Learned.none;
     return s.copyWith(
       text: text,
+      ignored: ignored,
       draft: s.draft
           .withTyped(typed)
           .withHabit(habit)

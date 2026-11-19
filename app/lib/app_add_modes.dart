@@ -9,7 +9,11 @@ import 'package:flutter/widgets.dart';
 Widget withAddModes(Widget child) => AddModesScope(
   // Plan it opens the proposal; Add steps aside first (ED-150).
   brainDump: (context, a) => BrainDumpBody(today: a.today, onPlanned: a.done),
-  routine: (context, a) =>
-      RoutineAddTab(day: a.day, today: a.today, onPicked: a.done),
+  routine: (context, a) => RoutineAddTab(
+    day: a.day,
+    today: a.today,
+    onPicked: a.done,
+    embedded: a.embedded,
+  ),
   child: child,
 );

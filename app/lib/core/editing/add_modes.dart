@@ -1,8 +1,15 @@
 import 'package:flutter/widgets.dart';
 
 /// What a Brain dump or Routine tab of Add needs: the day Add opened on,
-/// today, and [done] to close Add once that tab's proposal opens.
-typedef AddModeArgs = ({DateTime day, DateTime today, VoidCallback done});
+/// today, [done] to close Add once that tab's proposal opens, and whether
+/// it sits [embedded] in a scrolling popover (E-R2-36) rather than filling
+/// a sheet.
+typedef AddModeArgs = ({
+  DateTime day,
+  DateTime today,
+  VoidCallback done,
+  bool embedded,
+});
 
 /// Builds one of Add's other modes.
 typedef AddModeBuilder =
