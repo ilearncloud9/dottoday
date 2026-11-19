@@ -210,20 +210,23 @@ void main() {
     expect(find.text('Pinned'), findsNothing);
   });
 
-  testWidgets('Move puts the task on the picked day, same time, with Undo', (
+  testWidgets('Move: the When picker, another day at the same time, Undo', (
     tester,
   ) async {
     final rows = demoDayRows(_date);
     final repo = FakeOccurrenceRepository(rows);
     final deep = rows.firstWhere((o) => o.title == 'Deep work: roadmap');
     await _pumpWith(tester, repo);
-    await tester.tap(_inSheet(find.text('Move')));
+    await tester.tap(_tile('Move'));
     await tester.pumpAndSettle();
-    expect(find.text('Move to'), findsOneWidget);
-    await tester.tap(find.bySemanticsLabel(RegExp('^Friday, October 23')).last);
+    // The one When picker (ED-099): Fri 23 keeps 09:00 (a 24 h clock).
+    expect(find.text('Move Deep work: roadmap'), findsOneWidget);
+    await tester.tap(find.text('Fri 23'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Move to 09:00'));
     await tester.pumpAndSettle();
     expect(
-      find.text('Deep work: roadmap moved to Friday, October 23'),
+      find.text('Deep work: roadmap moved to Fri, Oct 23, 09:00'),
       findsOneWidget,
     );
     final moved = repo.rows.firstWhere((o) => o.id == deep.id);

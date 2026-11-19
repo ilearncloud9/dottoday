@@ -12,11 +12,13 @@ import 'package:dottoday/domain/scheduling/inbox_order.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/undo/undo_service.dart';
 import 'package:dottoday/features/inbox/state/inbox_actions.dart';
-import 'package:dottoday/features/inbox/widgets/pick_time_sheet.dart';
-import 'package:dottoday/features/inbox/widgets/schedule_sheet.dart';
+import 'package:dottoday/features/inbox/widgets/slot_choice.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/pickers/when/when_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// What the Inbox's buttons and swipes do, each confirmed with Undo
 /// (docs/02 F3, R-11). Built per frame from the screen's context.
@@ -82,24 +84,34 @@ final class InboxCommands {
     return result is Ok;
   }
 
-  Future<void> schedule(Occurrence item) async {
-    final choice = await showScheduleSheet(
+  /// Schedule (ED-099): the one When picker; the picked start is placed
+  /// with Undo, its snackbar naming the day and range.
+  Future<void> schedule(Occurrence item, {Rect? anchor}) async {
+    final start = await showWhenPicker(
       _context,
-      item: item,
+      task: item,
+      mode: WhenMode.schedule,
       today: today,
-      rangeText: rangeText,
+      anchor: anchor,
     );
-    final picked = switch (choice) {
-      SlotPicked(:final choice) => choice,
-      PickTime() when _context.mounted => await showPickTimeSheet(
-        _context,
-        item: item,
-        today: today,
-        rangeText: rangeText,
+    if (start == null) return;
+    final slot = Slot(start, start.add(Duration(minutes: item.durationMin)));
+    final local = tz.TZDateTime.from(start, tz.getLocation(item.tzId));
+    final days = DateTime(
+      local.year,
+      local.month,
+      local.day,
+    ).difference(today).inDays;
+    final range = rangeText(slot);
+    final label = switch (days) {
+      0 => _l10n.inboxScheduleToday(range),
+      1 => _l10n.inboxScheduleTomorrow(range),
+      _ => _l10n.inboxScheduleDay(
+        DateFormat.E(_l10n.localeName).format(local),
+        range,
       ),
-      _ => null,
     };
-    if (picked != null) await place(item, picked);
+    await place(item, (slot: slot, label: label));
   }
 
   /// Puts [item] in [choice]'s slot; the snackbar repeats its label

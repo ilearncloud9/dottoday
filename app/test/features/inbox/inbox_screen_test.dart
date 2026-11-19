@@ -1,9 +1,8 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/shared/dot/thread_picker.dart';
+import 'package:dottoday/shared/pickers/when/day_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
@@ -21,6 +20,14 @@ Future<FakeOccurrenceRepository> _pump(
 
 Occurrence _row(FakeOccurrenceRepository repo, String title) =>
     repo.rows.singleWhere((o) => o.title == title);
+
+/// A free time's Place in the When picker, by the start of its label.
+Finder _placeFor(String label) => find.descendant(
+  of: find
+      .ancestor(of: find.textContaining(label), matching: find.byType(Row))
+      .first,
+  matching: find.text('Place'),
+);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -137,7 +144,8 @@ void main() {
     await tester.tap(find.byTooltip('Schedule').at(1)); // Call Mum
     await tester.pumpAndSettle();
     expect(find.text('Schedule Call Mum'), findsOneWidget);
-    await tester.tap(find.textContaining('Tomorrow, '));
+    // The When picker (ED-099): a free time's Place.
+    await tester.tap(_placeFor('Tomorrow, '));
     await tester.pumpAndSettle();
     expect(find.textContaining('Call Mum scheduled for Tomorrow'), findsOne);
     expect(_row(repo, 'Call Mum').startUtc, isNotNull);
@@ -147,32 +155,33 @@ void main() {
     expect(find.text('Call Mum'), findsOneWidget);
   });
 
-  testWidgets('"Pick a time…" places it anywhere on the thread (M3c.2)', (
+  testWidgets('a day and the day bar place it anywhere (ED-099)', (
     tester,
   ) async {
+    final handle = tester.ensureSemantics();
     final repo = await _pump(tester);
     await tester.tap(find.byTooltip('Schedule').at(1)); // Call Mum, 15 min
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Pick a time…'));
-    await tester.pumpAndSettle();
     // Today's first free 15 minutes after 11:00: 11:15, after Design review.
-    expect(find.text('11:15 AM – 11:30 AM'), findsOneWidget);
-    expect(find.text('Free until 11:30 AM · no overlap'), findsOneWidget);
-    await tester.tap(find.text('Tomorrow'));
+    expect(find.text('11:15 AM – 11:30 AM · free'), findsOneWidget);
+    await tester.tap(find.text('Tomorrow').last);
     await tester.pumpAndSettle();
-    expect(find.text('7:00 AM – 7:15 AM'), findsOneWidget);
-    await tester.tap(find.byType(ThreadPicker));
+    expect(find.text('7:00 AM – 7:15 AM · free'), findsOneWidget);
+    // The bar's slider steps by the snap (5 min): three steps, 7:15.
+    final bar = tester.getSemantics(find.bySemanticsLabel('Start time'));
     for (var i = 0; i < 3; i++) {
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      tester.binding.performSemanticsAction(
+        SemanticsActionEvent(
+          type: SemanticsAction.increase,
+          nodeId: bar.id,
+          viewId: tester.view.viewId,
+        ),
+      );
+      await tester.pump();
     }
-    await tester.pump();
-    await tester.tap(
-      find.descendant(
-        of: find.byType(BottomSheet),
-        matching: find.text('Place'),
-      ),
-    );
+    await tester.tap(find.textContaining('Place at '));
     await tester.pumpAndSettle();
+    handle.dispose();
     expect(_row(repo, 'Call Mum').startUtc, DateTime.utc(2026, 10, 22, 5, 15));
     expect(
       find.text('Call Mum scheduled for Tomorrow, 7:15 AM – 7:30 AM'),
@@ -185,13 +194,11 @@ void main() {
       ('compact', const Size(390, 1200)),
       ('expanded', const Size(1280, 1000)),
     ]) {
-      testWidgets('Pick a time a11y ${mode.name} $name', (tester) async {
+      testWidgets('When picker a11y ${mode.name} $name', (tester) async {
         await _pump(tester, mode: mode, size: size);
         await tester.tap(find.byTooltip('Schedule').at(1));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Pick a time…'));
-        await tester.pumpAndSettle();
-        expect(find.byType(ThreadPicker), findsOneWidget);
+        expect(find.byType(DayBar), findsOneWidget);
         await expectA11yGuidelines(tester);
       });
     }

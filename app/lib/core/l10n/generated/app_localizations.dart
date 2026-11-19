@@ -1572,6 +1572,72 @@ abstract class AppLocalizations {
   /// **'Schedule {title}'**
   String inboxScheduleTitle(String title);
 
+  /// The When picker's title for Move (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Move {title}'**
+  String whenMoveTitle(String title);
+
+  /// Under the Move title: where the task is now, and that it keeps its length (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'{when} · keeps its length'**
+  String whenKeepsLength(String when);
+
+  /// Under the Schedule title: an Inbox task and its length (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'From the Inbox · {length}'**
+  String whenFromInbox(String length);
+
+  /// Caption over the When picker's free-time suggestions (ED-099); drawn in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Free time'**
+  String get whenFreeTime;
+
+  /// Caption over the When picker's day chips and day bar (ED-099); drawn in capitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Or pick a day and time'**
+  String get whenPickDay;
+
+  /// The When picker's last day chip: opens the month (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Date…'**
+  String get whenDate;
+
+  /// The When picker's button for Move (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Move to {time}'**
+  String whenMoveTo(String time);
+
+  /// The When picker's button for Schedule (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Place at {time}'**
+  String whenPlaceAt(String time);
+
+  /// Under the day bar: the picked time is free (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · free'**
+  String whenRangeFree(String range);
+
+  /// Under the day bar: the picked time overlaps a task; it can still be placed (ADR-0015).
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · overlaps {title}'**
+  String whenRangeOverlaps(String range, String title);
+
+  /// Screen-reader name of the When picker's day bar, a slider (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Start time'**
+  String get whenBarLabel;
+
   /// Schedule suggestion: a free slot today.
   ///
   /// In en, this message translates to:

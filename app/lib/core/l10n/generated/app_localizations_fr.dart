@@ -1063,6 +1063,53 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String whenMoveTitle(String title) {
+    return 'Déplacer $title';
+  }
+
+  @override
+  String whenKeepsLength(String when) {
+    return '$when · garde sa durée';
+  }
+
+  @override
+  String whenFromInbox(String length) {
+    return 'Depuis la boîte de réception · $length';
+  }
+
+  @override
+  String get whenFreeTime => 'Temps libre';
+
+  @override
+  String get whenPickDay => 'Ou choisissez un jour et une heure';
+
+  @override
+  String get whenDate => 'Date…';
+
+  @override
+  String whenMoveTo(String time) {
+    return 'Déplacer à $time';
+  }
+
+  @override
+  String whenPlaceAt(String time) {
+    return 'Placer à $time';
+  }
+
+  @override
+  String whenRangeFree(String range) {
+    return '$range · libre';
+  }
+
+  @override
+  String whenRangeOverlaps(String range, String title) {
+    return '$range · chevauche $title';
+  }
+
+  @override
+  String get whenBarLabel => 'Heure de début';
+
+  @override
   String inboxScheduleToday(String range) {
     return 'Aujourd\'hui, $range';
   }

@@ -259,6 +259,13 @@ abstract final class DotSize {
   static const double tabletAddHeight = 700;
   static const double sideSheet = 412;
 
+  /// The When picker's day bar (E-Phones-2, ED-099): a 48 pt touch row,
+  /// the day's tasks 10 tall on its dashed line, the ring 24.
+  static const double dayBar = 48;
+  static const double dayBarBlock = 10;
+  static const double dayBarRing = 24;
+  static const double dayBarRingStroke = 3;
+
   /// Option D's "Need more time?" pill (E-Phones F3): at least 56 tall,
   /// its 44 pt chips inside with 6 around them.
   static const double extendPill = 56;

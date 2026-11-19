@@ -1559,6 +1559,88 @@
       }
     }
   },
+  "whenMoveTitle": "Move {title}",
+  "@whenMoveTitle": {
+    "description": "The When picker's title for Move (ED-099).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "whenKeepsLength": "{when} · keeps its length",
+  "@whenKeepsLength": {
+    "description": "Under the Move title: where the task is now, and that it keeps its length (ED-099).",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "whenFromInbox": "From the Inbox · {length}",
+  "@whenFromInbox": {
+    "description": "Under the Schedule title: an Inbox task and its length (ED-099).",
+    "placeholders": {
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "whenFreeTime": "Free time",
+  "@whenFreeTime": {
+    "description": "Caption over the When picker's free-time suggestions (ED-099); drawn in capitals."
+  },
+  "whenPickDay": "Or pick a day and time",
+  "@whenPickDay": {
+    "description": "Caption over the When picker's day chips and day bar (ED-099); drawn in capitals."
+  },
+  "whenDate": "Date…",
+  "@whenDate": {
+    "description": "The When picker's last day chip: opens the month (ED-099)."
+  },
+  "whenMoveTo": "Move to {time}",
+  "@whenMoveTo": {
+    "description": "The When picker's button for Move (ED-099).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "whenPlaceAt": "Place at {time}",
+  "@whenPlaceAt": {
+    "description": "The When picker's button for Schedule (ED-099).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "whenRangeFree": "{range} · free",
+  "@whenRangeFree": {
+    "description": "Under the day bar: the picked time is free (ED-099).",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "whenRangeOverlaps": "{range} · overlaps {title}",
+  "@whenRangeOverlaps": {
+    "description": "Under the day bar: the picked time overlaps a task; it can still be placed (ADR-0015).",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "whenBarLabel": "Start time",
+  "@whenBarLabel": {
+    "description": "Screen-reader name of the When picker's day bar, a slider (ED-099)."
+  },
   "inboxScheduleToday": "Today, {range}",
   "@inboxScheduleToday": {
     "description": "Schedule suggestion: a free slot today.",

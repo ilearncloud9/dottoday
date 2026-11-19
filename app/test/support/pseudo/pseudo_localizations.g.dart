@@ -801,6 +801,40 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.inboxScheduleTitle(title));
 
   @override
+  String whenMoveTitle(String title) => pseudo(super.whenMoveTitle(title));
+
+  @override
+  String whenKeepsLength(String when) => pseudo(super.whenKeepsLength(when));
+
+  @override
+  String whenFromInbox(String length) => pseudo(super.whenFromInbox(length));
+
+  @override
+  String get whenFreeTime => pseudo(super.whenFreeTime);
+
+  @override
+  String get whenPickDay => pseudo(super.whenPickDay);
+
+  @override
+  String get whenDate => pseudo(super.whenDate);
+
+  @override
+  String whenMoveTo(String time) => pseudo(super.whenMoveTo(time));
+
+  @override
+  String whenPlaceAt(String time) => pseudo(super.whenPlaceAt(time));
+
+  @override
+  String whenRangeFree(String range) => pseudo(super.whenRangeFree(range));
+
+  @override
+  String whenRangeOverlaps(String range, String title) =>
+      pseudo(super.whenRangeOverlaps(range, title));
+
+  @override
+  String get whenBarLabel => pseudo(super.whenBarLabel);
+
+  @override
   String inboxScheduleToday(String range) =>
       pseudo(super.inboxScheduleToday(range));
 

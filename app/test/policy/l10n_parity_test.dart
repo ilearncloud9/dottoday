@@ -51,6 +51,7 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'whenDate', // "Date…" is French too (the When picker, ED-099)
     'inspectorDate', // "Date"
     'navMenu', // « Menu » is French
     'deviceIphone', // product names

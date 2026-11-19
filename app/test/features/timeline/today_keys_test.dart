@@ -1,8 +1,8 @@
 import 'package:dottoday/core/editing/focus_task.dart';
-import 'package:dottoday/core/l10n/generated/app_localizations.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/shared/pickers/when/when_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -207,14 +207,16 @@ void main() {
       );
     });
 
-    testWidgets('Ctrl+Shift+M opens Move To… for the picked tasks', (
+    testWidgets('Ctrl+Shift+M opens the When picker for one picked task', (
       tester,
     ) async {
       await pumpToday(tester, repo: repo);
       await _pickNth(tester, 3);
+      final picked = _picked(tester, repo).single;
       await _ctrl(tester, LogicalKeyboardKey.keyM, shift: true);
-      final l10n = lookupAppLocalizations(const Locale('en'));
-      expect(find.text(l10n.selectionMoveTitle), findsOneWidget);
+      // ED-099: one task gets the picker; several keep the month.
+      expect(find.byType(WhenPicker), findsOneWidget);
+      expect(find.text('Move $picked'), findsOneWidget);
     });
 
     testWidgets('Ctrl+Shift+F focuses on the picked task', (tester) async {

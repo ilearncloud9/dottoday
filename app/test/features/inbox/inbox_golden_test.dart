@@ -26,7 +26,7 @@ void main() {
   tz_data.initializeTimeZones();
   setUpAll(loadAppFonts);
   goldenMatrix('inbox', height: 844, build: (_) => _inbox(sampleInbox()));
-  // "Pick a time…" (derived, M3c.2): Call Mum on today's thread.
+  // Schedule: the one When picker (ED-099) for Call Mum.
   goldenMatrix(
     'inbox_pick_time',
     height: 844,
@@ -35,8 +35,6 @@ void main() {
     overrides: _overrides(sampleInbox()),
     act: (tester) async {
       await tester.tap(find.byTooltip('Schedule').at(1));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Pick a time…'));
     },
     build: (_) => const InboxScreen(),
   );

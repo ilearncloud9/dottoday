@@ -4,8 +4,6 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/schedule/planned_colors.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -17,8 +15,8 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_tiles.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
+import 'package:dottoday/features/timeline/widgets/when_move.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
-import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -124,7 +122,7 @@ class SheetActions extends ConsumerWidget {
             label: l10n.sheetMove,
             onTap: o.startUtc == null || o.pinned
                 ? null
-                : () => unawaited(moveTask(context, ref, task)),
+                : () => unawaited(pickMoveTask(context, ref, o)),
           ),
           SheetTile(
             glyph: DotGlyphs.edit,
@@ -149,30 +147,6 @@ DateTime _dayOf(TaskView task) {
 Future<void> _tomorrow(BuildContext context, WidgetRef ref, TaskView task) {
   final d = _dayOf(task);
   return _toDay(context, ref, task, DateTime(d.year, d.month, d.day + 1));
-}
-
-/// Move (docs/03 §3.2 "Move (to a day, same times; pinned stay)"): the
-/// change-day month the selection bar's Move uses, then the same time on
-/// the picked day, with Undo.
-/// Public: option D's Move tile too (ED-086).
-Future<void> moveTask(
-  BuildContext context,
-  WidgetRef ref,
-  TaskView task,
-) async {
-  final container = ProviderScope.containerOf(context);
-  final from = _dayOf(task);
-  final to = await showMonthDayPicker(
-    context,
-    plannedFor: (m) => plannedColors(container, m),
-    firstDayOfWeek:
-        ref.read(currentProfileProvider).value?.settings.firstDayOfWeek ?? 1,
-    title: context.l10n.selectionMoveTitle,
-    today: ref.read(todayDateProvider).value ?? from,
-    initial: from,
-  );
-  if (to == null || to == from || !context.mounted) return;
-  await _toDay(context, ref, task, to);
 }
 
 /// The same time on [date], with Undo.

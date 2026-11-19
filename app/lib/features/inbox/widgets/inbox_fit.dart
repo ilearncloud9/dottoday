@@ -1,7 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/domain/scheduling/schedule_result.dart';
 import 'package:dottoday/domain/scheduling/week_plan.dart';
-import 'package:dottoday/features/inbox/widgets/schedule_sheet.dart';
+import 'package:dottoday/features/inbox/widgets/slot_choice.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 

@@ -710,6 +710,7 @@ Rules for every task in M18 to M22:
   - Need more time +5 / +15 / +30 (ED-163).
   Split by the owner (2026-11-19) in four parts, each with its own review page and commit: 4a the phones' option D sheet and editor; 4b the one When picker; 4c Colour and icon; 4d tablets' docked editor (ED-273) and the Mac/web inspector's More rows (R2-40). Every feature of the old editor is kept, placed quietly (owner approved per part).
   - [x] Part 4a done 2026-11-19 (ED-398): option D on the phones: the task sheet is the editor (medium detent: header, Done · Move · Shift the rest · Focus, Need more time? in its tinted pill (ED-399); pulled up: When card, Repeat and Energy, steps and notes, More card; Saved · Undo); step times and reorder in a step's ⋯ and long press, time zone and sum of steps in Time and length, Break it down in ⋯. Open: Move becomes the When picker (4b), Colour and icon (4c), tablets and the Mac/web (4d), a real-phone run.
+  - [x] Part 4b done 2026-11-19 (ED-400): the one When picker (ED-099) for Inbox Schedule, Move and Move To… (⇧⌘M, web m) for one task: free time with Place, day chips and Date…, the drawn day bar (a slider for screen readers, arrows, ↵); a sheet on phones, a popover with a typed time on the Mac and web. Open: a typed date; a repeating task's Move asking which ones (not asked, as built); a real-device run.
 - [ ] M19.5 Complete and Reopen:
   - Done with Undo (R2-7, ED-281) and the done circle;
   - reopen from the Earlier fold;

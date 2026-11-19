@@ -24,6 +24,23 @@ final class DayRoom {
   final DateTime endUtc;
   final int snapMinutes;
 
+  /// This room without task [id]: where a task being moved could go, its
+  /// own time free (the When picker, ED-099).
+  ///
+  /// ```dart
+  /// room.without(lunch.id).slotsFor(45); // Lunch's hour is offered too
+  /// ```
+  DayRoom without(String id) => DayRoom(
+    blocks: [
+      for (final o in blocks)
+        if (o.id != id) o,
+    ],
+    fromUtc: fromUtc,
+    startUtc: startUtc,
+    endUtc: endUtc,
+    snapMinutes: snapMinutes,
+  );
+
   /// This room with [o] booked too (auto-plan places one after another).
   DayRoom withBlock(Occurrence o) => DayRoom(
     blocks: [...blocks, o],

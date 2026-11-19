@@ -13,6 +13,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_tiles.dart';
+import 'package:dottoday/features/timeline/widgets/when_move.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -65,7 +66,9 @@ class TaskDActions extends ConsumerWidget {
               label: l10n.sheetMove,
               onTap: o.startUtc == null || o.pinned
                   ? null
-                  : () => unawaited(then(() => moveTask(context, ref, task))),
+                  : () => unawaited(
+                      then(() => pickMoveTask(context, ref, task.occurrence)),
+                    ),
             ),
             SheetTile(
               glyph: DotGlyphs.rollForward,

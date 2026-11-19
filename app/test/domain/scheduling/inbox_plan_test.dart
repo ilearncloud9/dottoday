@@ -54,4 +54,16 @@ void main() {
       expect(nextFreeSlot(items, full), isNull);
     });
   });
+
+  test('without frees a task\'s own time (the When picker, ED-099)', () {
+    final room = DayRoom(
+      blocks: [block('a', '11:00', 30), block('b', '11:30', 60)],
+      fromUtc: at('11:00'),
+      startUtc: at('07:00'),
+      endUtc: at('18:00'),
+    );
+    expect(hhmm(room.slotsFor(30).single.startUtc), '12:30');
+    expect(hhmm(room.without('a').slotsFor(30).single.startUtc), '11:00');
+    expect(room.without('a').blocks.map((o) => o.id), ['b']);
+  });
 }

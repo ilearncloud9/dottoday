@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Moving or scheduling a task opens one picker everywhere (redesign branch): free times first, then a day and a bar of the day you slide to the exact time, with what it overlaps; Move keeps the task's time on another day. On Mac and the web it opens as a popover with a typed time, and the web's m key opens it for the picked task.
 - On phones, tapping a task opens one sheet that is also its editor (redesign branch): the header, Done, Move, Shift the rest, Focus and Need more time? at half height; pull up for the date, time, alerts, repeat, energy, steps, notes, sound, travel time and pinned. Edits save as you go, with Undo. A step's time and delete are in its ⋯, and a long press reorders it; the time zone and length-from-steps are under the time.
 - While a proposal is open beside the calendar (a brain dump, a routine), the tasks it would add or move show dashed where they would land, on Mac, web and tablets (redesign branch); nothing is saved until you accept. The Today button in the calendar toolbar is easier to tap on tablets.
 - On iPad, + opens Create task in a popover beside the calendar, and holding + offers Brain dump, Routine and Paste a list; on Android tablets, + offers Task, Brain dump and Routine, which open in a side sheet (redesign branch). Create task's tabs and fields are easier to tap on phones and tablets.
