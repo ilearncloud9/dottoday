@@ -2,11 +2,13 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_search_field.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_view_menu.dart';
+import 'package:dottoday/shared/layout/first_that_fits.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +16,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// The Workspace toolbar (E-FullA-v2, ED-073, ED-184): ‹ Today ›, the
-/// shown date, the Day / 3 days / Week / Month tabs, then Day ▾ (the Day
+/// shown date, the Day / 3 days / Week / Month tabs ("Week ⌄" when
+/// narrow, E-G4-3-Narrow), then Day ▾ (the Day
 /// menu, owner M19.2), + and "Search or run" (opens Search until the
 /// palette, owner M19.2). [shown] and [view] come from the address.
 class WorkspaceToolbar extends ConsumerWidget {
@@ -53,104 +56,126 @@ class WorkspaceToolbar extends ConsumerWidget {
     }
 
     final (back, ahead) = _stepLabels(l10n);
-    final touch = watchTouchContent(context, ref);
+    final labels = {
+      WorkspaceView.day: l10n.workspaceDay,
+      WorkspaceView.threeDays: l10n.workspaceThreeDays,
+      WorkspaceView.week: l10n.navWeek,
+      WorkspaceView.month: l10n.menuMonth,
+    };
+    final full = _dateLabel(context);
+    // The date without its year: the last room the left group gives up.
+    List<Widget> start({bool short = false}) => [
+      ?leading,
+      StepGroup(
+        backLabel: back,
+        aheadLabel: ahead,
+        todayLabel: l10n.navToday,
+        onBack: () => show(view, _step(-1)),
+        onToday: () => show(view, today),
+        onAhead: () => show(view, _step(1)),
+      ),
+      DatePill(
+        label: short ? _dateLabel(context, year: false) : full,
+        spoken: full,
+        onTap: () async {
+          final picked = await showMonthDayPicker(
+            context,
+            initial: shown,
+            today: today,
+            firstDayOfWeek: firstDayOfWeek,
+          );
+          if (picked != null) show(view, picked);
+        },
+      ),
+    ];
+    final tabs = ViewTabs(
+      selected: view,
+      labels: labels,
+      onSelect: (v) => show(v, shown),
+    );
+    final menu = ViewMenu(
+      selected: view,
+      labels: labels,
+      onSelect: (v) => show(v, shown),
+    );
+    List<Widget> end({required bool full, required bool inspector}) => [
+      TodayMenu(
+        date: shown,
+        today: today,
+        button: ToolbarPill(label: l10n.workspaceDay, menu: true),
+      ),
+      ToolbarAdd(
+        label: l10n.quickAddTooltip,
+        onTap: () => Actions.maybeInvoke(
+          context,
+          const AppCommandIntent(AppCommand.quickAdd),
+        ),
+      ),
+      SearchField(
+        label: l10n.workspaceSearchOrRun,
+        hint: macApp(context)
+            ? '⌘K' // l10n-ignore: a key cap
+            : null,
+        compact: !full,
+        onTap: () => router.go(AppRoutes.search),
+      ),
+      if (inspector) ?trailing,
+    ];
+    Widget line(
+      Widget views, {
+      bool search = false,
+      bool short = false,
+      bool inspector = true,
+    }) => Row(
+      spacing: DotSpace.s,
+      children: [
+        ...start(short: short),
+        views,
+        const Spacer(),
+        ...end(full: search, inspector: inspector),
+      ],
+    );
     // Its own Material: the bar sits above the screens' Scaffolds.
-    return LayoutBuilder(
-      builder: (context, box) {
-        // Rules §12.3: a narrow toolbar shows "Search or run" as its icon.
-        // Measured on the bar itself, as the window it would fill beside
-        // the sidebar, so a docked editor beside it counts (ED-391).
-        final room = box.maxWidth + DotSize.sidebar + DotSpace.hairline;
-        final compact =
-            room <
-            (touch
-                ? DotSize.workspaceToolbarTouchRoom
-                : DotSize.workspaceToolbarRoom);
-        return Material(
-          color: t.colors.sunk,
-          shape: Border(bottom: BorderSide(color: t.colors.hairline)),
-          child: Container(
-            constraints: const BoxConstraints(
-              minHeight: DotSize.workspaceToolbar,
+    return Material(
+      color: t.colors.sunk,
+      shape: Border(bottom: BorderSide(color: t.colors.hairline)),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: DotSize.workspaceToolbar),
+        alignment: AlignmentDirectional.centerStart,
+        padding: const EdgeInsets.symmetric(
+          horizontal: DotSpace.m,
+          vertical: DotSpace.s + DotSpace.xxs,
+        ),
+        // Rules §12.3, E-G4-3-Narrow: one line that gives up room in
+        // steps, measured on the bar itself (so a docked editor beside it
+        // counts, ED-391): "Search or run" to its icon and ⌘K, the tabs to
+        // "Week ⌄", the date to no year, then the inspector's button
+        // (⌥⌘I and View still work). Only at very large text does the left group wrap
+        // (rules §12.1).
+        child: FirstThatFits(
+          children: [
+            line(tabs, search: true),
+            line(tabs),
+            line(menu),
+            line(menu, short: true),
+            line(menu, short: true, inspector: false),
+            Row(
+              spacing: DotSpace.s,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: DotSpace.s,
+                    runSpacing: DotSpace.xs,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [...start(short: true), menu],
+                  ),
+                ),
+                ...end(full: false, inspector: false),
+              ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: DotSpace.m,
-                vertical: DotSpace.s + DotSpace.xxs,
-              ),
-              // Larger text or a narrow window: the left group wraps onto a
-              // second line rather than clip (rules §12.1).
-              child: Row(
-                spacing: DotSpace.s,
-                children: [
-                  Expanded(
-                    child: Wrap(
-                      spacing: DotSpace.s,
-                      runSpacing: DotSpace.xs,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        ?leading,
-                        StepGroup(
-                          backLabel: back,
-                          aheadLabel: ahead,
-                          todayLabel: l10n.navToday,
-                          onBack: () => show(view, _step(-1)),
-                          onToday: () => show(view, today),
-                          onAhead: () => show(view, _step(1)),
-                        ),
-                        DatePill(
-                          label: _dateLabel(context),
-                          onTap: () async {
-                            final picked = await showMonthDayPicker(
-                              context,
-                              initial: shown,
-                              today: today,
-                              firstDayOfWeek: firstDayOfWeek,
-                            );
-                            if (picked != null) show(view, picked);
-                          },
-                        ),
-                        ViewTabs(
-                          selected: view,
-                          labels: {
-                            WorkspaceView.day: l10n.workspaceDay,
-                            WorkspaceView.threeDays: l10n.workspaceThreeDays,
-                            WorkspaceView.week: l10n.navWeek,
-                            WorkspaceView.month: l10n.menuMonth,
-                          },
-                          onSelect: (v) => show(v, shown),
-                        ),
-                      ],
-                    ),
-                  ),
-                  TodayMenu(
-                    date: shown,
-                    today: today,
-                    button: ToolbarPill(label: l10n.workspaceDay, menu: true),
-                  ),
-                  ToolbarAdd(
-                    label: l10n.quickAddTooltip,
-                    onTap: () => Actions.maybeInvoke(
-                      context,
-                      const AppCommandIntent(AppCommand.quickAdd),
-                    ),
-                  ),
-                  SearchField(
-                    label: l10n.workspaceSearchOrRun,
-                    hint: macApp(context)
-                        ? '⌘K' // l10n-ignore: a key cap
-                        : null,
-                    compact: compact,
-                    onTap: () => router.go(AppRoutes.search),
-                  ),
-                  // Narrow, the row keeps its room: ⌥⌘I and View still work.
-                  if (!compact) ?trailing,
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
@@ -177,21 +202,29 @@ class WorkspaceToolbar extends ConsumerWidget {
     return range(start, DateTime(start.year, start.month, start.day + 6));
   }
 
-  /// "Tue, Nov 3, 2026", "Nov 2 – Nov 8, 2026" or "November 2026".
-  String _dateLabel(BuildContext context) {
+  /// "Tue, Nov 3, 2026", "Nov 2 – Nov 8, 2026" or "November 2026"; without
+  /// [year], "Tue, Nov 3", "Nov 2 – Nov 8" or "November".
+  String _dateLabel(BuildContext context, {bool year = true}) {
     final locale = Localizations.localeOf(context).toLanguageTag();
+    final end = year ? DateFormat.yMMMd(locale) : DateFormat.MMMd(locale);
     String range(DateTime a, DateTime b) => context.l10n.weekRange(
       DateFormat.MMMd(locale).format(a),
-      DateFormat.yMMMd(locale).format(b),
+      end.format(b),
     );
     return switch (view) {
-      WorkspaceView.day => DateFormat.yMMMEd(locale).format(shown),
+      WorkspaceView.day =>
+        (year ? DateFormat.yMMMEd(locale) : DateFormat.MMMEd(locale)).format(
+          shown,
+        ),
       WorkspaceView.threeDays => range(
         DateTime(shown.year, shown.month, shown.day - 1),
         DateTime(shown.year, shown.month, shown.day + 1),
       ),
       WorkspaceView.week => _weekRange(range),
-      WorkspaceView.month => DateFormat.yMMMM(locale).format(shown),
+      WorkspaceView.month =>
+        (year ? DateFormat.yMMMM(locale) : DateFormat.MMMM(locale)).format(
+          shown,
+        ),
     };
   }
 }

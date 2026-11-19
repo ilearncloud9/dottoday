@@ -4017,6 +4017,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get workspaceSearchOrRun => pseudo(super.workspaceSearchOrRun);
 
   @override
+  String get workspaceViewMenu => pseudo(super.workspaceViewMenu);
+
+  @override
   String workspaceTodayCount(int done, int total) =>
       pseudo(super.workspaceTodayCount(done, total));
 

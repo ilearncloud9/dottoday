@@ -6261,6 +6261,10 @@
   "@workspaceSearchOrRun": {
     "description": "Workspace toolbar: the search field (opens Search until the command palette)."
   },
+  "workspaceViewMenu": "Calendar view",
+  "@workspaceViewMenu": {
+    "description": "Workspace toolbar, narrow window: the pop-up that replaces the Day / 3 days / Week / Month tabs; its tooltip and accessible name, read before the current view."
+  },
   "workspaceTodayCount": "{done}/{total}",
   "@workspaceTodayCount": {
     "description": "Workspace sidebar: today's done and planned tasks after Today, \"3/9\".",

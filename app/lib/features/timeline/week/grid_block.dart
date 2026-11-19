@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/week/grid_focus.dart';
 import 'package:dottoday/features/timeline/week/week_card.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/thread.dart';
@@ -15,6 +16,7 @@ class GridBlock extends StatelessWidget {
     required this.over,
     required this.picked,
     required this.onOpen,
+    this.slot,
     this.onCue,
     this.onMove,
     super.key,
@@ -29,8 +31,12 @@ class GridBlock extends StatelessWidget {
   final VoidCallback? onCue;
   final void Function({int steps, int days})? onMove;
 
-  WeekCard _card({bool lifted = false}) => WeekCard(
+  /// Its day and start, for the arrow keys between blocks ([GridFocus]).
+  final GridSlot? slot;
+
+  WeekCard _card({bool lifted = false, FocusNode? node}) => WeekCard(
     task: task,
+    focusNode: node,
     height: height,
     narrow: narrow,
     lifted: lifted,
@@ -42,8 +48,14 @@ class GridBlock extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
-    if (!task.movable) return _card();
+  Widget build(BuildContext context) => GridFocusTarget(
+    id: task.id,
+    slot: slot,
+    builder: (node) => _movable(node),
+  );
+
+  Widget _movable(FocusNode node) {
+    if (!task.movable) return _card(node: node);
     // It appears at once, with no scale (owner, M19.2: the lift's motion
     // stays open, §7.5).
     return LayoutBuilder(
@@ -54,13 +66,16 @@ class GridBlock extends StatelessWidget {
           height: height,
           child: _card(lifted: true),
         ),
-        childWhenDragging: Opacity(opacity: TaskAlpha.done, child: _card()),
+        childWhenDragging: Opacity(
+          opacity: TaskAlpha.done,
+          child: _card(node: node),
+        ),
         callbacks: DragCallbacks(
           onDragStarted: () {},
           onDragUpdate: (_) {},
           onDragEnd: (_) {},
         ),
-        child: _card(),
+        child: _card(node: node),
       ),
     );
   }

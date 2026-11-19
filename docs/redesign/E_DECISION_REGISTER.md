@@ -1306,3 +1306,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-19, ED-390:** M19.2 part 2b: hover, focus, Alt-arrow moves and drag on the hour grid (ED-116), snapping to Settings' step. Approved.
 - **2026-11-19, ED-391:** M19.2 part 2c: the Workspace inspector (a click picks, opening the picked task opens the editor in its place) and Month as E-R2-30 cards. Approved.
 - **2026-11-19, ED-392:** M19.2 part 3a: the Workspace at touch sizes on expanded tablets (96 an hour, columns 180, stacked overlaps, the inspector floats, hold then drag) and Day opening at the now row's top. Approved.
+- **2026-11-19, ED-393:** M19.2 part 3b: the narrow Mac (one-line toolbar that folds search, the view tabs into Week ⌄, the date's year and the inspector button as room runs out), the picked Day row's 2 px ink edge, arrow keys between Week blocks and Month cards. Approved.

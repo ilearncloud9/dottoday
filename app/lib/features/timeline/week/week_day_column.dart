@@ -274,6 +274,13 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     narrow: narrow,
     over: over,
     picked: widget.day.pickedId == task.id,
+    slot: switch (widget.day.starts[task.id]) {
+      final s? => (
+        day: widget.day.date,
+        minute: s.startUtc.difference(widget.day.axisStartUtc).inMinutes,
+      ),
+      null => null,
+    },
     onOpen: () => widget.onOpen(task.id),
     onCue: switch (widget.onCue) {
       final cue? => () => cue(task.id),

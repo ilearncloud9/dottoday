@@ -44,7 +44,8 @@ void main() {
   }
 
   final panel = find.byType(PlanPanelShell);
-  final button = find.byType(PlanPanelButton);
+  // The toolbar keeps its fallback layouts mounted: the one shown.
+  final button = find.byType(PlanPanelButton).hitTestable();
 
   testWidgets('docked; hidden by its button; brought out; Esc; the pin', (
     tester,

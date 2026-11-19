@@ -16,6 +16,7 @@ import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/grid_axis.dart';
+import 'package:dottoday/features/timeline/week/grid_focus.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
@@ -89,22 +90,25 @@ class WeekView extends ConsumerWidget {
     final todayAt = days.indexOf(today);
     final axisStart = todayAt < 0 ? null : _axisStart(zone, today, first);
     final use24h = use24hFor(context, profile.settings.use24h);
-    final board = WeekBoard(
-      loads: loads,
-      today: today,
-      hourLabels: _labels(context, first, last),
-      axisMinutes: axisMinutes,
-      nowY: axisStart == null
-          ? null
-          : nowUtc.difference(axisStart).inSeconds /
-                Duration.secondsPerMinute *
-                scale.pxPerMinute,
-      nowText: timeOfUtc(context, zone, nowUtc, use24h: use24h),
-      long: !cues,
-      columns: [
-        for (final (i, d) in data.indexed)
-          _column(context, ref, d, shapes[i], first, axisMinutes),
-      ],
+    // Arrow keys between the blocks (handoff "Week", M19.2 part 3b).
+    final board = GridFocus(
+      child: WeekBoard(
+        loads: loads,
+        today: today,
+        hourLabels: _labels(context, first, last),
+        axisMinutes: axisMinutes,
+        nowY: axisStart == null
+            ? null
+            : nowUtc.difference(axisStart).inSeconds /
+                  Duration.secondsPerMinute *
+                  scale.pxPerMinute,
+        nowText: timeOfUtc(context, zone, nowUtc, use24h: use24h),
+        long: !cues,
+        columns: [
+          for (final (i, d) in data.indexed)
+            _column(context, ref, d, shapes[i], first, axisMinutes),
+        ],
+      ),
     );
     if (!cues) return _keys(GridScaleScope(scale: scale, child: board));
     // The header (or, in the Workspace, the cue chips) over the grid; the

@@ -5095,6 +5095,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get workspaceSearchOrRun => 'Buscar o ejecutar';
 
   @override
+  String get workspaceViewMenu => 'Vista del calendario';
+
+  @override
   String workspaceTodayCount(int done, int total) {
     return '$done/$total';
   }

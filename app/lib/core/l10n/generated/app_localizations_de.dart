@@ -5103,6 +5103,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get workspaceSearchOrRun => 'Suchen oder ausführen';
 
   @override
+  String get workspaceViewMenu => 'Kalenderansicht';
+
+  @override
   String workspaceTodayCount(int done, int total) {
     return '$done/$total';
   }

@@ -9,13 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A control's height and target: 30 with a pointer, 48 on touch (both
 /// floors, 44 pt and 48 dp).
-double _height(BuildContext context, WidgetRef ref) =>
+double workspaceControlHeight(BuildContext context, WidgetRef ref) =>
     watchTouchContent(context, ref)
     ? DotTouch.android
     : DotSize.workspaceControl;
 
 /// A card-coloured pill with a hairline: the date, Day ▾, the search.
-BoxDecoration _pill(DotColors c) => BoxDecoration(
+BoxDecoration workspacePill(DotColors c) => BoxDecoration(
   color: c.card,
   borderRadius: BorderRadius.circular(DotRadii.pill),
   border: Border.all(color: c.hairline),
@@ -43,7 +43,7 @@ class StepGroup extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
-    final h = _height(context, ref);
+    final h = workspaceControlHeight(context, ref);
     Widget step(DotGlyph g, String label, VoidCallback onTap) => Tooltip(
       message: label,
       child: InkResponse(
@@ -60,7 +60,7 @@ class StepGroup extends ConsumerWidget {
     // The outline is drawn over the pill, not inside it: the steps keep
     // the full height as their target.
     return DecoratedBox(
-      decoration: _pill(t.colors),
+      decoration: workspacePill(t.colors),
       child: SizedBox(
         height: h,
         child: Row(
@@ -91,17 +91,25 @@ class StepGroup extends ConsumerWidget {
 
 /// The shown date or range with ▾: a month to pick another day.
 class DatePill extends ConsumerWidget {
-  const DatePill({required this.label, required this.onTap, super.key});
+  const DatePill({
+    required this.label,
+    required this.onTap,
+    this.spoken,
+    super.key,
+  });
 
   final String label;
   final VoidCallback onTap;
+
+  /// What a screen reader hears when [label] is shortened (no year).
+  final String? spoken;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     return Semantics(
       button: true,
-      label: label,
+      label: spoken ?? label,
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
@@ -110,9 +118,9 @@ class DatePill extends ConsumerWidget {
           onTap: onTap,
           customBorder: const StadiumBorder(),
           child: Container(
-            height: _height(context, ref),
+            height: workspaceControlHeight(context, ref),
             padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
-            decoration: _pill(t.colors),
+            decoration: workspacePill(t.colors),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               spacing: DotSpace.s,
@@ -151,7 +159,7 @@ class ViewTabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    final h = _height(context, ref);
+    final h = workspaceControlHeight(context, ref);
     // Each tab keeps the full target; the track is that plus its inset.
     return Container(
       height: h + 2 * DotSpace.xxs,
@@ -212,9 +220,9 @@ class ToolbarPill extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     return Container(
-      height: _height(context, ref),
+      height: workspaceControlHeight(context, ref),
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
-      decoration: _pill(t.colors),
+      decoration: workspacePill(t.colors),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         spacing: DotSpace.xs,
@@ -245,7 +253,7 @@ class ToolbarAdd extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = DotTheme.of(context).colors;
-    final h = _height(context, ref);
+    final h = workspaceControlHeight(context, ref);
     return Tooltip(
       message: label,
       child: Material(
@@ -263,91 +271,6 @@ class ToolbarAdd extends ConsumerWidget {
                 color: c.onAccent,
                 size: DotSize.sidebarGlyph,
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// "Search or run ⌘K": opens Search until the palette exists (M19.2).
-class SearchField extends ConsumerWidget {
-  const SearchField({
-    required this.label,
-    required this.onTap,
-    this.hint,
-    this.compact = false,
-    super.key,
-  });
-
-  final String label;
-  final String? hint;
-  final VoidCallback onTap;
-
-  /// Its icon alone, named for a screen reader (a narrow toolbar).
-  final bool compact;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = DotTheme.of(context);
-    final h = _height(context, ref);
-    if (compact) {
-      return Tooltip(
-        message: label,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            customBorder: const StadiumBorder(),
-            child: Container(
-              width: h + DotSpace.xs,
-              height: h,
-              decoration: _pill(t.colors),
-              child: Center(
-                child: DotIcon(
-                  DotGlyphs.search,
-                  color: t.colors.ink2,
-                  size: DotSize.sidebarGlyph * 5 / 6,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: const StadiumBorder(),
-          child: Container(
-            height: h,
-            constraints: const BoxConstraints(
-              minWidth: DotSize.workspaceSearch,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
-            decoration: _pill(t.colors),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: DotSpace.s,
-              children: [
-                DotIcon(
-                  DotGlyphs.search,
-                  color: t.colors.ink2,
-                  size: DotSize.sidebarGlyph * 5 / 6,
-                ),
-                Text(
-                  label,
-                  style: t.styles.sidebarItem.copyWith(color: t.colors.ink2),
-                ),
-                if (hint case final h?) Text(h, style: t.styles.sidebarHint),
-              ],
             ),
           ),
         ),

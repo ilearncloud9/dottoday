@@ -155,3 +155,33 @@ class _Check extends StatelessWidget {
     );
   }
 }
+
+/// The row the Workspace inspector shows (owner, M19.2 part 3b): the
+/// grid block's picked edge, 2 px in ink, so the pick never rests on
+/// colour alone; announced as selected.
+class PickedRowEdge extends StatelessWidget {
+  const PickedRowEdge({required this.picked, required this.child, super.key});
+
+  final bool picked;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    return Semantics(
+      selected: picked ? true : null,
+      child: DecoratedBox(
+        position: DecorationPosition.foreground,
+        decoration: picked
+            ? ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(DotRadii.card),
+                  side: BorderSide(color: c.text, width: DotSpace.xxs),
+                ),
+              )
+            : const BoxDecoration(),
+        child: child,
+      ),
+    );
+  }
+}

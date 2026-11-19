@@ -37,6 +37,7 @@ ThreadActions dayThreadActions(
   ValueChanged<bool>? onEarlier,
   ValueChanged<String>? onRunningLate,
   Widget Function(int freeMinutes)? emptyDay,
+  String? pickedId,
 }) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -60,6 +61,7 @@ ThreadActions dayThreadActions(
 
   return ThreadActions(
     emptyDay: emptyDay,
+    pickedId: pickedId,
     drag: drag,
     selectedIds: selectedIds,
     onSelect: onSelect,

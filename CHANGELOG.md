@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- In a narrow Mac window or browser, the workspace toolbar stays on one line (redesign branch): search shrinks to its icon, the Day, 3 days, Week and Month tabs become one menu, and the date drops its year as room runs out.
+- On Mac and in a wide browser, the task shown in the inspector is outlined on Day, and the arrow keys move between tasks on Week and 3 days and between days on Month; Return opens the focused task (redesign branch).
 - On iPad, Android tablets and touch-first browsers, the workspace uses touch sizes (redesign branch): an hour is taller, days are wider, task titles are bigger, short tasks become one-line pills and overlapping tasks stack. Hold a task, then drag it to move it, with Undo. The inspector opens over the calendar.
 - When the week doesn't fit, it opens with today in view (redesign branch).
 - Today opens with the task you're on at the top, so the line above it is never cut in half (redesign branch).

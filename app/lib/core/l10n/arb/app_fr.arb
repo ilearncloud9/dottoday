@@ -1255,6 +1255,7 @@
   "workspaceThreeDays": "3 jours",
   "workspaceReview": "Bilan",
   "workspaceSearchOrRun": "Rechercher ou lancer",
+  "workspaceViewMenu": "Vue du calendrier",
   "workspaceTodayCount": "{done}/{total}",
   "planPanelShow": "Afficher le panneau Planifier",
   "planPanelHide": "Masquer le panneau Planifier",

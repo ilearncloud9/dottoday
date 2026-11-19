@@ -99,10 +99,18 @@ class _Pip extends StatelessWidget {
 /// then "N of M done", or "Light day" when nothing is planned. Today has
 /// the teal edge. A day of the month either side is its faded number only.
 class ExpandedMonthCell extends StatelessWidget {
-  const ExpandedMonthCell({required this.day, this.onTap, super.key});
+  const ExpandedMonthCell({
+    required this.day,
+    this.onTap,
+    this.focusNode,
+    super.key,
+  });
 
   final MonthDay day;
   final VoidCallback? onTap;
+
+  /// The card's focus, so the grid's arrow keys reach it.
+  final FocusNode? focusNode;
 
   static const _shown = 3;
 
@@ -144,6 +152,7 @@ class ExpandedMonthCell extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
+          focusNode: focusNode,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: _minHeight),
             child: Padding(padding: _padding, child: _lines(context)),

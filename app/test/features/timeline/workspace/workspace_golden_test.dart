@@ -25,9 +25,10 @@ void main() {
     ThemeMode mode, {
     String place = '/week/2026-10-21',
     bool steps = false,
+    Size size = const Size(1280, 800),
   }) async {
     tester.view
-      ..physicalSize = const Size(1280, 800)
+      ..physicalSize = size
       ..devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final router = buildRouter(appScreens);
@@ -177,6 +178,36 @@ void main() {
         await expectLater(
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/workspace_3days_mac_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // E-G4-3-Narrow: the 840 minimum, its toolbar on one line (M19.2 3b).
+    testWidgets('golden: the narrow Mac, Week at 840, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, size: const Size(840, 640));
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_week_840_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // The picked Day row's 2 px ink edge (owner, M19.2 3b).
+    testWidgets('golden: a picked Day row, ${mode.name}', (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/today/2026-10-21');
+        await tester.tap(find.text('Reply to email').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_day_picked_${mode.name}.png'),
         );
       } finally {
         debugDefaultTargetPlatformOverride = null;

@@ -677,7 +677,7 @@ Rules for every task in M18 to M22:
   - opens at now, with the current task in view (ED-336);
   - "Pull from inbox · {count}" on an empty day (ED-336);
   - phone landscape: the week strip folds into the title row (R2-41, ED-347; moved from M18.5).
-- [ ] M19.2 Today in Full on wide screens:
+- [x] M19.2 Today in Full on wide screens:
   Split by the owner (2026-11-18) in three parts, each with its own review page and commit: 1 the Workspace sidebar, toolbar and Plan panel; 2 the hour grid (Day, 3 days, Week), web hover and drag, the inspector and Month as cards; 3 expanded tablets and the narrow Mac.
   - [x] Part 1 done 2026-11-18 (ED-387): the sidebar, the toolbar and the Plan panel A + B; the views as addresses; pointer sizes with a 24 px floor. Open: dragging a routine onto a day, and opening the panel from the grid's edge.
   - Part 2 split by the owner (2026-11-19) into 2a the hour grid, 2b web hover and drag on it (ED-116), 2c the inspector (a click picks, a double-click opens the editor) and Month as cards.
@@ -686,6 +686,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2c done 2026-11-19 (ED-391): the Workspace inspector on Day, 3 days and Week (a click picks into `?task=`; opening the picked task opens the editor in its place; Esc, a click on free grid or ⌥⌘I puts it away; docked from 1160, a card below; every row edits and saves as you go) and Month as E-R2-30 cards. Open for part 3: the Day rows' picked edge, Month card arrow keys, expanded tablets (ED-269) and the narrow Mac.
   - Part 3 split by the owner (2026-11-19) into 3a expanded tablets (ED-269) and 3b the narrow Mac (E-G4-3-Narrow) with the Day rows' picked edge and Month card arrow keys.
   - [x] Part 3a done 2026-11-19 (ED-392): the Workspace at touch sizes on iPad, Android tablets and touch-first web (96 an hour on Week, 3 days and Day; columns ≥ 180; titles 17; pills under 35 min; overlaps stacked; the Plan panel docks beside 3 days of 180; the inspector floats; hold then drag); the grid opens with today in view; Day opens at the now row's top. Open for 3b: the narrow Mac, the Day rows' picked edge, Month card arrow keys. Real tablets in M21.
+  - [x] Part 3b done 2026-11-19 (ED-393): the narrow Mac (E-G4-3-Narrow): a one-line toolbar that gives up room in steps (search to its icon with ⌘K, the view tabs to Week ⌄, the date's year, the inspector button); the picked Day row's 2 px ink edge; arrow keys between Week and 3 days blocks (Return opens the inspector) and between Month cards. The Minimal window's narrow rules stay in M19.6. Open: narrow overlap lanes break a long first word (the grid's overflow pass, rules §12.3); a real 840 Mac window check.
   - Mac and web Workspace (E-FullA-v2, ED-073) with the Plan panel A + B (ED-184), and the inspector's own docking rule: from 1160 when the week grid keeps ≥ 3 days (C1, ED-170; moved from M18.5);
   - hover and drag on web blocks (ED-116);
   - the Workspace's Day / 3 days / Week / Month tabs (ED-333; in today's app 3 days is Today's spread);

@@ -7632,6 +7632,12 @@ abstract class AppLocalizations {
   /// **'Search or run'**
   String get workspaceSearchOrRun;
 
+  /// Workspace toolbar, narrow window: the pop-up that replaces the Day / 3 days / Week / Month tabs; its tooltip and accessible name, read before the current view.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar view'**
+  String get workspaceViewMenu;
+
   /// Workspace sidebar: today's done and planned tasks after Today, "3/9".
   ///
   /// In en, this message translates to:

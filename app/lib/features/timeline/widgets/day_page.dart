@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
+import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_shift_providers.dart';
@@ -30,6 +31,7 @@ import 'package:dottoday/features/timeline/widgets/later_row.dart';
 import 'package:dottoday/features/timeline/widgets/reality_insight.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/today_learning.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/day_card.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -314,6 +316,9 @@ class DayPage extends ConsumerWidget {
               allDayStartUtc: data.day.startUtc,
             ),
       selectedIds: picked.day == date ? picked.ids : const {},
+      pickedId: WorkspaceScope.of(context)
+          ? ref.watch(inspectedTaskProvider)
+          : null,
       onEarlier: (open) =>
           ref.read(earlierOpenProvider.notifier).set(date, open: open),
       onSelect: (id) =>

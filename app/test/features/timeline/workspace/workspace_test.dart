@@ -1,9 +1,11 @@
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_search_field.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_sidebar.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_toolbar.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
+import 'package:dottoday/features/timeline/workspace/workspace_view_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -102,19 +104,38 @@ void main() {
     final router = await pump(tester, at: '/day/2026-10-23');
     final bar = find.byType(WorkspaceToolbar);
     expect(bar, findsOneWidget);
-    await tester.tap(find.descendant(of: bar, matching: find.text('3 days')));
+    // The toolbar keeps every layout it can fall back to mounted; only the
+    // one shown is hit-testable (FirstThatFits).
+    Finder on(Finder f) => find.descendant(of: bar, matching: f).hitTestable();
+    // Touch sizes at 1280: the tabs fold into "Day ⌄" (rules §12.3).
+    expect(on(find.byType(ViewTabs)), findsNothing);
+    await tester.tap(on(find.byType(ViewMenu)));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(CheckedPopupMenuItem<WorkspaceView>, '3 days'),
+    );
     await tester.pumpAndSettle();
     expect(path(router), '/3-days/2026-10-23');
+    // A tooltip's own box is never on the hit path: find it in the shown
+    // step group.
     await tester.tap(
-      find.descendant(of: bar, matching: find.byTooltip('Next day')),
+      find.descendant(
+        of: on(find.byType(StepGroup)),
+        matching: find.byTooltip('Next day'),
+      ),
     );
     await tester.pumpAndSettle();
     expect(path(router), '/3-days/2026-10-24');
-    await tester.tap(find.descendant(of: bar, matching: find.text('Today')));
+    await tester.tap(
+      find.descendant(
+        of: on(find.byType(StepGroup)),
+        matching: find.text('Today'),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(path(router), '/3-days/2026-10-21');
     // Touch sizes at 1280 show its icon (rules §12.3).
-    await tester.tap(find.byType(SearchField));
+    await tester.tap(on(find.byType(SearchField)));
     await tester.pumpAndSettle();
     expect(path(router), '/search');
   });

@@ -221,10 +221,6 @@ abstract final class DotSize {
   /// of 180 and the hour labels (ED-269).
   static const double weekGridTouchMin = 3 * gridTouchColumn + gridGutter;
 
-  /// Window widths from which the toolbar has room for "Search or run" in
-  /// full (rules §12.3): the board's 1280 has it; touch sizes need more.
-  static const double workspaceToolbarRoom = 1100;
-  static const double workspaceToolbarTouchRoom = 1360;
   static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor

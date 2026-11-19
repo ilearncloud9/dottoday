@@ -34,6 +34,7 @@ class WeekCard extends StatefulWidget {
     this.onOpen,
     this.onCue,
     this.onMove,
+    this.focusNode,
     super.key,
   });
 
@@ -59,6 +60,9 @@ class WeekCard extends StatefulWidget {
   /// Moves the task by [steps] snap steps and [days] days: Alt+arrows on
   /// a focused block, and the screen reader's move actions.
   final void Function({int steps, int days})? onMove;
+
+  /// The block's focus, from [GridFocusTarget] so the arrow keys reach it.
+  final FocusNode? focusNode;
 
   @override
   State<WeekCard> createState() => _WeekCardState();
@@ -156,6 +160,7 @@ class _WeekCardState extends State<WeekCard> {
     final move = widget.onMove;
     final tap = InkWell(
       onTap: widget.onOpen,
+      focusNode: widget.focusNode,
       customBorder: shape,
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,

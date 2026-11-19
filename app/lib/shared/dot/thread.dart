@@ -39,6 +39,7 @@ final class ThreadActions {
     this.selectedIds = const {},
     this.onSelect,
     this.emptyDay,
+    this.pickedId,
   });
 
   final ValueChanged<String>? onToggleDone;
@@ -81,6 +82,10 @@ final class ThreadActions {
   /// task, given that gap's minutes. The gap keeps its dotted line and
   /// stays a drop target.
   final Widget Function(int freeMinutes)? emptyDay;
+
+  /// The task the Workspace inspector shows (ED-391); its row gets the
+  /// grid's 2 px ink edge (owner, M19.2 part 3b).
+  final String? pickedId;
 }
 
 /// The day as a vertical thread (docs/10 §1, §3 `Thread`): sun cap, task
@@ -340,6 +345,8 @@ class _ThreadState extends State<Thread> {
         child: row,
       );
     }
+    // Always wrapped, so a pick never rebuilds the row (and its focus).
+    row = PickedRowEdge(picked: a.pickedId == task.id, child: row);
     if (onSelect != null) {
       row = SelectableTaskRow(
         selecting: a.selectedIds.isNotEmpty,

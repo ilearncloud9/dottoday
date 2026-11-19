@@ -120,10 +120,11 @@ void main() {
     c.read(inspectorHiddenProvider.notifier).toggle();
     await tester.pumpAndSettle();
     expect(find.byType(WorkspaceInspector), findsNothing);
-    await tester.tap(find.byTooltip('Show Inspector'));
+    // Hit-testable: the toolbar keeps its fallback layouts mounted.
+    await tester.tap(find.byTooltip('Show Inspector').hitTestable());
     await tester.pumpAndSettle();
     expect(find.byType(WorkspaceInspector), findsOneWidget);
-    expect(find.byTooltip('Hide Inspector'), findsOneWidget);
+    expect(find.byTooltip('Hide Inspector').hitTestable(), findsOneWidget);
   });
 
   testWidgets('docks at 1280, floats over a narrower window', (tester) async {
