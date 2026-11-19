@@ -31,6 +31,8 @@ final class DotType {
     required this.threadTitle,
     required this.threadMeta,
     required this.promptTitle,
+    required this.lookTitle,
+    required this.hexCode,
     required this.choiceTitle,
     required this.sheetTitle,
     required this.sheetTitleAndroid,
@@ -109,6 +111,8 @@ final class DotType {
     threadMeta: _manrope(13, 18, 400, muted),
     // Decision screens from CR-160 (main, PR #75), in the Concept E content face.
     promptTitle: _manrope(22, 28, 700, text),
+    lookTitle: _manrope(20, 25, 700, text),
+    hexCode: _system(15, 20, 600, text),
     choiceTitle: _manrope(17, 22, 700, text),
     sheetTitle: _manrope(24, 30, 800, text),
     sheetTitleAndroid: _system(22, 28, 400, text),
@@ -265,6 +269,14 @@ final class DotType {
   /// choices (CR-160 boards A1–A3, B1, G1, D1; 22/700).
   final TextStyle promptTitle;
 
+  /// The colour and icon sheets' titles: "Colour and icon", "All colours",
+  /// "Run · Coral" (E-Phones, E-Phones-3; 20/700).
+  final TextStyle lookTitle;
+
+  /// A colour's hex in All colours' title row (E-Phones-3; 15/600, even
+  /// figures).
+  final TextStyle hexCode;
+
   /// An option's title on a decision screen (B1, G1; 17/700).
   final TextStyle choiceTitle;
 
@@ -385,6 +397,8 @@ final class DotType {
       threadTitle: l(threadTitle, other.threadTitle),
       threadMeta: l(threadMeta, other.threadMeta),
       promptTitle: l(promptTitle, other.promptTitle),
+      lookTitle: l(lookTitle, other.lookTitle),
+      hexCode: l(hexCode, other.hexCode),
       choiceTitle: l(choiceTitle, other.choiceTitle),
       sheetTitle: l(sheetTitle, other.sheetTitle),
       sheetTitleAndroid: l(sheetTitleAndroid, other.sheetTitleAndroid),

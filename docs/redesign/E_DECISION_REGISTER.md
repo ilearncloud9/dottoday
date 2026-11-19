@@ -1315,3 +1315,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-19, ED-399:** Option D's Need more time? sits in its tinted pill as drawn (E-Phones F3), replacing ED-398's plain row. Approved.
 - **2026-11-19, ED-400:** M19.4 part 4b: the one When picker (free time, day chips, the drawn day bar) for Schedule, Move and Move To… (⇧⌘M, web m) for one task; several keep the change-day month. Approved.
 - **2026-11-19, ED-401:** M19.4 part 4c-1: the colour data: brown, plum and olive; custom `#RRGGBB` colours with derived shades; forward-compatible colour keys; `profiles.your_colours` and `accent_hex` (Drift 24, server 0017, local only). Approved.
+- **2026-11-20, ED-402:** M19.4 part 4c-2: Colour and icon on the phones (compact sheet, All icons, All colours with a typed hex, sliders and Your colours; Android mirrors the iPhone); palette in ED-161's order, mint named Green. Approved.

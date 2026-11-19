@@ -149,7 +149,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colorAmber => 'Amber';
 
   @override
-  String get colorMint => 'Mint';
+  String get colorMint => 'Green';
 
   @override
   String get colorTeal => 'Teal';
@@ -2505,6 +2505,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colourIconDone => 'Done';
+
+  @override
+  String get lookPaletteLabel => 'Colour, swipe for more';
+
+  @override
+  String get lookAllColours => 'All colours';
+
+  @override
+  String get lookCurrent => 'Current';
+
+  @override
+  String get lookSuggested => 'Suggested';
+
+  @override
+  String get lookRecent => 'Recent';
+
+  @override
+  String get lookRecentlyUsed => 'Recently used';
+
+  @override
+  String lookAllIcons(String count) {
+    return 'All icons · search $count';
+  }
+
+  @override
+  String get lookHint =>
+      'Swipe the colours; drag up or tap All icons for the full library.';
+
+  @override
+  String lookSearch(String count) {
+    return 'Search $count icons';
+  }
+
+  @override
+  String lookTitleOf(String icon, String colour) {
+    return '$icon · $colour';
+  }
+
+  @override
+  String get lookPreviewStates => 'Ahead · in progress · done';
+
+  @override
+  String get lookRingSame => 'Ring = your colour (already 3:1)';
+
+  @override
+  String lookRingAdjusted(String hex) {
+    return 'Ring adjusted to $hex so it stays visible (3:1)';
+  }
+
+  @override
+  String get lookAhead => 'Ahead';
+
+  @override
+  String get lookInProgress => 'In progress';
+
+  @override
+  String get lookDone => 'Done';
+
+  @override
+  String get lookColourSlider => 'Colour';
+
+  @override
+  String get lookShadeSlider => 'Shade';
+
+  @override
+  String get lookDottodayColours => 'Dottoday colours';
+
+  @override
+  String get lookYourColours => 'Your colours';
+
+  @override
+  String get lookEdit => 'Edit';
+
+  @override
+  String get lookAddColour => 'Save to Your colours';
+
+  @override
+  String lookRemoveColour(String colour) {
+    return 'Remove $colour';
+  }
+
+  @override
+  String get lookHexLabel => 'Hex colour';
 
   @override
   String get iconSearchHint => 'Search icons';

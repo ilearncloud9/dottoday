@@ -66,7 +66,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Colour and icon'), findsOneWidget);
     // The sheet's own colours come after the block's.
-    await tester.tap(find.bySemanticsLabel('Mint').last);
+    await tester.tap(find.bySemanticsLabel('Green').last);
     await tester.pumpAndSettle();
     // Dottoday's own planning icons open the library.
     await tester.tap(find.bySemanticsLabel('Focus Block'));

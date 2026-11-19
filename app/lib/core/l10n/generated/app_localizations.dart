@@ -351,7 +351,7 @@ abstract class AppLocalizations {
   /// Block colour name (screen readers, picker).
   ///
   /// In en, this message translates to:
-  /// **'Mint'**
+  /// **'Green'**
   String get colorMint;
 
   /// Block colour name (screen readers, picker).
@@ -3665,6 +3665,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get colourIconDone;
+
+  /// Screen-reader name of the swipeable colour row in Colour and icon (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Colour, swipe for more'**
+  String get lookPaletteLabel;
+
+  /// ⋯ in Colour and icon, and the All colours sheet's title (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'All colours'**
+  String get lookAllColours;
+
+  /// Under the task's icon in Colour and icon (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get lookCurrent;
+
+  /// Over icons the task's title suggests, in Colour and icon (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get lookSuggested;
+
+  /// Over the last icon picked on this device, in Colour and icon (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get lookRecent;
+
+  /// All icons' first section: icons last picked on this device (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Recently used'**
+  String get lookRecentlyUsed;
+
+  /// Colour and icon's button to the icon library; count is how many icons (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'All icons · search {count}'**
+  String lookAllIcons(String count);
+
+  /// Hint under Colour and icon (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe the colours; drag up or tap All icons for the full library.'**
+  String get lookHint;
+
+  /// All icons' search field hint; count is how many icons (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'Search {count} icons'**
+  String lookSearch(String count);
+
+  /// All icons' title: the task's icon and colour names, e.g. Run · Coral (ED-086).
+  ///
+  /// In en, this message translates to:
+  /// **'{icon} · {colour}'**
+  String lookTitleOf(String icon, String colour);
+
+  /// All colours' preview caption: the three dots are the task ahead, in progress and done (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Ahead · in progress · done'**
+  String get lookPreviewStates;
+
+  /// All colours' preview: the colour is visible enough to be its own ring (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Ring = your colour (already 3:1)'**
+  String get lookRingSame;
+
+  /// All colours' preview: a pale colour's ring is drawn deeper; hex is the ring's #RRGGBB (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Ring adjusted to {hex} so it stays visible (3:1)'**
+  String lookRingAdjusted(String hex);
+
+  /// Screen-reader name of All colours' first preview dot: the task ahead (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Ahead'**
+  String get lookAhead;
+
+  /// Screen-reader name of All colours' second preview dot (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get lookInProgress;
+
+  /// Screen-reader name of All colours' third preview dot: the task done (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get lookDone;
+
+  /// All colours' hue slider (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get lookColourSlider;
+
+  /// All colours' slider from dark through the colour to light (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Shade'**
+  String get lookShadeSlider;
+
+  /// All colours' section of the 12 built-in colours (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday colours'**
+  String get lookDottodayColours;
+
+  /// All colours' section of the account's own colours, synced (ED-221).
+  ///
+  /// In en, this message translates to:
+  /// **'Your colours'**
+  String get lookYourColours;
+
+  /// Turns on removing colours in Your colours (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get lookEdit;
+
+  /// Screen-reader name of + in Your colours: saves the colour in use (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Save to Your colours'**
+  String get lookAddColour;
+
+  /// A colour in Your colours while editing; colour is its #RRGGBB (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {colour}'**
+  String lookRemoveColour(String colour);
+
+  /// Name of All colours' hex field; tap to type #RRGGBB (owner, 4c-2).
+  ///
+  /// In en, this message translates to:
+  /// **'Hex colour'**
+  String get lookHexLabel;
 
   /// Search field in the task icon picker.
   ///

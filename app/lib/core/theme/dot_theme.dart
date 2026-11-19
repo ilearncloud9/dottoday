@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+export 'colour_math.dart';
 export 'contrast.dart';
 export 'dot_colors.dart';
 export 'dot_glyphs.dart';
@@ -16,6 +17,7 @@ export 'dot_idiom.dart';
 export 'dot_metrics.dart';
 export 'dot_motion.dart';
 export 'dot_type.dart';
+export 'look_metrics.dart';
 export 'task_icons.dart';
 export 'task_palette.dart';
 

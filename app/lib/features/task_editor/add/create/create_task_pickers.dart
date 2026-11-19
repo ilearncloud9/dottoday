@@ -14,8 +14,8 @@ import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/shared/duration/duration_sheet.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
-import 'package:dottoday/shared/pickers/task_icon_picker.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +37,15 @@ final class CreateTaskPickers {
   Future<void> look() async {
     final d = _draft;
     if (d == null) return;
-    final picked = await showTaskLookPicker(
-      context: context,
+    // Live: the header behind recolours as you pick (ED-161).
+    await showTaskLook(
+      context,
       colour: TaskColor.fromKey(d.color),
       icon: TaskIcon.fromKey(d.icon),
+      title: d.title,
+      onChanged: (l) =>
+          _flow.edit((x) => x.withColor(l.color.key).withIcon(l.icon.key)),
     );
-    if (picked == null) return;
-    _flow.edit((x) => x.withColor(picked.color.key).withIcon(picked.icon.key));
   }
 
   Future<void> day() async {

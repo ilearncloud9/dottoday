@@ -41,6 +41,26 @@ IconGuess? guessIcon(String title, {required String language}) {
   return (iconKey: key, colorKey: iconGuessColors[key]);
 }
 
+/// Up to [limit] icon keys [title] suggests, the best first: the whole
+/// title's guess, then each word's own (Colour and icon's Suggested,
+/// ED-086). Empty when nothing matches.
+///
+/// ```dart
+/// guessIconKeys('Gym then groceries', language: 'en'); // [dumbbell, cart]
+/// ```
+List<String> guessIconKeys(
+  String title, {
+  required String language,
+  int limit = 2,
+}) {
+  final keys = <String>{};
+  for (final text in [title, ...guessWords(title)]) {
+    if (guessIcon(text, language: language)?.iconKey case final k?) keys.add(k);
+    if (keys.length >= limit) break;
+  }
+  return keys.toList();
+}
+
 String? _phrase(List<String> words, Map<String, String> terms, String lang) {
   final longest = words.length < iconGuessMaxWords
       ? words.length

@@ -150,7 +150,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get colorAmber => 'Ambre';
 
   @override
-  String get colorMint => 'Menthe';
+  String get colorMint => 'Vert';
 
   @override
   String get colorTeal => 'Sarcelle';
@@ -2514,6 +2514,89 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get colourIconDone => 'OK';
+
+  @override
+  String get lookPaletteLabel => 'Couleur, balayez pour plus';
+
+  @override
+  String get lookAllColours => 'Toutes les couleurs';
+
+  @override
+  String get lookCurrent => 'Actuelle';
+
+  @override
+  String get lookSuggested => 'Suggérées';
+
+  @override
+  String get lookRecent => 'Récente';
+
+  @override
+  String get lookRecentlyUsed => 'Utilisées récemment';
+
+  @override
+  String lookAllIcons(String count) {
+    return 'Toutes les icônes · rechercher parmi $count';
+  }
+
+  @override
+  String get lookHint =>
+      'Balayez les couleurs ; tirez vers le haut ou touchez Toutes les icônes pour la bibliothèque.';
+
+  @override
+  String lookSearch(String count) {
+    return 'Rechercher parmi $count icônes';
+  }
+
+  @override
+  String lookTitleOf(String icon, String colour) {
+    return '$icon · $colour';
+  }
+
+  @override
+  String get lookPreviewStates => 'À venir · en cours · fait';
+
+  @override
+  String get lookRingSame => 'Anneau = votre couleur (déjà 3:1)';
+
+  @override
+  String lookRingAdjusted(String hex) {
+    return 'Anneau ajusté à $hex pour rester visible (3:1)';
+  }
+
+  @override
+  String get lookAhead => 'À venir';
+
+  @override
+  String get lookInProgress => 'En cours';
+
+  @override
+  String get lookDone => 'Fait';
+
+  @override
+  String get lookColourSlider => 'Couleur';
+
+  @override
+  String get lookShadeSlider => 'Nuance';
+
+  @override
+  String get lookDottodayColours => 'Couleurs Dottoday';
+
+  @override
+  String get lookYourColours => 'Vos couleurs';
+
+  @override
+  String get lookEdit => 'Modifier';
+
+  @override
+  String get lookAddColour => 'Enregistrer dans Vos couleurs';
+
+  @override
+  String lookRemoveColour(String colour) {
+    return 'Retirer $colour';
+  }
+
+  @override
+  String get lookHexLabel => 'Couleur hex';
 
   @override
   String get iconSearchHint => 'Rechercher des icônes';

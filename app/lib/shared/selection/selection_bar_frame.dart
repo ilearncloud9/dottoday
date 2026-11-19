@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
+import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -150,14 +152,20 @@ class ColourSwatchIcon extends StatelessWidget {
   }
 }
 
-/// The nine task colours in a sheet; the one tapped, or null.
-Future<TaskColor?> showColourChoice(BuildContext context) =>
-    showModalBottomSheet<TaskColor>(
-      context: context,
-      // Above the iPhone's floating tab bar (M4.9: it covered Save).
-      useRootNavigator: true,
-      builder: (_) => const _ColourSheet(),
-    );
+/// A colour for the picked tasks, or null: on phones All colours (owner,
+/// M19.4 part 4c-2), from medium width the colours in a sheet until
+/// 4c-3's popover.
+Future<TaskColor?> showColourChoice(BuildContext context) {
+  if (AppLayout.classOf(context) == WidthClass.compact) {
+    return showColourOnly(context);
+  }
+  return showModalBottomSheet<TaskColor>(
+    context: context,
+    // Above the iPhone's floating tab bar (M4.9: it covered Save).
+    useRootNavigator: true,
+    builder: (_) => const _ColourSheet(),
+  );
+}
 
 class _ColourSheet extends StatelessWidget {
   const _ColourSheet();

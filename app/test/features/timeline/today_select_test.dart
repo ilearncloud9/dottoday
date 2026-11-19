@@ -104,7 +104,10 @@ void main() {
       await pick(tester, ['Team standup', 'Design review']);
       await tester.tap(find.text('Colour'));
       await tester.pumpAndSettle();
-      await tester.tap(find.bySemanticsLabel('Mint'));
+      // All colours on phones (M19.4 part 4c-2): pick, then Done.
+      await tester.tap(find.bySemanticsLabel('Green'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done'));
       await tester.pumpAndSettle();
       expect(find.text('2 tasks recoloured'), findsOneWidget);
       final picked = repo.rows.where(

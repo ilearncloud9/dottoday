@@ -1,5 +1,4 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
-import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -83,7 +82,10 @@ void main() {
     final repo = await pickTwo(tester);
     await tester.tap(find.text('Colour'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(ColourDot).first);
+    // All colours on phones (M19.4 part 4c-2): pick, then Done.
+    await tester.tap(find.bySemanticsLabel('Coral'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(_row(repo, 'Do taxes').colorKey, 'coral');
     expect(_row(repo, 'Call Mum').colorKey, 'coral');

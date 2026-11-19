@@ -150,7 +150,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get colorAmber => 'Ámbar';
 
   @override
-  String get colorMint => 'Menta';
+  String get colorMint => 'Verde';
 
   @override
   String get colorTeal => 'Verde azulado';
@@ -2510,6 +2510,89 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get colourIconDone => 'Hecho';
+
+  @override
+  String get lookPaletteLabel => 'Color, desliza para ver más';
+
+  @override
+  String get lookAllColours => 'Todos los colores';
+
+  @override
+  String get lookCurrent => 'Actual';
+
+  @override
+  String get lookSuggested => 'Sugeridos';
+
+  @override
+  String get lookRecent => 'Reciente';
+
+  @override
+  String get lookRecentlyUsed => 'Usados recientemente';
+
+  @override
+  String lookAllIcons(String count) {
+    return 'Todos los iconos · buscar entre $count';
+  }
+
+  @override
+  String get lookHint =>
+      'Desliza los colores; arrastra hacia arriba o toca Todos los iconos para ver la biblioteca.';
+
+  @override
+  String lookSearch(String count) {
+    return 'Buscar entre $count iconos';
+  }
+
+  @override
+  String lookTitleOf(String icon, String colour) {
+    return '$icon · $colour';
+  }
+
+  @override
+  String get lookPreviewStates => 'Pendiente · en curso · hecho';
+
+  @override
+  String get lookRingSame => 'Anillo = tu color (ya 3:1)';
+
+  @override
+  String lookRingAdjusted(String hex) {
+    return 'Anillo ajustado a $hex para que se vea (3:1)';
+  }
+
+  @override
+  String get lookAhead => 'Pendiente';
+
+  @override
+  String get lookInProgress => 'En curso';
+
+  @override
+  String get lookDone => 'Hecho';
+
+  @override
+  String get lookColourSlider => 'Color';
+
+  @override
+  String get lookShadeSlider => 'Tono';
+
+  @override
+  String get lookDottodayColours => 'Colores de Dottoday';
+
+  @override
+  String get lookYourColours => 'Tus colores';
+
+  @override
+  String get lookEdit => 'Editar';
+
+  @override
+  String get lookAddColour => 'Guardar en Tus colores';
+
+  @override
+  String lookRemoveColour(String colour) {
+    return 'Quitar $colour';
+  }
+
+  @override
+  String get lookHexLabel => 'Color hex';
 
   @override
   String get iconSearchHint => 'Buscar iconos';

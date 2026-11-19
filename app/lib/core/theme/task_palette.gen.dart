@@ -35,46 +35,46 @@ final class TaskColor {
     dark: Color(0xFFD9A23A),
     index: 1,
   );
-  static const mint = TaskColor._(
-    'mint',
-    Color(0xFF4CA36B),
-    ring: Color(0xFF469763),
-    dark: Color(0xFF4CA36B),
-    index: 2,
-  );
-  static const teal = TaskColor._(
-    'teal',
-    Color(0xFF2A9D8F),
-    ring: Color(0xFF289588),
-    dark: Color(0xFF2A9D8F),
-    index: 3,
-  );
   static const sky = TaskColor._(
     'sky',
     Color(0xFF4A9BD6),
     ring: Color(0xFF338ED1),
     dark: Color(0xFF4A9BD6),
-    index: 4,
+    index: 2,
   );
   static const indigo = TaskColor._(
     'indigo',
     Color(0xFF5B5FD6),
     ring: Color(0xFF5B5FD6),
     dark: Color(0xFF7A7EDE),
-    index: 5,
+    index: 3,
   );
-  static const violet = TaskColor._(
-    'violet',
-    Color(0xFF8B5CF6),
-    ring: Color(0xFF8B5CF6),
-    dark: Color(0xFF9672E6),
-    index: 6,
+  static const teal = TaskColor._(
+    'teal',
+    Color(0xFF2A9D8F),
+    ring: Color(0xFF289588),
+    dark: Color(0xFF2A9D8F),
+    index: 4,
   );
   static const rose = TaskColor._(
     'rose',
     Color(0xFFD9668F),
     ring: Color(0xFFD75E89),
     dark: Color(0xFFD9668F),
+    index: 5,
+  );
+  static const mint = TaskColor._(
+    'mint',
+    Color(0xFF4CA36B),
+    ring: Color(0xFF469763),
+    dark: Color(0xFF4CA36B),
+    index: 6,
+  );
+  static const violet = TaskColor._(
+    'violet',
+    Color(0xFF8B5CF6),
+    ring: Color(0xFF8B5CF6),
+    dark: Color(0xFF9672E6),
     index: 7,
   );
   static const slate = TaskColor._(
@@ -110,12 +110,12 @@ final class TaskColor {
   static const values = <TaskColor>[
     coral,
     amber,
-    mint,
-    teal,
     sky,
     indigo,
-    violet,
+    teal,
     rose,
+    mint,
+    violet,
     slate,
     brown,
     plum,

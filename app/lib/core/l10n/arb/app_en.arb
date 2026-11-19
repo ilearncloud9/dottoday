@@ -176,7 +176,7 @@
   "@colorAmber": {
     "description": "Block colour name (screen readers, picker)."
   },
-  "colorMint": "Mint",
+  "colorMint": "Green",
   "@colorMint": {
     "description": "Block colour name (screen readers, picker)."
   },
@@ -3764,6 +3764,130 @@
   "colourIconDone": "Done",
   "@colourIconDone": {
     "description": "Closes the colour and icon picker keeping the colour."
+  },
+  "lookPaletteLabel": "Colour, swipe for more",
+  "@lookPaletteLabel": {
+    "description": "Screen-reader name of the swipeable colour row in Colour and icon (ED-086)."
+  },
+  "lookAllColours": "All colours",
+  "@lookAllColours": {
+    "description": "⋯ in Colour and icon, and the All colours sheet's title (ED-161)."
+  },
+  "lookCurrent": "Current",
+  "@lookCurrent": {
+    "description": "Under the task's icon in Colour and icon (ED-086)."
+  },
+  "lookSuggested": "Suggested",
+  "@lookSuggested": {
+    "description": "Over icons the task's title suggests, in Colour and icon (ED-086)."
+  },
+  "lookRecent": "Recent",
+  "@lookRecent": {
+    "description": "Over the last icon picked on this device, in Colour and icon (ED-086)."
+  },
+  "lookRecentlyUsed": "Recently used",
+  "@lookRecentlyUsed": {
+    "description": "All icons' first section: icons last picked on this device (ED-086)."
+  },
+  "lookAllIcons": "All icons · search {count}",
+  "@lookAllIcons": {
+    "description": "Colour and icon's button to the icon library; count is how many icons (ED-086).",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "lookHint": "Swipe the colours; drag up or tap All icons for the full library.",
+  "@lookHint": {
+    "description": "Hint under Colour and icon (ED-086)."
+  },
+  "lookSearch": "Search {count} icons",
+  "@lookSearch": {
+    "description": "All icons' search field hint; count is how many icons (ED-086).",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "lookTitleOf": "{icon} · {colour}",
+  "@lookTitleOf": {
+    "description": "All icons' title: the task's icon and colour names, e.g. Run · Coral (ED-086).",
+    "placeholders": {
+      "icon": {
+        "type": "String"
+      },
+      "colour": {
+        "type": "String"
+      }
+    }
+  },
+  "lookPreviewStates": "Ahead · in progress · done",
+  "@lookPreviewStates": {
+    "description": "All colours' preview caption: the three dots are the task ahead, in progress and done (ED-156)."
+  },
+  "lookRingSame": "Ring = your colour (already 3:1)",
+  "@lookRingSame": {
+    "description": "All colours' preview: the colour is visible enough to be its own ring (ED-156)."
+  },
+  "lookRingAdjusted": "Ring adjusted to {hex} so it stays visible (3:1)",
+  "@lookRingAdjusted": {
+    "description": "All colours' preview: a pale colour's ring is drawn deeper; hex is the ring's #RRGGBB (ED-156).",
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "lookAhead": "Ahead",
+  "@lookAhead": {
+    "description": "Screen-reader name of All colours' first preview dot: the task ahead (ED-156)."
+  },
+  "lookInProgress": "In progress",
+  "@lookInProgress": {
+    "description": "Screen-reader name of All colours' second preview dot (ED-156)."
+  },
+  "lookDone": "Done",
+  "@lookDone": {
+    "description": "Screen-reader name of All colours' third preview dot: the task done (ED-156)."
+  },
+  "lookColourSlider": "Colour",
+  "@lookColourSlider": {
+    "description": "All colours' hue slider (ED-156)."
+  },
+  "lookShadeSlider": "Shade",
+  "@lookShadeSlider": {
+    "description": "All colours' slider from dark through the colour to light (ED-156)."
+  },
+  "lookDottodayColours": "Dottoday colours",
+  "@lookDottodayColours": {
+    "description": "All colours' section of the 12 built-in colours (ED-161)."
+  },
+  "lookYourColours": "Your colours",
+  "@lookYourColours": {
+    "description": "All colours' section of the account's own colours, synced (ED-221)."
+  },
+  "lookEdit": "Edit",
+  "@lookEdit": {
+    "description": "Turns on removing colours in Your colours (ED-161)."
+  },
+  "lookAddColour": "Save to Your colours",
+  "@lookAddColour": {
+    "description": "Screen-reader name of + in Your colours: saves the colour in use (ED-161)."
+  },
+  "lookRemoveColour": "Remove {colour}",
+  "@lookRemoveColour": {
+    "description": "A colour in Your colours while editing; colour is its #RRGGBB (ED-161).",
+    "placeholders": {
+      "colour": {
+        "type": "String"
+      }
+    }
+  },
+  "lookHexLabel": "Hex colour",
+  "@lookHexLabel": {
+    "description": "Name of All colours' hex field; tap to type #RRGGBB (owner, 4c-2)."
   },
   "iconSearchHint": "Search icons",
   "@iconSearchHint": {

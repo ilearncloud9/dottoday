@@ -1936,6 +1936,80 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get colourIconDone => pseudo(super.colourIconDone);
 
   @override
+  String get lookPaletteLabel => pseudo(super.lookPaletteLabel);
+
+  @override
+  String get lookAllColours => pseudo(super.lookAllColours);
+
+  @override
+  String get lookCurrent => pseudo(super.lookCurrent);
+
+  @override
+  String get lookSuggested => pseudo(super.lookSuggested);
+
+  @override
+  String get lookRecent => pseudo(super.lookRecent);
+
+  @override
+  String get lookRecentlyUsed => pseudo(super.lookRecentlyUsed);
+
+  @override
+  String lookAllIcons(String count) => pseudo(super.lookAllIcons(count));
+
+  @override
+  String get lookHint => pseudo(super.lookHint);
+
+  @override
+  String lookSearch(String count) => pseudo(super.lookSearch(count));
+
+  @override
+  String lookTitleOf(String icon, String colour) =>
+      pseudo(super.lookTitleOf(icon, colour));
+
+  @override
+  String get lookPreviewStates => pseudo(super.lookPreviewStates);
+
+  @override
+  String get lookRingSame => pseudo(super.lookRingSame);
+
+  @override
+  String lookRingAdjusted(String hex) => pseudo(super.lookRingAdjusted(hex));
+
+  @override
+  String get lookAhead => pseudo(super.lookAhead);
+
+  @override
+  String get lookInProgress => pseudo(super.lookInProgress);
+
+  @override
+  String get lookDone => pseudo(super.lookDone);
+
+  @override
+  String get lookColourSlider => pseudo(super.lookColourSlider);
+
+  @override
+  String get lookShadeSlider => pseudo(super.lookShadeSlider);
+
+  @override
+  String get lookDottodayColours => pseudo(super.lookDottodayColours);
+
+  @override
+  String get lookYourColours => pseudo(super.lookYourColours);
+
+  @override
+  String get lookEdit => pseudo(super.lookEdit);
+
+  @override
+  String get lookAddColour => pseudo(super.lookAddColour);
+
+  @override
+  String lookRemoveColour(String colour) =>
+      pseudo(super.lookRemoveColour(colour));
+
+  @override
+  String get lookHexLabel => pseudo(super.lookHexLabel);
+
+  @override
   String get iconSearchHint => pseudo(super.iconSearchHint);
 
   @override

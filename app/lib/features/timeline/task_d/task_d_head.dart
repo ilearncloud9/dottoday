@@ -9,7 +9,7 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/shared/dot/done_circle.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/pickers/task_icon_picker.dart';
+import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:dottoday/shared/task_form/task_form_header.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -75,12 +75,14 @@ class TaskDHead extends ConsumerWidget {
     TaskColor colour,
     TaskIcon icon,
   ) async {
-    final picked = await showTaskLookPicker(
-      context: context,
+    // Each pick lands at once, so the header recolours live (ED-161).
+    await showTaskLook(
+      context,
       colour: colour,
       icon: icon,
+      title: draft.title,
+      onChanged: (l) => onLook(l.color.key, l.icon.key),
     );
-    if (picked != null) onLook(picked.color.key, picked.icon.key);
   }
 
   /// "Wed, Nov 4 · 2:00 – 2:20 PM · 20 min"; today's "9:00 – 11:00 AM",

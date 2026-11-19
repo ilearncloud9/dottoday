@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On phones, a task's colour and icon are picked in one sheet (redesign branch): the colours in a row, icons suggested from the title and your recent ones, a searchable icon library, and All colours where you can type a hex, slide the colour and shade, and keep your own colours. Mint is now called Green.
 - Tasks can be brown, plum or olive, and any colour you choose (redesign branch): a custom colour gets its ring and dark-mode shade worked out so it stays readable, and your own colours sync with your account. Colours from a newer version of the app are kept, not lost, when you sync or restore.
 - Moving or scheduling a task opens one picker everywhere (redesign branch): free times first, then a day and a bar of the day you slide to the exact time, with what it overlaps; Move keeps the task's time on another day. On Mac and the web it opens as a popover with a typed time, and the web's m key opens it for the picked task.
 - On phones, tapping a task opens one sheet that is also its editor (redesign branch): the header, Done, Move, Shift the rest, Focus and Need more time? at half height; pull up for the date, time, alerts, repeat, energy, steps, notes, sound, travel time and pinned. Edits save as you go, with Undo. A step's time and delete are in its ⋯, and a long press reorders it; the time zone and length-from-steps are under the time.
