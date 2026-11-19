@@ -221,6 +221,15 @@ abstract final class DotSize {
   /// of 180 and the hour labels (ED-269).
   static const double weekGridTouchMin = 3 * gridTouchColumn + gridGutter;
 
+  /// Create task's and the editor's ring (E-Phones ED-140, option D) and
+  /// the palette badge on it that opens Colour and icon.
+  static const double formRing = 60;
+  static const double formBadge = 24;
+
+  /// The When card's rows and the Repeat · Energy pills (ED-140), and a
+  /// step's check box.
+  static const double formRow = 60;
+  static const double stepBox = 22;
   static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor

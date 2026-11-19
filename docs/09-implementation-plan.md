@@ -697,6 +697,8 @@ Rules for every task in M18 to M22:
   - the Mac and web Add popover with live chips (R2-36, ED-342);
   - tablets (R2-3, ED-271).
   Natural-language time and paste-a-list keep working (R-06, R-07).
+  Split by the owner (2026-11-19) in three parts, each with its own review page and commit: 3a the phones' Create task, 3b the Mac and web popover, 3c tablets.
+  - [x] Part 3a done 2026-11-19 (ED-394): Create task on iPhone and Android phones, full height with the title focused; Task · Brain dump · Routine tabs (native controls), each keeping its draft; the shared task form in `shared/task_form/` (look, title, When, Repeat, Energy, steps, notes) that M19.4's editor reuses; ⋯ holds Sound, Travel time, Pinned, Add to Inbox instead, Break it down; habit and routine suggestions below the empty form; the neutral return key; no time typed takes the first free slot. Minimal keeps its own Add. Open: the +'s hold hint and Android mode menu, no done circle in the header, a pasted list still confirms in place instead of the proposal; a real-device run.
 - [ ] M19.4 Edit and reschedule:
   - the option D editor (ED-086, ED-087) with steps and notes (ED-137, ED-145);
   - pin, travel time and energy (R2-40, ED-346);

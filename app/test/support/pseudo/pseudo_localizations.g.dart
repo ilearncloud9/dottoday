@@ -4020,6 +4020,45 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get workspaceViewMenu => pseudo(super.workspaceViewMenu);
 
   @override
+  String get createTabTask => pseudo(super.createTabTask);
+
+  @override
+  String get createTask => pseudo(super.createTask);
+
+  @override
+  String get createTaskShort => pseudo(super.createTaskShort);
+
+  @override
+  String get createNewTask => pseudo(super.createNewTask);
+
+  @override
+  String get createMore => pseudo(super.createMore);
+
+  @override
+  String get formSteps => pseudo(super.formSteps);
+
+  @override
+  String get formNotesHint => pseudo(super.formNotesHint);
+
+  @override
+  String get formNoAlerts => pseudo(super.formNoAlerts);
+
+  @override
+  String get formEnergyNone => pseudo(super.formEnergyNone);
+
+  @override
+  String get routineDropOnLabel => pseudo(super.routineDropOnLabel);
+
+  @override
+  String get routineOtherDay => pseudo(super.routineOtherDay);
+
+  @override
+  String get routineTabHint => pseudo(super.routineTabHint);
+
+  @override
+  String get routineEditAll => pseudo(super.routineEditAll);
+
+  @override
   String workspaceTodayCount(int done, int total) =>
       pseudo(super.workspaceTodayCount(done, total));
 

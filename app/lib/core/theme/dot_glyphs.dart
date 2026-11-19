@@ -110,6 +110,11 @@ abstract final class DotGlyphs {
   static final haptics = DotGlyph(
     '${_r(8, 3, 8, 18, 2)}M11 18h2M4 9q-1.5 3 0 6M20 9q1.5 3 0 6',
   );
+  // Create task's colour-and-icon badge (ED-140): a painter's palette.
+  static const palette = DotGlyph(
+    'M12 21a9 9 0 1 1 9-9c0 2-1.6 2.7-3.2 2.7h-2.3a1.8 1.8 0 0 0-1.3 3 '
+    '1.5 1.5 0 0 1-1.1 3.3zM7.5 10.5h.01M10.5 7h.01M15 8h.01',
+  );
   static final clock = DotGlyph('${_c(12, 12, 9)}M12 7v5l3 2');
   static final timer = DotGlyph('${_c(12, 14, 8)}M12 14v-4M10 2h4');
   static final calendar = DotGlyph(

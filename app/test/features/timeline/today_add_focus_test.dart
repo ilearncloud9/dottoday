@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
-import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/shared/task_form/task_form_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -70,7 +70,8 @@ void main() {
   ) async {
     await pumpToday(tester);
     unawaited(showAddFlow(tester.element(find.byType(TodayScreen))));
-    final close = find.byTooltip('Close');
+    // At phone width Add is Create task, whose × is "Cancel" (M19.3).
+    final close = find.byTooltip('Cancel');
     final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
     // Mid-slide: the close button is on screen, still on its way up.
     do {
@@ -85,7 +86,7 @@ void main() {
     var tooltip = false;
     for (var i = 0; i < 60; i++) {
       await tester.pump(const Duration(milliseconds: 16));
-      tooltip = tooltip || find.text('Close').evaluate().isNotEmpty;
+      tooltip = tooltip || find.text('Cancel').evaluate().isNotEmpty;
     }
 
     expect(tester.getRect(close).contains(rest), isFalse);
@@ -97,7 +98,7 @@ void main() {
 bool _fieldHasFocus(WidgetTester tester) => tester
     .widget<EditableText>(
       find.descendant(
-        of: find.byType(AddTitleField),
+        of: find.byType(TaskFormTitleField),
         matching: find.byType(EditableText),
       ),
     )

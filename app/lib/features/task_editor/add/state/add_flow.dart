@@ -11,6 +11,7 @@ import 'package:dottoday/domain/quick_add/add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:flutter/foundation.dart';
@@ -277,3 +278,10 @@ List<({QuickAddToken token, String text})> tokenTexts(QuickAddDraft draft) => [
 /// the callbacks with the last keystroke.
 AddDraft currentDraft(WidgetRef ref, AddRequest request, AddFlowState shown) =>
     ref.read(addFlowProvider(request)).value?.draft ?? shown.draft;
+
+/// The first free slot that fits [draft]; with no room left, now on
+/// today, Wake Up on a later day (docs/10 §6 "Add never asks for what it
+/// can infer").
+DateTime firstFreeStart(DayRoom room, AddDraft draft) =>
+    room.slotsFor(draft.length).firstOrNull?.startUtc ??
+    (room.fromUtc.isAfter(room.startUtc) ? room.fromUtc : room.startUtc);

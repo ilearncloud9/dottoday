@@ -5108,6 +5108,46 @@ class AppLocalizationsFr extends AppLocalizations {
   String get workspaceViewMenu => 'Vue du calendrier';
 
   @override
+  String get createTabTask => 'Tâche';
+
+  @override
+  String get createTask => 'Créer la tâche';
+
+  @override
+  String get createTaskShort => 'Créer';
+
+  @override
+  String get createNewTask => 'Nouvelle tâche';
+
+  @override
+  String get createMore => 'Plus d’options';
+
+  @override
+  String get formSteps => 'Étapes';
+
+  @override
+  String get formNotesHint => 'Ajoutez des notes, liens ou numéros…';
+
+  @override
+  String get formNoAlerts => 'Aucune alerte';
+
+  @override
+  String get formEnergyNone => '—';
+
+  @override
+  String get routineDropOnLabel => 'Placer le';
+
+  @override
+  String get routineOtherDay => 'Autre jour…';
+
+  @override
+  String get routineTabHint =>
+      'Touchez-en une pour voir où ses étapes se placent. Rien n’est ajouté avant votre accord.';
+
+  @override
+  String get routineEditAll => 'Modifier les routines…';
+
+  @override
   String workspaceTodayCount(int done, int total) {
     return '$done/$total';
   }

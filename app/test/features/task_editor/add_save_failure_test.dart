@@ -11,6 +11,9 @@ import 'add_harness.dart';
 
 /// M8.5b, R-08: a write that fails (0 bytes free) never loses what was
 /// typed in Add.
+/// A window that keeps the two-step sheet when a failed save reopens it.
+const _wide = Size(1280, 900);
+
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
@@ -23,7 +26,7 @@ void main() {
   testWidgets('Add reopens with the draft; Try again writes it', (
     tester,
   ) async {
-    final repo = await pumpAddHost(tester, writeFault: fault);
+    final repo = await pumpAddHost(tester, size: _wide, writeFault: fault);
     await tester.enterText(addTitle, 'Pay rent 5pm 20m');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
@@ -45,7 +48,7 @@ void main() {
   testWidgets('the reopened draft can be edited and added as usual', (
     tester,
   ) async {
-    final repo = await pumpAddHost(tester, writeFault: fault);
+    final repo = await pumpAddHost(tester, size: _wide, writeFault: fault);
     await tester.enterText(addTitle, 'Call Mum');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
@@ -61,7 +64,7 @@ void main() {
   testWidgets('Add another keeps the sheet and the title on failure', (
     tester,
   ) async {
-    final repo = await pumpAddHost(tester, writeFault: fault);
+    final repo = await pumpAddHost(tester, size: _wide, writeFault: fault);
     await tester.enterText(addTitle, 'Pack 8pm 30m');
     await tester.pump();
     await tester.sendKeyDownEvent(LogicalKeyboardKey.shift);
@@ -84,7 +87,7 @@ void main() {
   testWidgets('a pasted list reopens on failure; Try again adds it all', (
     tester,
   ) async {
-    final repo = await pumpAddHost(tester, writeFault: fault);
+    final repo = await pumpAddHost(tester, size: _wide, writeFault: fault);
     await tester.enterText(addTitle, 'Milk\nEggs');
     await tester.pump();
     await tester.tap(find.text('Add 2'));
@@ -103,8 +106,10 @@ void main() {
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     for (final (name, size) in [
-      ('compact', const Size(390, 844)),
-      ('expanded', const Size(1280, 900)),
+      // Phones in Full reopen Create task (create_task_test.dart); this
+      // sheet reopens where it runs: Minimal, and wider windows.
+      ('medium', const Size(700, 900)),
+      ('expanded', _wide),
     ]) {
       testWidgets('failure strip a11y ${mode.name} $name', (tester) async {
         await pumpAddHost(tester, mode: mode, size: size, writeFault: fault);

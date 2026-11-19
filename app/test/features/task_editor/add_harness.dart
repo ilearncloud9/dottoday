@@ -2,7 +2,9 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
+import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
+import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,11 +65,20 @@ Future<FakeOccurrenceRepository> pumpAddHost(
             builder: (context) => Scaffold(
               body: Center(
                 child: TextButton(
-                  onPressed: () => showAddFlow(
-                    context,
-                    text: text,
-                    startUtc: startUtc,
-                    day: day,
+                  // The two-step sheet itself: Minimal's Add and, until
+                  // M19.3 parts 3b and 3c, the wide windows'. Phones in
+                  // Full open Create task (create_task_test.dart).
+                  onPressed: () => showAppSheet<void>(
+                    context: context,
+                    fullHeight: true,
+                    builder: (_) => AddFlowSheet(
+                      request: AddRequest(
+                        languageCode: 'en',
+                        text: text,
+                        startUtc: startUtc,
+                        day: day,
+                      ),
+                    ),
                   ),
                   child: const Text('open'),
                 ),

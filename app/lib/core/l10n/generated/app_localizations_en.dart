@@ -5079,6 +5079,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workspaceViewMenu => 'Calendar view';
 
   @override
+  String get createTabTask => 'Task';
+
+  @override
+  String get createTask => 'Create task';
+
+  @override
+  String get createTaskShort => 'Create';
+
+  @override
+  String get createNewTask => 'New task';
+
+  @override
+  String get createMore => 'More options';
+
+  @override
+  String get formSteps => 'Steps';
+
+  @override
+  String get formNotesHint => 'Add notes, links or phone numbers…';
+
+  @override
+  String get formNoAlerts => 'No alerts';
+
+  @override
+  String get formEnergyNone => '—';
+
+  @override
+  String get routineDropOnLabel => 'Drop on';
+
+  @override
+  String get routineOtherDay => 'Other day…';
+
+  @override
+  String get routineTabHint =>
+      'Tap one to see where its steps land. Nothing is added until you accept.';
+
+  @override
+  String get routineEditAll => 'Edit routines…';
+
+  @override
   String workspaceTodayCount(int done, int total) {
     return '$done/$total';
   }

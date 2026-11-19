@@ -1,3 +1,4 @@
+import 'package:dottoday/app_add_modes.dart';
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/env/env.dart';
@@ -49,12 +50,15 @@ Widget _routerApp(
   supportedLocales: testL10nLocales,
   locale: testL10nLocale,
   routerConfig: router,
-  builder: (context, child) => AppCommandScope(
-    handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
-    // A view's ?task= opens the task, as in the app (ED-097).
-    child: TaskLinkHost(
-      router: router,
-      child: child ?? const SizedBox.shrink(),
+  // Add's Brain dump and Routine tabs, as in the app (M19.3).
+  builder: (context, child) => withAddModes(
+    AppCommandScope(
+      handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
+      // A view's ?task= opens the task, as in the app (ED-097).
+      child: TaskLinkHost(
+        router: router,
+        child: child ?? const SizedBox.shrink(),
+      ),
     ),
   ),
 );

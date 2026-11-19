@@ -7638,6 +7638,84 @@ abstract class AppLocalizations {
   /// **'Calendar view'**
   String get workspaceViewMenu;
 
+  /// Create task: the Task tab (beside Brain dump and Routine).
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get createTabTask;
+
+  /// Create task: the iPhone header button that creates the task (ED-140).
+  ///
+  /// In en, this message translates to:
+  /// **'Create task'**
+  String get createTask;
+
+  /// Create task: the Android top-bar button that creates the task (ED-141).
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createTaskShort;
+
+  /// Create task: the Android top-bar title on the Task tab.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get createNewTask;
+
+  /// Create task: the ⋯ button's name (Sound, Travel time, Pinned, Inbox, Break it down).
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get createMore;
+
+  /// Task form: the caption over the task's steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get formSteps;
+
+  /// Task form: the empty notes field's hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes, links or phone numbers…'**
+  String get formNotesHint;
+
+  /// Task form: the alerts row when the task has none.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts'**
+  String get formNoAlerts;
+
+  /// Task form: the Energy pill's value when none is set (a dash).
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get formEnergyNone;
+
+  /// Add › Routine: the label before the Today / Tomorrow / Other day… choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop on'**
+  String get routineDropOnLabel;
+
+  /// Add › Routine: opens a month to pick the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Other day…'**
+  String get routineOtherDay;
+
+  /// Add › Routine: the note under the routines.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap one to see where its steps land. Nothing is added until you accept.'**
+  String get routineTabHint;
+
+  /// Add › Routine: opens the Routines page.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit routines…'**
+  String get routineEditAll;
+
   /// Workspace sidebar: today's done and planned tasks after Today, "3/9".
   ///
   /// In en, this message translates to:

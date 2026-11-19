@@ -3,16 +3,17 @@ import 'dart:async';
 import 'package:dottoday/core/editing/pending_brain_dump.dart';
 import 'package:dottoday/core/editing/pending_routine_drop.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/quick_add/add_draft.dart';
-import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/add_when_host.dart';
+import 'package:dottoday/features/task_editor/add/create/create_task_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_header.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_routine_chips.dart';
@@ -47,8 +48,27 @@ Future<void> showAddFlow(
   return showAppSheet<void>(
     context: context,
     fullHeight: true,
-    builder: (_) => AddFlowSheet(request: request),
+    builder: (_) => _AddHost(request: request),
   );
+}
+
+/// Phones in Full get Create task (ED-140, M19.3 part 3a); Minimal keeps
+/// its own Add sheet (ED-152), and wider windows keep this one until the
+/// Mac and web popover (3b) and tablets (3c).
+class _AddHost extends ConsumerWidget {
+  const _AddHost({required this.request});
+
+  final AddRequest request;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // AppLayout: a short landscape phone stays compact too (H1).
+    final phone = AppLayout.classOf(context) == WidthClass.compact;
+    if (phone && !watchSimplified(ref, FeatureId.addTask)) {
+      return CreateTaskSheet(request: request);
+    }
+    return AddFlowSheet(request: request);
+  }
 }
 
 /// The Add sheet's content: header and the current step.
@@ -127,7 +147,7 @@ class _What extends ConsumerWidget {
     );
     final draft = currentDraft(ref, request, state);
     final start =
-        draft.startUtc ?? (room == null ? null : _firstFree(room, draft));
+        draft.startUtc ?? (room == null ? null : firstFreeStart(room, draft));
     return AddWhatStep(
       minimal: minimal,
       whenLabel: start == null || profile == null
@@ -220,7 +240,7 @@ class _What extends ConsumerWidget {
     final draft = currentDraft(ref, request, state);
     if (draft.startMinute == null) {
       final room = await ref.read(dayRoomProvider(draft.day).future);
-      final from = _firstFree(room, draft);
+      final from = firstFreeStart(room, draft);
       notifier.edit((d) => d.withStartUtc(from, snap: room.snapMinutes));
     }
     notifier.goTo(AddStep.when);
@@ -233,7 +253,7 @@ class _What extends ConsumerWidget {
     if (draft.startMinute == null) {
       final room = await ref.read(dayRoomProvider(draft.day).future);
       draft = draft.withStartUtc(
-        _firstFree(room, draft),
+        firstFreeStart(room, draft),
         snap: room.snapMinutes,
       );
     }
@@ -248,10 +268,4 @@ class _What extends ConsumerWidget {
     ref.read(pendingBrainDumpProvider.notifier).request(text);
     unawaited(Navigator.of(context).maybePop());
   }
-
-  /// The first free slot that fits [draft]; with no room left, now on
-  /// today, Wake Up on a later day.
-  static DateTime _firstFree(DayRoom room, AddDraft draft) =>
-      room.slotsFor(draft.length).firstOrNull?.startUtc ??
-      (room.fromUtc.isAfter(room.startUtc) ? room.fromUtc : room.startUtc);
 }

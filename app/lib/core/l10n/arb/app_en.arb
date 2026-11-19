@@ -6265,6 +6265,58 @@
   "@workspaceViewMenu": {
     "description": "Workspace toolbar, narrow window: the pop-up that replaces the Day / 3 days / Week / Month tabs; its tooltip and accessible name, read before the current view."
   },
+  "createTabTask": "Task",
+  "@createTabTask": {
+    "description": "Create task: the Task tab (beside Brain dump and Routine)."
+  },
+  "createTask": "Create task",
+  "@createTask": {
+    "description": "Create task: the iPhone header button that creates the task (ED-140)."
+  },
+  "createTaskShort": "Create",
+  "@createTaskShort": {
+    "description": "Create task: the Android top-bar button that creates the task (ED-141)."
+  },
+  "createNewTask": "New task",
+  "@createNewTask": {
+    "description": "Create task: the Android top-bar title on the Task tab."
+  },
+  "createMore": "More options",
+  "@createMore": {
+    "description": "Create task: the ⋯ button's name (Sound, Travel time, Pinned, Inbox, Break it down)."
+  },
+  "formSteps": "Steps",
+  "@formSteps": {
+    "description": "Task form: the caption over the task's steps."
+  },
+  "formNotesHint": "Add notes, links or phone numbers…",
+  "@formNotesHint": {
+    "description": "Task form: the empty notes field's hint."
+  },
+  "formNoAlerts": "No alerts",
+  "@formNoAlerts": {
+    "description": "Task form: the alerts row when the task has none."
+  },
+  "formEnergyNone": "—",
+  "@formEnergyNone": {
+    "description": "Task form: the Energy pill's value when none is set (a dash)."
+  },
+  "routineDropOnLabel": "Drop on",
+  "@routineDropOnLabel": {
+    "description": "Add › Routine: the label before the Today / Tomorrow / Other day… choice."
+  },
+  "routineOtherDay": "Other day…",
+  "@routineOtherDay": {
+    "description": "Add › Routine: opens a month to pick the day."
+  },
+  "routineTabHint": "Tap one to see where its steps land. Nothing is added until you accept.",
+  "@routineTabHint": {
+    "description": "Add › Routine: the note under the routines."
+  },
+  "routineEditAll": "Edit routines…",
+  "@routineEditAll": {
+    "description": "Add › Routine: opens the Routines page."
+  },
   "workspaceTodayCount": "{done}/{total}",
   "@workspaceTodayCount": {
     "description": "Workspace sidebar: today's done and planned tasks after Today, \"3/9\".",

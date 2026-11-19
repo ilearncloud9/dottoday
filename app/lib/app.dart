@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/app_add_modes.dart';
 import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
@@ -117,34 +118,36 @@ class DottodayApp extends ConsumerWidget {
         );
         // The Mac window takes the app's theme (ED-176); a view's
         // `?task=` opens the task over it (ED-097).
-        return MacWindowChrome(
-          // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
-          child: LayoutSwitchGuard(
-            child: HapticsScope(
-              enabled: settings?.inAppHapticsEnabled ?? true,
-              child: AppLifecycleScope(
-                // The Mac menu bar (M5.5) runs the same handlers as the keys.
-                child: AppMenuBar(
-                  router: router,
-                  handlers: handlers,
-                  child: AppCommandScope(
+        return withAddModes(
+          MacWindowChrome(
+            // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
+            child: LayoutSwitchGuard(
+              child: HapticsScope(
+                enabled: settings?.inAppHapticsEnabled ?? true,
+                child: AppLifecycleScope(
+                  // The Mac menu bar (M5.5) runs the same handlers as the keys.
+                  child: AppMenuBar(
+                    router: router,
                     handlers: handlers,
-                    singleKeys: settings?.webSingleKeys ?? true,
-                    child: UndoKeys(
-                      child: Actions(
-                        actions: _intents(router),
-                        // An unreadable database replaces every screen (M3f.9).
-                        child: DatabaseGate(
-                          // The optional app lock over everything else (M5.8).
-                          child: LockGate(
-                            // After a change of owner: signed out, guest work,
-                            // settings, an unfinished removal (CR-160).
-                            child: AccountGateView(
-                              // First run on this device (M4).
-                              child: OnboardingGate(
-                                child: TaskLinkHost(
-                                  router: router,
-                                  child: child ?? const SizedBox.shrink(),
+                    child: AppCommandScope(
+                      handlers: handlers,
+                      singleKeys: settings?.webSingleKeys ?? true,
+                      child: UndoKeys(
+                        child: Actions(
+                          actions: _intents(router),
+                          // An unreadable database replaces every screen (M3f.9).
+                          child: DatabaseGate(
+                            // The optional app lock over everything else (M5.8).
+                            child: LockGate(
+                              // After a change of owner: signed out, guest work,
+                              // settings, an unfinished removal (CR-160).
+                              child: AccountGateView(
+                                // First run on this device (M4).
+                                child: OnboardingGate(
+                                  child: TaskLinkHost(
+                                    router: router,
+                                    child: child ?? const SizedBox.shrink(),
+                                  ),
                                 ),
                               ),
                             ),

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On iPhone and Android phones, + opens Create task full height (redesign branch): the title is ready to type, and tabs switch between a task, a brain dump and dropping a routine, each keeping what you started. Colour and icon, date, time, length, alerts, repeat, energy, steps and notes are set before the task is created; ⋯ holds sound, travel time, pinned, Add to Inbox and Break it down.
 - In a narrow Mac window or browser, the workspace toolbar stays on one line (redesign branch): search shrinks to its icon, the Day, 3 days, Week and Month tabs become one menu, and the date drops its year as room runs out.
 - On Mac and in a wide browser, the task shown in the inspector is outlined on Day, and the arrow keys move between tasks on Week and 3 days and between days on Month; Return opens the focused task (redesign branch).
 - On iPad, Android tablets and touch-first browsers, the workspace uses touch sizes (redesign branch): an hour is taller, days are wider, task titles are bigger, short tasks become one-line pills and overlapping tasks stack. Hold a task, then drag it to move it, with Undo. The inspector opens over the calendar.

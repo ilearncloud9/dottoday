@@ -5,8 +5,10 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/entities/task_color_keys.gen.dart';
 import 'package:dottoday/domain/icon_guess/icon_guess.dart';
+import 'package:dottoday/domain/quick_add/add_details.dart';
 import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
+import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
@@ -48,7 +50,11 @@ final class AddDraft {
     this.steps = const [],
     this.learned = Learned.none,
     this.guess,
+    this.details = const AddDetails(),
   });
+
+  /// Create task's Repeat, Alerts, Energy, Notes and ⋯ choices (ED-140).
+  final AddDetails details;
 
   /// The icon and colour the title suggests ("Gym" → dumbbell), below
   /// any choice and the habit's, so a pick is never replaced.
@@ -120,8 +126,11 @@ final class AddDraft {
             habit?.durationMin ??
             defaultDurationMin;
 
-  /// "every …" from the title (R-01 prefill).
-  String? get rrule => typed.rrule;
+  /// The picked repeat, else "every …" from the title (R-01 prefill).
+  String? get rrule => switch (details.repeat) {
+    final pick? => pick.rule?.rruleFrom(day),
+    null => typed.rrule,
+  };
 
   /// Whether `@inbox` was typed.
   bool get inbox => typed.inbox;
@@ -193,6 +202,8 @@ final class AddDraft {
 
   AddDraft withSteps(List<ProposedStep> value) => _copy(steps: value);
 
+  AddDraft withDetails(AddDetails value) => _copy(details: value);
+
   /// Whether the length is the steps' sum ("the dot grows to fit"); a
   /// length picked afterwards differs, and wins (M10.3).
   bool get followsSteps {
@@ -252,15 +263,26 @@ final class AddDraft {
       nowUtc: nowUtc,
       defaultDurationMin: defaultDurationMin,
       untitled: untitled,
-      alerts: alerts,
+      alerts: details.alerts ?? alerts,
       ids: ids,
     );
     final follows = followsSteps;
+    final d = details;
+    final end = d.repeat?.rule?.end;
     return (
       series: rows.series?.copyWith(
         colorKey: color,
         iconKey: icon,
         durationFromSteps: follows,
+        notes: d.storedNotes,
+        energy: d.energy,
+        soundId: d.soundId,
+        travelBufferMin: d.travelMin,
+        pinned: d.pinned,
+        count: end is EndsAfter ? end.count : rows.series?.count,
+        untilUtc: end is EndsOn
+            ? const ClockTime(23, 59).onDate(tz.getLocation(tzId), end.until)
+            : rows.series?.untilUtc,
         subtaskTemplate: [
           for (final (i, s) in steps.indexed)
             SubtaskTemplateItem(
@@ -275,6 +297,11 @@ final class AddDraft {
         colorKey: color,
         iconKey: icon,
         durationFromSteps: follows,
+        notes: d.storedNotes,
+        energy: d.energy,
+        soundId: d.soundId,
+        travelBufferMin: d.travelMin,
+        pinned: d.pinned,
       ),
     );
   }
@@ -294,6 +321,7 @@ final class AddDraft {
     List<ProposedStep>? steps,
     Learned? learned,
     IconGuess? Function()? guess,
+    AddDetails? details,
   }) => AddDraft(
     today: today,
     tzId: tzId ?? this.tzId,
@@ -311,5 +339,6 @@ final class AddDraft {
     steps: steps ?? this.steps,
     learned: learned ?? this.learned,
     guess: guess == null ? this.guess : guess(),
+    details: details ?? this.details,
   );
 }
