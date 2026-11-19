@@ -258,6 +258,9 @@ abstract final class DotSize {
   static const double tabletAddWidth = 400;
   static const double tabletAddHeight = 700;
   static const double sideSheet = 412;
+
+  /// A proposed block's empty dashed ring on the hour grid (E-R2-3): 18.
+  static const double gridProposedRing = 18;
   static const double sidebarGlyph = 17;
 
   /// The right-hand panel at the expanded width: the task editor

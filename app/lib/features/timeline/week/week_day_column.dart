@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/layout/week_layout.dart';
 import 'package:dottoday/features/timeline/week/grid_block.dart';
 import 'package:dottoday/features/timeline/week/grid_column_pieces.dart';
+import 'package:dottoday/features/timeline/week/grid_proposed.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/grid_thread.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
@@ -11,11 +12,10 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
-/// A day column of the hour grid (E-FullA-v2 Week, M19.2 part 2): its
-/// hour lines and left divider, today's tint, the thread behind the
-/// blocks, the blocks at their times (side by side where they overlap),
-/// today's now line and dot, and a drop target that shows where a dragged
-/// task would land (M3e.3).
+/// A day column of the hour grid (E-FullA-v2 Week, M19.2 part 2): hour
+/// lines, today's tint, the thread, the blocks (side by side where they
+/// overlap), an open proposal's tasks dashed (R2-3), the now line and dot,
+/// and where a dragged task would land (M3e.3).
 class WeekDayColumn extends StatefulWidget {
   const WeekDayColumn({
     required this.day,
@@ -27,10 +27,14 @@ class WeekDayColumn extends StatefulWidget {
     this.onCue,
     this.onMove,
     this.onEmpty,
+    this.proposed = const [],
     super.key,
   });
 
   final WeekDayView day;
+
+  /// The open proposal's tasks on this day, drawn dashed (R2-3).
+  final List<GridProposed> proposed;
   final int axisMinutes;
 
   /// A click on the grid's free space: the Workspace puts its inspector
@@ -149,8 +153,15 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     final now = widget.day.nowUtc;
     final hover = _hover;
     return [
+      ...gridProposedBlocks(context, proposed: widget.proposed, y: _y),
       if (now != null) ..._now(c, _y(now)),
-      if (hover != null) ..._preview(context, hover),
+      if (hover != null)
+        ...gridDropPreview(
+          context,
+          top: _y(hover.start),
+          height: hover.minutes * _scale.pxPerMinute,
+          label: widget.dropLabel(hover.start, hover.minutes),
+        ),
     ];
   }
 
@@ -209,16 +220,6 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     top: y - width / 2,
     height: width,
     child: ColoredBox(color: color),
-  );
-
-  List<Widget> _preview(
-    BuildContext context,
-    ({DateTime start, int minutes}) hover,
-  ) => gridDropPreview(
-    context,
-    top: _y(hover.start),
-    height: hover.minutes * _scale.pxPerMinute,
-    label: widget.dropLabel(hover.start, hover.minutes),
   );
 
   List<WeekCardBox> _boxes() {

@@ -73,8 +73,9 @@ class StepGroup extends ConsumerWidget {
             step(DotGlyphs.chevronLeft, backLabel, onBack),
             InkWell(
               onTap: onToday,
+              // At touch sizes "Today" alone is narrower than its target.
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: h),
+                constraints: BoxConstraints(minHeight: h, minWidth: h),
                 child: Center(
                   child: Text(
                     todayLabel,

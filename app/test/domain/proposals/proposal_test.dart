@@ -42,6 +42,27 @@ void main() {
     expect(p.withEdits([added]).after.dots.length, 8);
   });
 
+  test('placements: where Accept puts what it adds or moves (R2-3)', () {
+    final p = sampleProposal(4);
+    final rows = sampleDayRows();
+    final placed = {for (final x in p.placements) x.row.id: x};
+    expect(placed.containsKey(rows[1].id), isFalse, reason: 'untouched');
+    expect(
+      placed[rows[0].id]!.row.startUtc,
+      rows[0].startUtc!.add(const Duration(minutes: 25)),
+    );
+    expect(placed[rows[2].id]!.row.durationMin, 45);
+    expect(p.placements.every((x) => !x.added), isTrue);
+    final fresh = rows.first.copyWith(id: 'fresh', title: 'Email Sam');
+    final added = ProposalEdit(
+      id: 'new',
+      change: ProposalChange.added,
+      after: p.before.dots.first,
+      occurrences: [fresh],
+    );
+    expect(p.withEdits([added]).placements.single, (row: fresh, added: true));
+  });
+
   test('without drops a removable line and keeps untouched ones', () {
     final p = sampleProposal(3);
     expect(p.without('e0').edits.map((e) => e.id), ['e1', 'e2']);

@@ -17,6 +17,7 @@ import 'package:dottoday/features/timeline/state/drag_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/grid_axis.dart';
 import 'package:dottoday/features/timeline/week/grid_focus.dart';
+import 'package:dottoday/features/timeline/week/grid_proposed.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
@@ -212,6 +213,7 @@ class WeekView extends ConsumerWidget {
         nowUtc: isToday ? nowUtc : null,
       ),
       axisMinutes: axisMinutes,
+      proposed: gridProposedOn(ref, date, zone),
       find: (id) => _find(ref, id),
       dropLabel: (start, minutes) => l10n.weekDropAt(
         DateFormat.E(locale).format(date),

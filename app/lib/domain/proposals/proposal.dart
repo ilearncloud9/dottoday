@@ -157,6 +157,27 @@ final class Proposal {
   Proposal withEdits(List<ProposalEdit> edits) =>
       Proposal(userId: userId, before: before, edits: edits);
 
+  /// Where Accept would put each task it adds or moves (R2-3: dashed
+  /// blocks on the grid while the proposal is open): the rows of the
+  /// remaining added, shifted, resized and moved edits that have a time,
+  /// [added] for new ones. Untouched, overlapping, Inbox-bound and
+  /// steps-only lines place nothing.
+  ///
+  /// ```dart
+  /// brainDump.placements.first; // (row: Email Sam at 12:00, added: true)
+  /// ```
+  List<({Occurrence row, bool added})> get placements => [
+    for (final e in edits)
+      if (e.change
+          case ProposalChange.added ||
+              ProposalChange.shifted ||
+              ProposalChange.resized ||
+              ProposalChange.movedToDay)
+        for (final o in e.occurrences)
+          if (o.startUtc != null && o.deletedAt == null)
+            (row: o, added: e.change == ProposalChange.added),
+  ];
+
   /// Whether Accept would write anything.
   bool get isEmpty => toBatch().isEmpty;
 
