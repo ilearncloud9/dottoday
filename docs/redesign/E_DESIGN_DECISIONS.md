@@ -5234,6 +5234,11 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, recorded:** ⋯ and Done at the medium detent too; no "Overlaps … · 2 of 4 steps" line under the header; Need more time? as a plain chip row; the notes keep the format hint and mic. Move is today's change-day picker until 4b; Colour and icon today's picker until 4c. Minimal keeps its sheet (M19.6); tablets, the Mac and the web keep theirs until 4d.
 - **Checks:** task_d_test (13) and option D goldens (medium and pulled up on iPhone and Android, light and dark; the three kept features); the phone task sheet tests moved to option D. Analyze and format clean; 7225 tests pass, 31 skipped; the 5 Supabase suites need the stack. Not yet run on a real phone (detents, the keyboard over steps and notes).
 
+### ED-399 · Option D's "Need more time?" in its tinted pill
+- **Date:** 2026-11-19. **Owner** (after ED-398): "it should sit inside a tinted pill, make it like drawn in Concept E … show me to approve this"; then "Approve the pill" after the before / after page.
+- **As drawn (E-Phones F3):** the row sits in a pill of the sunk colour (#F6F1EA light, #1F1B1E dark), corners 22, at least 56 tall, 6 around the chips and 14 before the label; "Need more time?" bold at its start; +5 min · +15 min · +30 min at its end, each a 44 pt pill in the accent's tint inside the 48 pt target every touch control keeps; at large text the chips wrap under the label. Replaces ED-398's recorded departure ("a plain chip row").
+- **Checks:** the option D and task sheet tests pass; the option D goldens re-baselined with the pill.
+
 ---
 
 ## Pending owner answers

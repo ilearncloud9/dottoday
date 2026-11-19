@@ -120,7 +120,10 @@ void main() {
   ) async {
     await _open(tester);
     await _pullUp(tester);
-    await tester.tap(_in(find.text('9:00 AM – 11:00 AM')).first);
+    final time = _in(find.text('9:00 AM – 11:00 AM')).first;
+    await tester.ensureVisible(time);
+    await tester.pumpAndSettle();
+    await tester.tap(time);
     await tester.pumpAndSettle();
     expect(find.text('Time and length'), findsOneWidget);
     expect(find.textContaining('Time zone'), findsOneWidget);

@@ -259,6 +259,10 @@ abstract final class DotSize {
   static const double tabletAddHeight = 700;
   static const double sideSheet = 412;
 
+  /// Option D's "Need more time?" pill (E-Phones F3): at least 56 tall,
+  /// its 44 pt chips inside with 6 around them.
+  static const double extendPill = 56;
+
   /// A proposed block's empty dashed ring on the hour grid (E-R2-3): 18.
   static const double gridProposedRing = 18;
   static const double sidebarGlyph = 17;

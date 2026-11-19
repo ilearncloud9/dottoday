@@ -119,30 +119,45 @@ class NeedMoreTime extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    return Wrap(
-      spacing: DotSpace.s,
-      runSpacing: DotSpace.xs,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Text(l10n.lateNudgeTitle, style: t.styles.body),
-        for (final m in _amounts)
-          Semantics(
-            button: true,
-            label: l10n.inspectorExtendLabel(m),
-            excludeSemantics: true,
-            child: ActionChip(
-              label: Text(l10n.runningLateBy(m)),
-              backgroundColor: t.colors.accentTint,
-              side: BorderSide.none,
-              shape: const StadiumBorder(),
-              labelStyle: t.styles.rowMeta.copyWith(
-                color: t.colors.accentText,
-                fontWeight: FontWeight.w700,
-              ),
-              onPressed: () => unawaited(_extend(context, ref, m)),
-            ),
+    // The tinted pill as drawn (E-Phones F3): the label at its start, the
+    // chips at its end; they wrap under the label at large text.
+    return Container(
+      constraints: const BoxConstraints(minHeight: DotSize.extendPill),
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        DotSpace.m + DotSpace.xxs,
+        DotSpace.xs + DotSpace.xxs,
+        DotSpace.xs + DotSpace.xxs,
+        DotSpace.xs + DotSpace.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: t.colors.sunk,
+        borderRadius: BorderRadius.circular(DotRadii.tile),
+      ),
+      // No alignment: the row gets the pill's full width, so the chips
+      // can sit at its end.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: DotSpace.s,
+        runSpacing: DotSpace.xxs,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DotSpace.m),
+            child: Text(l10n.lateNudgeTitle, style: t.styles.cardTitle),
           ),
-      ],
+          Wrap(
+            spacing: DotSpace.xs,
+            children: [
+              for (final m in _amounts)
+                _ExtendChip(
+                  text: l10n.runningLateBy(m),
+                  label: l10n.inspectorExtendLabel(m),
+                  onTap: () => unawaited(_extend(context, ref, m)),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -158,6 +173,73 @@ class NeedMoreTime extends ConsumerWidget {
       await extendTask(ref, task, minutes: m),
       message: (_) => l10n.runningLateBy(m),
       tokenOf: (token) => token,
+    );
+  }
+}
+
+/// One "+15 min": the drawn 44 pt pill in the accent's tint, inside the
+/// 48 pt target every touch control keeps.
+class _ExtendChip extends StatelessWidget {
+  const _ExtendChip({
+    required this.text,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String text;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: DotTouch.android,
+            minWidth: DotTouch.android,
+          ),
+          child: Center(
+            widthFactor: 1,
+            child: DecoratedBox(
+              decoration: ShapeDecoration(
+                color: t.colors.accentTint,
+                shape: const StadiumBorder(),
+              ),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: DotTouch.min,
+                  minWidth: DotTouch.min,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DotSpace.s + DotSpace.xxs,
+                  ),
+                  // Shrink-wrapped: a stretching child would fill the row.
+                  child: Center(
+                    widthFactor: 1,
+                    heightFactor: 1,
+                    child: Text(
+                      text,
+                      style: t.styles.rowMeta.copyWith(
+                        color: t.colors.accentText,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
