@@ -166,6 +166,9 @@ abstract final class DotSize {
   /// The sidebar of places on tablets, Mac and web (rules §6.2: 216).
   static const double sidebar = 216;
 
+  /// Minimal's sidebar on Mac and web (ED-207).
+  static const double sidebarMinimal = 200;
+
   /// The Workspace sidebar's rows (E-FullA-v2): 30 with a pointer (Mac,
   /// a mouse-driven browser; WCAG 2.5.8 holds at 24, ED-260), the touch
   /// height on tablets and touch-first web (ED-261).

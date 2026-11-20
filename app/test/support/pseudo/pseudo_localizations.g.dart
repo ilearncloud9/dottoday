@@ -79,6 +79,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get navToday => pseudo(super.navToday);
 
   @override
+  String get navNow => pseudo(super.navNow);
+
+  @override
   String get navInbox => pseudo(super.navInbox);
 
   @override
@@ -1653,6 +1656,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get shortcutGoToday => pseudo(super.shortcutGoToday);
+
+  @override
+  String get shortcutGoNow => pseudo(super.shortcutGoNow);
 
   @override
   String get shortcutGoInbox => pseudo(super.shortcutGoInbox);

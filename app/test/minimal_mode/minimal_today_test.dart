@@ -22,7 +22,9 @@ import '../support/today_harness.dart';
 // rows open their sheet). Enumerated from the semantics tree, so a new
 // control on minimal Today fails here until §3 says where it belongs.
 
-enum Tappable { add, done, row, runningLate, headerMenu, later, dayNav }
+/// [places]: Minimal's tab bar, Now · Today · Inbox (ED-068, M19.6),
+/// which supersedes docs/14 §7's "no tab bar" on this branch.
+enum Tappable { add, done, row, runningLate, headerMenu, later, dayNav, places }
 
 final _titles = {for (final o in demoDayRows(todayTestDate)) o.title};
 
@@ -106,6 +108,8 @@ Tappable? _classify(String label, Rect rect, Rect? add) => switch (label) {
   // The FAB's own button node shares the Add tooltip's rect.
   '' when add != null && add.overlaps(rect) => Tappable.add,
   'More options' => Tappable.headerMenu,
+  'Now' || 'Today' => Tappable.places,
+  _ when label.startsWith('Inbox') => Tappable.places,
   'Done' => Tappable.done,
   'Running late' => Tappable.runningLate,
   'Show month' || 'Hide month' || 'Wed, Oct 21' => Tappable.dayNav,
@@ -152,9 +156,13 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('no tab bar, no day dot, no numbers in minimal', (tester) async {
+  testWidgets('Now · Today · Inbox, no numbers in minimal', (tester) async {
     await _pumpMinimalApp(tester);
-    expect(find.byType(NavigationBar), findsNothing);
+    // Minimal's places on a phone (ED-068), not Full's.
+    for (final place in ['Now', 'Today']) {
+      expect(find.bySemanticsLabel(place), findsWidgets, reason: place);
+    }
+    expect(find.bySemanticsLabel('Search'), findsNothing);
     expect(find.textContaining(RegExp(r'^\d+ of \d+ · ')), findsNothing);
     expect(find.text('+15 min'), findsNothing);
     expect(find.text('Shift the rest'), findsNothing);

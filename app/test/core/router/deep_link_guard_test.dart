@@ -46,8 +46,9 @@ void main() {
       '/week/2026-10-20?task=$_v7': '/week/2026-10-20?task=$_v7',
       '/month/2026-10': '/month/2026-10',
       // Places not built yet open the nearest one (owner, M18.7 part 3).
-      '/now': '/today',
-      '/now?task=$_v7': '/today?task=$_v7',
+      // Minimal's Now (ED-068, M19.6).
+      '/now': '/now',
+      '/now?task=$_v7': '/now?task=$_v7',
       '/3-days/2026-10-20': '/3-days/2026-10-20',
       // Any other query is dropped and the path kept (D2).
       '/today?q=1': '/today',

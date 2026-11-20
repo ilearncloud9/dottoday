@@ -5315,6 +5315,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, recorded:** the key is ⇧⌘T (ED-095's approved scheme and macOS Calendar's own), not ED-342's design-only ⇧⌘G caption; Go to Date… is in the Go menu (ED-095), not View; the header is the approved "Sep · Oct · Nov" and a day's spoken name the built "…, 2 of 4 done"; the Day menu's item sits in today's ungrouped list until M20.3; phones keep their month from the week strip, with the same month in a sheet for ⇧⌘T.
 - **Checks:** go_to_date_test (7); goldens: the Mac popover light and dark, the iPad popover, the Android dialog (4). Analyze and format clean; 7370 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-409 · M19.6 part 6a: Minimal's places and shell
+- **Date:** 2026-11-20. **Owner:** "Go" (M19.6), then five parts (6a places and shell; 6b the phones' Now tab; 6c the Mac and web Now pane with the Day column; 6d the minimal task sheet and Add; 6e the narrow-Mac rules and tablets), then "Approve 6a" after the review page.
+- **Native first, checked:** the iPhone's own native tab bar (SF Symbols: `smallcircle.filled.circle` for Now, `calendar`), Android's floating toolbar and rail, the Mac and iPad system menus for ⌘1–4.
+- **Built (ED-068, E rules §9.0; ED-266; ED-207):** Minimal phones get a tab bar, Now · Today · Inbox with Add; wider windows (tablets from medium, the Mac, the web) Now · Inbox · Calendar · Search with Settings at the foot, Calendar being the month. New shell branches `/now` and `/calendar` (appended to branch order; Minimal shows Now first). The sidebar is 200 in Minimal (Full 216). ⌘1–4 (web 1–4) go to Now · Inbox · Calendar · Search in Minimal, named so in the Mac menu and the ⌘/ list. The "‹ Today" pill Minimal needed without a tab bar is removed.
+- **Until 6b and 6c:** the Now place shows Minimal's day; opening on Now comes with 6b. Full has no Now (ED-066): its `/now` is Today.
+- **Not changed:** doc 14's "no tab bar" and "Later row" rows, which doc 14 says ED-068 supersedes on this branch without rewriting; the layout policy.
+- **Checks:** minimal_places_test (6); updated the /now deep link, Minimal Today's tappables, the keyboard scheme's Minimal keys; the test app passes Minimal to its keys as the app does; 5 goldens of Minimal's places. Analyze and format clean; 7376 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

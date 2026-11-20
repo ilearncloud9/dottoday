@@ -22,6 +22,9 @@ import 'package:dottoday/features/timeline/workspace/workspace_frame.dart';
 /// Workspace's Plan panel here, so no feature imports another (M19.2).
 final appScreens = RouteScreens(
   shell: (context, shell) => AppShell(shell: shell),
+  // Minimal's Now (ED-066): the day until its own view (M19.6 parts 6b
+  // and 6c); Full has no Now, so its /now is Today.
+  now: (_) => const TodayScreen(),
   today: (_) =>
       const WorkspaceFrame(child: PlanPanelFrame(child: TodayScreen())),
   inbox: (_) => const InboxScreen(),

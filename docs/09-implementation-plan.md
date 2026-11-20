@@ -730,6 +730,8 @@ Rules for every task in M18 to M22:
   - the minimal task sheet title (ED-216);
   - the minimal sidebar at 200 (ED-207), and Minimal's places by width on tablets: Now · Inbox · Calendar · Search at medium and expanded (R2-1a, ED-266; moved from M18.5);
   - the narrow-Mac rules for the Minimal window, moved from M18.5 part 1 because they need the Now pane and Day column built here: the Day-column fold at the computed point (≈ 1042 at 100 % text) with the "Day" edge button, the narrow toolbar below ≈ 1000, and the short-window now-dot under 720 (ED-169, ED-170).
+  Split by the owner (2026-11-20) in five parts, each with its own review page and commit: 6a places and shell; 6b the phones' Now tab; 6c the Mac and web Now pane with the Day column; 6d the minimal task sheet and Add; 6e the narrow-Mac rules and tablets.
+  - [x] Part 6a done 2026-11-20 (ED-409): Minimal's places by width (Now · Today · Inbox on phones with the native bars; Now · Inbox · Calendar · Search from medium), the 200 sidebar, ⌘1–4; `/now` and `/calendar`. Open: Now's own screen (6b, 6c) and opening on Now; a real-device run.
 - [ ] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
   - cases: empty, dense, loading, error, long text and 200 % text;

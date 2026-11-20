@@ -17,6 +17,8 @@ final class ShellDestination {
     required this.glyph,
     required this.label,
     this.expandedOnly = false,
+    this.compactOnly = false,
+    this.wideOnly = false,
     this.visible = true,
     this.badge,
     this.badgeLabel,
@@ -40,6 +42,13 @@ final class ShellDestination {
 
   /// Week: on the Mac/web rail only; phones use the strip + month (§4).
   final bool expandedOnly;
+
+  /// On phones only (Minimal's Today: wider, the Now pane's Day column
+  /// shows the day, ED-068).
+  final bool compactOnly;
+
+  /// From the medium width only (Minimal's Calendar and Search, ED-266).
+  final bool wideOnly;
 
   /// False leaves it out of every bar (minimal layout, docs/14 §3); its
   /// branch is still routable.
@@ -75,6 +84,8 @@ class DotShell extends StatelessWidget {
     this.frosted = false,
     this.native,
     this.vibrantSidebar = false,
+    this.sidebarWidth = DotSize.sidebar,
+    this.order,
     this.workspaceSidebar,
     super.key,
   });
@@ -88,6 +99,13 @@ class DotShell extends StatelessWidget {
   /// The expanded sidebar shows the Mac's vibrant material through its
   /// tint (ED-130); false paints it solid.
   final bool vibrantSidebar;
+
+  /// The expanded sidebar's width: Full 216, Minimal 200 (ED-207).
+  final double sidebarWidth;
+
+  /// The order the places show in, as indexes into [destinations];
+  /// null is their own order (Minimal shows Now first, ED-068).
+  final List<int>? order;
 
   /// The expanded width's sidebar when the app supplies its own (the
   /// Workspace's, E-FullA-v2); null draws the list of places.
@@ -131,11 +149,14 @@ class DotShell extends StatelessWidget {
         // row (ED-238). The iPad's native tabs keep it, in the sidebar.
         final padNative = this.native?.kind == NativeBarKind.pad;
         final shown = [
-          for (final (i, d) in destinations.indexed)
-            if (d.visible &&
-                (width == WidthClass.expanded || !d.expandedOnly) &&
-                (width != WidthClass.compact || compactBar) &&
-                !(width == WidthClass.compact && d.foot && !padNative))
+          for (final i in order ?? List.generate(destinations.length, (i) => i))
+            if (destinations[i] case final d
+                when d.visible &&
+                    (width == WidthClass.expanded || !d.expandedOnly) &&
+                    (width == WidthClass.compact || !d.compactOnly) &&
+                    (width != WidthClass.compact || !d.wideOnly) &&
+                    (width != WidthClass.compact || compactBar) &&
+                    !(width == WidthClass.compact && d.foot && !padNative))
               i,
         ];
         final bar = ShellBar(
@@ -197,6 +218,7 @@ class DotShell extends StatelessWidget {
             bar: bar,
             body: body,
             vibrant: vibrantSidebar,
+            width: sidebarWidth,
             sidebar: workspaceSidebar,
           ),
         };

@@ -83,6 +83,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navToday => 'Today';
 
   @override
+  String get navNow => 'Now';
+
+  @override
   String get navInbox => 'Inbox';
 
   @override
@@ -2102,6 +2105,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutGoToday => 'Go to Today';
+
+  @override
+  String get shortcutGoNow => 'Go to Now';
 
   @override
   String get shortcutGoInbox => 'Go to Inbox';

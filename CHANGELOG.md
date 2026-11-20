@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Minimal now has its own places: Now, Today and Inbox in a tab bar on phones, and Now, Inbox, Calendar and Search on tablets, Mac and the web, with ⌘1–4 to match (redesign branch).
 - Go to date: the month with your planned days opens from the date button, ⇧⌘T (Ctrl+Shift+T, g on the web), the Go menu and the Day menu, as a popover on the Mac, the web and iPad, a dialog on Android tablets and a sheet on phones; the week you're on is tinted and today ringed (redesign branch).
 - In the Day view on the Mac, the web and tablets, today's finished tasks fold into one Earlier row you can open; reopening a task now says "… reopened", and the done circle works from the keyboard (redesign branch).
 - On iPad and Android tablets each task on the calendar grid has a done circle, and tapping it again reopens the task; Create task's circle adds a task that's already done; the Undo message no longer slides in with Reduce Motion, sits at the start of the screen on Android tablets, and goes away once ⌘Z or Ctrl+Z has undone the change (redesign branch).

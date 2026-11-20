@@ -130,7 +130,7 @@ List<AppMenu> appMenus({
     AppMenu(AppMenuKind.view, l10n.menuView, [
       // ⌘1–4 by the layout's places (ED-095).
       [
-        command(l10n.navToday, AppCommand.goToday),
+        command(minimal ? l10n.navNow : l10n.navToday, AppCommand.goToday),
         command(l10n.navInbox, AppCommand.goInbox),
         command(minimal ? l10n.menuCalendar : l10n.navWeek, AppCommand.goWeek),
         command(minimal ? l10n.navSearch : l10n.menuMonth, AppCommand.goMonth),

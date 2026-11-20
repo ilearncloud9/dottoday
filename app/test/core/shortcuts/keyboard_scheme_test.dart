@@ -138,6 +138,8 @@ void main() {
         initialLocation: AppRoutes.today,
         routes: [
           for (final path in [
+            AppRoutes.now,
+            AppRoutes.calendar,
             AppRoutes.today,
             AppRoutes.inbox,
             AppRoutes.week,
@@ -167,10 +169,20 @@ void main() {
       expect(went, containsAllInOrder([AppRoutes.week, AppRoutes.month]));
     });
 
-    testWidgets('Minimal: ⌘3 Calendar (the month), ⌘4 Search', (tester) async {
+    testWidgets('Minimal: ⌘1 Now, ⌘3 Calendar, ⌘4 Search (ED-068)', (
+      tester,
+    ) async {
+      await run(tester, AppCommand.goToday, true);
       await run(tester, AppCommand.goWeek, true);
       await run(tester, AppCommand.goMonth, true);
-      expect(went, containsAllInOrder([AppRoutes.month, AppRoutes.search]));
+      expect(
+        went,
+        containsAllInOrder([
+          AppRoutes.now,
+          AppRoutes.calendar,
+          AppRoutes.search,
+        ]),
+      );
       expect(went, isNot(contains(AppRoutes.week)));
     });
   });

@@ -78,6 +78,10 @@
   "@navToday": {
     "description": "Bottom bar / rail tab: today's timeline."
   },
+  "navNow": "Now",
+  "@navNow": {
+    "description": "Minimal's first place (ED-066, ED-068): what's on now."
+  },
   "navInbox": "Inbox",
   "@navInbox": {
     "description": "Tab: unscheduled tasks."
@@ -3224,6 +3228,10 @@
   "shortcutGoToday": "Go to Today",
   "@shortcutGoToday": {
     "description": "Shortcut sheet action."
+  },
+  "shortcutGoNow": "Go to Now",
+  "@shortcutGoNow": {
+    "description": "Keyboard shortcuts list, Minimal: ⌘1 opens Now (ED-095, ED-068)."
   },
   "shortcutGoInbox": "Go to Inbox",
   "@shortcutGoInbox": {

@@ -228,6 +228,12 @@ abstract class AppLocalizations {
   /// **'Today'**
   String get navToday;
 
+  /// Minimal's first place (ED-066, ED-068): what's on now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get navNow;
+
   /// Tab: unscheduled tasks.
   ///
   /// In en, this message translates to:
@@ -3143,6 +3149,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to Today'**
   String get shortcutGoToday;
+
+  /// Keyboard shortcuts list, Minimal: ⌘1 opens Now (ED-095, ED-068).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Now'**
+  String get shortcutGoNow;
 
   /// Shortcut sheet action.
   ///

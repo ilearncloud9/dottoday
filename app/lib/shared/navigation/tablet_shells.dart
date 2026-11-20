@@ -16,6 +16,7 @@ class SidebarShell extends StatefulWidget {
     required this.body,
     this.vibrant = false,
     this.sidebar,
+    this.width = DotSize.sidebar,
     super.key,
   });
 
@@ -29,6 +30,9 @@ class SidebarShell extends StatefulWidget {
   /// The Mac's material shows through the sidebar (ED-130): the shell
   /// paints only the content opaque, the sidebar its tint.
   final bool vibrant;
+
+  /// Full's 216; Minimal's 200 (ED-207).
+  final double width;
 
   @override
   State<SidebarShell> createState() => _SidebarShellState();
@@ -58,7 +62,7 @@ class _SidebarShellState extends State<SidebarShell> {
       body: Row(
         children: [
           SizedBox(
-            width: DotSize.sidebar,
+            width: widget.width,
             child:
                 widget.sidebar ??
                 DotSidebar(

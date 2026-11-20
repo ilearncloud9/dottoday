@@ -122,6 +122,8 @@ abstract final class DotGlyphs {
   );
   static final clock = DotGlyph('${_c(12, 12, 9)}M12 7v5l3 2');
   static final timer = DotGlyph('${_c(12, 14, 8)}M12 14v-4M10 2h4');
+  // Minimal's Now (E-PhonesMinimal): the dot in its ring.
+  static final now = DotGlyph('${_c(12, 12, 9)}${_c(12, 12, 3)}');
   static final calendar = DotGlyph(
     '${_r(3, 4, 18, 18, 2)}M16 2v4M8 2v4M3 10h18',
   );

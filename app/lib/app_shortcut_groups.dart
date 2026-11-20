@@ -27,7 +27,10 @@ List<ShortcutGroup> appShortcutGroups(
         (keys: w('n', 'N'), action: l10n.shortcutAdd),
         (keys: w('⇧N', 'N', shift: true), action: l10n.shortcutBrainDump),
         if (!web) (keys: k('V', shift: true), action: l10n.shortcutPasteTasks),
-        (keys: w('1', '1'), action: l10n.shortcutGoToday),
+        (
+          keys: w('1', '1'),
+          action: minimal ? l10n.shortcutGoNow : l10n.shortcutGoToday,
+        ),
         (keys: w('2', '2'), action: l10n.shortcutGoInbox),
         (
           keys: w('3', '3'),

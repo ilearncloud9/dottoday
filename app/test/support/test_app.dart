@@ -7,6 +7,8 @@ import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -55,13 +57,20 @@ Widget _routerApp(
   routerConfig: router,
   // Add's Brain dump and Routine tabs, as in the app (M19.3).
   builder: (context, child) => withAddModes(
-    AppCommandScope(
-      handlers: appCommandHandlers(router, onQuickAdd: onQuickAdd),
-      onAddMode: onAddMode,
-      // A view's ?task= opens the task, as in the app (ED-097).
-      child: TaskLinkHost(
-        router: router,
-        child: child ?? const SizedBox.shrink(),
+    // ⌘1–4 name Minimal's places in Minimal, as in the app (ED-095).
+    Consumer(
+      builder: (context, ref, _) => AppCommandScope(
+        handlers: appCommandHandlers(
+          router,
+          onQuickAdd: onQuickAdd,
+          minimal: watchSimplified(ref, FeatureId.navigation),
+        ),
+        onAddMode: onAddMode,
+        // A view's ?task= opens the task, as in the app (ED-097).
+        child: TaskLinkHost(
+          router: router,
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
     ),
   ),

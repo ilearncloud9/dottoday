@@ -91,7 +91,14 @@ final class ChannelNativeBar implements NativeBar {
     if (glyph == DotGlyphs.settings) {
       return selected ? 'gearshape.fill' : 'gearshape';
     }
-    if (glyph == DotGlyphs.week) return 'calendar';
+    if (glyph == DotGlyphs.week || glyph == DotGlyphs.calendar) {
+      return 'calendar';
+    }
+    if (glyph == DotGlyphs.now) {
+      return selected
+          ? 'smallcircle.filled.circle.fill'
+          : 'smallcircle.filled.circle';
+    }
     return 'circle';
   }
 }

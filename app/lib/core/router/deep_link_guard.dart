@@ -13,6 +13,7 @@ const _staticRoutes = {
   'week': AppRoutes.week,
   'month': AppRoutes.month,
   'search': AppRoutes.search,
+  'calendar': AppRoutes.calendar,
   'settings': AppRoutes.settings,
   'add': AppRoutes.add,
   // "I'm up" on Android's ringing screen (docs/15 §5, M17.3).
@@ -46,7 +47,7 @@ String? allowListedLocation(Uri uri) {
   if (segments == null) return null;
   final (path, view) = switch (segments) {
     [] => (AppRoutes.today, true),
-    ['now'] => (AppRoutes.today, true),
+    ['now'] => (AppRoutes.now, true),
     [final name] => (_staticRoutes[name], _views.contains(name)),
     ['settings', final page] => switch (SettingsPage.byName(page)) {
       final p? => (AppRoutes.settingsPage(p), false),

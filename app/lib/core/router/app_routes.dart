@@ -5,11 +5,16 @@
 /// context.go(AppRoutes.day(DateTime(2026, 10, 20))); // '/day/2026-10-20'
 /// ```
 abstract final class AppRoutes {
+  /// Minimal's Now (ED-066, ED-068; M19.6).
+  static const now = '/now';
   static const today = '/today';
   static const inbox = '/inbox';
   static const week = '/week';
   static const month = '/month';
   static const search = '/search';
+
+  /// Minimal's Calendar place on wide windows: the month (ED-068).
+  static const calendar = '/calendar';
   static const settings = '/settings';
 
   /// Not a screen: opens Quick Add over Today (`dottoday://add`, the

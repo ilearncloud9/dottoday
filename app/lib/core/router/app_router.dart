@@ -13,7 +13,14 @@ enum ShellTab {
   inbox(AppRoutes.inbox),
   week(AppRoutes.week),
   search(AppRoutes.search),
-  settings(AppRoutes.settings);
+  settings(AppRoutes.settings),
+
+  /// Minimal's first place (ED-068); Full has no Now (ED-066). Last in
+  /// branch order; Minimal shows it first ([minimalOrder]).
+  now(AppRoutes.now),
+
+  /// Minimal's Calendar on wide windows (ED-068).
+  calendar(AppRoutes.calendar);
 
   const ShellTab(this.path);
 
@@ -25,6 +32,7 @@ enum ShellTab {
 final class RouteScreens {
   const RouteScreens({
     required this.shell,
+    required this.now,
     required this.today,
     required this.inbox,
     required this.week,
@@ -44,6 +52,9 @@ final class RouteScreens {
 
   /// Wraps the five tab branches (nav bar/rail lands in M0.13).
   final Widget Function(BuildContext, StatefulNavigationShell) shell;
+
+  /// Minimal's Now (M19.6); Full shows Today there (ED-066).
+  final WidgetBuilder now;
   final WidgetBuilder today;
   final WidgetBuilder inbox;
   final WidgetBuilder week;
@@ -219,9 +230,11 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
 
 WidgetBuilder _tabScreen(RouteScreens screens, ShellTab tab) {
   return switch (tab) {
+    ShellTab.now => screens.now,
     ShellTab.today => screens.today,
     ShellTab.inbox => screens.inbox,
     ShellTab.week => screens.week,
+    ShellTab.calendar => screens.month,
     ShellTab.search => screens.search,
     ShellTab.settings => screens.settings,
   };

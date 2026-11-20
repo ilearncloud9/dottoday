@@ -23,7 +23,6 @@ import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_sidebar.dart';
-import 'package:dottoday/shared/navigation/back_to_today.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
 import 'package:flutter/material.dart';
@@ -59,19 +58,29 @@ class AppShell extends ConsumerWidget {
     int inbox,
   ) {
     final drops = ShellDrops(context, ref);
-    // Minimal layout (docs/14 §3): no tab bar on phones, Today and
-    // Settings on the rail; the Inbox is Today's Later row.
+    // Minimal's places (ED-068, E rules §9.0, superseding docs/14's "no
+    // tab bar"): Now · Today · Inbox on phones, Now · Inbox · Calendar ·
+    // Search wider (ED-266).
     final minimalNav = watchSimplified(ref, FeatureId.navigation);
     return DotShell(
-      destinations: shellDestinations(
-        l10n,
-        inbox: inbox,
-        onDropOnInbox: drops.toInbox,
-        inboxTab: watchFeature(ref, FeatureId.inbox) == FeatureVisibility.shown,
-        weekTab: watchOnScreen(ref, FeatureId.macWeekMonth),
-        searchTab: watchOnScreen(ref, FeatureId.search),
-      ),
-      compactBar: !minimalNav,
+      destinations: minimalNav
+          ? minimalDestinations(
+              l10n,
+              inbox: inbox,
+              onDropOnInbox: drops.toInbox,
+            )
+          : shellDestinations(
+              l10n,
+              inbox: inbox,
+              onDropOnInbox: drops.toInbox,
+              inboxTab:
+                  watchFeature(ref, FeatureId.inbox) == FeatureVisibility.shown,
+              weekTab: watchOnScreen(ref, FeatureId.macWeekMonth),
+              searchTab: watchOnScreen(ref, FeatureId.search),
+            ),
+      order: minimalNav ? minimalOrder : null,
+      // Minimal's sidebar is 200 on Mac and web (ED-207).
+      sidebarWidth: minimalNav ? DotSize.sidebarMinimal : DotSize.sidebar,
       addAtEveryWidth: minimalNav,
       frosted: ref.watch(frostedChromeProvider).value ?? false,
       native: ref.watch(nativeBarProvider).value,
@@ -118,17 +127,7 @@ class AppShell extends ConsumerWidget {
                 child: RoutineDropHost(
                   // Several lines from minimal Add (docs/14 §3 B4).
                   child: BrainDumpHost(
-                    child: EditorPanelFrame(
-                      child: FocusFrame(
-                        child: BackToToday(
-                          show:
-                              minimalNav &&
-                              shell.currentIndex != ShellTab.today.index,
-                          onToday: () => _goTab(ShellTab.today),
-                          child: shell,
-                        ),
-                      ),
-                    ),
+                    child: EditorPanelFrame(child: FocusFrame(child: shell)),
                   ),
                 ),
               ),
@@ -146,6 +145,68 @@ class AppShell extends ConsumerWidget {
   );
 }
 
+/// The order Minimal shows its places in (ED-068): Now first.
+final minimalOrder = [
+  for (final tab in [
+    ShellTab.now,
+    ShellTab.today,
+    ShellTab.inbox,
+    ShellTab.calendar,
+    ShellTab.search,
+    ShellTab.settings,
+    ShellTab.week,
+  ])
+    tab.index,
+];
+
+/// Minimal's places in branch order (ED-068): Now · Today (phones only)
+/// · Inbox · Calendar and Search (wider only) · Settings at the foot.
+List<ShellDestination> minimalDestinations(
+  AppLocalizations l10n, {
+  int inbox = 0,
+  ValueChanged<String>? onDropOnInbox,
+}) => [
+  for (final tab in ShellTab.values)
+    switch (tab) {
+      ShellTab.now => ShellDestination(
+        glyph: DotGlyphs.now,
+        label: l10n.navNow,
+      ),
+      ShellTab.today => ShellDestination(
+        glyph: DotGlyphs.today,
+        label: l10n.navToday,
+        compactOnly: true,
+      ),
+      ShellTab.inbox => ShellDestination(
+        glyph: DotGlyphs.inbox,
+        label: l10n.navInbox,
+        badge: inbox,
+        badgeLabel: l10n.navInboxBadge(inbox),
+        onDropTask: onDropOnInbox,
+      ),
+      ShellTab.week => ShellDestination(
+        glyph: DotGlyphs.week,
+        label: l10n.navWeek,
+        visible: false,
+      ),
+      ShellTab.calendar => ShellDestination(
+        glyph: DotGlyphs.calendar,
+        label: l10n.menuCalendar,
+        wideOnly: true,
+      ),
+      ShellTab.search => ShellDestination(
+        glyph: DotGlyphs.search,
+        label: l10n.navSearch,
+        wideOnly: true,
+      ),
+      ShellTab.settings => ShellDestination(
+        glyph: DotGlyphs.settings,
+        foot: true,
+        label: l10n.navSettings,
+      ),
+    },
+];
+
 /// The fixed nav set, in branch order (docs/10 §3): Today · Inbox ·
 /// [Week, expanded width only] · Search · Settings; [inbox] open tasks badge the
 /// Inbox (docs/02 F3.3).
@@ -157,8 +218,11 @@ List<ShellDestination> shellDestinations(
   bool weekTab = true,
   bool searchTab = true,
 }) => [
-  for (final tab in ShellTab.values)
+  // Full has no Now (ED-066) and its month is Week's (M19.2): its places
+  // end before them in branch order.
+  for (final tab in ShellTab.values.take(ShellTab.now.index))
     switch (tab) {
+      ShellTab.now || ShellTab.calendar => throw StateError('not Full'),
       ShellTab.today => ShellDestination(
         glyph: DotGlyphs.today,
         label: l10n.navToday,
