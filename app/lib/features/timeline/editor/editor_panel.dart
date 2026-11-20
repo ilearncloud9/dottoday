@@ -2,6 +2,7 @@ import 'package:dottoday/core/editing/active_proposal.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
@@ -12,6 +13,7 @@ import 'package:dottoday/shared/layout/side_panel_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// [child] with the task editor as a right-hand panel while a task is
 /// open (docs/10 §4 "editing in a right-hand TaskEditor panel, no
@@ -40,6 +42,10 @@ class EditorPanelFrame extends ConsumerWidget {
         width == WidthClass.expanded ||
         (width == WidthClass.medium && tabletPanel(context, ref));
     if (id == null || !shows || proposing) return child;
+    // Minimal's Now opens it in its Day column instead (ED-089, 6d).
+    if (width == WidthClass.expanded && minimalNowColumn(context, ref)) {
+      return child;
+    }
     // Docked from 1160 when Today keeps its minimum, else floating over
     // it; a resize keeps the open editor as it is (ED-167, ED-168).
     return SidePanelFrame(
@@ -58,6 +64,14 @@ class EditorPanelFrame extends ConsumerWidget {
         ? SidePanelFloat.edgeSheet
         : SidePanelFloat.dimmedCard;
   }
+}
+
+/// Whether this is Minimal's Now at a width with the Day column, where a
+/// task opens in the column, like the Day (ED-089, M19.6 part 6d).
+bool minimalNowColumn(BuildContext context, WidgetRef ref) {
+  if (!watchSimplified(ref, FeatureId.taskSheet)) return false;
+  final router = GoRouter.maybeOf(context);
+  return router?.routerDelegate.currentConfiguration.uri.path == AppRoutes.now;
 }
 
 /// Whether a tablet edits in the side panel: option D's editor in Full

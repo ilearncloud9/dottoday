@@ -159,10 +159,30 @@ class AppLocalizationsDe extends AppLocalizations {
       'Aufgabe hinzufügen · mehrere Zeilen für viele einfügen';
 
   @override
+  String get taskMStarts => 'Beginnt';
+
+  @override
+  String get taskMCaption => 'Aufgabe';
+
+  @override
+  String get taskMMoreHint =>
+      'Vollständiger Editor · Erinnerungen, Wiederholen, Schritte, Notizen, Farbe und Symbol';
+
+  @override
+  String get taskMShorter => '15 Min. kürzer';
+
+  @override
+  String get taskMLonger => '15 Min. länger';
+
+  @override
   String get dayColumnHide => 'Tagesspalte ausblenden';
 
   @override
   String get dayColumnShow => 'Tagesspalte einblenden';
+
+  @override
+  String get dayColumnHint =>
+      'Klicke auf eine Aufgabe, und sie öffnet sich in dieser Spalte. Schließe sie, und der Tag kehrt zurück.';
 
   @override
   String get nowDotOpen => 'Öffnen';

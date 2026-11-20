@@ -4,7 +4,6 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
-import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
@@ -14,6 +13,7 @@ import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/task_d/task_d_sheet.dart';
+import 'package:dottoday/features/timeline/task_m/task_m_screen.dart';
 import 'package:dottoday/features/timeline/widgets/note_links.dart';
 import 'package:dottoday/features/timeline/widgets/note_text.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
@@ -52,7 +52,12 @@ Future<void> showTaskSheet(BuildContext context, String id) {
     builder: (_) => DraggableScrollableSheet(
       expand: false,
       // A short window has no room for a half sheet: full height (ED-347).
-      initialChildSize: AppLayout.isShort(context) ? 0.94 : 0.62,
+      initialChildSize: AppLayout.isShort(context)
+          ? 0.94
+          : minimal
+          // Minimal's task screen whole, Delete task included (ED-089).
+          ? 0.72
+          : 0.62,
       maxChildSize: 0.94,
       builder: (context, scroll) =>
           TaskSheetBody(id: id, scrollController: scroll),
@@ -108,7 +113,7 @@ class TaskSheetBody extends ConsumerStatefulWidget {
 
 /// A leaf: only whether minimal's More is open.
 class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
-  bool _more = false;
+  final bool _more = false;
 
   String get id => widget.id;
 
@@ -118,8 +123,9 @@ class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
     final minimal = watchSimplified(ref, FeatureId.taskSheet) && !_more;
     // A reload keeps the previous task, so the sheet doesn't jump (M5.5).
     return switch (view) {
-      AsyncValue(hasValue: true, value: final TaskView task) when minimal =>
-        _minimal(context, task),
+      AsyncValue(hasValue: true, value: TaskView()) when minimal => _minimal(
+        context,
+      ),
       AsyncValue(hasValue: true, value: final TaskView task) => ListView(
         controller: widget.scrollController,
         padding: const EdgeInsets.fromLTRB(
@@ -159,34 +165,24 @@ class _TaskSheetBodyState extends ConsumerState<TaskSheetBody> {
     };
   }
 
-  Widget _minimal(BuildContext context, TaskView task) {
-    final l10n = context.l10n;
-    return ListView(
-      controller: widget.scrollController,
-      padding: const EdgeInsets.fromLTRB(
-        DotSpace.page,
-        0,
-        DotSpace.page,
-        DotSpace.xl,
-      ),
-      children: [
-        _Identity(task: task),
-        const SizedBox(height: DotSpace.l),
-        SheetActions(task: task, minimal: true, onClose: widget.onClose),
-        const SizedBox(height: DotSpace.m),
-        if (task.subtasks.isEmpty)
-          TextButton(
-            onPressed: () => Actions.maybeInvoke(
-              context,
-              BreakDownIntent(task.occurrence.id),
-            ),
-            child: Text(l10n.breakdownAction),
-          ),
-        TextButton(
-          onPressed: widget.onMore ?? () => setState(() => _more = true),
-          child: Text(l10n.moreOptions),
-        ),
-      ],
+  /// Minimal's task screen (ED-089). On phones More options closes it
+  /// and opens option D's editor (E-PhonesMinimal); the Mac and web
+  /// panel passes its own [TaskSheetBody.onMore].
+  Widget _minimal(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final root = Navigator.of(context, rootNavigator: true).context;
+    return TaskMScreen(
+      id: id,
+      scrollController: widget.scrollController,
+      onClose: widget.onClose ?? () => unawaited(navigator.maybePop()),
+      onMore:
+          widget.onMore ??
+          () {
+            navigator.pop();
+            unawaited(
+              showTaskDSheet(root, id, routeName: taskSheetRouteName(id)),
+            );
+          },
     );
   }
 }

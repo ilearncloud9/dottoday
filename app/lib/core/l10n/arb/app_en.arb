@@ -205,6 +205,26 @@
   "@nowAddField": {
     "description": "The Add row in the Mac and web Now pane (E-Minimal); opens Quick Add."
   },
+  "taskMStarts": "Starts",
+  "@taskMStarts": {
+    "description": "Minimal task screen (ED-089): caption of the start time; a tap opens the When picker."
+  },
+  "taskMCaption": "Task",
+  "@taskMCaption": {
+    "description": "Minimal task screen in the Mac and web Day column (ED-089): the caption over it, beside ✕."
+  },
+  "taskMMoreHint": "Full editor · alerts, repeat, steps, notes, colour and icon",
+  "@taskMMoreHint": {
+    "description": "Minimal task screen: under More options, what the full editor holds (ED-089)."
+  },
+  "taskMShorter": "15 min shorter",
+  "@taskMShorter": {
+    "description": "Minimal task screen in the Day column: the − button beside Duration (screen reader and tooltip)."
+  },
+  "taskMLonger": "15 min longer",
+  "@taskMLonger": {
+    "description": "Minimal task screen in the Day column: the + button beside Duration (screen reader and tooltip)."
+  },
   "dayColumnHide": "Hide the Day column",
   "@dayColumnHide": {
     "description": "Minimal Mac and web: hides the Day column beside Now (ED-218, ⌥⌘I)."
@@ -212,6 +232,10 @@
   "dayColumnShow": "Show Day Column",
   "@dayColumnShow": {
     "description": "Minimal Mac View menu and the Now pane: shows the Day column again (ED-218, ⌥⌘I)."
+  },
+  "dayColumnHint": "Click a task and it opens in this column. Close it and the Day comes back.",
+  "@dayColumnHint": {
+    "description": "Minimal Mac and web Day column, under its header (E-Minimal frame 1, ED-089)."
   },
   "nowDotOpen": "Open",
   "@nowDotOpen": {

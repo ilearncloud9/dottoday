@@ -142,10 +142,28 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get nowAddField => pseudo(super.nowAddField);
 
   @override
+  String get taskMStarts => pseudo(super.taskMStarts);
+
+  @override
+  String get taskMCaption => pseudo(super.taskMCaption);
+
+  @override
+  String get taskMMoreHint => pseudo(super.taskMMoreHint);
+
+  @override
+  String get taskMShorter => pseudo(super.taskMShorter);
+
+  @override
+  String get taskMLonger => pseudo(super.taskMLonger);
+
+  @override
   String get dayColumnHide => pseudo(super.dayColumnHide);
 
   @override
   String get dayColumnShow => pseudo(super.dayColumnShow);
+
+  @override
+  String get dayColumnHint => pseudo(super.dayColumnHint);
 
   @override
   String get nowDotOpen => pseudo(super.nowDotOpen);

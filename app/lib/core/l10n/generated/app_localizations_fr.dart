@@ -159,10 +159,30 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ajouter une tâche · collez plusieurs lignes pour plusieurs';
 
   @override
+  String get taskMStarts => 'Début';
+
+  @override
+  String get taskMCaption => 'Tâche';
+
+  @override
+  String get taskMMoreHint =>
+      'Éditeur complet · alertes, répétition, étapes, notes, couleur et icône';
+
+  @override
+  String get taskMShorter => '15 min de moins';
+
+  @override
+  String get taskMLonger => '15 min de plus';
+
+  @override
   String get dayColumnHide => 'Masquer la colonne Jour';
 
   @override
   String get dayColumnShow => 'Afficher la colonne Jour';
+
+  @override
+  String get dayColumnHint =>
+      'Cliquez sur une tâche et elle s’ouvre dans cette colonne. Fermez-la et la journée revient.';
 
   @override
   String get nowDotOpen => 'Ouvrir';

@@ -5349,6 +5349,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Medium widths (tablets):** the day until 6e.
 - **Checks:** now_wide_test (5), now_wide_golden_test (3 goldens), now_view_test (the count after Next); the 6a Mac places golden shows the Now pane. Analyze and format clean; 7413 tests pass, 31 skipped. Not yet run on a real Mac or in a browser.
 
+### ED-413 · M19.6 part 6d-1: Minimal's task screen on phones and in the Day column
+- **Date:** 2026-11-20. **Owner:** "Start 6d"; split "Two parts" (6d-1 the task screen and the Day column's rows, 6d-2 minimal Add); then "Approve 6d-1" after the review page.
+- **Built (ED-089, ED-216; E-PhonesMinimal "Task sheet (minimal)", E-Minimal's task in the right column):** one minimal task screen (`TaskMScreen`) replacing the old Done · Tomorrow · Later · Delete tiles. The 44 dot with its progress, the title in a new `minimalSheetTitle` role (Manrope 800 21/26), "Now, 18 min left" in teal while it runs or its times; Starts (the When picker, ED-099) and Duration (the Duration sheet), each with Undo; Done; Tomorrow · Later (stacked at large text); Need more time? +5 / +15 / +30 only while it runs; More options (the full editor); a small Delete task with Undo.
+- **Phones:** the sheet opens at 72 % so Delete task shows; More options closes it and opens option D's editor.
+- **Mac and web Now:** a task opens in the Day column, not the side panel: "Task" and ✕ over it, Starts and Duration as rows with − / + (15 min); More options shows the full editor in the column; ✕ or Esc brings the Day back and the Now pane stays. Opening a task brings a hidden column out. Elsewhere (Inbox, Calendar, Search) the side panel shows the same screen.
+- **Day column (from 6c):** its hint "Click a task and it opens in this column. Close it and the Day comes back." and no Running late on the live row.
+- **Departures, approved with the part:** a task ahead shows its times without "· next"; the column's chips read "+5 min" (board "+5"); Tomorrow and Later are filled quiet buttons; one More options line everywhere; no "· Undo after"; Break it down is reached through More options; the More options chevron doesn't mirror in RTL (as every chevron today); the full editor is the panel's at 290.
+- **Checks:** task_m_test (6), 5 goldens; the 14 minimal task sheet goldens, the Now pane and Mac places goldens and the editor panel test updated; the old minimal tiles removed from `SheetActions`. Analyze and format clean; 7424 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

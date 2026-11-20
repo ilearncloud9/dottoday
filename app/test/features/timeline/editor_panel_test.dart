@@ -123,9 +123,8 @@ void main() {
     }
   });
 
-  _macTest('minimal: the panel shows the minimal sheet; More, the editor', (
-    tester,
-  ) async {
+  _macTest('minimal: the panel shows the minimal task screen; More options, '
+      'the editor', (tester) async {
     final repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
     await pumpToday(
       tester,
@@ -138,10 +137,13 @@ void main() {
     await tester.pumpAndSettle();
     final panel = find.byType(TaskEditorPanel);
     expect(panel, findsOneWidget);
-    for (final tile in ['Tomorrow', 'Later', 'Delete']) {
+    // Minimal's task screen (ED-089, M19.6 part 6d) away from Now.
+    for (final tile in ['Tomorrow', 'Later', 'Delete task']) {
       expect(find.descendant(of: panel, matching: find.text(tile)), findsOne);
     }
-    await tester.tap(find.descendant(of: panel, matching: find.text('More')));
+    await tester.tap(
+      find.descendant(of: panel, matching: find.text('More options')),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(TaskEditor), findsOneWidget);
   });

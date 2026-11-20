@@ -14,7 +14,6 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_tiles.dart';
-import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
 import 'package:dottoday/features/timeline/widgets/when_move.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
@@ -22,26 +21,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// Done · +15 min · Shift · Move · Edit tiles; in the minimal layout
-/// Done · Tomorrow · Later · Delete (docs/14 §4), the rest under More.
+/// Done · +15 min · Shift · Move · Edit tiles; Minimal has its own
+/// screen (`TaskMScreen`, ED-089).
 class SheetActions extends ConsumerWidget {
-  const SheetActions({
-    required this.task,
-    this.onEdit,
-    this.minimal = false,
-    this.onClose,
-    super.key,
-  });
+  const SheetActions({required this.task, this.onEdit, super.key});
 
   final TaskView task;
-
-  /// Minimal's four tiles: Tomorrow keeps the time, Later is the Inbox,
-  /// Delete is Trash; each says so with Undo and closes the sheet.
-  final bool minimal;
-
-  /// How the sheet goes after Tomorrow / Later / Delete: the route pops,
-  /// unless the Mac/web panel closes itself (M16).
-  final VoidCallback? onClose;
 
   /// Opens the editor (M3b.4b wires it).
   final VoidCallback? onEdit;
@@ -59,40 +44,6 @@ class SheetActions extends ConsumerWidget {
       filled: !done,
       onTap: () => unawaited(markDone(context, ref, o)),
     );
-    if (minimal) {
-      final drops = ShellDrops(context, ref);
-      final navigator = Navigator.of(context);
-      void then(void Function() write) {
-        write();
-        if (onClose case final close?) return close();
-        unawaited(navigator.maybePop());
-      }
-
-      return SheetTileGrid(
-        tiles: [
-          doneTile,
-          SheetTile(
-            glyph: DotGlyphs.rollForward,
-            label: l10n.sheetTomorrow,
-            onTap: o.startUtc == null
-                ? null
-                : () => then(() => unawaited(_tomorrow(context, ref, task))),
-          ),
-          SheetTile(
-            glyph: DotGlyphs.inbox,
-            label: l10n.sheetLater,
-            onTap: o.startUtc == null || o.pinned
-                ? null
-                : () => then(() => drops.toInbox(o.id)),
-          ),
-          SheetTile(
-            glyph: DotGlyphs.trash,
-            label: l10n.sheetDelete,
-            onTap: o.pinned ? null : () => then(() => drops.toTrash(o.id)),
-          ),
-        ],
-      );
-    }
     return Row(
       spacing: DotSpace.s,
       children: [
@@ -143,8 +94,13 @@ DateTime _dayOf(TaskView task) {
   return DateTime(l.year, l.month, l.day);
 }
 
-/// Tomorrow at the same time, with Undo (as a week-strip drop).
-Future<void> _tomorrow(BuildContext context, WidgetRef ref, TaskView task) {
+/// Tomorrow at the same time, with Undo (as a week-strip drop); the
+/// minimal task screen's Tomorrow (ED-089).
+Future<void> moveToTomorrow(
+  BuildContext context,
+  WidgetRef ref,
+  TaskView task,
+) {
   final d = _dayOf(task);
   return _toDay(context, ref, task, DateTime(d.year, d.month, d.day + 1));
 }

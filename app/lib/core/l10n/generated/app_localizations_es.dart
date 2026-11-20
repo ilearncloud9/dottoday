@@ -158,10 +158,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nowAddField => 'Añadir una tarea · pega varias líneas para varias';
 
   @override
+  String get taskMStarts => 'Empieza';
+
+  @override
+  String get taskMCaption => 'Tarea';
+
+  @override
+  String get taskMMoreHint =>
+      'Editor completo · avisos, repetir, pasos, notas, color e icono';
+
+  @override
+  String get taskMShorter => '15 min menos';
+
+  @override
+  String get taskMLonger => '15 min más';
+
+  @override
   String get dayColumnHide => 'Ocultar la columna Día';
 
   @override
   String get dayColumnShow => 'Mostrar la columna Día';
+
+  @override
+  String get dayColumnHint =>
+      'Haz clic en una tarea y se abre en esta columna. Ciérrala y vuelve el día.';
 
   @override
   String get nowDotOpen => 'Abrir';

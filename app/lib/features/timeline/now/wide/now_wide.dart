@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/data/layout/day_column_prefs.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
@@ -19,7 +20,11 @@ class NowWide extends ConsumerWidget {
     final n = NowInputs.watch(context, ref);
     if (n == null) return const Scaffold();
     final mac = macApp(context);
-    final hidden = ref.watch(dayColumnHiddenProvider).value ?? false;
+    // A task opened from the pane (Open on a dot) brings the column out
+    // for it, even when the person put the Day away (ED-089).
+    final hidden =
+        (ref.watch(dayColumnHiddenProvider).value ?? false) &&
+        ref.watch(editingTaskProvider) == null;
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -35,6 +35,7 @@ final class DotType {
     required this.hexCode,
     required this.choiceTitle,
     required this.sheetTitle,
+    required this.minimalSheetTitle,
     required this.sheetTitleAndroid,
     required this.stripDateAndroid,
     required this.badge,
@@ -115,6 +116,8 @@ final class DotType {
     hexCode: _system(15, 20, 600, text),
     choiceTitle: _manrope(17, 22, 700, text),
     sheetTitle: _manrope(24, 30, 800, text),
+    // Minimal's task sheet header, read-only beside the 44 dot (ED-216).
+    minimalSheetTitle: _manrope(21, 26, 800, text),
     sheetTitleAndroid: _system(22, 28, 400, text),
     stripDateAndroid: _manrope(16, 19, 500, text),
     // A count on an icon (Sync's conflicts, E-Phones): 11/700.
@@ -283,6 +286,9 @@ final class DotType {
   /// The iOS sheet title (E-Phones-2: 800 24/30).
   final TextStyle sheetTitle;
 
+  /// Minimal's task sheet header (ED-216): Manrope 800 21/26.
+  final TextStyle minimalSheetTitle;
+
   /// The Android sheet title (E-Phones-2: 400 22/28).
   final TextStyle sheetTitleAndroid;
 
@@ -401,6 +407,7 @@ final class DotType {
       hexCode: l(hexCode, other.hexCode),
       choiceTitle: l(choiceTitle, other.choiceTitle),
       sheetTitle: l(sheetTitle, other.sheetTitle),
+      minimalSheetTitle: l(minimalSheetTitle, other.minimalSheetTitle),
       sheetTitleAndroid: l(sheetTitleAndroid, other.sheetTitleAndroid),
       stripDateAndroid: l(stripDateAndroid, other.stripDateAndroid),
       badge: l(badge, other.badge),

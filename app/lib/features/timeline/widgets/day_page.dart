@@ -51,6 +51,7 @@ class DayPage extends ConsumerWidget {
     required this.today,
     this.page = false,
     this.hours = false,
+    this.runningLate = true,
     super.key,
   });
 
@@ -65,6 +66,11 @@ class DayPage extends ConsumerWidget {
   /// The Workspace's Day view (E-FullA-v2 web Day, M19.2 part 2): the page
   /// thread on the hour scale under the day's header line.
   final bool hours;
+
+  /// Minimal's Running late on the live row; off in the Mac and web Day
+  /// column, where Need more time? lives in the Now pane beside it
+  /// (E-Minimal, M19.6 part 6d).
+  final bool runningLate;
 
   /// How far a drop looks for a task dragged in from another day: a week
   /// either way, as hovering a week-strip day pages there mid-drag
@@ -336,7 +342,8 @@ class DayPage extends ConsumerWidget {
             )
           : null,
       // Minimal: Running late on the live row (docs/14 §4).
-      onRunningLate: watchSimplified(ref, FeatureId.shiftRunningLate)
+      onRunningLate:
+          runningLate && watchSimplified(ref, FeatureId.shiftRunningLate)
           ? (_) => unawaited(showRunningLateSheet(context, today))
           : null,
     );

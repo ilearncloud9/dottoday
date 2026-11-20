@@ -348,6 +348,36 @@ abstract class AppLocalizations {
   /// **'Add a task · paste several lines for many'**
   String get nowAddField;
 
+  /// Minimal task screen (ED-089): caption of the start time; a tap opens the When picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts'**
+  String get taskMStarts;
+
+  /// Minimal task screen in the Mac and web Day column (ED-089): the caption over it, beside ✕.
+  ///
+  /// In en, this message translates to:
+  /// **'Task'**
+  String get taskMCaption;
+
+  /// Minimal task screen: under More options, what the full editor holds (ED-089).
+  ///
+  /// In en, this message translates to:
+  /// **'Full editor · alerts, repeat, steps, notes, colour and icon'**
+  String get taskMMoreHint;
+
+  /// Minimal task screen in the Day column: the − button beside Duration (screen reader and tooltip).
+  ///
+  /// In en, this message translates to:
+  /// **'15 min shorter'**
+  String get taskMShorter;
+
+  /// Minimal task screen in the Day column: the + button beside Duration (screen reader and tooltip).
+  ///
+  /// In en, this message translates to:
+  /// **'15 min longer'**
+  String get taskMLonger;
+
   /// Minimal Mac and web: hides the Day column beside Now (ED-218, ⌥⌘I).
   ///
   /// In en, this message translates to:
@@ -359,6 +389,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Day Column'**
   String get dayColumnShow;
+
+  /// Minimal Mac and web Day column, under its header (E-Minimal frame 1, ED-089).
+  ///
+  /// In en, this message translates to:
+  /// **'Click a task and it opens in this column. Close it and the Day comes back.'**
+  String get dayColumnHint;
 
   /// Right-click menu on a dot of the Now pane's horizon: opens the task.
   ///
