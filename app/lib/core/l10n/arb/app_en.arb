@@ -3253,6 +3253,10 @@
   "@shortcutBackToday": {
     "description": "Shortcut sheet action."
   },
+  "shortcutGoToDate": "Go to a date",
+  "@shortcutGoToDate": {
+    "description": "Keyboard shortcuts list: ⇧⌘T / web g opens Go to date (ED-095)."
+  },
   "shortcutDoneLive": "Mark the current task done",
   "@shortcutDoneLive": {
     "description": "Shortcut sheet action."
@@ -5434,6 +5438,14 @@
   "menuPreviousDay": "Previous Day",
   "@menuPreviousDay": {
     "description": "Mac Go menu: the day before on Today."
+  },
+  "menuGoToDate": "Go to Date…",
+  "@menuGoToDate": {
+    "description": "Go menu (Mac, iPad keyboard): opens Go to date, ⇧⌘T (ED-095, E-R2-36)."
+  },
+  "todayMenuGoToDate": "Go to date…",
+  "@todayMenuGoToDate": {
+    "description": "Day menu, Day group: opens Go to date (owner, M19.5 part 5c)."
   },
   "menuNextDay": "Next Day",
   "@menuNextDay": {

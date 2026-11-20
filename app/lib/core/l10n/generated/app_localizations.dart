@@ -3186,6 +3186,12 @@ abstract class AppLocalizations {
   /// **'Back to today'**
   String get shortcutBackToday;
 
+  /// Keyboard shortcuts list: ⇧⌘T / web g opens Go to date (ED-095).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to a date'**
+  String get shortcutGoToDate;
+
   /// Shortcut sheet action.
   ///
   /// In en, this message translates to:
@@ -5765,6 +5771,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Previous Day'**
   String get menuPreviousDay;
+
+  /// Go menu (Mac, iPad keyboard): opens Go to date, ⇧⌘T (ED-095, E-R2-36).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Date…'**
+  String get menuGoToDate;
+
+  /// Day menu, Day group: opens Go to date (owner, M19.5 part 5c).
+  ///
+  /// In en, this message translates to:
+  /// **'Go to date…'**
+  String get todayMenuGoToDate;
 
   /// Mac Go menu: the day after on Today.
   ///

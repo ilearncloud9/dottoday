@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
@@ -127,6 +128,15 @@ class TodayMenu extends ConsumerWidget {
         ContextMenuEntry(
           value: () => unawaited(copyDayAsText(context, date)),
           label: l10n.todayMenuCopyText,
+        ),
+        // Go to date (owner, M19.5 part 5c): from the date button on
+        // screen, else Today's month.
+        ContextMenuEntry(
+          value: () => Actions.maybeInvoke(
+            context,
+            const AppCommandIntent(AppCommand.goToDate),
+          ),
+          label: l10n.todayMenuGoToDate,
         ),
         // Routines (11 C2, M11.4): drop one on this day.
         ContextMenuEntry(

@@ -42,6 +42,8 @@ final class MonthDay {
     this.isToday = false,
     this.isLight = false,
     this.outside = false,
+    this.tinted = false,
+    this.ringed = false,
   });
 
   /// "21".
@@ -75,4 +77,10 @@ final class MonthDay {
   /// A day of the month before or after, filling the first or last week
   /// (E-R2-30): its number only, faded, no card and no tap.
   final bool outside;
+
+  /// Go to date (E-R2-36): a day of the week on show, tinted.
+  final bool tinted;
+
+  /// Go to date: today, ringed when it isn't the day on show.
+  final bool ringed;
 }

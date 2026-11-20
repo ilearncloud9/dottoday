@@ -2134,6 +2134,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shortcutBackToday => 'Zurück zu heute';
 
   @override
+  String get shortcutGoToDate => 'Zu einem Datum gehen';
+
+  @override
   String get shortcutDoneLive => 'Aktuelle Aufgabe als erledigt markieren';
 
   @override
@@ -3866,6 +3869,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get menuPreviousDay => 'Vorheriger Tag';
+
+  @override
+  String get menuGoToDate => 'Gehe zu Datum …';
+
+  @override
+  String get todayMenuGoToDate => 'Gehe zu Datum …';
 
   @override
   String get menuNextDay => 'Nächster Tag';

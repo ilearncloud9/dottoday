@@ -12,12 +12,16 @@ class CompactMonthCell extends StatelessWidget {
   const CompactMonthCell({
     required this.day,
     this.selected = false,
+    this.autofocus = false,
     this.onTap,
     super.key,
   });
 
   final MonthDay day;
   final bool selected;
+
+  /// Takes the keys when its month opens (Go to date's day on show).
+  final bool autofocus;
   final VoidCallback? onTap;
 
   static const double _selection = DotSize.rowDot;
@@ -38,8 +42,10 @@ class CompactMonthCell extends StatelessWidget {
       excludeSemantics: true,
       child: InkResponse(
         onTap: onTap,
-        child: ConstrainedBox(
+        autofocus: autofocus,
+        child: Container(
           constraints: const BoxConstraints(minHeight: DotTouch.android),
+          color: day.tinted ? c.accentTint : null,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -49,6 +55,14 @@ class CompactMonthCell extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: selected
                     ? BoxDecoration(shape: BoxShape.circle, color: c.accent)
+                    : day.ringed
+                    ? BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: c.accent,
+                          width: DotSize.smallDotOutline,
+                        ),
+                      )
                     : null,
                 child: Text(day.date, style: date),
               ),

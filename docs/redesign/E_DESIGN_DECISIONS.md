@@ -5307,6 +5307,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, recorded:** tablets fold too (the same Workspace Day by width); the Day column keeps its hour labels; from the first done task Tab moves on to its circle; no announcement beyond the toast's message. Add on tablets' a11y test now scrolls "Notes" into view first: the contrast check had measured the half-hidden heading against the day behind the popover.
 - **Checks:** earlier_day_column_test (4); the Mac Day column with Earlier open, light and dark (2 new goldens); 58 re-recorded where the Workspace's Day now folds. Analyze and format clean; 7359 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-408 · M19.5 part 5c: change day and Go to date
+- **Date:** 2026-11-20. **Owner:** "Start 5c"; answer: the Day menu gains Go to Date… only (the four-group regrouping stays M20.3); earlier, Go to date keeps the approved month everywhere. Then "Approve 5c" after the review page.
+- **Native first, checked:** each platform's own container (a popover from the date button on the Mac, the web and the iPad; a dialog on Android tablets, which have no popover; a sheet on phones); the Mac menu bar's and the iPad's ⌘ menu's own Go › Go to Date… ⇧⌘T. The month is the approved component (owner).
+- **Built (E-R2-36, ED-342):** Go to date is Today's approved month (ED-075: ‹ ›, planned-day dots, "{month} · N of M days planned", Today) with the week on show tinted and today ringed; a picked day goes there in the view on show. Opened from the toolbar's date button (replacing its "Change day" sheet), ⇧⌘T / Ctrl+Shift+T, web g (single keys), Go › Go to Date…, the Day menu's Go to date… (owner) and listed in the ⌘/ keys. The day on show has the keys; arrows move a day, Page Up / Down the month, Return picks, Esc closes. `AddAnchor` and the new `DateAnchor` share one painted-anchor mark.
+- **Kept as built (E-R2-5, ED-276):** swipe between days, ⌘← / ⌘→ (web [ ]), ⌘T / t, the Mac Go menu's Previous and Next Day, the web's day URL.
+- **Departures, recorded:** the key is ⇧⌘T (ED-095's approved scheme and macOS Calendar's own), not ED-342's design-only ⇧⌘G caption; Go to Date… is in the Go menu (ED-095), not View; the header is the approved "Sep · Oct · Nov" and a day's spoken name the built "…, 2 of 4 done"; the Day menu's item sits in today's ungrouped list until M20.3; phones keep their month from the week strip, with the same month in a sheet for ⇧⌘T.
+- **Checks:** go_to_date_test (7); goldens: the Mac popover light and dark, the iPad popover, the Android dialog (4). Analyze and format clean; 7370 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

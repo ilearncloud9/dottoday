@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
@@ -9,7 +13,7 @@ import 'package:dottoday/features/timeline/workspace/workspace_search_field.dart
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view_menu.dart';
 import 'package:dottoday/shared/layout/first_that_fits.dart';
-import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -74,17 +78,26 @@ class WorkspaceToolbar extends ConsumerWidget {
         onToday: () => show(view, today),
         onAhead: () => show(view, _step(1)),
       ),
-      DatePill(
-        label: short ? _dateLabel(context, year: false) : full,
-        spoken: full,
-        onTap: () async {
-          final picked = await showMonthDayPicker(
-            context,
-            initial: shown,
-            today: today,
-            firstDayOfWeek: firstDayOfWeek,
+      // Go to date (E-R2-36): from here, or ⇧⌘T / web g / the menus.
+      Builder(
+        builder: (pill) {
+          void open() => unawaited(
+            showGoToDate(
+              pill,
+              shown: shown,
+              today: today,
+              anchor: globalRectOf(pill),
+              onSelect: (d) => show(view, d),
+            ),
           );
-          if (picked != null) show(view, picked);
+          return DateAnchor(
+            onOpen: open,
+            child: DatePill(
+              label: short ? _dateLabel(context, year: false) : full,
+              spoken: full,
+              onTap: open,
+            ),
+          );
         },
       ),
     ];

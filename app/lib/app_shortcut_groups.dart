@@ -52,6 +52,7 @@ List<ShortcutGroup> appShortcutGroups(
         (keys: w('[', '←'), action: l10n.shortcutPrevDay),
         (keys: w(']', '→'), action: l10n.shortcutNextDay),
         (keys: w('t', 'T'), action: l10n.shortcutBackToday),
+        (keys: w('g', 'T', shift: true), action: l10n.shortcutGoToDate),
         if (!web) (keys: k('D'), action: l10n.shortcutDoneLive),
         if (!web) (keys: k('C', shift: true), action: l10n.shortcutCopyDay),
         (keys: '↑ ↓', action: l10n.shortcutPickTask),

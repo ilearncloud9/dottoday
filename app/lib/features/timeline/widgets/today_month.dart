@@ -21,8 +21,13 @@ class TodayMonth extends ConsumerWidget {
     required this.today,
     required this.onSelect,
     required this.onMonth,
+    this.goTo = false,
     super.key,
   });
+
+  /// Go to date (E-R2-36, ED-342): the week on show tinted, today ringed,
+  /// and the day on show takes the keys.
+  final bool goTo;
 
   /// Year/month on screen.
   final DateTime month;
@@ -58,6 +63,11 @@ class TodayMonth extends ConsumerWidget {
     final lead = cells.indexWhere((c) => c != null);
     final start = weekStart(DateTime(month.year, month.month), first);
     final shownHere = shown.year == month.year && shown.month == month.month;
+    // Go to date tints the week on show (E-R2-36).
+    final week = weekStart(shown, first);
+    bool inWeek(DateTime d) =>
+        !d.isBefore(week) &&
+        d.isBefore(DateTime(week.year, week.month, week.day + 7));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
       child: Column(
@@ -71,8 +81,18 @@ class TodayMonth extends ConsumerWidget {
                   locale,
                 ).format(DateTime(start.year, start.month, start.day + i)),
             ],
-            days: dots ? cells : [for (final c in cells) c?.withoutCompletion],
+            days: [
+              for (final (i, c) in cells.indexed)
+                switch (dots ? c : c?.withoutCompletion) {
+                  final d? when goTo => d.marked(
+                    inWeek(DateTime(month.year, month.month, i - lead + 1)),
+                    DateTime(month.year, month.month, i - lead + 1) == today,
+                  ),
+                  final d => d,
+                },
+            ],
             selected: shownHere ? lead + shown.day - 1 : null,
+            focusSelected: goTo,
             onSelect: (i) =>
                 onSelect(DateTime(month.year, month.month, i - lead + 1)),
           ),
@@ -257,5 +277,20 @@ extension on MonthDay {
     isPast: isPast,
     isToday: isToday,
     isLight: isLight,
+  );
+
+  /// The cell with Go to date's marks.
+  MonthDay marked(bool tinted, bool today) => MonthDay(
+    date: date,
+    label: label,
+    completion: completion,
+    planned: planned,
+    repeatsOnly: repeatsOnly,
+    items: items,
+    isPast: isPast,
+    isToday: isToday,
+    isLight: isLight,
+    tinted: tinted,
+    ringed: today,
   );
 }

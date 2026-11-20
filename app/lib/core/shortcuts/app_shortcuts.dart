@@ -19,6 +19,9 @@ enum AppCommand {
   newBrainDump,
   pasteAsTasks,
   today,
+
+  /// Go to Date… (ED-095: ⇧⌘T, web g; E-R2-36, M19.5 part 5c).
+  goToDate,
   back,
   forward,
   search,
@@ -87,6 +90,12 @@ final class ShowDayIntent extends Intent {
   final int days;
 }
 
+/// Go to date on the screen that shows days, when no date button is on
+/// screen to open it from (a phone): Today handles it with its month.
+final class GoToDateIntent extends Intent {
+  const GoToDateIntent();
+}
+
 /// Show today on Today (Go › Today, M5.5).
 final class ShowTodayIntent extends Intent {
   const ShowTodayIntent();
@@ -144,6 +153,8 @@ abstract final class AppShortcuts {
     AppCommand.newBrainDump: KeyCombo(LogicalKeyboardKey.keyN, shift: true),
     AppCommand.pasteAsTasks: KeyCombo(LogicalKeyboardKey.keyV, shift: true),
     AppCommand.today: KeyCombo(LogicalKeyboardKey.keyT),
+    // ⇧⌘T, as macOS Calendar's own Go to Date (ED-095).
+    AppCommand.goToDate: KeyCombo(LogicalKeyboardKey.keyT, shift: true),
     AppCommand.back: KeyCombo(LogicalKeyboardKey.bracketLeft),
     AppCommand.forward: KeyCombo(LogicalKeyboardKey.bracketRight),
     AppCommand.search: KeyCombo(LogicalKeyboardKey.keyF),
@@ -169,6 +180,7 @@ abstract final class AppShortcuts {
       shift: true,
     ),
     AppCommand.today: SingleActivator(LogicalKeyboardKey.keyT),
+    AppCommand.goToDate: SingleActivator(LogicalKeyboardKey.keyG),
     AppCommand.search: CharacterActivator('/'),
     AppCommand.toggleLayout: SingleActivator(
       LogicalKeyboardKey.keyL,

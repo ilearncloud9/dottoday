@@ -29,6 +29,7 @@ class MonthGrid extends StatefulWidget {
     this.style = MonthCellStyle.compact,
     this.selected,
     this.onSelect,
+    this.focusSelected = false,
     super.key,
   }) : assert(weekdays.length == 7);
 
@@ -40,6 +41,9 @@ class MonthGrid extends StatefulWidget {
   /// Index into [days] of the day shown below (accent filled, compact).
   final int? selected;
   final ValueChanged<int>? onSelect;
+
+  /// The [selected] day takes the keys when the grid opens (Go to date).
+  final bool focusSelected;
 
   @override
   State<MonthGrid> createState() => _MonthGridState();
@@ -119,6 +123,7 @@ class _MonthGridState extends State<MonthGrid> {
         MonthCellStyle.compact => CompactMonthCell(
           day: day,
           selected: i == widget.selected,
+          autofocus: widget.focusSelected && i == widget.selected,
           onTap: onTap,
         ),
         MonthCellStyle.expanded => Focus(

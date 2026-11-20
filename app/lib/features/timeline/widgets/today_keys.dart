@@ -11,6 +11,7 @@ import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
+import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/task_keys.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,17 @@ class TodayKeys extends ConsumerWidget {
           ),
           ShowTodayIntent: CallbackAction<ShowTodayIntent>(
             onInvoke: (_) => onSelect(today),
+          ),
+          // No date button on screen (a phone): the month here (5c).
+          GoToDateIntent: CallbackAction<GoToDateIntent>(
+            onInvoke: (_) => unawaited(
+              showGoToDate(
+                context,
+                shown: shown,
+                today: today,
+                onSelect: onSelect,
+              ),
+            ),
           ),
           CopyDayIntent: CallbackAction<CopyDayIntent>(
             onInvoke: (_) => unawaited(copyDayAsText(context, shown)),

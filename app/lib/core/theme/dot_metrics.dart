@@ -242,6 +242,10 @@ abstract final class DotSize {
   /// The Mac and web Add popover (E-R2-36, ED-342): 404 wide, its arrow
   /// 7 out, the title's ring 34, a pointer's duration pill 26 tall.
   static const double addPopover = 404;
+
+  /// Go to date's popover (E-R2-36, ED-342): the month under the date
+  /// button, as wide as its board frame.
+  static const double goToDate = 360;
   static const double popoverArrow = 7;
 
   /// How far a popover's arrow sits from its end (E-R2-36: 349 of 404),

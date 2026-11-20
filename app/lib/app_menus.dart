@@ -162,6 +162,7 @@ List<AppMenu> appMenus({
           () => sendToFocus(const ShowDayIntent(1)),
         ),
         command(l10n.navToday, AppCommand.today),
+        command(l10n.menuGoToDate, AppCommand.goToDate),
         command(l10n.navSearch, AppCommand.search),
       ],
     ]),

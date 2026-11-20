@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:flutter/widgets.dart';
@@ -26,6 +27,13 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
   VoidCallback? onTogglePlanPanel,
   VoidCallback? onToggleInspector,
 }) {
+  // From the date button on screen (any view), else Today's own month.
+  void goToDate() {
+    if (DateAnchor.open()) return;
+    final focus = FocusManager.instance.primaryFocus?.context;
+    if (focus != null) Actions.maybeInvoke(focus, const GoToDateIntent());
+  }
+
   void month() => unawaited(router.push<void>(AppRoutes.month));
   return {
     AppCommand.goToday: () => router.go(AppRoutes.today),
@@ -36,6 +44,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.newBrainDump: onBrainDump ?? () {},
     AppCommand.pasteAsTasks: onPasteAsTasks ?? () {},
     AppCommand.today: onToday ?? () => router.go(AppRoutes.today),
+    AppCommand.goToDate: goToDate,
     // ⌘[ / ⌘] in the apps; the web's are the browser's own.
     AppCommand.back: () => _BackForward.back(router),
     AppCommand.forward: () => _BackForward.forward(router),

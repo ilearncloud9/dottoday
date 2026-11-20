@@ -1676,6 +1676,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get shortcutBackToday => pseudo(super.shortcutBackToday);
 
   @override
+  String get shortcutGoToDate => pseudo(super.shortcutGoToDate);
+
+  @override
   String get shortcutDoneLive => pseudo(super.shortcutDoneLive);
 
   @override
@@ -3024,6 +3027,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get menuPreviousDay => pseudo(super.menuPreviousDay);
+
+  @override
+  String get menuGoToDate => pseudo(super.menuGoToDate);
+
+  @override
+  String get todayMenuGoToDate => pseudo(super.todayMenuGoToDate);
 
   @override
   String get menuNextDay => pseudo(super.menuNextDay);
