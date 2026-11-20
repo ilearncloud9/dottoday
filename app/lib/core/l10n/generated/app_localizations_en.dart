@@ -157,6 +157,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nowAddField => 'Add a task · paste several lines for many';
 
   @override
+  String get addMinimalTitle => 'New task';
+
+  @override
+  String get addMinimalTitleAndroid => 'Add a task';
+
+  @override
+  String get addWhatAndWhen => 'What and when';
+
+  @override
+  String get addClear => 'Clear';
+
+  @override
+  String addWhenDay(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String addLandsAt(String range) {
+    return 'Lands at $range';
+  }
+
+  @override
+  String get addFreeNoOverlap => 'free, no overlap';
+
+  @override
+  String get addSeveralLines =>
+      'Several lines? You\'ll see a plan first. Nothing is added until you accept.';
+
+  @override
+  String get addSeveralLinesShort => 'Several lines open a plan first';
+
+  @override
   String get taskMStarts => 'Starts';
 
   @override

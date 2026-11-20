@@ -20,6 +20,10 @@ abstract final class TaskAlpha {
   /// Minimal's orb (E rules §5.3, ED-106): its centre is the task's colour
   /// at 8 % (indigo's `#F1F0FB`), its shadow at 16 %.
   static const orbCentre = 0.08;
+
+  /// The other tasks on Minimal Add's mini horizon (CR-133: 45 %, on
+  /// purpose; the strip is hidden from screen readers).
+  static const landingOthers = 0.45;
   static const orbShadow = 0.16;
 
   /// Dashes and glyph of a skipped dot (`A-ios-future-month`).

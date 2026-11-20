@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Minimal Add is a short sheet: type what and when ("Gym 6pm 1h"), see where it lands on the day and whether it overlaps anything, then Add. More opens the full Create task with what you typed; several lines still show a plan before anything is added (redesign branch).
 - In Minimal, tapping a task opens one simple screen: start time and length, Done, Tomorrow or Later, Need more time? while it runs, More options for everything else, and Delete. On the Mac and the web it opens in the Day column beside Now, and Esc brings the day back (redesign branch).
 - Minimal on the Mac and the web opens on Now beside the Day column: the day's horizon (right-click a dot for its menu), what's on now with Done, Focus and Need more time?, what's next, and an Add row. Hide the Day column with its ✕ or ⌥⌘I; it stays hidden on that device until you show it again (redesign branch).
 - Minimal opens on Now on phones: the day's horizon, what's on now with Done and Need more time?, Next up between tasks with anything not ticked under Earlier, and an open day's Add to the day. In the morning the Wake Up card sits in Now until you start the day or choose Later, instead of opening over Today (redesign branch).

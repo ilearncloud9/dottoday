@@ -39,7 +39,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(container.read(pendingBrainDumpProvider), _list);
     expect(repo.rows, hasLength(before), reason: 'nothing before Accept');
-    expect(find.text('More'), findsNothing, reason: 'Add closed');
+    expect(find.text('More options'), findsNothing, reason: 'Add closed');
   });
 
   testWidgets('"Keep as one" joins the list into one title', (tester) async {
@@ -63,11 +63,11 @@ void main() {
     await tester.sendKeyUpEvent(LogicalKeyboardKey.shift);
     await tester.pumpAndSettle();
     expect(addedRow(repo, 'Pack'), isNotNull);
-    expect(find.text('More'), findsOneWidget);
+    expect(find.text('More options'), findsOneWidget);
     expect(find.widgetWithText(TextField, 'Pack 8pm 30m'), findsNothing);
     await tester.enterText(addTitle, 'Shower');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     expect(find.text('8:30 PM – 9:00 PM'), findsOneWidget);
   });
@@ -78,7 +78,7 @@ void main() {
     await pumpAddHost(tester, startUtc: DateTime.utc(2026, 10, 21, 10, 2));
     await tester.enterText(addTitle, 'Stretch');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     // 12:02 Berlin, rounded up to the 5-min grid.
     expect(find.text('12:05 PM – 12:35 PM'), findsOneWidget);
@@ -90,7 +90,7 @@ void main() {
     await pumpAddHost(tester, startUtc: DateTime.utc(2026, 10, 21, 6, 15));
     await tester.enterText(addTitle, 'Go shopping 5pm tomorrow');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     expect(find.textContaining('Tomorrow · 5:00 PM'), findsOneWidget);
   });
@@ -99,7 +99,7 @@ void main() {
     await pumpAddHost(tester, day: DateTime(2026, 10, 24));
     await tester.enterText(addTitle, 'Hike');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     expect(find.textContaining('Sat, Oct 24 ·'), findsOneWidget);
   });

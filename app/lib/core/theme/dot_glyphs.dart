@@ -180,6 +180,12 @@ abstract final class DotGlyphs {
 
   /// The Android rail's menu: opens the drawer (E-R2-1).
   static const menu = DotGlyph('M4 7h16M4 12h16M4 17h16');
+
+  /// A bulleted list: Minimal Add's "Several lines?" hint (E-PhonesMinimal
+  /// frame 3).
+  static const list = DotGlyph(
+    'M9 7h11M9 12h11M9 17h11M4.5 7h.01M4.5 12h.01M4.5 17h.01',
+  );
   static const undo = DotGlyph('M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-4');
 
   /// A row of dots: a week of days ("Pick from the week").

@@ -9,7 +9,7 @@ import 'add_harness.dart';
 Future<void> _menu(WidgetTester tester, {String text = 'Pack 5pm 1h'}) async {
   await tester.enterText(addTitle, text);
   await tester.pump();
-  await tester.tap(find.text('More'));
+  await tester.tap(find.byType(ActionChip).last);
   await tester.pumpAndSettle();
   await tester.tap(find.byTooltip('More time options'));
   await tester.pumpAndSettle();
@@ -118,7 +118,7 @@ void main() {
     await pumpAddHost(tester);
     await tester.enterText(addTitle, 'Pack 5pm 1h');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     final button = tester.widget<IconButton>(
       find.ancestor(
@@ -143,7 +143,7 @@ void main() {
     await pumpAddHost(tester, size: const Size(390, 1100));
     await tester.enterText(addTitle, 'Pack 5pm');
     await tester.pump();
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Edit'));
     await tester.tap(find.text('Edit'));

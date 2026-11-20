@@ -1327,3 +1327,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-411:** M19.6 part 6b: the Wake Up card folded into Minimal's Now (each morning until answered; Minimal never opens it over Today). Approved.
 - **2026-11-20, ED-412:** M19.6 part 6c: the Mac and web Now pane beside the 290 Day column (orb, Done · Focus · Need more time?, the dot menu, ⌥⌘I). Approved.
 - **2026-11-20, ED-413:** M19.6 part 6d-1: Minimal's task screen (ED-089, ED-216) on phones and in the Mac and web Day column. Approved.
+- **2026-11-20, ED-414:** M19.6 part 6d-2: minimal Add (the iPhone's nav bar, Android's M3 sheet, Lands at on a mini horizon; More opens Create task). Approved.

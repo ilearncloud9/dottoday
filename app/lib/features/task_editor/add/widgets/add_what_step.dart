@@ -1,3 +1,4 @@
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
@@ -7,9 +8,12 @@ import 'package:dottoday/features/task_editor/add/widgets/add_title_field.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
 
-/// Minimal's Add (docs/14 §4): the title with live parsing (R-06) and two
-/// chips, when and how long, then Add and More (the When step). Full Add
-/// is Create task on phones and the popover from medium width (M19.3).
+/// Minimal's Add (docs/14 §4; E-PhonesMinimal frames 3 and 6, M19.6
+/// part 6d-2): "What and when" with live parsing (R-06), the when and
+/// length chips, where it lands on the day, and Add. The iPhone's nav bar
+/// (Cancel · New task · Add) with a filled field; Android's M3 sheet with
+/// an outlined field, More options and Add at the foot. Several lines
+/// open a plan first (B4). Full Add is Create task (M19.3).
 class AddWhatStep extends StatelessWidget {
   const AddWhatStep({
     required this.state,
@@ -18,9 +22,12 @@ class AddWhatStep extends StatelessWidget {
     required this.onSubmit,
     required this.onAnother,
     required this.onAddMany,
+    required this.onWhen,
     required this.onMore,
+    required this.onCancel,
     this.whenLabel,
     this.lengthLabel = '',
+    this.landsAt,
     super.key,
   });
 
@@ -30,7 +37,7 @@ class AddWhatStep extends StatelessWidget {
   /// A chip's ×: its word stays as title text.
   final ValueChanged<QuickAddToken> onRemoveToken;
 
-  /// Enter in the title: add with what is known.
+  /// Enter in the title, or Add: add with what is known.
   final VoidCallback onSubmit;
 
   /// Shift+Enter: add and start the next.
@@ -39,8 +46,15 @@ class AddWhatStep extends StatelessWidget {
   /// A pasted list confirmed.
   final VoidCallback onAddMany;
 
-  /// More, and either chip: the When step.
+  /// Either chip: the When step.
+  final VoidCallback onWhen;
+
+  /// More (options): the detailed Create task with this draft.
   final VoidCallback onMore;
+  final VoidCallback onCancel;
+
+  /// "Lands at …" with its strip; null until the day is known.
+  final AddLandsAt? landsAt;
 
   /// The when chip ("At 11:30 AM") and the length chip.
   final String? whenLabel;
@@ -48,57 +62,111 @@ class AddWhatStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final android = DotIdiom.of(context) == DotIdiom.material;
     final draft = state.draft;
-    // A pasted list is answered above first.
+    // A pasted list is answered by the field first (R-07).
     final many = QuickAddParser.lines(state.text).length > 1;
+    final empty = state.text.trim().isEmpty;
+    // A list waits for the field's answer ("Add 3 tasks?", R-07).
+    final add = many || empty ? null : onSubmit;
+    final dot = TaskDot(
+      color: TaskColor.fromKey(draft.color),
+      icon: TaskIcon.fromKey(draft.icon),
+      state: DotState.upcoming,
+      label: draft.title,
+      size: DotTouch.android,
+    );
+    final field = AddTitleField(
+      text: state.text,
+      typed: draft.typed,
+      onChanged: onType,
+      onRemoveToken: onRemoveToken,
+      onSubmit: onSubmit,
+      onAnother: onAnother,
+      onAddMany: onAddMany,
+      // Manrope 600 20 on both phones (ED-206 7a).
+      style: t.styles.lookTitle.copyWith(fontWeight: FontWeight.w600),
+      decoration: android
+          ? InputDecoration(
+              labelText: l10n.addWhatAndWhen,
+              helperText: l10n.addSeveralLinesShort,
+              border: const OutlineInputBorder(),
+              suffixIcon: empty
+                  ? null
+                  : IconButton(
+                      tooltip: l10n.addClear,
+                      onPressed: () => onType(''),
+                      icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                    ),
+            )
+          : InputDecoration.collapsed(hintText: l10n.addWhatAndWhen),
+      frame: android
+          ? null
+          : (f) => DecoratedBox(
+              decoration: BoxDecoration(
+                color: t.colors.sunk,
+                borderRadius: BorderRadius.circular(DotRadii.tile),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(DotSpace.s),
+                child: Row(
+                  spacing: DotSpace.m,
+                  children: [
+                    dot,
+                    Expanded(child: f),
+                  ],
+                ),
+              ),
+            ),
+    );
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: DotSpace.page,
-              vertical: DotSpace.l,
+        AddMinimalHeader(android: android, onCancel: onCancel, onAdd: add),
+        // A short form, built whole; it scrolls at large text.
+        Flexible(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              DotSpace.page,
+              DotSpace.xs,
+              DotSpace.page,
+              DotSpace.l,
             ),
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: DotSpace.l,
-                children: [
-                  TaskDot(
-                    color: TaskColor.fromKey(draft.color),
-                    icon: TaskIcon.fromKey(draft.icon),
-                    state: DotState.upcoming,
-                    label: draft.title,
-                    size: DotSize.addDot,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!android)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DotSpace.s),
+                    child: Text(l10n.addWhatAndWhen, style: t.styles.rowMeta),
                   ),
-                  Expanded(
-                    child: AddTitleField(
-                      text: state.text,
-                      typed: draft.typed,
-                      onChanged: onType,
-                      onRemoveToken: onRemoveToken,
-                      onSubmit: onSubmit,
-                      onAnother: onAnother,
-                      onAddMany: onAddMany,
-                    ),
+                field,
+                // A list's when, length and landing would be one line's:
+                // hidden until the list is answered.
+                if (!many) ...[
+                  const SizedBox(height: DotSpace.m),
+                  AddQuickChips(
+                    when: whenLabel,
+                    length: lengthLabel,
+                    onWhen: onWhen,
+                    onMore: android ? null : onMore,
                   ),
+                  if (landsAt case final l?) ...[
+                    const SizedBox(height: DotSpace.m),
+                    l,
+                  ],
                 ],
-              ),
-              // A list's when and length would be one line's: hidden
-              // until the list is answered.
-              if (!many)
-                AddQuickChips(
-                  when: whenLabel,
-                  length: lengthLabel,
-                  onMore: onMore,
-                ),
-            ],
+                const SizedBox(height: DotSpace.m),
+                if (android)
+                  AddMinimalFoot(onMore: many ? null : onMore, onAdd: add)
+                else
+                  const AddManyHint(),
+              ],
+            ),
           ),
-        ),
-        AddMinimalFooter(
-          onAdd: many ? null : onSubmit,
-          onMore: many ? null : onMore,
         ),
       ],
     );

@@ -159,6 +159,38 @@ class AppLocalizationsDe extends AppLocalizations {
       'Aufgabe hinzufügen · mehrere Zeilen für viele einfügen';
 
   @override
+  String get addMinimalTitle => 'Neue Aufgabe';
+
+  @override
+  String get addMinimalTitleAndroid => 'Aufgabe hinzufügen';
+
+  @override
+  String get addWhatAndWhen => 'Was und wann';
+
+  @override
+  String get addClear => 'Löschen';
+
+  @override
+  String addWhenDay(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String addLandsAt(String range) {
+    return 'Landet um $range';
+  }
+
+  @override
+  String get addFreeNoOverlap => 'frei, keine Überschneidung';
+
+  @override
+  String get addSeveralLines =>
+      'Mehrere Zeilen? Du siehst zuerst einen Plan. Nichts wird hinzugefügt, bevor du zustimmst.';
+
+  @override
+  String get addSeveralLinesShort => 'Mehrere Zeilen öffnen zuerst einen Plan';
+
+  @override
   String get taskMStarts => 'Beginnt';
 
   @override

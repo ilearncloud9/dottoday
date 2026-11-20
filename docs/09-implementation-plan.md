@@ -735,6 +735,7 @@ Rules for every task in M18 to M22:
   - [x] Part 6b done 2026-11-20 (ED-410): the phones' Now (Minimal opens on it; header, horizon, orb, Done and Need more time?, Also now and Next; Next up with the task after and Earlier "· not done"; an open day; Nothing else today; Day ▾). The Wake Up card folded into Now 2026-11-20 (ED-411): each morning until answered, never over Today in Minimal. Open: a real-device run.
   - [x] Part 6c done 2026-11-20 (ED-412): the Mac and web Now pane beside the 290 Day column (the Mac toolbar or the web's header; horizon with each dot's right-click menu; the 280 / 240 orb; Done · Focus · Need more time?; Also now and Next with "· 4 more"; the Add row); the Day column hidden or shown by ✕, ⌥⌘I or View, remembered per device. Open: tasks opening in the column and its compact rows (6d); a real-device run.
   - [x] Part 6d-1 done 2026-11-20 (ED-413): Minimal's task screen (ED-089, ED-216) on phones and in the Mac and web Day column (✕ or Esc back to the Day); the column's hint and no Running late. Open: 6d-2 minimal Add; a real-device run.
+  - [x] Part 6d-2 done 2026-11-20 (ED-414): minimal Add (the iPhone's Cancel · New task · Add; Android's M3 sheet; the chips; Lands at on a mini horizon; several lines plan first; More opens Create task). Open: 6e (the narrow-Mac rules and tablets); a real-device run.
 - [ ] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
   - cases: empty, dense, loading, error, long text and 200 % text;

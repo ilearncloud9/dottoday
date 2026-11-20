@@ -348,6 +348,60 @@ abstract class AppLocalizations {
   /// **'Add a task · paste several lines for many'**
   String get nowAddField;
 
+  /// Minimal Add on the iPhone (E-PhonesMinimal frame 3): the sheet's title between Cancel and Add.
+  ///
+  /// In en, this message translates to:
+  /// **'New task'**
+  String get addMinimalTitle;
+
+  /// Minimal Add on Android (E-PhonesMinimal frame 6): the M3 sheet's title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task'**
+  String get addMinimalTitleAndroid;
+
+  /// Minimal Add: the field's caption (iPhone) or label (Android), e.g. "Gym 6pm 1h".
+  ///
+  /// In en, this message translates to:
+  /// **'What and when'**
+  String get addWhatAndWhen;
+
+  /// Minimal Add on Android: the field's clear button (screen reader and tooltip).
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get addClear;
+
+  /// Minimal Add's when chip: "Today 6:00 PM".
+  ///
+  /// In en, this message translates to:
+  /// **'{day} {time}'**
+  String addWhenDay(String day, String time);
+
+  /// Minimal Add: where the task lands, over the mini horizon; {range} is bold ("6:00–7:00 PM").
+  ///
+  /// In en, this message translates to:
+  /// **'Lands at {range}'**
+  String addLandsAt(String range);
+
+  /// Minimal Add: after Lands at when nothing overlaps.
+  ///
+  /// In en, this message translates to:
+  /// **'free, no overlap'**
+  String get addFreeNoOverlap;
+
+  /// Minimal Add on the iPhone: the hint under the preview (E-PhonesMinimal frame 3).
+  ///
+  /// In en, this message translates to:
+  /// **'Several lines? You\'ll see a plan first. Nothing is added until you accept.'**
+  String get addSeveralLines;
+
+  /// Minimal Add on Android: the field's helper text (E-PhonesMinimal frame 6).
+  ///
+  /// In en, this message translates to:
+  /// **'Several lines open a plan first'**
+  String get addSeveralLinesShort;
+
   /// Minimal task screen (ED-089): caption of the start time; a tap opens the When picker.
   ///
   /// In en, this message translates to:

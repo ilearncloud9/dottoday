@@ -205,6 +205,55 @@
   "@nowAddField": {
     "description": "The Add row in the Mac and web Now pane (E-Minimal); opens Quick Add."
   },
+  "addMinimalTitle": "New task",
+  "@addMinimalTitle": {
+    "description": "Minimal Add on the iPhone (E-PhonesMinimal frame 3): the sheet's title between Cancel and Add."
+  },
+  "addMinimalTitleAndroid": "Add a task",
+  "@addMinimalTitleAndroid": {
+    "description": "Minimal Add on Android (E-PhonesMinimal frame 6): the M3 sheet's title."
+  },
+  "addWhatAndWhen": "What and when",
+  "@addWhatAndWhen": {
+    "description": "Minimal Add: the field's caption (iPhone) or label (Android), e.g. \"Gym 6pm 1h\"."
+  },
+  "addClear": "Clear",
+  "@addClear": {
+    "description": "Minimal Add on Android: the field's clear button (screen reader and tooltip)."
+  },
+  "addWhenDay": "{day} {time}",
+  "@addWhenDay": {
+    "description": "Minimal Add's when chip: \"Today 6:00 PM\".",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "addLandsAt": "Lands at {range}",
+  "@addLandsAt": {
+    "description": "Minimal Add: where the task lands, over the mini horizon; {range} is bold (\"6:00–7:00 PM\").",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "addFreeNoOverlap": "free, no overlap",
+  "@addFreeNoOverlap": {
+    "description": "Minimal Add: after Lands at when nothing overlaps."
+  },
+  "addSeveralLines": "Several lines? You'll see a plan first. Nothing is added until you accept.",
+  "@addSeveralLines": {
+    "description": "Minimal Add on the iPhone: the hint under the preview (E-PhonesMinimal frame 3)."
+  },
+  "addSeveralLinesShort": "Several lines open a plan first",
+  "@addSeveralLinesShort": {
+    "description": "Minimal Add on Android: the field's helper text (E-PhonesMinimal frame 6)."
+  },
   "taskMStarts": "Starts",
   "@taskMStarts": {
     "description": "Minimal task screen (ED-089): caption of the start time; a tap opens the When picker."

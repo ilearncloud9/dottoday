@@ -158,6 +158,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nowAddField => 'Añadir una tarea · pega varias líneas para varias';
 
   @override
+  String get addMinimalTitle => 'Nueva tarea';
+
+  @override
+  String get addMinimalTitleAndroid => 'Añadir una tarea';
+
+  @override
+  String get addWhatAndWhen => 'Qué y cuándo';
+
+  @override
+  String get addClear => 'Borrar';
+
+  @override
+  String addWhenDay(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String addLandsAt(String range) {
+    return 'Queda a las $range';
+  }
+
+  @override
+  String get addFreeNoOverlap => 'libre, sin solapamiento';
+
+  @override
+  String get addSeveralLines =>
+      '¿Varias líneas? Verás primero un plan. No se añade nada hasta que aceptes.';
+
+  @override
+  String get addSeveralLinesShort => 'Varias líneas abren primero un plan';
+
+  @override
   String get taskMStarts => 'Empieza';
 
   @override

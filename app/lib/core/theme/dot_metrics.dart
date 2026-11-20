@@ -220,6 +220,12 @@ abstract final class DotSize {
   // The whole horizon is one tap target (opens Today), 48 as drawn.
   static const double horizonHeight = 48;
 
+  /// Minimal Add's "Lands at" marker on its mini horizon (ED-217: 22,
+  /// a 4 px ring), and the strip's height with its hour label.
+  static const double landingMarker = 22;
+  static const double landingRing = 4;
+  static const double landingStrip = 44;
+
   /// Minimal's orb, the large now-dot (E rules §5.3, ED-106): 236 on the
   /// iPhone, 228 on Android; drawn on a 232 viewBox.
   static const double orbIphone = 236;

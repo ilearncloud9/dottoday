@@ -154,7 +154,7 @@ void main() {
   testWidgets('Minimal: off (docs/14 §3)', (tester) async {
     await _pump(tester, energyHistory(), layout: UiLayout.minimal);
     await _add(tester, 'Write report 3pm');
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     expect(find.textContaining('high-energy'), findsNothing);
   });

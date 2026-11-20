@@ -5358,6 +5358,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, approved with the part:** a task ahead shows its times without "· next"; the column's chips read "+5 min" (board "+5"); Tomorrow and Later are filled quiet buttons; one More options line everywhere; no "· Undo after"; Break it down is reached through More options; the More options chevron doesn't mirror in RTL (as every chevron today); the full editor is the panel's at 290.
 - **Checks:** task_m_test (6), 5 goldens; the 14 minimal task sheet goldens, the Now pane and Mac places goldens and the editor panel test updated; the old minimal tiles removed from `SheetActions`. Analyze and format clean; 7424 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-414 · M19.6 part 6d-2: minimal Add
+- **Date:** 2026-11-20. **Owner:** "Start 6d-2"; More → "Create task" (asked: it opened the When step as built); then "Approve 6d-2" after the review page.
+- **Native first, checked:** the iPhone's sheet nav bar (Cancel · New task · Add); Android's M3 sheet with an outlined field, helper text and an `OverflowBar` foot.
+- **Built (E-PhonesMinimal frames 3 and 6; ED-152, ED-206 7a, ED-217; docs/14 §4):** the iPhone's content-sized sheet with Cancel · New task · Add, "What and when" over a filled field with the task's dot (Manrope 600 20); Android's "Add a task", an outlined "What and when" field with clear and "Several lines open a plan first", More options and Add at the foot. The chips "Today 6:00 PM" (with its clock) and "1 h" open the When step, as before; the iPhone's More at the row's end. "Lands at 6:00 PM – 7:00 PM · free, no overlap" (or "overlaps …") over a mini horizon (`LandingStrip`: the day's other tasks at 45 %, CR-133; the 22 px / 4 px marker with its hour; hidden from screen readers). The iPhone's "Several lines? You'll see a plan first. Nothing is added until you accept." Add waits for text and for a list's answer ("Add 3 tasks?"); several lines go to Brain dump's plan, nothing written before Accept.
+- **More / More options:** the detailed Create task with what was typed (colour, icon, repeat, alerts, notes), as the board's note says; the When step stays on the chips. The Mac and web in Minimal open the same sheet.
+- **Large text:** the chips and More wrap; Android's Add drops under More options.
+- **Departures, approved with the part:** the parsed-word chips ("6pm ×") and "Type a time too" stay under the field; the range in the app's format; the strip's rings at the horizon's 14; Android's sheet has no ✕ (Back or the scrim); no keyboard in the goldens.
+- **Checks:** minimal_add_test (5), 3 in-app goldens; the Add tests reach When through the length chip; 26 goldens updated. Analyze and format clean; 7432 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

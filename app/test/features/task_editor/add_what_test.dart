@@ -108,10 +108,11 @@ void main() {
     final repo = await pumpAddHost(tester, rows: _history());
     await expectA11yGuidelines(tester);
     await tester.enterText(_title, 'Nope');
-    await tester.tap(find.byTooltip('Close'));
+    // Android's M3 sheet has no ✕: Back closes it (E-PhonesMinimal 6).
+    await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     expect(_added(repo, 'Nope'), isNull);
-    expect(find.text('More'), findsNothing);
+    expect(find.text('More options'), findsNothing);
   });
 }
 
@@ -176,7 +177,7 @@ void _a11yMatrix() {
     ]) {
       testWidgets('A1 a11y ${mode.name} $name', (tester) async {
         await _pumpHost(tester, size: size, mode: mode);
-        expect(find.text('More'), findsOneWidget);
+        expect(find.text('More options'), findsOneWidget);
         await expectA11yGuidelines(tester);
         // The token-chip state too.
         await tester.enterText(_title, 'Go shopping 5pm 1h');
@@ -195,6 +196,6 @@ void _a11yMatrix() {
     );
     final e = tester.takeException();
     expect(e, isNull);
-    expect(find.text('More'), findsOneWidget);
+    expect(find.text('More options'), findsOneWidget);
   });
 }

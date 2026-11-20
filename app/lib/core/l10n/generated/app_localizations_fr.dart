@@ -159,6 +159,38 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ajouter une tâche · collez plusieurs lignes pour plusieurs';
 
   @override
+  String get addMinimalTitle => 'Nouvelle tâche';
+
+  @override
+  String get addMinimalTitleAndroid => 'Ajouter une tâche';
+
+  @override
+  String get addWhatAndWhen => 'Quoi et quand';
+
+  @override
+  String get addClear => 'Effacer';
+
+  @override
+  String addWhenDay(String day, String time) {
+    return '$day $time';
+  }
+
+  @override
+  String addLandsAt(String range) {
+    return 'Arrive à $range';
+  }
+
+  @override
+  String get addFreeNoOverlap => 'libre, sans chevauchement';
+
+  @override
+  String get addSeveralLines =>
+      'Plusieurs lignes ? Vous verrez d’abord un plan. Rien n’est ajouté avant que vous acceptiez.';
+
+  @override
+  String get addSeveralLinesShort => 'Plusieurs lignes ouvrent d’abord un plan';
+
+  @override
   String get taskMStarts => 'Début';
 
   @override

@@ -10,7 +10,7 @@ import 'add_harness.dart';
 Future<void> _toWhen(WidgetTester tester, String text) async {
   await tester.enterText(addTitle, text);
   await tester.pump();
-  await tester.tap(find.text('More'));
+  await tester.tap(find.byType(ActionChip).last);
   await tester.pumpAndSettle();
 }
 
@@ -119,7 +119,7 @@ void main() {
     await tester.tap(find.text('Add another'));
     await tester.pumpAndSettle();
     expect(addedRow(repo, 'Pack'), isNotNull);
-    expect(find.text('More'), findsOneWidget);
+    expect(find.text('More options'), findsOneWidget);
     expect(find.text('Pack added for 8:00 PM'), findsOneWidget);
     await _toWhen(tester, 'Shower');
     expect(find.text('8:30 PM – 9:00 PM'), findsOneWidget);

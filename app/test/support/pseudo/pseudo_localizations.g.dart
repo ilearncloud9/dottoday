@@ -142,6 +142,34 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get nowAddField => pseudo(super.nowAddField);
 
   @override
+  String get addMinimalTitle => pseudo(super.addMinimalTitle);
+
+  @override
+  String get addMinimalTitleAndroid => pseudo(super.addMinimalTitleAndroid);
+
+  @override
+  String get addWhatAndWhen => pseudo(super.addWhatAndWhen);
+
+  @override
+  String get addClear => pseudo(super.addClear);
+
+  @override
+  String addWhenDay(String day, String time) =>
+      pseudo(super.addWhenDay(day, time));
+
+  @override
+  String addLandsAt(String range) => pseudo(super.addLandsAt(range));
+
+  @override
+  String get addFreeNoOverlap => pseudo(super.addFreeNoOverlap);
+
+  @override
+  String get addSeveralLines => pseudo(super.addSeveralLines);
+
+  @override
+  String get addSeveralLinesShort => pseudo(super.addSeveralLinesShort);
+
+  @override
   String get taskMStarts => pseudo(super.taskMStarts);
 
   @override

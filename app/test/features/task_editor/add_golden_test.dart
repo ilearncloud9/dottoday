@@ -165,7 +165,8 @@ void main() {
   );
   // A2 (`A-ios-add-when`): More from "Go shopping 5pm".
   const when = AddRequest(languageCode: 'en', text: 'Go shopping 5pm');
-  Future<void> toWhen(WidgetTester tester) => tester.tap(find.text('More'));
+  Future<void> toWhen(WidgetTester tester) =>
+      tester.tap(find.byType(ActionChip).last);
   goldenMatrix(
     'add_when',
     height: 844,
@@ -182,7 +183,7 @@ void main() {
   );
   // A3 (`A-ios-add-duration`): DURATION ⋯ at 1 h 30 from step 2.
   Future<void> toDuration(WidgetTester tester) async {
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('1.5h'));
     await tester.pumpAndSettle();
@@ -208,7 +209,7 @@ void main() {
   );
   // A4 (`A-ios-add-time-menu`): the TIME ⋯ menu open.
   Future<void> toMenu(WidgetTester tester) async {
-    await tester.tap(find.text('More'));
+    await tester.tap(find.byType(ActionChip).last);
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('More time options'));
   }
@@ -254,9 +255,9 @@ void main() {
       widths: const {'compact', 'expanded'},
       a11yVariants: true,
       act: (t) async {
-        await t.ensureVisible(find.text('More'));
+        await t.ensureVisible(find.byType(ActionChip).last);
         await t.pumpAndSettle();
-        await t.tap(find.text('More'));
+        await t.tap(find.byType(ActionChip).last);
         await t.pumpAndSettle();
         if (!open) return;
         // At the largest text the line sits below the step's lazy fold:
