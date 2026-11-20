@@ -75,3 +75,13 @@ class GridCueLine extends StatelessWidget {
     );
   }
 }
+
+/// A full-width line across a day column at [y], [width] thick (the
+/// hour lines, the now line).
+Widget gridLine(Color color, double y, double width) => Positioned(
+  left: 0,
+  right: 0,
+  top: y - width / 2,
+  height: width,
+  child: ColoredBox(color: color),
+);

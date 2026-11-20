@@ -19,6 +19,7 @@ import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_learned_lines.dart';
 import 'package:dottoday/features/task_editor/add/widgets/add_routine_chips.dart';
 import 'package:dottoday/features/task_editor/add/widgets/habit_list.dart';
+import 'package:dottoday/shared/dot/done_circle.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/feedback/paste_confirm.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
@@ -112,6 +113,17 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
               : TaskIcon.fromKey(draft.icon),
           card: android,
           onLook: (at) => unawaited(pick.look(anchor: at)),
+          // Added already done (E-Phones ED-140); not for a repeating
+          // task, whose first time alone would be.
+          trailing: draft.rrule != null
+              ? null
+              : DoneCircle(
+                  color: TaskColor.fromKey(draft.color),
+                  done: draft.details.done,
+                  // Named before there is a title to name it by.
+                  title: draft.title.isEmpty ? l10n.sheetDone : draft.title,
+                  onTap: () => pick.toggleDone(),
+                ),
           summary: range == null
               ? null
               : l10n.addWhenSummary(dayName, range, length),

@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
+import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -191,7 +192,10 @@ void sendToFocus(Intent intent) {
 Future<void> undoLast(WidgetRef ref) async {
   final undo = ref.read(undoServiceProvider);
   final token = undo.latest;
-  if (token != null) await undo.undo(token);
+  if (token == null) return;
+  // The toast offered this change; once undone it has nothing to offer.
+  UndoToasts.hide();
+  await undo.undo(token);
 }
 
 /// Re-applies the change the last undo reverted, if still in its window

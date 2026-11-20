@@ -10,6 +10,7 @@ import 'package:dottoday/domain/quick_add/draft_rows.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 import 'package:dottoday/domain/scheduling/learning.dart';
+import 'package:dottoday/domain/scheduling/task_progress.dart';
 import 'package:dottoday/domain/suggestions/suggestion_service.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
@@ -293,7 +294,7 @@ final class AddDraft {
             ),
         ],
       ),
-      occurrence: rows.occurrence?.copyWith(
+      occurrence: switch (rows.occurrence?.copyWith(
         colorKey: color,
         iconKey: icon,
         durationFromSteps: follows,
@@ -302,7 +303,11 @@ final class AddDraft {
         soundId: d.soundId,
         travelBufferMin: d.travelMin,
         pinned: d.pinned,
-      ),
+      )) {
+        // Done as the circle and ⌘D mark it, so the actuals match (B1).
+        final o? when d.done && rows.series == null => markDone(o, nowUtc),
+        final o => o,
+      },
     );
   }
 

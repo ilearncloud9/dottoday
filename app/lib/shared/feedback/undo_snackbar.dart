@@ -36,7 +36,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
   required VoidCallback onUndo,
 }) {
   messenger.hideCurrentSnackBar();
-  return messenger.showSnackBar(
+  final shown = messenger.showSnackBar(
     dotToast(
       messenger,
       UndoToast(
@@ -48,7 +48,27 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
         expired: l10n.failureUndoExpired,
       ),
     ),
+    // Reduce Motion: it appears and goes without sliding (ED-281).
+    snackBarAnimationStyle:
+        MediaQuery.maybeDisableAnimationsOf(messenger.context) ?? false
+        ? AnimationStyle.noAnimation
+        : null,
   );
+  UndoToasts._shown = shown;
+  return shown;
+}
+
+/// The Undo toast on screen, so ⌘Z / Ctrl+Z can put it away once it has
+/// undone the change the toast offered (ED-281).
+abstract final class UndoToasts {
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _shown;
+
+  /// Closes the toast showing now, if any.
+  static void hide() {
+    final shown = _shown;
+    _shown = null;
+    shown?.close();
+  }
 }
 
 /// [body] on the toast surface (E-R2-7): floating above the bottom row on
@@ -88,14 +108,19 @@ SnackBar dotToast(ScaffoldMessengerState messenger, Widget body) {
   final apple = appleChrome(context);
   final width = apple ? DotSize.toastWide : DotSize.toastWideMaterial;
   final start = _navigationWidth(context, window);
+  // Android tablets: the M3 snackbar at the start of the content (E-R2-7);
+  // the iPad, the Mac and the web centre it under the content.
+  final android = !webChrome(context) && !apple;
   final side = ((window - start - width) / 2).clamp(DotSpace.l, window);
+  final lead = android ? DotSpace.l : side;
+  final trail = (window - start - lead - width).clamp(DotSpace.l, window);
   return SnackBar(
     content: body,
     persist: true,
     padding: padding,
     margin: EdgeInsetsDirectional.only(
-      start: start + side,
-      end: side,
+      start: start + lead,
+      end: trail,
       bottom: DotSpace.l,
     ),
   );

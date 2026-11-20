@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/week/grid_block_lines.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class WeekCard extends StatefulWidget {
     this.onOpen,
     this.onCue,
     this.onMove,
+    this.onDone,
     this.focusNode,
     super.key,
   });
@@ -61,6 +63,10 @@ class WeekCard extends StatefulWidget {
   /// a focused block, and the screen reader's move actions.
   final void Function({int steps, int days})? onMove;
 
+  /// The done circle at the block's end, at touch sizes (E-R2-5, ED-276):
+  /// done, or reopened when it is done, with Undo. Null: no circle.
+  final VoidCallback? onDone;
+
   /// The block's focus, from [GridFocusTarget] so the arrow keys reach it.
   final FocusNode? focusNode;
 
@@ -79,6 +85,18 @@ class _WeekCardState extends State<WeekCard> {
 
   /// Tall enough for the cue under the title and time (an hour).
   double get _cueRoom => _scale.hour - DotSpace.s;
+
+  /// The done circle: tasks only (not calendar events), tall enough for
+  /// its touch target, not on the dragged copy, and not in a narrow
+  /// overlap lane, where it would leave the title no room (done there by
+  /// the docked editor).
+  VoidCallback? get _circle =>
+      _task.imported ||
+          widget.lifted ||
+          widget.narrow ||
+          widget.height < DotTouch.android
+      ? null
+      : widget.onDone;
 
   /// Blocks that drag (ED-116); calendar events stay as they are.
   bool get _eligible => _task.movable && !_task.imported;
@@ -114,7 +132,22 @@ class _WeekCardState extends State<WeekCard> {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: _tapTarget(l10n, shape)),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _tapTarget(l10n, shape)),
+              if (_circle case final done?)
+                DoneCircle(
+                  color: _task.color,
+                  done: _task.state == DotState.done,
+                  live: _task.state == DotState.live,
+                  title: _task.title,
+                  onTap: done,
+                ),
+            ],
+          ),
+        ),
         if (cueLine) GridCueLine(text: cue, onTap: widget.onCue!),
       ],
     );

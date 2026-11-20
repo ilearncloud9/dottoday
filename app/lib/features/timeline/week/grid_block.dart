@@ -19,6 +19,7 @@ class GridBlock extends StatelessWidget {
     this.slot,
     this.onCue,
     this.onMove,
+    this.onDone,
     super.key,
   });
 
@@ -30,6 +31,9 @@ class GridBlock extends StatelessWidget {
   final VoidCallback onOpen;
   final VoidCallback? onCue;
   final void Function({int steps, int days})? onMove;
+
+  /// Done or reopened by its circle, at touch sizes (ED-276).
+  final VoidCallback? onDone;
 
   /// Its day and start, for the arrow keys between blocks ([GridFocus]).
   final GridSlot? slot;
@@ -45,6 +49,7 @@ class GridBlock extends StatelessWidget {
     onOpen: onOpen,
     onCue: onCue,
     onMove: onMove,
+    onDone: onDone,
   );
 
   @override

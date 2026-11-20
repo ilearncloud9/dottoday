@@ -7,7 +7,8 @@ import 'package:dottoday/domain/recurrence/repeat_rule.dart';
 typedef RepeatPick = ({RepeatRule? rule});
 
 /// The choices Create task's form adds to a typed title (ED-140, M19.3):
-/// Repeat, Alerts, Energy, Notes, and ⋯'s Sound, Travel time and Pinned.
+/// Repeat, Alerts, Energy, Notes, ⋯'s Sound, Travel time and Pinned, and
+/// the header's done circle (added already done, M19.5).
 /// All are written with the task in one write; none needs a second save.
 ///
 /// ```dart
@@ -22,6 +23,7 @@ final class AddDetails {
     this.soundId,
     this.travelMin = 0,
     this.pinned = false,
+    this.done = false,
   });
 
   /// The picked repeat; null keeps what was typed ("every Monday").
@@ -37,6 +39,10 @@ final class AddDetails {
   final int travelMin;
   final bool pinned;
 
+  /// Added already done (the header's circle, E-Phones ED-140). A
+  /// repeating task can't be: only its first time would be.
+  final bool done;
+
   /// Notes as stored: blank is none.
   String? get storedNotes => notes.trim().isEmpty ? null : notes.trim();
 
@@ -48,6 +54,7 @@ final class AddDetails {
     String? Function()? soundId,
     int? travelMin,
     bool? pinned,
+    bool? done,
   }) => AddDetails(
     repeat: repeat == null ? this.repeat : repeat(),
     alerts: alerts == null ? this.alerts : alerts(),
@@ -56,5 +63,6 @@ final class AddDetails {
     soundId: soundId == null ? this.soundId : soundId(),
     travelMin: travelMin ?? this.travelMin,
     pinned: pinned ?? this.pinned,
+    done: done ?? this.done,
   );
 }

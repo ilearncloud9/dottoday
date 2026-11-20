@@ -25,6 +25,7 @@ import 'package:dottoday/features/timeline/week/week_header.dart';
 import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/features/timeline/week/week_tasks.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/workspace/inspector_pick.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -226,7 +227,7 @@ class WeekView extends ConsumerWidget {
       onMove: (id, minutes, days) {
         final start = _find(ref, id)?.startUtc;
         if (start == null) return;
-        final to = _shifted(zone, start, minutes: minutes, days: days);
+        final to = shiftedLocal(zone, start, minutes: minutes, days: days);
         unawaited(_move(context, ref, id, to, time));
       },
       // In the Workspace a click picks into the inspector and a second
@@ -237,6 +238,13 @@ class WeekView extends ConsumerWidget {
       onOpen: (id) => workspace
           ? InspectorPick.click(context, ref, id)
           : ref.read(editingTaskProvider.notifier).open(id),
+      // Touch sizes: each block's done circle (E-R2-5, ED-276).
+      onDone: watchTouchContent(context, ref)
+          ? (id) {
+              final o = _find(ref, id);
+              if (o != null) unawaited(markDone(context, ref, o));
+            }
+          : null,
       onCue: (id) => openWeekCue(
         context,
         ref,
@@ -244,25 +252,6 @@ class WeekView extends ConsumerWidget {
         find: (id) => _find(ref, id),
       ),
     );
-  }
-
-  /// [startUtc] moved by [minutes], and by [days] at the same local time
-  /// (DST-safe).
-  static DateTime _shifted(
-    tz.Location zone,
-    DateTime startUtc, {
-    required int minutes,
-    required int days,
-  }) {
-    final l = tz.TZDateTime.from(startUtc, zone);
-    return tz.TZDateTime(
-      zone,
-      l.year,
-      l.month,
-      l.day + days,
-      l.hour,
-      l.minute,
-    ).add(Duration(minutes: minutes)).toUtc();
   }
 
   /// A task of this week or the Inbox.

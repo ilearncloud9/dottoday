@@ -26,6 +26,7 @@ class WeekDayColumn extends StatefulWidget {
     required this.onOpen,
     this.onCue,
     this.onMove,
+    this.onDone,
     this.onEmpty,
     this.proposed = const [],
     super.key,
@@ -56,6 +57,10 @@ class WeekDayColumn extends StatefulWidget {
 
   /// A card's Smallest step or Unstick cue tapped (M10.6, M10.7).
   final ValueChanged<String>? onCue;
+
+  /// Task [id]'s done circle tapped; null draws no circles (pointer
+  /// sizes, where the inspector's Done does it).
+  final ValueChanged<String>? onDone;
 
   @override
   State<WeekDayColumn> createState() => _WeekDayColumnState();
@@ -199,7 +204,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
 
   /// Today's stretch of the now line and the dot on its thread.
   List<Widget> _now(DotColors c, double y) => [
-    _line(c.nowLineToday, y, DotSpace.hairline * 1.5),
+    gridLine(c.nowLineToday, y, DotSpace.hairline * 1.5),
     Positioned(
       left: _scale.threadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
       top: y - DotSize.gridNowDot / 2,
@@ -213,14 +218,6 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       utc.difference(widget.day.axisStartUtc).inSeconds /
       60 *
       _scale.pxPerMinute;
-
-  Widget _line(Color color, double y, double width) => Positioned(
-    left: 0,
-    right: 0,
-    top: y - width / 2,
-    height: width,
-    child: ColoredBox(color: color),
-  );
 
   List<WeekCardBox> _boxes() {
     final day = widget.day;
@@ -285,6 +282,10 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     onOpen: () => widget.onOpen(task.id),
     onCue: switch (widget.onCue) {
       final cue? => () => cue(task.id),
+      null => null,
+    },
+    onDone: switch (widget.onDone) {
+      final done? => () => done(task.id),
       null => null,
     },
     onMove: switch (widget.onMove) {

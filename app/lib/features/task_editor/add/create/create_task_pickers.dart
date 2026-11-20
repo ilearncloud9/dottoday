@@ -125,6 +125,11 @@ final class CreateTaskPickers {
     );
   }
 
+  /// The header's done circle: added already done, or not (ED-140).
+  void toggleDone() => _flow.edit(
+    (x) => x.withDetails(x.details.copyWith(done: !x.details.done)),
+  );
+
   /// Energy's menu under the pill at [at] (ED-346).
   Future<void> energy(Rect? at) async {
     final d = _draft;

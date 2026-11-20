@@ -35,3 +35,22 @@ import 'package:timezone/timezone.dart' as tz;
   }
   return (first, last <= first ? first + 1 : last);
 }
+
+/// [startUtc] moved by [minutes], and by [days] at the same local time
+/// (DST-safe).
+DateTime shiftedLocal(
+  tz.Location zone,
+  DateTime startUtc, {
+  required int minutes,
+  required int days,
+}) {
+  final l = tz.TZDateTime.from(startUtc, zone);
+  return tz.TZDateTime(
+    zone,
+    l.year,
+    l.month,
+    l.day + days,
+    l.hour,
+    l.minute,
+  ).add(Duration(minutes: minutes)).toUtc();
+}

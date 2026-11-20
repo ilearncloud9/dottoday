@@ -5289,6 +5289,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Blocked:** a Mac Settings window (26): Flutter 3.47's multi-window API is internal, debug-flag only and not for production; Settings stays a page, opened with ⌘, from the native menu (M20.7 revisits it).
 - **Checks:** native_controls_test (policy), menu tick tests, time picker per platform, the alert and menu channels answer "no bridge" in tests by default; 23 golden files re-recorded for the native controls. iOS's menus, alert and colour picker run on the iPhone simulator (iOS 26.5). Full suite 7341 pass, 31 skipped; iOS, Mac, web and Android builds compile. Not run on a real Mac, Android device or browser.
 
+### ED-406 · M19.5 part 5a: Done and Undo
+- **Date:** 2026-11-20. **Owner:** "start 19.5 also make sure that moving forward every platform native is the first considered as the document also stated"; answers: Go to date keeps the approved month everywhere (5c); the done circle reopens (not the dot), and grid blocks gain it; M19.5 in three parts (5a Done and Undo, 5b reopen and the Earlier fold, 5c change day and Go to date). Then "Approve 5a" after the review page.
+- **Native first, checked:** the Undo toast is Android's own Material snackbar; iOS and the Mac have no system toast, so it stays the approved drawn toast there (ED-194, ED-281); the done circle is task content, with no native counterpart.
+- **Built (E-R2-7, ED-281):** the toast appears and goes without sliding under Reduce Motion; on Android tablets it sits at the start of the content (440), the iPad, Mac and web keep it centred (400); ⌘Z / Ctrl+Z, once it has undone the change, closes the toast that offered it. Kept as built: the 30 s window, waiting while hovered or focused, staying with a screen reader on with Close, Escape, "too late", one toast at a time.
+- **Built (E-R2-5, ED-276; owner):** the done circle at the end of Workspace grid blocks at touch sizes (iPad, Android tablets): Done with Undo, and the same circle reopens. The Mac and web blocks have none (the inspector's Done).
+- **Built (E-Phones ED-140, M19.3 open item):** Create task's header circle adds the task already done, through the same `markDone` (completion time recorded); none for a repeating task; named "Done" for screen readers before there is a title.
+- **Departures, recorded:** E-R2-5 draws no circle on blocks (owner answer); in a 3-day or week column the circle costs the title about a word, and a block in a narrow overlap lane or shorter than the touch target has none (Done in the docked editor). ⌘Z closing the toast is not on the board.
+- **Checks:** the toast's Reduce Motion, ⌘Z and placement (4); grid_done_test (3); create_task_done_test (3); goldens re-recorded where touch blocks draw circles, Create task on phones and tablets, the Android toast. Analyze and format clean; 7353 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers
