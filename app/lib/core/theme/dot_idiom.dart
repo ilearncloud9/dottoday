@@ -45,6 +45,24 @@ bool appleChrome(BuildContext context) {
 bool macApp(BuildContext context) =>
     !kIsWeb && Theme.of(context).platform == TargetPlatform.macOS;
 
+/// Whether this is the iPhone or iPad app (not the web on an iPhone).
+bool iosApp(BuildContext context) =>
+    !kIsWeb && Theme.of(context).platform == TargetPlatform.iOS;
+
+/// Whether this is an Apple app, the Mac's or iOS's: their alerts are
+/// Cupertino's (owner, 4d: each platform's own).
+bool appleApp(BuildContext context) => macApp(context) || iosApp(context);
+
+/// Whether this is the iPad or Android tablet app rather than the Mac or
+/// the web: tablets edit in option D's panel, the Mac inspector stays a Mac
+/// and web surface (ED-273); a browser on a tablet is the web.
+bool touchApp(BuildContext context) =>
+    !kIsWeb &&
+    switch (Theme.of(context).platform) {
+      TargetPlatform.iOS || TargetPlatform.android => true,
+      _ => false,
+    };
+
 /// Whether this is the web build: compact web gets its own solid bar,
 /// never the iOS glass bar or the Android toolbar (ED-172).
 bool webChrome(BuildContext context) => kIsWeb;

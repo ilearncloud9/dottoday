@@ -6,6 +6,7 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -130,6 +131,46 @@ void main() {
         await expectLater(
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/workspace_inspector_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
+    // R2-40 (ED-346): the More rows under Notes, Energy's menu open.
+    testWidgets("golden: the inspector's More rows, ${mode.name}", (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(
+          tester,
+          mode,
+          place: '/3-days/2026-10-21',
+          steps: true,
+          size: const Size(1280, 1100),
+        );
+        await tester.tap(find.textContaining('Deep work').first);
+        await tester.pumpAndSettle();
+        // No system menu in a test: Flutter's menu, with its tick.
+        const menu = MethodChannel('dottoday/context_menu');
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              menu,
+              (_) async => throw MissingPluginException(),
+            );
+        addTearDown(
+          () => TestDefaultBinaryMessengerBinding
+              .instance
+              .defaultBinaryMessenger
+              .setMockMethodCallHandler(menu, null),
+        );
+        await tester.tap(find.text('—'));
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile(
+            'goldens/workspace_inspector_more_${mode.name}.png',
+          ),
         );
       } finally {
         debugDefaultTargetPlatformOverride = null;

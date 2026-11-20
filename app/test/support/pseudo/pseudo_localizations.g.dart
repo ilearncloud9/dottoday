@@ -106,7 +106,7 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get timeInputInvalid => pseudo(super.timeInputInvalid);
 
   @override
-  String get timeInputWheel => pseudo(super.timeInputWheel);
+  String get timeInputPick => pseudo(super.timeInputPick);
 
   @override
   String get timeInputDone => pseudo(super.timeInputDone);
@@ -2035,6 +2035,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get lookShowColours => pseudo(super.lookShowColours);
+
+  @override
+  String get lookMoreColours => pseudo(super.lookMoreColours);
 
   @override
   String get iconSearchHint => pseudo(super.iconSearchHint);
@@ -4318,6 +4321,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String routineMoveUp(String title) => pseudo(super.routineMoveUp(title));
+
+  @override
+  String routineStepLength(String title) =>
+      pseudo(super.routineStepLength(title));
 
   @override
   String routineMoveDown(String title) => pseudo(super.routineMoveDown(title));

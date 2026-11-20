@@ -102,6 +102,7 @@
 		EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */; };
 		C3A1E7D24F8B6A9D0E2C5F31 /* ContextMenuBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */; };
 		A7C3E9F14B2D6A8E0C5F3B71 /* ColourSamplerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D4F0A25C3E7B9F1D6A4C82 /* ColourSamplerBridge.swift */; };
+		A8BC26DA5E7F9A013C4D5E89 /* AlertBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CD37EB6F8A0B124D5E6F9A /* AlertBridge.swift */; };
 		E5C3A9F46B0D8C1F2A4E7B53 /* WindowMaterialBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D4BA057C1E9D20AB5F8C64 /* WindowMaterialBridge.swift */; };
 		EC419A2A0FF236AA1C768A15 /* clear_smile.caf in Resources */ = {isa = PBXBuildFile; fileRef = 728EA0968EB413640CA48432 /* clear_smile.caf */; };
 		EEE1F91BF9973ECC1A9EFF7A /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 768A5D1719066B54E4DE2C58 /* start_lovingly.caf */; };
@@ -164,6 +165,7 @@
 		0428686613BE33AFBECCA17F /* play_chick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_chick.caf; path = ../ios/Runner/Sounds/play_chick.caf; sourceTree = SOURCE_ROOT; };
 		D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContextMenuBridge.swift; sourceTree = "<group>"; };
 		B8D4F0A25C3E7B9F1D6A4C82 /* ColourSamplerBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColourSamplerBridge.swift; sourceTree = "<group>"; };
+		B9CD37EB6F8A0B124D5E6F9A /* AlertBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlertBridge.swift; sourceTree = "<group>"; };
 		F6D4BA057C1E9D20AB5F8C64 /* WindowMaterialBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WindowMaterialBridge.swift; sourceTree = "<group>"; };
 		064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IntentQueueBridge.swift; sourceTree = "<group>"; };
 		084D50A246138E8BBF21F2F1 /* play_horse.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_horse.caf; path = ../ios/Runner/Sounds/play_horse.caf; sourceTree = SOURCE_ROOT; };
@@ -395,6 +397,7 @@
 				064113D26C4B8C6EC4357132 /* IntentQueueBridge.swift */,
 				D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */,
 				B8D4F0A25C3E7B9F1D6A4C82 /* ColourSamplerBridge.swift */,
+				B9CD37EB6F8A0B124D5E6F9A /* AlertBridge.swift */,
 				F6D4BA057C1E9D20AB5F8C64 /* WindowMaterialBridge.swift */,
 			);
 			path = Runner;
@@ -834,6 +837,7 @@
 				EA0ECF4143D7501174EC83E3 /* IntentQueueBridge.swift in Sources */,
 				C3A1E7D24F8B6A9D0E2C5F31 /* ContextMenuBridge.swift in Sources */,
 				A7C3E9F14B2D6A8E0C5F3B71 /* ColourSamplerBridge.swift in Sources */,
+				A8BC26DA5E7F9A013C4D5E89 /* AlertBridge.swift in Sources */,
 				E5C3A9F46B0D8C1F2A4E7B53 /* WindowMaterialBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

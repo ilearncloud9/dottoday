@@ -16,6 +16,7 @@ import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
 import 'package:dottoday/shared/layout/layout_switch.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -53,87 +54,89 @@ class TodayMenu extends ConsumerWidget {
     final low = watchLowEnergy(ref);
     final l10n = context.l10n;
     if (!watchOnScreen(ref, FeatureId.dayMenuExtras)) {
-      return PopupMenuButton<void>(
+      return DotMenuButton<VoidCallback>(
         tooltip: l10n.timelineMenu,
         icon: button == null
             ? DotIcon(DotGlyphs.more, color: t.colors.text)
             : null,
         child: button,
-        itemBuilder: (context) => [
-          PopupMenuItem<void>(
-            onTap: () => setLayout(context, minimal: false),
-            child: Text(l10n.layoutShowEverything),
+        onSelected: (run) => run(),
+        entries: () => [
+          ContextMenuEntry(
+            value: () => setLayout(context, minimal: false),
+            label: l10n.layoutShowEverything,
           ),
-          PopupMenuItem<void>(
-            onTap: () => toggleLowEnergy(context, on: !low),
-            child: Text(low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode),
+          ContextMenuEntry(
+            value: () => toggleLowEnergy(context, on: !low),
+            label: low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode,
           ),
-          PopupMenuItem<void>(
-            onTap: () => context.go(AppRoutes.settings),
-            child: Text(l10n.navSettings),
+          ContextMenuEntry(
+            value: () => context.go(AppRoutes.settings),
+            label: l10n.navSettings,
           ),
         ],
       );
     }
-    return PopupMenuButton<void>(
+    return DotMenuButton<VoidCallback>(
       tooltip: l10n.timelineMenu,
       icon: button == null
           ? DotIcon(DotGlyphs.more, color: t.colors.text)
           : null,
       child: button,
-      itemBuilder: (context) => [
-        PopupMenuItem<void>(
-          onTap: () => setLayout(context, minimal: true),
-          child: Text(l10n.layoutShowLess),
+      onSelected: (run) => run(),
+      entries: () => [
+        ContextMenuEntry(
+          value: () => setLayout(context, minimal: true),
+          label: l10n.layoutShowLess,
         ),
         if (date == today) ...[
           if (withLate)
-            PopupMenuItem<void>(
-              onTap: () => unawaited(showRunningLateSheet(context, today)),
-              child: Text(l10n.todayMenuLate),
+            ContextMenuEntry(
+              value: () => unawaited(showRunningLateSheet(context, today)),
+              label: l10n.todayMenuLate,
             ),
-          PopupMenuItem<void>(
-            onTap: () => unawaited(showDayReviewSheet(context, today)),
-            child: Text(l10n.todayMenuReview),
+          ContextMenuEntry(
+            value: () => unawaited(showDayReviewSheet(context, today)),
+            label: l10n.todayMenuReview,
           ),
           // Brain dump (11 B4, M12.5): everything on your mind → a plan.
-          PopupMenuItem<void>(
-            onTap: () => unawaited(showBrainDump(context, today)),
-            child: Text(l10n.dumpTitle),
+          ContextMenuEntry(
+            value: () => unawaited(showBrainDump(context, today)),
+            label: l10n.dumpTitle,
           ),
           // Today's one thing (15 §8, owner 2026-11-01): any time of day.
-          PopupMenuItem<void>(
-            onTap: () => unawaited(showOneThingSheet(context)),
-            child: Text(l10n.oneThingMenu),
+          ContextMenuEntry(
+            value: () => unawaited(showOneThingSheet(context)),
+            label: l10n.oneThingMenu,
           ),
           // Low-energy mode (11 D2, M12.2): on until the next Wake Up.
-          PopupMenuItem<void>(
-            onTap: () => toggleLowEnergy(context, on: !low),
-            child: Text(low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode),
+          ContextMenuEntry(
+            value: () => toggleLowEnergy(context, on: !low),
+            label: low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode,
           ),
           // The weekly review on demand (11 D1, M12.1).
-          PopupMenuItem<void>(
-            onTap: () => unawaited(showWeekReview(context, today)),
-            child: Text(l10n.weekReviewTitle),
+          ContextMenuEntry(
+            value: () => unawaited(showWeekReview(context, today)),
+            label: l10n.weekReviewTitle,
           ),
         ],
-        PopupMenuItem<void>(
-          onTap: () => unawaited(showDuplicateDaySheet(context, source: date)),
-          child: Text(l10n.todayMenuDuplicate),
+        ContextMenuEntry(
+          value: () => unawaited(showDuplicateDaySheet(context, source: date)),
+          label: l10n.todayMenuDuplicate,
         ),
-        PopupMenuItem<void>(
-          onTap: () => unawaited(copyDayAsText(context, date)),
-          child: Text(l10n.todayMenuCopyText),
+        ContextMenuEntry(
+          value: () => unawaited(copyDayAsText(context, date)),
+          label: l10n.todayMenuCopyText,
         ),
         // Routines (11 C2, M11.4): drop one on this day.
-        PopupMenuItem<void>(
-          onTap: () => unawaited(
+        ContextMenuEntry(
+          value: () => unawaited(
             context.push(
               AppRoutes.settingsPage(SettingsPage.routines),
               extra: date,
             ),
           ),
-          child: Text(l10n.routinesMenu),
+          label: l10n.routinesMenu,
         ),
         ...debugMenuItems(context),
       ],

@@ -5,6 +5,8 @@ import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// Step lengths offered in the editor (minutes).
@@ -149,6 +151,7 @@ class RoutineStepRow extends StatelessWidget {
             const SizedBox(width: DotSpace.s),
             Expanded(
               child: TextField(
+                contextMenuBuilder: systemTextMenu,
                 controller: step.name,
                 maxLength: maxTitleLength,
                 decoration: InputDecoration(
@@ -167,21 +170,41 @@ class RoutineStepRow extends StatelessWidget {
           ),
           child: Row(
             children: [
-              DropdownButton<int>(
-                value: step.durationMin,
-                underline: const SizedBox.shrink(),
-                items: [
+              // The system menu on the Mac and iOS (native pass).
+              DotMenuButton<int>(
+                tooltip: l10n.routineStepLength(title),
+                entries: () => [
                   for (final m in lengths)
-                    DropdownMenuItem(
+                    ContextMenuEntry(
                       value: m,
-                      child: Text(formatDurationShort(l10n, m)),
+                      label: formatDurationShort(l10n, m),
+                      checked: m == step.durationMin,
                     ),
                 ],
-                onChanged: (m) {
-                  if (m == null) return;
+                onSelected: (m) {
                   step.durationMin = m;
                   onChanged();
                 },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DotSpace.s,
+                    vertical: DotSpace.s + DotSpace.xxs,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: DotSpace.xs,
+                    children: [
+                      Text(
+                        formatDurationShort(l10n, step.durationMin),
+                        style: DotTheme.of(context).styles.body,
+                      ),
+                      DotIcon(
+                        DotGlyphs.chevronDown,
+                        color: DotTheme.of(context).colors.muted,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const Spacer(),
               _Icon(DotGlyphs.chevronUp, l10n.routineMoveUp(title), onUp),

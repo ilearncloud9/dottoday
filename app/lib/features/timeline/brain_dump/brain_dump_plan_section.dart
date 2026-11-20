@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// The Plan panel's Brain dump (E-FullA-v2, ED-184): everything on your
@@ -42,6 +43,7 @@ class _BrainDumpPlanSectionState extends State<BrainDumpPlanSection> {
       spacing: DotSpace.s,
       children: [
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           minLines: 3,
           maxLines: 6,

@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/task_icon_grid.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// A task's colour and icon as one value (the colour and icon pickers,
@@ -111,6 +112,7 @@ class _SearchFieldState extends State<_SearchField> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return TextField(
+      contextMenuBuilder: systemTextMenu,
       controller: _controller,
       style: t.styles.rowTitle,
       textInputAction: TextInputAction.search,

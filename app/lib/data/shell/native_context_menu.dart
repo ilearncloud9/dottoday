@@ -8,9 +8,17 @@ final class NativeMenuItem {
     this.symbol,
     this.enabled = true,
     this.shortcut,
+    this.checked = false,
+    this.divided = false,
   });
 
+  /// A separator before this item (a new group).
+  final bool divided;
+
   final String label;
+
+  /// Ticked: the pop-up's current choice (R2-40, ED-346).
+  final bool checked;
 
   /// An SF Symbol name (ED-260).
   final String? symbol;
@@ -25,6 +33,8 @@ final class NativeMenuItem {
       'label': label,
       'symbol': symbol,
       'enabled': enabled,
+      'checked': checked,
+      'divided': divided,
       if (key != null) ...{
         'key': _keyName(key.trigger),
         'command': key.meta,
@@ -60,8 +70,10 @@ final class NativeMenuMissing extends NativeMenuResult {
   const NativeMenuMissing();
 }
 
-/// The Mac's NSMenu over `dottoday/context_menu` (macos/Runner
-/// `ContextMenuBridge.swift`, ED-239, CR-098).
+/// The system menu over `dottoday/context_menu`: the Mac's NSMenu
+/// (macos/Runner `ContextMenuBridge.swift`, ED-239, CR-098) and iOS's
+/// pull-down UIMenu from 17.4 (ios/Runner `ContextMenuBridge.swift`, M19.4
+/// part 4d). It answers the chosen index, or -1 when dismissed.
 abstract final class NativeContextMenu {
   static const _channel = MethodChannel('dottoday/context_menu');
 
@@ -77,7 +89,10 @@ abstract final class NativeContextMenu {
         'y': at.dy,
         'items': [for (final i in items) i.toWire()],
       });
-      return NativeMenuShown(index);
+      // -1: shown and dismissed. No answer at all is no bridge (a test, an
+      // older iOS): Flutter's menu then.
+      if (index == null) return const NativeMenuMissing();
+      return NativeMenuShown(index < 0 ? null : index);
     } on MissingPluginException {
       return const NativeMenuMissing();
     } on PlatformException {

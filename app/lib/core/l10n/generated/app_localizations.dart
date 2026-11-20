@@ -282,11 +282,11 @@ abstract class AppLocalizations {
   /// **'Type a time like 9:30 or 2pm'**
   String get timeInputInvalid;
 
-  /// Button next to the time field opening a wheel picker.
+  /// The time field's button: the platform's own time picker (the wheel on iOS, Material's on Android and the web; owner, native pass).
   ///
   /// In en, this message translates to:
-  /// **'Pick time with a wheel'**
-  String get timeInputWheel;
+  /// **'Pick a time'**
+  String get timeInputPick;
 
   /// Confirms the wheel time picker.
   ///
@@ -3863,6 +3863,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Colours…'**
   String get lookShowColours;
+
+  /// Opens the platform's own colour picker: iOS's on iPhone and iPad, the browser's on the web (native pass).
+  ///
+  /// In en, this message translates to:
+  /// **'More colours…'**
+  String get lookMoreColours;
 
   /// Search field in the task icon picker.
   ///
@@ -8225,6 +8231,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Move {title} up'**
   String routineMoveUp(String title);
+
+  /// Tooltip and screen-reader name of a routine step's length menu (native pass).
+  ///
+  /// In en, this message translates to:
+  /// **'Length of {title}'**
+  String routineStepLength(String title);
 
   /// Tooltip: move a step later.
   ///

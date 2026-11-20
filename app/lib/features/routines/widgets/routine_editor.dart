@@ -8,6 +8,8 @@ import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/domain/validation/routine_validator.dart';
 import 'package:dottoday/features/routines/widgets/routine_step_row.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
 
@@ -79,6 +81,7 @@ class _RoutineEditorState extends State<RoutineEditor> {
       spacing: DotSpace.m,
       children: [
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _name,
           decoration: InputDecoration(labelText: l10n.routineName),
           textCapitalization: TextCapitalization.sentences,
@@ -137,24 +140,14 @@ class _RoutineEditorState extends State<RoutineEditor> {
 
   Widget _anchorChoice(BuildContext context) {
     final l10n = context.l10n;
-    return SegmentedButton<RoutineAnchor>(
+    return DotSegmented<RoutineAnchor>(
       segments: [
-        ButtonSegment(
-          value: RoutineAnchor.wake,
-          label: Text(l10n.routineAnchorWake),
-        ),
-        ButtonSegment(
-          value: RoutineAnchor.time,
-          label: Text(l10n.routineAnchorTime),
-        ),
-        ButtonSegment(
-          value: RoutineAnchor.bed,
-          label: Text(l10n.routineAnchorBed),
-        ),
+        (RoutineAnchor.wake, l10n.routineAnchorWake),
+        (RoutineAnchor.time, l10n.routineAnchorTime),
+        (RoutineAnchor.bed, l10n.routineAnchorBed),
       ],
-      selected: {_anchor},
-      showSelectedIcon: false,
-      onSelectionChanged: (s) => _edit(() => _anchor = s.first),
+      selected: _anchor,
+      onChanged: (a) => _edit(() => _anchor = a),
     );
   }
 }

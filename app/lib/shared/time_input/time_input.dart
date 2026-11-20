@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/shared/feedback/field_error.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/time_input/time_wheel.dart';
 import 'package:flutter/material.dart';
 
@@ -135,6 +136,7 @@ class _TimeInputState extends State<TimeInput> {
     final l10n = context.l10n;
     final t = DotTheme.of(context);
     return TextField(
+      contextMenuBuilder: systemTextMenu,
       controller: _controller,
       focusNode: _focus,
       style: t.styles.body.copyWith(
@@ -149,11 +151,15 @@ class _TimeInputState extends State<TimeInput> {
         labelText: widget.label ?? l10n.timeInputLabel,
         hintText: l10n.timeInputHint,
         error: _invalid ? FieldError(l10n.timeInputInvalid) : null,
-        suffixIcon: widget.showWheel
+        // The Mac types times, as macOS does: no picker button there.
+        suffixIcon: widget.showWheel && !macApp(context)
             ? IconButton(
                 onPressed: _openWheel,
-                tooltip: l10n.timeInputWheel,
-                icon: const Icon(Icons.schedule),
+                tooltip: l10n.timeInputPick,
+                icon: DotIcon(
+                  DotGlyphs.clock,
+                  color: DotTheme.of(context).colors.muted,
+                ),
               )
             : null,
       ),
@@ -170,6 +176,7 @@ class _TimeInputState extends State<TimeInput> {
     return Semantics(
       label: widget.label ?? context.l10n.timeInputLabel,
       child: TextField(
+        contextMenuBuilder: systemTextMenu,
         controller: _controller,
         focusNode: _focus,
         textAlign: TextAlign.center,

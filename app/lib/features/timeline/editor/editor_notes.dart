@@ -5,6 +5,7 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/timeline/editor/editor_fields.dart';
 import 'package:dottoday/features/timeline/widgets/dictation_mic.dart';
 import 'package:dottoday/features/timeline/widgets/note_links.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -115,6 +116,7 @@ class _EditorNotesState extends ConsumerState<EditorNotes> {
   }
 
   Widget _field({String? helper, double? endPadding}) => TextField(
+    contextMenuBuilder: systemTextMenu,
     controller: _notes,
     focusNode: _focus,
     minLines: 3,

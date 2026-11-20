@@ -10,7 +10,9 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_field.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/thinking/thinking_copy.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -99,13 +101,10 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
       spacing: DotSpace.m,
       children: [
         BrainDumpField(controller: _text),
-        SegmentedButton<bool>(
-          segments: [
-            ButtonSegment(value: false, label: Text(l10n.sheetToday)),
-            ButtonSegment(value: true, label: Text(l10n.sheetTomorrow)),
-          ],
-          selected: {_tomorrow},
-          onSelectionChanged: (s) => setState(() => _tomorrow = s.first),
+        DotSegmented<bool>(
+          segments: [(false, l10n.sheetToday), (true, l10n.sheetTomorrow)],
+          selected: _tomorrow,
+          onChanged: (v) => setState(() => _tomorrow = v),
         ),
         if (_nothing) Text(l10n.dumpNothing, style: t.styles.rowMeta),
         FilledButton(
@@ -138,6 +137,7 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
         child: Text(l10n.dumpEarlier.toUpperCase(), style: t.styles.caption),
       ),
       TextField(
+        contextMenuBuilder: systemTextMenu,
         controller: _search,
         onChanged: (_) => setState(() {}),
         decoration: InputDecoration(hintText: l10n.dumpSearch),

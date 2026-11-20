@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:dottoday/features/timeline/task_d/task_d_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/task_sheet.dart';
 import 'package:dottoday/shared/layout/side_panel_frame.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +34,36 @@ class EditorPanelFrame extends ConsumerWidget {
     final proposing = ref.watch(activeProposalProvider) != null;
     // The window's class, as `openTask` decides: a task opened here
     // always shows.
-    final expanded = AppLayout.classOf(context) == WidthClass.expanded;
-    if (id == null || !expanded || proposing) return child;
+    final width = AppLayout.classOf(context);
+    // Tablets edit in the panel from medium width too (ED-274).
+    final shows =
+        width == WidthClass.expanded ||
+        (width == WidthClass.medium && tabletPanel(context, ref));
+    if (id == null || !shows || proposing) return child;
     // Docked from 1160 when Today keeps its minimum, else floating over
     // it; a resize keeps the open editor as it is (ED-167, ED-168).
     return SidePanelFrame(
       panel: TaskEditorPanel(key: ValueKey(id), id: id),
+      float: _floatOf(context),
+      onDismiss: () => ref.read(editingTaskProvider.notifier).close(),
       child: child,
     );
   }
+
+  /// The Mac and web card; the iPad's card over a dim; Android's modal
+  /// side sheet (E-R2-4, ED-274).
+  static SidePanelFloat _floatOf(BuildContext context) {
+    if (!touchApp(context)) return SidePanelFloat.card;
+    return Theme.of(context).platform == TargetPlatform.android
+        ? SidePanelFloat.edgeSheet
+        : SidePanelFloat.dimmedCard;
+  }
 }
+
+/// Whether a tablet edits in the side panel: option D's editor in Full
+/// (ED-273); Minimal keeps its own sheet below expanded (docs/14).
+bool tabletPanel(BuildContext context, WidgetRef ref) =>
+    touchApp(context) && !watchSimplified(ref, FeatureId.taskSheet);
 
 /// The panel: "EDIT TASK", esc and ×, then the editor (title, colour and
 /// icon, When / Start, duration, Repeat, Alerts, subtasks, notes, Delete ·
@@ -72,6 +93,25 @@ class _TaskEditorPanelState extends ConsumerState<TaskEditorPanel> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     void close() => ref.read(editingTaskProvider.notifier).close();
+    // Tablets: option D's editor, all of it, closing the panel (ED-273).
+    if (!minimal && touchApp(context)) {
+      return Material(
+        color: t.colors.raised,
+        child: CallbackShortcuts(
+          bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
+          child: FocusScope(
+            child: SafeArea(
+              left: false,
+              right: false,
+              child: Padding(
+                padding: const EdgeInsets.only(top: DotSpace.s),
+                child: TaskDBody(id: id, onClose: close),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return Material(
       color: t.colors.raised,
       child: CallbackShortcuts(

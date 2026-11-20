@@ -1,11 +1,13 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/look/colour_sampler.dart';
 import 'package:dottoday/shared/pickers/look/gradient_slider.dart';
 import 'package:dottoday/shared/pickers/look/look_hex.dart';
 import 'package:dottoday/shared/pickers/look/look_parts.dart';
 import 'package:dottoday/shared/pickers/look/look_preview.dart';
 import 'package:dottoday/shared/pickers/look/your_colours_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// All colours · half sheet (E-Phones-3, ED-156, ED-161): the hex beside
 /// the title (tap to type), the task as ahead · in progress · done, Colour
@@ -87,6 +89,30 @@ class LookColours extends StatelessWidget {
         ),
         const SizedBox(height: DotSpace.s),
         YourColoursRow(colour: colour, onColour: onColour),
+        // iOS's own colour picker, with its grid, spectrum and eyedropper
+        // (owner, native pass).
+        Consumer(
+          builder: (context, ref, _) {
+            final sampler = ref.watch(colourSamplerProvider);
+            if (!sampler.hasSystemPicker || !iosApp(context)) {
+              return const SizedBox.shrink();
+            }
+            return Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton(
+                // A 48 target, as every touch control here.
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(0, DotTouch.android),
+                ),
+                onPressed: () async {
+                  final c = await sampler.pickSystem(colour.color);
+                  if (c != null) _custom(c);
+                },
+                child: Text(l10n.lookMoreColours),
+              ),
+            );
+          },
+        ),
       ],
     );
   }

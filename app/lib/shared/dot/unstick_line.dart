@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// Unstick (11 B3, docs/09 M10.7): under a task moved three times with no
@@ -47,6 +48,7 @@ class _UnstickLineState extends State<UnstickLine> {
           children: [
             Expanded(
               child: TextField(
+                contextMenuBuilder: systemTextMenu,
                 controller: _text,
                 maxLength: 200,
                 textCapitalization: TextCapitalization.sentences,

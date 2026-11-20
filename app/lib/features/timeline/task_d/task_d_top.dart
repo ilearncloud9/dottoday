@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/editor/editor_leave.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +17,7 @@ class TaskDTopBar extends StatelessWidget {
     required this.leave,
     required this.onDone,
     required this.onBreakDown,
+    this.onBack,
     super.key,
   });
 
@@ -23,6 +25,9 @@ class TaskDTopBar extends StatelessWidget {
   final EditorLeave leave;
   final VoidCallback onDone;
   final VoidCallback onBreakDown;
+
+  /// Android's ←: closes the tablets' panel; null pops the sheet.
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,8 @@ class TaskDTopBar extends StatelessWidget {
           if (android) ...[
             IconButton(
               tooltip: l10n.sheetClose,
-              onPressed: () => unawaited(Navigator.of(context).maybePop()),
+              onPressed:
+                  onBack ?? () => unawaited(Navigator.of(context).maybePop()),
               icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
             ),
             Expanded(
@@ -88,7 +94,7 @@ class TaskDMenu extends ConsumerWidget {
     final l10n = context.l10n;
     final o = task.occurrence;
     final android = DotIdiom.of(context) == DotIdiom.material;
-    return PopupMenuButton<_Item>(
+    return DotMenuButton<_Item>(
       tooltip: l10n.createMore,
       icon: DotIcon(
         android ? DotGlyphs.moreVertical : DotGlyphs.more,
@@ -99,17 +105,16 @@ class TaskDMenu extends ConsumerWidget {
         _Item.inbox => unawaited(leave.toInbox(context, ref)),
         _Item.delete => unawaited(leave.delete(context, ref)),
       },
-      itemBuilder: (_) => [
-        PopupMenuItem(
-          value: _Item.breakDown,
-          child: Text(l10n.breakdownAction),
-        ),
+      entries: () => [
+        ContextMenuEntry(value: _Item.breakDown, label: l10n.breakdownAction),
         if (o.startUtc != null)
-          PopupMenuItem(
-            value: _Item.inbox,
-            child: Text(l10n.editorMoveToInbox),
-          ),
-        PopupMenuItem(value: _Item.delete, child: Text(l10n.editorDelete)),
+          ContextMenuEntry(value: _Item.inbox, label: l10n.editorMoveToInbox),
+        ContextMenuEntry(
+          value: _Item.delete,
+          label: l10n.editorDelete,
+          symbol: 'trash', // l10n-ignore: SF Symbol name
+          divided: true,
+        ),
       ],
     );
   }

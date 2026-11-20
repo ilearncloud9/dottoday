@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 
 /// One row of the When card (option D, ED-086; Create task, ED-140): an
@@ -171,7 +172,9 @@ final class TaskFormPill {
   final DotGlyph glyph;
   final String caption;
   final String value;
-  final VoidCallback onTap;
+
+  /// Tapped; the pill is at this rectangle (a menu's anchor, ED-346).
+  final ValueChanged<Rect?> onTap;
 }
 
 /// Repeat and Energy side by side; at large text they stack.
@@ -206,17 +209,18 @@ class _Pill extends StatelessWidget {
       borderRadius: BorderRadius.circular(DotRadii.pill),
       side: BorderSide(color: t.colors.outline),
     );
+    void tap() => pill.onTap(globalRectOf(context));
     return Semantics(
       button: true,
       label: context.l10n.listJoin(pill.caption, pill.value),
       excludeSemantics: true,
-      onTap: pill.onTap,
+      onTap: tap,
       child: Material(
         color: t.colors.raised,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: pill.onTap,
+          onTap: tap,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: DotSize.formRow),
             child: Padding(

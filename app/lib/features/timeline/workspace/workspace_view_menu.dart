@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,16 +33,15 @@ class ViewMenu extends ConsumerWidget {
       value: labels[selected],
       excludeSemantics: true,
       button: true,
-      child: PopupMenuButton<WorkspaceView>(
+      child: DotMenuButton<WorkspaceView>(
         tooltip: name,
-        initialValue: selected,
         onSelected: onSelect,
-        itemBuilder: (context) => [
+        entries: () => [
           for (final v in WorkspaceView.values)
-            CheckedPopupMenuItem<WorkspaceView>(
+            ContextMenuEntry(
               value: v,
+              label: labels[v]!,
               checked: v == selected,
-              child: Text(labels[v]!),
             ),
         ],
         child: Container(

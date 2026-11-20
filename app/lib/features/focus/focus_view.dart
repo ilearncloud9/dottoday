@@ -16,6 +16,7 @@ import 'package:dottoday/features/focus/focus_deep_work.dart';
 import 'package:dottoday/features/focus/focus_parts.dart';
 import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -295,13 +296,14 @@ class _TopBar extends StatelessWidget {
             ),
           ),
         ),
-        PopupMenuButton<void>(
+        DotMenuButton<VoidCallback>(
           tooltip: l10n.focusMore,
           icon: DotIcon(DotGlyphs.more, color: t.colors.text),
-          itemBuilder: (_) => [
-            PopupMenuItem(
-              onTap: () => openTask(context, id),
-              child: Text(l10n.focusOpenTask),
+          onSelected: (run) => run(),
+          entries: () => [
+            ContextMenuEntry(
+              value: () => openTask(context, id),
+              label: l10n.focusOpenTask,
             ),
           ],
         ),

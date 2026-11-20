@@ -7,8 +7,10 @@ import 'package:dottoday/domain/review/journal.dart';
 import 'package:dottoday/features/search/state/journal_state.dart';
 import 'package:dottoday/features/search/widgets/journal_day_row.dart';
 import 'package:dottoday/features/search/widgets/year_strip.dart';
+import 'package:dottoday/shared/navigation/dot_page_bar.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -46,8 +48,9 @@ class _PastDaysPageState extends ConsumerState<PastDaysPage> {
     ], onRetry: () => ref.invalidate(pastDaysProvider));
     return Scaffold(
       key: PastDaysPage._key,
-      appBar: AppBar(
-        title: Text(l10n.journalTitle),
+      appBar: dotPageBar(
+        context,
+        title: l10n.journalTitle,
         actions: [
           if (async.value case final data? when data.days.isNotEmpty)
             TextButton(
@@ -99,6 +102,7 @@ class _PastDaysPageState extends ConsumerState<PastDaysPage> {
           spacing: DotSpace.s,
           children: [
             TextField(
+              contextMenuBuilder: systemTextMenu,
               controller: _query,
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(

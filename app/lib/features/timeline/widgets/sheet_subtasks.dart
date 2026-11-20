@@ -20,6 +20,7 @@ import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/subtask_row.dart';
 import 'package:dottoday/features/timeline/widgets/subtasks_header.dart';
 import 'package:dottoday/shared/feedback/field_error.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -135,6 +136,7 @@ class _SubtasksState extends ConsumerState<SheetSubtasks> {
   }
 
   Widget _newField(BuildContext context) => TextField(
+    contextMenuBuilder: systemTextMenu,
     controller: _field,
     // "+ Add" asks for it; option D's always-there field waits for a tap.
     autofocus: !widget.quiet,

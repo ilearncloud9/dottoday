@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
@@ -116,17 +117,13 @@ class _CapSheetState extends State<_CapSheet> {
             textAlign: TextAlign.center,
             style: DotTheme.of(context).styles.rowMeta,
           ),
-        SegmentedButton<bool>(
-          showSelectedIcon: false,
+        DotSegmented<bool>(
           segments: [
-            ButtonSegment(value: true, label: Text(l10n.capEveryDay)),
-            ButtonSegment(
-              value: false,
-              label: Text(l10n.capEveryWeekday(widget.weekday)),
-            ),
+            (true, l10n.capEveryDay),
+            (false, l10n.capEveryWeekday(widget.weekday)),
           ],
-          selected: {_everyDay},
-          onSelectionChanged: (v) => setState(() => _everyDay = v.single),
+          selected: _everyDay,
+          onChanged: (v) => setState(() => _everyDay = v),
         ),
         FilledButton(
           onPressed: () => Navigator.of(

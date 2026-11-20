@@ -110,12 +110,12 @@ void main() {
     expect(h.changes, isEmpty);
   });
 
-  testWidgets('wheel only reads hour and minute (never a date)', (
+  testWidgets("iOS's wheel only reads hour and minute (never a date)", (
     tester,
   ) async {
     final h = _Harness();
     await tester.pumpWidget(h.build(value: const ClockTime(23, 30)));
-    await tester.tap(find.byTooltip('Pick time with a wheel'));
+    await tester.tap(find.byTooltip('Pick a time'));
     await tester.pumpAndSettle();
     final picker = tester.widget<CupertinoDatePicker>(
       find.byType(CupertinoDatePicker),
@@ -127,7 +127,22 @@ void main() {
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
     expect(h.changes, [const ClockTime(0, 15)]);
-  });
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets("Android's own time picker (native pass)", (tester) async {
+    final h = _Harness();
+    await tester.pumpWidget(h.build(value: const ClockTime(9, 30)));
+    await tester.tap(find.byTooltip('Pick a time'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TimePickerDialog), findsOneWidget);
+    expect(find.byType(CupertinoDatePicker), findsNothing);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('the Mac types times: no picker button', (tester) async {
+    final h = _Harness();
+    await tester.pumpWidget(h.build());
+    expect(find.byTooltip('Pick a time'), findsNothing);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('meets a11y guidelines ($mode, with error)', (tester) async {

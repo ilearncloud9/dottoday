@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/time_zones.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -47,6 +48,7 @@ class _ZonePickerState extends State<_ZonePicker> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         TextField(
+          contextMenuBuilder: systemTextMenu,
           autofocus: true,
           autocorrect: false,
           textInputAction: TextInputAction.search,

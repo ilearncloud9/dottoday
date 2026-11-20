@@ -6,6 +6,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 
 /// The tablets' + menus (E-R2-3, ED-271; G2-8): an Android tablet's +
@@ -37,42 +39,47 @@ enum AddMenu {
 /// Shows [menu] under the + that [context] belongs to and runs the pick.
 Future<void> showAddMenu(BuildContext context, AddMenu menu) async {
   final l10n = context.l10n;
-  final box = context.findRenderObject()! as RenderBox;
-  final overlay =
-      Navigator.of(context).overlay!.context.findRenderObject()! as RenderBox;
-  final at = RelativeRect.fromRect(
-    Rect.fromPoints(
-      box.localToGlobal(box.size.bottomLeft(Offset.zero), ancestor: overlay),
-      box.localToGlobal(box.size.bottomRight(Offset.zero), ancestor: overlay),
-    ),
-    Offset.zero & overlay.size,
-  );
+  final box = globalRectOf(context);
+  final rtl = Directionality.of(context) == TextDirection.rtl;
+  final at = box == null
+      ? Offset.zero
+      : (rtl ? box.bottomRight : box.bottomLeft);
   const task = AppCommandIntent(AppCommand.quickAdd);
   const dump = OpenAddIntent(AddMode.brainDump);
   const routine = OpenAddIntent(AddMode.routine);
   const paste = AppCommandIntent(AppCommand.pasteAsTasks);
-  final items = <(Intent, String, DotGlyph)>[
-    if (menu == AddMenu.modes) (task, l10n.createTabTask, DotGlyphs.add),
-    (dump, l10n.dumpTitle, DotGlyphs.edit),
-    (routine, l10n.routineDropTitle, DotGlyphs.repeat),
-    if (menu == AddMenu.hold) (paste, l10n.addMenuPasteList, DotGlyphs.sort),
-  ];
-  final t = DotTheme.of(context);
-  final picked = await showMenu<Intent>(
-    context: context,
-    position: at,
+  // SF Symbols for the system menu on the Mac and iOS (ED-260), the app's
+  // glyphs in Flutter's menu.
+  final picked = await showContextMenu<Intent>(
+    context,
+    at: at,
     semanticLabel: l10n.addMenuLabel,
-    items: [
-      for (final (intent, label, glyph) in items)
-        PopupMenuItem(
-          value: intent,
-          child: Row(
-            spacing: DotSpace.m,
-            children: [
-              DotIcon(glyph, color: t.colors.text),
-              Text(label),
-            ],
-          ),
+    entries: [
+      if (menu == AddMenu.modes)
+        ContextMenuEntry(
+          value: task,
+          label: l10n.createTabTask,
+          glyph: DotGlyphs.add,
+          symbol: 'plus', // l10n-ignore: SF Symbol name
+        ),
+      ContextMenuEntry(
+        value: dump,
+        label: l10n.dumpTitle,
+        glyph: DotGlyphs.edit,
+        symbol: 'square.and.pencil', // l10n-ignore: SF Symbol name
+      ),
+      ContextMenuEntry(
+        value: routine,
+        label: l10n.routineDropTitle,
+        glyph: DotGlyphs.repeat,
+        symbol: 'repeat', // l10n-ignore: SF Symbol name
+      ),
+      if (menu == AddMenu.hold)
+        ContextMenuEntry(
+          value: paste,
+          label: l10n.addMenuPasteList,
+          glyph: DotGlyphs.sort,
+          symbol: 'list.bullet', // l10n-ignore: SF Symbol name
         ),
     ],
   );

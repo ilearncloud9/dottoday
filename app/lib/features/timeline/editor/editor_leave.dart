@@ -4,6 +4,7 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -68,22 +69,14 @@ final class EditorLeave {
 
   Future<bool?> _confirm(BuildContext context) {
     final l10n = context.l10n;
-    return showDialog<bool>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(l10n.editorDeleteConfirm(task.title)),
-        content: Text(l10n.editorDeleteBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialog).pop(false),
-            child: Text(l10n.editorCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialog).pop(true),
-            child: Text(l10n.editorDelete),
-          ),
-        ],
-      ),
+    return showChoiceAlert<bool>(
+      context,
+      title: l10n.editorDeleteConfirm(task.title),
+      message: l10n.editorDeleteBody,
+      choices: [
+        AlertChoice(label: l10n.editorCancel, value: false, cancel: true),
+        AlertChoice(label: l10n.editorDelete, value: true, primary: true),
+      ],
     );
   }
 

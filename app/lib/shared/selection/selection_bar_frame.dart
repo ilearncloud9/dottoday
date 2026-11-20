@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/look/look_sheet.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -159,21 +160,13 @@ Future<TaskColor?> showColourChoice(BuildContext context) =>
 /// "Delete 3 tasks?": true only on Delete.
 Future<bool> confirmDeleteMany(BuildContext context, int count) async {
   final l10n = context.l10n;
-  final sure = await showDialog<bool>(
-    context: context,
-    builder: (dialog) => AlertDialog(
-      title: Text(l10n.selectionDeleteConfirm(count)),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialog).pop(false),
-          child: Text(l10n.editorCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(dialog).pop(true),
-          child: Text(l10n.selectionDelete),
-        ),
-      ],
-    ),
+  final sure = await showChoiceAlert<bool>(
+    context,
+    title: l10n.selectionDeleteConfirm(count),
+    choices: [
+      AlertChoice(label: l10n.editorCancel, value: false, cancel: true),
+      AlertChoice(label: l10n.selectionDelete, value: true, primary: true),
+    ],
   );
   return sure ?? false;
 }

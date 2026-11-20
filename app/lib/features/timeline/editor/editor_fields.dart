@@ -13,6 +13,7 @@ import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:dottoday/shared/pickers/zone_picker.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
@@ -271,6 +272,7 @@ class EditorTitleField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TextField(
+    contextMenuBuilder: systemTextMenu,
     controller: controller,
     autofocus: autofocus,
     style: DotTheme.of(context).styles.topBarTitle,

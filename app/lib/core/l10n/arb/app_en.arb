@@ -114,9 +114,9 @@
   "@timeInputInvalid": {
     "description": "Error under the time field when the text isn't a time; the previous time is kept."
   },
-  "timeInputWheel": "Pick time with a wheel",
-  "@timeInputWheel": {
-    "description": "Button next to the time field opening a wheel picker."
+  "timeInputPick": "Pick a time",
+  "@timeInputPick": {
+    "description": "The time field's button: the platform's own time picker (the wheel on iOS, Material's on Android and the web; owner, native pass)."
   },
   "timeInputDone": "Done",
   "@timeInputDone": {
@@ -3925,6 +3925,10 @@
   "@lookShowColours": {
     "description": "Mac only: opens the system Colours panel from Custom colour (ED-156)."
   },
+  "lookMoreColours": "More colours…",
+  "@lookMoreColours": {
+    "description": "Opens the platform's own colour picker: iOS's on iPhone and iPad, the browser's on the web (native pass)."
+  },
   "iconSearchHint": "Search icons",
   "@iconSearchHint": {
     "description": "Search field in the task icon picker."
@@ -6679,6 +6683,15 @@
   "routineRemoveStep": "Remove {title}",
   "@routineRemoveStep": {"description": "Tooltip: remove a step from the routine.", "placeholders": {"title": {"type": "String"}}},
   "routineMoveUp": "Move {title} up",
+  "routineStepLength": "Length of {title}",
+  "@routineStepLength": {
+    "description": "Tooltip and screen-reader name of a routine step's length menu (native pass).",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "@routineMoveUp": {"description": "Tooltip: move a step earlier.", "placeholders": {"title": {"type": "String"}}},
   "routineMoveDown": "Move {title} down",
   "@routineMoveDown": {"description": "Tooltip: move a step later.", "placeholders": {"title": {"type": "String"}}},

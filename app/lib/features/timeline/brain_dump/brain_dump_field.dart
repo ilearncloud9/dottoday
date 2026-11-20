@@ -6,6 +6,7 @@ import 'package:dottoday/data/speech/dictation_controller.dart';
 import 'package:dottoday/data/tips/seen_tips.dart';
 import 'package:dottoday/domain/speech/dictation_text.dart';
 import 'package:dottoday/features/timeline/widgets/dictation_mic.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -64,6 +65,7 @@ class _BrainDumpFieldState extends ConsumerState<BrainDumpField> {
         Stack(
           children: [
             TextField(
+              contextMenuBuilder: systemTextMenu,
               controller: widget.controller,
               focusNode: _focus,
               autofocus: true,

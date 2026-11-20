@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -74,21 +75,18 @@ class RepeatEndRow extends StatelessWidget {
       spacing: DotSpace.s,
       children: [
         Text(l10n.repeatEnds.toUpperCase(), style: t.styles.caption),
-        SegmentedButton<int>(
-          showSelectedIcon: false,
+        DotSegmented<int>(
           segments: [
-            ButtonSegment(value: 0, label: Text(l10n.repeatEndsNever)),
-            ButtonSegment(value: 1, label: Text(l10n.repeatEndsAfter)),
-            ButtonSegment(value: 2, label: Text(l10n.repeatEndsOn)),
+            (0, l10n.repeatEndsNever),
+            (1, l10n.repeatEndsAfter),
+            (2, l10n.repeatEndsOn),
           ],
-          selected: {
-            switch (end) {
-              EndsNever() => 0,
-              EndsAfter() => 1,
-              EndsOn() => 2,
-            },
+          selected: switch (end) {
+            EndsNever() => 0,
+            EndsAfter() => 1,
+            EndsOn() => 2,
           },
-          onSelectionChanged: (s) => onEnd(switch (s.single) {
+          onChanged: (v) => onEnd(switch (v) {
             1 => const EndsAfter(10),
             2 => EndsOn(DateTime(start.year, start.month + 1, start.day)),
             _ => const EndsNever(),

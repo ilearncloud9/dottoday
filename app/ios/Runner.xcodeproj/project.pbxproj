@@ -80,6 +80,9 @@
 		CBB5BF469938257C7BD106F1 /* NativeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */; };
 		CB0CCED8763B32AC93CC1005 /* NativeIPadTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */; };
 		A7E3C91D5F2B4D6E8A0C1F23 /* KeyMenusBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F4DA2E6A3C5E7F9B1D2A34 /* KeyMenusBridge.swift */; };
+		C4D8E2F61A3B5C7D9E0F1A45 /* ContextMenuBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E9F3A72B4C6D8E0F1A2B56 /* ContextMenuBridge.swift */; };
+		E6FA04B83C5D7E9F1A2B3C67 /* AlertBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AB15C94D6E8FA02B3C4D78 /* AlertBridge.swift */; };
+		C1DE48FC7A9B1C235E6F7AAB /* ColourPickerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2EF59AD8BAC2D346F7A8BBC /* ColourPickerBridge.swift */; };
 		A1D0F7C2B9E4A35D6C8E1F02 /* DotFlutterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */; };
 		A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */; };
 		A1E0BC2D094EABDDE16EC931 /* start_wind_chimes.caf in Resources */ = {isa = PBXBuildFile; fileRef = FF9A7BFB94E4F5D26D9C60FD /* start_wind_chimes.caf */; };
@@ -264,6 +267,9 @@
 		B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DotFlutterViewController.swift; sourceTree = "<group>"; };
 		8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeIPadTabs.swift; sourceTree = "<group>"; };
 		B8F4DA2E6A3C5E7F9B1D2A34 /* KeyMenusBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyMenusBridge.swift; sourceTree = "<group>"; };
+		D5E9F3A72B4C6D8E0F1A2B56 /* ContextMenuBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContextMenuBridge.swift; sourceTree = "<group>"; };
+		F7AB15C94D6E8FA02B3C4D78 /* AlertBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AlertBridge.swift; sourceTree = "<group>"; };
+		D2EF59AD8BAC2D346F7A8BBC /* ColourPickerBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColourPickerBridge.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CalendarSeriesBridge.swift; sourceTree = "<group>"; };
 		A7FF859CE408F3EF13C10DAB /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ACF2F1CC152008A2C7D4135F /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
@@ -553,6 +559,9 @@
 				6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */,
 				8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */,
 				B8F4DA2E6A3C5E7F9B1D2A34 /* KeyMenusBridge.swift */,
+				D5E9F3A72B4C6D8E0F1A2B56 /* ContextMenuBridge.swift */,
+				F7AB15C94D6E8FA02B3C4D78 /* AlertBridge.swift */,
+				D2EF59AD8BAC2D346F7A8BBC /* ColourPickerBridge.swift */,
 				B2E1A8D3CAF5B46E7D9F2A13 /* DotFlutterViewController.swift */,
 				A1B2C3D4E5F60718293A4C02 /* CalendarSeriesBridge.swift */,
 				38D6FFE543424C4973F4A138 /* Sounds */,
@@ -963,6 +972,9 @@
 				CBB5BF469938257C7BD106F1 /* NativeTabBar.swift in Sources */,
 				CB0CCED8763B32AC93CC1005 /* NativeIPadTabs.swift in Sources */,
 				A7E3C91D5F2B4D6E8A0C1F23 /* KeyMenusBridge.swift in Sources */,
+				C4D8E2F61A3B5C7D9E0F1A45 /* ContextMenuBridge.swift in Sources */,
+				E6FA04B83C5D7E9F1A2B3C67 /* AlertBridge.swift in Sources */,
+				C1DE48FC7A9B1C235E6F7AAB /* ColourPickerBridge.swift in Sources */,
 				A1D0F7C2B9E4A35D6C8E1F02 /* DotFlutterViewController.swift in Sources */,
 				A1B2C3D4E5F60718293A4C01 /* CalendarSeriesBridge.swift in Sources */,
 				FB06A964B9B1197955384188 /* WakeUpAlarmKit.swift in Sources */,

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/editor/editor_energy.dart';
 import 'package:dottoday/features/timeline/editor/editor_leave.dart';
@@ -15,13 +14,14 @@ import 'package:dottoday/features/timeline/task_d/task_d_when.dart';
 import 'package:dottoday/features/timeline/widgets/pin_row.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_subtasks.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/sheets/choice_sheet.dart';
+import 'package:dottoday/shared/pickers/energy_menu.dart';
 import 'package:dottoday/shared/task_form/task_form_rows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Repeat and Energy as pills (ED-086). Repeat opens the built repeat
-/// editor (its scope asked first, M3f.1); Energy a short list.
+/// editor (its scope asked first, M3f.1); Energy its three-item menu
+/// (ED-346).
 class TaskDPills extends StatelessWidget {
   const TaskDPills({
     required this.task,
@@ -47,7 +47,7 @@ class TaskDPills extends StatelessWidget {
           glyph: DotGlyphs.repeat,
           caption: l10n.sheetRepeat,
           value: repeatText(l10n, locale, task.series?.rrule),
-          onTap: onRepeat ?? () {},
+          onTap: (_) => (onRepeat ?? () {})(),
         ),
         TaskFormPill(
           glyph: DotGlyphs.bolt,
@@ -55,29 +55,17 @@ class TaskDPills extends StatelessWidget {
           value: energy == null
               ? l10n.formEnergyNone
               : energyLabel(l10n, energy),
-          onTap: () => unawaited(_energy(context)),
+          onTap: (at) => unawaited(_energy(context, at)),
         ),
       ],
     );
   }
 
-  /// None, Low, Medium, High; picked by index so a dismiss keeps it.
-  Future<void> _energy(BuildContext context) async {
-    final l10n = context.l10n;
-    final picked = await showChoiceSheet<int>(
-      context,
-      title: l10n.editorEnergy,
-      selected: draft.energy?.index ?? -1,
-      options: [
-        (value: -1, label: l10n.formEnergyNone, detail: null),
-        for (final e in Energy.values)
-          (value: e.index, label: energyLabel(l10n, e), detail: null),
-      ],
-    );
+  /// Energy's menu under its pill; the ticked level clears (ED-346).
+  Future<void> _energy(BuildContext context, Rect? at) async {
+    final picked = await pickEnergy(context, at: at, current: draft.energy);
     if (picked == null) return;
-    change(
-      (o) => o.copyWith(energy: picked < 0 ? null : Energy.values[picked]),
-    );
+    change((o) => o.copyWith(energy: picked.energy));
   }
 }
 

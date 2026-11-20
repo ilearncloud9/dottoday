@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/sheets/sheet_header.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Widest an [AppSheet] popover gets on large screens.
@@ -15,7 +16,8 @@ const double _fullHeightShare = 0.94;
 
 /// Shows [builder]'s content as a bottom sheet on compact widths and as a
 /// centred popover from [WidthClass.mediumFrom] up (docs/03 §3.3,
-/// §6). Chosen by available width, never by platform.
+/// §6). Layout follows the width; on an iPhone a full-height sheet is
+/// iOS's own card sheet (native pass).
 ///
 /// Both dismiss with a swipe/tap outside/Esc and return [T] when popped
 /// with a value.
@@ -39,6 +41,19 @@ Future<T?> showAppSheet<T>({
 }) {
   final size = MediaQuery.sizeOf(context);
   final wide = size.width >= WidthClass.mediumFrom;
+  // iOS's own card sheet for a full-height sheet on iPhone (owner, native
+  // pass): the screen behind recedes and the card drags down to close.
+  // Half-height sheets keep their medium detent below, which iOS's card
+  // sheet in Flutter doesn't have.
+  if (fullHeight && !wide && iosApp(context)) {
+    return showCupertinoSheet<T>(
+      context: context,
+      scrollableBuilder: (sheet, _) => Material(
+        color: DotTheme.of(sheet).colors.sheet,
+        child: SafeArea(top: false, child: Builder(builder: builder)),
+      ),
+    );
+  }
   final Widget sheet = switch ((fullHeight, wide)) {
     (false, _) => AppSheet(
       title: title,

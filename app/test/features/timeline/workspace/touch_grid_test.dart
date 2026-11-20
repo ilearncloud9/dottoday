@@ -2,9 +2,11 @@ import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
+import 'package:dottoday/features/timeline/task_d/task_d_sheet.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/features/timeline/week/week_card.dart';
 import 'package:dottoday/features/timeline/week/week_day_column.dart';
+import 'package:dottoday/features/timeline/workspace/inspector/inspector_frame.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
 import 'package:dottoday/features/timeline/workspace/plan_panel_state.dart';
 import 'package:flutter/foundation.dart';
@@ -87,18 +89,20 @@ void main() {
     }
   }
 
-  testWidgets('a wide iPad: the inspector floats over the grid', (
+  testWidgets("a wide iPad: option D's editor docks beside the grid", (
     tester,
   ) async {
     await onIPad(() async {
-      // Wide enough to dock with a pointer (1440, ED-170 C1).
       await pump(tester, size: const Size(1440, 900));
       await tester.tap(find.text('Reply to email').first);
       await tester.pumpAndSettle();
-      final panel = tester.getRect(find.byType(WorkspaceInspector));
-      final last = tester.getRect(find.byType(WeekDayColumn).last);
-      // Over the grid, not beside it: the columns run on under it.
-      expect(last.right, greaterThan(panel.left));
+      // One task surface on tablets (ED-273): no Mac inspector.
+      expect(find.byType(WorkspaceInspector), findsNothing);
+      final panel = tester.getRect(find.byType(TaskDBody));
+      final grid = tester.getRect(find.byType(InspectorFrame));
+      // Beside the grid at the window's end: the grid ends where it starts.
+      expect(panel.right, 1440);
+      expect(grid.right, lessThanOrEqualTo(panel.left));
     });
   });
 

@@ -139,7 +139,8 @@ void main() {
     // One page, the day: the link itself left nothing to go Back to.
     expect(router.routerDelegate.currentConfiguration.matches, hasLength(1));
     expect(find.byType(BottomSheet), findsOneWidget);
-  });
+    // A Mac window: tablets edit in the panel instead (ED-273).
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
   testWidgets('a view keeps its ?task=; other queries are dropped', (
     tester,

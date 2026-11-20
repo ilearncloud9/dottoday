@@ -5,6 +5,8 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/duration/step_length_chip.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
@@ -60,9 +62,13 @@ class SubtaskRow extends StatefulWidget {
 class _SubtaskRowState extends State<SubtaskRow> {
   /// Tap the title: a small dialog to rename it (Enter or Rename).
   Future<void> _rename() async {
-    final name = await showDialog<String>(
-      context: context,
-      builder: (_) => _RenameDialog(title: widget.subtask.title),
+    final l10n = context.l10n;
+    final name = await showTextAlert(
+      context,
+      title: l10n.subtaskRenameTitle,
+      initial: widget.subtask.title,
+      action: l10n.subtaskRenameSave,
+      cancel: l10n.editorCancel,
     );
     final title = name?.trim() ?? '';
     if (title.isNotEmpty && title != widget.subtask.title) {
@@ -142,20 +148,20 @@ class _SubtaskRowState extends State<SubtaskRow> {
           formatDurationShort(l10n, minutes),
           style: t.styles.rowMeta.copyWith(color: t.colors.muted),
         ),
-      PopupMenuButton<VoidCallback>(
+      DotMenuButton<VoidCallback>(
         tooltip: l10n.subtaskMenu(s.title),
         icon: DotIcon(DotGlyphs.more, color: t.colors.muted),
         onSelected: (run) => run(),
         // The row's context: the menu's is gone once an item is picked.
-        itemBuilder: (_) => [
+        entries: () => [
           if (widget.onLength case final onLength?)
-            PopupMenuItem(
+            ContextMenuEntry(
               value: () => unawaited(
                 pickStepLength(context, minutes: minutes, onChanged: onLength),
               ),
-              child: Text(l10n.subtaskSetTime),
+              label: l10n.subtaskSetTime,
             ),
-          PopupMenuItem(value: widget.onRemove, child: Text(l10n.sheetDelete)),
+          ContextMenuEntry(value: widget.onRemove, label: l10n.sheetDelete),
         ],
       ),
     ];
@@ -180,50 +186,6 @@ class _SubtaskRowState extends State<SubtaskRow> {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// "Rename subtask": the field owns its controller for the dialog's life.
-class _RenameDialog extends StatefulWidget {
-  const _RenameDialog({required this.title});
-
-  final String title;
-
-  @override
-  State<_RenameDialog> createState() => _RenameDialogState();
-}
-
-class _RenameDialogState extends State<_RenameDialog> {
-  late final _text = TextEditingController(text: widget.title);
-
-  @override
-  void dispose() {
-    _text.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return AlertDialog(
-      title: Text(l10n.subtaskRenameTitle),
-      content: TextField(
-        controller: _text,
-        autofocus: true,
-        textInputAction: TextInputAction.done,
-        onSubmitted: (v) => Navigator.of(context).pop(v),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.editorCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(_text.text),
-          child: Text(l10n.subtaskRenameSave),
-        ),
-      ],
     );
   }
 }

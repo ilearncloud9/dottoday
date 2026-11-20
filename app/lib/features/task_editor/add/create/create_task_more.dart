@@ -6,6 +6,7 @@ import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/task_editor/add/add_save.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:dottoday/shared/pickers/travel_picker.dart';
 import 'package:dottoday/shared/sounds/sound_picker_sheet.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class CreateTaskMore extends ConsumerWidget {
       android ? DotGlyphs.moreVertical : DotGlyphs.more,
       color: t.colors.text,
     );
-    return PopupMenuButton<_More>(
+    return DotMenuButton<_More>(
       tooltip: l10n.createMore,
       // The iPhone's round ⋯ beside Create task (E-Phones ED-140).
       icon: android
@@ -49,21 +50,21 @@ class CreateTaskMore extends ConsumerWidget {
               ),
             ),
       onSelected: (m) => unawaited(_pick(context, ref, m)),
-      itemBuilder: (_) => [
-        PopupMenuItem(value: _More.sound, child: Text(l10n.sheetSound)),
-        PopupMenuItem(value: _More.travel, child: Text(l10n.travelTitle)),
-        CheckedPopupMenuItem(
+      entries: () => [
+        ContextMenuEntry(value: _More.sound, label: l10n.sheetSound),
+        ContextMenuEntry(value: _More.travel, label: l10n.travelTitle),
+        ContextMenuEntry(
           value: _More.pinned,
+          label: l10n.pinTitle,
           checked: draft?.details.pinned ?? false,
-          child: Text(l10n.pinTitle),
         ),
-        const PopupMenuDivider(),
-        PopupMenuItem(value: _More.inbox, child: Text(l10n.addToInbox)),
+        ContextMenuEntry(
+          value: _More.inbox,
+          label: l10n.addToInbox,
+          divided: true,
+        ),
         if (draft?.title.isNotEmpty ?? false)
-          PopupMenuItem(
-            value: _More.breakDown,
-            child: Text(l10n.breakdownAction),
-          ),
+          ContextMenuEntry(value: _More.breakDown, label: l10n.breakdownAction),
       ],
     );
   }

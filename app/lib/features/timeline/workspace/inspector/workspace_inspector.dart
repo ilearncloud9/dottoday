@@ -9,6 +9,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_actions.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_details.dart';
+import 'package:dottoday/features/timeline/workspace/inspector/inspector_more.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_rows.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
@@ -20,7 +21,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// The Workspace inspector for task [id] (E-FullA-v2, ED-170 C1, rules
 /// §627): its ring, title and state; Need more time? while it runs; Done,
 /// Focus, Shift rest; Date, Time, Repeat, Alerts; Subtasks; the overlap;
-/// Notes. Every change is written as it is made (ED-086). A task that
+/// Notes; then Energy, Sound, Travel time, Pinned and Delete (R2-40). Every change is written as it is made (ED-086). A task that
 /// goes away (deleted, another owner) takes the inspector with it.
 class WorkspaceInspector extends ConsumerWidget {
   const WorkspaceInspector({required this.id, super.key});
@@ -72,6 +73,8 @@ class _Body extends ConsumerWidget {
             ],
             InspectorOverlap(task: o),
             InspectorNotes(key: ValueKey(o.id), task: o),
+            const _Rule(),
+            InspectorMore(task: task),
           ])
             Padding(
               padding: const EdgeInsets.only(bottom: DotSpace.m),

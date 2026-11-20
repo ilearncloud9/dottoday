@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/thinking/breakdown_tree.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
 import 'package:dottoday/shared/duration/step_length_chip.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
@@ -103,6 +104,7 @@ class _StepTileState extends State<StepTile> {
         ),
         Expanded(
           child: TextField(
+            contextMenuBuilder: systemTextMenu,
             controller: _title,
             style: top ? t.styles.rowTitle : t.styles.body,
             textCapitalization: TextCapitalization.sentences,
@@ -176,7 +178,8 @@ class _StepTileState extends State<StepTile> {
               if (splitting)
                 const SizedBox.square(
                   dimension: DotSize.rowIcon,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  // iOS's activity indicator on Apple platforms (native pass).
+                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                 )
               else if (tree.canSplit(s.id) &&
                   s.children.isEmpty &&

@@ -14,6 +14,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/calendar_rows.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,22 +126,18 @@ class _AccountGroup extends ConsumerWidget {
   Future<void> _disconnect(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
     final cloud = ref.read(cloudCalendarActionsProvider);
-    final sure = await showDialog<bool>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(l10n.calendarsDisconnectTitle(account.label)),
-        content: Text(l10n.calendarsDisconnectBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialog).pop(false),
-            child: Text(l10n.editorCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialog).pop(true),
-            child: Text(l10n.calendarsDisconnect),
-          ),
-        ],
-      ),
+    final sure = await showChoiceAlert<bool>(
+      context,
+      title: l10n.calendarsDisconnectTitle(account.label),
+      message: l10n.calendarsDisconnectBody,
+      choices: [
+        AlertChoice(label: l10n.editorCancel, value: false, cancel: true),
+        AlertChoice(
+          label: l10n.calendarsDisconnect,
+          value: true,
+          primary: true,
+        ),
+      ],
     );
     if (sure != true || !context.mounted) return;
     saveCalendarChange(context, cloud.disconnect(account));

@@ -57,7 +57,7 @@ void main() {
   ProviderContainer container(WidgetTester tester) =>
       ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
 
-  testWidgets('nothing picked: no inspector; a click picks into it', (
+  _macTest('nothing picked: no inspector; a click picks into it', (
     tester,
   ) async {
     final router = await pump(tester);
@@ -73,7 +73,7 @@ void main() {
     }
   });
 
-  testWidgets('Esc and a click on free grid put it away', (tester) async {
+  _macTest('Esc and a click on free grid put it away', (tester) async {
     final router = await pump(tester);
     await tester.tap(find.text('Reply to email').first);
     await tester.pumpAndSettle();
@@ -92,7 +92,7 @@ void main() {
     expect(find.byType(WorkspaceInspector), findsNothing);
   });
 
-  testWidgets('a second click opens the editor in its place; closing it '
+  _macTest('a second click opens the editor in its place; closing it '
       'brings the inspector back', (tester) async {
     // Wide enough for the test font beside the 420 editor.
     final router = await pump(tester, width: 1440);
@@ -111,7 +111,7 @@ void main() {
     expect(AppRoutes.taskOf(uri(router)), id);
   });
 
-  testWidgets('⌥⌘I hides it and shows it again', (tester) async {
+  _macTest('⌥⌘I hides it and shows it again', (tester) async {
     // Wide enough for the toolbar's button with touch sizes.
     await pump(tester, width: 1440);
     await tester.tap(find.text('Reply to email').first);
@@ -127,7 +127,7 @@ void main() {
     expect(find.byTooltip('Hide Inspector').hitTestable(), findsOneWidget);
   });
 
-  testWidgets('docks at 1280, floats over a narrower window', (tester) async {
+  _macTest('docks at 1280, floats over a narrower window', (tester) async {
     await pump(tester, width: 1100);
     await tester.tap(find.text('Reply to email').first);
     await tester.pumpAndSettle();
@@ -137,7 +137,7 @@ void main() {
     expect(panel.width, 248);
   });
 
-  testWidgets('Month has no inspector: a day opens that day', (tester) async {
+  _macTest('Month has no inspector: a day opens that day', (tester) async {
     final router = await pump(tester, at: '/month/2026-10');
     expect(find.byTooltip('Show Inspector'), findsNothing);
     expect(find.byTooltip('Hide Inspector'), findsNothing);
@@ -146,7 +146,7 @@ void main() {
     expect(uri(router).path, isNot(startsWith('/month')));
   });
 
-  testWidgets('screen reader: the region, the picked block, labels', (
+  _macTest('screen reader: the region, the picked block, labels', (
     tester,
   ) async {
     await pump(tester);
@@ -159,3 +159,10 @@ void main() {
     await expectA11yGuidelines(tester);
   });
 }
+
+/// A Mac window: tablets edit in option D's panel instead (ED-273).
+void _macTest(String name, WidgetTesterCallback body) => testWidgets(
+  name,
+  body,
+  variant: TargetPlatformVariant.only(TargetPlatform.macOS),
+);

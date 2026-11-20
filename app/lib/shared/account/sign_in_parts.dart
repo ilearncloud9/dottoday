@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 // The sign-in pieces of O5 Account (docs/09 M4.5 / M4.7) and Settings ›
@@ -89,6 +90,7 @@ class _EmailFormState extends State<EmailForm> {
       spacing: DotSpace.s,
       children: [
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           autofocus: true,
           keyboardType: TextInputType.emailAddress,

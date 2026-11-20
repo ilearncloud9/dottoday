@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -42,16 +43,32 @@ Future<SettingsHarness> _openTrash(
   return h;
 }
 
+/// A button of the confirm: iOS's alert on iPhone (the harness's
+/// platform), Material's elsewhere (native pass).
 Finder _dialogButton(String label) => find.ancestor(
-  of: find.descendant(of: find.byType(AlertDialog), matching: find.text(label)),
-  matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+  of: find.descendant(
+    of: find.byWidgetPredicate(
+      (w) => w is AlertDialog || w is CupertinoAlertDialog,
+    ),
+    matching: find.text(label),
+  ),
+  matching: find.byWidgetPredicate(
+    (w) => w is ButtonStyleButton || w is CupertinoDialogAction,
+  ),
 );
 
-/// The action is ink (the accent's filled button), never the error red.
+/// The action is ink, never the error red (ED-336/ED-337): iOS's bold
+/// default action, not its red destructive one; Material's accent fill.
 void _expectInkAction(WidgetTester tester, String label) {
   final button = _dialogButton(label);
   expect(button, findsOneWidget);
-  expect(tester.widget(button), isA<FilledButton>());
+  final widget = tester.widget(button);
+  if (widget is CupertinoDialogAction) {
+    expect(widget.isDestructiveAction, isFalse);
+    expect(widget.isDefaultAction, isTrue);
+    return;
+  }
+  expect(widget, isA<FilledButton>());
   final context = tester.element(button);
   final scheme = Theme.of(context).colorScheme;
   final fill = tester

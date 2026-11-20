@@ -1,6 +1,7 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// Asks for one line of text in an app sheet ("Save as routine" › Name):
@@ -54,6 +55,7 @@ class _PromptState extends State<_Prompt> {
       spacing: DotSpace.m,
       children: [
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           autofocus: true,
           maxLength: maxTitleLength,

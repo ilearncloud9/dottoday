@@ -12,6 +12,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../domain/export/export_fixtures.dart';
 import '../../support/a11y.dart';
+import '../../support/alerts.dart';
 import '../../support/export_fakes.dart';
 import 'settings_harness.dart';
 
@@ -133,7 +134,7 @@ void main() {
     await _tap(tester, 'Import a backup…');
     expect(find.textContaining('over 25 MB'), findsOneWidget);
     expect(backups.imported, isEmpty);
-    expect(find.byType(AlertDialog), findsNothing);
+    expect(findAlert, findsNothing);
   });
 
   testWidgets('a backup on this device can be gone back to', (tester) async {
@@ -187,7 +188,7 @@ void main() {
         );
         await expectA11yGuidelines(tester);
         await _tap(tester, 'Import a backup…');
-        expect(find.byType(AlertDialog), findsOneWidget);
+        expect(findAlert, findsOneWidget);
         await expectA11yGuidelines(tester);
       });
     }

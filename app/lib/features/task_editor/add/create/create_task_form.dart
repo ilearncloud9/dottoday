@@ -197,7 +197,7 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
                     glyph: DotGlyphs.repeat,
                     caption: l10n.sheetRepeat,
                     value: _repeatText(l10n, draft),
-                    onTap: () => unawaited(pick.repeat()),
+                    onTap: (_) => unawaited(pick.repeat()),
                   ),
                   TaskFormPill(
                     glyph: DotGlyphs.bolt,
@@ -206,7 +206,7 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
                       final e? => energyName(l10n, e),
                       null => l10n.formEnergyNone,
                     },
-                    onTap: () => unawaited(pick.energy()),
+                    onTap: (at) => unawaited(pick.energy(at)),
                   ),
                 ],
               ),

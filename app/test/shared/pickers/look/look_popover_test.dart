@@ -49,6 +49,15 @@ class FakeSampler implements ColourSampler {
 
   @override
   Future<void> closePanel() async => closed = true;
+
+  /// The browser's colour input, on in the web test only.
+  var systemPicker = false;
+
+  @override
+  bool get hasSystemPicker => systemPicker;
+
+  @override
+  Future<Color?> pickSystem(Color start) async => const Color(0xFF6A88A8);
 }
 
 /// The colour and icon picker beyond phones (M19.4 part 4c-3; ED-156,

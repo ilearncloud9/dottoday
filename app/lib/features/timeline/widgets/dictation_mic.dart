@@ -9,6 +9,7 @@ import 'package:dottoday/data/speech/mic_settings.dart';
 import 'package:dottoday/data/speech/speech_providers.dart';
 import 'package:dottoday/domain/speech/dictation_text.dart';
 import 'package:dottoday/domain/speech/speech_recognizer.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:dottoday/shared/speech/mic_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -152,22 +153,18 @@ class _DictationMicState extends ConsumerState<DictationMic> {
   /// Dottoday's own words before Android's dialog (D5).
   static Future<bool> _rationale(BuildContext context) async {
     final l10n = context.l10n;
-    final yes = await showDialog<bool>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(l10n.micRationaleTitle),
-        content: Text(l10n.micRationaleBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialog).pop(false),
-            child: Text(l10n.promptNotNow),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialog).pop(true),
-            child: Text(l10n.micRationaleContinue),
-          ),
-        ],
-      ),
+    final yes = await showChoiceAlert<bool>(
+      context,
+      title: l10n.micRationaleTitle,
+      message: l10n.micRationaleBody,
+      choices: [
+        AlertChoice(label: l10n.promptNotNow, value: false, cancel: true),
+        AlertChoice(
+          label: l10n.micRationaleContinue,
+          value: true,
+          primary: true,
+        ),
+      ],
     );
     return yes ?? false;
   }

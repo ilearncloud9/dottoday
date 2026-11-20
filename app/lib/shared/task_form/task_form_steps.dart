@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// Steps and Notes in one card (option D, ED-137; Create task, ED-140):
@@ -89,6 +90,7 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
             Divider(height: DotSpace.l, color: t.colors.outline),
             caption(widget.notesCaption),
             TextField(
+              contextMenuBuilder: systemTextMenu,
               controller: _notes,
               minLines: 2,
               maxLines: null,
@@ -155,6 +157,7 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
         ExcludeSemantics(child: _box(t)),
         Expanded(
           child: TextField(
+            contextMenuBuilder: systemTextMenu,
             controller: _step,
             focusNode: _stepFocus,
             textInputAction: TextInputAction.unspecified,

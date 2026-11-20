@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/recurrence/repeat_rule.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_end.dart';
 import 'package:dottoday/shared/pickers/weekday_chips.dart';
 import 'package:flutter/material.dart';
@@ -181,25 +182,14 @@ class _Interval extends StatelessWidget {
           more: l10n.repeatIntervalMore,
           onChanged: (v) => onRule((r) => r.copyWith(interval: v)),
         ),
-        SegmentedButton<RepeatFrequency>(
-          showSelectedIcon: false,
+        DotSegmented<RepeatFrequency>(
           segments: [
-            ButtonSegment(
-              value: RepeatFrequency.daily,
-              label: Text(l10n.repeatUnitDays(n)),
-            ),
-            ButtonSegment(
-              value: RepeatFrequency.weekly,
-              label: Text(l10n.repeatUnitWeeks(n)),
-            ),
-            ButtonSegment(
-              value: RepeatFrequency.monthly,
-              label: Text(l10n.repeatUnitMonths(n)),
-            ),
+            (RepeatFrequency.daily, l10n.repeatUnitDays(n)),
+            (RepeatFrequency.weekly, l10n.repeatUnitWeeks(n)),
+            (RepeatFrequency.monthly, l10n.repeatUnitMonths(n)),
           ],
-          selected: {rule.frequency},
-          onSelectionChanged: (s) =>
-              onRule((r) => r.copyWith(frequency: s.single)),
+          selected: rule.frequency,
+          onChanged: (f) => onRule((r) => r.copyWith(frequency: f)),
         ),
       ],
     );

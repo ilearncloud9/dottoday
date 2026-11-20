@@ -18,6 +18,7 @@ import 'package:dottoday/features/settings/widgets/export_set_sheet.dart';
 import 'package:dottoday/features/settings/widgets/import_set_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:dottoday/shared/sheets/anchored_popover.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -236,22 +237,14 @@ Future<bool> _confirm(
   required String action,
 }) async {
   final l10n = context.l10n;
-  final yes = await showDialog<bool>(
-    context: context,
-    builder: (dialog) => AlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialog, false),
-          child: Text(l10n.exportCancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(dialog, true),
-          child: Text(action),
-        ),
-      ],
-    ),
+  final yes = await showChoiceAlert<bool>(
+    context,
+    title: title,
+    message: body,
+    choices: [
+      AlertChoice(label: l10n.exportCancel, value: false, cancel: true),
+      AlertChoice(label: action, value: true, primary: true),
+    ],
   );
   return yes ?? false;
 }

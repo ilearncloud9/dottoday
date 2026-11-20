@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 
 /// What the person chose when an export left no saved copy (CR-160 Stage C).
@@ -22,29 +23,23 @@ Future<WithoutCopyChoice?> confirmDeleteWithoutCopy(
   int? setFiles,
 }) {
   final l10n = context.l10n;
-  return showDialog<WithoutCopyChoice>(
-    context: context,
-    builder: (dialog) => AlertDialog(
-      content: Text(
-        setFiles == null
-            ? l10n.accountDeleteWithoutCopyQuestion
-            : l10n.accountDeleteWithoutCopySetQuestion(setFiles),
+  return showChoiceAlert<WithoutCopyChoice?>(
+    context,
+    message: setFiles == null
+        ? l10n.accountDeleteWithoutCopyQuestion
+        : l10n.accountDeleteWithoutCopySetQuestion(setFiles),
+    choices: [
+      AlertChoice(label: l10n.editorCancel, value: null, cancel: true),
+      if (retry)
+        AlertChoice(
+          label: l10n.accountDeleteExportRetry,
+          value: WithoutCopyChoice.retry,
+        ),
+      AlertChoice(
+        label: l10n.accountDeleteWithoutCopy,
+        value: WithoutCopyChoice.delete,
+        primary: true,
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialog).pop(),
-          child: Text(l10n.editorCancel),
-        ),
-        if (retry)
-          TextButton(
-            onPressed: () => Navigator.of(dialog).pop(WithoutCopyChoice.retry),
-            child: Text(l10n.accountDeleteExportRetry),
-          ),
-        FilledButton(
-          onPressed: () => Navigator.of(dialog).pop(WithoutCopyChoice.delete),
-          child: Text(l10n.accountDeleteWithoutCopy),
-        ),
-      ],
-    ),
+    ],
   );
 }

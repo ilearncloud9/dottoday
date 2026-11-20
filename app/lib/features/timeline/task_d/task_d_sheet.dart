@@ -53,12 +53,17 @@ Future<void> showTaskDSheet(
   ),
 );
 
-/// Task [id] as option D shows it, or "not here".
+/// Task [id] as option D shows it, or "not here". In a sheet it pops;
+/// in the tablets' side panel (ED-273, M19.4 part 4d) [onClose] closes it
+/// and the whole editor shows at once.
 class TaskDBody extends ConsumerWidget {
-  const TaskDBody({required this.id, this.scroll, super.key});
+  const TaskDBody({required this.id, this.scroll, this.onClose, super.key});
 
   final String id;
   final ScrollController? scroll;
+
+  /// Closes the panel; null in a sheet.
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,6 +73,7 @@ class TaskDBody extends ConsumerWidget {
       AsyncValue(hasValue: true, value: final TaskView task) => _Form(
         task: task,
         scroll: scroll,
+        onClose: onClose,
       ),
       AsyncData(value: null) || AsyncError(error: NotFoundFailure()) => Center(
         child: Text(context.l10n.sheetNotFound),
@@ -78,10 +84,11 @@ class TaskDBody extends ConsumerWidget {
 }
 
 class _Form extends ConsumerStatefulWidget {
-  const _Form({required this.task, required this.scroll});
+  const _Form({required this.task, required this.scroll, this.onClose});
 
   final TaskView task;
   final ScrollController? scroll;
+  final VoidCallback? onClose;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -92,7 +99,7 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
   TaskView get task => widget.task;
 
   @override
-  VoidCallback? get onClose => null;
+  VoidCallback? get onClose => widget.onClose;
 
   @override
   void didUpdateWidget(covariant _Form old) {
@@ -103,7 +110,7 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
 
   EditorLeave _leave(NavigatorState navigator) => EditorLeave(
     task: draft,
-    onLeft: () => navigator.pop(),
+    onLeft: onClose ?? () => navigator.pop(),
     beforeLeave: leaving,
     scopedDelete: !task.repeats
         ? null
@@ -116,7 +123,8 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
     if (!await flushNow() || !mounted) return;
     leaving();
     Actions.maybeInvoke(context, BreakDownIntent(draft.id));
-    Navigator.of(context).pop();
+    final close = onClose;
+    close == null ? Navigator.of(context).pop() : close();
   }
 
   /// The header's circle: as the Done tile, with its sound and Undo.
@@ -142,6 +150,7 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
                   task: task,
                   leave: leave,
                   onDone: save,
+                  onBack: onClose,
                   onBreakDown: () => unawaited(_breakDown()),
                 ),
                 TaskDHead(
@@ -175,11 +184,13 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
     return [
       TaskDActions(task: task, draft: draft, beforeWrite: flushNow),
       TravelSuggestionCard(task: task),
-      Text(
-        context.l10n.taskPullUp,
-        textAlign: TextAlign.center,
-        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-      ),
+      // The panel shows everything at once: nothing to pull up.
+      if (onClose == null)
+        Text(
+          context.l10n.taskPullUp,
+          textAlign: TextAlign.center,
+          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        ),
     ];
   }
 

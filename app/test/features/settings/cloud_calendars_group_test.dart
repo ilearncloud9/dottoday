@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/alerts.dart';
 import '../../support/calendar_fakes.dart';
 import '../../support/cloud_calendar_fakes.dart';
 import 'settings_harness.dart';
@@ -106,7 +107,7 @@ void main() {
     expect(fake.disconnected, isEmpty);
     await tester.tap(find.text('Disconnect'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Disconnect'));
+    await tester.tap(alertButton('Disconnect'));
     await tester.pumpAndSettle();
     expect(fake.disconnected, [sampleCloudAccount.id]);
     expect(find.text('KODY@GMAIL.COM'), findsNothing);

@@ -3,6 +3,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
+import 'package:dottoday/shared/navigation/dot_page_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -22,8 +23,9 @@ class DayReviewScreen extends ConsumerWidget {
         context.canPop() ? context.pop() : context.go(AppRoutes.today);
     return Scaffold(
       backgroundColor: t.colors.surface,
-      appBar: AppBar(
-        title: Text(context.l10n.reviewTitle),
+      appBar: dotPageBar(
+        context,
+        title: context.l10n.reviewTitle,
         leading: IconButton(
           tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: close,

@@ -14,9 +14,9 @@ import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
 import 'package:dottoday/shared/duration/duration_sheet.dart';
 import 'package:dottoday/shared/pickers/alerts/alerts_editor.dart';
 import 'package:dottoday/shared/pickers/day_pickers.dart';
+import 'package:dottoday/shared/pickers/energy_menu.dart';
 import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:dottoday/shared/pickers/repeat/repeat_editor.dart';
-import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -125,24 +125,15 @@ final class CreateTaskPickers {
     );
   }
 
-  Future<void> energy() async {
+  /// Energy's menu under the pill at [at] (ED-346).
+  Future<void> energy(Rect? at) async {
     final d = _draft;
     if (d == null) return;
-    final l10n = context.l10n;
-    // By index, -1 for none: a dismissed sheet (null) changes nothing.
-    final picked = await showChoiceSheet<int>(
-      context,
-      title: l10n.editorEnergy,
-      selected: d.details.energy?.index ?? -1,
-      options: [
-        (value: -1, label: l10n.sheetNoAlerts, detail: null),
-        for (final e in Energy.values)
-          (value: e.index, label: energyName(l10n, e), detail: null),
-      ],
-    );
+    final picked = await pickEnergy(context, at: at, current: d.details.energy);
     if (picked == null) return;
-    final energy = picked < 0 ? null : Energy.values[picked];
-    _flow.edit((x) => x.withDetails(x.details.copyWith(energy: () => energy)));
+    _flow.edit(
+      (x) => x.withDetails(x.details.copyWith(energy: () => picked.energy)),
+    );
   }
 }
 

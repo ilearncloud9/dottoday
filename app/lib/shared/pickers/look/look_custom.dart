@@ -136,6 +136,19 @@ class _LookCustomState extends ConsumerState<LookCustom> {
             ),
           ],
         ),
+        // The browser's own colour input (owner, native pass); iOS's
+        // picker lives in All colours, the Mac has Show Colours….
+        if (sampler.hasSystemPicker && !iosApp(context))
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton(
+              onPressed: () async {
+                final c = await _sampler.pickSystem(_colour);
+                if (c != null && mounted) _fromColour(c);
+              },
+              child: Text(l10n.lookMoreColours),
+            ),
+          ),
         if (sampler.hasPanel)
           Align(
             alignment: AlignmentDirectional.centerStart,

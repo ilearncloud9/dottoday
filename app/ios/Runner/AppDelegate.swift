@@ -91,6 +91,18 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "KeyMenusBridge") {
       KeyMenusBridge.shared.attach(to: registrar.messenger())
     }
+    // iOS's own pull-down menus for the app's menus (M19.4 part 4d).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ContextMenuBridge") {
+      ContextMenuBridge.shared.attach(to: registrar.messenger())
+    }
+    // iOS's own alerts for confirms and rename prompts (native pass).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "AlertBridge") {
+      AlertBridge.shared.attach(to: registrar.messenger())
+    }
+    // More colours…: iOS's own colour picker (native pass).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ColourPickerBridge") {
+      ColourPickerBridge.shared.attach(to: registrar.messenger())
+    }
   }
 
   /// The app's menus in the iPad's menu bar (⌘ held) and their key

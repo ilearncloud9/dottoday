@@ -9,6 +9,7 @@ import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
+import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,11 +21,11 @@ import 'support/sample_inbox.dart';
 import 'support/timeline_fakes.dart';
 
 // Web parity (docs/09 M3e.8, docs/10 §4 "Mac and web are the same layout
-// at the same width"): each Mac/web screen at 1280 renders the same
-// pixels with the Mac theme platform as with Windows and Linux, the
-// other hosts of the web build. Layout reads only the width class; the
-// idiom is Material for all three. (kIsWeb itself is pinned by
-// `no_platform_layout_test`.)
+// at the same width"): each Mac/web screen at 1280 renders the same pixels
+// on Windows and Linux, the other hosts of the web build, and the Mac lays
+// it out the same: every task dot in the same place. The Mac's controls
+// are its own (CLAUDE.md §11 on this branch; owner, native pass), so its
+// pixels may differ. (kIsWeb itself is pinned by `no_platform_layout_test`.)
 
 final _screens = <String, Widget Function()>{
   'today spread': () => const PlanPanelFrame(child: TodayScreen()),
@@ -34,7 +35,8 @@ final _screens = <String, Widget Function()>{
   'editor panel': () => const EditorPanelFrame(child: TodayScreen()),
 };
 
-Future<Uint8List> _render(
+/// The screen's pixels, and where each task dot sits (its layout).
+Future<(Uint8List, List<Rect>)> _render(
   WidgetTester tester,
   Widget Function() screen,
   TargetPlatform platform,
@@ -64,12 +66,16 @@ Future<Uint8List> _render(
   final boundary = tester.renderObject<RenderRepaintBoundary>(
     find.byKey(GoldenFrame.boundaryKey),
   );
+  final dots = [
+    for (final e in find.byType(TaskDot).evaluate())
+      tester.getRect(find.byWidget(e.widget)),
+  ];
   final bytes = await tester.runAsync(() async {
     final image = await boundary.toImage();
     final data = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
     return data!.buffer.asUint8List();
   });
-  return bytes!;
+  return (bytes!, dots);
 }
 
 final class _Editing extends EditingTask {
@@ -85,18 +91,21 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   for (final MapEntry(key: name, value: screen) in _screens.entries) {
-    testWidgets('$name: Mac, Windows and Linux render the same', (
-      tester,
-    ) async {
+    testWidgets('$name: the web hosts render the same; the Mac lays it '
+        'out the same', (tester) async {
       tester.view
         ..physicalSize = const Size(1280, 900)
         ..devicePixelRatio = 1;
       addTearDown(tester.view.reset);
-      final mac = await _render(tester, screen, TargetPlatform.macOS);
-      for (final other in [TargetPlatform.windows, TargetPlatform.linux]) {
-        final pixels = await _render(tester, screen, other);
-        expect(pixels, equals(mac), reason: '$name on $other');
-      }
+      final (windows, layout) = await _render(
+        tester,
+        screen,
+        TargetPlatform.windows,
+      );
+      final (linux, _) = await _render(tester, screen, TargetPlatform.linux);
+      expect(linux, equals(windows), reason: '$name on Linux');
+      final (_, mac) = await _render(tester, screen, TargetPlatform.macOS);
+      expect(mac, equals(layout), reason: '$name: the Mac places it alike');
     });
   }
 }

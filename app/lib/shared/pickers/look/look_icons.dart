@@ -4,6 +4,7 @@ import 'package:dottoday/shared/pickers/block_names.dart';
 import 'package:dottoday/shared/pickers/look/look_library.dart';
 import 'package:dottoday/shared/pickers/look/look_parts.dart';
 import 'package:dottoday/shared/pickers/look/palette_row.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// All icons, pinned palette (E-Phones, ED-086): "Run · Coral" with its
@@ -151,6 +152,7 @@ class LookSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return TextField(
+      contextMenuBuilder: systemTextMenu,
       controller: controller,
       onChanged: onChanged,
       style: t.styles.body,

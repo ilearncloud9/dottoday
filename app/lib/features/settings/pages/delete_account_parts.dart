@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/owners/account_meta.dart';
 import 'package:dottoday/shared/account/account_buttons.dart';
 import 'package:dottoday/shared/account/decision_frame.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// What both D1 layouts show and do (see `DeleteAccountView`).
@@ -272,6 +273,7 @@ class _TypedWord extends StatelessWidget {
         Semantics(
           label: l10n.accountDeleteTypeWord(word),
           child: TextField(
+            contextMenuBuilder: systemTextMenu,
             controller: p.typed,
             enabled: !p.busy,
             autocorrect: false,

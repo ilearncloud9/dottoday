@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/shared/feedback/paste_confirm.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -81,6 +82,7 @@ class _InboxAddFieldState extends State<InboxAddField> {
       child: Semantics(
         label: l10n.inboxAddLabel,
         child: TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           minLines: 1,
           maxLines: 6,

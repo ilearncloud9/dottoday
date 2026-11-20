@@ -6,6 +6,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/dev/demo_day_loader.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
+import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,16 +14,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Debug-build-only header menu entries (M3.1a). Every reference sits
 /// behind [kDebugMode], a compile-time constant, so release builds drop
 /// this code and the demo data with it.
-List<PopupMenuEntry<void>> debugMenuItems(BuildContext context) {
+List<ContextMenuEntry<VoidCallback>> debugMenuItems(BuildContext context) {
   if (!kDebugMode) return const [];
   return [
-    PopupMenuItem<void>(
-      onTap: () => unawaited(_loadDemoDay(context)),
-      child: Text(context.l10n.debugLoadDemoDay),
+    ContextMenuEntry(
+      value: () => unawaited(_loadDemoDay(context)),
+      label: context.l10n.debugLoadDemoDay,
+      divided: true,
     ),
-    PopupMenuItem<void>(
-      onTap: () => unawaited(_loadM11(context)),
-      child: Text(context.l10n.debugLoadM11Sample),
+    ContextMenuEntry(
+      value: () => unawaited(_loadM11(context)),
+      label: context.l10n.debugLoadM11Sample,
     ),
   ];
 }

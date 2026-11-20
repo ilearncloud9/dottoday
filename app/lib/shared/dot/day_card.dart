@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/dot/day_card_scroll.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -330,14 +331,10 @@ class _RealitySwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final button = SegmentedButton<bool>(
-      segments: [
-        ButtonSegment(value: false, label: Text(l10n.realityPlan)),
-        ButtonSegment(value: true, label: Text(l10n.realityReality)),
-      ],
-      selected: {toggle.on},
-      showSelectedIcon: false,
-      onSelectionChanged: (s) => toggle.onChanged(s.first),
+    final button = DotSegmented<bool>(
+      segments: [(false, l10n.realityPlan), (true, l10n.realityReality)],
+      selected: toggle.on,
+      onChanged: toggle.onChanged,
     );
     final h = toggle.highlight;
     return h == null

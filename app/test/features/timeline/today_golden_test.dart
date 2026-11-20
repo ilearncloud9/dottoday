@@ -131,6 +131,8 @@ void main() {
     'today_editor_panel',
     height: 1000,
     widths: const {'expanded'},
+    // Tablets edit in option D's panel (ED-273): this is the Mac's.
+    platform: TargetPlatform.macOS,
     build: (_) => _today(editing: _ids(['Deep work: roadmap']).single),
   );
   // The editor floating over Today below 1160 (ED-167, ED-168).
@@ -138,6 +140,7 @@ void main() {
     'today_editor_floating',
     height: 1000,
     widths: const {'expanded_float'},
+    platform: TargetPlatform.macOS,
     build: (_) => _today(editing: _ids(['Deep work: roadmap']).single),
   );
   // A phone in landscape (R2-41, ED-347): H1 keeps the phone layout, the

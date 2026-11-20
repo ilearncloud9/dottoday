@@ -15,6 +15,7 @@ import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/shared/dot/overlap_knot.dart';
 import 'package:dottoday/shared/feedback/save_failure.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -240,6 +241,7 @@ class _NotesState extends ConsumerState<InspectorNotes> {
       children: [
         Text(l10n.editorNotes, style: t.styles.inspectorHeading),
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           minLines: 2,
           maxLines: null,

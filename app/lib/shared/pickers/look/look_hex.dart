@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -67,6 +68,7 @@ class _HexChipState extends State<HexChip> {
       textField: true,
       child: _fit(
         TextField(
+          contextMenuBuilder: systemTextMenu,
           controller: _text,
           focusNode: _focus,
           onChanged: _typed,
@@ -88,7 +90,7 @@ class _HexChipState extends State<HexChip> {
             isDense: true,
             filled: true,
             fillColor: t.colors.raised,
-            constraints: const BoxConstraints(minHeight: DotTouch.min),
+            constraints: const BoxConstraints(minHeight: DotTouch.android),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: DotSpace.s,
               vertical: DotSpace.s,

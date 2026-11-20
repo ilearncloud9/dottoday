@@ -4,7 +4,8 @@ import FlutterMacOS
 /// The Mac's right-click menus are the system's own (ED-239, CR-098):
 /// Flutter sends the items over `dottoday/context_menu`
 /// (lib/shared/menus/context_menu.dart), this pops an NSMenu at the click
-/// point and answers with the chosen item's index, or nil when dismissed.
+/// point and answers with the chosen item's index, or -1 when dismissed
+/// (nil would read as "no bridge" on the Dart side).
 /// The system gives it its look, keyboard navigation, VoiceOver, Increase
 /// Contrast and dark mode.
 final class ContextMenuBridge: NSObject {
@@ -21,7 +22,7 @@ final class ContextMenuBridge: NSObject {
         result(FlutterMethodNotImplemented)
         return
       }
-      result(self.show(args))
+      result(self.show(args) ?? -1)
     }
     self.channel = channel
   }
@@ -33,6 +34,7 @@ final class ContextMenuBridge: NSObject {
     menu.autoenablesItems = false
     let items = args["items"] as? [[String: Any]] ?? []
     for (index, entry) in items.enumerated() {
+      if entry["divided"] as? Bool == true { menu.addItem(.separator()) }
       menu.addItem(item(entry, index: index))
     }
     let x = args["x"] as? Double ?? 0
@@ -51,6 +53,8 @@ final class ContextMenuBridge: NSObject {
     item.target = self
     item.tag = index
     item.isEnabled = entry["enabled"] as? Bool ?? true
+    // A pop-up's current choice carries the system tick (R2-40).
+    item.state = entry["checked"] as? Bool == true ? .on : .off
     if let symbol = entry["symbol"] as? String {
       item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: nil)
     }

@@ -100,17 +100,70 @@ void main() {
         );
       });
     });
-    // ED-269: a tap opens the inspector over the grid; it never docks.
-    testWidgets('golden: iPad floating inspector, ${mode.name}', (
-      tester,
-    ) async {
+    // ED-273: a tap opens option D's editor; it docks beside the grid
+    // from 1160 (E-R2-4 B1, B2).
+    testWidgets('golden: iPad editor docked, ${mode.name}', (tester) async {
       await on(TargetPlatform.iOS, () async {
-        await pump(tester, mode, size: ipad, place: '/3-days/2026-10-21');
+        await pump(tester, mode, size: ipad, place: '/week/2026-10-21');
         await tester.tap(find.textContaining('Deep work').first);
         await tester.pumpAndSettle();
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/tablet_inspector_ipad_${mode.name}.png'),
+          matchesGoldenFile('goldens/tablet_editor_ipad_${mode.name}.png'),
+        );
+      });
+    });
+    testWidgets('golden: Android tablet editor docked, ${mode.name}', (
+      tester,
+    ) async {
+      await on(TargetPlatform.android, () async {
+        await pump(tester, mode, size: android, place: '/week/2026-10-21');
+        await tester.tap(find.textContaining('Deep work').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/tablet_editor_android_${mode.name}.png'),
+        );
+      });
+    });
+    // ED-274: below 1160 it floats; portrait iPad is medium (E-R2-4 M1, M2).
+    testWidgets('golden: iPad portrait, the editor floats, ${mode.name}', (
+      tester,
+    ) async {
+      await on(TargetPlatform.iOS, () async {
+        await pump(
+          tester,
+          mode,
+          size: const Size(820, 1180),
+          place: '/today/2026-10-21',
+        );
+        await tester.tap(find.textContaining('Deep work').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile(
+            'goldens/tablet_editor_float_ipad_${mode.name}.png',
+          ),
+        );
+      });
+    });
+    testWidgets('golden: Android portrait, a modal side sheet, ${mode.name}', (
+      tester,
+    ) async {
+      await on(TargetPlatform.android, () async {
+        await pump(
+          tester,
+          mode,
+          size: const Size(800, 1280),
+          place: '/today/2026-10-21',
+        );
+        await tester.tap(find.textContaining('Deep work').first);
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile(
+            'goldens/tablet_editor_float_android_${mode.name}.png',
+          ),
         );
       });
     });

@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +12,26 @@ const double _wheelHeight = 216;
 /// scrolling past midnight can never change a task's day (R-20).
 final _anchorDay = DateTime(2000);
 
-/// Opens the optional wheel picker for [initial]; null when dismissed.
+/// Opens the platform's own time picker for [initial] (owner, native
+/// pass): iOS's wheel on iPhone and iPad; Material 3's time picker on
+/// Android and the web (E-R2-4 "M3 time picker"). The Mac types times and
+/// offers no picker. Null when dismissed.
 Future<ClockTime?> showTimeWheel({
   required BuildContext context,
   required ClockTime initial,
   required bool use24h,
-}) {
+}) async {
+  if (!iosApp(context)) {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: initial.hour, minute: initial.minute),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: use24h),
+        child: child!,
+      ),
+    );
+    return picked == null ? null : ClockTime(picked.hour, picked.minute);
+  }
   return showAppSheet<ClockTime>(
     context: context,
     title: context.l10n.timeInputLabel,

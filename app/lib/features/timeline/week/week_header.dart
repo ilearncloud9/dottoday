@@ -4,6 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
 import 'package:dottoday/features/timeline/widgets/day_titles.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
+import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/dot/week_summary_strip.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/foundation.dart';
@@ -183,14 +184,10 @@ class PeriodControls extends StatelessWidget {
       runSpacing: DotSpace.s,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        SegmentedButton<bool>(
-          segments: [
-            ButtonSegment(value: true, label: Text(l10n.weekViewWeek)),
-            ButtonSegment(value: false, label: Text(l10n.weekViewMonth)),
-          ],
-          selected: {week},
-          showSelectedIcon: false,
-          onSelectionChanged: (s) => s.first == week ? null : onSwitch(),
+        DotSegmented<bool>(
+          segments: [(true, l10n.weekViewWeek), (false, l10n.weekViewMonth)],
+          selected: week,
+          onChanged: (_) => onSwitch(),
         ),
         _Nav(
           onPrevious: onPrevious,

@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/a11y.dart';
 import '../../support/account_screen_fakes.dart';
+import '../../support/alerts.dart';
 import '../auth/auth_harness.dart';
 
 // CR-160 D1 (policy §4, interim): export first, the summary, the typed
@@ -141,8 +142,7 @@ void main() {
     const question =
         'Delete without a saved copy? You may permanently lose data that '
         'hasn’t been saved elsewhere.';
-    Finder withoutCopy() =>
-        find.widgetWithText(FilledButton, 'Delete without a saved copy');
+    Finder withoutCopy() => alertButton('Delete without a saved copy');
 
     Future<void> confirmTyped(WidgetTester t) async {
       await t.enterText(find.byType(TextField), 'DELETE');
@@ -203,7 +203,7 @@ void main() {
       await tapIn(t, find.text('Export my data first'));
       await t.pumpAndSettle();
       await confirmTyped(t);
-      await tapIn(t, find.widgetWithText(TextButton, 'Cancel'));
+      await tapIn(t, alertButton('Cancel'));
       await t.pumpAndSettle();
       expect(find.text(question), findsNothing);
       expect(actions.calls, ['export', 'delete']);

@@ -2,6 +2,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,10 +31,14 @@ Future<FakeOccurrenceRepository> _open(
   return repo;
 }
 
+/// The platform's command key: ⌘ on the Mac, Ctrl elsewhere.
 Future<void> _ctrl(WidgetTester tester, LogicalKeyboardKey key) async {
-  await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+  final mod = defaultTargetPlatform == TargetPlatform.macOS
+      ? LogicalKeyboardKey.metaLeft
+      : LogicalKeyboardKey.controlLeft;
+  await tester.sendKeyDownEvent(mod);
   await tester.sendKeyEvent(key);
-  await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+  await tester.sendKeyUpEvent(mod);
   await tester.pumpAndSettle();
 }
 
@@ -45,9 +50,7 @@ bool _focusInPanel() {
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('a row opens the panel, not a sheet; esc closes it', (
-    tester,
-  ) async {
+  _macTest('a row opens the panel, not a sheet; esc closes it', (tester) async {
     await _open(tester);
     expect(find.byType(TaskEditorPanel), findsOneWidget);
     expect(find.byType(BottomSheet), findsNothing);
@@ -57,7 +60,7 @@ void main() {
     expect(find.byType(TaskEditorPanel), findsNothing);
   });
 
-  testWidgets('× closes; another row switches the task', (tester) async {
+  _macTest('× closes; another row switches the task', (tester) async {
     await _open(tester);
     await tester.tap(find.text('Design review').first);
     await tester.pumpAndSettle();
@@ -73,7 +76,7 @@ void main() {
     expect(find.byType(TaskEditorPanel), findsNothing);
   });
 
-  testWidgets('Ctrl+S saves the edit and closes', (tester) async {
+  _macTest('⌘S saves the edit and closes', (tester) async {
     final repo = await _open(tester);
     final field = find.descendant(
       of: find.byType(TaskEditorPanel),
@@ -85,7 +88,7 @@ void main() {
     expect(repo.rows.where((o) => o.title == 'Reply to Sam'), hasLength(1));
   });
 
-  testWidgets('Ctrl+D marks it done', (tester) async {
+  _macTest('⌘D marks it done', (tester) async {
     final repo = await _open(tester);
     await _ctrl(tester, LogicalKeyboardKey.keyD);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -94,7 +97,7 @@ void main() {
     expect(row.status, OccurrenceStatus.done);
   });
 
-  testWidgets('Tab stays inside the panel (focus trap)', (tester) async {
+  _macTest('Tab stays inside the panel (focus trap)', (tester) async {
     await _open(tester);
     for (var i = 0; i < 40; i++) {
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
@@ -103,7 +106,7 @@ void main() {
     }
   });
 
-  testWidgets('below the expanded width a row opens the task sheet', (
+  _macTest('below the expanded width a row opens the task sheet', (
     tester,
   ) async {
     await pumpToday(tester, size: const Size(390, 1400), wrap: _frame);
@@ -113,14 +116,14 @@ void main() {
     expect(find.byType(BottomSheet), findsOneWidget);
   });
 
-  testWidgets('meets a11y guidelines in both themes', (tester) async {
+  _macTest('meets a11y guidelines in both themes', (tester) async {
     for (final mode in [ThemeMode.light, ThemeMode.dark]) {
       await _open(tester, mode: mode);
       await expectA11yGuidelines(tester);
     }
   });
 
-  testWidgets('minimal: the panel shows the minimal sheet; More, the editor', (
+  _macTest('minimal: the panel shows the minimal sheet; More, the editor', (
     tester,
   ) async {
     final repo = FakeOccurrenceRepository(demoDayRows(todayTestDate));
@@ -143,3 +146,10 @@ void main() {
     expect(find.byType(TaskEditor), findsOneWidget);
   });
 }
+
+/// A Mac window: tablets edit in option D's panel instead (ED-273).
+void _macTest(String name, WidgetTesterCallback body) => testWidgets(
+  name,
+  body,
+  variant: TargetPlatformVariant.only(TargetPlatform.macOS),
+);

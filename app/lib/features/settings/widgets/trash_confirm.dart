@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/shared/sheets/dot_alert.dart';
 import 'package:flutter/material.dart';
 
 /// "Delete “{title}” now?" (ED-337): true only on Delete. Permanent
@@ -33,22 +34,14 @@ Future<bool> _confirm(
   required String action,
 }) async {
   final l10n = context.l10n;
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (dialog) => AlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dialog).pop(false),
-          child: Text(l10n.editorCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(dialog).pop(true),
-          child: Text(action),
-        ),
-      ],
-    ),
+  final ok = await showChoiceAlert<bool>(
+    context,
+    title: title,
+    message: body,
+    choices: [
+      AlertChoice(label: l10n.editorCancel, value: false, cancel: true),
+      AlertChoice(label: action, value: true, primary: true),
+    ],
   );
   return ok ?? false;
 }

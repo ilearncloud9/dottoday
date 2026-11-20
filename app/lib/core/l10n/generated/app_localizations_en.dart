@@ -110,7 +110,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeInputInvalid => 'Type a time like 9:30 or 2pm';
 
   @override
-  String get timeInputWheel => 'Pick time with a wheel';
+  String get timeInputPick => 'Pick a time';
 
   @override
   String get timeInputDone => 'Done';
@@ -2615,6 +2615,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lookShowColours => 'Show Colours…';
+
+  @override
+  String get lookMoreColours => 'More colours…';
 
   @override
   String get iconSearchHint => 'Search icons';
@@ -5422,6 +5425,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String routineMoveUp(String title) {
     return 'Move $title up';
+  }
+
+  @override
+  String routineStepLength(String title) {
+    return 'Length of $title';
   }
 
   @override

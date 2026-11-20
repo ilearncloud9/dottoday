@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
 import 'package:dottoday/shared/feedback/paste_confirm.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -108,6 +109,7 @@ class _AddTitleFieldState extends State<AddTitleField> {
       children: [
         (widget.frame ?? (f) => f)(
           TextField(
+            contextMenuBuilder: systemTextMenu,
             controller: _controller,
             autofocus: true,
             style: widget.style ?? t.styles.topBarTitle,

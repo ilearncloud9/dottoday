@@ -5,6 +5,7 @@ import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/workspace_routes.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/links/browser_history.dart';
@@ -19,7 +20,8 @@ import 'package:go_router/go_router.dart';
 /// Keeps the open task and the address in step (ED-097, CR-068): a view's
 /// `?task=<id>` opens the task where this width edits it, the panel at the
 /// expanded width, the sheet elsewhere, and on the Workspace's Day, 3 days
-/// and Week the inspector (E-FullA-v2, ED-391); losing it (Back, a link) closes
+/// and Week the inspector (E-FullA-v2, ED-391); tablets edit in the panel
+/// from medium width (ED-273); losing it (Back, a link) closes
 /// it; closing it by hand removes it, as a Back step when it was opened
 /// here and by a replace when the address arrived with it. So Refresh
 /// keeps the task, Back closes it and Forward opens it again.
@@ -111,7 +113,16 @@ class _TaskLinkHostState extends ConsumerState<TaskLinkHost> {
   /// Where [path] shows a task at this width: the Workspace's grid views
   /// in Full pick it into the inspector (ED-170 C1).
   _Where _whereFor(String path) {
-    if (AppLayout.classOf(context) != WidthClass.expanded) return _Where.sheet;
+    final width = AppLayout.classOf(context);
+    final simple =
+        ref.read(layoutPolicyProvider).visibility(FeatureId.taskSheet) ==
+        FeatureVisibility.simplified;
+    // Tablets: option D's editor in the panel from medium width, never the
+    // Mac inspector (ED-273, ED-274).
+    if (touchApp(context) && !simple && width != WidthClass.compact) {
+      return _Where.panel;
+    }
+    if (width != WidthClass.expanded) return _Where.sheet;
     final full =
         ref.read(layoutPolicyProvider).visibility(FeatureId.spread) !=
         FeatureVisibility.simplified;

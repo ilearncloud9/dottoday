@@ -29,7 +29,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Opens task [id]'s sheet: option D on phones in Full (ED-086, M19.4
 /// part 4a), the task sheet (docs/10 §5.2 T4, `A-ios-task-sheet`) in
-/// Minimal (M19.6) and on wider windows until part 4d.
+/// Minimal (M19.6) and on the Mac and web below expanded. Tablets edit in
+/// the side panel from medium width (ED-273, part 4d).
 Future<void> showTaskSheet(BuildContext context, String id) {
   final minimal =
       ProviderScope.containerOf(

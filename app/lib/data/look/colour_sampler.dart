@@ -5,9 +5,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'colour_sampler.g.dart';
 
-/// Custom colour…'s eyedropper and the Mac's Show Colours… (ED-156,
-/// owner 4c-3): the Mac's own screen sampler and Colours panel, the
-/// browser's EyeDropper where it has one, nothing elsewhere.
+/// Custom colour…'s eyedropper, the Mac's Show Colours… (ED-156, owner
+/// 4c-3) and More colours… (owner, native pass): the Mac's own screen
+/// sampler and Colours panel; iOS's system colour picker; the browser's
+/// EyeDropper and colour input where it has them; nothing on Android,
+/// which has no system colour picker.
 abstract interface class ColourSampler {
   /// Whether the eyedropper is offered here.
   bool get canSample;
@@ -23,6 +25,14 @@ abstract interface class ColourSampler {
   Future<void> openPanel(Color start, void Function(Color) onColour);
 
   Future<void> closePanel();
+
+  /// Whether More colours… (the platform's own colour picker: iOS's, the
+  /// browser's) is offered here.
+  bool get hasSystemPicker;
+
+  /// The colour picked in it, starting at [start]; null when unchanged or
+  /// cancelled.
+  Future<Color?> pickSystem(Color start);
 }
 
 /// The sampler for this platform (a fake in tests).

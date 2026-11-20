@@ -7,6 +7,7 @@ import 'package:dottoday/shared/duration/duration_preview.dart';
 import 'package:dottoday/shared/duration/preset_chips.dart';
 import 'package:dottoday/shared/feedback/field_error.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -158,6 +159,7 @@ class _DurationSheetState extends State<_DurationSheet> {
   );
 
   Widget _typedField(AppLocalizations l10n) => TextField(
+    contextMenuBuilder: systemTextMenu,
     key: ValueKey('typed-$_wheel'),
     keyboardType: TextInputType.text,
     textInputAction: TextInputAction.done,

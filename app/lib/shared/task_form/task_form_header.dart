@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/sheets/anchored_popover.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// The task form's head (option D, ED-086; Create task, ED-140): the
@@ -176,6 +177,7 @@ class TaskFormTitleField extends StatelessWidget {
     final t = DotTheme.of(context);
     final style = t.styles.sheetTitle.copyWith(fontWeight: FontWeight.w700);
     return TextField(
+      contextMenuBuilder: systemTextMenu,
       controller: controller,
       focusNode: focusNode,
       autofocus: autofocus,

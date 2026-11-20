@@ -111,7 +111,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get timeInputInvalid => 'Gib eine Uhrzeit wie 9:30 oder 14 Uhr ein';
 
   @override
-  String get timeInputWheel => 'Uhrzeit mit Rad wählen';
+  String get timeInputPick => 'Uhrzeit wählen';
 
   @override
   String get timeInputDone => 'Fertig';
@@ -2625,6 +2625,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get lookShowColours => 'Farben einblenden …';
+
+  @override
+  String get lookMoreColours => 'Weitere Farben …';
 
   @override
   String get iconSearchHint => 'Symbole suchen';
@@ -5450,6 +5453,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String routineMoveUp(String title) {
     return '$title nach oben';
+  }
+
+  @override
+  String routineStepLength(String title) {
+    return 'Dauer von $title';
   }
 
   @override

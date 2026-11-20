@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 
 /// The search field (`A-ios-search`): magnifier, text, round × to clear.
@@ -45,6 +46,7 @@ class _SearchFieldState extends State<SearchField> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return TextField(
+      contextMenuBuilder: systemTextMenu,
       controller: _controller,
       style: t.styles.rowTitle,
       textInputAction: TextInputAction.search,
