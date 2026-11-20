@@ -1323,3 +1323,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-407:** M19.5 part 5b: Earlier folds in the Workspace Day column (Mac, web, tablets); reopening says "{title} reopened"; ↓ into the open group, the done circle focusable everywhere. Approved.
 - **2026-11-20, ED-408:** M19.5 part 5c: Go to date (the approved month, week tinted, today ringed) as each platform's own container, from the date button, ⇧⌘T, web g, Go › Go to Date… and the Day menu; M19.5 complete. Approved.
 - **2026-11-20, ED-409:** M19.6 part 6a: Minimal's places by width (Now · Today · Inbox on phones, Now · Inbox · Calendar · Search wider), the 200 sidebar, ⌘1–4; M19.6 in five parts. Approved.
+- **2026-11-20, ED-410:** M19.6 part 6b: Now on the phones (Minimal opens on Now; the horizon, the orb, Done and Need more time?, Next up with Earlier, an open day). Approved.

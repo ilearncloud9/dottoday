@@ -87,6 +87,54 @@ class AppLocalizationsDe extends AppLocalizations {
   String get navNow => 'Jetzt';
 
   @override
+  String nowSummary(String now, String windDown) {
+    return 'Jetzt $now · Feierabend um $windDown';
+  }
+
+  @override
+  String get nowAlsoNow => 'Auch jetzt';
+
+  @override
+  String get nowNext => 'Danach';
+
+  @override
+  String get nowOrbCaption => 'Min. übrig';
+
+  @override
+  String get nowOrbHoursCaption => 'übrig';
+
+  @override
+  String get nowOrbFree => 'frei';
+
+  @override
+  String get nowHours => 'Std.';
+
+  @override
+  String get nowOpenDay => 'Ein freier Tag';
+
+  @override
+  String nowFreeUntil(String time) {
+    return 'Frei bis zum Feierabend um $time.';
+  }
+
+  @override
+  String get nowAddToDay => 'Zum Tag hinzufügen';
+
+  @override
+  String get nowOneThing => 'Eine Sache reicht. Oder füge eine Liste ein.';
+
+  @override
+  String get nowFocusHint => 'Öffnet den Fokus';
+
+  @override
+  String horizonLabel(String wake, String windDown, String now) {
+    return 'Tageshorizont, $wake bis $windDown, jetzt $now';
+  }
+
+  @override
+  String get horizonOpensToday => 'Öffnet Heute';
+
+  @override
   String get navInbox => 'Eingang';
 
   @override

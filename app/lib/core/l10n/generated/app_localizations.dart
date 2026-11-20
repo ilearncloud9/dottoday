@@ -234,6 +234,90 @@ abstract class AppLocalizations {
   /// **'Now'**
   String get navNow;
 
+  /// Minimal Now's summary line under the date (E-PhonesMinimal).
+  ///
+  /// In en, this message translates to:
+  /// **'Now {now} · Wind Down at {windDown}'**
+  String nowSummary(String now, String windDown);
+
+  /// Minimal Now: a second task running at the same time (E-PhonesMinimal).
+  ///
+  /// In en, this message translates to:
+  /// **'Also now'**
+  String get nowAlsoNow;
+
+  /// Minimal Now: the next task, under the running one (E-PhonesMinimal).
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nowNext;
+
+  /// Under the minutes in Minimal's orb: '18' / 'min left' (ED-106).
+  ///
+  /// In en, this message translates to:
+  /// **'min left'**
+  String get nowOrbCaption;
+
+  /// Under hours in Minimal's orb when a task has 100 minutes or more left: '2h' / 'left'.
+  ///
+  /// In en, this message translates to:
+  /// **'left'**
+  String get nowOrbHoursCaption;
+
+  /// Under the hours in the open day's orb: '16h' / 'free' (E-PhonesMinimal frame 4).
+  ///
+  /// In en, this message translates to:
+  /// **'free'**
+  String get nowOrbFree;
+
+  /// The hours unit beside the orb's numeral: '16' 'h'.
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get nowHours;
+
+  /// Minimal Now with nothing planned (E-PhonesMinimal frame 4).
+  ///
+  /// In en, this message translates to:
+  /// **'An open day'**
+  String get nowOpenDay;
+
+  /// Under 'An open day' (E-PhonesMinimal frame 4).
+  ///
+  /// In en, this message translates to:
+  /// **'Free until Wind Down at {time}.'**
+  String nowFreeUntil(String time);
+
+  /// Minimal Now's open-day button: opens Add (E-PhonesMinimal frame 4).
+  ///
+  /// In en, this message translates to:
+  /// **'Add to the day'**
+  String get nowAddToDay;
+
+  /// Under Add to the day (E-PhonesMinimal frame 4).
+  ///
+  /// In en, this message translates to:
+  /// **'One thing is enough. Or paste a list.'**
+  String get nowOneThing;
+
+  /// Screen-reader hint on Minimal's orb: a tap opens Focus (ED-244).
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Focus'**
+  String get nowFocusHint;
+
+  /// Screen-reader name of Minimal's horizon (CR-138); a tap opens Today.
+  ///
+  /// In en, this message translates to:
+  /// **'Day horizon, {wake} to {windDown}, now {now}'**
+  String horizonLabel(String wake, String windDown, String now);
+
+  /// Screen-reader hint on Minimal's horizon: a tap opens the Today tab (E-PhonesMinimal frame 1).
+  ///
+  /// In en, this message translates to:
+  /// **'Opens Today'**
+  String get horizonOpensToday;
+
   /// Tab: unscheduled tasks.
   ///
   /// In en, this message translates to:

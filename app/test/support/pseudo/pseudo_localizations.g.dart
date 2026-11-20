@@ -82,6 +82,50 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get navNow => pseudo(super.navNow);
 
   @override
+  String nowSummary(String now, String windDown) =>
+      pseudo(super.nowSummary(now, windDown));
+
+  @override
+  String get nowAlsoNow => pseudo(super.nowAlsoNow);
+
+  @override
+  String get nowNext => pseudo(super.nowNext);
+
+  @override
+  String get nowOrbCaption => pseudo(super.nowOrbCaption);
+
+  @override
+  String get nowOrbHoursCaption => pseudo(super.nowOrbHoursCaption);
+
+  @override
+  String get nowOrbFree => pseudo(super.nowOrbFree);
+
+  @override
+  String get nowHours => pseudo(super.nowHours);
+
+  @override
+  String get nowOpenDay => pseudo(super.nowOpenDay);
+
+  @override
+  String nowFreeUntil(String time) => pseudo(super.nowFreeUntil(time));
+
+  @override
+  String get nowAddToDay => pseudo(super.nowAddToDay);
+
+  @override
+  String get nowOneThing => pseudo(super.nowOneThing);
+
+  @override
+  String get nowFocusHint => pseudo(super.nowFocusHint);
+
+  @override
+  String horizonLabel(String wake, String windDown, String now) =>
+      pseudo(super.horizonLabel(wake, windDown, now));
+
+  @override
+  String get horizonOpensToday => pseudo(super.horizonOpensToday);
+
+  @override
   String get navInbox => pseudo(super.navInbox);
 
   @override

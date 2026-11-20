@@ -11,20 +11,25 @@ import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
+import 'package:dottoday/features/timeline/now/now_screen.dart';
 import 'package:dottoday/features/timeline/review/day_review_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
 import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_frame.dart';
+import 'package:dottoday/minimal_start.dart';
 
 /// Composition-root wiring of routes to screens. Today and Week get the
 /// Workspace's Plan panel here, so no feature imports another (M19.2).
 final appScreens = RouteScreens(
-  shell: (context, shell) => AppShell(shell: shell),
+  shell: (context, shell) => MinimalStart(
+    shell: shell,
+    child: AppShell(shell: shell),
+  ),
   // Minimal's Now (ED-066): the day until its own view (M19.6 parts 6b
   // and 6c); Full has no Now, so its /now is Today.
-  now: (_) => const TodayScreen(),
+  now: (_) => const NowScreen(),
   today: (_) =>
       const WorkspaceFrame(child: PlanPanelFrame(child: TodayScreen())),
   inbox: (_) => const InboxScreen(),

@@ -5323,6 +5323,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not changed:** doc 14's "no tab bar" and "Later row" rows, which doc 14 says ED-068 supersedes on this branch without rewriting; the layout policy.
 - **Checks:** minimal_places_test (6); updated the /now deep link, Minimal Today's tappables, the keyboard scheme's Minimal keys; the test app passes Minimal to its keys as the app does; 5 goldens of Minimal's places. Analyze and format clean; 7376 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-410 · M19.6 part 6b: Now on the phones
+- **Date:** 2026-11-20. **Owner:** "Start 6b", then "Approve 6b" after the review page.
+- **Native first, checked:** Need more time? is each platform's own menu (UIMenu on the iPhone, Material's on Android); Go to date is 5c's; the Day chip opens Minimal's Day menu through the system's pull-down.
+- **Built (E-PhonesMinimal frames 1, 4, 5; E-R2-26 "Now through the day", ED-329; ED-066, ED-106, ED-244):** Minimal opens on Now, once, when the profile first loads and the launch is still on plain Today (a link elsewhere, or a later switch to Minimal, stays put). The header: the date with ▾ (Go to date), the sync and profile capsule, "Now 10:42 · Wind Down at 11:00 PM". The day horizon (48 tall, one tap target, opens Today). Running: the orb (minutes left, hours from 100 min, the elapsed arc; a tap opens Focus), Done with Undo, Need more time? (+5, +15, +30 min, Shift the rest), Also now and Next. Between tasks: Next up (the 200 ring, "{duration} free"), the task after as Next, and tasks that ended unticked under Earlier, "· not done", with their done circle. An open day: the hours-free orb, Add to the day, "One thing is enough. Or paste a list." The day's end: "Nothing else today". Day ▾ above the tab bar's end. The rule is `nowViewOf` in `domain/now`, the same as the widgets and the Mac menu bar.
+- **Departures, approved with the part:** at 6:30 the Wake Up card stays its own screen (as built, R2-19) instead of inside Now; rows between tasks keep the task dot with its icon (frame 1) where E-R2-26 draws plain rings; no hairline between Also now and Next, no overlap knot, no shadow under Next up's ring.
+- **Wider (tablets, the Mac, the web):** Now still shows the day until 6c.
+- **Checks:** now_view_test (6), now_screen_test (7), 7 goldens; Minimal Today and the Wake Up promise tests go to Today first; the 6a place goldens now show Now. Fixed: the horizon threw while painting when a task began after now; the orb's numerals use the locale's digits. Analyze and format clean; 7401 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

@@ -1,5 +1,6 @@
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
@@ -72,6 +73,9 @@ Future<void> _pumpMinimalApp(WidgetTester tester) async {
       ),
     ),
   );
+  await tester.pumpAndSettle();
+  // Minimal opens on Now (6b); these are Today's.
+  router.go(AppRoutes.today);
   await tester.pumpAndSettle();
 }
 

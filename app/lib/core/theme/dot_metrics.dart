@@ -209,6 +209,33 @@ abstract final class DotSize {
   /// The now dot on today's thread (E-FullA-v2 Week): 14 with a 2 edge.
   static const double gridNowDot = 14;
 
+  /// Minimal's horizon (E rules §5.3, ED-241): the waking day laid flat,
+  /// a 3 px line, 14 px dots with a 2 px ground cut-out, 16 px caps and
+  /// the 14 px now-bead; labels under it.
+  static const double horizonLine = 3;
+  static const double horizonDot = 14;
+  static const double horizonCut = 2;
+  static const double horizonRing = 2.5;
+  static const double horizonCap = 16;
+  // The whole horizon is one tap target (opens Today), 48 as drawn.
+  static const double horizonHeight = 48;
+
+  /// Minimal's orb, the large now-dot (E rules §5.3, ED-106): 236 on the
+  /// iPhone, 228 on Android; drawn on a 232 viewBox.
+  static const double orbIphone = 236;
+  static const double orbAndroid = 228;
+
+  /// Next up's ring between tasks (E-R2-26): the task's colour, its icon.
+  static const double nextUpRing = 200;
+  static const double nextUpStroke = 12;
+  static const double nextUpGlyph = 64;
+
+  /// Now's "Also now" / "Next" rows (E rules §5.2): the dot 32 on the
+  /// iPhone, 36 on Android, after a 72 label column.
+  static const double nowRowDot = 32;
+  static const double nowRowDotAndroid = 36;
+  static const double nowRowLabel = 72;
+
   /// The narrowest week grid the Plan panel leaves room for: 3 days of 144
   /// and the 44 hour labels (ED-170). Narrower, the panel hides itself.
   static const double weekGridMin = 3 * gridColumn + gridGutter;

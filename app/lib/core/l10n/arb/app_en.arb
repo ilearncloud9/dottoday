@@ -82,6 +82,86 @@
   "@navNow": {
     "description": "Minimal's first place (ED-066, ED-068): what's on now."
   },
+  "nowSummary": "Now {now} · Wind Down at {windDown}",
+  "@nowSummary": {
+    "description": "Minimal Now's summary line under the date (E-PhonesMinimal).",
+    "placeholders": {
+      "now": {
+        "type": "String"
+      },
+      "windDown": {
+        "type": "String"
+      }
+    }
+  },
+  "nowAlsoNow": "Also now",
+  "@nowAlsoNow": {
+    "description": "Minimal Now: a second task running at the same time (E-PhonesMinimal)."
+  },
+  "nowNext": "Next",
+  "@nowNext": {
+    "description": "Minimal Now: the next task, under the running one (E-PhonesMinimal)."
+  },
+  "nowOrbCaption": "min left",
+  "@nowOrbCaption": {
+    "description": "Under the minutes in Minimal's orb: '18' / 'min left' (ED-106)."
+  },
+  "nowOrbHoursCaption": "left",
+  "@nowOrbHoursCaption": {
+    "description": "Under hours in Minimal's orb when a task has 100 minutes or more left: '2h' / 'left'."
+  },
+  "nowOrbFree": "free",
+  "@nowOrbFree": {
+    "description": "Under the hours in the open day's orb: '16h' / 'free' (E-PhonesMinimal frame 4)."
+  },
+  "nowHours": "h",
+  "@nowHours": {
+    "description": "The hours unit beside the orb's numeral: '16' 'h'."
+  },
+  "nowOpenDay": "An open day",
+  "@nowOpenDay": {
+    "description": "Minimal Now with nothing planned (E-PhonesMinimal frame 4)."
+  },
+  "nowFreeUntil": "Free until Wind Down at {time}.",
+  "@nowFreeUntil": {
+    "description": "Under 'An open day' (E-PhonesMinimal frame 4).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowAddToDay": "Add to the day",
+  "@nowAddToDay": {
+    "description": "Minimal Now's open-day button: opens Add (E-PhonesMinimal frame 4)."
+  },
+  "nowOneThing": "One thing is enough. Or paste a list.",
+  "@nowOneThing": {
+    "description": "Under Add to the day (E-PhonesMinimal frame 4)."
+  },
+  "nowFocusHint": "Opens Focus",
+  "@nowFocusHint": {
+    "description": "Screen-reader hint on Minimal's orb: a tap opens Focus (ED-244)."
+  },
+  "horizonLabel": "Day horizon, {wake} to {windDown}, now {now}",
+  "@horizonLabel": {
+    "description": "Screen-reader name of Minimal's horizon (CR-138); a tap opens Today.",
+    "placeholders": {
+      "wake": {
+        "type": "String"
+      },
+      "windDown": {
+        "type": "String"
+      },
+      "now": {
+        "type": "String"
+      }
+    }
+  },
+  "horizonOpensToday": "Opens Today",
+  "@horizonOpensToday": {
+    "description": "Screen-reader hint on Minimal's horizon: a tap opens the Today tab (E-PhonesMinimal frame 1)."
+  },
   "navInbox": "Inbox",
   "@navInbox": {
     "description": "Tab: unscheduled tasks."
