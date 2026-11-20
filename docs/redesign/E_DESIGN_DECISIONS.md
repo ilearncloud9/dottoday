@@ -5394,6 +5394,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not run:** iPad landscape and Android tablet portrait on a device (rotation needs the simulator panel's OK or a device setting); real iPhone, iPad and Android devices (no dev flavour, decision 14).
 - **Checks:** analyze and format clean; 7542 tests pass, 31 skipped. Device entry `integration_test/slice_journey_test.dart`; web driver `tool/slice/web_journey.mjs`.
 
+### ED-418 · M19.7 part 7b: the sweep beside the boards, the matrix, the acceptance page; M19 closed
+- **Date:** 2026-11-20. **Owner:** "Start 7b"; "run it on my iphone it's plugged in now" ("Run without a backup"); "install it on iphone so when i disconnect from the pc it would still work" (signed in to Xcode; "Yes, delete it" for the main checkout's `build/ios`; "Yes, build it that way": personal team, without Time Sensitive Notifications); then "Approve, close M19" after the acceptance page.
+- **Sweep:** each target's journey shots beside its board (iPhone and Android phone on E-Phones / E-PhonesMinimal; iPad portrait and landscape and the Android tablet on E-R2-1; Mac and web on E-FullA-v2 / E-Minimal; mobile web on E-MobileWeb), Full and Minimal. Differences named, not changed: no Calendar tab (M20.1), "···" for Day ▾ (M20.3), no sidebar Synced line (M20.10), the locale's date format, Week opened where a board shows Day.
+- **Real iPhone:** the journey passed in Full and Minimal on the owner's iPhone 17 Pro (iOS 27.2.1, debug, its own data left untouched by the in-memory run). Its shots showed the native tab bar over open sheets: the harness, not the app; the journey now builds the router with `NativeBarObserver` as bootstrap does. The device entry saves shots on a real iOS device with `takeScreenshot` and no longer converts the Android surface (screencap showed the test's start screen). A rerun with the fade was stopped by a full disk.
+- **Install (not committed):** a release build on the owner's iPhone, signed by the personal team; the Time Sensitive entitlement was left out for that build only and `project.pbxproj` restored (clean diff). It opens unplugged, expires after about 7 days, uses `.env.example` (no account sync) and the phone's existing data, upgraded.
+- **Matrix:** `PLATFORM_QUALITY_MATRIX.md` gets the Prompt F note and an F value in each row, "FAIL → fixed in 7a" where the slice found something, and the F slice row.
+- **Not verified:** iPad landscape and Android tablet portrait on a device; real iPad and Android devices; Back and dismiss, background and resume, a screen reader and mid-flow switches on a device.
+- **Checks:** analyze and format clean; the 18 widget journeys pass with the harness change.
+
 ---
 
 ## Pending owner answers

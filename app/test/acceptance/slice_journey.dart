@@ -8,6 +8,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/now/now_screen.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
+import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,10 @@ Future<void> runSliceJourney(
   Future<void> Function(String step)? shot,
 }) async {
   final repo = sliceRepo();
-  final router = buildRouter(appScreens);
+  // As bootstrap builds it: the iPhone's native row fades under sheets
+  // and dialogs (found on a real iPhone in M19.7: without it the row sat
+  // over the task sheet).
+  final router = buildRouter(appScreens, observers: [NativeBarObserver()]);
   addTearDown(router.dispose);
   await tester.pumpWidget(
     testRouterApp(

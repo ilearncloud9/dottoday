@@ -738,7 +738,7 @@ Rules for every task in M18 to M22:
   - [x] Part 6d-2 done 2026-11-20 (ED-414): minimal Add (the iPhone's Cancel · New task · Add; Android's M3 sheet; the chips; Lands at on a mini horizon; several lines plan first; More opens Create task). Open: 6e (the narrow-Mac rules and tablets); a real-device run.
   - [x] Part 6e-1 done 2026-11-20 (ED-415): Minimal on a narrow Mac (the Day column fold at the computed point with the "Day" edge panel, the narrow toolbar below 1000, the short window's 72 % orb). Open: 6e-2 tablets; a real-device run.
   - [x] Part 6e-2 done 2026-11-20 (ED-416): Minimal on tablets (E-R2-1 2a, 2b, 4a): expanded iPad and Android tablets get the pane and Day column under the apps' toolbar (no key hints on touch); medium shows Now with the Day under it (its header and Day menu); 48 touch rows, the iPad sidebar's too; the + hold in the button's semantics. Open: the medium Day's own scroll inside the page; a real iPad and Android tablet run (M21).
-- [ ] M19.7 Acceptance (playbook step 11):
+- [x] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
   - cases: empty, dense, loading, error, long text and 200 % text;
   - screenshots compared with the boards;
@@ -747,6 +747,7 @@ Rules for every task in M18 to M22:
   **STOP: the owner uses the journey and approves it before M20.**
   Split by the owner (2026-11-20) in two parts, each with its own review page and commit: 7a the journey on every target and the cases; 7b the screenshot sweep beside the boards, `PLATFORM_QUALITY_MATRIX.md` and the acceptance page.
   - [x] Part 7a done 2026-11-20 (ED-417): the journey in Full and Minimal on 9 targets (widget level) and on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit and the real Mac app; the six cases at three widths (36 checks, 36 goldens); eight fixes it found. Open: 7b; iPad landscape and Android tablet portrait on a device; real devices (no dev flavour).
+  - [x] Part 7b done 2026-11-20 (ED-418): the sweep beside the boards (differences named: Calendar tab M20.1, Day ▾ M20.3, Synced line M20.10, locale dates); `PLATFORM_QUALITY_MATRIX.md` with F values; the acceptance page; the journey on the owner's iPhone in Full and Minimal. M19 approved and closed. Open: iPad landscape and Android tablet portrait on a device; real iPad and Android devices; Back, resume, screen reader and mid-flow switches on a device.
 
 ## Milestone 20 — Migrate the rest, one slice at a time (Prompt G; the owner reviews each slice)
 

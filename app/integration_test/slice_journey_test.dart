@@ -5,6 +5,8 @@
 // touches nothing stored on the device. A shot is saved after each step:
 //   tool/device_tests.sh ios <udid> slice_journey      (DEVICE_SHOT)
 //   tool/device_tests.sh android <serial> slice_journey
+//   a real iPhone: flutter drive -d <udid> --driver=test_driver/screenshot_driver.dart \
+//     --target=integration_test/slice_journey_test.dart (shots in build/sweep)
 //   SWEEP_TARGET=integration_test/slice_journey_test.dart tool/mac_sweep.sh
 //   flutter build web -t integration_test/slice_journey_test.dart \
 //     --dart-define=SWEEP_HOST_SHOTS=true, served, then
@@ -48,7 +50,13 @@ Future<void> _shot(
   WidgetTester tester,
   String name,
 ) async {
-  if (kIsWeb && !_hostShots) {
+  // A real iPhone or iPad captures its own (the simulator's comes back
+  // blank, so the host takes those).
+  final iosDevice =
+      !kIsWeb &&
+      Platform.isIOS &&
+      !Platform.environment.containsKey('SIMULATOR_DEVICE_NAME');
+  if ((kIsWeb && !_hostShots) || iosDevice) {
     await binding.takeScreenshot(name);
     return;
   }
