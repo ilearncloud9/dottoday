@@ -39,9 +39,12 @@ class DoneCircle extends StatelessWidget {
       onTapHint: done ? l10n.dotMarkNotDoneHint : l10n.dotMarkDoneHint,
       onTap: onTap,
       excludeSemantics: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      // Focusable: Tab and the arrows reach it, Space or Return toggles it
+      // (E-Earlier frame 8, M19.5).
+      child: InkResponse(
         onTap: onTap,
+        radius: DotTouch.android / 2,
+        customBorder: const CircleBorder(),
         child: SizedBox.square(
           dimension: DotTouch.android,
           child: Center(

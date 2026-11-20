@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- In the Day view on the Mac, the web and tablets, today's finished tasks fold into one Earlier row you can open; reopening a task now says "… reopened", and the done circle works from the keyboard (redesign branch).
 - On iPad and Android tablets each task on the calendar grid has a done circle, and tapping it again reopens the task; Create task's circle adds a task that's already done; the Undo message no longer slides in with Reduce Motion, sits at the start of the screen on Android tablets, and goes away once ⌘Z or Ctrl+Z has undone the change (redesign branch).
 - Each platform uses its own controls (redesign branch): iPhone and iPad menus, alerts and colour picker are iOS's own, the Mac's menus and alerts are macOS's, Android gets Material's time picker and menus, and the web uses the browser's colour picker. Text fields show the system's Cut, Copy and Paste menu, choices use each platform's segmented control, and full-height sheets on iPhone are iOS card sheets.
 - On tablets, tapping a task opens the same editor as on phones in a side panel beside the calendar, docked on wide screens and floating on narrower ones (redesign branch). On the Mac and the web, the task inspector adds Energy, Sound, Travel time, Pinned and Delete task under Notes.

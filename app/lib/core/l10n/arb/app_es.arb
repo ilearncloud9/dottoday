@@ -155,7 +155,7 @@
   "copyDayDone": "{count, plural, =1{1 tarea copiada} other{{count} tareas copiadas}}",
   "copyDayNothing": "Ese día no tiene nada que copiar",
   "snackDone": "{title} hecha",
-  "snackNotDone": "{title} sin hacer",
+  "snackNotDone": "{title} reabierta",
   "snackExtended": "{title} ahora termina a las {time}",
   "snackShifted": "{count, plural, =1{1 tarea movida} other{{count} tareas movidas}}",
   "snackShiftedPartial": "{count, plural, =0{Nada movido: {pin} está fijada} =1{1 tarea movida · detenido en {pin} (fijada)} other{{count} tareas movidas · detenido en {pin} (fijada)}}",

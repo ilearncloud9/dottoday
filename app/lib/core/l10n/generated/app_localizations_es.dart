@@ -657,7 +657,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String snackNotDone(String title) {
-    return '$title sin hacer';
+    return '$title reabierta';
   }
 
   @override

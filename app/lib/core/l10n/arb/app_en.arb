@@ -985,9 +985,9 @@
       }
     }
   },
-  "snackNotDone": "{title} not done",
+  "snackNotDone": "{title} reopened",
   "@snackNotDone": {
-    "description": "Snackbar after un-marking a done task, with Undo.",
+    "description": "Snackbar after reopening a done task, with Undo (E-Earlier: \"Team standup reopened\").",
     "placeholders": {
       "title": {
         "type": "String"

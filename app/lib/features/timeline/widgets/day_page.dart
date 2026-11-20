@@ -151,9 +151,10 @@ class DayPage extends ConsumerWidget {
       oneThingId: date == today ? ref.watch(todayOneThingIdProvider) : null,
       outsideCounted: !minimal,
     );
-    // Today folds its done tasks into Earlier on Minimal phones and on the
-    // Mac/web card; Full phones keep their rows (ED-164, docs/14 §3).
-    final fold = date == today && (!page || minimal);
+    // Today folds its done tasks into Earlier on Minimal phones, on the
+    // Mac/web card and in the Workspace's Day column on every wide window
+    // (E-Earlier 7-10, M19.5); Full phones keep their rows (ED-164).
+    final fold = date == today && (!page || minimal || hours);
     final entries = fold
         ? foldEarlier(
             threaded,

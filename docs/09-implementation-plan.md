@@ -722,6 +722,7 @@ Rules for every task in M18 to M22:
   - change day by the Day menu, swipe or arrows (R2-5, ED-276), and Go to date (R2-36, ED-342).
   Split by the owner (2026-11-20) in three parts, each with its own review page and commit: 5a Done and Undo; 5b reopen and the Earlier fold; 5c change day and Go to date (the approved month everywhere, owner). From M19.5 on, each platform's native control is considered first (owner).
   - [x] Part 5a done 2026-11-20 (ED-406): the Undo toast without sliding under Reduce Motion, at the content's start on Android tablets, closed by ⌘Z / Ctrl+Z's undo; the done circle on touch grid blocks (Done with Undo, reopens too; not in narrow lanes); Create task's header circle adds a task already done (not a repeating one). Open: 5b, 5c; a real-device run.
+  - [x] Part 5b done 2026-11-20 (ED-407): today's done tasks fold into Earlier in the Workspace's Day column on the Mac, web and tablets (E-Earlier 7 to 10); reopening says "{title} reopened"; ↓ moves into the open group and the done circle takes the keyboard everywhere. Open: 5c; a real-device run.
 - [ ] M19.6 The same journey in Minimal:
   - the Now tab (phones) and Now pane (Mac and web): the horizon, the large now-dot and the orb, with Done, Focus and Need more time? (ED-066, ED-106);
   - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);

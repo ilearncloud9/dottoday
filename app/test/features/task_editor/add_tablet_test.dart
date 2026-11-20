@@ -189,6 +189,10 @@ void main() {
             await tester.pumpAndSettle();
           }
           expect(find.byType(CreateTaskSheet), findsOneWidget);
+          // Text half under the popover's edge is measured against what is
+          // behind the popover; scroll it in, as a person would read it.
+          await tester.ensureVisible(find.text('Notes'));
+          await tester.pumpAndSettle();
           await expectA11yGuidelines(tester);
         });
       });

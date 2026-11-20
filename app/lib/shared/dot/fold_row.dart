@@ -55,6 +55,10 @@ class FoldRow extends StatelessWidget {
         const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
           if (open) onToggle(false);
         },
+        // Open, ↓ moves into the group (E-Earlier frame 8).
+        const SingleActivator(LogicalKeyboardKey.arrowDown): () {
+          if (open) FocusScope.of(context).nextFocus();
+        },
       },
       child: Semantics(
         button: true,

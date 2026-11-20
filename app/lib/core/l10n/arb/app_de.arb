@@ -155,7 +155,7 @@
   "copyDayDone": "{count, plural, =1{1 Aufgabe kopiert} other{{count} Aufgaben kopiert}}",
   "copyDayNothing": "An diesem Tag gibt es nichts zu kopieren",
   "snackDone": "{title} erledigt",
-  "snackNotDone": "{title} nicht erledigt",
+  "snackNotDone": "{title} wieder geöffnet",
   "snackExtended": "{title} endet jetzt um {time}",
   "snackShifted": "{count, plural, =1{1 Aufgabe verschoben} other{{count} Aufgaben verschoben}}",
   "snackShiftedPartial": "{count, plural, =0{Nichts verschoben: {pin} ist angeheftet} =1{1 Aufgabe verschoben · gestoppt bei {pin} (angeheftet)} other{{count} Aufgaben verschoben · gestoppt bei {pin} (angeheftet)}}",

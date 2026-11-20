@@ -1032,10 +1032,10 @@ abstract class AppLocalizations {
   /// **'{title} done'**
   String snackDone(String title);
 
-  /// Snackbar after un-marking a done task, with Undo.
+  /// Snackbar after reopening a done task, with Undo (E-Earlier: "Team standup reopened").
   ///
   /// In en, this message translates to:
-  /// **'{title} not done'**
+  /// **'{title} reopened'**
   String snackNotDone(String title);
 
   /// Snackbar after +15 min on the live task, with Undo.

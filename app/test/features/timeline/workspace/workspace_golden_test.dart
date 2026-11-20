@@ -71,6 +71,23 @@ void main() {
         debugDefaultTargetPlatformOverride = null;
       }
     });
+    // E-Earlier frame 8 (M19.5 part 5b): the fold open in the Day column.
+    testWidgets('golden: the Mac Day column, Earlier open, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/today/2026-10-21');
+        await tester.tap(find.text('Earlier'));
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_day_earlier_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
+      }
+    });
     testWidgets('golden: the Mac Workspace, Day, ${mode.name}', (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       try {

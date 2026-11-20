@@ -5298,6 +5298,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, recorded:** E-R2-5 draws no circle on blocks (owner answer); in a 3-day or week column the circle costs the title about a word, and a block in a narrow overlap lane or shorter than the touch target has none (Done in the docked editor). ⌘Z closing the toast is not on the board.
 - **Checks:** the toast's Reduce Motion, ⌘Z and placement (4); grid_done_test (3); create_task_done_test (3); goldens re-recorded where touch blocks draw circles, Create task on phones and tablets, the Android toast. Analyze and format clean; 7353 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-407 · M19.5 part 5b: reopen and the Earlier fold
+- **Date:** 2026-11-20. **Owner:** "Start 5b", then "Approve 5b" after the review page.
+- **Native first, checked:** Earlier is the app's own row; it is already a native disclosure button (VoiceOver and TalkBack say its state, the web marks it expanded or collapsed). The done circle is task content.
+- **Built (E-Earlier frames 7 to 10, ED-164):** today's done tasks before now fold into Earlier in the Workspace's Day column on every wide window (Mac, web and tablets at the expanded width), the column starting at the fold with no Wake Up cap (ED-364 Q2). Full phones keep their rows; Minimal phones and the old spread card already folded.
+- **Reopen:** the filled circle returns the task to its time; the toast says "{title} reopened" (frame 10's wording) in place of "… not done", in en, de, fr and es, with Undo.
+- **Keyboard (frame 8):** Space or Return toggles Earlier, → opens, ← closes (built); ↓ from the open row moves into the group; the done circle is focusable everywhere (an ink response), so Space or Return on it reopens; Return on a row opens the task (built).
+- **Departures, recorded:** tablets fold too (the same Workspace Day by width); the Day column keeps its hour labels; from the first done task Tab moves on to its circle; no announcement beyond the toast's message. Add on tablets' a11y test now scrolls "Notes" into view first: the contrast check had measured the half-hidden heading against the day behind the popover.
+- **Checks:** earlier_day_column_test (4); the Mac Day column with Earlier open, light and dark (2 new goldens); 58 re-recorded where the Workspace's Day now folds. Analyze and format clean; 7359 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers
