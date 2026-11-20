@@ -102,6 +102,10 @@ class DayHorizon extends StatelessWidget {
     final midX = at.x(labels.midUtc);
     // The middle hour gives way when now's label would cover it.
     final midClear = (midX - nowX).abs() > DotSize.horizonCap * 3;
+    // So do the ends' hours near them: at 6:30 only "6:30" shows (E-R2-26).
+    const room = DotSize.horizonCap * 4;
+    final wakeClear = nowX > room;
+    final windClear = w - nowX > room;
     final now = t.styles.threadMeta.copyWith(
       color: t.colors.accentInk,
       fontWeight: FontWeight.w700,
@@ -113,16 +117,18 @@ class DayHorizon extends StatelessWidget {
       child: Text(text, style: s, textAlign: TextAlign.center, maxLines: 1),
     );
     return [
-      Positioned(
-        top: top,
-        left: 0,
-        child: Text(labels.wake, style: style),
-      ),
-      Positioned(
-        top: top,
-        right: 0,
-        child: Text(labels.windDown, style: style),
-      ),
+      if (wakeClear)
+        Positioned(
+          top: top,
+          left: 0,
+          child: Text(labels.wake, style: style),
+        ),
+      if (windClear)
+        Positioned(
+          top: top,
+          right: 0,
+          child: Text(labels.windDown, style: style),
+        ),
       if (midClear) centred(midX, labels.mid, style),
       centred(nowX, labels.now, now),
     ];

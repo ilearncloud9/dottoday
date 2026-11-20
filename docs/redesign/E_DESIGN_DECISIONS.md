@@ -5331,6 +5331,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Wider (tablets, the Mac, the web):** Now still shows the day until 6c.
 - **Checks:** now_view_test (6), now_screen_test (7), 7 goldens; Minimal Today and the Wake Up promise tests go to Today first; the 6a place goldens now show Now. Fixed: the horizon threw while painting when a task began after now; the orb's numerals use the locale's digits. Analyze and format clean; 7401 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-411 · M19.6 part 6b: the Wake Up card folded into Now
+- **Date:** 2026-11-20. **Owner:** "Fold Wake Up in", then "Approve the fold" after the review page. Replaces ED-410's departure "at 6:30 the Wake Up card stays its own screen".
+- **Built (E-R2-26 frame 4, ED-329; R2-19's card):** in Minimal on a phone, the Wake Up card takes Now's place under the horizon in the morning: "Good morning…" from the start, "3 planned · ends …" without the day dot, the first dot, Start the day and Later. Same once-a-day window as the card's own screen (`wakeUpCardDue`); it stays until Start the day, Later or Shift the rest answers it, and the answer is the day's "card shown". A task under way comes first. "Show my day" gives way to the horizon (it opens Today).
+- **Minimal never opens the card as its own screen over Today** (`wakeUpCardDueNow` is null there; Full unchanged; a tapped Wake Up notification still opens it). The old Minimal rule, "only after I'm up" (15 §10), is replaced: its aim, no unexpected full-screen route, holds because the card is in Now. `wakeUpCardDue`'s `firstOpen` switch is removed.
+- **One set of answers:** Start the day, Shift the rest and the missions offer live in `wake_up_card_actions.dart`, used by the card's screen and by Now.
+- **Horizon:** the wake and Wind Down hours give way when the now label is beside them (the board's 6:30 shows only "6:30").
+- **Departure, approved:** the card's first dot keeps the card's own layout (time above title, its first step) rather than the board's stacked "First / title / time".
+- **Checks:** now_wake_up_test (3: the card in Now and Later, with a11y; Start the day; a task under way first), 2 goldens; the Minimal gate test now asserts "never over Today". Analyze and format clean; 7405 tests pass, 31 skipped. Not yet run on a real device.
+
 ---
 
 ## Pending owner answers

@@ -20,14 +20,14 @@ const wakeUpLateChoices = [5, 10, 15, 30];
 bool wakeUpCardOn(Settings settings) =>
     settings.wakeUpCard ?? settings.wakeUpAlarm;
 
-/// Whether Today should open the Wake Up card by itself now (15 §5): once
-/// a day, before Wind Down, within [wakeUpCardWindow] of "I'm up" or, when
-/// [firstOpen] allows it (minimal mode doesn't), of Wake Up on a day with
-/// a thread. A tapped Wake Up notification opens it directly instead.
+/// Whether the Wake Up card is due now (15 §5): once a day, before Wind
+/// Down, within [wakeUpCardWindow] of "I'm up" or of Wake Up on a day with
+/// a thread. Full opens it over Today; Minimal shows it in Now (E-R2-26
+/// frame 4). A tapped Wake Up notification opens it directly instead.
 ///
 /// ```dart
 /// wakeUpCardDue(day: null, shape: shape, nowUtc: shape.wakeUtc,
-///     settings: s, hasThread: true, firstOpen: true); // true when on
+///     settings: s, hasThread: true); // true when on
 /// ```
 bool wakeUpCardDue({
   required WakeUpDay? day,
@@ -35,17 +35,13 @@ bool wakeUpCardDue({
   required DateTime nowUtc,
   required Settings settings,
   required bool hasThread,
-  required bool firstOpen,
 }) {
   if (!wakeUpCardOn(settings) || day?.cardShownAtUtc != null) return false;
   if (!nowUtc.isBefore(shape.bedUtc)) return false;
   bool within(DateTime from) =>
       !nowUtc.isBefore(from) && nowUtc.isBefore(from.add(wakeUpCardWindow));
   if (day?.stoppedAtUtc case final stopped?) return within(stopped);
-  return firstOpen &&
-      settings.wakeUpCardOnOpen &&
-      hasThread &&
-      within(shape.wakeUtc);
+  return settings.wakeUpCardOnOpen && hasThread && within(shape.wakeUtc);
 }
 
 /// Minutes up after Wake Up when that reaches `wakeUpLateMin`, else null

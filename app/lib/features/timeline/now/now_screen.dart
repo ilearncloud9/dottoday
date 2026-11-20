@@ -10,8 +10,10 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/now/now_view.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/now/now_body.dart';
+import 'package:dottoday/features/timeline/now/now_wake_up.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
@@ -61,6 +63,7 @@ class NowScreen extends ConsumerWidget {
       nowUtc: now,
       windDownUtc: shape.bedUtc,
     );
+    final wakeUp = ref.watch(wakeUpCardInNowProvider).value;
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -89,12 +92,17 @@ class NowScreen extends ConsumerWidget {
                   time,
                 ),
                 const SizedBox(height: DotSpace.xl),
-                NowBody(
-                  view: view,
-                  nowUtc: now,
-                  windDownUtc: shape.bedUtc,
-                  time: time,
-                ),
+                // The morning's Wake Up card until it's answered, unless a
+                // task is already under way (E-R2-26 frame 4).
+                if (wakeUp != null && view is! NowRunning)
+                  NowWakeUp(model: wakeUp)
+                else
+                  NowBody(
+                    view: view,
+                    nowUtc: now,
+                    windDownUtc: shape.bedUtc,
+                    time: time,
+                  ),
               ],
             ),
             // Day ▾ above the tab bar's end (ED-124): Minimal's Day menu,

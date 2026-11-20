@@ -221,10 +221,11 @@ void main() {
       expect(find.text('today'), findsOneWidget);
     });
 
-    testWidgets("minimal: only after I'm up", (tester) async {
+    testWidgets("minimal: never over Today, even after I'm up (in Now)", (
+      tester,
+    ) async {
+      // Minimal folds the card into Now (E-R2-26 frame 4): no route opens.
       final minimal = wakeUpOn.copyWith(uiLayout: UiLayout.minimal);
-      await pumpWakeUp(tester, location: '/today', settings: minimal);
-      expect(find.text('today'), findsOneWidget);
       await pumpWakeUp(
         tester,
         location: '/today',
@@ -236,7 +237,8 @@ void main() {
           ),
         ],
       );
-      expect(find.text('Start the day'), findsOneWidget);
+      expect(find.text('today'), findsOneWidget);
+      expect(find.text('Start the day'), findsNothing);
     });
   });
 }

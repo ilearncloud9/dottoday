@@ -34,14 +34,12 @@ void main() {
     DateTime? now,
     Settings settings = _on,
     bool hasThread = true,
-    bool firstOpen = true,
   }) => wakeUpCardDue(
     day: day,
     shape: shape,
     nowUtc: now ?? at(7, 20),
     settings: settings,
     hasThread: hasThread,
-    firstOpen: firstOpen,
   );
 
   group('on', () {
@@ -74,14 +72,6 @@ void main() {
       final up = _today.copyWith(stoppedAtUtc: at(8));
       expect(due(day: up, now: at(10, 30), hasThread: false), isTrue);
       expect(due(day: up, now: at(11, 1)), isFalse);
-    });
-
-    test("minimal mode: only after I'm up (15 §10)", () {
-      expect(due(firstOpen: false), isFalse);
-      expect(
-        due(day: _today.copyWith(stoppedAtUtc: at(7, 10)), firstOpen: false),
-        isTrue,
-      );
     });
 
     test('never at or after Wind Down', () {

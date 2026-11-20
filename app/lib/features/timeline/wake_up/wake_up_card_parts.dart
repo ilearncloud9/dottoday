@@ -24,10 +24,15 @@ class WakeUpGreeting extends StatelessWidget {
     required this.ends,
     required this.geometry,
     this.showDot = true,
+    this.inline = false,
     super.key,
   });
 
   final String date;
+
+  /// In Minimal's Now (E-R2-26 frame 4): from the start, smaller, and
+  /// "9 planned · ends 10:00 PM" without the day dot.
+  final bool inline;
 
   /// Today's day dot with its night (docs/15 W6).
   final DayDotGeometry geometry;
@@ -39,25 +44,29 @@ class WakeUpGreeting extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final align = inline ? TextAlign.start : TextAlign.center;
     return Column(
-      spacing: DotSpace.m,
+      spacing: inline ? DotSpace.xs : DotSpace.m,
+      crossAxisAlignment: inline
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
         Semantics(
           header: true,
           child: Text(
             l10n.wakeUpCardGreeting(date),
-            style: t.styles.pageTitle,
-            textAlign: TextAlign.center,
+            style: inline ? t.styles.emptyTitle : t.styles.pageTitle,
+            textAlign: align,
           ),
         ),
-        if (showDot && planned > 0) ...[
+        if (showDot && planned > 0 && !inline)
           DayDot(geometry: geometry, size: DotSize.wakeUpDayDot),
+        if ((showDot || inline) && planned > 0)
           Text(
             l10n.wakeUpCardPlanned(planned, ends),
             style: t.styles.rowMeta,
-            textAlign: TextAlign.center,
+            textAlign: align,
           ),
-        ],
       ],
     );
   }

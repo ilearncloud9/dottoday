@@ -123,22 +123,34 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
 }
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only. Minimal mode opens it only after "I'm
-/// up" (15 §10): an unexpected full-screen route is what it avoids.
+/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
+/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
+/// full-screen route opens by itself (15 §10).
 @riverpod
 Future<String?> wakeUpCardDueNow(Ref ref) async {
-  if (!currentHealthPlatform().isPhone) return null;
+  if (!currentHealthPlatform().isPhone || _minimal(ref)) return null;
   final m = await ref.watch(wakeUpCardProvider.future);
-  final firstOpen =
-      ref.watch(layoutPolicyProvider).visibility(FeatureId.wakeUpCard) !=
-      FeatureVisibility.simplified;
-  final due = wakeUpCardDue(
-    day: m.day,
-    shape: m.shape,
-    nowUtc: m.nowUtc,
-    settings: m.settings,
-    hasThread: m.data.blocks.isNotEmpty,
-    firstOpen: firstOpen,
-  );
-  return due ? m.dateKey : null;
+  return _due(m) ? m.dateKey : null;
 }
+
+/// The card Minimal's Now shows in place of its body on a phone, else
+/// null: the same once-a-day window as the card's own screen, until Start
+/// the day or Later answers it (E-R2-26 frame 4, ED-329).
+@riverpod
+Future<WakeUpCardModel?> wakeUpCardInNow(Ref ref) async {
+  if (!currentHealthPlatform().isPhone || !_minimal(ref)) return null;
+  final m = await ref.watch(wakeUpCardProvider.future);
+  return _due(m) ? m : null;
+}
+
+bool _minimal(Ref ref) =>
+    ref.watch(layoutPolicyProvider).visibility(FeatureId.wakeUpCard) ==
+    FeatureVisibility.simplified;
+
+bool _due(WakeUpCardModel m) => wakeUpCardDue(
+  day: m.day,
+  shape: m.shape,
+  nowUtc: m.nowUtc,
+  settings: m.settings,
+  hasThread: m.data.blocks.isNotEmpty,
+);

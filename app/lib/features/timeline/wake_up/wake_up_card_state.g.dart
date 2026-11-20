@@ -53,22 +53,25 @@ final class WakeUpCardProvider
 String _$wakeUpCardHash() => r'5a65b38922d163bfd5a59634c9b449ed12fde32c';
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only. Minimal mode opens it only after "I'm
-/// up" (15 §10): an unexpected full-screen route is what it avoids.
+/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
+/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
+/// full-screen route opens by itself (15 §10).
 
 @ProviderFor(wakeUpCardDueNow)
 final wakeUpCardDueNowProvider = WakeUpCardDueNowProvider._();
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only. Minimal mode opens it only after "I'm
-/// up" (15 §10): an unexpected full-screen route is what it avoids.
+/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
+/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
+/// full-screen route opens by itself (15 §10).
 
 final class WakeUpCardDueNowProvider
     extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
     with $FutureModifier<String?>, $FutureProvider<String?> {
   /// Today's key when the card should open by itself now, else null (15 §5,
-  /// `wakeUpCardDue`). Phones only. Minimal mode opens it only after "I'm
-  /// up" (15 §10): an unexpected full-screen route is what it avoids.
+  /// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
+  /// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
+  /// full-screen route opens by itself (15 §10).
   WakeUpCardDueNowProvider._()
     : super(
         from: null,
@@ -94,4 +97,54 @@ final class WakeUpCardDueNowProvider
   }
 }
 
-String _$wakeUpCardDueNowHash() => r'1b14e7478b95328f559d86c57886ab14fd007520';
+String _$wakeUpCardDueNowHash() => r'7b96626ce845963e85bb29452f4895c27e15cb97';
+
+/// The card Minimal's Now shows in place of its body on a phone, else
+/// null: the same once-a-day window as the card's own screen, until Start
+/// the day or Later answers it (E-R2-26 frame 4, ED-329).
+
+@ProviderFor(wakeUpCardInNow)
+final wakeUpCardInNowProvider = WakeUpCardInNowProvider._();
+
+/// The card Minimal's Now shows in place of its body on a phone, else
+/// null: the same once-a-day window as the card's own screen, until Start
+/// the day or Later answers it (E-R2-26 frame 4, ED-329).
+
+final class WakeUpCardInNowProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<WakeUpCardModel?>,
+          WakeUpCardModel?,
+          FutureOr<WakeUpCardModel?>
+        >
+    with $FutureModifier<WakeUpCardModel?>, $FutureProvider<WakeUpCardModel?> {
+  /// The card Minimal's Now shows in place of its body on a phone, else
+  /// null: the same once-a-day window as the card's own screen, until Start
+  /// the day or Later answers it (E-R2-26 frame 4, ED-329).
+  WakeUpCardInNowProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'wakeUpCardInNowProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$wakeUpCardInNowHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<WakeUpCardModel?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<WakeUpCardModel?> create(Ref ref) {
+    return wakeUpCardInNow(ref);
+  }
+}
+
+String _$wakeUpCardInNowHash() => r'27f53a262307d7b827ec27799cdc8ddb78749eee';

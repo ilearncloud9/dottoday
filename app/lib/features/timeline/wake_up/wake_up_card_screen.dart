@@ -2,20 +2,14 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
-import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
-import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
-import 'package:dottoday/data/writes/write_providers.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/wake_up/wake_up_card.dart';
-import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_card_actions.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_body.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_coach_mark.dart';
@@ -83,11 +77,24 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
                       model: model,
                       minimal: minimal,
                       onOpenTask: (id) => openTask(context, id),
-                      onShift: (min) => unawaited(_shift(model, min)),
-                      onStart: () => unawaited(_start(model)),
+                      onShift: (min) => unawaited(
+                        shiftTheRest(context, model, min, close: _close),
+                      ),
+                      onStart: () => unawaited(
+                        startTheDay(
+                          ref,
+                          model,
+                          openFocus: (id) =>
+                              context.pushReplacement(AppRoutes.focus(id)),
+                          close: () {
+                            if (mounted) _close();
+                          },
+                        ),
+                      ),
                       onLater: _close,
                       onPlan: () => context.go(AppRoutes.add),
-                      onMissionsOff: (off) => unawaited(_missionsOff(off)),
+                      onMissionsOff: (off) =>
+                          unawaited(answerMissionsOff(context, off)),
                       coachMark: coach,
                     ),
             ),
@@ -104,56 +111,4 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
       context.go(AppRoutes.today);
     }
   }
-
-  /// Focus on the first dot when it begins within 15 min, else the day
-  /// is marked started and Today shows (15 §5 step 7).
-  Future<void> _start(WakeUpCardModel model) async {
-    final now = ref.read(clockProvider).nowUtc();
-    if (startDot(model.first, now) case final dot?) {
-      context.pushReplacement(AppRoutes.focus(dot.id));
-      return;
-    }
-    final sync = ref.read(notificationSyncProvider);
-    final logger = ref.read(loggerProvider);
-    await ref.read(wakeUpDayRepositoryProvider).markStarted(model.dateKey, now);
-    if (mounted) _close();
-    // The day began: the Wake Up Check is called off (15 W3).
-    try {
-      await sync.resync(model.data.userId);
-    } on Object catch (e, st) {
-      logger.error(
-        'wake_up.resync_failed', // l10n-ignore: log key
-        error: e,
-        stackTrace: st,
-      );
-    }
-  }
-
-  /// Rebalance by the minutes up after plan, from now (15 §5 step 6). The
-  /// card closes first so the sheet opens over Today; nothing is written
-  /// before Accept.
-  Future<void> _shift(WakeUpCardModel model, int minutes) async {
-    final l10n = context.l10n;
-    final container = ProviderScope.containerOf(context, listen: false);
-    _close();
-    await openRebalance(
-      container,
-      l10n,
-      today: model.data.day.date,
-      fromUtc: model.nowUtc,
-      deltaMin: minutes,
-      subtitle: l10n.wakeUpCardLate(minutes),
-      title: l10n.wakeUpCardShift,
-    );
-  }
-
-  /// The once-only offer (15 §8 rule 4): either answer retires it; only
-  /// "Turn off" turns missions off.
-  Future<void> _missionsOff(bool off) => updateSettings(
-    ProviderScope.containerOf(context, listen: false),
-    (s) => s.copyWith(
-      missionOffOfferAnswered: true,
-      missionMode: off ? MissionMode.off : s.missionMode,
-    ),
-  );
 }

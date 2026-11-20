@@ -30,6 +30,7 @@ class WakeUpCardBody extends StatefulWidget {
     required this.onPlan,
     this.onMissionsOff,
     this.coachMark,
+    this.inline = false,
     super.key,
   });
 
@@ -47,6 +48,11 @@ class WakeUpCardBody extends StatefulWidget {
   /// Today's coach mark (15 §11): on Start the day or Shift the rest?.
   final HintId? coachMark;
 
+  /// Folded into Minimal's Now (E-R2-26 frame 4): it doesn't scroll by
+  /// itself, and "Show my day" gives way to the horizon above it, which
+  /// opens Today.
+  final bool inline;
+
   @override
   State<WakeUpCardBody> createState() => _WakeUpCardBodyState();
 }
@@ -63,6 +69,8 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
     final whole = !m.lowEnergy && (!widget.minimal || _showDay);
     final late = m.lateMin;
     return ListView(
+      shrinkWrap: widget.inline,
+      physics: widget.inline ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(DotSpace.l),
       children: [
         WakeUpGreeting(
@@ -70,6 +78,7 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
           planned: m.ahead.length,
           ends: _time(context, m.ahead.lastOrNull?.endUtc ?? m.shape.bedUtc),
           showDot: whole,
+          inline: widget.inline,
           geometry: dayDotGeometry(
             wakeUtc: m.shape.wakeUtc,
             windDownUtc: m.shape.bedUtc,
@@ -110,7 +119,11 @@ class _WakeUpCardBodyState extends State<WakeUpCardBody> {
           if (widget.coachMark == HintId.wakeUpShift)
             const WakeUpCoachMark(HintId.wakeUpShift),
         ],
-        if (widget.minimal && !_showDay && !m.lowEnergy && first != null)
+        if (widget.minimal &&
+            !widget.inline &&
+            !_showDay &&
+            !m.lowEnergy &&
+            first != null)
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: TextButton(

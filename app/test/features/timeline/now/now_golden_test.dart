@@ -59,6 +59,7 @@ void main() {
     DateTime now, {
     List<Occurrence>? blocks,
     ThemeMode mode = ThemeMode.light,
+    bool wakeUp = false,
   }) async {
     debugDefaultTargetPlatformOverride = p;
     try {
@@ -79,9 +80,10 @@ void main() {
               now: now,
               occurrences: FakeOccurrenceRepository(blocks ?? day),
               profile: testProfile(
-                settings: const Settings(
+                settings: Settings(
                   uiLayout: UiLayout.minimal,
                   use24h: false,
+                  wakeUpAlarm: wakeUp,
                 ),
               ),
             ),
@@ -140,6 +142,28 @@ void main() {
       'android_open_day_dark',
       at(9, 42),
       blocks: const [],
+      mode: ThemeMode.dark,
+    );
+  });
+
+  // The Wake Up card folded into Now (owner; E-R2-26 frame 4), 7:20 AM.
+  testWidgets('golden: iPhone, the Wake Up card in Now', (tester) async {
+    await shot(
+      tester,
+      TargetPlatform.iOS,
+      'iphone_wake_up',
+      at(6, 20),
+      wakeUp: true,
+    );
+  });
+
+  testWidgets('golden: Android, the Wake Up card in Now, dark', (tester) async {
+    await shot(
+      tester,
+      TargetPlatform.android,
+      'android_wake_up_dark',
+      at(6, 20),
+      wakeUp: true,
       mode: ThemeMode.dark,
     );
   });
