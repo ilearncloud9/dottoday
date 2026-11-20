@@ -5367,6 +5367,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, approved with the part:** the parsed-word chips ("6pm ×") and "Type a time too" stay under the field; the range in the app's format; the strip's rings at the horizon's 14; Android's sheet has no ✕ (Back or the scrim); no keyboard in the goldens.
 - **Checks:** minimal_add_test (5), 3 in-app goldens; the Add tests reach When through the length chip; 26 goldens updated. Analyze and format clean; 7432 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-415 · M19.6 part 6e-1: Minimal on a narrow Mac
+- **Date:** 2026-11-20. **Owner:** "Start 6e"; split "Two parts" (6e-1 the narrow Mac, 6e-2 tablets); then "Approve 6e-1" after the review page.
+- **Built (ED-169, ED-170; E-G4-3-Narrow):** the Day column folds when the Now pane's minimum (550 at 100 % text) and the 290 column don't both fit (≈ 1042 with the 200 sidebar), computed with the text size. Folded, a 44 strip holds a "Day" pill (no shortcut; ⌘1–4 unchanged) that opens the same Day column as a panel over Now, not modal and not dimmed; Esc (from the pill or the panel), ✕ or the pill closes it and focus returns to the pill; a screen reader hears "Day", expanded or collapsed. A task opened while folded shows in the panel; the pane's Day row opens and closes the panel there.
+- **From the fold point:** Also now and Next stack, the Add row under them.
+- **Narrow toolbar (below 1000):** no status text; Search or run is its icon with its name and ⌘K.
+- **Short window (under 720 tall):** the orb at 72 %, the pane scrolls; above 130 % text it keeps full size. At any text size the orb's numeral keeps its size (its spoken label says it) and the horizon's labels grow with the text.
+- **Departures, approved with the part:** the open "Day" pill tinted rather than filled teal with an icon; "Dottoday" wraps in the 200 sidebar at 200 % (6a's shell); the native 840 × 640 minimum window unchanged (ED-169); no ‹ › or "● Synced" (as 6c).
+- **Checks:** now_narrow_test (6), 6 goldens; `HorizonDot` and `HorizonLabels` moved to their own file. Analyze and format clean; 7444 tests pass, 31 skipped. Not yet run on a real Mac (VoiceOver, Tab order, resizing with unsaved edits).
+
 ---
 
 ## Pending owner answers

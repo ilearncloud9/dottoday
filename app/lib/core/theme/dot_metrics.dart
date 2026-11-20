@@ -252,6 +252,23 @@ abstract final class DotSize {
   /// Minimal's Day column on Mac and web (ED-232: 290).
   static const double dayColumn = 290;
 
+  /// The Now pane's narrowest at 100 % text (ED-170: the action row's
+  /// 460 and 2 × 45 padding); with the Day column it sets the fold point
+  /// (≈ 1042 with the 200 sidebar), recomputed with the text size.
+  static const double nowPaneMin = 550;
+
+  /// The folded Day column's edge button (ED-170: 44).
+  static const double dayEdge = 44;
+
+  /// Below this the Mac toolbar narrows (ED-170: ≈ 1000).
+  static const double narrowToolbar = 1000;
+
+  /// Under this window height the orb draws at [shortOrb] (ED-170: 720,
+  /// 72 %), unless text is above [shortOrbTextLimit] (130 %).
+  static const double shortWindow = 720;
+  static const double shortOrb = 0.72;
+  static const double shortOrbTextLimit = 1.3;
+
   /// The Now pane's horizon and content width (ED-232: 700).
   static const double nowPaneContent = 700;
 

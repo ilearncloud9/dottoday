@@ -158,13 +158,22 @@ class _Running extends StatelessWidget {
         if (aside case final a?)
           Padding(
             padding: const EdgeInsets.only(top: DotSpace.l),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: DotSpace.xl,
-              children: [
-                Expanded(child: Column(children: _rows(context))),
-                Expanded(child: a),
-              ],
+            // Side by side; stacked once the pane narrows (ED-170: from
+            // the fold point "Also now" and "Next" stack).
+            child: LayoutBuilder(
+              builder: (context, box) => box.maxWidth < DotSize.nowPaneContent
+                  ? Column(
+                      spacing: DotSpace.m,
+                      children: [..._rows(context), a],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: DotSpace.xl,
+                      children: [
+                        Expanded(child: Column(children: _rows(context))),
+                        Expanded(child: a),
+                      ],
+                    ),
             ),
           )
         else

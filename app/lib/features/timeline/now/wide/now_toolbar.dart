@@ -28,6 +28,9 @@ class NowToolbar extends ConsumerWidget {
     final l10n = context.l10n;
     final n = inputs;
     final locale = Localizations.localeOf(context).toLanguageTag();
+    // Narrow (ED-170): no status text (the pane says "Now · 10:42"), and
+    // Search or run is its icon, with its name and ⌘K.
+    final narrow = MediaQuery.sizeOf(context).width < DotSize.narrowToolbar;
     return Material(
       color: t.colors.sunk,
       shape: Border(bottom: BorderSide(color: t.colors.hairline)),
@@ -54,10 +57,11 @@ class NowToolbar extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    l10n.nowSummary(n.time(n.nowUtc), n.time(n.shape.bedUtc)),
-                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-                  ),
+                  if (!narrow)
+                    Text(
+                      l10n.nowSummary(n.time(n.nowUtc), n.time(n.shape.bedUtc)),
+                      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                    ),
                 ],
               ),
             ),
@@ -70,6 +74,7 @@ class NowToolbar extends ConsumerWidget {
             SearchField(
               label: l10n.workspaceSearchOrRun,
               hint: '⌘K', // l10n-ignore: a key cap
+              compact: narrow,
               onTap: () => context.go(AppRoutes.search),
             ),
             ToolbarAdd(

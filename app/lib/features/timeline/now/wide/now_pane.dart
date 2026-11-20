@@ -21,12 +21,17 @@ class NowPane extends ConsumerWidget {
     required this.inputs,
     required this.mac,
     required this.dayHidden,
+    this.onDayRow,
     super.key,
   });
 
   final NowInputs inputs;
   final bool mac;
   final bool dayHidden;
+
+  /// The folded window's Day row: it opens or closes the column's panel
+  /// (ED-170) rather than hiding the column.
+  final VoidCallback? onDayRow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +61,7 @@ class NowPane extends ConsumerWidget {
                   context,
                   // With the Day column put away, the horizon brings it
                   // back (`/today` reveals it too, ED-097).
-                  onTap: dayHidden ? showDay : null,
+                  onTap: dayHidden ? (onDayRow ?? showDay) : null,
                   hint: dayHidden ? l10n.dayColumnShow : null,
                   onDotMenu: (o, at) =>
                       unawaited(showNowDotMenu(context, ref, o, at)),
@@ -67,8 +72,12 @@ class NowPane extends ConsumerWidget {
                   nowUtc: n.nowUtc,
                   windDownUtc: n.shape.bedUtc,
                   time: n.time,
-                  orbSize: mac ? DotSize.orbMac : DotSize.orbWeb,
-                  aside: _Aside(mac: mac, dayHidden: dayHidden),
+                  orbSize: _orb(context),
+                  aside: _Aside(
+                    mac: mac,
+                    dayHidden: dayHidden,
+                    onDayRow: onDayRow,
+                  ),
                 ),
               ],
             ),
@@ -76,6 +85,18 @@ class NowPane extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+/// The Mac's 280 or the web's 240 orb (ED-106); under 720 tall it draws
+/// at 72 %, unless text is above 130 % (ED-170). The pane scrolls.
+extension on NowPane {
+  double _orb(BuildContext context) {
+    final base = mac ? DotSize.orbMac : DotSize.orbWeb;
+    final short = MediaQuery.sizeOf(context).height < DotSize.shortWindow;
+    final large =
+        MediaQuery.textScalerOf(context).scale(1) > DotSize.shortOrbTextLimit;
+    return short && !large ? base * DotSize.shortOrb : base;
   }
 }
 
@@ -147,10 +168,11 @@ class _WebHeader extends StatelessWidget {
 /// Beside Also now and Next (E-Minimal frame 1): the Add row (Quick Add,
 /// several lines for many) and Hide the Day column, or Show it.
 class _Aside extends ConsumerWidget {
-  const _Aside({required this.mac, required this.dayHidden});
+  const _Aside({required this.mac, required this.dayHidden, this.onDayRow});
 
   final bool mac;
   final bool dayHidden;
+  final VoidCallback? onDayRow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -214,8 +236,11 @@ class _Aside extends ConsumerWidget {
         row(
           label: dayHidden ? l10n.dayColumnShow : l10n.dayColumnHide,
           keys: '⌥⌘I', // l10n-ignore: a key cap
-          onTap: () =>
-              unawaited(ref.read(dayColumnHiddenProvider.notifier).toggle()),
+          onTap:
+              onDayRow ??
+              () => unawaited(
+                ref.read(dayColumnHiddenProvider.notifier).toggle(),
+              ),
         ),
       ],
     );

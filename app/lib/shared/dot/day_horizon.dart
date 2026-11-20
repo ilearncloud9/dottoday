@@ -1,25 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/horizon_dot.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
 
-/// One task on the [DayHorizon]: where it starts and ends, its colour and
-/// its state (done filled, under way and ahead as rings).
-@immutable
-final class HorizonDot {
-  const HorizonDot({
-    required this.startUtc,
-    required this.endUtc,
-    required this.color,
-    required this.state,
-  });
-
-  final DateTime startUtc;
-  final DateTime endUtc;
-  final TaskColor color;
-  final DotState state;
-}
+export 'package:dottoday/shared/dot/horizon_dot.dart';
 
 /// Minimal's horizon (E rules §3 "Horizon", §5.3; ED-241): the thread
 /// laid flat from Wake Up to Wind Down, 3 px. Behind now it is solid, in
@@ -112,7 +98,13 @@ class DayHorizon extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ..._labels(t, at, style, w),
+                    ..._labels(
+                      t,
+                      at,
+                      style,
+                      w,
+                      MediaQuery.textScalerOf(context).scale(1),
+                    ),
                   ],
                 ),
               );
@@ -123,7 +115,13 @@ class DayHorizon extends StatelessWidget {
     );
   }
 
-  List<Widget> _labels(DotTheme t, _Scale at, TextStyle style, double w) {
+  List<Widget> _labels(
+    DotTheme t,
+    _Scale at,
+    TextStyle style,
+    double w,
+    double scale,
+  ) {
     const top = DotSize.horizonCap + DotSpace.xxs;
     final nowX = at.x(nowUtc);
     final midX = at.x(labels.midUtc);
@@ -137,10 +135,12 @@ class DayHorizon extends StatelessWidget {
       color: t.colors.accentInk,
       fontWeight: FontWeight.w700,
     );
+    // A label's box grows with the text, so "10:42" is never cut (200 %).
+    final half = DotSize.horizonCap * 2 * scale;
     Widget centred(double x, String text, TextStyle s) => Positioned(
       top: top,
-      left: (x - DotSize.horizonCap * 2).clamp(0, w),
-      width: DotSize.horizonCap * 4,
+      left: (x - half).clamp(0, math.max(0, w - 2 * half)),
+      width: 2 * half,
       child: Text(text, style: s, textAlign: TextAlign.center, maxLines: 1),
     );
     return [
@@ -161,15 +161,6 @@ class DayHorizon extends StatelessWidget {
     ];
   }
 }
-
-/// The horizon's four labels, as shown.
-typedef HorizonLabels = ({
-  String wake,
-  String now,
-  String mid,
-  DateTime midUtc,
-  String windDown,
-});
 
 /// Times to x along the line, the dots' radius kept in at both ends.
 final class _Scale {

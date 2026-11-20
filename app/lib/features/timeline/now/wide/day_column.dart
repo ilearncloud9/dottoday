@@ -20,9 +20,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// minimal task screen, its More options the full editor; ✕ or Esc
 /// brings the Day back, and the Now pane stays as it is.
 class DayColumn extends ConsumerStatefulWidget {
-  const DayColumn({required this.today, super.key});
+  const DayColumn({required this.today, this.onClose, super.key});
 
   final DateTime today;
+
+  /// The folded column's panel (ED-170): ✕ closes the panel instead of
+  /// hiding the column.
+  final VoidCallback? onClose;
 
   @override
   ConsumerState<DayColumn> createState() => _DayColumnState();
@@ -48,7 +52,7 @@ class _DayColumnState extends ConsumerState<DayColumn> {
         border: BorderDirectional(start: BorderSide(color: t.colors.hairline)),
       ),
       child: id == null
-          ? _Day(today: widget.today)
+          ? _Day(today: widget.today, onClose: widget.onClose)
           : CallbackShortcuts(
               bindings: {
                 const SingleActivator(LogicalKeyboardKey.escape): close,
@@ -79,9 +83,10 @@ class _DayColumnState extends ConsumerState<DayColumn> {
 
 /// The column's Day: its header, the hint and today's thread.
 class _Day extends ConsumerWidget {
-  const _Day({required this.today});
+  const _Day({required this.today, this.onClose});
 
   final DateTime today;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -112,10 +117,16 @@ class _Day extends ConsumerWidget {
                 button: ToolbarPill(label: l10n.workspaceDay, menu: true),
               ),
               IconButton(
-                tooltip: l10n.dayColumnHide,
-                onPressed: () => unawaited(
-                  ref.read(dayColumnHiddenProvider.notifier).set(hidden: true),
-                ),
+                tooltip: onClose == null
+                    ? l10n.dayColumnHide
+                    : MaterialLocalizations.of(context).closeButtonTooltip,
+                onPressed:
+                    onClose ??
+                    () => unawaited(
+                      ref
+                          .read(dayColumnHiddenProvider.notifier)
+                          .set(hidden: true),
+                    ),
                 icon: DotIcon(DotGlyphs.close, color: t.colors.text),
               ),
             ],

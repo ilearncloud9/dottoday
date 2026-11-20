@@ -79,7 +79,11 @@ class NowOrb extends StatelessWidget {
               children: [
                 if (glyph != null && swatch != null)
                   DotIcon(glyph, color: swatch.ring, size: DotSize.rowIcon),
+                // The numeral keeps its size at any text size (ED-170): it
+                // is the orb's own drawing, and the orb's spoken label
+                // says it (`NowBody`).
                 Text.rich(
+                  textScaler: TextScaler.noScaling,
                   TextSpan(
                     text: this.numeral,
                     children: [
