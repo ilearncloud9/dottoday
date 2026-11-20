@@ -175,22 +175,28 @@ class _TopTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    return Container(
-      padding: const EdgeInsets.all(DotSpace.xxs + 1),
-      decoration: ShapeDecoration(color: c.tile, shape: const StadiumBorder()),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final (i, d) in bar.items.indexed)
-            if (!d.foot) _tab(context, i, d),
-        ],
+    // Scrolls sideways when large text makes the tabs wider than the
+    // window (M19.7, 200 %), rather than clipping one.
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: DotSpace.xxs + 1),
+        decoration: ShapeDecoration(
+          color: c.tile,
+          shape: const StadiumBorder(),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (i, d) in bar.items.indexed)
+              if (!d.foot) _tab(context, i, d),
+          ],
+        ),
       ),
     );
   }
 
   Widget _tab(BuildContext context, int i, ShellDestination d) {
-    final t = DotTheme.of(context);
-    final c = t.colors;
     final selected = i == bar.selected;
     return Semantics(
       button: true,
@@ -198,37 +204,54 @@ class _TopTabs extends StatelessWidget {
       label: d.semanticLabel,
       excludeSemantics: true,
       onTap: () => bar.onSelect(i),
-      child: Material(
-        color: selected ? c.raised : Colors.transparent,
-        shape: const StadiumBorder(),
-        elevation: selected ? 1 : 0,
-        shadowColor: c.shadow,
-        child: InkWell(
-          onTap: () => bar.onSelect(i),
-          customBorder: const StadiumBorder(),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minHeight: DotTouch.min - DotSpace.xs - DotSpace.xxs,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-              child: Center(
-                widthFactor: 1,
-                // Words only, as iPadOS's top tabs (E-R2-1 1b).
-                child: Text(
-                  d.label,
-                  style: selected
-                      ? DotType.emphasis(
-                          t.styles.chip.copyWith(color: c.accentInk),
-                          bold: true,
-                          italic: false,
-                        )
-                      : t.styles.chip.copyWith(
-                          color: c.ink2,
-                          fontWeight: FontWeight.w600,
-                          fontVariations: const [FontVariation.weight(600)],
-                        ),
-                ),
+      // The capsule's padding is part of each tab's target: 38 drawn, 44
+      // to touch (M19.7).
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: () => bar.onSelect(i),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: DotSpace.xxs + 1),
+          child: _pill(context, i, d, selected),
+        ),
+      ),
+    );
+  }
+
+  /// The drawn tab: 38 tall, raised when [selected].
+  Widget _pill(BuildContext context, int i, ShellDestination d, bool selected) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    return Material(
+      color: selected ? c.raised : Colors.transparent,
+      shape: const StadiumBorder(),
+      elevation: selected ? 1 : 0,
+      shadowColor: c.shadow,
+      child: InkWell(
+        onTap: () => bar.onSelect(i),
+        customBorder: const StadiumBorder(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: DotTouch.min - DotSpace.xs - DotSpace.xxs,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
+            child: Center(
+              widthFactor: 1,
+              // Words only, as iPadOS's top tabs (E-R2-1 1b).
+              child: Text(
+                d.label,
+                style: selected
+                    ? DotType.emphasis(
+                        t.styles.chip.copyWith(color: c.accentInk),
+                        bold: true,
+                        italic: false,
+                      )
+                    : t.styles.chip.copyWith(
+                        color: c.ink2,
+                        fontWeight: FontWeight.w600,
+                        fontVariations: const [FontVariation.weight(600)],
+                      ),
               ),
             ),
           ),

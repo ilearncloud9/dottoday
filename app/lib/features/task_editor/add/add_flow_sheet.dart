@@ -50,6 +50,8 @@ Future<void> showAddFlow(
     // Sized to its content over the keyboard (E-PhonesMinimal frame 3).
     _AddHost.minimal => showAppSheet<void>(
       context: context,
+      // Its form scrolls and its foot stays in view above the keyboard.
+      scrolls: false,
       builder: (_) => AddFlowSheet(request: request),
     ),
     _AddHost.phone => showAppSheet<void>(

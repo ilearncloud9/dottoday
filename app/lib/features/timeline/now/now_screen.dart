@@ -1,19 +1,18 @@
-import 'dart:async';
-
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/now/now_view.dart';
 import 'package:dottoday/features/timeline/now/now_body.dart';
+import 'package:dottoday/features/timeline/now/now_date_anchor.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/now/now_wake_up.dart';
 import 'package:dottoday/features/timeline/now/wide/now_stacked.dart';
 import 'package:dottoday/features/timeline/now/wide/now_wide.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
-import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
+import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +28,11 @@ class NowScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const key = ValueKey('route:now');
+    if (waitFor(key, NowInputs.states(ref), onRetry: () => NowInputs.retry(ref))
+        case final w?) {
+      return w;
+    }
     switch (AppLayout.classOf(context)) {
       // The Mac and web pane beside the Day column (E-Minimal, 6c).
       case WidthClass.expanded:
@@ -129,28 +133,24 @@ class _Header extends StatelessWidget {
             Expanded(
               child: Align(
                 alignment: AlignmentDirectional.centerStart,
-                child: TextButton.icon(
-                  onPressed: () => unawaited(
-                    showGoToDate(
-                      context,
-                      shown: today,
-                      today: today,
-                      onSelect: (d) => context.go(AppRoutes.day(d)),
+                child: NowDateAnchor(
+                  today: today,
+                  child: TextButton.icon(
+                    onPressed: () => NowDateAnchor.open(context, today),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      foregroundColor: t.colors.text,
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    foregroundColor: t.colors.text,
-                  ),
-                  iconAlignment: IconAlignment.end,
-                  icon: DotIcon(
-                    DotGlyphs.chevronDown,
-                    color: android ? t.colors.text : t.colors.accentInk,
-                    size: DotSize.rowIcon,
-                  ),
-                  label: Text(
-                    DateFormat.MMMEd(locale).format(today),
-                    style: android ? t.styles.topBarTitle : t.styles.dayTitle,
+                    iconAlignment: IconAlignment.end,
+                    icon: DotIcon(
+                      DotGlyphs.chevronDown,
+                      color: android ? t.colors.text : t.colors.accentInk,
+                      size: DotSize.rowIcon,
+                    ),
+                    label: Text(
+                      DateFormat.MMMEd(locale).format(today),
+                      style: android ? t.styles.topBarTitle : t.styles.dayTitle,
+                    ),
                   ),
                 ),
               ),

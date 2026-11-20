@@ -745,6 +745,8 @@ Rules for every task in M18 to M22:
   - `PLATFORM_QUALITY_MATRIX.md` updated;
   - regressions and untested targets recorded honestly.
   **STOP: the owner uses the journey and approves it before M20.**
+  Split by the owner (2026-11-20) in two parts, each with its own review page and commit: 7a the journey on every target and the cases; 7b the screenshot sweep beside the boards, `PLATFORM_QUALITY_MATRIX.md` and the acceptance page.
+  - [x] Part 7a done 2026-11-20 (ED-417): the journey in Full and Minimal on 9 targets (widget level) and on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit and the real Mac app; the six cases at three widths (36 checks, 36 goldens); eight fixes it found. Open: 7b; iPad landscape and Android tablet portrait on a device; real devices (no dev flavour).
 
 ## Milestone 20 — Migrate the rest, one slice at a time (Prompt G; the owner reviews each slice)
 

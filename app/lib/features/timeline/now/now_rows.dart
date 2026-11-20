@@ -50,6 +50,15 @@ class NowRow extends StatelessWidget {
     final t = DotTheme.of(context);
     final android = DotIdiom.of(context) == DotIdiom.material;
     final size = android ? DotSize.nowRowDotAndroid : DotSize.nowRowDot;
+    // Large text: the time under the title, so the title keeps its room.
+    final below =
+        MediaQuery.textScalerOf(context).scale(1) > DotSize.stackAbove;
+    final when = Text(
+      time,
+      style: (meta == null ? t.styles.rowTitle : t.styles.rowMeta).copyWith(
+        color: below ? t.colors.muted : t.colors.text,
+      ),
+    );
     return MergeSemantics(
       child: InkWell(
         onTap: onTap,
@@ -106,14 +115,11 @@ class NowRow extends StatelessWidget {
                         m,
                         style: t.styles.rowMeta.copyWith(color: t.colors.muted),
                       ),
+                    if (below) when,
                   ],
                 ),
               ),
-              Text(
-                time,
-                style: (meta == null ? t.styles.rowTitle : t.styles.rowMeta)
-                    .copyWith(color: t.colors.text),
-              ),
+              if (!below) when,
               ?trailing,
             ],
           ),

@@ -1330,3 +1330,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-414:** M19.6 part 6d-2: minimal Add (the iPhone's nav bar, Android's M3 sheet, Lands at on a mini horizon; More opens Create task). Approved.
 - **2026-11-20, ED-415:** M19.6 part 6e-1: Minimal on a narrow Mac (the Day column fold with its edge panel, the narrow toolbar, the short window). Approved.
 - **2026-11-20, ED-416:** M19.6 part 6e-2: Minimal on tablets (the pane and column under the apps' toolbar when expanded; the Day under Now at medium; 48 touch rows). Approved.
+- **2026-11-20, ED-417:** M19.7 part 7a: the slice journey on every target in Full and Minimal, the six cases at three widths, and eight fixes they found. Approved.

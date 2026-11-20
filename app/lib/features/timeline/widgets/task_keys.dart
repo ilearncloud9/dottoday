@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
+import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
@@ -28,9 +29,8 @@ export 'task_key_intents.dart';
 /// The task keys on Today (docs/02 F1.17): ↑↓ pick the previous or next
 /// task of [day], ⌘/Ctrl+↑↓ move the picked tasks 5 min (Shift: 15),
 /// Delete or ⌫ move them to Trash, ↩ opens and Space completes the one
-/// picked, Esc drops the pick. The pick is the multi-select model (R-05),
-/// so the selection bar shows and its commands apply. Keys that have nothing to act on stay with the
-/// focused control (a row's ↩ still opens it).
+/// picked, Esc drops the pick (R-05's multi-select). Keys with nothing
+/// to act on stay with the focused control.
 class TaskKeys extends ConsumerWidget {
   const TaskKeys({
     required this.day,
@@ -100,37 +100,37 @@ class TaskKeys extends ConsumerWidget {
       },
       child: Actions(
         actions: {
-          StepTaskIntent: _KeyAction<StepTaskIntent>(
+          StepTaskIntent: TaskKeyAction<StepTaskIntent>(
             () => k.tasks.isNotEmpty,
             (i) => k.step(i.by),
           ),
-          NudgeTaskIntent: _KeyAction<NudgeTaskIntent>(
+          NudgeTaskIntent: TaskKeyAction<NudgeTaskIntent>(
             () => k.picked.isNotEmpty,
             (i) => unawaited(k.nudge(i.minutes)),
           ),
-          TrashTaskIntent: _KeyAction<TrashTaskIntent>(
+          TrashTaskIntent: TaskKeyAction<TrashTaskIntent>(
             () => k.picked.isNotEmpty,
             (_) => unawaited(k.trash()),
           ),
-          OpenTaskIntent: _KeyAction<OpenTaskIntent>(
+          OpenTaskIntent: TaskKeyAction<OpenTaskIntent>(
             () => k.picked.length == 1,
             (_) => k.open(),
           ),
-          DoneTaskIntent: _KeyAction<DoneTaskIntent>(
+          DoneTaskIntent: TaskKeyAction<DoneTaskIntent>(
             () => k.picked.length == 1,
             (_) => unawaited(k.done()),
           ),
-          MoveTaskIntent: _KeyAction<MoveTaskIntent>(
+          MoveTaskIntent: TaskKeyAction<MoveTaskIntent>(
             // The web's m is a single key: off with the setting (ED-095).
-            () => k.picked.isNotEmpty && (!web || singleKeys),
+            () => k.moving.isNotEmpty && (!web || singleKeys),
             (_) => k.move(today),
           ),
-          FocusTaskIntent: _KeyAction<FocusTaskIntent>(
+          FocusTaskIntent: TaskKeyAction<FocusTaskIntent>(
             // The web's f is a single key: off with the setting (ED-095).
             () => k.picked.length == 1 && (!web || singleKeys),
             (_) => k.focus(),
           ),
-          ClearPickIntent: _KeyAction<ClearPickIntent>(
+          ClearPickIntent: TaskKeyAction<ClearPickIntent>(
             () => k.picked.isNotEmpty,
             (_) => ref.read(taskSelectionProvider.notifier).clear(),
           ),
@@ -138,24 +138,6 @@ class TaskKeys extends ConsumerWidget {
         child: child,
       ),
     );
-  }
-}
-
-/// An action that is off (so the key passes on) when [enabled] says so,
-/// or while a text field has focus (M8.6b: ⌫ and Space are typing there).
-final class _KeyAction<T extends Intent> extends Action<T> {
-  _KeyAction(this.enabled, this.run);
-
-  final bool Function() enabled;
-  final void Function(T intent) run;
-
-  @override
-  bool isEnabled(T intent) => focusedTextField() == null && enabled();
-
-  @override
-  Object? invoke(T intent) {
-    run(intent);
-    return null;
   }
 }
 
@@ -182,6 +164,17 @@ final class _Keys {
     return [
       for (final o in tasks)
         if (p.ids.contains(o.id)) o,
+    ];
+  }
+
+  /// What Move To… acts on: the picked tasks, else the one a click picked
+  /// into the inspector (ED-391; M19.7: after a click ⇧⌘M did nothing).
+  List<Occurrence> get moving {
+    if (picked case final p when p.isNotEmpty) return p;
+    final id = ref.read(inspectedTaskProvider);
+    return [
+      for (final o in tasks)
+        if (o.id == id) o,
     ];
   }
 
@@ -251,18 +244,18 @@ final class _Keys {
     );
   }
 
-  /// The selection bar's Move To…, on the picked tasks.
   /// Move To… (⇧⌘M): one task gets the When picker (ED-099); several
   /// move by days, keeping their times (the selection bar's Move).
   void move(DateTime today) {
-    if (picked.length == 1) {
-      unawaited(pickMoveTask(context, ref, picked.single));
+    final rows = moving;
+    if (rows.length == 1) {
+      unawaited(pickMoveTask(context, ref, rows.single));
       return;
     }
     SelectionCommands(
       context: context,
       container: ProviderScope.containerOf(context),
-      rows: picked,
+      rows: rows,
       today: today,
       day: day,
     ).move?.call();

@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/now/now_date_anchor.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/now/wide/now_pane.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
@@ -55,10 +56,18 @@ class NowStacked extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    TodayMenu(
-                      date: n.today,
+                    // Medium has no date on show: Go to date opens from
+                    // the Day menu's button.
+                    NowDateAnchor(
                       today: n.today,
-                      button: ToolbarPill(label: l10n.workspaceDay, menu: true),
+                      child: TodayMenu(
+                        date: n.today,
+                        today: n.today,
+                        button: ToolbarPill(
+                          label: l10n.workspaceDay,
+                          menu: true,
+                        ),
+                      ),
                     ),
                   ],
                 ),

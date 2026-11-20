@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Minimal's Now shows a loading skeleton and a Try again when the day can't load; Go to date (⇧⌘T) works on Now; after a click, Move To… (⇧⌘M) moves the task in the inspector; Minimal Add keeps its Add button above the keyboard on Android tablets; at 200 % text Now's rows, the Plan panel, the iPad tabs and the day's horizon no longer overflow or overlap; the iPad tabs and the empty day's buttons are easier to tap (redesign branch).
 - Minimal on iPad and Android tablets: in landscape, Now sits beside the Day column under the toolbar, sized for touch; in portrait and on foldables, Now comes first with today's day under it. The + button's hold is now announced as part of the button (redesign branch).
 - On a narrow Mac window in Minimal, the Day column folds behind a Day button at the edge that opens it over Now; the toolbar and the large dot make room in small windows, and the dot's number no longer grows with large text (redesign branch).
 - Minimal Add is a short sheet: type what and when ("Gym 6pm 1h"), see where it lands on the day and whether it overlaps anything, then Add. More opens the full Create task with what you typed; several lines still show a plan before anything is added (redesign branch).

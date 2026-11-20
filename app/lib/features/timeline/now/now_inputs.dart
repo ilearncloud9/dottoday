@@ -39,6 +39,25 @@ final class NowInputs {
   final NowTime time;
   final NowView view;
 
+  /// What Now waits on (today, then its day), for [waitFor]: the
+  /// skeleton while either loads, the inline error with Try again if one
+  /// failed (docs/10 §5.4; found in M19.7: Now drew a blank screen).
+  static List<AsyncValue<Object?>> states(WidgetRef ref) {
+    final today = ref.watch(todayDateProvider);
+    return [
+      today,
+      if (today.value case final d?) ref.watch(timelineDataProvider(d)),
+    ];
+  }
+
+  /// Try again: reloads today and its day.
+  static void retry(WidgetRef ref) {
+    ref.invalidate(todayDateProvider);
+    if (ref.read(todayDateProvider).value case final d?) {
+      ref.invalidate(timelineDataProvider(d));
+    }
+  }
+
   /// Today's inputs, or null while the day loads.
   static NowInputs? watch(BuildContext context, WidgetRef ref) {
     final today = ref.watch(todayDateProvider).value;

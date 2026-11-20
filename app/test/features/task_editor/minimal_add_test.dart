@@ -33,10 +33,15 @@ void main() {
     status: OccurrenceStatus.planned,
   );
 
-  Future<FakeOccurrenceRepository> pump(WidgetTester tester) async {
+  Future<FakeOccurrenceRepository> pump(
+    WidgetTester tester, {
+    Size size = const Size(390, 844),
+    double keyboard = 0,
+  }) async {
     tester.view
-      ..physicalSize = const Size(390, 844)
-      ..devicePixelRatio = 1;
+      ..physicalSize = size
+      ..devicePixelRatio = 1
+      ..viewInsets = FakeViewPadding(bottom: keyboard);
     addTearDown(tester.view.reset);
     final rows = FakeOccurrenceRepository([lunch]);
     final router = buildRouter(appScreens);
@@ -132,5 +137,17 @@ void main() {
     await tester.tap(find.text('More options'));
     await tester.pumpAndSettle();
     expect(find.byType(CreateTaskSheet), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+  testWidgets('an Android tablet with the keyboard up: Add stays in view', (
+    tester,
+  ) async {
+    // Found on the emulator in M19.7: the keyboard left 372 px and Add
+    // had scrolled out of the sheet.
+    final rows = await pump(tester, size: const Size(1280, 800), keyboard: 380);
+    await type(tester, 'Gym 6pm 1h');
+    await tester.tap(find.text('Add').hitTestable());
+    await tester.pumpAndSettle();
+    expect(rows.rows.where((o) => o.title == 'Gym'), hasLength(1));
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

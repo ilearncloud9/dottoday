@@ -129,11 +129,11 @@ class AddWhatStep extends StatelessWidget {
         // A short form, built whole; it scrolls at large text.
         Flexible(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
               DotSpace.page,
               DotSpace.xs,
               DotSpace.page,
-              DotSpace.l,
+              android ? DotSpace.m : DotSpace.l,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -159,15 +159,27 @@ class AddWhatStep extends StatelessWidget {
                     l,
                   ],
                 ],
-                const SizedBox(height: DotSpace.m),
-                if (android)
-                  AddMinimalFoot(onMore: many ? null : onMore, onAdd: add)
-                else
+                if (!android) ...[
+                  const SizedBox(height: DotSpace.m),
                   const AddManyHint(),
+                ],
               ],
             ),
           ),
         ),
+        // Android's More options · Add stay in view under the scrolling
+        // form (M19.7: on a tablet in landscape the keyboard left 372
+        // px and Add scrolled out of sight).
+        if (android)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              DotSpace.page,
+              0,
+              DotSpace.page,
+              DotSpace.l,
+            ),
+            child: AddMinimalFoot(onMore: many ? null : onMore, onAdd: add),
+          ),
       ],
     );
   }

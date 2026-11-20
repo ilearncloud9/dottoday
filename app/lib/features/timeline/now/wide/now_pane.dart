@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/day_column_prefs.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/now/now_body.dart';
+import 'package:dottoday/features/timeline/now/now_date_anchor.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/now/wide/now_dot_menu.dart';
 import 'package:flutter/material.dart';
@@ -138,14 +139,17 @@ class _WebHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Semantics(
-                header: true,
-                child: Text(
-                  l10n.nowDateAt(
-                    DateFormat.MMMEd(locale).format(n.today),
-                    n.time(n.nowUtc),
+              NowDateAnchor(
+                today: n.today,
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    l10n.nowDateAt(
+                      DateFormat.MMMEd(locale).format(n.today),
+                      n.time(n.nowUtc),
+                    ),
+                    style: t.styles.cardTitle,
                   ),
-                  style: t.styles.cardTitle,
                 ),
               ),
               Text(

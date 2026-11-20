@@ -4,6 +4,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/features/timeline/now/now_date_anchor.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_search_field.dart';
@@ -48,12 +49,15 @@ class NowToolbar extends ConsumerWidget {
                 spacing: DotSpace.m,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      DateFormat.MMMMEEEEd(locale).format(n.today),
-                      style: t.styles.rowTitle.copyWith(
-                        fontWeight: FontWeight.w700,
+                  NowDateAnchor(
+                    today: n.today,
+                    child: Semantics(
+                      header: true,
+                      child: Text(
+                        DateFormat.MMMMEEEEd(locale).format(n.today),
+                        style: t.styles.rowTitle.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),

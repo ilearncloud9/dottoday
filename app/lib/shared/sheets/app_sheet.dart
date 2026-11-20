@@ -38,6 +38,7 @@ Future<T?> showAppSheet<T>({
   required WidgetBuilder builder,
   String? title,
   bool fullHeight = false,
+  bool scrolls = true,
 }) {
   final size = MediaQuery.sizeOf(context);
   final wide = size.width >= WidthClass.mediumFrom;
@@ -57,6 +58,7 @@ Future<T?> showAppSheet<T>({
   final Widget sheet = switch ((fullHeight, wide)) {
     (false, _) => AppSheet(
       title: title,
+      scrolls: scrolls,
       child: Builder(builder: builder),
     ),
     (true, false) => FractionallySizedBox(
@@ -71,7 +73,7 @@ Future<T?> showAppSheet<T>({
   if (wide) {
     return showDialog<T>(
       context: context,
-      builder: (_) => Dialog(
+      builder: (dialog) => Dialog(
         // Its own width, not the theme's prompt cap (G2): 560, not 480.
         constraints: const BoxConstraints(
           minWidth: DotSize.dialogMin,
@@ -80,7 +82,14 @@ Future<T?> showAppSheet<T>({
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),
         ),
-        child: sheet,
+        // The dialog already sits above the keyboard: the sheet inside
+        // must not make room for it again (M19.7: on an Android tablet in
+        // landscape, Minimal Add's Add went under the keyboard).
+        child: MediaQuery.removeViewInsets(
+          context: dialog,
+          removeBottom: true,
+          child: sheet,
+        ),
       ),
     );
   }
@@ -103,15 +112,30 @@ Future<T?> showAppSheet<T>({
 /// close button, always in view, over a padded scrollable body that stays
 /// above the keyboard.
 class AppSheet extends StatelessWidget {
-  const AppSheet({required this.child, this.title, super.key});
+  const AppSheet({
+    required this.child,
+    this.title,
+    this.scrolls = true,
+    super.key,
+  });
 
   final String? title;
   final Widget child;
+
+  /// False for a body that scrolls itself and pins a foot under it
+  /// (Minimal Add, M19.7): it gets the room left, not an endless column.
+  final bool scrolls;
 
   @override
   Widget build(BuildContext context) {
     final insets = MediaQuery.viewInsetsOf(context).bottom;
     final title = this.title;
+    final pad = EdgeInsetsDirectional.fromSTEB(
+      DotSpace.l,
+      title == null ? DotSpace.s : 0,
+      DotSpace.l,
+      DotSpace.xl,
+    );
     // The title row stays put and only the body scrolls: scrolled with it,
     // the close button slid under the drag handle, cut to 48×22 (CR-160
     // B7 gate, G1).
@@ -138,15 +162,9 @@ class AppSheet extends StatelessWidget {
               ),
             ),
           Flexible(
-            child: SingleChildScrollView(
-              padding: EdgeInsetsDirectional.fromSTEB(
-                DotSpace.l,
-                title == null ? DotSpace.s : 0,
-                DotSpace.l,
-                DotSpace.xl,
-              ),
-              child: child,
-            ),
+            child: scrolls
+                ? SingleChildScrollView(padding: pad, child: child)
+                : Padding(padding: pad, child: child),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/horizon_dot.dart';
+import 'package:dottoday/shared/dot/horizon_labels.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:flutter/material.dart';
 
@@ -98,12 +99,14 @@ class DayHorizon extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ..._labels(
+                    ...horizonLabels(
                       t,
-                      at,
-                      style,
-                      w,
-                      MediaQuery.textScalerOf(context).scale(1),
+                      labels,
+                      nowX: at.x(nowUtc),
+                      midX: at.x(labels.midUtc),
+                      width: w,
+                      style: style,
+                      scaler: MediaQuery.textScalerOf(context),
                     ),
                   ],
                 ),
@@ -113,52 +116,6 @@ class DayHorizon extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  List<Widget> _labels(
-    DotTheme t,
-    _Scale at,
-    TextStyle style,
-    double w,
-    double scale,
-  ) {
-    const top = DotSize.horizonCap + DotSpace.xxs;
-    final nowX = at.x(nowUtc);
-    final midX = at.x(labels.midUtc);
-    // The middle hour gives way when now's label would cover it.
-    final midClear = (midX - nowX).abs() > DotSize.horizonCap * 3;
-    // So do the ends' hours near them: at 6:30 only "6:30" shows (E-R2-26).
-    const room = DotSize.horizonCap * 4;
-    final wakeClear = nowX > room;
-    final windClear = w - nowX > room;
-    final now = t.styles.threadMeta.copyWith(
-      color: t.colors.accentInk,
-      fontWeight: FontWeight.w700,
-    );
-    // A label's box grows with the text, so "10:42" is never cut (200 %).
-    final half = DotSize.horizonCap * 2 * scale;
-    Widget centred(double x, String text, TextStyle s) => Positioned(
-      top: top,
-      left: (x - half).clamp(0, math.max(0, w - 2 * half)),
-      width: 2 * half,
-      child: Text(text, style: s, textAlign: TextAlign.center, maxLines: 1),
-    );
-    return [
-      if (wakeClear)
-        Positioned(
-          top: top,
-          left: 0,
-          child: Text(labels.wake, style: style),
-        ),
-      if (windClear)
-        Positioned(
-          top: top,
-          right: 0,
-          child: Text(labels.windDown, style: style),
-        ),
-      if (midClear) centred(midX, labels.mid, style),
-      centred(nowX, labels.now, now),
-    ];
   }
 }
 

@@ -74,7 +74,9 @@ class EmptyDayActions extends ConsumerWidget {
       constraints: const BoxConstraints(maxWidth: DotSize.emptyActionWidth),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        spacing: DotSpace.nowCard,
+        // The board's gap between the drawn pills; their touch padding
+        // sits inside it.
+        spacing: DotSpace.nowCard - (DotTouch.android - DotSize.emptyAction),
         children: [
           _Action(
             primary: true,
@@ -137,31 +139,46 @@ class _Action extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final c = t.colors;
     return Semantics(
       button: true,
       label: label,
       excludeSemantics: true,
       onTap: onTap,
-      child: Material(
-        color: primary ? c.accent : c.card,
-        shape: primary
-            ? const StadiumBorder()
-            : StadiumBorder(side: BorderSide(color: c.hairline)),
-        child: InkWell(
-          onTap: onTap,
-          customBorder: const StadiumBorder(),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: DotSize.emptyAction),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: t.styles.button.copyWith(
-                    color: primary ? c.onAccent : c.ink,
-                  ),
+      // Drawn 46 (E-Phones), touched 48: the padding takes the tap too.
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: (DotTouch.android - DotSize.emptyAction) / 2,
+          ),
+          child: _pill(t),
+        ),
+      ),
+    );
+  }
+
+  Widget _pill(DotTheme t) {
+    final c = t.colors;
+    return Material(
+      color: primary ? c.accent : c.card,
+      shape: primary
+          ? const StadiumBorder()
+          : StadiumBorder(side: BorderSide(color: c.hairline)),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotSize.emptyAction),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: t.styles.button.copyWith(
+                  color: primary ? c.onAccent : c.ink,
                 ),
               ),
             ),

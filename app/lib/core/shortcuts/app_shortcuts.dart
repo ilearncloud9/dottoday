@@ -1,5 +1,6 @@
 import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -295,7 +296,10 @@ class AppCommandScope extends StatelessWidget {
     return SingleKeysOn(
       on: singleKeys,
       child: Shortcuts(
-        shortcuts: AppShortcuts.bindings(defaultTargetPlatform),
+        shortcuts: AppShortcuts.bindings(
+          defaultTargetPlatform,
+          web: webChrome(context),
+        ),
         child: Actions(
           actions: {
             AppCommandIntent: AppCommandAction(

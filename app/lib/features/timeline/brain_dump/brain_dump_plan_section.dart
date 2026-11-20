@@ -38,6 +38,7 @@ class _BrainDumpPlanSectionState extends State<BrainDumpPlanSection> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final plan = FilledButton(onPressed: _plan, child: Text(l10n.dumpPlan));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -62,15 +63,20 @@ class _BrainDumpPlanSectionState extends State<BrainDumpPlanSection> {
             ),
           ),
         ),
-        Row(
-          spacing: DotSpace.s,
-          children: [
-            Expanded(
-              child: Text(l10n.planPanelDumpNote, style: t.styles.rowMeta),
-            ),
-            FilledButton(onPressed: _plan, child: Text(l10n.dumpPlan)),
-          ],
-        ),
+        // Large text: the note above, Plan it under it (M19.7, 200 %).
+        if (MediaQuery.textScalerOf(context).scale(1) > DotSize.stackAbove) ...[
+          Text(l10n.planPanelDumpNote, style: t.styles.rowMeta),
+          Align(alignment: AlignmentDirectional.centerEnd, child: plan),
+        ] else
+          Row(
+            spacing: DotSpace.s,
+            children: [
+              Expanded(
+                child: Text(l10n.planPanelDumpNote, style: t.styles.rowMeta),
+              ),
+              plan,
+            ],
+          ),
       ],
     );
   }

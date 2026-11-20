@@ -142,7 +142,8 @@ abstract final class DotSize {
   static const double stripPillWidth = 52;
   static const double stripPillHeight = 60;
 
-  /// An empty day's actions (E-Phones): 46 tall, up to 250 wide.
+  /// An empty day's actions (E-Phones): 46 tall drawn (48 to touch, the
+  /// rest is padding; M19.7), up to 250 wide.
   static const double emptyAction = 46;
   static const double emptyActionWidth = 250;
 
@@ -268,6 +269,10 @@ abstract final class DotSize {
   static const double shortWindow = 720;
   static const double shortOrb = 0.72;
   static const double shortOrbTextLimit = 1.3;
+
+  /// Text scale above which a row stacks what sits beside its text (a
+  /// time, a button) under it instead (found at 200 % in M19.7).
+  static const double stackAbove = 1.3;
 
   /// The Now pane's horizon and content width (ED-232: 700).
   static const double nowPaneContent = 700;

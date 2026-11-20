@@ -1,3 +1,4 @@
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:flutter/widgets.dart';
 
 /// Step the keyboard pick [by] tasks along the day (↑ −1, ↓ +1).
@@ -37,4 +38,22 @@ final class MoveTaskIntent extends Intent {
 /// Focus on the one picked task (⇧⌘F, web f, ED-095).
 final class FocusTaskIntent extends Intent {
   const FocusTaskIntent();
+}
+
+/// An action that is off (so the key passes on) when [enabled] says so,
+/// or while a text field has focus (M8.6b: ⌫ and Space are typing there).
+final class TaskKeyAction<T extends Intent> extends Action<T> {
+  TaskKeyAction(this.enabled, this.run);
+
+  final bool Function() enabled;
+  final void Function(T intent) run;
+
+  @override
+  bool isEnabled(T intent) => focusedTextField() == null && enabled();
+
+  @override
+  Object? invoke(T intent) {
+    run(intent);
+    return null;
+  }
 }
