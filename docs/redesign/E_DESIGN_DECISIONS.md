@@ -5376,6 +5376,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures, approved with the part:** the open "Day" pill tinted rather than filled teal with an icon; "Dottoday" wraps in the 200 sidebar at 200 % (6a's shell); the native 840 × 640 minimum window unchanged (ED-169); no ‹ › or "● Synced" (as 6c).
 - **Checks:** now_narrow_test (6), 6 goldens; `HorizonDot` and `HorizonLabels` moved to their own file. Analyze and format clean; 7444 tests pass, 31 skipped. Not yet run on a real Mac (VoiceOver, Tab order, resizing with unsaved edits).
 
+### ED-416 · M19.6 part 6e-2: Minimal on tablets
+- **Date:** 2026-11-20. **Owner:** "Start 6e-2"; then "Approve 6e-2" after the review page.
+- **Built (E-R2-1 2a, 2b, 4a; ED-266):** expanded iPad and Android tablets get the Now pane beside the Day column under the apps' toolbar (the Mac's, with no key hints on touch; ⌘K only on the Mac); the web keeps its date in the pane. Medium windows (iPad portrait, Android tablets in portrait, foldables, a narrow browser) show Now first, then a "Day" header with the Day menu and today's thread under it; Also now and Next stack with the Add row under them, and there is no Day row.
+- **Touch sizes:** the pane's Add and Day rows and Minimal's sidebar rows are 48 on touch (44 on the Mac and the web).
+- **The + button's hold:** merged into the button's semantics, so a screen reader hears one named button with a long-press action, not an unnamed item.
+- **Tests:** `debugWebChromeOverride` in `dot_idiom.dart` draws the web's chrome in goldens (Linux no longer stands in for it).
+- **Departures, approved with the part:** at medium the Day is one window tall inside the page (the page brings it up, then it scrolls on its own; ED-103 opens it at the live task); the orb is 280 on tablets rather than sized to the window; Android tablet portrait is not on the boards and follows the iPad's portrait.
+- **Checks:** now_tablet_test (3), 4 goldens; the router's `/now` and 6a's Android-tablet golden updated. Analyze and format clean; 7449 tests pass, 31 skipped. Not yet run on a real iPad or Android tablet.
+
 ---
 
 ## Pending owner answers

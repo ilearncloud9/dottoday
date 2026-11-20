@@ -28,6 +28,7 @@ class NowBody extends StatelessWidget {
     required this.time,
     this.orbSize,
     this.aside,
+    this.asideBelow = false,
     super.key,
   });
 
@@ -37,6 +38,9 @@ class NowBody extends StatelessWidget {
   final NowTime time;
   final double? orbSize;
   final Widget? aside;
+
+  /// [aside] under Also now and Next at any width (medium, E-R2-1 2b).
+  final bool asideBelow;
 
   @override
   Widget build(BuildContext context) => switch (view) {
@@ -50,6 +54,7 @@ class NowBody extends StatelessWidget {
         time: time,
         orbSize: orbSize ?? _orb(context),
         aside: aside,
+        asideBelow: asideBelow,
       ),
     NowNextUp(:final next, :final free, :final after, :final earlier) => Column(
       spacing: DotSpace.m,
@@ -100,6 +105,7 @@ class _Running extends StatelessWidget {
     required this.time,
     required this.orbSize,
     required this.aside,
+    required this.asideBelow,
   });
 
   final Occurrence task;
@@ -110,6 +116,7 @@ class _Running extends StatelessWidget {
   final NowTime time;
   final double orbSize;
   final Widget? aside;
+  final bool asideBelow;
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +168,8 @@ class _Running extends StatelessWidget {
             // Side by side; stacked once the pane narrows (ED-170: from
             // the fold point "Also now" and "Next" stack).
             child: LayoutBuilder(
-              builder: (context, box) => box.maxWidth < DotSize.nowPaneContent
+              builder: (context, box) =>
+                  asideBelow || box.maxWidth < DotSize.nowPaneContent
                   ? Column(
                       spacing: DotSpace.m,
                       children: [..._rows(context), a],

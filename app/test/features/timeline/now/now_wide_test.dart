@@ -4,7 +4,8 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/now/wide/day_column.dart';
-import 'package:dottoday/features/timeline/today_screen.dart';
+import 'package:dottoday/features/timeline/now/wide/now_stacked.dart';
+import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/shared/dot/day_horizon.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,7 @@ import '../../../support/timeline_fakes.dart';
 /// The Mac and web Now pane beside the Day column (E-Minimal frames 1 and
 /// 2, ED-232; M19.6 part 6c): the orb, Done · Focus · Need more time?,
 /// "· 4 more"; the Day column with ✕ and ⌥⌘I; a horizon dot's
-/// right-click menu; medium widths keep the day until 6e.
+/// right-click menu; medium widths put the Day under Now.
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
@@ -137,9 +138,11 @@ void main() {
     expect(find.text('Undo'), findsOneWidget);
   }, variant: TargetPlatformVariant.only(TargetPlatform.linux));
 
-  testWidgets('a medium window keeps the day until 6e', (tester) async {
+  testWidgets('a medium window: the Day under Now (6e-2)', (tester) async {
     await pump(tester, size: const Size(800, 1000));
-    expect(find.byType(TodayScreen), findsOneWidget);
+    expect(find.byType(NowStacked), findsOneWidget);
     expect(find.byType(DayColumn), findsNothing);
+    expect(find.byType(DayPage), findsOneWidget);
+    expect(find.text('Hide the Day column'), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }

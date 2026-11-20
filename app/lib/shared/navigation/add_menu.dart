@@ -104,12 +104,23 @@ class AddMenuButton extends StatelessWidget {
       builder: (context) {
         final tap = AddMenu.onTap(context);
         final hold = AddMenu.onHold(context);
-        return GestureDetector(
-          onLongPress: hold == null
-              ? null
-              : () => unawaited(showAddMenu(context, hold)),
-          child: builder(
-            tap == null ? onAdd : () => unawaited(showAddMenu(context, tap)),
+        final menu = hold == null
+            ? null
+            : () => unawaited(showAddMenu(context, hold));
+        final button = builder(
+          tap == null ? onAdd : () => unawaited(showAddMenu(context, tap)),
+        );
+        if (menu == null) return button;
+        // One stop for a screen reader: the button's name with both its
+        // tap and the iPad's hold (a gesture alone made an unnamed node).
+        return MergeSemantics(
+          child: Semantics(
+            onLongPress: menu,
+            child: GestureDetector(
+              excludeFromSemantics: true,
+              onLongPress: menu,
+              child: button,
+            ),
           ),
         );
       },

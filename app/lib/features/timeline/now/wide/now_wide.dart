@@ -55,7 +55,9 @@ class _NowWideState extends ConsumerState<NowWide> {
   Widget build(BuildContext context) {
     final n = NowInputs.watch(context, ref);
     if (n == null) return const Scaffold();
-    final mac = macApp(context);
+    // The apps' chrome (the Mac, iPad, Android tablets: E-Minimal 1,
+    // E-R2-1 2a, 4a); the web keeps the date in the pane (frame 2).
+    final app = !webChrome(context);
     final editing = ref.watch(editingTaskProvider) != null;
     // A task opened from the pane (Open on a dot) brings the column out
     // for it, even when the person put the Day away (ED-089).
@@ -66,7 +68,7 @@ class _NowWideState extends ConsumerState<NowWide> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (mac) NowToolbar(inputs: n),
+          if (app) NowToolbar(inputs: n),
           Expanded(
             child: LayoutBuilder(
               builder: (context, box) {
@@ -80,7 +82,7 @@ class _NowWideState extends ConsumerState<NowWide> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
-                        child: NowPane(inputs: n, mac: mac, dayHidden: hidden),
+                        child: NowPane(inputs: n, app: app, dayHidden: hidden),
                       ),
                       if (!hidden) DayColumn(today: n.today),
                     ],
@@ -101,7 +103,7 @@ class _NowWideState extends ConsumerState<NowWide> {
                           Expanded(
                             child: NowPane(
                               inputs: n,
-                              mac: mac,
+                              app: app,
                               dayHidden: !open,
                               onDayRow: _toggle,
                             ),

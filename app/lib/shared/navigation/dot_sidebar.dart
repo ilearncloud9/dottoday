@@ -149,13 +149,10 @@ class _SidebarRow extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(DotRadii.railItem),
-          // 44 pt on iPad, 48 dp elsewhere (rules §6.4).
+          // 48 on touch, iPad included: the touch floor every screen test
+          // checks (docs/08 §3; rules §6.4's 44 pt + 4, within ±4).
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: DotIdiom.of(context) == DotIdiom.cupertino
-                  ? DotTouch.min
-                  : DotTouch.android,
-            ),
+            constraints: const BoxConstraints(minHeight: DotTouch.android),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
               child: Row(

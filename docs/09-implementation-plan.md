@@ -724,7 +724,7 @@ Rules for every task in M18 to M22:
   - [x] Part 5a done 2026-11-20 (ED-406): the Undo toast without sliding under Reduce Motion, at the content's start on Android tablets, closed by ⌘Z / Ctrl+Z's undo; the done circle on touch grid blocks (Done with Undo, reopens too; not in narrow lanes); Create task's header circle adds a task already done (not a repeating one). Open: 5b, 5c; a real-device run.
   - [x] Part 5b done 2026-11-20 (ED-407): today's done tasks fold into Earlier in the Workspace's Day column on the Mac, web and tablets (E-Earlier 7 to 10); reopening says "{title} reopened"; ↓ moves into the open group and the done circle takes the keyboard everywhere. Open: 5c; a real-device run.
   - [x] Part 5c done 2026-11-20 (ED-408): Go to date, the approved month with the week on show tinted and today ringed, as a popover on the Mac, the web and the iPad, a dialog on Android tablets and a sheet on phones; from the date button, ⇧⌘T (web g), Go › Go to Date… and the Day menu; arrows, Page Up / Down, Return, Esc. Swipe and the day arrows kept as built. Open: the Day menu's four groups (M20.3); a real-device run.
-- [ ] M19.6 The same journey in Minimal:
+- [x] M19.6 The same journey in Minimal (done 2026-11-20, parts 6a to 6e-2):
   - the Now tab (phones) and Now pane (Mac and web): the horizon, the large now-dot and the orb, with Done, Focus and Need more time? (ED-066, ED-106);
   - E-PhonesMinimal and E-Minimal (ED-089, ED-106, ED-145);
   - the minimal task sheet title (ED-216);
@@ -737,6 +737,7 @@ Rules for every task in M18 to M22:
   - [x] Part 6d-1 done 2026-11-20 (ED-413): Minimal's task screen (ED-089, ED-216) on phones and in the Mac and web Day column (✕ or Esc back to the Day); the column's hint and no Running late. Open: 6d-2 minimal Add; a real-device run.
   - [x] Part 6d-2 done 2026-11-20 (ED-414): minimal Add (the iPhone's Cancel · New task · Add; Android's M3 sheet; the chips; Lands at on a mini horizon; several lines plan first; More opens Create task). Open: 6e (the narrow-Mac rules and tablets); a real-device run.
   - [x] Part 6e-1 done 2026-11-20 (ED-415): Minimal on a narrow Mac (the Day column fold at the computed point with the "Day" edge panel, the narrow toolbar below 1000, the short window's 72 % orb). Open: 6e-2 tablets; a real-device run.
+  - [x] Part 6e-2 done 2026-11-20 (ED-416): Minimal on tablets (E-R2-1 2a, 2b, 4a): expanded iPad and Android tablets get the pane and Day column under the apps' toolbar (no key hints on touch); medium shows Now with the Day under it (its header and Day menu); 48 touch rows, the iPad sidebar's too; the + hold in the button's semantics. Open: the medium Day's own scroll inside the page; a real iPad and Android tablet run (M21).
 - [ ] M19.7 Acceptance (playbook step 11):
   - verified on iPhone, Android, Mac and web, plus iPad and Android-tablet widths and a narrow browser or window;
   - cases: empty, dense, loading, error, long text and 200 % text;

@@ -1,5 +1,6 @@
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/features/timeline/now/now_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -51,11 +52,13 @@ void main() {
       '/day/2026-10-20',
       'route:day:2026-10-20',
     );
-    // Week and Month on a date or month, the Workspace's 3 days (M19.2)
-    // and /now, a place not built yet (owner, M18.7 part 3).
+    // Week and Month on a date or month, the Workspace's 3 days (M19.2),
+    // and /now, Minimal's Now (M19.6).
     await _goAndExpect(tester, router, '/week/2026-10-20', 'route:week');
     await _goAndExpect(tester, router, '/month/2026-10', 'route:month');
-    await _goAndExpect(tester, router, '/now', 'route:today');
+    router.go('/now');
+    await tester.pumpAndSettle();
+    expect(find.byType(NowScreen), findsOneWidget, reason: '/now');
     await _goAndExpect(
       tester,
       router,

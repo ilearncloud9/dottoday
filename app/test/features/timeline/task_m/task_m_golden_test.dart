@@ -4,6 +4,7 @@ library;
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -143,6 +144,8 @@ void main() {
   });
 
   testWidgets('golden: web chrome, in the Day column, dark', (tester) async {
+    debugWebChromeOverride = true;
+    addTearDown(() => debugWebChromeOverride = null);
     await shot(
       tester,
       TargetPlatform.linux,

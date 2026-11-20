@@ -8,8 +8,8 @@ import 'package:dottoday/domain/now/now_view.dart';
 import 'package:dottoday/features/timeline/now/now_body.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/now/now_wake_up.dart';
+import 'package:dottoday/features/timeline/now/wide/now_stacked.dart';
 import 'package:dottoday/features/timeline/now/wide/now_wide.dart';
-import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
@@ -23,7 +23,7 @@ import 'package:intl/intl.dart';
 /// ED-106, ED-329; M19.6 part 6b): the date and "Now 10:42 · Wind Down
 /// at 11:00 PM", the horizon (a tap opens Today), then what's on now
 /// ([NowBody]), and the Day ▾ chip. Expanded, the Mac and web pane
-/// ([NowWide]); medium (tablets) shows the day until 6e.
+/// ([NowWide]); medium, the Day under Now ([NowStacked]).
 class NowScreen extends ConsumerWidget {
   const NowScreen({super.key});
 
@@ -33,9 +33,9 @@ class NowScreen extends ConsumerWidget {
       // The Mac and web pane beside the Day column (E-Minimal, 6c).
       case WidthClass.expanded:
         return const NowWide();
-      // Tablets at medium keep the day until 6e.
+      // Medium (tablets, a narrow browser): the Day under Now (6e-2).
       case WidthClass.medium:
-        return const TodayScreen();
+        return const NowStacked();
       case WidthClass.compact:
         break;
     }

@@ -65,4 +65,10 @@ bool touchApp(BuildContext context) =>
 
 /// Whether this is the web build: compact web gets its own solid bar,
 /// never the iOS glass bar or the Android toolbar (ED-172).
-bool webChrome(BuildContext context) => kIsWeb;
+bool webChrome(BuildContext context) => debugWebChromeOverride ?? kIsWeb;
+
+/// Tests draw the web's own chrome with this, as Flutter's
+/// `debugDefaultTargetPlatformOverride` stands in for a platform; null in
+/// the app. Only [webChrome] reads it.
+@visibleForTesting
+bool? debugWebChromeOverride;

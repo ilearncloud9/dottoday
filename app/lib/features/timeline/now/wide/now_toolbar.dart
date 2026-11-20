@@ -13,8 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-/// The Mac's Minimal toolbar over Now and the Day column (E-Minimal frame
-/// 1): "Tuesday, 3 November", "Now 10:42 · Wind Down at 11:00 PM", then
+/// The apps' Minimal toolbar over Now and the Day column (E-Minimal frame
+/// 1; iPad and Android tablets, E-R2-1 2a, 4a): "Tuesday, 3 November", "Now 10:42 · Wind Down at 11:00 PM", then
 /// sync, Search or run ⌘K and +. The web draws the date in the pane
 /// instead (frame 2): only the chrome differs (ED-232).
 class NowToolbar extends ConsumerWidget {
@@ -73,7 +73,10 @@ class NowToolbar extends ConsumerWidget {
             ),
             SearchField(
               label: l10n.workspaceSearchOrRun,
-              hint: '⌘K', // l10n-ignore: a key cap
+              // ⌘K on the Mac; touch shows no key hints (E-R2-1).
+              hint: macApp(context)
+                  ? '⌘K' // l10n-ignore: a key cap
+                  : null,
               compact: narrow,
               onTap: () => context.go(AppRoutes.search),
             ),

@@ -3,6 +3,7 @@ library;
 
 import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/core/router/app_router.dart';
+import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -18,8 +19,8 @@ import '../../../support/test_app.dart';
 import '../../../support/timeline_fakes.dart';
 
 /// The Mac and web Now pane with the Day column beside E-Minimal frames 1
-/// (Mac) and 2 (web; Linux stands in, the same not-Mac chrome) at 1280 ×
-/// 800; M19.6 part 6c.
+/// (Mac) and 2 (web, through `debugWebChromeOverride`) at 1280 × 800;
+/// M19.6 part 6c.
 void main() {
   setUpAll(tz_data.initializeTimeZones);
   setUpAll(loadAppFonts);
@@ -108,6 +109,8 @@ void main() {
   });
 
   testWidgets('golden: web chrome', (tester) async {
+    debugWebChromeOverride = true;
+    addTearDown(() => debugWebChromeOverride = null);
     await shot(tester, TargetPlatform.linux, 'web');
   });
 }
