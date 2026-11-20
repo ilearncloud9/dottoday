@@ -7,10 +7,18 @@ import 'package:flutter/services.dart';
 /// Shows [colour]'s `#RRGGBB`; tapped it becomes a field, and a full
 /// six-digit value applies as typed.
 class HexChip extends StatefulWidget {
-  const HexChip({required this.colour, required this.onColour, super.key});
+  const HexChip({
+    required this.colour,
+    required this.onColour,
+    this.wide = false,
+    super.key,
+  });
 
   final Color colour;
   final ValueChanged<Color> onColour;
+
+  /// Custom colour…'s full-width field (ED-156) rather than a chip.
+  final bool wide;
 
   @override
   State<HexChip> createState() => _HexChipState();
@@ -57,14 +65,14 @@ class _HexChipState extends State<HexChip> {
     return Semantics(
       label: context.l10n.lookHexLabel,
       textField: true,
-      child: IntrinsicWidth(
-        child: TextField(
+      child: _fit(
+        TextField(
           controller: _text,
           focusNode: _focus,
           onChanged: _typed,
           onSubmitted: (_) => _focus.unfocus(),
           style: t.styles.hexCode,
-          textAlign: TextAlign.center,
+          textAlign: widget.wide ? TextAlign.start : TextAlign.center,
           autocorrect: false,
           enableSuggestions: false,
           keyboardType: TextInputType.visiblePassword,
@@ -98,4 +106,7 @@ class _HexChipState extends State<HexChip> {
       ),
     );
   }
+
+  Widget _fit(Widget field) =>
+      widget.wide ? field : IntrinsicWidth(child: field);
 }

@@ -238,7 +238,8 @@ void main() {
     await _open(tester);
     await tester.tap(_in(find.byTooltip('Colour and icon')));
     await tester.pumpAndSettle();
-    expect(find.text('Colour and icon'), findsWidgets);
+    // The Mac and web colour and icon popover (4c-3, ED-156).
+    expect(find.text('Dottoday colours'), findsOneWidget);
   });
 
   _macTest('tabs switch modes and write nothing (ED-152)', (tester) async {

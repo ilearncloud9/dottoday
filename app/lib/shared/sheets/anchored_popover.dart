@@ -49,6 +49,14 @@ Future<T?> showAnchoredPopover<T>({
   ),
 );
 
+/// [context]'s widget in global coordinates, for a popover to point at
+/// (the dot that opened it), or null before it is laid out.
+Rect? globalRectOf(BuildContext context) {
+  final box = context.findRenderObject();
+  if (box is! RenderBox || !box.hasSize) return null;
+  return box.localToGlobal(Offset.zero) & box.size;
+}
+
 class _PopoverRoute<T> extends PopupRoute<T> {
   _PopoverRoute({
     required this.anchor,

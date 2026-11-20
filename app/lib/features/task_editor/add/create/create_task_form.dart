@@ -111,7 +111,7 @@ class _CreateTaskFormState extends ConsumerState<CreateTaskForm> {
               ? TaskIcon.pencil
               : TaskIcon.fromKey(draft.icon),
           card: android,
-          onLook: () => unawaited(pick.look()),
+          onLook: (at) => unawaited(pick.look(anchor: at)),
           summary: range == null
               ? null
               : l10n.addWhenSummary(dayName, range, length),

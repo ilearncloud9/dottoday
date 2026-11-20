@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
+import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:dottoday/shared/pickers/task_icon_choice.dart';
-import 'package:dottoday/shared/pickers/task_icon_picker.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 
 /// "COLOUR AND ICON" (docs/10 §3 `ColourIconBlock`, `A-ios-add-what`,
@@ -19,6 +20,7 @@ class ColourIconBlock extends StatelessWidget {
     required this.onColor,
     required this.onIcon,
     this.suggested = const [TaskIcon.cart, TaskIcon.heart],
+    this.title = '',
     super.key,
   });
 
@@ -29,6 +31,9 @@ class ColourIconBlock extends StatelessWidget {
 
   /// Quick icons beside the chosen one (from habits; M3c.1).
   final List<TaskIcon> suggested;
+
+  /// The task's title, for the picker's suggested icons.
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +73,7 @@ class ColourIconBlock extends StatelessWidget {
                   selected: i == icon,
                   onTap: () => onIcon(i),
                 ),
-              _More(onTap: () => unawaited(_pickIcon(context))),
+              _More(onTap: (at) => unawaited(_pickIcon(context, at))),
             ],
           ),
         ),
@@ -76,16 +81,21 @@ class ColourIconBlock extends StatelessWidget {
     );
   }
 
-  /// The full picker (docs/10 §5.3 "Colour & icon full picker").
-  Future<void> _pickIcon(BuildContext context) async {
-    final picked = await showTaskLookPicker(
-      context: context,
+  /// Colour and icon (M19.4 part 4c): each pick lands as it is made.
+  Future<void> _pickIcon(BuildContext context, Rect? anchor) async {
+    var last = (color: color, icon: icon);
+    await showTaskLook(
+      context,
       colour: color,
       icon: icon,
+      title: title,
+      anchor: anchor,
+      onChanged: (l) {
+        if (l.color != last.color) onColor(l.color);
+        if (l.icon != last.icon) onIcon(l.icon);
+        last = l;
+      },
     );
-    if (picked == null) return;
-    if (picked.color != color) onColor(picked.color);
-    if (picked.icon != icon) onIcon(picked.icon);
   }
 }
 
@@ -157,13 +167,13 @@ class ColourDot extends StatelessWidget {
 class _More extends StatelessWidget {
   const _More({required this.onTap});
 
-  final VoidCallback onTap;
+  final ValueChanged<Rect?> onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     return IconButton(
-      onPressed: onTap,
+      onPressed: () => onTap(globalRectOf(context)),
       tooltip: context.l10n.colourIconMore,
       icon: DotIcon(DotGlyphs.more, color: c.muted),
     );

@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/shared/dot/colour_icon_block.dart';
 import 'package:dottoday/shared/pickers/look/look_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -152,52 +150,11 @@ class ColourSwatchIcon extends StatelessWidget {
   }
 }
 
-/// A colour for the picked tasks, or null: on phones All colours (owner,
-/// M19.4 part 4c-2), from medium width the colours in a sheet until
-/// 4c-3's popover.
-Future<TaskColor?> showColourChoice(BuildContext context) {
-  if (AppLayout.classOf(context) == WidthClass.compact) {
-    return showColourOnly(context);
-  }
-  return showModalBottomSheet<TaskColor>(
-    context: context,
-    // Above the iPhone's floating tab bar (M4.9: it covered Save).
-    useRootNavigator: true,
-    builder: (_) => const _ColourSheet(),
-  );
-}
-
-class _ColourSheet extends StatelessWidget {
-  const _ColourSheet();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(DotSpace.page),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.m,
-          children: [
-            Text(context.l10n.selectionColour, style: t.styles.cardTitle),
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                for (final c in TaskColor.values)
-                  ColourDot(
-                    colour: c,
-                    selected: false,
-                    onTap: () => Navigator.of(context).pop(c),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+/// A colour for the picked tasks, or null (owner, M19.4 part 4c): All
+/// colours on phones and tablets below expanded, the colour popover on the
+/// Mac and web, boxed on wide tablets.
+Future<TaskColor?> showColourChoice(BuildContext context) =>
+    showColourOnly(context);
 
 /// "Delete 3 tasks?": true only on Delete.
 Future<bool> confirmDeleteMany(BuildContext context, int count) async {

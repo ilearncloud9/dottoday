@@ -1,22 +1,56 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/look/recent_icons.dart';
 import 'package:dottoday/shared/dot/colour_icon_block.dart';
+import 'package:dottoday/shared/pickers/task_icon_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/a11y.dart';
 import '../../support/test_app.dart';
+import '../../support/timeline_fakes.dart';
+
+class _Recent extends RecentIcons {
+  @override
+  Future<List<String>> build() async => const [];
+
+  @override
+  Future<void> use(String iconKey) async {}
+}
 
 Widget _block({
   ValueChanged<TaskColor>? onColor,
   ValueChanged<TaskIcon>? onIcon,
   ThemeMode mode = ThemeMode.light,
-}) => testApp(
+}) => UncontrolledProviderScope(
+  container: ProviderContainer(
+    overrides: [
+      ...timelineOverrides(now: DateTime.utc(2026, 11, 20, 9)),
+      recentIconsProvider.overrideWith(_Recent.new),
+    ],
+  ),
+  child: testApp(
+    Scaffold(
+      body: ColourIconBlock(
+        color: TaskColor.coral,
+        icon: TaskIcon.bag,
+        onColor: onColor ?? (_) {},
+        onIcon: onIcon ?? (_) {},
+      ),
+    ),
+    themeMode: mode,
+  ),
+);
+
+/// The icon library alone (Search's "with icon" filter): the full picker's
+/// colour mode is Colour and icon now (M19.4 part 4c-3).
+Widget _library({ThemeMode mode = ThemeMode.light}) => testApp(
   Scaffold(
-    body: ColourIconBlock(
-      color: TaskColor.coral,
-      icon: TaskIcon.bag,
-      onColor: onColor ?? (_) {},
-      onIcon: onIcon ?? (_) {},
+    body: Builder(
+      builder: (context) => TextButton(
+        onPressed: () => showTaskIconPicker(context: context, title: 'Icon'),
+        child: const Text('open'),
+      ),
     ),
   ),
   themeMode: mode,
@@ -39,25 +73,20 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('taps report colour, quick icon and a grid icon', (tester) async {
+  testWidgets('taps report colour and quick icon', (tester) async {
     final colors = <TaskColor>[];
     final icons = <TaskIcon>[];
     await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
     await tester.tap(find.bySemanticsLabel('Teal'));
     await tester.tap(find.bySemanticsLabel('Cart'));
-    await tester.ensureVisible(find.byTooltip('All icons'));
-    await tester.tap(find.byTooltip('All icons'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), 'camera');
-    await tester.pumpAndSettle();
-    await tester.tap(find.bySemanticsLabel('Camera'));
     await tester.pumpAndSettle();
     expect(colors, [TaskColor.teal]);
-    expect(icons, [TaskIcon.cart, TaskIcon.camera]);
+    expect(icons, [TaskIcon.cart]);
   });
 
-  testWidgets('the full picker takes a colour and an icon together '
-      '(M3f.3)', (tester) async {
+  testWidgets('⋯ opens Colour and icon; its picks land as made (4c-3)', (
+    tester,
+  ) async {
     final colors = <TaskColor>[];
     final icons = <TaskIcon>[];
     await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
@@ -65,28 +94,12 @@ void main() {
     await tester.tap(find.byTooltip('All icons'));
     await tester.pumpAndSettle();
     expect(find.text('Colour and icon'), findsOneWidget);
-    // The sheet's own colours come after the block's.
-    await tester.tap(find.bySemanticsLabel('Green').last);
-    await tester.pumpAndSettle();
-    // Dottoday's own planning icons open the library.
-    await tester.tap(find.bySemanticsLabel('Focus Block'));
-    await tester.pumpAndSettle();
-    expect(colors, [TaskColor.mint]);
-    expect(icons, [TaskIcon.focusBlock]);
-  });
-
-  testWidgets('a colour alone: Done keeps it', (tester) async {
-    final colors = <TaskColor>[];
-    final icons = <TaskIcon>[];
-    await tester.pumpWidget(_block(onColor: colors.add, onIcon: icons.add));
-    await tester.ensureVisible(find.byTooltip('All icons'));
-    await tester.tap(find.byTooltip('All icons'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.bySemanticsLabel('Sky').last);
-    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.bySemanticsLabel('Plum').last);
+    await tester.tap(find.bySemanticsLabel('Plum').last);
+    await tester.pump();
+    expect(colors, [TaskColor.plum], reason: 'before Done');
     await tester.tap(find.text('Done'));
     await tester.pumpAndSettle();
-    expect(colors, [TaskColor.sky]);
     expect(icons, isEmpty);
   });
 
@@ -94,9 +107,8 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await tester.pumpWidget(_block());
-    await tester.ensureVisible(find.byTooltip('All icons'));
-    await tester.tap(find.byTooltip('All icons'));
+    await tester.pumpWidget(_library());
+    await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
     expect(find.text('PLANNING & RHYTHM'), findsOneWidget);
     expect(
@@ -118,30 +130,12 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('the chosen icon is marked selected in the library', (
-    tester,
-  ) async {
-    final handle = tester.ensureSemantics();
-    await tester.pumpWidget(_block());
-    await tester.ensureVisible(find.byTooltip('All icons'));
-    await tester.tap(find.byTooltip('All icons'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), 'bag');
-    await tester.pumpAndSettle();
-    expect(
-      tester.getSemantics(find.bySemanticsLabel('Bag').last),
-      isSemantics(isSelected: true, isButton: true, hasTapAction: true),
-    );
-    handle.dispose();
-  });
-
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('the library sheet meets a11y guidelines (${mode.name})', (
       tester,
     ) async {
-      await tester.pumpWidget(_block(mode: mode));
-      await tester.ensureVisible(find.byTooltip('All icons'));
-      await tester.tap(find.byTooltip('All icons'));
+      await tester.pumpWidget(_library(mode: mode));
+      await tester.tap(find.text('open'));
       await tester.pumpAndSettle();
       await expectA11yGuidelines(tester);
     });

@@ -124,7 +124,9 @@ class LookSwatch extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.size = DotLook.paletteDot,
+    this.target = DotTouch.android,
     this.label,
+    this.autofocus = false,
     super.key,
   });
 
@@ -132,6 +134,12 @@ class LookSwatch extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
   final double size;
+
+  /// The tap target: 48 on touch, the popover's 44 for a pointer.
+  final double target;
+
+  /// Takes the keys when its popover opens (the picked colour, ED-156).
+  final bool autofocus;
 
   /// Overrides the colour's spoken name (Your colours' "Remove …").
   final String? label;
@@ -150,11 +158,14 @@ class LookSwatch extends StatelessWidget {
       label: label ?? taskColorName(context.l10n, colour),
       excludeSemantics: true,
       onTap: onTap,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      // Focusable, so a keyboard moves through the colours and ↵ picks.
+      child: InkResponse(
         onTap: onTap,
+        autofocus: autofocus,
+        radius: target / 2,
+        customBorder: const CircleBorder(),
         child: SizedBox.square(
-          dimension: size < DotTouch.android ? DotTouch.android : size,
+          dimension: size < target ? target : size,
           child: Center(
             child: Container(
               width: size,
@@ -180,6 +191,13 @@ class LookSwatch extends StatelessWidget {
     );
   }
 }
+
+/// A section label in the Mac and web popover ("Dottoday colours",
+/// "Your colours", "Icon"; E-G3-9b): sentence case, semibold.
+TextStyle lookPopoverLabel(DotTheme t) => t.styles.inspectorLabel.copyWith(
+  color: t.colors.text,
+  fontWeight: FontWeight.w600,
+);
 
 /// The selected ring: a gap in the card, then [colour] (E-Phones).
 /// The outer ring paints first, so the gap stays on top of it.
@@ -217,9 +235,10 @@ class LookIconCircle extends StatelessWidget {
       label: taskIconName(context.l10n, icon),
       excludeSemantics: true,
       onTap: onTap,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      child: InkResponse(
         onTap: onTap,
+        radius: size / 2,
+        customBorder: const CircleBorder(),
         child: Container(
           width: size,
           height: size,

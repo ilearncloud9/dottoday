@@ -53,7 +53,7 @@ class TaskDHead extends ConsumerWidget {
       icon: icon,
       card: android,
       summary: _summary(context, ref),
-      onLook: () => unawaited(_look(context, color, icon)),
+      onLook: (at) => unawaited(_look(context, color, icon, at)),
       title: TaskFormTitleField(
         controller: title,
         hint: l10n.editorTitleHint,
@@ -74,6 +74,7 @@ class TaskDHead extends ConsumerWidget {
     BuildContext context,
     TaskColor colour,
     TaskIcon icon,
+    Rect? anchor,
   ) async {
     // Each pick lands at once, so the header recolours live (ED-161).
     await showTaskLook(
@@ -81,6 +82,7 @@ class TaskDHead extends ConsumerWidget {
       colour: colour,
       icon: icon,
       title: draft.title,
+      anchor: anchor,
       onChanged: (l) => onLook(l.color.key, l.icon.key),
     );
   }

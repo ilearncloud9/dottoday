@@ -12,6 +12,7 @@ class AppDelegate: FlutterAppDelegate {
   private var statusChannel: FlutterMethodChannel?
   private let calendars = CalendarBridge()
   private let contextMenus = ContextMenuBridge()
+  private let colourSampler = ColourSamplerBridge()
   private lazy var nextUp = DayDotStatusItem(
     open: { [weak self] link in
       NSApp.activate(ignoringOtherApps: true)
@@ -63,6 +64,7 @@ class AppDelegate: FlutterAppDelegate {
     calendars.attach(to: controller.engine.binaryMessenger)
     // Right-click menus are the system's own (ED-239).
     contextMenus.attach(to: controller)
+    colourSampler.attach(to: controller)
 
     // Reminder sound previews (docs/09 M8.4d).
     SoundBridge.shared.attach(to: controller.engine.binaryMessenger)

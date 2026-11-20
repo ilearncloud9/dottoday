@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,7 +23,9 @@ class PopoverTitleBox extends StatelessWidget {
   final TaskColor color;
   final TaskIcon icon;
   final String title;
-  final VoidCallback onLook;
+
+  /// The dot was tapped; it is at this rectangle (the popover's anchor).
+  final ValueChanged<Rect?> onLook;
   final Widget field;
 
   @override
@@ -50,23 +53,25 @@ class PopoverTitleBox extends StatelessWidget {
           children: [
             Tooltip(
               message: l10n.colourIconTitle,
-              child: Semantics(
-                button: true,
-                label: l10n.colourIconTitle,
-                excludeSemantics: true,
-                onTap: onLook,
-                child: InkResponse(
-                  onTap: onLook,
-                  radius: DotTouch.min / 2,
-                  child: SizedBox.square(
-                    dimension: DotTouch.min,
-                    child: Center(
-                      child: TaskDot(
-                        color: color,
-                        icon: icon,
-                        state: DotState.upcoming,
-                        label: title,
-                        size: DotSize.popoverRing,
+              child: Builder(
+                builder: (dot) => Semantics(
+                  button: true,
+                  label: l10n.colourIconTitle,
+                  excludeSemantics: true,
+                  onTap: () => onLook(globalRectOf(dot)),
+                  child: InkResponse(
+                    onTap: () => onLook(globalRectOf(dot)),
+                    radius: DotTouch.min / 2,
+                    child: SizedBox.square(
+                      dimension: DotTouch.min,
+                      child: Center(
+                        child: TaskDot(
+                          color: color,
+                          icon: icon,
+                          state: DotState.upcoming,
+                          label: title,
+                          size: DotSize.popoverRing,
+                        ),
                       ),
                     ),
                   ),

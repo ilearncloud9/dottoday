@@ -3889,6 +3889,42 @@
   "@lookHexLabel": {
     "description": "Name of All colours' hex field; tap to type #RRGGBB (owner, 4c-2)."
   },
+  "lookIcon": "Icon",
+  "@lookIcon": {
+    "description": "Over the icon row in the Mac and web colour and icon popover (owner, 4c-3)."
+  },
+  "lookAllIconsOpen": "All icons…",
+  "@lookAllIconsOpen": {
+    "description": "Opens the icon library inside the Mac and web colour popover (owner, 4c-3)."
+  },
+  "lookCustomColour": "Custom colour",
+  "@lookCustomColour": {
+    "description": "Title of the expanded Custom colour section in the Mac and web popover (ED-156)."
+  },
+  "lookCustomColourOpen": "Custom colour…",
+  "@lookCustomColourOpen": {
+    "description": "Button that expands the custom colour picker in the Mac and web popover (ED-156)."
+  },
+  "lookFieldLabel": "Saturation and brightness",
+  "@lookFieldLabel": {
+    "description": "Screen-reader name of Custom colour's field (ED-156)."
+  },
+  "lookHueSlider": "Hue",
+  "@lookHueSlider": {
+    "description": "Screen-reader name of Custom colour's hue strip (ED-156)."
+  },
+  "lookEyedropper": "Pick a colour from the screen",
+  "@lookEyedropper": {
+    "description": "Tooltip of Custom colour's eyedropper button (ED-156)."
+  },
+  "lookUseAndSave": "Use and save",
+  "@lookUseAndSave": {
+    "description": "Applies the custom colour to the task and saves it to Your colours (ED-156)."
+  },
+  "lookShowColours": "Show Colours…",
+  "@lookShowColours": {
+    "description": "Mac only: opens the system Colours panel from Custom colour (ED-156)."
+  },
   "iconSearchHint": "Search icons",
   "@iconSearchHint": {
     "description": "Search field in the task icon picker."

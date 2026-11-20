@@ -2599,6 +2599,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lookHexLabel => 'Couleur hex';
 
   @override
+  String get lookIcon => 'Icône';
+
+  @override
+  String get lookAllIconsOpen => 'Toutes les icônes…';
+
+  @override
+  String get lookCustomColour => 'Couleur personnalisée';
+
+  @override
+  String get lookCustomColourOpen => 'Couleur personnalisée…';
+
+  @override
+  String get lookFieldLabel => 'Saturation et luminosité';
+
+  @override
+  String get lookHueSlider => 'Teinte';
+
+  @override
+  String get lookEyedropper => 'Prélever une couleur à l’écran';
+
+  @override
+  String get lookUseAndSave => 'Utiliser et enregistrer';
+
+  @override
+  String get lookShowColours => 'Afficher les couleurs…';
+
+  @override
   String get iconSearchHint => 'Rechercher des icônes';
 
   @override

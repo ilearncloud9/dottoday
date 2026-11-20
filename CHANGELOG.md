@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On the Mac and the web, a task's colour and icon open in one popover from its dot (redesign branch): the colours, your own colours, icons suggested from the title and your recent ones, the full icon library, and Custom colour… with a colour field, hue strip, hex, an eyedropper and, on the Mac, the system Colours panel. Wide iPads show the phone picker in a popover and wide Android tablets in a dialog; the select bar's Colour uses them too.
 - On phones, a task's colour and icon are picked in one sheet (redesign branch): the colours in a row, icons suggested from the title and your recent ones, a searchable icon library, and All colours where you can type a hex, slide the colour and shade, and keep your own colours. Mint is now called Green.
 - Tasks can be brown, plum or olive, and any colour you choose (redesign branch): a custom colour gets its ring and dark-mode shade worked out so it stays readable, and your own colours sync with your account. Colours from a newer version of the app are kept, not lost, when you sync or restore.
 - Moving or scheduling a task opens one picker everywhere (redesign branch): free times first, then a day and a bar of the day you slide to the exact time, with what it overlaps; Move keeps the task's time on another day. On Mac and the web it opens as a popover with a typed time, and the web's m key opens it for the picked task.

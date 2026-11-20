@@ -59,6 +59,8 @@ class LookLibrary extends StatelessWidget {
     required this.onIcon,
     required this.controller,
     required this.query,
+    this.iconSize = DotLook.icon,
+    this.padding,
     super.key,
   });
 
@@ -68,6 +70,12 @@ class LookLibrary extends StatelessWidget {
   final ValueChanged<TaskIcon> onIcon;
   final ScrollController controller;
   final String query;
+
+  /// The phones' 56, the popover's 36 (ED-156).
+  final double iconSize;
+
+  /// Around the lines: the sheet's sides and safe area when null.
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -86,18 +94,20 @@ class LookLibrary extends StatelessWidget {
       controller: controller,
       slivers: [
         SliverPadding(
-          padding: EdgeInsets.fromLTRB(
-            DotSpace.l,
-            0,
-            DotSpace.l,
-            DotSpace.l + MediaQuery.paddingOf(context).bottom,
-          ),
+          padding:
+              padding ??
+              EdgeInsets.fromLTRB(
+                DotSpace.l,
+                0,
+                DotSpace.l,
+                DotSpace.l + MediaQuery.paddingOf(context).bottom,
+              ),
           sliver: SliverVariedExtentList.builder(
             itemCount: lines.length,
             itemExtentBuilder: (i, _) => i >= lines.length
                 ? null
                 : lines[i].title == null
-                ? libraryRowExtent
+                ? iconSize + DotSpace.m
                 : libraryTitleExtent,
             itemBuilder: (context, i) => _line(t, lines[i]),
           ),
@@ -135,9 +145,10 @@ class LookLibrary extends StatelessWidget {
                 colour: colour,
                 selected: line.icons[k] == icon,
                 onTap: () => onIcon(line.icons[k]),
+                size: iconSize,
               )
             else
-              const SizedBox.square(dimension: DotLook.icon),
+              SizedBox.square(dimension: iconSize),
         ],
       ),
     );

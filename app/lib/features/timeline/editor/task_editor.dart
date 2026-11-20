@@ -144,6 +144,7 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
         ColourIconBlock(
           color: TaskColor.fromKey(draft.colorKey),
           icon: TaskIcon.fromKey(draft.iconKey),
+          title: draft.title,
           onColor: (c) => change((o) => look.pickColor(o, c.key)),
           onIcon: (i) => change((o) => look.pickIcon(o, i.key)),
         ),

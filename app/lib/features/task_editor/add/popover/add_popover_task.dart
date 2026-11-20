@@ -75,7 +75,7 @@ class AddPopoverTask extends ConsumerWidget {
             color: TaskColor.fromKey(draft.color),
             icon: TaskIcon.fromKey(draft.icon),
             title: draft.title,
-            onLook: () => unawaited(pick.look()),
+            onLook: (at) => unawaited(pick.look(anchor: at)),
             field: field,
           ),
         ),

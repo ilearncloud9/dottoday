@@ -34,7 +34,9 @@ final class CreateTaskPickers {
   AddDraft? get _draft => ref.read(addFlowProvider(request)).value?.draft;
   Settings? get _settings => ref.read(currentProfileProvider).value?.settings;
 
-  Future<void> look() async {
+  /// Colour and icon, pointing at the dot at [anchor] where it is a
+  /// popover.
+  Future<void> look({Rect? anchor}) async {
     final d = _draft;
     if (d == null) return;
     // Live: the header behind recolours as you pick (ED-161).
@@ -43,6 +45,7 @@ final class CreateTaskPickers {
       colour: TaskColor.fromKey(d.color),
       icon: TaskIcon.fromKey(d.icon),
       title: d.title,
+      anchor: anchor,
       onChanged: (l) =>
           _flow.edit((x) => x.withColor(l.color.key).withIcon(l.icon.key)),
     );

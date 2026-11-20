@@ -80,4 +80,28 @@ abstract final class DotLook {
 
   /// Stops in the Colour slider's rainbow (every 30°).
   static const int hueStops = 13;
+
+  /// The Mac and web colour popover (E-G3-9b "Mac · Colour popover",
+  /// E-FullA-v2 inspector; ED-156): 300 wide with 12 inside, its colours
+  /// 26 in a pointer's 44 target, its icons 36.
+  static const double popover = 300;
+  static const double popoverPad = 12;
+  static const double popoverDot = 26;
+  static const double popoverIcon = 36;
+
+  /// The popover's icon library, scrolled in place.
+  static const double popoverLibrary = 320;
+
+  /// Custom colour…'s saturation and brightness field, its corners, and
+  /// the hue strip under it with its thumb.
+  static const double field = 150;
+  static const double fieldRadius = 8;
+  static const double fieldThumb = 16;
+  static const double strip = 12;
+  static const double stripThumb = 20;
+
+  /// The phone pages boxed on wide tablets (E-R2-15, ED-298): an iPad
+  /// popover from the dot, an Android dialog; at most this tall.
+  static const double boxWidth = 400;
+  static const double boxHeight = 640;
 }

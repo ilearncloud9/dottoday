@@ -15,11 +15,15 @@ class YourColoursRow extends ConsumerStatefulWidget {
   const YourColoursRow({
     required this.colour,
     required this.onColour,
+    this.pointer = false,
     super.key,
   });
 
   final TaskColor colour;
   final ValueChanged<TaskColor> onColour;
+
+  /// The Mac and web popover's sizes and sentence-case label (ED-156).
+  final bool pointer;
 
   @override
   ConsumerState<YourColoursRow> createState() => _YourColoursRowState();
@@ -48,10 +52,12 @@ class _YourColoursRowState extends ConsumerState<YourColoursRow> {
         Row(
           children: [
             Expanded(
-              child: Text(
-                l10n.lookYourColours.toUpperCase(),
-                style: t.styles.caption,
-              ),
+              child: widget.pointer
+                  ? Text(l10n.lookYourColours, style: lookPopoverLabel(t))
+                  : Text(
+                      l10n.lookYourColours.toUpperCase(),
+                      style: t.styles.caption,
+                    ),
             ),
             if (saved.isNotEmpty)
               TextButton(
@@ -66,7 +72,8 @@ class _YourColoursRowState extends ConsumerState<YourColoursRow> {
             for (final c in saved)
               LookSwatch(
                 colour: c,
-                size: DotLook.swatch,
+                size: widget.pointer ? DotLook.popoverDot : DotLook.swatch,
+                target: widget.pointer ? DotTouch.min : DotTouch.android,
                 selected: !_editing && c == widget.colour,
                 label: _editing ? l10n.lookRemoveColour(c.key) : null,
                 onTap: _editing
@@ -78,6 +85,7 @@ class _YourColoursRowState extends ConsumerState<YourColoursRow> {
                 widget.colour.isCustom &&
                 !saved.any((c) => c.key == current))
               _AddButton(
+                pointer: widget.pointer,
                 onTap: () => unawaited(saveYourColour(_container, current)),
               ),
           ],
@@ -89,9 +97,10 @@ class _YourColoursRowState extends ConsumerState<YourColoursRow> {
 
 /// + : saves the colour in use.
 class _AddButton extends StatelessWidget {
-  const _AddButton({required this.onTap});
+  const _AddButton({required this.onTap, required this.pointer});
 
   final VoidCallback onTap;
+  final bool pointer;
 
   @override
   Widget build(BuildContext context) {
@@ -105,11 +114,11 @@ class _AddButton extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: SizedBox.square(
-          dimension: DotTouch.android,
+          dimension: pointer ? DotTouch.min : DotTouch.android,
           child: Center(
             child: Container(
-              width: DotLook.swatch,
-              height: DotLook.swatch,
+              width: pointer ? DotLook.popoverDot : DotLook.swatch,
+              height: pointer ? DotLook.popoverDot : DotLook.swatch,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

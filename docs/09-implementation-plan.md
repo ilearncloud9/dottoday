@@ -713,6 +713,7 @@ Rules for every task in M18 to M22:
   - [x] Part 4b done 2026-11-19 (ED-400): the one When picker (ED-099) for Inbox Schedule, Move and Move To… (⇧⌘M, web m) for one task: free time with Place, day chips and Date…, the drawn day bar (a slider for screen readers, arrows, ↵); a sheet on phones, a popover with a typed time on the Mac and web. Open: a typed date; a repeating task's Move asking which ones (not asked, as built); a real-device run.
   - [x] Part 4c-1 done 2026-11-19 (ED-401): the colour data under 4c's pickers (owner split 4c in three: 4c-1 data, 4c-2 the phone pickers, 4c-3 the Mac/web popover with Custom colour… and tablets by width). Brown, plum and olive (12 named colours); custom `#RRGGBB` colours drawn everywhere with derived ring and dark shades; forward-compatible `color_key` validation, sync and restore; `profiles.your_colours` and `accent_hex` (Drift 24, server 0017, run locally with its pgTAP tests, not pushed). Open: 4c-2, 4c-3; the hosted push of 0017 (owner).
   - [x] Part 4c-2 done 2026-11-20 (ED-402): Colour and icon on the phones (the task sheet, Add and the select bar): the compact sheet (Current, the 12 colours in a row, Suggested, Recently used, All icons ·), All icons with the glass palette and search pinned, All colours with a typed hex, preview, Colour and Shade sliders and Your colours; Android mirrors the iPhone (owner). Palette stored in ED-161's order, mint named Green. Open: 4c-3 (Mac/web popover with Custom colour…, tablets by width); a real-phone run.
+  - [x] Part 4c-3 done 2026-11-20 (ED-403): the Mac and web colour and icon popover (Dottoday colours, Your colours, the Icon row with All icons…, Custom colour… with field, hue, hex, eyedropper, preview, Use and save; Mac Show Colours…), the wide iPad popover and Android dialog, tablets below expanded keep the sheet; the select bar's Colour too; the old full colour picker replaced. Open: a real Mac, browser and tablet run.
 - [ ] M19.5 Complete and Reopen:
   - Done with Undo (R2-7, ED-281) and the done circle;
   - reopen from the Earlier fold;
@@ -763,7 +764,7 @@ Rules for every task in M18 to M22:
   - the Day shape row removed (ED-321);
   - Appearance and colour selection (G3-9b, ED-161), with the colour and icon picker on tablets (R2-15, ED-299);
   - the Mac Settings window, Dottoday › Settings… ⌘, (ED-238, ED-333; today Settings is a page).
-  **Colour data:** brown, plum and olive ship over two releases (ED-219); custom colours are stored as a hex value in `color_key` (ED-220). App colour and Your colours need new `profiles` columns (ED-221), which is a must-ask migration.
+  **Colour data:** brown, plum and olive ship over two releases (ED-219); custom colours are stored as a hex value in `color_key` (ED-220). App colour and Your colours need new `profiles` columns (ED-221), which is a must-ask migration (built locally in M19.4 part 4c-1, ED-401; hosted push still owner's). The App colour picker writes the nearest built-in `accent` beside `accent_hex` (ED-221; moved here from 4c-3, ED-403).
 - [ ] M20.8 Wake Up and Wind Down:
   - Settings pages and the dial (ED-084), with tablets (R2-18, ED-311);
   - the alarm, option B "The thread wakes up" (R2-19, ED-314), with tablet missions that need no movement and Catch the dot "Tap the blue circle" (ED-336);

@@ -3810,6 +3810,60 @@ abstract class AppLocalizations {
   /// **'Hex colour'**
   String get lookHexLabel;
 
+  /// Over the icon row in the Mac and web colour and icon popover (owner, 4c-3).
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get lookIcon;
+
+  /// Opens the icon library inside the Mac and web colour popover (owner, 4c-3).
+  ///
+  /// In en, this message translates to:
+  /// **'All icons…'**
+  String get lookAllIconsOpen;
+
+  /// Title of the expanded Custom colour section in the Mac and web popover (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Custom colour'**
+  String get lookCustomColour;
+
+  /// Button that expands the custom colour picker in the Mac and web popover (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Custom colour…'**
+  String get lookCustomColourOpen;
+
+  /// Screen-reader name of Custom colour's field (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Saturation and brightness'**
+  String get lookFieldLabel;
+
+  /// Screen-reader name of Custom colour's hue strip (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Hue'**
+  String get lookHueSlider;
+
+  /// Tooltip of Custom colour's eyedropper button (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a colour from the screen'**
+  String get lookEyedropper;
+
+  /// Applies the custom colour to the task and saves it to Your colours (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Use and save'**
+  String get lookUseAndSave;
+
+  /// Mac only: opens the system Colours panel from Custom colour (ED-156).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Colours…'**
+  String get lookShowColours;
+
   /// Search field in the task icon picker.
   ///
   /// In en, this message translates to:

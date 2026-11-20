@@ -2600,6 +2600,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get lookHexLabel => 'Hex-Farbe';
 
   @override
+  String get lookIcon => 'Symbol';
+
+  @override
+  String get lookAllIconsOpen => 'Alle Symbole …';
+
+  @override
+  String get lookCustomColour => 'Eigene Farbe';
+
+  @override
+  String get lookCustomColourOpen => 'Eigene Farbe …';
+
+  @override
+  String get lookFieldLabel => 'Sättigung und Helligkeit';
+
+  @override
+  String get lookHueSlider => 'Farbton';
+
+  @override
+  String get lookEyedropper => 'Farbe vom Bildschirm aufnehmen';
+
+  @override
+  String get lookUseAndSave => 'Verwenden und sichern';
+
+  @override
+  String get lookShowColours => 'Farben einblenden …';
+
+  @override
   String get iconSearchHint => 'Symbole suchen';
 
   @override

@@ -112,7 +112,7 @@ class _LookIconsState extends State<LookIcons> {
                 onPick: widget.onColour,
                 glass: true,
               ),
-              _SearchField(
+              LookSearchField(
                 controller: _search,
                 onChanged: (_) => setState(() => _category = null),
               ),
@@ -136,9 +136,13 @@ class _LookIconsState extends State<LookIcons> {
   }
 }
 
-/// "Search 525 icons" in a sunk field.
-class _SearchField extends StatelessWidget {
-  const _SearchField({required this.controller, required this.onChanged});
+/// "Search 525 icons" in a sunk field (also the popover's, ED-156).
+class LookSearchField extends StatelessWidget {
+  const LookSearchField({
+    required this.controller,
+    required this.onChanged,
+    super.key,
+  });
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;

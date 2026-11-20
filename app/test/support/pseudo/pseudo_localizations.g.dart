@@ -2010,6 +2010,33 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get lookHexLabel => pseudo(super.lookHexLabel);
 
   @override
+  String get lookIcon => pseudo(super.lookIcon);
+
+  @override
+  String get lookAllIconsOpen => pseudo(super.lookAllIconsOpen);
+
+  @override
+  String get lookCustomColour => pseudo(super.lookCustomColour);
+
+  @override
+  String get lookCustomColourOpen => pseudo(super.lookCustomColourOpen);
+
+  @override
+  String get lookFieldLabel => pseudo(super.lookFieldLabel);
+
+  @override
+  String get lookHueSlider => pseudo(super.lookHueSlider);
+
+  @override
+  String get lookEyedropper => pseudo(super.lookEyedropper);
+
+  @override
+  String get lookUseAndSave => pseudo(super.lookUseAndSave);
+
+  @override
+  String get lookShowColours => pseudo(super.lookShowColours);
+
+  @override
   String get iconSearchHint => pseudo(super.iconSearchHint);
 
   @override

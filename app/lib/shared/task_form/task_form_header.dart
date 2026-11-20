@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 
 /// The task form's head (option D, ED-086; Create task, ED-140): the
@@ -27,7 +28,8 @@ class TaskFormHeader extends StatelessWidget {
   final Widget title;
 
   /// Opens Colour and icon.
-  final VoidCallback onLook;
+  /// The dot was tapped; it is at this rectangle (a popover's anchor).
+  final ValueChanged<Rect?> onLook;
   final String? summary;
   final bool card;
 
@@ -93,20 +95,21 @@ class _Look extends StatelessWidget {
 
   final TaskColor color;
   final TaskIcon icon;
-  final VoidCallback onTap;
+  final ValueChanged<Rect?> onTap;
   final String label;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     const badge = DotSize.formBadge;
+    void tap() => onTap(globalRectOf(context));
     return Semantics(
       button: true,
       label: label,
       excludeSemantics: true,
-      onTap: onTap,
+      onTap: tap,
       child: GestureDetector(
-        onTap: onTap,
+        onTap: tap,
         child: SizedBox.square(
           dimension: DotSize.formRing + badge / 2,
           child: Stack(

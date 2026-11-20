@@ -17,6 +17,7 @@ import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/features/settings/widgets/export_set_sheet.dart';
 import 'package:dottoday/features/settings/widgets/import_set_sheet.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ Future<void> exportAs(BuildContext context, ExportFormat format) async {
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
-  final origin = _originOf(context);
+  final origin = globalRectOf(context);
   final profile = await readProfile(container);
   // Over one part, JSON is a set (CR-160 B7, owner: automatic).
   if (format == ExportFormat.json) {
@@ -221,13 +222,6 @@ Future<void> _undo(
 String _date(DateTime utc, String tzId, DateFormat format) {
   final zone = tz.timeZoneDatabase.locations[tzId] ?? tz.UTC;
   return format.format(tz.TZDateTime.from(utc, zone));
-}
-
-/// Where the iPad / Mac share popover points: the page.
-Rect? _originOf(BuildContext context) {
-  final box = context.findRenderObject();
-  if (box is! RenderBox || !box.hasSize) return null;
-  return box.localToGlobal(Offset.zero) & box.size;
 }
 
 /// Replaces any snackbar showing, so the answer to this tap is seen now.

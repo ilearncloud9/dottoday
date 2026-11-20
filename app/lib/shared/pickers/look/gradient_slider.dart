@@ -16,6 +16,8 @@ class GradientSlider extends StatefulWidget {
     required this.valueText,
     required this.onChanged,
     this.step = 0.02,
+    this.track = DotLook.track,
+    this.thumbSize = DotLook.thumb,
     super.key,
   });
 
@@ -26,6 +28,11 @@ class GradientSlider extends StatefulWidget {
   final String Function(double value) valueText;
   final ValueChanged<double> onChanged;
   final double step;
+
+  /// The track's height and the thumb's size: the phones' 28 and 24, the
+  /// popover's hue strip 12 and 20 (ED-156).
+  final double track;
+  final double thumbSize;
 
   @override
   State<GradientSlider> createState() => _GradientSliderState();
@@ -44,7 +51,7 @@ class _GradientSliderState extends State<GradientSlider> {
   void _set(double v) => widget.onChanged(v.clamp(0, 1));
 
   void _at(double dx, double width, bool rtl) {
-    const r = DotLook.thumb / 2;
+    final r = widget.thumbSize / 2;
     final p = ((dx - r) / (width - 2 * r)).clamp(0.0, 1.0);
     _set(rtl ? 1 - p : p);
   }
@@ -108,6 +115,8 @@ class _GradientSliderState extends State<GradientSlider> {
                   ring: DotPrimitives.white,
                   edge: t.colors.hairline,
                   halo: _focus.hasFocus ? t.colors.accentTint : null,
+                  track: widget.track,
+                  thumbSize: widget.thumbSize,
                 ),
               ),
             ),
@@ -126,6 +135,8 @@ class _TrackPainter extends CustomPainter {
     required this.ring,
     required this.edge,
     required this.halo,
+    required this.track,
+    required this.thumbSize,
   });
 
   final List<Color> colours;
@@ -134,30 +145,32 @@ class _TrackPainter extends CustomPainter {
   final Color ring;
   final Color edge;
   final Color? halo;
+  final double track;
+  final double thumbSize;
 
   @override
   void paint(Canvas canvas, Size size) {
     final y = size.height / 2;
-    final track = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, y - DotLook.track / 2, size.width, DotLook.track),
-      const Radius.circular(DotLook.track / 2),
+    final bar = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, y - track / 2, size.width, track),
+      Radius.circular(track / 2),
     );
     canvas
       ..drawRRect(
-        track,
+        bar,
         Paint()
           ..shader = LinearGradient(
             colors: colours,
-          ).createShader(track.outerRect),
+          ).createShader(bar.outerRect),
       )
       ..drawRRect(
-        track,
+        bar,
         Paint()
           ..color = edge
           ..style = PaintingStyle.stroke
           ..strokeWidth = DotSpace.hairline,
       );
-    const r = DotLook.thumb / 2;
+    final r = thumbSize / 2;
     final c = Offset(r + value * (size.width - 2 * r), y);
     if (halo case final h?) {
       canvas.drawCircle(c, r + DotLook.thumbRing * 2, Paint()..color = h);

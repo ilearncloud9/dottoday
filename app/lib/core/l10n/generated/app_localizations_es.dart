@@ -2595,6 +2595,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lookHexLabel => 'Color hex';
 
   @override
+  String get lookIcon => 'Icono';
+
+  @override
+  String get lookAllIconsOpen => 'Todos los iconos…';
+
+  @override
+  String get lookCustomColour => 'Color personalizado';
+
+  @override
+  String get lookCustomColourOpen => 'Color personalizado…';
+
+  @override
+  String get lookFieldLabel => 'Saturación y brillo';
+
+  @override
+  String get lookHueSlider => 'Tono';
+
+  @override
+  String get lookEyedropper => 'Tomar un color de la pantalla';
+
+  @override
+  String get lookUseAndSave => 'Usar y guardar';
+
+  @override
+  String get lookShowColours => 'Mostrar colores…';
+
+  @override
   String get iconSearchHint => 'Buscar iconos';
 
   @override
