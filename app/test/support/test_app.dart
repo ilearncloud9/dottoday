@@ -59,19 +59,24 @@ Widget _routerApp(
   builder: (context, child) => withAddModes(
     // ⌘1–4 name Minimal's places in Minimal, as in the app (ED-095).
     Consumer(
-      builder: (context, ref, _) => AppCommandScope(
-        handlers: appCommandHandlers(
-          router,
-          onQuickAdd: onQuickAdd,
-          minimal: watchSimplified(ref, FeatureId.navigation),
-        ),
-        onAddMode: onAddMode,
-        // A view's ?task= opens the task, as in the app (ED-097).
-        child: TaskLinkHost(
-          router: router,
-          child: child ?? const SizedBox.shrink(),
-        ),
-      ),
+      builder: (context, ref, _) {
+        final minimal = watchSimplified(ref, FeatureId.navigation);
+        return AppCommandScope(
+          handlers: appCommandHandlers(
+            router,
+            onQuickAdd: onQuickAdd,
+            minimal: minimal,
+            // ⌥⌘I as the app wires it (ED-218).
+            onToggleInspector: () => toggleSidePanel(ref, minimal: minimal),
+          ),
+          onAddMode: onAddMode,
+          // A view's ?task= opens the task, as in the app (ED-097).
+          child: TaskLinkHost(
+            router: router,
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
     ),
   ),
 );

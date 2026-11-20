@@ -17,6 +17,7 @@ import 'package:dottoday/data/export/export_service.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/feedback/feedback_providers.dart';
+import 'package:dottoday/data/layout/day_column_prefs.dart';
 import 'package:dottoday/data/layout/plan_panel_prefs.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
@@ -611,7 +612,18 @@ List<Override> timelineOverrides({
     ),
     // The Plan panel's memory (M19.2) without a database.
     planPanelProvider.overrideWith(MemoryPlanPanel.new),
+    // Minimal's Day column memory (M19.6 part 6c), likewise.
+    dayColumnHiddenProvider.overrideWith(MemoryDayColumnHidden.new),
   ];
+}
+
+/// [DayColumnHidden] kept in memory, as tests have no `local_meta`.
+class MemoryDayColumnHidden extends DayColumnHidden {
+  @override
+  Future<bool> build() async => false;
+
+  @override
+  Future<void> set({required bool hidden}) async => state = AsyncData(hidden);
 }
 
 /// [PlanPanel] kept in memory, as tests have no `local_meta`.

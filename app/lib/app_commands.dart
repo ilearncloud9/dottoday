@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:dottoday/core/editing/add_anchor.dart';
+import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/data/layout/day_column_prefs.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 /// App-wide handlers for [AppCommand]s; keyboard shortcuts, the Mac menu
@@ -80,5 +83,16 @@ abstract final class _BackForward {
     if (left == null || _here(router) != _landed) return;
     _left = _landed = null;
     unawaited(router.push<void>(left));
+  }
+}
+
+/// ⌥⌘I, View › Show Inspector / Show Day Column (ED-218): the person
+/// shows or hides the inspector in Full, or in Minimal the Day column
+/// beside Now (M19.6 part 6c).
+void toggleSidePanel(WidgetRef ref, {required bool minimal}) {
+  if (minimal) {
+    unawaited(ref.read(dayColumnHiddenProvider.notifier).toggle());
+  } else {
+    ref.read(inspectorHiddenProvider.notifier).toggle();
   }
 }

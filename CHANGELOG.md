@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Minimal on the Mac and the web opens on Now beside the Day column: the day's horizon (right-click a dot for its menu), what's on now with Done, Focus and Need more time?, what's next, and an Add row. Hide the Day column with its ✕ or ⌥⌘I; it stays hidden on that device until you show it again (redesign branch).
 - Minimal opens on Now on phones: the day's horizon, what's on now with Done and Need more time?, Next up between tasks with anything not ticked under Earlier, and an open day's Add to the day. In the morning the Wake Up card sits in Now until you start the day or choose Later, instead of opening over Today (redesign branch).
 - Minimal now has its own places: Now, Today and Inbox in a tab bar on phones, and Now, Inbox, Calendar and Search on tablets, Mac and the web, with ⌘1–4 to match (redesign branch).
 - Go to date: the month with your planned days opens from the date button, ⇧⌘T (Ctrl+Shift+T, g on the web), the Go menu and the Day menu, as a popover on the Mac, the web and iPad, a dialog on Android tablets and a sheet on phones; the week you're on is tinted and today ringed (redesign branch).

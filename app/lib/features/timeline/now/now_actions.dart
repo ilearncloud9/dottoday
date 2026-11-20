@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
@@ -15,17 +16,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Now's two actions (E-PhonesMinimal frames 1 and 5): Done, filled, with
 /// Undo; and Need more time? ▾, whose menu is each platform's own (owner,
 /// native first): +5, +15, +30 min, then Shift the rest while the task
-/// runs into the next one.
+/// runs into the next one. [wide], the Mac and web pane (E-Minimal):
+/// Done · Focus · Need more time?, centred at their own widths.
 class NowActions extends ConsumerWidget {
-  const NowActions({required this.task, super.key});
+  const NowActions({required this.task, this.wide = false, super.key});
 
   final Occurrence task;
+  final bool wide;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final android = DotIdiom.of(context) == DotIdiom.material;
+    // Tonal on an Android phone; outlined with ▾ on the iPhone and in the
+    // Mac and web pane (E-PhonesMinimal, E-Minimal).
+    final android = DotIdiom.of(context) == DotIdiom.material && !wide;
     final view = ref.watch(taskViewProvider(task.id)).value;
     final shift = view == null ? null : shiftRestAction(context, ref, view);
     final more = DotMenuButton<VoidCallback>(
@@ -72,22 +77,48 @@ class NowActions extends ConsumerWidget {
         ),
       ),
     );
+    final done = FilledButton.icon(
+      onPressed: () => unawaited(markDone(context, ref, task)),
+      style: FilledButton.styleFrom(
+        minimumSize: wide
+            ? const Size(DotSize.nowActionWide, DotTouch.min)
+            : const Size.fromHeight(DotTouch.android),
+      ),
+      icon: DotIcon(DotGlyphs.check, color: t.colors.onAccent),
+      label: Text(l10n.sheetDone),
+    );
+    if (wide) {
+      return Wrap(
+        alignment: WrapAlignment.center,
+        spacing: DotSpace.s,
+        runSpacing: DotSpace.s,
+        children: [
+          done,
+          FilledButton.tonal(
+            onPressed: () => openFocus(context, task.id),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(DotSize.nowActionWide, DotTouch.min),
+              backgroundColor: t.colors.accentTint,
+              foregroundColor: t.colors.accentInk,
+            ),
+            child: Text(l10n.focusTitle),
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: DotSize.nowActionWide,
+              minHeight: DotTouch.min,
+            ),
+            child: more,
+          ),
+        ],
+      );
+    }
     // Done the shorter, as the boards draw it, so "Need more time?" keeps
     // to one line.
     return Row(
       spacing: DotSpace.s,
       children: [
-        Expanded(
-          flex: 2,
-          child: FilledButton.icon(
-            onPressed: () => unawaited(markDone(context, ref, task)),
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(DotTouch.android),
-            ),
-            icon: DotIcon(DotGlyphs.check, color: t.colors.onAccent),
-            label: Text(l10n.sheetDone),
-          ),
-        ),
+        Expanded(flex: 2, child: done),
         Expanded(flex: 3, child: more),
       ],
     );

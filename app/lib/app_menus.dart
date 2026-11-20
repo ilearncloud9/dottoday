@@ -142,6 +142,8 @@ List<AppMenu> appMenus({
         ),
         command(l10n.menuShortcuts, AppCommand.showShortcuts),
       ],
+      // Minimal's Day column beside Now, ⌥⌘I (ED-218, M19.6 part 6c).
+      if (minimal) [command(l10n.dayColumnShow, AppCommand.toggleInspector)],
       // The Workspace's panes (ED-184); not in Minimal (M19.6).
       if (!minimal)
         [

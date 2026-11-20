@@ -318,6 +318,66 @@ abstract class AppLocalizations {
   /// **'Opens Today'**
   String get horizonOpensToday;
 
+  /// Mac and web Now pane, over the horizon (E-Minimal): the current time.
+  ///
+  /// In en, this message translates to:
+  /// **'Now · {time}'**
+  String nowAt(String time);
+
+  /// Web Now pane header (E-Minimal frame 2): the date and the current time, e.g. "Tue 3 Nov · 10:42".
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · {time}'**
+  String nowDateAt(String date, String time);
+
+  /// Web Now pane header, under the date (E-Minimal frame 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down at {time}'**
+  String nowWindDown(String time);
+
+  /// After the Next task in the Mac and web Now pane: how many more tasks come after it today.
+  ///
+  /// In en, this message translates to:
+  /// **'· {count} more'**
+  String nowMore(String count);
+
+  /// The Add row in the Mac and web Now pane (E-Minimal); opens Quick Add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a task · paste several lines for many'**
+  String get nowAddField;
+
+  /// Minimal Mac and web: hides the Day column beside Now (ED-218, ⌥⌘I).
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the Day column'**
+  String get dayColumnHide;
+
+  /// Minimal Mac View menu and the Now pane: shows the Day column again (ED-218, ⌥⌘I).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Day Column'**
+  String get dayColumnShow;
+
+  /// Right-click menu on a dot of the Now pane's horizon: opens the task.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get nowDotOpen;
+
+  /// Right-click menu on a horizon dot: marks the task done, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Done'**
+  String get nowDotMarkDone;
+
+  /// Right-click menu on a horizon dot: opens the When picker to move the task.
+  ///
+  /// In en, this message translates to:
+  /// **'Move To…'**
+  String get nowDotMoveTo;
+
   /// Tab: unscheduled tasks.
   ///
   /// In en, this message translates to:

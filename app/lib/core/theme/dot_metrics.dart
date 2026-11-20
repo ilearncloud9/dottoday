@@ -236,6 +236,19 @@ abstract final class DotSize {
   static const double nowRowDotAndroid = 36;
   static const double nowRowLabel = 72;
 
+  /// Done and Focus in the Mac and web Now pane (E-Minimal: 124).
+  static const double nowActionWide = 124;
+
+  /// The Mac's orb (ED-106: 280) and the web's (240).
+  static const double orbMac = 280;
+  static const double orbWeb = 240;
+
+  /// Minimal's Day column on Mac and web (ED-232: 290).
+  static const double dayColumn = 290;
+
+  /// The Now pane's horizon and content width (ED-232: 700).
+  static const double nowPaneContent = 700;
+
   /// The narrowest week grid the Plan panel leaves room for: 3 days of 144
   /// and the 44 hour labels (ED-170). Narrower, the panel hides itself.
   static const double weekGridMin = 3 * gridColumn + gridGutter;

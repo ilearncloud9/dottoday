@@ -9,13 +9,20 @@ sealed class NowView {
 }
 
 /// A task under way: the one that began first leads ([task]); any other
-/// running task is "Also now"; [next] is the first one still ahead.
+/// running task is "Also now"; [next] is the first one still ahead, and
+/// [later] how many come after it ("Lunch · 4 more", E-Minimal).
 final class NowRunning extends NowView {
-  const NowRunning({required this.task, required this.alsoNow, this.next});
+  const NowRunning({
+    required this.task,
+    required this.alsoNow,
+    this.next,
+    this.later = 0,
+  });
 
   final Occurrence task;
   final List<Occurrence> alsoNow;
   final Occurrence? next;
+  final int later;
 }
 
 /// Nothing running: the next task and the free time until it, the task
@@ -82,6 +89,7 @@ NowView nowViewOf({
       task: running.first,
       alsoNow: running.skip(1).toList(),
       next: next,
+      later: ahead.length > 1 ? ahead.length - 1 : 0,
     );
   }
   if (next != null) {

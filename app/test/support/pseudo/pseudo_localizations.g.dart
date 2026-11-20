@@ -126,6 +126,37 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get horizonOpensToday => pseudo(super.horizonOpensToday);
 
   @override
+  String nowAt(String time) => pseudo(super.nowAt(time));
+
+  @override
+  String nowDateAt(String date, String time) =>
+      pseudo(super.nowDateAt(date, time));
+
+  @override
+  String nowWindDown(String time) => pseudo(super.nowWindDown(time));
+
+  @override
+  String nowMore(String count) => pseudo(super.nowMore(count));
+
+  @override
+  String get nowAddField => pseudo(super.nowAddField);
+
+  @override
+  String get dayColumnHide => pseudo(super.dayColumnHide);
+
+  @override
+  String get dayColumnShow => pseudo(super.dayColumnShow);
+
+  @override
+  String get nowDotOpen => pseudo(super.nowDotOpen);
+
+  @override
+  String get nowDotMarkDone => pseudo(super.nowDotMarkDone);
+
+  @override
+  String get nowDotMoveTo => pseudo(super.nowDotMoveTo);
+
+  @override
   String get navInbox => pseudo(super.navInbox);
 
   @override

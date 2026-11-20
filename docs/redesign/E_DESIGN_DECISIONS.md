@@ -5340,6 +5340,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departure, approved:** the card's first dot keeps the card's own layout (time above title, its first step) rather than the board's stacked "First / title / time".
 - **Checks:** now_wake_up_test (3: the card in Now and Later, with a11y; Start the day; a task under way first), 2 goldens; the Minimal gate test now asserts "never over Today". Analyze and format clean; 7405 tests pass, 31 skipped. Not yet run on a real device.
 
+### ED-412 · M19.6 part 6c: the Mac and web Now pane with the Day column
+- **Date:** 2026-11-20. **Owner:** "Start 6c"; scope "Pane + column; tasks in 6d"; then "Approve 6c" after the review page.
+- **Native first, checked:** a horizon dot's right-click menu and Need more time? are the Mac's own menus (Flutter's on the web); View › Show Day Column is a Mac menu item; ⌥⌘I is the one key for the inspector in Full and the Day column in Minimal.
+- **Built (E-Minimal frames 1 and 2; ED-066, ED-068, ED-106, ED-218, ED-232):** in Minimal from the expanded width, the Now pane beside a 290 Day column with the 200 sidebar (one split on Mac and web). The Mac's toolbar over both (the date, "Now · Wind Down", sync, Search or run ⌘K, +); the web's date, time and Wind Down in the pane with + Add. The pane: "Now · 10:42" (Mac), the 700 horizon, the orb at 280 (Mac) or 240 (web), Done · Focus · Need more time? at their own widths, Also now and Next with "· 4 more" beside the Add row (⌘N) and Hide the Day column (⌥⌘I). A horizon dot's right-click: Open, Mark Done, Move To…, Focus, Duplicate, Move to Trash, with Undo. The Day column: "Day", Day ▾ (the Day menu), ✕, today's thread with Earlier.
+- **Day column shown or hidden:** ✕, ⌥⌘I, View › Show Day Column or the pane's row; a view setting remembered on the device in `local_meta`, never synced, never in the address; with it hidden the horizon brings it back.
+- **Departures, approved with the part:** tasks open as on Today until 6d opens them in the column (and its hint waits for 6d); the column's thread is the phones' at 290 (Running late cards, wrapping titles) where the board draws compact rows; no ‹ › or "● Synced" in the Mac toolbar; the dot menu has no Shift the Rest From Here or Copy as Text, and key hints only for Move To… and Move to Trash; the web sidebar keeps 6a's; Wake Up in Now stays phones only.
+- **Medium widths (tablets):** the day until 6e.
+- **Checks:** now_wide_test (5), now_wide_golden_test (3 goldens), now_view_test (the count after Next); the 6a Mac places golden shows the Now pane. Analyze and format clean; 7413 tests pass, 31 skipped. Not yet run on a real Mac or in a browser.
+
 ---
 
 ## Pending owner answers

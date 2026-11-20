@@ -9,7 +9,6 @@ import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/editing/focus_task.dart';
-import 'package:dottoday/core/editing/inspected_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/router_provider.dart';
@@ -113,9 +112,7 @@ class DottodayApp extends ConsumerWidget {
           onShortcuts: () => _shortcuts(router),
           // ⌥⌘P (ED-184): the person shows or hides the Plan panel.
           onTogglePlanPanel: () => unawaited(togglePlanPanelHidden(ref)),
-          // ⌥⌘I (ED-218): the person shows or hides the inspector.
-          onToggleInspector: () =>
-              ref.read(inspectorHiddenProvider.notifier).toggle(),
+          onToggleInspector: () => toggleSidePanel(ref, minimal: minimalNav),
         );
         // The Mac window takes the app's theme (ED-176); a view's
         // `?task=` opens the task over it (ED-097).

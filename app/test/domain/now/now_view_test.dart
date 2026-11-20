@@ -36,6 +36,7 @@ void main() {
     expect(v.task.id, 'deep');
     expect(v.alsoNow.map((o) => o.id), ['call']);
     expect(v.next?.id, 'lunch');
+    expect(v.later, 0, reason: 'nothing after lunch');
   });
 
   test('between tasks: Next up with the free time until it', () {

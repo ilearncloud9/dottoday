@@ -162,6 +162,69 @@
   "@horizonOpensToday": {
     "description": "Screen-reader hint on Minimal's horizon: a tap opens the Today tab (E-PhonesMinimal frame 1)."
   },
+  "nowAt": "Now · {time}",
+  "@nowAt": {
+    "description": "Mac and web Now pane, over the horizon (E-Minimal): the current time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowDateAt": "{date} · {time}",
+  "@nowDateAt": {
+    "description": "Web Now pane header (E-Minimal frame 2): the date and the current time, e.g. \"Tue 3 Nov · 10:42\".",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowWindDown": "Wind Down at {time}",
+  "@nowWindDown": {
+    "description": "Web Now pane header, under the date (E-Minimal frame 2).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "nowMore": "· {count} more",
+  "@nowMore": {
+    "description": "After the Next task in the Mac and web Now pane: how many more tasks come after it today.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "nowAddField": "Add a task · paste several lines for many",
+  "@nowAddField": {
+    "description": "The Add row in the Mac and web Now pane (E-Minimal); opens Quick Add."
+  },
+  "dayColumnHide": "Hide the Day column",
+  "@dayColumnHide": {
+    "description": "Minimal Mac and web: hides the Day column beside Now (ED-218, ⌥⌘I)."
+  },
+  "dayColumnShow": "Show Day Column",
+  "@dayColumnShow": {
+    "description": "Minimal Mac View menu and the Now pane: shows the Day column again (ED-218, ⌥⌘I)."
+  },
+  "nowDotOpen": "Open",
+  "@nowDotOpen": {
+    "description": "Right-click menu on a dot of the Now pane's horizon: opens the task."
+  },
+  "nowDotMarkDone": "Mark Done",
+  "@nowDotMarkDone": {
+    "description": "Right-click menu on a horizon dot: marks the task done, with Undo."
+  },
+  "nowDotMoveTo": "Move To…",
+  "@nowDotMoveTo": {
+    "description": "Right-click menu on a horizon dot: opens the When picker to move the task."
+  },
   "navInbox": "Inbox",
   "@navInbox": {
     "description": "Tab: unscheduled tasks."

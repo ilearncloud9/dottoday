@@ -23,6 +23,7 @@ class NowRow extends StatelessWidget {
     this.progress = 0,
     this.meta,
     this.trailing,
+    this.more,
     super.key,
   });
 
@@ -40,6 +41,9 @@ class NowRow extends StatelessWidget {
 
   /// The row's done circle, for an earlier task.
   final Widget? trailing;
+
+  /// "· 4 more" after Next's title in the wide pane (E-Minimal).
+  final String? more;
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +81,19 @@ class NowRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      task.title,
+                    Text.rich(
+                      TextSpan(
+                        text: task.title,
+                        children: [
+                          if (more case final m?)
+                            TextSpan(
+                              text: ' $m', // l10n-ignore: a space before
+                              style: t.styles.rowMeta.copyWith(
+                                color: t.colors.muted,
+                              ),
+                            ),
+                        ],
+                      ),
                       // An earlier task is quieter (E-R2-26 frame 7).
                       style: meta == null
                           ? t.styles.rowTitle.copyWith(

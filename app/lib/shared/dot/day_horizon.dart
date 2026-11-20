@@ -27,7 +27,10 @@ final class HorizonDot {
 /// a 14 px dot cut out of the line by the ground; the caps are plain
 /// discs; the teal now-bead sits at now. Labels under it: Wake Up, now
 /// (bold, teal), the middle hour and Wind Down. One stop for screen
-/// readers, [label]; a tap is [onTap] (Today, on phones).
+/// readers, [label]; a tap is [onTap] (Today, on phones). A right-click
+/// on a dot is [onDotMenu] with that dot's index (the Mac and web pane,
+/// E-Minimal frame 1); the tasks stay reachable by keyboard in the Day
+/// column.
 class DayHorizon extends StatelessWidget {
   const DayHorizon({
     required this.dots,
@@ -38,6 +41,7 @@ class DayHorizon extends StatelessWidget {
     required this.label,
     this.hint,
     this.onTap,
+    this.onDotMenu,
     super.key,
   });
 
@@ -52,6 +56,7 @@ class DayHorizon extends StatelessWidget {
   final String label;
   final String? hint;
   final VoidCallback? onTap;
+  final void Function(int index, Offset global)? onDotMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -71,23 +76,45 @@ class DayHorizon extends StatelessWidget {
             builder: (context, box) {
               final w = box.maxWidth;
               final at = _Scale(wakeUtc, windDownUtc, w);
+              // The dot under a right-click, within its own width.
+              int? hit(double x) {
+                int? best;
+                var gap = DotSize.horizonDot.toDouble();
+                for (final (i, d) in dots.indexed) {
+                  final g = (at.x(d.startUtc) - x).abs();
+                  if (g <= gap) (best, gap) = (i, g);
+                }
+                return best;
+              }
+
               final style = t.styles.threadMeta.copyWith(color: t.colors.muted);
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: _HorizonPainter(
-                        dots: dots,
-                        at: at,
-                        nowUtc: nowUtc,
-                        colors: t.colors,
-                        tasks: t.tasks,
+              final menu = onDotMenu;
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onSecondaryTapUp: menu == null
+                    ? null
+                    : (e) {
+                        if (hit(e.localPosition.dx) case final i?) {
+                          menu(i, e.globalPosition);
+                        }
+                      },
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: _HorizonPainter(
+                          dots: dots,
+                          at: at,
+                          nowUtc: nowUtc,
+                          colors: t.colors,
+                          tasks: t.tasks,
+                        ),
                       ),
                     ),
-                  ),
-                  ..._labels(t, at, style, w),
-                ],
+                    ..._labels(t, at, style, w),
+                  ],
+                ),
               );
             },
           ),

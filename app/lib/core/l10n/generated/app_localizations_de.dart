@@ -135,6 +135,45 @@ class AppLocalizationsDe extends AppLocalizations {
   String get horizonOpensToday => 'Öffnet Heute';
 
   @override
+  String nowAt(String time) {
+    return 'Jetzt · $time';
+  }
+
+  @override
+  String nowDateAt(String date, String time) {
+    return '$date · $time';
+  }
+
+  @override
+  String nowWindDown(String time) {
+    return 'Ausklingen um $time';
+  }
+
+  @override
+  String nowMore(String count) {
+    return '· $count weitere';
+  }
+
+  @override
+  String get nowAddField =>
+      'Aufgabe hinzufügen · mehrere Zeilen für viele einfügen';
+
+  @override
+  String get dayColumnHide => 'Tagesspalte ausblenden';
+
+  @override
+  String get dayColumnShow => 'Tagesspalte einblenden';
+
+  @override
+  String get nowDotOpen => 'Öffnen';
+
+  @override
+  String get nowDotMarkDone => 'Als erledigt markieren';
+
+  @override
+  String get nowDotMoveTo => 'Verschieben nach …';
+
+  @override
   String get navInbox => 'Eingang';
 
   @override

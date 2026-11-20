@@ -1,0 +1,223 @@
+import 'dart:async';
+
+import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/day_column_prefs.dart';
+import 'package:dottoday/features/timeline/now/now_body.dart';
+import 'package:dottoday/features/timeline/now/now_inputs.dart';
+import 'package:dottoday/features/timeline/now/wide/now_dot_menu.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+/// The Mac and web Now pane (E-Minimal frames 1 and 2; ED-232): "Now ·
+/// 10:42" on the Mac, or on the web the date, the time and Wind Down with
+/// Add; the horizon, whose dots take a right-click; then [NowBody] with
+/// the Mac's 280 or the web's 240 orb (ED-106) and the Add and Day column
+/// rows beside Also now and Next.
+class NowPane extends ConsumerWidget {
+  const NowPane({
+    required this.inputs,
+    required this.mac,
+    required this.dayHidden,
+    super.key,
+  });
+
+  final NowInputs inputs;
+  final bool mac;
+  final bool dayHidden;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final n = inputs;
+    void showDay() => unawaited(
+      ref.read(dayColumnHiddenProvider.notifier).set(hidden: false),
+    );
+    return ListView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DotSpace.xxl,
+        vertical: DotSpace.l,
+      ),
+      children: [
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: DotSize.nowPaneContent),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (mac)
+                  _NowAt(time: n.time(n.nowUtc))
+                else
+                  _WebHeader(inputs: n),
+                const SizedBox(height: DotSpace.m),
+                n.horizon(
+                  context,
+                  // With the Day column put away, the horizon brings it
+                  // back (`/today` reveals it too, ED-097).
+                  onTap: dayHidden ? showDay : null,
+                  hint: dayHidden ? l10n.dayColumnShow : null,
+                  onDotMenu: (o, at) =>
+                      unawaited(showNowDotMenu(context, ref, o, at)),
+                ),
+                const SizedBox(height: DotSpace.xxl),
+                NowBody(
+                  view: n.view,
+                  nowUtc: n.nowUtc,
+                  windDownUtc: n.shape.bedUtc,
+                  time: n.time,
+                  orbSize: mac ? DotSize.orbMac : DotSize.orbWeb,
+                  aside: _Aside(mac: mac, dayHidden: dayHidden),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// "Now · 10:42" over the Mac's horizon.
+class _NowAt extends StatelessWidget {
+  const _NowAt({required this.time});
+
+  final String time;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return Text(
+      context.l10n.nowAt(time),
+      style: t.styles.rowTitle.copyWith(fontWeight: FontWeight.w700),
+    );
+  }
+}
+
+/// The web's header (frame 2): "Tue 3 Nov · 10:42", "Wind Down at 11:00
+/// PM", and + Add; the Mac has these in its toolbar.
+class _WebHeader extends StatelessWidget {
+  const _WebHeader({required this.inputs});
+
+  final NowInputs inputs;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final n = inputs;
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.nowDateAt(
+                    DateFormat.MMMEd(locale).format(n.today),
+                    n.time(n.nowUtc),
+                  ),
+                  style: t.styles.cardTitle,
+                ),
+              ),
+              Text(
+                l10n.nowWindDown(n.time(n.shape.bedUtc)),
+                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              ),
+            ],
+          ),
+        ),
+        FilledButton.icon(
+          onPressed: () => Actions.maybeInvoke(
+            context,
+            const AppCommandIntent(AppCommand.quickAdd),
+          ),
+          icon: DotIcon(DotGlyphs.add, color: t.colors.onAccent),
+          label: Text(l10n.addAdd),
+        ),
+      ],
+    );
+  }
+}
+
+/// Beside Also now and Next (E-Minimal frame 1): the Add row (Quick Add,
+/// several lines for many) and Hide the Day column, or Show it.
+class _Aside extends ConsumerWidget {
+  const _Aside({required this.mac, required this.dayHidden});
+
+  final bool mac;
+  final bool dayHidden;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    Widget row({
+      required String label,
+      required VoidCallback onTap,
+      String? keys,
+      DotGlyph? glyph,
+      bool outlined = false,
+    }) => Material(
+      color: outlined ? t.colors.raised : t.colors.sunk,
+      shape: StadiumBorder(
+        side: outlined ? BorderSide(color: t.colors.outline) : BorderSide.none,
+      ),
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const StadiumBorder(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotTouch.min),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
+            child: Row(
+              spacing: DotSpace.s,
+              children: [
+                if (glyph != null)
+                  DotIcon(glyph, color: t.colors.muted, size: DotSize.rowIcon),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: t.styles.rowMeta.copyWith(
+                      color: outlined ? t.colors.muted : t.colors.text,
+                    ),
+                  ),
+                ),
+                if (mac && keys != null)
+                  Text(
+                    keys,
+                    style: t.styles.caption.copyWith(color: t.colors.muted),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    return Column(
+      spacing: DotSpace.s,
+      children: [
+        row(
+          label: l10n.nowAddField,
+          glyph: DotGlyphs.add,
+          keys: '⌘N', // l10n-ignore: a key cap
+          outlined: true,
+          onTap: () => Actions.maybeInvoke(
+            context,
+            const AppCommandIntent(AppCommand.quickAdd),
+          ),
+        ),
+        row(
+          label: dayHidden ? l10n.dayColumnShow : l10n.dayColumnHide,
+          keys: '⌥⌘I', // l10n-ignore: a key cap
+          onTap: () =>
+              unawaited(ref.read(dayColumnHiddenProvider.notifier).toggle()),
+        ),
+      ],
+    );
+  }
+}

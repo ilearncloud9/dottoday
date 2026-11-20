@@ -134,6 +134,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get horizonOpensToday => 'Opens Today';
 
   @override
+  String nowAt(String time) {
+    return 'Now · $time';
+  }
+
+  @override
+  String nowDateAt(String date, String time) {
+    return '$date · $time';
+  }
+
+  @override
+  String nowWindDown(String time) {
+    return 'Wind Down at $time';
+  }
+
+  @override
+  String nowMore(String count) {
+    return '· $count more';
+  }
+
+  @override
+  String get nowAddField => 'Add a task · paste several lines for many';
+
+  @override
+  String get dayColumnHide => 'Hide the Day column';
+
+  @override
+  String get dayColumnShow => 'Show Day Column';
+
+  @override
+  String get nowDotOpen => 'Open';
+
+  @override
+  String get nowDotMarkDone => 'Mark Done';
+
+  @override
+  String get nowDotMoveTo => 'Move To…';
+
+  @override
   String get navInbox => 'Inbox';
 
   @override

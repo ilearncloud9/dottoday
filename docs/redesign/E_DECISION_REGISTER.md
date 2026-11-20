@@ -1325,3 +1325,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-409:** M19.6 part 6a: Minimal's places by width (Now · Today · Inbox on phones, Now · Inbox · Calendar · Search wider), the 200 sidebar, ⌘1–4; M19.6 in five parts. Approved.
 - **2026-11-20, ED-410:** M19.6 part 6b: Now on the phones (Minimal opens on Now; the horizon, the orb, Done and Need more time?, Next up with Earlier, an open day). Approved.
 - **2026-11-20, ED-411:** M19.6 part 6b: the Wake Up card folded into Minimal's Now (each morning until answered; Minimal never opens it over Today). Approved.
+- **2026-11-20, ED-412:** M19.6 part 6c: the Mac and web Now pane beside the 290 Day column (orb, Done · Focus · Need more time?, the dot menu, ⌥⌘I). Approved.
