@@ -9,6 +9,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/schedule/month_data.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/month_stats.dart';
+import 'package:dottoday/features/timeline/calendar/calendar_page.dart';
 import 'package:dottoday/features/timeline/state/month_cells.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/week_header.dart';
@@ -57,6 +58,22 @@ class MonthScreen extends ConsumerWidget {
     );
     void step(int months) =>
         showMonth(DateTime(month.year, month.month + months));
+    // Phones and medium widths: the Calendar tab's month (ED-075, ED-293).
+    if (AppLayout.classOf(context) != WidthClass.expanded) {
+      return Scaffold(
+        key: _key,
+        body: SafeArea(
+          bottom: false,
+          child: CalendarPage(
+            month: month,
+            today: today,
+            firstDayOfWeek: profile.settings.firstDayOfWeek,
+            byDay: byDay,
+            onMonth: showMonth,
+          ),
+        ),
+      );
+    }
     return Scaffold(
       key: _key,
       body: SafeArea(
@@ -110,10 +127,9 @@ class _Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).toLanguageTag();
-    // Cards of what each day held from the expanded width; below it (the
-    // route opens at any width) the phones' compact month, which fits.
-    final wide = AppLayout.classOf(context) == WidthClass.expanded;
-    final cells = _cells(context, locale, wide: wide);
+    // Cards of what each day held (expanded only; narrower is the
+    // Calendar tab's page).
+    final cells = _cells(context, locale);
     final lead = cells.indexWhere((c) => c != null && !c.outside);
     final start = weekStart(DateTime(month.year, month.month), firstDayOfWeek);
     final workspace = WorkspaceScope.of(context);
@@ -141,7 +157,7 @@ class _Page extends StatelessWidget {
           const SizedBox(height: DotSpace.l),
         ],
         MonthGrid(
-          style: wide ? MonthCellStyle.expanded : MonthCellStyle.compact,
+          style: MonthCellStyle.expanded,
           weekdays: [
             for (var i = 0; i < 7; i++)
               DateFormat.E(locale).format(start.add(Duration(days: i))),
@@ -155,11 +171,7 @@ class _Page extends StatelessWidget {
     );
   }
 
-  List<MonthDay?> _cells(
-    BuildContext context,
-    String locale, {
-    required bool wide,
-  }) {
+  List<MonthDay?> _cells(BuildContext context, String locale) {
     final l10n = context.l10n;
     String label(DateTime d, ({int done, int total}) c) {
       final name = DateFormat.MMMMEEEEd(locale).format(d);
@@ -167,24 +179,15 @@ class _Page extends StatelessWidget {
     }
 
     String date(DateTime d) => DateFormat.d(locale).format(d);
-    return wide
-        ? expandedMonthCells(
-            month: month,
-            firstDayOfWeek: firstDayOfWeek,
-            today: today,
-            nowUtc: nowUtc,
-            byDay: byDay,
-            dateText: date,
-            label: label,
-          )
-        : compactMonthCells(
-            month: month,
-            firstDayOfWeek: firstDayOfWeek,
-            today: today,
-            byDay: byDay,
-            dateText: date,
-            label: label,
-          );
+    return expandedMonthCells(
+      month: month,
+      firstDayOfWeek: firstDayOfWeek,
+      today: today,
+      nowUtc: nowUtc,
+      byDay: byDay,
+      dateText: date,
+      label: label,
+    );
   }
 
   /// The Workspace's "November 2026" 26/800 over its numbers (E-R2-30).

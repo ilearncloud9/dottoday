@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/month_models.dart';
-import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/material.dart';
 
 /// Compact cell (`A-ios-today-month`, `A-ios-future-month`): the date,
@@ -66,7 +65,10 @@ class CompactMonthCell extends StatelessWidget {
                     : null,
                 child: Text(day.date, style: date),
               ),
-              SizedBox(height: DotSize.weekDot + DotSpace.xs, child: _dots()),
+              SizedBox(
+                height: DotSize.weekDot + DotSpace.xs,
+                child: _dots(context),
+              ),
             ],
           ),
         ),
@@ -74,37 +76,54 @@ class CompactMonthCell extends StatelessWidget {
     );
   }
 
-  Widget? _dots() {
-    if (day.planned.isNotEmpty) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: DotSpace.xxs,
+  /// Up to three task dots, then "+n" (E-Phones Calendar, ED-075); a
+  /// past day's are lighter, never red.
+  Widget? _dots(BuildContext context) {
+    if (day.dots.isEmpty) return null;
+    final t = DotTheme.of(context);
+    final alpha = day.isPast ? TaskAlpha.faded : 1.0;
+    // A narrow cell (Go to date's popover) shrinks the row, never cuts it.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: DotSpace.xxs / 2,
         children: [
-          for (final color in day.planned.take(3)) _Pip(color: color.color),
+          for (final d in day.dots)
+            _Pip(
+              color: d.color.color.withValues(alpha: alpha),
+              filled: d.filled,
+            ),
+          if (day.more > 0)
+            Text(
+              context.l10n.timelineMoreBlocks(day.more),
+              style: t.styles.monthMore,
+              textScaler: TextScaler.noScaling,
+            ),
         ],
-      );
-    }
-    if (day.repeatsOnly) {
-      return const CompletionDot(completion: Completion.none());
-    }
-    return switch (day.completion) {
-      final completion? => CompletionDot(completion: completion),
-      null => null,
-    };
+      ),
+    );
   }
 }
 
-/// One solid planned-task dot.
+/// One task's dot: filled once done, a ring while not.
 class _Pip extends StatelessWidget {
-  const _Pip({required this.color});
+  const _Pip({required this.color, required this.filled});
 
   final Color color;
+  final bool filled;
 
   @override
   Widget build(BuildContext context) => Container(
-    width: DotSize.weekDot,
-    height: DotSize.weekDot,
-    decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+    width: DotSize.monthDot,
+    height: DotSize.monthDot,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: filled ? color : null,
+      border: filled
+          ? null
+          : Border.all(color: color, width: DotSize.smallDotOutline / 1.5),
+    ),
   );
 }
 

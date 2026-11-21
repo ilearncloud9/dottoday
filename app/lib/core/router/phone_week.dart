@@ -3,14 +3,13 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Week on a phone (M19.1): phones have no Week view in Concept E (their
-/// Calendar comes with M20.1), so `/week` there opens the nearest built
-/// screen, Today on the same date (the owner's "Nearest built screen",
-/// ED-380). Wider windows show [child], the Week itself.
+/// Week on a phone: phones have no Week view in Concept E, only the
+/// Calendar's month (ED-075), so `/week` there opens the month holding
+/// the same date. Wider windows show [child], the Week itself.
 class PhoneWeek extends StatefulWidget {
   const PhoneWeek({required this.to, required this.child, super.key});
 
-  /// Where a phone goes instead: `/today` or `/day/<date>`.
+  /// Where a phone goes instead: `/month` or `/month/<yyyy-MM>`.
   final String to;
   final Widget child;
 

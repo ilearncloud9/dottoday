@@ -1,106 +1,41 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/logging/logger_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/domain/review/journal.dart';
-import 'package:dottoday/shared/dot/week_strip.dart';
+import 'package:dottoday/features/search/widgets/year_strip_months.dart';
 import 'package:dottoday/shared/share/capture_image.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// The year strip (11 D3, docs/09 M12.3): twelve rows, one per month, of
-/// the month grid's completion dots. Drawn at its own width and shown
-/// scaled down where the screen is narrower; the shared PNG is the
-/// full-size card.
-class YearStripCard extends StatelessWidget {
-  const YearStripCard({
-    required this.months,
-    required this.boundary,
-    super.key,
-  });
-
-  final List<StripMonth> months;
-  final GlobalKey boundary;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final planned = months.fold(
-      0,
-      (n, m) => n + m.shares.where((s) => s != null).length,
-    );
-    return Semantics(
-      image: true,
-      label: context.l10n.journalStripLabel(planned),
-      excludeSemantics: true,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: AlignmentDirectional.topStart,
-        child: RepaintBoundary(
-          key: boundary,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: t.colors.surface,
-              borderRadius: BorderRadius.circular(DotRadii.card),
-              border: Border.all(color: t.colors.outline),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(DotSpace.l),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: DotSpace.xs,
-                children: [
-                  for (final m in months)
-                    Row(
-                      spacing: DotSpace.xxs,
-                      children: [
-                        SizedBox(
-                          width: DotSize.yearStripLabel,
-                          child: Text(
-                            DateFormat.MMM(locale).format(m.month),
-                            style: t.styles.rowMeta,
-                          ),
-                        ),
-                        for (final s in m.shares)
-                          CompletionDot(
-                            completion: s == null
-                                ? const Completion.none()
-                                : Completion.of(s),
-                          ),
-                      ],
-                    ),
-                  const SizedBox(height: DotSpace.xs),
-                  Text(
-                    context.l10n.appTitle.toLowerCase(),
-                    style: t.styles.rowMeta,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// "Year strip": the strip in a sheet with Share image (the OS sheet; a
-/// download on the web without Web Share).
-Future<void> showYearStrip(BuildContext context, List<StripMonth> months) {
+/// "Year strip", option B (E-R2-34, E-R2-42; ED-348, ED-349): the last
+/// twelve months as dots that fill with the days planned, a month's days
+/// under them, and Share image (the OS sheet; a download on the web
+/// without Web Share). A sheet on phones; from medium width the built
+/// centred dialog, Esc or a click outside closing it.
+Future<void> showYearStrip(
+  BuildContext context,
+  List<StripMonth> months, {
+  int firstDayOfWeek = DateTime.monday,
+}) {
   final boundary = GlobalKey();
   return showAppSheet<void>(
     context: context,
-    title: context.l10n.journalStripTitle,
     builder: (sheet) => Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.l,
       children: [
-        YearStripCard(months: months, boundary: boundary),
+        _Header(months: months),
+        YearStripMonths(
+          months: months,
+          boundary: boundary,
+          firstDayOfWeek: firstDayOfWeek,
+        ),
         Builder(
           builder: (button) => FilledButton.icon(
             onPressed: () => unawaited(_share(button, boundary, months)),
@@ -115,6 +50,67 @@ Future<void> showYearStrip(BuildContext context, List<StripMonth> months) {
       ],
     ),
   );
+}
+
+/// "Year strip" over "214 days in the last 12 months", and Done.
+class _Header extends StatelessWidget {
+  const _Header({required this.months});
+
+  final List<StripMonth> months;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final planned = months.fold(
+      0,
+      (n, m) => n + m.shares.where((s) => s != null).length,
+    );
+    final done = TextButton(
+      onPressed: () => Navigator.of(context).maybePop(),
+      child: Text(l10n.sheetDone),
+    );
+    // The iPhone's sheet; the Mac, the web and tablets get the dialog
+    // with the title at the start (E-R2-42).
+    final ios =
+        DotIdiom.of(context) == DotIdiom.cupertino &&
+        AppLayout.classOf(context) == WidthClass.compact;
+    final title = Column(
+      crossAxisAlignment: ios
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(l10n.journalStripTitle, style: t.styles.cardTitle),
+        ),
+        Text(
+          l10n.journalDays(planned),
+          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        ),
+      ],
+    );
+    // The iPhone centres the title with Done at the end (E-R2-34 option
+    // B); Material and the dialog start it.
+    if (!ios) {
+      return Row(
+        children: [
+          Expanded(child: title),
+          done,
+        ],
+      );
+    }
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DotTouch.android),
+          child: title,
+        ),
+        Align(alignment: AlignmentDirectional.centerEnd, child: done),
+      ],
+    );
+  }
 }
 
 Future<void> _share(

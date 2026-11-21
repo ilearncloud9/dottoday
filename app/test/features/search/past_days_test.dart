@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -81,6 +82,32 @@ void main() {
     });
     await tester.pumpAndSettle();
     expect(files.images.keys, ['dottoday-year-2026-10.png']);
+  });
+
+  testWidgets('year strip option B: a month opens its days, by tap or '
+      'by the arrows and Return (ED-348, ED-349)', (tester) async {
+    await _pump(tester);
+    await tester.tap(find.text('Year strip'));
+    await tester.pumpAndSettle();
+    // The last whole month opens first; each month reads its days.
+    expect(find.textContaining('September · '), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp(r'^Oct · \d+ of 31 days planned$')),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Aug'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('August · '), findsOneWidget);
+    Focus.of(tester.element(find.text('Jul'))).requestFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('September · '), findsOneWidget);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Share image'), findsNothing);
   });
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {

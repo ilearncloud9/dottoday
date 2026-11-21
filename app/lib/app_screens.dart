@@ -33,9 +33,9 @@ final appScreens = RouteScreens(
   today: (_) =>
       const WorkspaceFrame(child: PlanPanelFrame(child: TodayScreen())),
   inbox: (_) => const InboxScreen(),
-  // Phones have no Week (Concept E): their /week opens Today (M19.1).
+  // Phones have no Week (ED-075): their /week opens the Calendar's month.
   week: (_) => const PhoneWeek(
-    to: AppRoutes.today,
+    to: AppRoutes.month,
     child: WorkspaceFrame(child: PlanPanelFrame(child: WeekScreen())),
   ),
   search: (_) => const SearchScreen(),
@@ -47,7 +47,7 @@ final appScreens = RouteScreens(
       : settingsPageFor(page),
   month: (_) => const WorkspaceFrame(child: MonthScreen()),
   weekOn: (_, date) => PhoneWeek(
-    to: AppRoutes.day(date),
+    to: AppRoutes.monthOf(date),
     child: WorkspaceFrame(
       child: PlanPanelFrame(child: WeekScreen(date: date)),
     ),

@@ -53,7 +53,7 @@ void main() {
       {
         'Today': false,
         'Inbox': false,
-        'Week': false,
+        'Calendar': false,
         'Search': false,
         'Settings': true,
       },

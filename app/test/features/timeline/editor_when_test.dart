@@ -34,8 +34,8 @@ void main() {
     final start = _deep().startUtc!;
     await tester.tap(inEditor(find.text('Wed, Oct 21')));
     await tester.pumpAndSettle();
-    expect(_cell(tester, '21').day.planned, isNotEmpty);
-    expect(_cell(tester, '23').day.planned, isEmpty);
+    expect(_cell(tester, '21').day.dots, isNotEmpty);
+    expect(_cell(tester, '23').day.dots, isEmpty);
     await tester.tap(find.byWidget(_cell(tester, '23')));
     await tester.pumpAndSettle();
     await tester.pump(const Duration(seconds: 1));

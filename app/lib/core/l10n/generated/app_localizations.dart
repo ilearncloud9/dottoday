@@ -1170,18 +1170,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 day planned} other{{count} days planned}}'**
   String monthDaysPlanned(int count);
 
-  /// Legend next to a filled dot: a one-off task is planned that day.
-  ///
-  /// In en, this message translates to:
-  /// **'planned'**
-  String get monthLegendPlanned;
-
-  /// Legend next to an outline dot: only repeating tasks that day.
-  ///
-  /// In en, this message translates to:
-  /// **'repeats'**
-  String get monthLegendRepeats;
-
   /// Month navigation row, e.g. 'Nov · Dec · Jan'.
   ///
   /// In en, this message translates to:
@@ -11381,6 +11369,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings and account'**
   String get settingsAndAccount;
+
+  /// Tab and place: the month calendar (Full: Today · Inbox · Calendar · Search; Minimal's wide Calendar place). ED-327: one line on the tab bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get navCalendar;
+
+  /// Calendar tab: the button on the picked day's card that opens that day (E-Phones Calendar, ED-075).
+  ///
+  /// In en, this message translates to:
+  /// **'Open day'**
+  String get calendarOpenDay;
+
+  /// iPhone Calendar tab, under the month's name: its year and how many tasks the month holds (E-Phones, ED-079).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{year} · 1 planned} other{{year} · {count} planned}}'**
+  String calendarYearPlanned(String year, int count);
+
+  /// Android Calendar destination, under the top app bar: how many tasks the month holds (E-Phones, ED-079).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 planned this month} other{{count} planned this month}}'**
+  String calendarMonthPlanned(int count);
 
   /// Section title in the task icon picker.
   ///

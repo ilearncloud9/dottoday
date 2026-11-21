@@ -191,7 +191,7 @@ List<ShellDestination> minimalDestinations(
       ),
       ShellTab.calendar => ShellDestination(
         glyph: DotGlyphs.calendar,
-        label: l10n.menuCalendar,
+        label: l10n.navCalendar,
         wideOnly: true,
       ),
       ShellTab.search => ShellDestination(
@@ -207,9 +207,9 @@ List<ShellDestination> minimalDestinations(
     },
 ];
 
-/// The fixed nav set, in branch order (docs/10 §3): Today · Inbox ·
-/// [Week, expanded width only] · Search · Settings; [inbox] open tasks badge the
-/// Inbox (docs/02 F3.3).
+/// The fixed nav set, in branch order (E-Phones, ED-075): Today · Inbox ·
+/// Calendar · Search · Settings; [inbox] open tasks badge the Inbox
+/// (docs/02 F3.3).
 List<ShellDestination> shellDestinations(
   AppLocalizations l10n, {
   int inbox = 0,
@@ -218,7 +218,8 @@ List<ShellDestination> shellDestinations(
   bool weekTab = true,
   bool searchTab = true,
 }) => [
-  // Full has no Now (ED-066) and its month is Week's (M19.2): its places
+  // Full has no Now (ED-066) and its Calendar is Week's branch (M19.2,
+  // M20.1): its places
   // end before them in branch order.
   for (final tab in ShellTab.values.take(ShellTab.now.index))
     switch (tab) {
@@ -236,10 +237,11 @@ List<ShellDestination> shellDestinations(
         // A dragged task let go here goes back to the Inbox (ADR-0015).
         onDropTask: onDropOnInbox,
       ),
+      // The Calendar (ED-075, ED-293): Month on phones, Month · Week at
+      // medium; the expanded Workspace lists its own views.
       ShellTab.week => ShellDestination(
-        glyph: DotGlyphs.week,
-        label: l10n.navWeek,
-        expandedOnly: true,
+        glyph: DotGlyphs.calendar,
+        label: l10n.navCalendar,
         visible: weekTab,
       ),
       ShellTab.search => ShellDestination(

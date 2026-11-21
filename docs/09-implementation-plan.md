@@ -752,7 +752,7 @@ Rules for every task in M18 to M22:
 
 ## Milestone 20 — Migrate the rest, one slice at a time (Prompt G; the owner reviews each slice)
 
-- [ ] M20.1 Calendar:
+- [x] M20.1 Calendar. Done 2026-11-21 (ED-420), one part: Full's tabs Today · Inbox · Calendar · Search on every shell, the tab opening Month; phones' Month with the picked day's card and Open day; Month · Week at medium width; the month grid's task dots shared with Today's pull-down and Go to date; Year strip option B as a sheet on phones and the dialog from medium width. Open: real devices, landscape iPad. Originally:
   - Month on phones (ED-075, ED-079);
   - Month and Week on wide screens and tablets (R2-12, ED-293);
   - Past days and the Year strip option B, which needs `year_strip.dart` (R2-34, ED-339, ED-348; Mac and web R2-42, ED-349).

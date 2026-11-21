@@ -34,12 +34,22 @@ class DotSegmented<T extends Object> extends StatelessWidget {
         onValueChanged: _pick,
         children: {
           for (final (v, label) in segments)
-            v: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: DotSpace.s,
-                vertical: DotSpace.xs,
+            v: ConstrainedBox(
+              // 48 to touch on iPhone and iPad (the a11y check takes 48)
+              // (M20.1: the Calendar's Month · Week was 28).
+              constraints: BoxConstraints(
+                minHeight: touchApp(context) ? DotTouch.android : 0,
               ),
-              child: Text(label, style: t.styles.rowMeta),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DotSpace.s,
+                  vertical: DotSpace.xs,
+                ),
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(label, style: t.styles.rowMeta),
+                ),
+              ),
             ),
         },
       );

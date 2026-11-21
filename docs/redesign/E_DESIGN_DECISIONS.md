@@ -5411,6 +5411,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departs from:** the approved E-Phones and E-PhonesMinimal boards (34 / 32 dots, fixed rows, ED-363) on phones. With rows by length the moving now still hops only when a task starts or ends (ED-364).
 - **Checks:** analyze and format clean; 7542 tests pass, 31 skipped; 263 phone goldens updated; three tests scroll to a later task before tapping it.
 
+### ED-420 · M20.1 Calendar: the tab, Month and Week, the shared month dots, Year strip option B
+- **Date:** 2026-11-21. **Owner:** "Start M20.1"; "One part", "Sims + this Mac"; then "Approve M20.1" after the review page (departures listed there, accepted with it).
+- **Tabs:** Full's places are Today · Inbox · Calendar · Search on every shell (the iPhone's native bar, Android's toolbar, iPad's top tabs, Android tablets' rail, the mobile web bar); the Calendar branch opens `/month`, and a phone's `/week` opens the month. Minimal is unchanged (no Calendar tab on phones, ED-068).
+- **Month (E-Phones, ED-075, ED-079):** the month as title opening Go to date, Sync and the profile; iPhone "2026 · 22 planned" with Today ‹ ›, Android "22 planned this month" with Today in the top bar; swipe (mirrored in RTL) or ‹ › for another month; the picked day's card (`CalendarPick`, kept alive) with its numbers, every task (the boards show two) and Open day. **Medium (E-R2-12, ED-293):** Month · Week at the top; Week gets the same top. Expanded keeps M19.2's Workspace Month.
+- **One month grid:** each day shows its first three tasks' dots in their colours, filled when done, then "+n"; past days lighter, never red. Today's pull-down month and Go to date use it; the pull-down's "planned / repeats" legend goes (`MonthDay.dots` / `more` replace completion, planned and repeatsOnly).
+- **Year strip option B (E-R2-34, E-R2-42, ED-348, ED-349):** twelve month dots filling with the share of days planned, the month in progress dashed, the open month's days below, Share image and Done; a sheet on phones, the dialog from medium width; it opens on the last whole month; arrows and Return on a keyboard; each month read as "Oct · 14 of 31 days planned".
+- **Departs from:** iOS segmented controls are 48 tall on touch app-wide (were 28; the touch-target check failed on Month · Week), so Brain dump, Plan / Reality, the routine editor and Create task's tabs grow too.
+- **Checks:** analyze and format clean; 7,556 pass, 31 skipped; 302 goldens re-baselined, each traced to the items above; `calendar_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators (portrait), Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices, landscape iPad.
+
 ---
 
 ## Pending owner answers

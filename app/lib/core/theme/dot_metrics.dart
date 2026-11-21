@@ -531,7 +531,13 @@ abstract final class DotSize {
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;
   static const double pickerDot = 22;
+
+  /// A task's dot on the Calendar tab's day card (E-Phones Calendar).
+  static const double calendarCardDot = 24;
   static const double weekDot = 8;
+
+  /// A task's dot in a compact month cell (E-Phones Calendar: 6–7 px).
+  static const double monthDot = 7;
   static const double tabDot = 14;
   static const double tabDotActive = 16;
 
@@ -572,8 +578,13 @@ abstract final class DotSize {
   static const double weekReviewGap = 0.06;
   static const double weekReviewHalo = 4;
 
-  /// The year strip's month label column (11 D3).
-  static const double yearStripLabel = 36;
+  /// The year strip's month dots, option B (E-R2-34, ED-348): 50 across
+  /// with a 5 ring, each a touch target.
+  static const double yearMonthDot = 50;
+  static const double yearMonthStroke = 5;
+
+  /// A day of the year strip's open month (E-R2-34 option B).
+  static const double yearDayDot = 10;
 
   /// The share image's dots (`B-ios-week-review` bottom card).
   static const double weekShareDotMin = 30;

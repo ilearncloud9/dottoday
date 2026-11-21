@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/review/journal.dart';
 import 'package:dottoday/features/search/state/journal_state.dart';
 import 'package:dottoday/features/search/widgets/journal_day_row.dart';
@@ -55,7 +56,17 @@ class _PastDaysPageState extends ConsumerState<PastDaysPage> {
           if (async.value case final data? when data.days.isNotEmpty)
             TextButton(
               onPressed: () => unawaited(
-                showYearStrip(context, yearStrip(data.days, data.today)),
+                showYearStrip(
+                  context,
+                  yearStrip(data.days, data.today),
+                  firstDayOfWeek:
+                      ref
+                          .read(currentProfileProvider)
+                          .value
+                          ?.settings
+                          .firstDayOfWeek ??
+                      DateTime.monday,
+                ),
               ),
               child: Text(l10n.journalStripTitle),
             ),

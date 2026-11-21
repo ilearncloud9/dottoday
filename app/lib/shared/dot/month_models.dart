@@ -1,5 +1,4 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/shared/dot/week_strip.dart';
 import 'package:flutter/foundation.dart';
 
 /// A task inside an expanded month cell (`A-mac-month`).
@@ -26,15 +25,24 @@ final class MonthItem {
   final bool now;
 }
 
+/// One task's dot in a compact month cell (E-Phones Calendar, ED-075):
+/// its colour, filled once done, a ring while not.
+@immutable
+final class MonthDot {
+  const MonthDot(this.color, {this.filled = false});
+
+  final TaskColor color;
+  final bool filled;
+}
+
 /// One day of a [MonthGrid]; display values from the feature.
 @immutable
 final class MonthDay {
   const MonthDay({
     required this.date,
     required this.label,
-    this.completion,
-    this.planned = const [],
-    this.repeatsOnly = false,
+    this.dots = const [],
+    this.more = 0,
     this.items = const [],
     this.done = 0,
     this.total = 0,
@@ -52,17 +60,12 @@ final class MonthDay {
   /// Screen-reader label, e.g. "Monday 19 October, 4 of 4 done".
   final String label;
 
-  /// The completion dot (compact) or badge (expanded); `Completion.none()`
-  /// draws an outline (days ahead in this month), null draws nothing.
-  final Completion? completion;
+  /// Compact cells: the day's first three tasks as dots (E-Phones
+  /// Calendar: "at most three, then +n").
+  final List<MonthDot> dots;
 
-  /// Future days: colours of what is planned, one dot each (max 3 drawn,
-  /// `A-ios-future-month`).
-  final List<TaskColor> planned;
-
-  /// Only repeats fall on this future day: a small outline dot
-  /// (`A-ios-future-month` legend "○ repeats").
-  final bool repeatsOnly;
+  /// Compact cells: the tasks past [dots], drawn as "+n".
+  final int more;
 
   /// Expanded cells: the day's tasks in order.
   final List<MonthItem> items;

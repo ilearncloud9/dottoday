@@ -148,7 +148,11 @@ class _MonthPickerState extends State<_MonthPicker> {
     label: DateFormat.MMMMEEEEd(locale).format(day),
     isPast: day.isBefore(widget.today),
     isToday: day == widget.today,
-    planned: dots[day] ?? const [],
+    dots: [
+      for (final c in (dots[day] ?? const <TaskColor>[]).take(3))
+        MonthDot(c, filled: true),
+    ],
+    more: ((dots[day]?.length ?? 0) - 3).clamp(0, 99),
   );
 }
 

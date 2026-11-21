@@ -30,8 +30,8 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Feature | Status | In minimal mode | What changes |
 | --- | --- | --- | --- |
 | Today thread, day pager | built | Shown | Header shrinks to date + menu; no counts, no "N planned" |
-| Week strip + month pull-open | built | Simplified | Strip stays for swiping days; month opens without per-day completion dots |
-| Mac Week / Month views | built | Hidden | Mac shows Today; Week and Month under the View menu |
+| Week strip + month pull-open | built | Simplified | Strip stays for swiping days; the month's task dots (M20.1, ED-075) are drawn plain, without done and not done |
+| Mac Week / Month views | built | Hidden | Mac shows Today; Week and Month under the View menu. Full's Calendar tab (M20.1: Month on phones, Month · Week at medium; ED-075, ED-293) is this feature too: Minimal phones have no Calendar tab (Now · Today · Inbox, ED-068); wider, Minimal has its own Calendar place (ED-266) |
 | Add task, two steps + parser | built | Simplified | One step: title field, parser sets time and recurrence, duration chip pre-filled from history; everything else under More |
 | Task sheet | built | Simplified | Title, time, duration, Done, Tomorrow, Later, Delete; colour, icon, energy, notes, recurrence, subtasks under More |
 | Recurrence editor | built | Hidden | Typed recurrence ("every Monday") still works; editor under More |

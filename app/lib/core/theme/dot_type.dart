@@ -39,6 +39,7 @@ final class DotType {
     required this.sheetTitleAndroid,
     required this.stripDateAndroid,
     required this.badge,
+    required this.monthMore,
     required this.emptyTitle,
     required this.sidebarItem,
     required this.sidebarHint,
@@ -122,6 +123,7 @@ final class DotType {
     stripDateAndroid: _manrope(16, 19, 500, text),
     // A count on an icon (Sync's conflicts, E-Phones): 11/700.
     badge: _system(11, 13, 700, text),
+    monthMore: _system(9, 11, 600, muted),
     // An empty day's free time, "16 h free" (E-Phones): 28/800.
     emptyTitle: _manrope(28, 34, 800, text),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
@@ -298,6 +300,9 @@ final class DotType {
   /// A count badge on an icon (E-Phones' Sync): 11/700.
   final TextStyle badge;
 
+  /// "+2" after a month cell's three dots (E-Phones Calendar): 9/600.
+  final TextStyle monthMore;
+
   /// An empty day's "16 h free" in the thread (E-Phones): 28/800.
   final TextStyle emptyTitle;
 
@@ -411,6 +416,7 @@ final class DotType {
       sheetTitleAndroid: l(sheetTitleAndroid, other.sheetTitleAndroid),
       stripDateAndroid: l(stripDateAndroid, other.stripDateAndroid),
       badge: l(badge, other.badge),
+      monthMore: l(monthMore, other.monthMore),
       emptyTitle: l(emptyTitle, other.emptyTitle),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),

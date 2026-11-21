@@ -7,9 +7,10 @@ import 'package:dottoday/shared/dot/month_grid.dart';
 /// The cells of [month] for a compact [MonthGrid], blanks included, with
 /// the week starting on [firstDayOfWeek] (1 = Monday … 7 = Sunday).
 ///
-/// Days up to [today] show their completion dot; later days show up to
-/// three colours of what is planned on them, or the repeats-only outline
-/// when only repeating tasks fall there (`A-ios-future-month` legend).
+/// Each day shows its first three tasks as dots in their colours, filled
+/// once done, then "+n" (E-Phones Calendar, ED-075); skipped tasks are
+/// left out. Nothing is red and nothing says late: a past day is only
+/// lighter.
 List<MonthDay?> compactMonthCells({
   required DateTime month,
   required int firstDayOfWeek,
@@ -41,24 +42,27 @@ MonthDay _cell(
   String Function(DateTime) dateText,
   String Function(DateTime, ({int done, int total})) label,
 ) {
-  final rows = byDay[day] ?? const <Occurrence>[];
-  final ahead = day.isAfter(today);
-  final oneOffs = [
-    for (final o in rows)
-      if (o.seriesId == null && o.status != OccurrenceStatus.skipped) o,
-  ];
+  final rows = [
+    for (final o in byDay[day] ?? const <Occurrence>[])
+      if (o.status != OccurrenceStatus.skipped) o,
+  ]..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
   return MonthDay(
     date: dateText(day),
     label: label(day, doneCounts(rows)),
     isPast: day.isBefore(today),
     isToday: day == today,
-    completion: ahead ? null : completionOf(rows, begun: true),
-    planned: ahead
-        ? [for (final o in oneOffs.take(3)) TaskColor.fromKey(o.colorKey)]
-        : const [],
-    repeatsOnly: ahead && oneOffs.isEmpty && rows.isNotEmpty,
+    dots: [
+      for (final o in rows.take(_dotsShown))
+        MonthDot(
+          TaskColor.fromKey(o.colorKey),
+          filled: o.status == OccurrenceStatus.done,
+        ),
+    ],
+    more: rows.length > _dotsShown ? rows.length - _dotsShown : 0,
   );
 }
+
+const _dotsShown = 3;
 
 /// The cells of [month] for the expanded Mac/web [MonthGrid] (E-R2-30,
 /// ED-333): each day's tasks in start order (done struck, ended ones "not

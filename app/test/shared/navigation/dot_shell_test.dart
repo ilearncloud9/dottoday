@@ -51,7 +51,7 @@ Future<void> _size(
 /// Labels of [within] in reading order: top to bottom, then start to end.
 List<String> _order(WidgetTester tester, Finder within) {
   final found = <(double, double, String)>[];
-  for (final label in ['Today', 'Inbox', 'Week', 'Search', 'Settings']) {
+  for (final label in ['Today', 'Inbox', 'Calendar', 'Search', 'Settings']) {
     final f = find.descendant(of: within, matching: find.text(label));
     if (!tester.any(f)) continue;
     final c = tester.getCenter(f.first);
@@ -64,7 +64,7 @@ List<String> _order(WidgetTester tester, Finder within) {
 }
 
 void main() {
-  testWidgets('iPhone compact: pill bar with 3 tabs and the add dot; '
+  testWidgets('iPhone compact: pill bar with 4 tabs and the add dot; '
       'Settings is behind the profile, not a tab (ED-238)', (tester) async {
     await _size(tester, 390);
     await tester.pumpWidget(_shell());
@@ -72,6 +72,7 @@ void main() {
     expect(_order(tester, find.byType(PillTabShell)), [
       'Today',
       'Inbox',
+      'Calendar',
       'Search',
     ]);
     expect(find.bySemanticsLabel('Add a task'), findsOneWidget);
@@ -83,7 +84,8 @@ void main() {
     await tester.pumpWidget(_shell());
     expect(find.byType(MaterialBarShell), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
-    expect(find.text('Week'), findsNothing);
+    // Today · Inbox · Calendar · Search (E-Phones, ED-075).
+    expect(find.text('Calendar'), findsOneWidget);
     final add = tester.getRect(find.byTooltip('Add a task'));
     final today = tester.getRect(find.text('Today'));
     expect(add.right, 412 - 16);
@@ -96,7 +98,7 @@ void main() {
     await _size(tester, 700);
     await tester.pumpWidget(_shell());
     expect(find.byType(DotRailShell), findsOneWidget);
-    expect(find.text('Week'), findsNothing);
+    expect(find.text('Calendar'), findsOneWidget);
     expect(find.byTooltip('Add a task'), findsOneWidget);
     await tester.tap(find.byTooltip('Menu'));
     await tester.pumpAndSettle();
@@ -121,6 +123,7 @@ void main() {
     expect(_order(tester, find.byType(Drawer)), [
       'Today',
       'Inbox',
+      'Calendar',
       'Search',
       'Settings',
     ]);
@@ -134,7 +137,7 @@ void main() {
     expect(_order(tester, find.byType(DotSidebar)), [
       'Today',
       'Inbox',
-      'Week',
+      'Calendar',
       'Search',
       'Settings',
     ]);
@@ -230,14 +233,21 @@ void main() {
     expect(taps, [3, 1]);
   });
 
-  testWidgets('Week selected at phone width lights no tab', (tester) async {
+  testWidgets('the Calendar selected at phone width lights its tab', (
+    tester,
+  ) async {
     await _size(tester, 390);
     final handle = tester.ensureSemantics();
     await tester.pumpWidget(_shell(selected: 2));
-    for (final l in ['Today', 'Inbox', 'Search']) {
+    for (final (l, on) in [
+      ('Today', false),
+      ('Inbox', false),
+      ('Calendar', true),
+      ('Search', false),
+    ]) {
       expect(
         tester.getSemantics(find.bySemanticsLabel(l)),
-        isSemantics(isSelected: false, isButton: true),
+        isSemantics(isSelected: on, isButton: true),
         reason: l,
       );
     }

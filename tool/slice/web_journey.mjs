@@ -14,7 +14,8 @@ const { chromium, webkit } = await import(
 
 const [baseUrl, width = 'expanded', engine = 'chromium'] = process.argv.slice(2);
 const sizes = { compact: { width: 390, height: 844 }, expanded: { width: 1280, height: 800 } };
-const out = new URL('../../app/build/slice/', import.meta.url).pathname;
+// SHOTS=<folder> saves under app/build/<folder>/ (the Calendar's, M20.1).
+const out = new URL(`../../app/build/${process.env.SHOTS ?? 'slice'}/`, import.meta.url).pathname;
 mkdirSync(out, { recursive: true });
 
 const browser = await (engine === 'webkit' ? webkit : chromium).launch({ headless: true });

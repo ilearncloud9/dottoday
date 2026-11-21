@@ -155,6 +155,9 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
     _branch(
       tab.path,
       _tabScreen(screens, tab),
+      // Full's Calendar tab opens Month (ED-075); Week is one tap on
+      // (ED-293) and the Workspace's own list.
+      initialLocation: tab == ShellTab.week ? AppRoutes.month : null,
       dated: switch (tab) {
         ShellTab.today => [
           GoRoute(
@@ -268,8 +271,10 @@ StatefulShellBranch _branch(
   WidgetBuilder builder, {
   List<GoRoute> dated = const [],
   List<RouteBase> children = const [],
+  String? initialLocation,
 }) {
   return StatefulShellBranch(
+    initialLocation: initialLocation,
     routes: [
       GoRoute(
         path: path,

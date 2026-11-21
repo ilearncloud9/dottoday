@@ -176,7 +176,8 @@ class _NavButton extends StatelessWidget {
 }
 
 /// This month: "October · 14 of 31 days planned" and a Today link.
-/// Another month: the planned / repeats legend and "10 days planned".
+/// Another month: "10 days planned" (the cells' dots need no legend:
+/// filled is done, a ring is not yet, ED-075).
 class _Footer extends StatelessWidget {
   const _Footer({
     required this.month,
@@ -202,11 +203,6 @@ class _Footer extends StatelessWidget {
     final days = DateTime(month.year, month.month + 1, 0).day;
     return Row(
       children: [
-        if (!current) ...[
-          _Legend(filled: true, label: l10n.monthLegendPlanned),
-          const SizedBox(width: DotSpace.m),
-          _Legend(filled: false, label: l10n.monthLegendRepeats),
-        ],
         Expanded(
           child: Text(
             current
@@ -233,46 +229,14 @@ class _Footer extends StatelessWidget {
   }
 }
 
-class _Legend extends StatelessWidget {
-  const _Legend({required this.filled, required this.label});
-
-  final bool filled;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: DotSpace.xs,
-      children: [
-        Container(
-          width: DotSize.weekDot,
-          height: DotSize.weekDot,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: filled ? t.colors.accent : null,
-            border: filled
-                ? null
-                : Border.all(
-                    color: t.colors.threadAhead,
-                    width: DotSpace.hairline * 1.5,
-                  ),
-          ),
-        ),
-        Text(label, style: t.styles.rowTitle.copyWith(color: t.colors.muted)),
-      ],
-    );
-  }
-}
-
 extension on MonthDay {
-  /// The cell without its completion dot and counts (minimal mode).
+  /// The cell without done and not done (minimal mode): every dot
+  /// plain.
   MonthDay get withoutCompletion => MonthDay(
     date: date,
     label: label,
-    planned: planned,
-    repeatsOnly: repeatsOnly,
+    dots: [for (final d in dots) MonthDot(d.color, filled: true)],
+    more: more,
     items: items,
     isPast: isPast,
     isToday: isToday,
@@ -283,9 +247,8 @@ extension on MonthDay {
   MonthDay marked(bool tinted, bool today) => MonthDay(
     date: date,
     label: label,
-    completion: completion,
-    planned: planned,
-    repeatsOnly: repeatsOnly,
+    dots: dots,
+    more: more,
     items: items,
     isPast: isPast,
     isToday: isToday,

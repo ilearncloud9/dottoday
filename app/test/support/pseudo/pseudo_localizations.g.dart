@@ -582,12 +582,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String monthDaysPlanned(int count) => pseudo(super.monthDaysPlanned(count));
 
   @override
-  String get monthLegendPlanned => pseudo(super.monthLegendPlanned);
-
-  @override
-  String get monthLegendRepeats => pseudo(super.monthLegendRepeats);
-
-  @override
   String monthNav(String previous, String current, String next) =>
       pseudo(super.monthNav(previous, current, next));
 
@@ -5996,6 +5990,20 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get settingsAndAccount => pseudo(super.settingsAndAccount);
+
+  @override
+  String get navCalendar => pseudo(super.navCalendar);
+
+  @override
+  String get calendarOpenDay => pseudo(super.calendarOpenDay);
+
+  @override
+  String calendarYearPlanned(String year, int count) =>
+      pseudo(super.calendarYearPlanned(year, count));
+
+  @override
+  String calendarMonthPlanned(int count) =>
+      pseudo(super.calendarMonthPlanned(count));
 
   @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);

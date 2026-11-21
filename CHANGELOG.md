@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Calendar is a tab on every shell, between Inbox and Search: the month with up to three task dots on each day (filled when done, then +n), swipe or the arrows for another month, and the picked day's tasks with Open day; on tablets in portrait, Month · Week at the top. Today's pull-down month and Go to date show the same dots. Past days' Year strip shows twelve month dots that fill with the days you planned, and a month's days below them, with Share image. iPhone and iPad segmented controls are taller to tap (redesign branch).
 - On phones the day thread's dots are larger again and each task's row is as tall as the task is long, as before the redesign; the task that's on now keeps its card with a larger dot (redesign branch).
 - The first redesigned slice (Today or Now, Add, move, done, change day, reopen) is checked on iPhone, Android, iPad and Android tablets, the Mac and the web in Full and Minimal, compared with the design boards and recorded in the platform quality matrix (redesign branch).
 - Minimal's Now shows a loading skeleton and a Try again when the day can't load; Go to date (⇧⌘T) works on Now; after a click, Move To… (⇧⌘M) moves the task in the inspector; Minimal Add keeps its Add button above the keyboard on Android tablets; at 200 % text Now's rows, the Plan panel, the iPad tabs and the day's horizon no longer overflow or overlap; the iPad tabs and the empty day's buttons are easier to tap (redesign branch).

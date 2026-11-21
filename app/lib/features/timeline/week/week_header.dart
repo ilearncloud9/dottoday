@@ -2,7 +2,9 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/scheduling/week_summary.dart';
+import 'package:dottoday/features/timeline/calendar/calendar_header.dart';
 import 'package:dottoday/features/timeline/widgets/day_titles.dart';
+import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/dot/week_summary_strip.dart';
@@ -16,9 +18,10 @@ const _left = '←'; // l10n-ignore: a key cap, not words
 const _t = 'T'; // l10n-ignore: a key cap, not words
 const _right = '→'; // l10n-ignore: a key cap, not words
 
-/// The Week board's header (`A-mac-week-alt3-board`): "This week", "18 –
-/// 24 October · 13 of 29 done · 36 h 15 planned", Week | Month, ‹ Today ›
-/// with their keys, the day dot, then the summary chips.
+/// The Week's header outside the Workspace, the Calendar tab at medium
+/// width (E-R2-12): Month · Week, "This week" over "18 – 24 October · 13
+/// of 29 done · 36 h 15 planned", Today ‹ ›, then the summary chips. In
+/// the Workspace, the chips alone.
 class WeekHeader extends StatelessWidget {
   const WeekHeader({
     required this.days,
@@ -54,47 +57,59 @@ class WeekHeader extends StatelessWidget {
         formatDurationShort(l10n, summary.plannedMinutes),
       ),
     );
-    final controls = PeriodControls(
-      week: true,
-      onSwitch: onMonth,
-      onPrevious: onPrevious,
-      onToday: onToday,
-      onNext: onNext,
-      today: thisWeek ? today : null,
-    );
     // In the Workspace its toolbar has the range, the views and ‹ Today ›:
     // the week keeps its cues (Busiest, Lightest, Free, Done).
     if (WorkspaceScope.of(context)) {
       return WeekSummaryStrip(chips: _chips(context));
     }
+    final controls = [
+      CalendarNav(
+        onToday: onToday,
+        onPrevious: onPrevious,
+        onNext: onNext,
+        previous: l10n.weekPrevious,
+        next: l10n.weekNext,
+      ),
+      const TodayTopActions(sync: true),
+    ];
+    // The Calendar tab's Week at medium width (E-R2-12, ED-293): Month ·
+    // Week as on its Month, the range and its numbers, Today ‹ ›, Sync,
+    // then the cues.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.m,
       children: [
-        // Side by side on a full window; the controls drop under the title
-        // when it is narrow (the Week route opens at any width).
-        LayoutBuilder(
-          builder: (context, box) => box.maxWidth >= _sideBySide
-              ? Row(
-                  spacing: DotSpace.m,
-                  children: [
-                    Expanded(child: title),
-                    controls,
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: DotSpace.m,
-                  children: [title, controls],
-                ),
+        // One height on every platform's control, so the grid starts at
+        // the same place on the Mac and the web.
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: DotTouch.android),
+          child: Center(
+            child: DotSegmented<bool>(
+              segments: [
+                (false, l10n.weekViewMonth),
+                (true, l10n.weekViewWeek),
+              ],
+              selected: true,
+              onChanged: (_) => onMonth(),
+            ),
+          ),
         ),
+        // Large text: the controls go under the title.
+        if (MediaQuery.textScalerOf(context).scale(1) > DotSize.stackAbove) ...[
+          title,
+          Row(children: [const Spacer(), ...controls]),
+        ] else
+          Row(
+            spacing: DotSpace.xs,
+            children: [
+              Expanded(child: title),
+              ...controls,
+            ],
+          ),
         WeekSummaryStrip(chips: _chips(context)),
       ],
     );
   }
-
-  /// Width from which title and controls share a row.
-  static const double _sideBySide = 960;
 
   /// "October 18 – 24", or "Oct 28 – Nov 3" across a month end.
   String _range(BuildContext context) {

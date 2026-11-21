@@ -6,19 +6,18 @@
 //   tool/device_tests.sh ios <udid> slice_journey      (DEVICE_SHOT)
 //   tool/device_tests.sh android <serial> slice_journey
 //   a real iPhone: flutter drive -d <udid> --driver=test_driver/screenshot_driver.dart \
-//     --target=integration_test/slice_journey_test.dart (shots in build/sweep)
+//     --target=integration_test/slice_journey_test.dart --dart-define=SELF_SHOTS=true
+//     (shots in build/sweep)
 //   SWEEP_TARGET=integration_test/slice_journey_test.dart tool/mac_sweep.sh
 //   flutter build web -t integration_test/slice_journey_test.dart \
 //     --dart-define=SWEEP_HOST_SHOTS=true, served, then
 //   node tool/slice/web_journey.mjs <url> <compact|expanded> <chromium|webkit>
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../test/acceptance/slice_journey.dart';
+import 'support/device_shot.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -32,38 +31,8 @@ void main() {
       await runSliceJourney(
         tester,
         minimal: minimal,
-        shot: (step) => _shot(binding, tester, 'slice_${layout}_$step'),
+        shot: (step) => deviceShot(binding, tester, 'slice_${layout}_$step'),
       );
     });
-  }
-}
-
-/// A browser driven by Playwright saves the web's shots
-/// (`tool/slice/web_journey.mjs`), with no chromedriver.
-const _hostShots = bool.fromEnvironment('SWEEP_HOST_SHOTS');
-
-/// The web saves its own shot; elsewhere the host captures it while the
-/// test holds still (iOS: `simctl io`, Android: `screencap`, the Mac:
-/// `screencapture`; integration_test can't capture there).
-Future<void> _shot(
-  IntegrationTestWidgetsFlutterBinding binding,
-  WidgetTester tester,
-  String name,
-) async {
-  // A real iPhone or iPad captures its own (the simulator's comes back
-  // blank, so the host takes those).
-  final iosDevice =
-      !kIsWeb &&
-      Platform.isIOS &&
-      !Platform.environment.containsKey('SIMULATOR_DEVICE_NAME');
-  if ((kIsWeb && !_hostShots) || iosDevice) {
-    await binding.takeScreenshot(name);
-    return;
-  }
-  debugPrint(
-    kIsWeb || Platform.isMacOS ? 'SWEEP_SHOT $name' : 'DEVICE_SHOT $name',
-  );
-  for (var i = 0; i < 40; i++) {
-    await tester.pump(const Duration(milliseconds: 100));
   }
 }

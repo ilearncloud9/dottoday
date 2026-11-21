@@ -727,12 +727,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get monthLegendPlanned => 'planned';
-
-  @override
-  String get monthLegendRepeats => 'repeats';
-
-  @override
   String monthNav(String previous, String current, String next) {
     return '$previous · $current · $next';
   }
@@ -7498,6 +7492,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAndAccount => 'Settings and account';
+
+  @override
+  String get navCalendar => 'Calendar';
+
+  @override
+  String get calendarOpenDay => 'Open day';
+
+  @override
+  String calendarYearPlanned(String year, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$year · $count planned',
+      one: '$year · 1 planned',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String calendarMonthPlanned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count planned this month',
+      one: '1 planned this month',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

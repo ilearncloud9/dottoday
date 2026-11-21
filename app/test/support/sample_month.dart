@@ -1,6 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/month_grid.dart';
-import 'package:dottoday/shared/dot/week_strip.dart';
 
 const _names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -34,10 +33,11 @@ MonthDay _day(int d, int today, bool future) {
     return MonthDay(
       date: '$d',
       label: 'Day $d',
-      planned: [
-        for (var i = 0; i < d % 4; i++) colors[(d + i) % colors.length],
+      dots: [
+        for (var i = 0; i < d % 4; i++)
+          MonthDot(colors[(d + i) % colors.length]),
       ],
-      repeatsOnly: d % 4 == 0 && d.isOdd,
+      more: d % 7 == 0 ? 2 : 0,
     );
   }
   final past = d < today;
@@ -51,9 +51,11 @@ MonthDay _day(int d, int today, bool future) {
     isLight: !past && total == 2,
     done: done,
     total: total,
-    completion: past || d == today
-        ? Completion.of(done / total)
-        : const Completion.none(),
+    dots: [
+      for (var i = 0; i < total && i < 3; i++)
+        MonthDot(colors[(d + i * 2) % colors.length], filled: i < done),
+    ],
+    more: total > 3 ? total - 3 : 0,
     items: [
       for (var i = 0; i < total; i++)
         MonthItem(
