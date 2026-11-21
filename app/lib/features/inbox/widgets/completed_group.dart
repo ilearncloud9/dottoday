@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// "✓ Completed · 12", folded until tapped (`A-ios-inbox`); open, each
+/// "Completed · 12", folded until tapped (E-R2-13); open, each
 /// done item with its done dot and day, a button to put it back, and
 /// "Clear completed" to Trash them all (10 §5.3 "Completed group
 /// expanded", docs/09 M3f.6). Both confirm with Undo.
@@ -33,7 +33,6 @@ class CompletedGroup extends StatelessWidget {
         key: const PageStorageKey('inbox-completed'), // l10n-ignore: a key
         tilePadding: EdgeInsets.zero,
         childrenPadding: EdgeInsets.zero,
-        leading: const _DoneDot(),
         title: Text(
           context.l10n.inboxCompleted(items.length),
           style: t.styles.cardTitle.copyWith(color: c.muted),
@@ -49,28 +48,6 @@ class CompletedGroup extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// A filled check: the done state, as on the thread.
-class _DoneDot extends StatelessWidget {
-  const _DoneDot();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: c.threadAhead),
-      child: Padding(
-        padding: const EdgeInsets.all(DotSpace.xxs),
-        child: DotIcon(
-          DotGlyphs.check,
-          color: c.raised,
-          size: DotSize.rowIcon - DotSpace.xs,
-          active: true,
-        ),
       ),
     );
   }

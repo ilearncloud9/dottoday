@@ -3,7 +3,6 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/inbox/widgets/completed_group.dart';
 import 'package:dottoday/features/inbox/widgets/drop_today_panel.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_routines_button.dart';
 import 'package:dottoday/features/inbox/widgets/swipe_hint.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +12,10 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/inbox_harness.dart';
 
 // docs/14 §3 `inboxExtras` (Hidden in minimal): the Inbox shows the list,
-// the next free slot, swipe and Place only, at every width; full keeps
-// filters, Routines, the swipe hint, Completed and, expanded, the wide
-// Inbox with Drop onto today and Auto-plan the week.
+// the next free slot, swipe and each row's Place only, at every width
+// (ED-333); full keeps the filters with Sort, the swipe hint, Completed,
+// Auto-plan the week and, expanded, the wide Inbox with Drop onto today
+// (E-R2-13).
 
 const _widths = {
   'compact': Size(390, 1400),
@@ -44,7 +44,7 @@ void main() {
       expect(find.text('Drop onto today'), findsNothing);
       expect(find.textContaining('Auto-plan the week'), findsNothing);
       expect(find.byType(InboxFilters), findsNothing);
-      expect(find.byType(InboxRoutinesButton), findsNothing);
+      expect(find.text('Sort: added'), findsNothing);
       expect(find.byType(InboxSwipeHint), findsNothing);
       expect(find.byType(CompletedGroup), findsNothing);
       expect(find.text('Go for a run'), findsOneWidget);
@@ -52,8 +52,8 @@ void main() {
         find.text('Next free slot today: 11:15 AM – 11:30 AM · fits Call Mum'),
         findsOneWidget,
       );
-      expect(find.widgetWithText(FilledButton, 'Place'), findsOneWidget);
-      expect(find.bySemanticsLabel('5 tasks in the Inbox'), findsOneWidget);
+      // Every open row has its own Place.
+      expect(find.widgetWithText(FilledButton, 'Place'), findsNWidgets(5));
       handle.dispose();
     });
 
@@ -66,16 +66,12 @@ void main() {
         find.text('Drop onto today'),
         wide ? findsOneWidget : findsNothing,
       );
-      expect(
-        find.textContaining('Auto-plan the week'),
-        wide ? findsOneWidget : findsNothing,
-      );
+      expect(find.textContaining('Auto-plan the week'), findsOneWidget);
       expect(find.byType(InboxFilters), findsOneWidget);
-      expect(find.byType(InboxRoutinesButton), findsOneWidget);
+      expect(find.text('Sort: added'), findsOneWidget);
       expect(find.byType(CompletedGroup), findsOneWidget);
       // The wide rows don't swipe, so only the narrow list has the hint.
       expect(find.byType(InboxSwipeHint), wide ? findsNothing : findsOneWidget);
-      expect(find.bySemanticsLabel('5 tasks in the Inbox'), findsOneWidget);
       handle.dispose();
     });
   }

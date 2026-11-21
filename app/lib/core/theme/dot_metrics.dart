@@ -398,6 +398,9 @@ abstract final class DotSize {
 
   static const double rowDot = 36;
 
+  /// An Inbox row's least height (E-R2-13: 64).
+  static const double inboxRowMin = 64;
+
   /// A task's dot on the phone day thread: ahead, calendar and concurrent
   /// now (Concept E §5.1); a done dot is [threadDoneDot].
   static const double threadDot = 34;

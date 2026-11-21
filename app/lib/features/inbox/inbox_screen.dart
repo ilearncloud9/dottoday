@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/clock/minute_tick.dart';
-import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -11,37 +8,28 @@ import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/day_room_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
-import 'package:dottoday/features/inbox/widgets/completed_group.dart';
 import 'package:dottoday/features/inbox/widgets/drop_today_panel.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_body.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_header.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_selection_bar.dart';
-import 'package:dottoday/features/inbox/widgets/one_thing_meta.dart';
-import 'package:dottoday/features/inbox/widgets/swipe_hint.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_task_row.dart';
 import 'package:dottoday/features/inbox/widgets/wide_inbox.dart';
-import 'package:dottoday/shared/dot/inbox_row.dart';
-import 'package:dottoday/shared/dot/next_free_slot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
-import 'package:dottoday/shared/states/state_message.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// The Inbox (docs/10 §5.2 I1, `A-ios-inbox`): what has no time yet, a
-/// quick-add field, filters, the next free slot that fits something, and
-/// what is already done. Minimal (docs/14 §3 `inboxExtras` Hidden) draws
+/// The Inbox (E-R2-13, ED-295): what has no time yet, a quick-add field,
+/// filters and Sort, the next free slot, each task with where it fits and
+/// Place, and what is already done. Minimal (docs/14 §3 `inboxExtras` Hidden) draws
 /// the list with the next free slot, swipe and Place only, at every width.
 class InboxScreen extends ConsumerWidget {
   const InboxScreen({super.key});
@@ -84,20 +72,29 @@ class InboxScreen extends ConsumerWidget {
           context.l10n.threadTimeRange(time(s.startUtc), time(s.endUtc)),
     );
     final extras = watchOnScreen(ref, FeatureId.inboxExtras);
+    final rooms = ref.watch(inboxWeekRoomsProvider(today)).value;
+    final rows = InboxRowContext(
+      commands: commands,
+      fits: InboxFitText(
+        context,
+        today: today,
+        timeText: time,
+        rangeText: commands.rangeText,
+      ),
+      zone: zone,
+      weekKnown: rooms != null,
+      oneThingId: ref.watch(todayOneThingIdProvider),
+    );
     final narrow = Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: _maxWidth),
-        child: _Body(
+        child: InboxBody(
           items: items,
           room: room,
+          rooms: rooms,
           extras: extras,
-          // No filter chips in minimal, so no stored filter hides a row.
-          filter: extras
-              ? ref.watch(inboxFilterChoiceProvider)
-              : InboxFilter.all,
-          commands: commands,
-          oneThingId: ref.watch(todayOneThingIdProvider),
+          rows: rows,
         ),
       ),
     );
@@ -116,39 +113,32 @@ class InboxScreen extends ConsumerWidget {
               extras &&
                   AppLayout.classOf(context, width: box.maxWidth) ==
                       WidthClass.expanded
-              ? _wide(context, ref, items, today, zone, time, commands)
+              ? _wide(context, ref, items, rooms, zone, time, rows)
               : narrow,
         ),
       ),
     );
   }
 
-  /// Mac/web (M3e.2): the list with fits beside "Drop onto today".
+  /// Mac/web and expanded tablets (M3e.2, E-R2-13): the list with fits
+  /// beside "Drop onto today".
   Widget _wide(
     BuildContext context,
     WidgetRef ref,
     List<Occurrence> items,
-    DateTime today,
+    List<DayRoom>? rooms,
     tz.Location zone,
     String Function(DateTime utc) time,
-    InboxCommands commands,
+    InboxRowContext rows,
   ) {
     final l10n = context.l10n;
-    final rooms = ref.watch(inboxWeekRoomsProvider(today)).value;
     final now =
         ref.watch(minuteTickProvider).value ??
         ref.watch(clockProvider).nowUtc();
     return WideInbox(
       items: items,
       rooms: rooms,
-      zone: zone,
-      commands: commands,
-      fits: InboxFitText(
-        context,
-        today: today,
-        timeText: time,
-        rangeText: commands.rangeText,
-      ),
+      rows: rows,
       panel: (shown) => rooms == null
           ? const SizedBox.shrink()
           : DropTodayPanel(
@@ -156,7 +146,7 @@ class InboxScreen extends ConsumerWidget {
               items: shown,
               zone: zone,
               nowUtc: now,
-              commands: commands,
+              commands: rows.commands,
               format: ThreadFormat(
                 time: time,
                 range: l10n.threadTimeRange,
@@ -165,132 +155,4 @@ class InboxScreen extends ConsumerWidget {
             ),
     );
   }
-}
-
-class _Body extends StatelessWidget {
-  const _Body({
-    required this.items,
-    required this.room,
-    required this.extras,
-    required this.filter,
-    required this.commands,
-    this.oneThingId,
-  });
-
-  /// Today's one thing (docs/15 §8), ringed when it is in the Inbox.
-  final String? oneThingId;
-
-  final List<Occurrence> items;
-  final DayRoom? room;
-
-  /// Filters, Routines, swipe hint and Completed (docs/14 §3).
-  final bool extras;
-  final InboxFilter filter;
-  final InboxCommands commands;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final work = inboxWork(items);
-    final shown = filtered(items, filter, room);
-    final next = room == null ? null : nextFreeSlot(items, room!);
-    final done = [
-      for (final o in items)
-        if (o.status == OccurrenceStatus.done) o,
-    ];
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        DotSpace.page,
-        DotSpace.xl,
-        DotSpace.page,
-        DotSpace.xxl,
-      ),
-      children: [
-        InboxHeader(count: work.count, minutes: work.minutes, routines: extras),
-        const SizedBox(height: DotSpace.l),
-        InboxAddField(onSubmit: commands.add),
-        const SizedBox(height: DotSpace.m),
-        if (extras) ...[
-          const InboxFilters(),
-          const SizedBox(height: DotSpace.m),
-        ],
-        // The state kit's empty Inbox (E-G4-7-States A5); a filter that
-        // shows nothing keeps its one quiet line.
-        if (work.count == 0)
-          StateMessage(
-            glyph: DotGlyphs.inbox,
-            title: l10n.inboxEmpty,
-            body: l10n.inboxEmptyBody,
-          )
-        else if (shown.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: DotSpace.xl),
-            child: Text(
-              l10n.inboxNoMatch,
-              style: t.styles.body.copyWith(color: t.colors.muted),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        InboxList(
-          shown: shown,
-          // The user's own order: the stored one, unfiltered (M3f.9c).
-          canReorder: filter == InboxFilter.all,
-          commands: commands,
-          row: (o, s) => InboxRow(
-            title: o.title,
-            meta: inboxMetaWithOneThing(
-              l10n,
-              formatDurationShort(l10n, o.durationMin),
-              oneThing: o.id == oneThingId,
-            ),
-            oneThing: o.id == oneThingId,
-            color: TaskColor.fromKey(o.colorKey),
-            icon: TaskIcon.fromKey(o.iconKey),
-            onSchedule: () => unawaited(commands.schedule(o)),
-            onTrash: () => unawaited(commands.trash(o)),
-            onOpen: s.selected == null
-                ? () => openTask(context, o.id)
-                : s.toggle,
-            selected: s.selected,
-            onSelect: s.toggle,
-            reorderIndex: s.reorderIndex,
-            onMoveUp: s.moveUp,
-            onMoveDown: s.moveDown,
-          ),
-          after: (i) => i == 0 && extras
-              ? const InboxSwipeHint()
-              : const SizedBox(height: DotSpace.s),
-        ),
-        if (next != null) ...[
-          const SizedBox(height: DotSpace.s),
-          NextFreeSlot(
-            text: l10n.inboxNextSlot(
-              commands.rangeText(next.slot),
-              next.item.title,
-            ),
-            placeLabel: l10n.inboxPlace,
-            onPlace: () => unawaited(
-              commands.place(next.item, (
-                slot: next.slot,
-                label: l10n.inboxScheduleToday(commands.rangeText(next.slot)),
-              )),
-            ),
-          ),
-        ],
-        if (extras) ..._completed(done),
-      ],
-    );
-  }
-
-  List<Widget> _completed(List<Occurrence> done) => [
-    if (done.isNotEmpty) ...[
-      const SizedBox(height: DotSpace.l),
-      CompletedGroup(
-        items: done,
-        onNotDone: (o) => unawaited(commands.notDone(o)),
-        onClear: () => unawaited(commands.clearDone(done)),
-      ),
-    ],
-  ];
 }

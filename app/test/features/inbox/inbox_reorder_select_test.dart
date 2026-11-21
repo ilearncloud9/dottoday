@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +31,7 @@ void main() {
     final repo = await pumpInbox(tester);
     expect(_stored(repo).take(2), ['Go for a run', 'Call Mum']);
     tester.semantics.performAction(
-      find.semantics.byLabel('Go for a run, 1 h'),
+      find.semantics.byLabel(RegExp('^Go for a run, 1 h')),
       SemanticsAction.customAction,
       args: CustomSemanticsAction.getIdentifier(
         const CustomSemanticsAction(label: 'Move down'),
@@ -42,11 +43,13 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('dragging the handle reorders', (tester) async {
+  testWidgets('holding a row and moving it reorders (M20.2)', (tester) async {
     final repo = await pumpInbox(tester);
-    final handle = find.bySemanticsLabel('Reorder Go for a run');
-    final g = await tester.startGesture(tester.getCenter(handle));
-    await tester.pump(const Duration(milliseconds: 50));
+    final g = await tester.startGesture(
+      tester.getCenter(find.text('Go for a run')),
+    );
+    // The list's own delay before the lift.
+    await tester.pump(kLongPressTimeout + const Duration(milliseconds: 50));
     for (var i = 0; i < 10; i++) {
       await g.moveBy(const Offset(0, 20));
       await tester.pump();
@@ -54,14 +57,30 @@ void main() {
     await g.up();
     await tester.pumpAndSettle();
     expect(_stored(repo).indexOf('Go for a run'), greaterThan(0));
+    expect(find.text('Select'), findsNothing, reason: 'a move opens no menu');
   });
 
-  testWidgets('no handles while a filter is on', (tester) async {
+  testWidgets('a hold without moving opens the menu, with Move down', (
+    tester,
+  ) async {
     await pumpInbox(tester);
-    expect(find.bySemanticsLabel(RegExp('^Reorder ')), findsWidgets);
+    await tester.longPress(find.text('Go for a run'));
+    await tester.pumpAndSettle();
+    expect(find.text('Move down'), findsOneWidget);
+    expect(find.text('Select'), findsOneWidget);
+  });
+
+  testWidgets('no reordering while a filter is on', (tester) async {
+    await pumpInbox(tester);
+    await tester.ensureVisible(find.text('Under 30 min'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Under 30 min'));
     await tester.pumpAndSettle();
-    expect(find.bySemanticsLabel(RegExp('^Reorder ')), findsNothing);
+    await tester.longPress(find.text('Call Mum'));
+    await tester.pumpAndSettle();
+    expect(find.text('Select'), findsOneWidget);
+    expect(find.text('Move down'), findsNothing);
+    expect(find.text('Move up'), findsNothing);
   });
 
   Future<FakeOccurrenceRepository> pickTwo(WidgetTester tester) async {
@@ -74,7 +93,6 @@ void main() {
     await tester.tap(find.text('Call Mum'));
     await tester.pumpAndSettle();
     expect(find.text('2 selected'), findsOneWidget);
-    expect(find.bySemanticsLabel(RegExp('^Reorder ')), findsNothing);
     return repo;
   }
 

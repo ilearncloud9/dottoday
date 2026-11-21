@@ -5420,6 +5420,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departs from:** iOS segmented controls are 48 tall on touch app-wide (were 28; the touch-target check failed on Month · Week), so Brain dump, Plan / Reality, the routine editor and Create task's tabs grow too.
 - **Checks:** analyze and format clean; 7,556 pass, 31 skipped; 302 goldens re-baselined, each traced to the items above; `calendar_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators (portrait), Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices, landscape iPad.
 
+### ED-421 · M20.2 part 1: the Inbox on every platform
+- **Date:** 2026-11-22. **Owner:** "Start M20.2"; "Three parts", "Menu commands", "Sims + this Mac"; for the Inbox "Hold and drag" (reordering without a handle) and "Keep Under 30 min"; "Yes, clear it" (the main checkout's 17 GB `build`); then "Approve part 1" after the review page.
+- **Built (E-R2-13, ED-295; Minimal on wide E-R2-30, ED-333):** "Inbox" over the summary, Add, the filters with "Sort: added" at the end of their line, "Next free slot today: …" as a tinted line, then rows with the task dot, title, "15 min · added today", where it fits ("Fits today 11:00 AM", from the week's free time at every width) and Place (puts it there with Undo; Schedule when nothing fits this week), Completed and Auto-plan the week (now on phones; ⇧⌘P on the Mac and web). Wide: the list beside Drop onto today, rows at pointer sizes on the Mac and web.
+- **Order (owner):** a hold lifts the row into the list's reorder; a hold released without moving opens the menu, which gains Move up and Move down (a touch hold on the wide Inbox opens it too, where a drag goes to the day, so the order changes from the menu there). Under a filter or another Sort, nothing reorders.
+- **Minimal:** the next free slot, swipe and each row's Place only, at every width; closes the ED-333 code gap.
+- **Departs from the board:** Under 30 min kept (owner), so on phones the filters scroll sideways and Sort stays on their line (under them at large text); dots keep their icons (E rules §4.4); chips keep M18.4's selected look; Android's first-row swipe hint stays (R2-25).
+- **Removed:** the count ring and "Drop a routine…" from the Inbox (Routines stays in Settings › Planning and Add; strings `inboxRingLabel`, `routineDropHere` deleted), `WideInboxHeader`, the drag handle and the round "+", the dashed next-free-slot card's own Place.
+- **Checks:** analyze and format clean; 7,565 pass, 31 skipped; the Inbox goldens updated, no other golden moved; `integration_test/inbox_test.dart` passed on the iPhone and iPad simulators, the Android phone (portrait) and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices, Android tablet portrait.
+
 ---
 
 ## Pending owner answers

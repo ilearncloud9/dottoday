@@ -1150,18 +1150,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String inboxRingLabel(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count tasks in the Inbox',
-      one: '1 task in the Inbox',
-      zero: 'Inbox empty',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get inboxAddHint => 'Call Mum tomorrow 3pm 20m';
 
   @override
@@ -5631,9 +5619,6 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String get routineDropHere => 'Drop a routine…';
 
   @override
   String routineDropOnDay(String day) {

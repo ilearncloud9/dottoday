@@ -887,9 +887,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.inboxSummary(count, work));
 
   @override
-  String inboxRingLabel(int count) => pseudo(super.inboxRingLabel(count));
-
-  @override
   String get inboxAddHint => pseudo(super.inboxAddHint);
 
   @override
@@ -4493,9 +4490,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String routinesCount(int count) => pseudo(super.routinesCount(count));
-
-  @override
-  String get routineDropHere => pseudo(super.routineDropHere);
 
   @override
   String routineDropOnDay(String day) => pseudo(super.routineDropOnDay(day));

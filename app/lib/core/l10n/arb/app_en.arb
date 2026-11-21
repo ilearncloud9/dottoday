@@ -1710,15 +1710,6 @@
       }
     }
   },
-  "inboxRingLabel": "{count, plural, =0{Inbox empty} =1{1 task in the Inbox} other{{count} tasks in the Inbox}}",
-  "@inboxRingLabel": {
-    "description": "Screen-reader label of the dotted ring with the count.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "inboxAddHint": "Call Mum tomorrow 3pm 20m",
   "@inboxAddHint": {
     "description": "Quick-add field hint in the Inbox: an example of what it understands (R-06)."
@@ -6945,8 +6936,6 @@
   "@routineInvalid": {"description": "Editor: why Save is off."},
   "routinesCount": "{count, plural, =0{No routines} =1{1 routine} other{{count} routines}}",
   "@routinesCount": {"description": "Routines page ring, read out.", "placeholders": {"count": {"type": "int"}}},
-  "routineDropHere": "Drop a routine…",
-  "@routineDropHere": {"description": "Week strip day menu and Inbox: pick a routine to propose on that day."},
   "routineDropOnDay": "Drop on {day}",
   "@routineDropOnDay": {"description": "Routine card button for a day other than today.", "placeholders": {"day": {"type": "String", "example": "Thu, Oct 22"}}},
   "routineDropDay": "Which day",

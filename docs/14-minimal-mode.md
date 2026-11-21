@@ -119,7 +119,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Past days + Year strip (where D3 lives in code) | M12.3 | Hidden | Under Search, as D3 |
 | Navigation bar / rail (bold icons, ADR-0015 amendment) | M3a | Simplified | Compact: no tab bar, one floating Add. Medium/expanded: the rail keeps Today and Settings; Inbox is the Later row |
 | Mac/web spread with its greeting title, Inbox sidebar, `TaskEditor` panel | M3e, ADR-0015 amendment | Simplified | Expanded minimal shows Today alone with the phone's one-line date header (no spread, no greeting, no sidebar); the editor panel opens in its minimal form; keyboard shortcuts unchanged |
-| Inbox page extras: filters, completed group, Routines button, swipe hint, Drop on today panel | M3b–M11.4 | Hidden | The Later row opens the Inbox list with Next free slot, swipe and Place only |
+| Inbox page extras: filters and Sort, completed group, Auto-plan the week, swipe hint, Drop on today panel (E-R2-13; Routines left the Inbox in M20.2, reached from Settings › Planning and Add) | M3b–M11.4 | Hidden | The Later row opens the Inbox list with Next free slot, swipe and Place only |
 | Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line | M3b–M15 | Hidden | Under the sheet's More, in today's sheet layout |
 | Task icon library picker | ADR-0013 | Hidden | Under the sheet's More with colour; Add uses the default dot |
 | Sounds page, task Sound row, Start and Done sounds | M15 | Hidden | Sounds play exactly as set (defaults for new users); pickers under Everything else |

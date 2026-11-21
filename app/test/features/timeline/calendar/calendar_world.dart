@@ -95,6 +95,7 @@ Future<GoRouter> pumpCalendar(
   ThemeMode mode = ThemeMode.light,
   List<Occurrence>? rows,
   double text = 1,
+  UiLayout layout = UiLayout.full,
 }) async {
   if (size != null) {
     tester.view
@@ -119,7 +120,9 @@ Future<GoRouter> pumpCalendar(
           occurrences: FakeOccurrenceRepository(
             rows ?? [...calendarMonth(), ...pastYear()],
           ),
-          profile: testProfile(settings: const Settings(use24h: false)),
+          profile: testProfile(
+            settings: Settings(use24h: false, uiLayout: layout),
+          ),
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
       ],

@@ -1334,3 +1334,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-418:** M19.7 part 7b: the sweep beside the boards, the quality matrix and the acceptance page, with the journey on the owner's iPhone; M19 closed. Approved.
 - **2026-11-21, ED-419:** Phones' day thread: 52 dots (50 done) and caps, the now card's dot 52, rows as long as their task; column, gap, knot and wider windows unchanged. Approved.
 - **2026-11-21, ED-420:** M20.1 Calendar: the Calendar tab on every shell, Month with the picked day, Month · Week at medium, shared month dots, Year strip option B; iOS segmented controls 48 on touch. Approved.
+- **2026-11-22, ED-421:** M20.2 part 1: the Inbox on every platform (E-R2-13): fits and Place on each row, next free slot on top, Sort beside the filters, Auto-plan at the end, hold and move to reorder; Minimal with Place at every width. Approved.

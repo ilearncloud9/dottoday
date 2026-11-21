@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/inbox/state/inbox_selection.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,8 +22,8 @@ typedef InboxRowState = ({
   VoidCallback? moveDown,
 });
 
-/// The Inbox's open rows: in the user's own order by drag (or Move up /
-/// down) when [canReorder] and nobody is picking; a tap picks while
+/// The Inbox's open rows: in the user's own order by a hold and drag (or
+/// Move up / down) when [canReorder] and nobody is picking; a tap picks while
 /// selecting. [row] draws a row; [after] goes under row i (the swipe
 /// hint, spacing).
 class InboxList extends ConsumerWidget {
@@ -78,6 +79,8 @@ class InboxList extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       buildDefaultDragHandles: false,
       onReorderItem: move,
+      // The lift (R2-25: the same tick as a task picked up).
+      onReorderStart: (_) => AppHaptics.play(context, HapticTick.selection),
       children: children,
     );
   }

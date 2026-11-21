@@ -34,7 +34,10 @@ void main() {
     widths: const {'compact'},
     overrides: _overrides(sampleInbox()),
     act: (tester) async {
-      await tester.tap(find.byTooltip('Schedule').at(1));
+      // The row's menu (E-R2-13 rows have Place, not "+").
+      await tester.longPress(find.text('Call Mum'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Schedule').last);
     },
     build: (_) => const InboxScreen(),
   );

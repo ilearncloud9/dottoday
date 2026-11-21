@@ -1740,12 +1740,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 unscheduled} other{{count} unscheduled}} · {work} of work'**
   String inboxSummary(int count, String work);
 
-  /// Screen-reader label of the dotted ring with the count.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{Inbox empty} =1{1 task in the Inbox} other{{count} tasks in the Inbox}}'**
-  String inboxRingLabel(int count);
-
   /// Quick-add field hint in the Inbox: an example of what it understands (R-06).
   ///
   /// In en, this message translates to:
@@ -8561,12 +8555,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No routines} =1{1 routine} other{{count} routines}}'**
   String routinesCount(int count);
-
-  /// Week strip day menu and Inbox: pick a routine to propose on that day.
-  ///
-  /// In en, this message translates to:
-  /// **'Drop a routine…'**
-  String get routineDropHere;
 
   /// Routine card button for a day other than today.
   ///

@@ -1,5 +1,6 @@
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/shared/dot/inbox_row.dart';
 import 'package:dottoday/shared/pickers/when/day_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -29,6 +30,21 @@ Finder _placeFor(String label) => find.descendant(
   matching: find.text('Place'),
 );
 
+/// A row's Place, by its title.
+Finder _rowPlace(String title) => find.descendant(
+  of: find.ancestor(of: find.text(title), matching: find.byType(InboxRow)),
+  matching: find.widgetWithText(FilledButton, 'Place'),
+);
+
+/// Opens Schedule for [title] from its long-press menu (E-R2-13 rows have
+/// Place, not "+").
+Future<void> _schedule(WidgetTester tester, String title) async {
+  await tester.longPress(find.text(title));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Schedule').last);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
@@ -39,7 +55,6 @@ void main() {
     await _pump(tester);
     expect(find.text('Inbox'), findsOneWidget);
     expect(find.text('5 unscheduled · 5 h 30 of work'), findsOneWidget);
-    expect(find.bySemanticsLabel('5 tasks in the Inbox'), findsOneWidget);
     expect(find.text('Go for a run'), findsOneWidget);
     expect(
       find.text('Next free slot today: 11:15 AM – 11:30 AM · fits Call Mum'),
@@ -82,10 +97,14 @@ void main() {
 
   testWidgets('filters: Under 30 min, Fits today', (tester) async {
     await _pump(tester);
+    await tester.ensureVisible(find.text('Under 30 min'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Under 30 min'));
     await tester.pumpAndSettle();
     expect(find.text('Call Mum'), findsOneWidget);
     expect(find.text('Go for a run'), findsNothing);
+    await tester.ensureVisible(find.text('Fits today'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Fits today'));
     await tester.pumpAndSettle();
     // No two free hours are left today; 90 minutes still fit.
@@ -137,12 +156,11 @@ void main() {
     );
   });
 
-  testWidgets('+ offers free slots; picking one schedules it, with Undo', (
+  testWidgets('Schedule offers free slots; picking one schedules, with Undo', (
     tester,
   ) async {
     final repo = await _pump(tester);
-    await tester.tap(find.byTooltip('Schedule').at(1)); // Call Mum
-    await tester.pumpAndSettle();
+    await _schedule(tester, 'Call Mum');
     expect(find.text('Schedule Call Mum'), findsOneWidget);
     // The When picker (ED-099): a free time's Place.
     await tester.tap(_placeFor('Tomorrow, '));
@@ -160,8 +178,7 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     final repo = await _pump(tester);
-    await tester.tap(find.byTooltip('Schedule').at(1)); // Call Mum, 15 min
-    await tester.pumpAndSettle();
+    await _schedule(tester, 'Call Mum'); // 15 min
     // Today's first free 15 minutes after 11:00: 11:15, after Design review.
     expect(find.text('11:15 AM – 11:30 AM · free'), findsOneWidget);
     await tester.tap(find.text('Tomorrow').last);
@@ -196,19 +213,17 @@ void main() {
     ]) {
       testWidgets('When picker a11y ${mode.name} $name', (tester) async {
         await _pump(tester, mode: mode, size: size);
-        await tester.tap(find.byTooltip('Schedule').at(1));
-        await tester.pumpAndSettle();
+        await _schedule(tester, 'Call Mum');
         expect(find.byType(DayBar), findsOneWidget);
         await expectA11yGuidelines(tester);
       });
     }
   }
 
-  testWidgets('Place puts the fitting task in the next free slot', (
-    tester,
-  ) async {
+  testWidgets("a row's Place puts it where it first fits", (tester) async {
     final repo = await _pump(tester);
-    await tester.tap(find.text('Place'));
+    expect(find.text('Fits today 11:15 AM'), findsWidgets);
+    await tester.tap(_rowPlace('Call Mum'));
     await tester.pumpAndSettle();
     final placed = repo.rows.where(
       (o) => sampleInbox().any((s) => s.id == o.id) && o.startUtc != null,
@@ -235,7 +250,7 @@ void main() {
     final handle = tester.ensureSemantics();
     final repo = await _pump(tester);
     tester.semantics.performAction(
-      find.semantics.byLabel('Do taxes, 1 h 30'),
+      find.semantics.byLabel(RegExp('^Do taxes, 1 h 30')),
       SemanticsAction.customAction,
       args: CustomSemanticsAction.getIdentifier(
         const CustomSemanticsAction(label: 'Move to Trash'),

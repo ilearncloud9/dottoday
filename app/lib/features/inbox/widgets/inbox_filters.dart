@@ -3,11 +3,46 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_sort.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// All / Under 30 min / Fits today (`A-android-inbox`; all platforms,
-/// the doc wins over `A-ios-inbox`, which has none).
+/// The filters, then "Sort: added" at the row's end (E-R2-13). The
+/// filters scroll sideways when they need the room, so Sort stays on
+/// their line; with large text Sort goes under them.
+class InboxFilterRow extends StatelessWidget {
+  const InboxFilterRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const chips = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: InboxFilters(),
+    );
+    if (MediaQuery.textScalerOf(context).scale(1) > DotSize.stackAbove) {
+      return const Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          chips,
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: InboxSortButton(),
+          ),
+        ],
+      );
+    }
+    return const Row(
+      spacing: DotSpace.s,
+      children: [
+        Expanded(child: chips),
+        InboxSortButton(),
+      ],
+    );
+  }
+}
+
+/// All / Under 30 min / Fits today (`A-android-inbox`; E-R2-13 draws All
+/// and Fits today, and the owner kept Under 30 min, M20.2 part 1).
 class InboxFilters extends ConsumerWidget {
   const InboxFilters({super.key});
 

@@ -757,6 +757,8 @@ Rules for every task in M18 to M22:
   - Month and Week on wide screens and tablets (R2-12, ED-293);
   - Past days and the Year strip option B, which needs `year_strip.dart` (R2-34, ED-339, ED-348; Mac and web R2-42, ED-349).
 - [ ] M20.2 Inbox and Search on every platform (R2-13, ED-295):
+  Split by the owner (2026-11-21) into three parts, each with its own review page and commit: Inbox, Search, Search or run.
+  - [x] Part 1 done 2026-11-22 (ED-421): the Inbox on every platform (E-R2-13): rows with where each fits and Place, the next free slot on top, Sort on the filter line, Completed and Auto-plan the week at the end, hold and move to reorder (the menu adds Move up / Move down), Minimal's Inbox at every width with Place on each row (ED-333). Open: real devices, Android tablet portrait.
   - Search or run on Mac and web (R2-30, ED-333);
   - the minimal Inbox at wide widths follows docs/14 §3 (ED-333).
 - [ ] M20.3 Day menu and planning:

@@ -5,7 +5,6 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -13,32 +12,28 @@ import 'package:dottoday/domain/scheduling/week_plan.dart';
 import 'package:dottoday/features/inbox/state/inbox_state.dart';
 import 'package:dottoday/features/inbox/widgets/completed_group.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_add_field.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_commands.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_auto_plan.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_filters.dart';
-import 'package:dottoday/features/inbox/widgets/inbox_fit.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_header.dart';
 import 'package:dottoday/features/inbox/widgets/inbox_list.dart';
-import 'package:dottoday/features/inbox/widgets/one_thing_meta.dart';
-import 'package:dottoday/features/inbox/widgets/wide_inbox_header.dart';
-import 'package:dottoday/shared/dot/inbox_row.dart';
+import 'package:dottoday/features/inbox/widgets/inbox_task_row.dart';
+import 'package:dottoday/shared/dot/next_free_slot.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
-import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timezone/timezone.dart' as tz;
 
-/// The Mac/web Inbox (docs/10 §5.2 I1 expanded, `A-mac-inbox`, M3e.2):
-/// the list with where each task fits, Sort and Auto-plan the week (⇧⌘P),
-/// and [panel] ("Drop onto today") beside it. ⌘⏎ on a row places it in
-/// its first fitting slot.
+/// The wide Inbox (E-R2-13 expanded, M3e.2): the header, then the list
+/// (Add, filters with Sort, the next free slot, rows with where each fits
+/// and Place, Completed, Auto-plan the week ⇧⌘P) beside [panel] ("Drop
+/// onto today"). Dragging a row goes to the day, so the order changes
+/// from the row's menu (Move up / Move down); ⌘⏎ on a row places it.
 class WideInbox extends ConsumerWidget {
   const WideInbox({
     required this.items,
     required this.rooms,
-    required this.zone,
-    required this.commands,
-    required this.fits,
+    required this.rows,
     required this.panel,
     super.key,
   });
@@ -47,9 +42,7 @@ class WideInbox extends ConsumerWidget {
 
   /// Today (from now) and the six days after it; null while loading.
   final List<DayRoom>? rooms;
-  final tz.Location zone;
-  final InboxCommands commands;
-  final InboxFitText fits;
+  final InboxRowContext rows;
   final Widget Function(List<Occurrence> shown) panel;
 
   /// "Drop onto today" (render: 560 of 2000 px at 1280 → 360).
@@ -61,12 +54,15 @@ class WideInbox extends ConsumerWidget {
     final fitOf = <String, WeekFit?>{
       for (final o in openItems(items)) o.id: r == null ? null : firstFit(o, r),
     };
+    final filter = ref.watch(inboxFilterChoiceProvider);
+    final sort = ref.watch(inboxSortChoiceProvider);
     final shown = sortInbox(
-      filtered(items, ref.watch(inboxFilterChoiceProvider), r?.first),
-      ref.watch(inboxSortChoiceProvider),
+      filtered(items, filter, r?.first),
+      sort,
       (o) => fitOf[o.id],
     );
-    final plan = r == null ? null : () => unawaited(_autoPlan(shown, r));
+    final plan = autoPlanAction(rows.commands, shown, r);
+    final work = inboxWork(items);
     // ⇧⌘P auto-plans (web p, a single key; ED-095).
     return CallbackShortcuts(
       bindings: {
@@ -90,21 +86,35 @@ class WideInbox extends ConsumerWidget {
               DotSpace.xl,
               DotSpace.xl,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: DotSpace.l,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: DotSpace.xl,
               children: [
-                WideInboxHeader(items: items, onAutoPlan: plan),
                 Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: DotSpace.xl,
+                  child: ListView(
                     children: [
-                      Expanded(child: _list(context, ref, shown, fitOf)),
-                      SizedBox(width: _panelWidth, child: panel(shown)),
+                      InboxHeader(count: work.count, minutes: work.minutes),
+                      const SizedBox(height: DotSpace.m),
+                      InboxAddField(onSubmit: rows.commands.add),
+                      const SizedBox(height: DotSpace.m),
+                      const InboxFilterRow(),
+                      ..._slot(context, r),
+                      const SizedBox(height: DotSpace.m),
+                      InboxList(
+                        shown: shown,
+                        // The user's own order: "Sort: added", unfiltered.
+                        canReorder:
+                            sort == InboxSort.added &&
+                            filter == InboxFilter.all,
+                        commands: rows.commands,
+                        row: (o, s) => _row(context, o, fitOf[o.id], s),
+                        after: (_) => const SizedBox(height: DotSpace.s),
+                      ),
+                      ..._end(shown, plan),
                     ],
                   ),
                 ),
+                SizedBox(width: _panelWidth, child: panel(shown)),
               ],
             ),
           ),
@@ -113,44 +123,40 @@ class WideInbox extends ConsumerWidget {
     );
   }
 
-  Widget _list(
-    BuildContext context,
-    WidgetRef ref,
-    List<Occurrence> shown,
-    Map<String, WeekFit?> fitOf,
-  ) {
-    final oneThingId = ref.watch(todayOneThingIdProvider);
+  /// "Next free slot today: …" over the rows.
+  List<Widget> _slot(BuildContext context, List<DayRoom>? r) {
+    final next = r == null ? null : nextFreeSlot(items, r.first);
+    if (next == null) return const [];
+    return [
+      const SizedBox(height: DotSpace.m),
+      NextFreeSlot(
+        text: context.l10n.inboxNextSlot(
+          rows.commands.rangeText(next.slot),
+          next.item.title,
+        ),
+      ),
+    ];
+  }
+
+  /// "Completed · 2" and "Auto-plan the week".
+  List<Widget> _end(List<Occurrence> shown, VoidCallback? plan) {
     final done = [
       for (final o in items)
         if (o.status == OccurrenceStatus.done) o,
     ];
-    return ListView(
-      children: [
-        InboxAddField(onSubmit: commands.add),
-        const SizedBox(height: DotSpace.m),
-        const InboxFilters(),
-        const SizedBox(height: DotSpace.m),
-        InboxList(
-          shown: shown,
-          // The user's own order: "Sort: added", unfiltered (M3f.9c).
-          canReorder:
-              ref.watch(inboxSortChoiceProvider) == InboxSort.added &&
-              ref.watch(inboxFilterChoiceProvider) == InboxFilter.all,
-          commands: commands,
-          row: (o, s) =>
-              _row(context, o, fitOf[o.id], s, oneThing: o.id == oneThingId),
-          after: (_) => const SizedBox(height: DotSpace.s),
+    final commands = rows.commands;
+    return [
+      if (done.isNotEmpty)
+        CompletedGroup(
+          items: done,
+          onNotDone: (o) => unawaited(commands.notDone(o)),
+          onClear: () => unawaited(commands.clearDone(done)),
         ),
-        if (done.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.l),
-          CompletedGroup(
-            items: done,
-            onNotDone: (o) => unawaited(commands.notDone(o)),
-            onClear: () => unawaited(commands.clearDone(done)),
-          ),
-        ],
+      if (shown.isNotEmpty) ...[
+        const SizedBox(height: DotSpace.m),
+        InboxAutoPlanButton(onPressed: plan),
       ],
-    );
+    ];
   }
 
   /// A row: drag it onto a gap, or ⌘⏎ to place it where it first fits.
@@ -158,57 +164,31 @@ class WideInbox extends ConsumerWidget {
     BuildContext context,
     Occurrence o,
     WeekFit? fit,
-    InboxRowState s, {
-    required bool oneThing,
-  }) {
-    final l10n = context.l10n;
-    final created = tz.TZDateTime.from(o.createdAt, zone);
-    void place() {
-      if (fit != null) unawaited(commands.place(o, fits.choice(fit)));
-    }
-
-    final row = InboxRow(
-      title: o.title,
-      meta: inboxMetaWithOneThing(
-        l10n,
-        fits.added(formatDurationShort(l10n, o.durationMin), created),
-        oneThing: oneThing,
-      ),
-      oneThing: oneThing,
-      fit: rooms == null ? null : fits.fit(fit),
-      titleFirst: true,
+    InboxRowState s,
+  ) {
+    final row = rows.row(
+      context,
+      o,
+      fit,
+      s,
+      onOpen: () => ProviderScope.containerOf(
+        context,
+      ).read(editingTaskProvider.notifier).open(o.id),
       swipe: false,
-      color: TaskColor.fromKey(o.colorKey),
-      icon: TaskIcon.fromKey(o.iconKey),
-      onSchedule: () => unawaited(commands.schedule(o)),
-      onTrash: () => unawaited(commands.trash(o)),
-      onOpen: s.selected != null
-          ? s.toggle
-          : () => ProviderScope.containerOf(
-              context,
-            ).read(editingTaskProvider.notifier).open(o.id),
-      selected: s.selected,
-      onSelect: s.toggle,
-      reorderIndex: s.reorderIndex,
-      onMoveUp: s.moveUp,
-      onMoveDown: s.moveDown,
+      holdToReorder: false,
     );
     // While picking, rows don't drag onto the thread.
     if (s.selected != null) return row;
     return CallbackShortcuts(
       bindings: {
-        AppShortcuts.activator(defaultTargetPlatform, LogicalKeyboardKey.enter):
-            place,
+        AppShortcuts.activator(
+          defaultTargetPlatform,
+          LogicalKeyboardKey.enter,
+        ): () =>
+            rows.place(o, fit),
       },
       child: InboxDraggable(item: o, child: row),
     );
-  }
-
-  /// Places [shown] in its order (the Sort the user picked) across the
-  /// week; one Undo.
-  Future<void> _autoPlan(List<Occurrence> shown, List<DayRoom> rooms) async {
-    final plan = autoPlan(shown, rooms);
-    await commands.placeAll(plan.placed, left: plan.unplaced.length);
   }
 }
 
@@ -242,13 +222,15 @@ class InboxDraggable extends StatelessWidget {
           child: Text(item.title, style: t.styles.rowTitle),
         ),
       ),
+      // The same shape lifted or not, so the row keeps its state (its
+      // hold, which opens the menu when it ends where it began).
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: child),
       callbacks: DragCallbacks(
         onDragStarted: () {},
         onDragUpdate: (_) {},
         onDragEnd: (_) {},
       ),
-      child: child,
+      child: Opacity(opacity: 1, child: child),
     );
   }
 }
