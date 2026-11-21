@@ -2,6 +2,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +116,7 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
         color: widget.task.color,
         icon: widget.task.icon,
         hint: widget.hint,
+        size: ThreadScale.of(context).dot,
       ),
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: widget.child),
       callbacks: DragCallbacks(
@@ -158,12 +160,16 @@ class LiftedDot extends StatelessWidget {
     required this.color,
     required this.icon,
     required this.hint,
+    this.size = DotSize.threadDot,
     super.key,
   });
 
   final TaskColor color;
   final TaskIcon icon;
   final ValueListenable<String?> hint;
+
+  /// The dot's size: its thread's (ED-419).
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +188,7 @@ class LiftedDot extends StatelessWidget {
             icon: icon,
             state: DotState.upcoming,
             label: '',
-            size: DotSize.threadDot,
+            size: size,
           ),
         ),
         ValueListenableBuilder<String?>(

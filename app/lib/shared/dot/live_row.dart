@@ -5,15 +5,14 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/material.dart';
 
-/// The now card (E rules §5.3, ED-104; E-Phones Today): the 45 ring on
-/// the thread, "9:00–11:00 AM · Now, 18 min left", the title at 19/700
-/// and the done circle, on a card that covers the thread. Full Today has
-/// no buttons on it (owner, M18.3): Done is the circle, the rest is in
-/// the task sheet. Minimal keeps Running late (docs/14 §4).
+/// The now card (E rules §5.3, ED-104): the 45 ring (52 on phones,
+/// ED-419), time, title and done circle on a card over the thread. Full
+/// has no buttons on it (M18.3); Minimal keeps Running late (docs/14 §4).
 class LiveRow extends StatelessWidget {
   const LiveRow({
     required this.task,
@@ -46,6 +45,7 @@ class LiveRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tasks = DotTheme.of(context).tasks;
+    final size = ThreadScale.of(context).liveDot;
     return ThreadRowFrame(
       card: true,
       minHeight: DotSize.nowCard,
@@ -58,7 +58,7 @@ class LiveRow extends StatelessWidget {
         },
         ghost: task.reality?.ghost,
       ),
-      dot: taskRowDot(context, task, DotSize.liveDot, onOpen, onFocus: onFocus),
+      dot: taskRowDot(context, task, size, onOpen, onFocus: onFocus),
       trailing: onToggleDone == null
           ? null
           : DoneCircle(

@@ -6,13 +6,13 @@ import 'package:dottoday/shared/dot/live_row.dart';
 import 'package:dottoday/shared/dot/shift_chip.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
-import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_hours.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
 import 'package:dottoday/shared/dot/thread_outside.dart';
 import 'package:dottoday/shared/dot/thread_overlap.dart';
 import 'package:dottoday/shared/dot/thread_pieces.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:dottoday/shared/dot/thread_select.dart';
 import 'package:flutter/material.dart';
 
@@ -207,15 +207,22 @@ class _ThreadState extends State<Thread> {
     }
 
     final count = entries.length + (closing == null ? 0 : 1);
+    final scale = _scale;
     if (widget.sliver) {
-      return SliverList.builder(
-        itemCount: count,
-        itemBuilder: (_, n) => row(n),
+      return ThreadScope(
+        scale: scale,
+        child: SliverList.builder(
+          itemCount: count,
+          itemBuilder: (_, n) => row(n),
+        ),
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [for (var n = 0; n < count; n++) row(n)],
+    return ThreadScope(
+      scale: scale,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [for (var n = 0; n < count; n++) row(n)],
+      ),
     );
   }
 
@@ -276,7 +283,7 @@ class _ThreadState extends State<Thread> {
     return CapRow(
       cap: cap,
       solid: solid,
-      size: DotSize.threadCap,
+      size: _scale.cap,
       onTap: onCap == null ? null : () => onCap(cap.windDown),
     );
   }
@@ -331,17 +338,18 @@ class _ThreadState extends State<Thread> {
         : TaskRow(
             task: task,
             solid: solid,
-            dotSize: DotSize.threadDot,
+            dotSize: _scale.dot,
             onToggleDone: _bind(onDone, task),
             onOpen: _open(task),
             // Smallest step's Start opens Focus, which records the start.
             onStart: _bind(a.onFocus, task),
             onUnstick: _answer(a.onUnstick, task),
           );
-    // Fixed row heights by state (E rules §5.2); the now card sets its own.
+    // Rows by length on phones (ED-419), else fixed by state (E rules
+    // §5.2); the live row sets its own.
     if (task.state != DotState.live) {
       row = ConstrainedBox(
-        constraints: BoxConstraints(minHeight: threadRowHeight(task.state)),
+        constraints: BoxConstraints(minHeight: _scale.rowHeight(task)),
         child: row,
       );
     }
@@ -370,6 +378,11 @@ class _ThreadState extends State<Thread> {
       child: row,
     );
   }
+
+  /// This thread's sizes for its width (ED-419); the hour scale sizes
+  /// rows by the clock, so Concept E's there.
+  ThreadScale get _scale =>
+      widget.hours == null ? ThreadScale.forWidth(context) : ThreadScale.wide;
 
   /// Opens the task, or on desktop adds it to the selection while Shift,
   /// ⌘ or Ctrl is held.

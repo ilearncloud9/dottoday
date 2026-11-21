@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On phones the day thread's dots are larger again and each task's row is as tall as the task is long, as before the redesign; the task that's on now keeps its card with a larger dot (redesign branch).
 - The first redesigned slice (Today or Now, Add, move, done, change day, reopen) is checked on iPhone, Android, iPad and Android tablets, the Mac and the web in Full and Minimal, compared with the design boards and recorded in the platform quality matrix (redesign branch).
 - Minimal's Now shows a loading skeleton and a Try again when the day can't load; Go to date (⇧⌘T) works on Now; after a click, Move To… (⇧⌘M) moves the task in the inspector; Minimal Add keeps its Add button above the keyboard on Android tablets; at 200 % text Now's rows, the Plan panel, the iPad tabs and the day's horizon no longer overflow or overlap; the iPad tabs and the empty day's buttons are easier to tap (redesign branch).
 - Minimal on iPad and Android tablets: in landscape, Now sits beside the Day column under the toolbar, sized for touch; in portrait and on foldables, Now comes first with today's day under it. The + button's hold is now announced as part of the button (redesign branch).

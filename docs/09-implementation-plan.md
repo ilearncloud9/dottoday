@@ -748,6 +748,7 @@ Rules for every task in M18 to M22:
   Split by the owner (2026-11-20) in two parts, each with its own review page and commit: 7a the journey on every target and the cases; 7b the screenshot sweep beside the boards, `PLATFORM_QUALITY_MATRIX.md` and the acceptance page.
   - [x] Part 7a done 2026-11-20 (ED-417): the journey in Full and Minimal on 9 targets (widget level) and on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit and the real Mac app; the six cases at three widths (36 checks, 36 goldens); eight fixes it found. Open: 7b; iPad landscape and Android tablet portrait on a device; real devices (no dev flavour).
   - [x] Part 7b done 2026-11-20 (ED-418): the sweep beside the boards (differences named: Calendar tab M20.1, Day ▾ M20.3, Synced line M20.10, locale dates); `PLATFORM_QUALITY_MATRIX.md` with F values; the acceptance page; the journey on the owner's iPhone in Full and Minimal. M19 approved and closed. Open: iPad landscape and Android tablet portrait on a device; real iPad and Android devices; Back, resume, screen reader and mid-flow switches on a device.
+  - [x] Owner change 2026-11-21 (ED-419): the phones' day thread with 52 dots (50 done) and caps, a 52 dot on the now card and rows as long as their task (main's); wider windows unchanged.
 
 ## Milestone 20 — Migrate the rest, one slice at a time (Prompt G; the owner reviews each slice)
 

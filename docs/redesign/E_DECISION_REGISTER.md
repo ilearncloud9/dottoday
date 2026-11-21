@@ -1332,3 +1332,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-20, ED-416:** M19.6 part 6e-2: Minimal on tablets (the pane and column under the apps' toolbar when expanded; the Day under Now at medium; 48 touch rows). Approved.
 - **2026-11-20, ED-417:** M19.7 part 7a: the slice journey on every target in Full and Minimal, the six cases at three widths, and eight fixes they found. Approved.
 - **2026-11-20, ED-418:** M19.7 part 7b: the sweep beside the boards, the quality matrix and the acceptance page, with the journey on the owner's iPhone; M19 closed. Approved.
+- **2026-11-21, ED-419:** Phones' day thread: 52 dots (50 done) and caps, the now card's dot 52, rows as long as their task; column, gap, knot and wider windows unchanged. Approved.

@@ -5,11 +5,14 @@ import 'package:dottoday/shared/dot/smallest_step_line.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/thread_row_frame.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:dottoday/shared/dot/unstick_line.dart';
 import 'package:flutter/material.dart';
 
 export 'done_circle.dart';
 export 'smallest_step_line.dart';
+export 'thread_row_frame.dart';
 
 /// A task on the thread (docs/10 §3 `TaskRow`): dot + segment on the axis,
 /// time meta, title, and the done circle at the end.
@@ -59,6 +62,7 @@ class TaskRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final tasks = DotTheme.of(context).tasks;
     final done = task.state == DotState.done;
+    final scale = ThreadScale.of(context);
     return ThreadRowFrame(
       piece: SegmentPiece(
         color: tasks[task.color].color,
@@ -73,7 +77,7 @@ class TaskRow extends StatelessWidget {
       dot: taskRowDot(
         context,
         task,
-        done && dotSize == DotSize.threadDot ? DotSize.threadDoneDot : dotSize,
+        done && dotSize == scale.dot ? scale.doneDot : dotSize,
         onOpen,
       ),
       // A calendar event is read-only: no done check (E rules §4.4).
@@ -233,105 +237,4 @@ class _Text extends StatelessWidget {
   /// The plan's words on the Reality thread: quieter than the times.
   static TextStyle _plan(DotTheme t) =>
       t.styles.rowMeta.copyWith(color: t.colors.muted);
-}
-
-/// Lays out one thread row: [dot] on the axis over the [piece] painted
-/// down it, [child] beside it and an optional [trailing] control, all
-/// centred on the row (E rules §5.2), which is at least [minHeight] tall.
-/// Geometry is directional, so the thread runs down the start edge in RTL.
-class ThreadRowFrame extends StatelessWidget {
-  const ThreadRowFrame({
-    required this.piece,
-    required this.child,
-    this.dot,
-    this.trailing,
-    this.minHeight = 0,
-    this.card = false,
-    super.key,
-  });
-
-  final AxisPiece piece;
-  final Widget child;
-  final Widget? dot;
-  final Widget? trailing;
-  final double minHeight;
-
-  /// The now card (E rules §5.3): the row sits on a card that reaches
-  /// [DotSpace.nowCard] past each side and covers the thread.
-  final bool card;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    return CustomPaint(
-      painter: _AxisAtStart(
-        ThreadAxisPainter(
-          piece: piece,
-          hairline: c.threadAhead,
-          accent: c.accent,
-          card: c.raised,
-          ghostSide: Directionality.of(context) == TextDirection.rtl ? 1 : -1,
-        ),
-        rtl: Directionality.of(context) == TextDirection.rtl,
-        card: card ? (fill: c.raised, edge: c.hairline) : null,
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: minHeight),
-        child: Row(
-          children: [
-            SizedBox(
-              width: threadAxisWidth,
-              child: dot == null ? null : Center(child: dot),
-            ),
-            const SizedBox(width: threadTextGap),
-            Expanded(child: child),
-            ?trailing,
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Paints [axis] in the [threadAxisWidth] column at the row's start edge.
-/// With [card], the now card over it: radius 24, a 1 px inset hairline.
-final class _AxisAtStart extends CustomPainter {
-  const _AxisAtStart(this.axis, {required this.rtl, this.card});
-
-  final ThreadAxisPainter axis;
-  final bool rtl;
-  final ({Color fill, Color edge})? card;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas
-      ..save()
-      ..translate(rtl ? size.width - threadAxisWidth : 0, 0);
-    axis.paint(canvas, Size(threadAxisWidth, size.height));
-    canvas.restore();
-    final card = this.card;
-    if (card == null) return;
-    final box = RRect.fromRectAndRadius(
-      Rect.fromLTRB(
-        -DotSpace.nowCard,
-        0,
-        size.width + DotSpace.nowCard,
-        size.height,
-      ),
-      const Radius.circular(DotRadii.cardLarge),
-    );
-    canvas
-      ..drawRRect(box, Paint()..color = card.fill)
-      ..drawRRect(
-        box.deflate(DotSpace.hairline / 2),
-        Paint()
-          ..color = card.edge
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = DotSpace.hairline,
-      );
-  }
-
-  @override
-  bool shouldRepaint(_AxisAtStart old) =>
-      old.rtl != rtl || old.card != card || axis.shouldRepaint(old.axis);
 }

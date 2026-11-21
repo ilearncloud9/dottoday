@@ -408,6 +408,15 @@ abstract final class DotSize {
   /// The Wake Up / Wind Down caps on the phone thread (ED-201).
   static const double threadCap = 34;
 
+  /// The phones' day thread (owner 2026-11-21, ED-419, Full and Minimal):
+  /// 52 dots, caps and now-card dot (50 done) overhanging the 48 column,
+  /// rows as long as their task (main's 1.6 px a minute, 88 to 288).
+  static const double phoneThreadDot = 52;
+  static const double phoneThreadDoneDot = 50;
+  static const double threadPerMinute = 1.6;
+  static const double threadRowMin = 88;
+  static const double threadRowMax = 288;
+
   /// The done circle at a thread row's end (ADR-0015), and its open ring
   /// (E rules §4.4: 2.5).
   static const double doneCircle = 28;

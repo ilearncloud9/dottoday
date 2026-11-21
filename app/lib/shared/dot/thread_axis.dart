@@ -11,16 +11,6 @@ const double threadAxisWidth = 48;
 /// Gap between the dot column and a row's text (Concept E §5.2: 10).
 const double threadTextGap = DotSpace.s + DotSpace.xxs;
 
-/// Least height of a phone thread row for a task in [state] (Concept E
-/// §5.2): rows keep fixed heights instead of stretching with the task.
-///
-/// ```dart
-/// threadRowHeight(DotState.done);     // 48
-/// threadRowHeight(DotState.upcoming); // 54
-/// ```
-double threadRowHeight(DotState state) =>
-    state == DotState.done ? DotSize.threadRowDone : DotSize.threadRowAhead;
-
 /// What one row draws on the axis behind its dot or cap.
 sealed class AxisPiece {
   const AxisPiece();

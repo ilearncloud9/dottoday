@@ -5403,6 +5403,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Not verified:** iPad landscape and Android tablet portrait on a device; real iPad and Android devices; Back and dismiss, background and resume, a screen reader and mid-flow switches on a device.
 - **Checks:** analyze and format clean; the 18 widget journeys pass with the harness change.
 
+### ED-419 · Phones' day thread: larger dots and rows as long as their task
+- **Date:** 2026-11-21. **Owner:** asked for main's thread sizes back on phones ("Dots and rows", "Phones, Full + Minimal"), then over three reviews: keep the redesign's now card with a larger dot, keep the redesign's knot, and "Task dot, done dot = 52, 50; Dot column, gap to text 48, 10; Dragged dot, landing preview = 52"; caps and the now card's dot "Both 52"; then "Approve, commit" after the review page.
+- **Change (compact width only, Full and Minimal):** task dots 52 and done dots 50 (were 34 and 32); the Wake Up and Wind Down caps 52 (34); the now card keeps its card and 80 minimum with a 52 dot (45 ring); task rows grow with their task as on main (1.6 px a minute, 88 to 288; were fixed 54 ahead, 48 done); the dragged dot and the landing preview 52. The 48 column and 10 gap stay, the 52 dots overhang 2 px each side.
+- **Unchanged:** the knot (26), free time (28), the now bead (26), the fold rows; tablets, the Mac and web Day view with hours, and Minimal's Day column at normal widths (no golden there moved).
+- **How:** `ThreadScale` (`shared/dot/thread_scale.dart`) picks the phone or Concept E sizes by `AppLayout.classOf`, so a phone in landscape and a short or narrow window get the phone thread too; the hour scale is always Concept E. Tokens `phoneThreadDot`, `phoneThreadDoneDot`, `threadPerMinute`, `threadRowMin`, `threadRowMax`. `ThreadRowFrame` moved to its own file.
+- **Departs from:** the approved E-Phones and E-PhonesMinimal boards (34 / 32 dots, fixed rows, ED-363) on phones. With rows by length the moving now still hops only when a task starts or ends (ED-364).
+- **Checks:** analyze and format clean; 7542 tests pass, 31 skipped; 263 phone goldens updated; three tests scroll to a later task before tapping it.
+
 ---
 
 ## Pending owner answers

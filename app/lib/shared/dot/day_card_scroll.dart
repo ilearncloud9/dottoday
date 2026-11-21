@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -83,7 +84,10 @@ class _DayCardScrollState extends State<DayCardScroll> {
     final y = top + widget.anchor! * row.size.height;
     // The row's head (its dot, title and time) must sit clear; a long
     // live task needn't fit whole, so a tall phone usually stays put.
-    final tail = (row.size.height - (y - top)).clamp(0.0, DotSize.threadDot);
+    final tail = (row.size.height - (y - top)).clamp(
+      0.0,
+      ThreadScale.forWidth(context).dot,
+    );
     _settle();
     if (y >= p.pixels && y + tail <= p.pixels + clear) return;
     final fits = y + tail <= top + clear;

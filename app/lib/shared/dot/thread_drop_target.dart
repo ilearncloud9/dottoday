@@ -4,6 +4,7 @@ import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_drag.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
+import 'package:dottoday/shared/dot/thread_scale.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _SpanDropTargetState extends State<SpanDropTarget> {
                     PositionedDirectional(
                       start: 0,
                       end: 0,
-                      top: box.maxHeight * at - DotSize.threadDot / 2,
+                      top: box.maxHeight * at - ThreadScale.of(context).dot / 2,
                       child: IgnorePointer(
                         child: LandingPreview(
                           task: w.taskOf?.call(id),
@@ -143,8 +144,9 @@ class LandingPreview extends StatelessWidget {
     final c = t.colors;
     final task = this.task;
     final swatch = task == null ? null : t.tasks[task.color];
+    final scale = ThreadScale.of(context);
     return Container(
-      height: DotSize.threadDot,
+      height: scale.dot,
       decoration: BoxDecoration(
         color: Color.alphaBlend(c.accentTint, c.raised),
         borderRadius: BorderRadius.circular(DotRadii.pill),
@@ -156,12 +158,16 @@ class LandingPreview extends StatelessWidget {
             width: threadAxisWidth,
             child: task == null
                 ? null
-                : TaskDot(
-                    color: task.color,
-                    icon: task.icon,
-                    state: DotState.upcoming,
-                    label: '',
-                    size: DotSize.threadDot,
+                : OverflowBox(
+                    maxWidth: double.infinity,
+                    maxHeight: scale.dot,
+                    child: TaskDot(
+                      color: task.color,
+                      icon: task.icon,
+                      state: DotState.upcoming,
+                      label: '',
+                      size: scale.dot,
+                    ),
                   ),
           ),
           const SizedBox(width: threadTextGap),

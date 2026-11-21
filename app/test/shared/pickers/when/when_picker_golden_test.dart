@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
+import '../../../support/reveal_row.dart';
 import '../../../support/test_app.dart';
 import '../../../support/timeline_fakes.dart';
 
@@ -46,6 +47,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await revealRow(tester, 'Reply to email');
     await tester.tap(find.text('Reply to email').first);
     await tester.pumpAndSettle();
     final move = find.descendant(

@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
+import '../../support/reveal_row.dart';
 import '../../support/test_app.dart';
 import '../../support/timeline_fakes.dart';
 
@@ -46,8 +47,7 @@ void main() {
     await tester.pumpAndSettle();
     router.go(at);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Reply to email').first);
-    await tester.pumpAndSettle();
+    await revealRow(tester, 'Reply to email');
     await tester.tap(find.text('Reply to email').first);
     await tester.pumpAndSettle();
     return repo;
