@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/thinking/breakdown_tree.dart';
@@ -79,62 +81,78 @@ class _StepTileState extends State<StepTile> {
     final l10n = context.l10n;
     final s = widget.step;
     final top = widget.depth == 1;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: DotSpace.xs,
-      children: [
-        if (top)
-          ReorderableDragStartListener(
-            index: widget.index,
-            child: Semantics(
-              label: l10n.subtaskReorder(_label(l10n)),
-              excludeSemantics: true,
-              child: SizedBox.square(
-                dimension: DotTouch.android,
-                child: Center(
-                  child: DotIcon(DotGlyphs.dragHandle, color: t.colors.muted),
+    final total = widget.tree.total;
+    final share = total == null || total == 0 || s.length == null
+        ? null
+        : s.length! / total;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: DotSize.stepRow),
+      child: Row(
+        spacing: DotSpace.s,
+        children: [
+          if (top)
+            ReorderableDragStartListener(
+              index: widget.index,
+              child: Semantics(
+                label: l10n.subtaskReorder(_label(l10n)),
+                excludeSemantics: true,
+                child: SizedBox.square(
+                  dimension: DotTouch.android,
+                  child: Center(
+                    child: DotIcon(DotGlyphs.dragHandle, color: t.colors.muted),
+                  ),
                 ),
               ),
             ),
+          StepDot(
+            color: widget.color,
+            number: top ? widget.index + 1 : null,
+            share: share,
           ),
-        StepDot(
-          color: widget.color,
-          number: top ? widget.index + 1 : null,
-          minutes: s.length,
-        ),
-        Expanded(
-          child: TextField(
-            contextMenuBuilder: systemTextMenu,
-            controller: _title,
-            style: top ? t.styles.rowTitle : t.styles.body,
-            textCapitalization: TextCapitalization.sentences,
-            maxLength: 200,
-            decoration: InputDecoration(
-              hintText: l10n.breakdownStepHint(widget.index + 1),
-              border: InputBorder.none,
-              counterText: '',
-              isDense: true,
+          Expanded(
+            child: TextField(
+              contextMenuBuilder: systemTextMenu,
+              controller: _title,
+              style: top ? t.styles.chip : t.styles.body,
+              textCapitalization: TextCapitalization.sentences,
+              // A long title wraps rather than being cut (E-R2-23 rows).
+              minLines: 1,
+              maxLines: 3,
+              textInputAction: TextInputAction.done,
+              maxLength: 200,
+              // A title to edit, underlined as on the board (E-R2-23).
+              decoration: InputDecoration(
+                hintText: l10n.breakdownStepHint(widget.index + 1),
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: t.colors.hairline),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: t.colors.hairline),
+                ),
+                counterText: '',
+                isDense: true,
+              ),
+              onChanged: (v) => widget.onEdit(widget.tree.rename(s.id, v)),
             ),
-            onChanged: (v) => widget.onEdit(widget.tree.rename(s.id, v)),
           ),
-        ),
-        StepLengthChip(
-          minutes: s.length,
-          title: _label(l10n),
-          onChanged: s.children.isEmpty
-              ? (m) => widget.onEdit(widget.tree.setLength(s.id, m))
-              : null,
-        ),
-        IconButton(
-          tooltip: l10n.breakdownShow(_label(l10n)),
-          onPressed: () => widget.onToggle(s.id),
-          icon: DotIcon(
-            open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-            color: t.colors.muted,
-            size: DotSize.rowIcon,
+          StepLengthChip(
+            minutes: s.length,
+            title: _label(l10n),
+            onChanged: s.children.isEmpty
+                ? (m) => widget.onEdit(widget.tree.setLength(s.id, m))
+                : null,
           ),
-        ),
-      ],
+          IconButton(
+            tooltip: l10n.breakdownShow(_label(l10n)),
+            onPressed: () => widget.onToggle(s.id),
+            icon: DotIcon(
+              open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
+              color: t.colors.muted,
+              size: DotSize.rowIcon,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -145,56 +163,67 @@ class _StepTileState extends State<StepTile> {
     final s = widget.step;
     final tree = widget.tree;
     final splitting = widget.splitting.contains(s.id);
-    return Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: widget.depth == 1 ? DotTouch.android + DotSpace.xl : DotSpace.xl,
+    // The opened step's area, tinted (E-R2-23 "a step opened").
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: t.colors.sunk,
+        borderRadius: BorderRadius.circular(DotRadii.tile),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (final (i, c) in s.children.indexed)
-            StepTile(
-              key: ValueKey(c.id),
-              step: c,
-              index: i,
-              depth: widget.depth + 1,
-              tree: tree,
-              color: widget.color,
-              open: widget.open,
-              splitting: widget.splitting,
-              onToggle: widget.onToggle,
-              onEdit: widget.onEdit,
-              onSplit: widget.onSplit,
-            ),
-          if (s.children.isNotEmpty)
-            Text(
-              l10n.breakdownDepth(widget.depth + 1, BreakdownRequest.maxDepth),
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-            ),
-          Wrap(
-            spacing: DotSpace.s,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              if (splitting)
-                const SizedBox.square(
-                  dimension: DotSize.rowIcon,
-                  // iOS's activity indicator on Apple platforms (native pass).
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-                )
-              else if (tree.canSplit(s.id) &&
-                  s.children.isEmpty &&
-                  s.title.trim().isNotEmpty)
-                TextButton(
-                  onPressed: () => widget.onSplit(s),
-                  child: Text(l10n.breakdownSplit),
-                ),
-              TextButton(
-                onPressed: () => widget.onEdit(tree.remove(s.id)),
-                child: Text(l10n.breakdownRemove),
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(
+          start: widget.depth == 1 ? DotTouch.android : DotSpace.xl,
+          end: DotSpace.xs,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final (i, c) in s.children.indexed)
+              StepTile(
+                key: ValueKey(c.id),
+                step: c,
+                index: i,
+                depth: widget.depth + 1,
+                tree: tree,
+                color: widget.color,
+                open: widget.open,
+                splitting: widget.splitting,
+                onToggle: widget.onToggle,
+                onEdit: widget.onEdit,
+                onSplit: widget.onSplit,
               ),
-            ],
-          ),
-        ],
+            Wrap(
+              spacing: DotSpace.s,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                if (s.children.isNotEmpty)
+                  Text(
+                    l10n.breakdownDepth(
+                      widget.depth + 1,
+                      BreakdownRequest.maxDepth,
+                    ),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                  ),
+                if (splitting)
+                  const SizedBox.square(
+                    dimension: DotSize.rowIcon,
+                    // iOS's activity indicator on Apple platforms (native pass).
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                  )
+                else if (tree.canSplit(s.id) &&
+                    s.children.isEmpty &&
+                    s.title.trim().isNotEmpty)
+                  TextButton(
+                    onPressed: () => widget.onSplit(s),
+                    child: Text(l10n.breakdownSplit),
+                  ),
+                TextButton(
+                  onPressed: () => widget.onEdit(tree.remove(s.id)),
+                  child: Text(l10n.breakdownRemove),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -205,71 +234,86 @@ class _StepTileState extends State<StepTile> {
   }
 }
 
-/// A step's dot in the mini thread: a ring in the task's colour with its
-/// [number] (top-level) or a small dot (sub-steps), and under it a
-/// segment as long as the step, as on the thread.
+/// A step's dot (E-R2-23): a ring in the task's colour whose arc is
+/// the step's [share] of the task's length, with its [number] inside
+/// (top-level) or a small ring (sub-steps).
 class StepDot extends StatelessWidget {
   const StepDot({
     required this.color,
     required this.number,
-    required this.minutes,
+    required this.share,
     super.key,
   });
 
   final TaskColor color;
   final int? number;
-  final int? minutes;
 
-  /// Segment length per minute and its bounds (a 40 min step ≈ the render).
-  static const double _perMinute = 0.6;
-  static const double _minSegment = DotSpace.s;
-  static const double _maxSegment = DotSpace.xxl * 2;
+  /// The step's part of the whole (0 to 1); null draws a full ring.
+  final double? share;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final swatch = t.tasks[color];
-    final size = number == null ? DotSize.pickerDot : DotSize.macRowDot;
-    final m = minutes;
-    final segment = m == null
-        ? _minSegment
-        : (m * _perMinute).clamp(_minSegment, _maxSegment);
+    final top = number != null;
+    final size = top ? DotSize.stepRing : DotSize.pickerDot;
     return ExcludeSemantics(
-      child: Padding(
-        padding: const EdgeInsets.only(top: DotSpace.s),
-        child: Column(
-          children: [
-            Container(
-              width: size,
-              height: size,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: swatch.color,
-                  width: DotSize.smallDotOutline,
-                ),
-              ),
-              child: number == null
-                  ? null
-                  : Text(
-                      MaterialLocalizations.of(context).formatDecimal(number!),
-                      style: t.styles.rowMeta.copyWith(color: swatch.ink),
-                    ),
-            ),
-            Container(
-              width: DotSize.segment,
-              height: segment,
-              decoration: BoxDecoration(
-                color: swatch.color.withValues(alpha: TaskAlpha.upcoming),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(DotRadii.pill),
-                ),
-              ),
-            ),
-          ],
+      child: SizedBox.square(
+        dimension: size,
+        child: CustomPaint(
+          painter: _ShareRing(
+            track: swatch.color.withValues(alpha: TaskAlpha.upcoming),
+            arc: swatch.color,
+            share: top ? share : 1,
+          ),
+          child: top
+              ? Center(
+                  child: Text(
+                    MaterialLocalizations.of(context).formatDecimal(number!),
+                    style: t.styles.rowMeta.copyWith(color: swatch.ink),
+                  ),
+                )
+              : null,
         ),
       ),
     );
   }
+}
+
+/// The step ring: a faint full track and the arc of the step's share,
+/// from twelve o'clock.
+final class _ShareRing extends CustomPainter {
+  const _ShareRing({
+    required this.track,
+    required this.arc,
+    required this.share,
+  });
+
+  final Color track;
+  final Color arc;
+  final double? share;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const w = DotSize.smallDotOutline;
+    final rect = (Offset.zero & size).deflate(w / 2);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = w
+      ..strokeCap = StrokeCap.round;
+    canvas.drawOval(rect, paint..color = track);
+    final s = (share ?? 1).clamp(0.0, 1.0);
+    if (s <= 0) return;
+    canvas.drawArc(
+      rect,
+      -math.pi / 2,
+      s * 2 * math.pi,
+      false,
+      paint..color = arc,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ShareRing old) =>
+      old.track != track || old.arc != arc || old.share != share;
 }

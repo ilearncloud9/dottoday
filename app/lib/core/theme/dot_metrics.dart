@@ -584,6 +584,17 @@ abstract final class DotSize {
   /// The Plan panel's Brain dump row (E-R2-37): below this width (at
   /// 100 % text) the note goes above the mic and Plan it.
   static const double dumpRowMin = 260;
+
+  /// Break it down's step ring and row (E-R2-23).
+  static const double stepRing = 26;
+  static const double stepRow = 52;
+
+  /// A small grey chip's own height (a step's length, E-R2-23); its tap
+  /// target is padded to the platform's floor.
+  static const double smallChipHeight = 30;
+
+  /// The task's dot on Break it down's lead row (E-R2-23).
+  static const double breakdownLead = 34;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

@@ -76,11 +76,28 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
     );
     // E-Phones draws Full's tip on a tinted bar, 16 in from the edges; it
     // keeps the 48 height its two targets need (the board's 40 / 44).
-    // E-PhonesMinimal draws no tip: Minimal's stays plain until M19.6.
+    // Show less (E-R2-23 §1): the question on a card, Show me and Not now.
     if (!watchOnScreen(ref, FeatureId.headerExtras)) {
+      if (promise) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
+          child: link ? _withLink(context, hint) : hint,
+        );
+      }
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DotSpace.page),
-        child: link ? _withLink(context, hint) : hint,
+        padding: const EdgeInsets.fromLTRB(
+          DotSpace.l,
+          DotSpace.m,
+          DotSpace.l,
+          0,
+        ),
+        child: RevealHintCard(
+          text: _text(l10n, pick.hint),
+          onOpen: () => _open(context, pick),
+          onDismiss: () => unawaited(
+            dismissHint(ProviderScope.containerOf(context), pick.hint),
+          ),
+        ),
       );
     }
     final bar = DecoratedBox(
@@ -164,5 +181,56 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
           HintId.wakeUpCheckPing:
         break;
     }
+  }
+}
+
+/// A hint in Show less (E-R2-23 §1 "Break it into steps?"): the question
+/// on a card, then Show me and Not now.
+class RevealHintCard extends StatelessWidget {
+  const RevealHintCard({
+    required this.text,
+    required this.onOpen,
+    required this.onDismiss,
+    super.key,
+  });
+
+  final String text;
+  final VoidCallback onOpen;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    // Across the day's width, as the board draws it.
+    return SizedBox(
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: t.colors.sunk,
+          borderRadius: BorderRadius.circular(DotRadii.card),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DotSpace.l),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.s,
+            children: [
+              Text(text, style: t.styles.rowTitle),
+              Wrap(
+                spacing: DotSpace.s,
+                children: [
+                  FilledButton(onPressed: onOpen, child: Text(l10n.hintShowMe)),
+                  TextButton(
+                    onPressed: onDismiss,
+                    child: Text(l10n.promptNotNow),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

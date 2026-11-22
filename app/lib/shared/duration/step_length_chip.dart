@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/sheets/choice_sheet.dart';
+import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 
 /// Lengths a step can be given (11 B2): short ones first — a step is
@@ -11,8 +11,7 @@ import 'package:flutter/material.dart';
 const stepLengthChoices = [2, 5, 10, 15, 20, 30, 45, 60, 90, 120];
 
 /// A step's length as a chip: "10 min", or "+ time" when it has none
-/// (`B-ios-break-it-down`; docs/09 M10.3). Pill on iPhone, 8 px corners
-/// elsewhere (docs/10 §4). A tap picks a length.
+/// (E-R2-23; docs/09 M10.3): a small grey pill. A tap picks a length.
 class StepLengthChip extends StatelessWidget {
   const StepLengthChip({
     required this.minutes,
@@ -37,24 +36,28 @@ class StepLengthChip extends StatelessWidget {
     final m = minutes;
     return Semantics(
       onTapHint: l10n.stepLengthHint(title),
-      child: OutlinedButton(
+      // A small grey pill (E-R2-23); the hit area stays 44.
+      child: TextButton(
         onPressed: switch (onChanged) {
           final change? => () => unawaited(
             pickStepLength(context, minutes: minutes, onChanged: change),
           ),
           null => null,
         },
-        style: OutlinedButton.styleFrom(
-          shape: dotChipShape(context),
-          side: BorderSide(color: t.colors.outline),
-          foregroundColor: m == null ? t.colors.muted : t.colors.text,
+        style: TextButton.styleFrom(
+          backgroundColor: t.colors.tile,
+          disabledBackgroundColor: t.colors.tile,
+          shape: const StadiumBorder(),
+          // Small to look at, 48 to tap (44 pt / 48 dp floors).
+          minimumSize: const Size(0, DotSize.smallChipHeight),
+          tapTargetSize: MaterialTapTargetSize.padded,
           padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: DotSpace.m,
+            horizontal: DotSpace.s + DotSpace.xxs,
           ),
         ),
         child: Text(
           m == null ? l10n.stepLengthAdd : formatDurationShort(l10n, m),
-          style: t.styles.rowMeta.copyWith(
+          style: t.styles.smallChip.copyWith(
             color: m == null ? t.colors.muted : t.colors.text,
           ),
         ),
@@ -63,26 +66,72 @@ class StepLengthChip extends StatelessWidget {
   }
 }
 
-/// Picks a step's length (11 B2): "No time" or one of [stepLengthChoices];
-/// [onChanged] gets the pick (null for No time), and nothing on dismiss or
-/// the same length. The chip's tap and the quiet step row's ⋯ use it.
+/// Picks a step's length (11 B2, E-R2-23 "How long is this step?"): the
+/// lengths as chips, the current one filled, and No time; [onChanged]
+/// gets the pick (null for No time), and nothing on dismiss or the same
+/// length. The chip's tap and the quiet step row's ⋯ use it.
 Future<void> pickStepLength(
   BuildContext context, {
   required int? minutes,
   required ValueChanged<int?> onChanged,
 }) async {
-  final l10n = context.l10n;
   // 0 is "No time": null from the sheet means it was dismissed.
-  final picked = await showChoiceSheet<int>(
-    context,
-    title: l10n.stepLengthTitle,
-    selected: minutes ?? 0,
-    options: [
-      (value: 0, label: l10n.stepLengthNone, detail: null),
-      for (final m in stepLengthChoices)
-        (value: m, label: formatDuration(l10n, m), detail: null),
-    ],
+  final picked = await showAppSheet<int>(
+    context: context,
+    title: context.l10n.stepLengthTitle,
+    maxWidth: DotSize.pickDialog,
+    builder: (sheet) => _LengthChoices(
+      selected: minutes,
+      onPick: (m) => Navigator.of(sheet).pop(m),
+    ),
   );
   if (picked == null || picked == (minutes ?? 0)) return;
   onChanged(picked == 0 ? null : picked);
+}
+
+/// The lengths as chips, then No time (0).
+class _LengthChoices extends StatelessWidget {
+  const _LengthChoices({required this.selected, required this.onPick});
+
+  final int? selected;
+  final ValueChanged<int> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.m,
+      children: [
+        Wrap(
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.s,
+          children: [
+            for (final m in stepLengthChoices)
+              ChoiceChip(
+                label: Text(formatDurationShort(l10n, m)),
+                selected: m == selected,
+                showCheckmark: false,
+                onSelected: (_) => onPick(m),
+                color: WidgetStateProperty.resolveWith(
+                  (s) => s.contains(WidgetState.selected)
+                      ? t.colors.accent
+                      : t.colors.tile,
+                ),
+                side: BorderSide.none,
+                shape: const StadiumBorder(),
+                labelStyle: t.styles.chip.copyWith(
+                  color: m == selected ? t.colors.onAccent : t.colors.text,
+                ),
+              ),
+          ],
+        ),
+        TextButton(
+          onPressed: () => onPick(0),
+          child: Text(l10n.stepLengthNone),
+        ),
+      ],
+    );
+  }
 }

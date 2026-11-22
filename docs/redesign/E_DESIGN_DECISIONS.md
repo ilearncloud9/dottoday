@@ -5518,6 +5518,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the caption keeps the built status wording and puts "Nothing is saved until you accept" on its own line; the search shows past five dumps; the narrow Mac block stacks; the spoken states are goldens (the permission dialogs are the system's).
 - **Checks:** analyze and format clean; 7,703 pass, 31 skipped; new goldens `brain_dump_earlier`, `brain_dump_mic_stopped`, `brain_dump_mic_refused`, `plan_panel_dump_mic`; Brain dump and mic goldens updated; a test that more than five dumps show the search. `integration_test/brain_dump_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum on the final run). Not run: real devices.
 
+### ED-430 · M20.4 part 2: Break it down
+- **Date:** 2026-11-22. **Owner:** "Start part 2", then "Approve part 2" after the review page (https://claude.ai/artifact/AGHLQ4XgwypqgG9nWUS51P).
+- **Built (E-R2-23 §1, ED-324):** the look of Break it down; what it does is unchanged (M10.4): nothing is written before Accept. No new strings.
+  - **Card:** the task at its top (`BreakdownLead`, 34 dot with its icon, rowTitle, "was 2 h → now 2 h 15"), then the steps; each step one row: ⠿, a ring whose arc is its share of the task with its number (`StepDot`, 26), the title underlined to edit (wraps to three lines rather than cut, 14/700), the small grey length chip, ⌄; Add a step as a dashed box across the card; Total led by the dot before → after.
+  - **A step opened:** sub-steps on a tinted area, "depth 2 of 3", Break this down and Remove step on one line.
+  - **How long is this step?:** a sheet of length chips and No time (`pickStepLength`), replacing the list; the length chip (`StepLengthChip`) a small grey pill, 30 tall, its tap target padded to the floor (also on the editor's steps).
+  - **Simple rules:** `ThinkingHint` as a tinted box with "Made with simple rules · Turn on …" and Don't show again (was a line with ×); it stacks at large text.
+  - **Show less hints:** a full-width card with the question, Show me and Not now (`RevealHintCard`); the Wake Up promise keeps its line and link.
+  - The 13/700 style is renamed `smallChip` (Rebalance's rules and the length chip).
+- **Departures (on the review page):** Accept keeps its check (every proposal); touch sizes kept, so long titles wrap; the built lengths (2 min to 2 h); Add keeps Create task's Steps list for accepted steps; Break this down only on a step without sub-steps, as built; every Minimal hint uses the card.
+- **Checks:** analyze and format clean; 7,727 pass, 31 skipped; new goldens `breakdown_plan` (iPhone compact and the Mac panel), `breakdown_plan_android`, `breakdown_plan_open`, `breakdown_step_length`, `breakdown_plan_rules` in the app's fonts; updated `breakdown_mini_thread_*`, `proposal_rules_hint`, `task_editor*`, `minimal_today_hint`, `task_m_*`. `integration_test/breakdown_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac with Apple Intelligence (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

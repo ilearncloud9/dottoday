@@ -1,4 +1,5 @@
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/shared/duration/step_length_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -31,7 +32,7 @@ Future<void> _length(WidgetTester tester, String title, String label) async {
       of: inEditor(find.text(title)),
       matching: find.byType(Row),
     ),
-    matching: find.byType(OutlinedButton),
+    matching: find.byType(StepLengthChip),
   );
   await tester.tap(chip.first);
   await tester.pumpAndSettle();

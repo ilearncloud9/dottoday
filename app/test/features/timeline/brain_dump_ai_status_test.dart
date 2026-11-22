@@ -74,7 +74,7 @@ void main() {
     final h = await _off(tester);
     await planBrainDumpText(tester, _dump);
     await tester.runAsync(() async {
-      await tester.tap(find.byTooltip("Don't show again"));
+      await tester.tap(find.text("Don't show again"));
       await Future<void>.delayed(const Duration(milliseconds: 100));
     });
     await settleBrainDump(tester);

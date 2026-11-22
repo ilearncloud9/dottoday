@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/thinking/breakdown_tree.dart';
 import 'package:dottoday/domain/thinking/thinking_proposals.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_rows.dart';
+import 'package:dottoday/shared/dot/thread_pieces.dart';
 import 'package:flutter/material.dart';
 
 /// Asks for sub-steps of [step] at [depth] (the model, else rules).
@@ -24,8 +25,13 @@ class BreakdownBody extends StatefulWidget {
     required this.onChanged,
     required this.split,
     required this.newId,
+    this.lead,
     super.key,
   });
+
+  /// The task's row at the card's top, for the steps as they stand
+  /// ("was 2 h → now 2 h 15", E-R2-23).
+  final Widget Function(BreakdownTree tree)? lead;
 
   final BreakdownTree initial;
   final TaskColor color;
@@ -64,6 +70,13 @@ class _BreakdownBodyState extends State<BreakdownBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (widget.lead case final lead?) ...[
+          lead(_tree),
+          Divider(
+            height: DotSpace.l,
+            color: DotTheme.of(context).colors.hairline,
+          ),
+        ],
         ReorderableListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -100,7 +113,7 @@ class _BreakdownBodyState extends State<BreakdownBody> {
   void _add() => _edit(_tree.add(StepNode(id: widget.newId(), title: '')));
 }
 
-/// "+ Add a step": a dashed pill under the thread.
+/// "+ Add a step": a dashed box across the card (E-R2-23).
 class _AddStep extends StatelessWidget {
   const _AddStep({required this.onAdd});
 
@@ -110,22 +123,26 @@ class _AddStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return Padding(
-      padding: const EdgeInsetsDirectional.only(
-        start: DotTouch.android + DotSpace.s,
-        top: DotSpace.s,
-      ),
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: OutlinedButton.icon(
+      padding: const EdgeInsetsDirectional.only(top: DotSpace.s),
+      child: CustomPaint(
+        painter: DashedPillPainter(
+          color: t.colors.hairlineStrong,
+          radius: DotRadii.card,
+        ),
+        child: TextButton.icon(
           onPressed: onAdd,
-          style: OutlinedButton.styleFrom(
-            shape: dotChipShape(context),
-            side: BorderSide(color: t.colors.outline),
-            foregroundColor: t.colors.muted,
+          style: TextButton.styleFrom(
+            minimumSize: const Size.fromHeight(
+              DotSize.primaryButton - DotSpace.s,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(DotRadii.card),
+            ),
+            foregroundColor: t.colors.accentInk,
           ),
           icon: DotIcon(
             DotGlyphs.add,
-            color: t.colors.muted,
+            color: t.colors.accentInk,
             size: DotSize.rowIcon,
           ),
           label: Text(context.l10n.breakdownAddStep),

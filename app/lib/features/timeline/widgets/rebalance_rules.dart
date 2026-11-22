@@ -95,7 +95,7 @@ class _Rule extends StatelessWidget {
       color: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.selected) ? c.accentTint : c.raised,
       ),
-      labelStyle: t.styles.ruleChip.copyWith(color: on ? c.accentInk : c.text),
+      labelStyle: t.styles.smallChip.copyWith(color: on ? c.accentInk : c.text),
       checkmarkColor: c.accentInk,
       showCheckmark: true,
       iconTheme: const IconThemeData(size: DotSize.rowIcon),

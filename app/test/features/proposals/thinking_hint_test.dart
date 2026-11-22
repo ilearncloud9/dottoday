@@ -85,7 +85,7 @@ void main() {
 
   testWidgets("Don't show again puts it away", (tester) async {
     final (c, _) = await _pump(tester);
-    await tester.tap(find.byTooltip("Don't show again"));
+    await tester.tap(find.text("Don't show again"));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel(_mac), findsNothing);
     expect(c.read(seenTipsProvider).value, contains(Tip.thinkingHint));

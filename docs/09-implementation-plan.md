@@ -781,6 +781,7 @@ Rules for every task in M18 to M22:
   Each one has a test that nothing is written before Accept.
   Split by the owner (2026-11-22) into five parts, each with its own review page and commit: 1 Brain dump, typed and spoken; 2 Break it down; 3 Smallest step and Unstick; 4 Help with thinking; 5 the Reality thread and Learn my day.
   - [x] Part 1 done 2026-11-22 (ED-429): Brain dump to E-Phones-2 and E-R2-37: the filled box with the mic, Put it on ✓ Today / Tomorrow, "4 tasks · Plans with …" over "Nothing is saved until you accept", earlier dumps on a card (search past five), Dictate in the Mac and web block; journeys use an in-memory database on native platforms. Open: real devices.
+  - [x] Part 2 done 2026-11-22 (ED-430): Break it down to E-R2-23 §1: the task at the card's top, one-line steps (⠿, share ring, wrapping title, small grey length chip, ⌄), the dashed Add a step, the opened step tinted, How long is this step? as chips, the boxed simple-rules hint, Show less hints on a card. Open: real devices.
 - [ ] M20.5 Moving and selecting:
   - touch drag, tablet pointer and swipe (R2-25, ED-328);
   - multi-select and the selection bar (R2-6, ED-278, ED-279);
