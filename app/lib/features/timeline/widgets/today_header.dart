@@ -4,8 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_header.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/day_numbers.dart';
@@ -46,11 +45,11 @@ class TodayHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final low = date == today && watchLowEnergy(ref);
     final extras = watchOnScreen(ref, FeatureId.headerExtras);
     final short = AppLayout.isShort(context);
+    if (low) return LowEnergyTodayHeader(date: date, today: today, menu: menu);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.page,
@@ -120,25 +119,7 @@ class TodayHeader extends ConsumerWidget {
               );
             },
           ),
-          // Low energy's switch sits by its caption: the top row has the
-          // title, ⋯ and Settings (ED-238) and no room for it on a phone.
-          if (low)
-            Row(
-              children: [
-                Expanded(
-                  child: _Caption(
-                    l10n.lowEnergyCaption(
-                      DateFormat.MMMEd(locale).format(date),
-                    ),
-                  ),
-                ),
-                LowEnergySwitch(
-                  onChanged: (on) => toggleLowEnergy(context, on: on),
-                ),
-              ],
-            )
-          else if (!monthOpen && extras && !short)
-            DayNumbers(date: date),
+          if (!monthOpen && extras && !short) DayNumbers(date: date),
         ],
       ),
     );
@@ -267,18 +248,5 @@ class _TitleButton extends ConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-/// A muted line under the title (low-energy mode's "Thursday · low energy").
-class _Caption extends StatelessWidget {
-  const _Caption(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Text(text, style: t.styles.dayCaption.copyWith(letterSpacing: 0));
   }
 }

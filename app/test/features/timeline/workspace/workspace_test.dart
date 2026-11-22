@@ -8,6 +8,7 @@ import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -96,6 +97,32 @@ void main() {
     await tester.tap(find.text('Plan'));
     await tester.pumpAndSettle();
     expect(path(router), startsWith('/month'));
+  });
+
+  testWidgets('Routines is a sidebar place, marked on its own (E-R2-22)', (
+    tester,
+  ) async {
+    final router = await pump(tester);
+    final handle = tester.ensureSemantics();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(WorkspaceSidebar),
+        matching: find.text('Routines'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(path(router), '/settings/routines');
+    SemanticsNode row(String label) => tester.getSemantics(
+      find
+          .descendant(
+            of: find.byType(WorkspaceSidebar),
+            matching: find.bySemanticsLabel(RegExp('^$label')),
+          )
+          .first,
+    );
+    expect(row('Routines'), isSemantics(isSelected: true));
+    expect(row('Settings'), isSemantics(isSelected: false));
+    handle.dispose();
   });
 
   testWidgets('the toolbar switches views on the date and steps it', (

@@ -74,6 +74,8 @@ abstract final class DotGlyphs {
   static const chevronRight = DotGlyph('M9 6l6 6-6 6');
   static const arrowLeft = DotGlyph('M19 12H5M12 19l-7-7 7-7');
   static const arrowRight = DotGlyph('M5 12h14M12 5l7 7-7 7');
+  static const arrowUp = DotGlyph('M12 19V5M5 12l7-7 7 7');
+  static const arrowDown = DotGlyph('M12 5v14M19 12l-7 7-7-7');
   static const close = DotGlyph('M6 6l12 12M18 6L6 18');
   static const more = DotGlyph('M5 12h.01M12 12h.01M19 12h.01');
   static const moreVertical = DotGlyph('M12 5h.01M12 12h.01M12 19h.01');

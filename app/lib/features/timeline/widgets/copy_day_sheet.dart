@@ -52,6 +52,8 @@ Future<void> _copy(
     title: title,
     today: today,
     initial: fixed,
+    // The fixed day is the one copied, not a pick (E-R2-22).
+    markInitial: false,
   );
   if (picked == null || picked == fixed) return;
   final source = into ? picked : fixed;

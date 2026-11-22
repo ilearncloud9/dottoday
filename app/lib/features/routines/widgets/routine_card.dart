@@ -3,8 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/features/routines/widgets/routine_text.dart';
-import 'package:dottoday/shared/dot/task_dot.dart';
-import 'package:dottoday/shared/dot/thread_axis.dart';
+import 'package:dottoday/shared/dot/mini_ring.dart';
 import 'package:flutter/material.dart';
 
 /// One routine on the Routines page (`B-ios-routines`, 11 C2): its mini
@@ -42,13 +41,18 @@ class RoutineCard extends StatelessWidget {
         padding: const EdgeInsets.all(DotSpace.l),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: DotSpace.l,
+          spacing: DotSpace.m,
           children: [
-            ExcludeSemantics(child: RoutineMiniThread(routine: routine)),
+            Padding(
+              padding: const EdgeInsets.only(top: DotSpace.xs),
+              child: ExcludeSemantics(
+                child: RoutineMiniThread(routine: routine),
+              ),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: DotSpace.s,
+                spacing: DotSpace.xs,
                 children: [
                   Semantics(
                     header: true,
@@ -56,7 +60,7 @@ class RoutineCard extends StatelessWidget {
                   ),
                   Text(
                     routineSummary(context, routine, use24h: use24h),
-                    style: t.styles.body.copyWith(color: t.colors.muted),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
                   ),
                   Wrap(
                     spacing: DotSpace.xs,
@@ -65,14 +69,19 @@ class RoutineCard extends StatelessWidget {
                       for (final i in routine.items) _StepChip(item: i),
                     ],
                   ),
-                  const SizedBox(height: DotSpace.s),
+                  const SizedBox(height: DotSpace.xs),
                   Wrap(
                     spacing: DotSpace.s,
                     runSpacing: DotSpace.s,
                     children: [
-                      FilledButton(onPressed: onDrop, child: Text(dropLabel)),
+                      FilledButton(
+                        onPressed: onDrop,
+                        style: _compact(t),
+                        child: Text(dropLabel),
+                      ),
                       OutlinedButton(
                         onPressed: onEdit,
+                        style: _compact(t),
                         child: Text(l10n.routineEdit),
                       ),
                     ],
@@ -86,6 +95,16 @@ class RoutineCard extends StatelessWidget {
     );
   }
 }
+
+/// The card's buttons at the board's size (E-R2-22): the button face,
+/// 44 high, a 44 target kept.
+ButtonStyle _compact(DotTheme t) => ButtonStyle(
+  textStyle: WidgetStatePropertyAll(t.styles.button),
+  minimumSize: const WidgetStatePropertyAll(Size(0, DotTouch.min)),
+  padding: const WidgetStatePropertyAll(
+    EdgeInsets.symmetric(horizontal: DotSpace.l),
+  ),
+);
 
 /// A step's name on its colour's tint (the all-day chip style).
 class _StepChip extends StatelessWidget {
@@ -104,8 +123,8 @@ class _StepChip extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: DotSpace.m,
-          vertical: DotSpace.xs,
+          horizontal: DotSpace.s + DotSpace.xxs,
+          vertical: DotSpace.xxs + DotSpace.xxs,
         ),
         child: Text(
           item.title,
@@ -116,9 +135,9 @@ class _StepChip extends StatelessWidget {
   }
 }
 
-/// The routine as a small vertical thread: a picker-size dot per step and
-/// a short dotted segment in its colour, the moon cap under a routine that
-/// ends at Wind Down.
+/// The routine as a small vertical thread (E-R2-22): a hollow ring per
+/// step in its colour, joined by a short link, and the moon under a
+/// routine that ends at Wind Down.
 class RoutineMiniThread extends StatelessWidget {
   const RoutineMiniThread({required this.routine, super.key});
 
@@ -132,40 +151,24 @@ class RoutineMiniThread extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final i in steps) ...[
-          TaskDot(
-            color: TaskColor.fromKey(i.colorKey),
-            icon: TaskIcon.fromKey(i.iconKey),
-            state: DotState.upcoming,
-            label: i.title,
-            size: DotSize.pickerDot,
-          ),
-          CustomPaint(
-            size: Size(DotSize.pickerDot, _segment(i.durationMin)),
-            painter: ThreadAxisPainter(
-              // A step's own colour down its length (a preview, not now).
-              piece: SegmentPiece(
-                color: t.tasks[TaskColor.fromKey(i.colorKey)].color,
-                above: t.tasks[TaskColor.fromKey(i.colorKey)].color,
-                state: DotState.upcoming,
-              ),
-              hairline: t.colors.threadAhead,
-              accent: t.colors.accent,
-              card: t.colors.raised,
+        for (final (i, s) in steps.indexed) ...[
+          if (i > 0)
+            Container(
+              width: DotSize.miniRingStroke,
+              height: DotSize.miniLink,
+              color: t.tasks[TaskColor.fromKey(s.colorKey)].color,
             ),
-          ),
+          MiniRing(color: TaskColor.fromKey(s.colorKey)),
         ],
-        if (routine.anchor == RoutineAnchor.bed)
+        if (routine.anchor == RoutineAnchor.bed) ...[
+          const SizedBox(height: DotSpace.xxs),
           DotIcon(
             DotGlyphs.moon,
             color: t.tasks[TaskColor.violet].ink,
-            size: DotSize.rowIcon,
+            size: DotSize.miniRing,
           ),
+        ],
       ],
     );
   }
-
-  /// A step's segment grows with its length, within two sizes.
-  static double _segment(int minutes) =>
-      (DotSpace.l * minutes / 30).clamp(DotSpace.m, DotSpace.xxl * 1.5);
 }

@@ -1905,6 +1905,7 @@
   "menuDayWeekReview": "Wochenrückblick",
   "menuDayLowEnergy": "Energiesparmodus",
   "dayMenuPlanReality": "Plan / Realität",
+  "routinesSubtitleCount": "{subtitle} · {count}",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

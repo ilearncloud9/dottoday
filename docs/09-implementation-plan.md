@@ -771,6 +771,7 @@ Rules for every task in M18 to M22:
   - Rebalance with pins and the calendar trigger (R2-35, ED-341).
   Split by the owner (2026-11-22) into five parts, each with its own review page and commit: 1 the Day menu; 2 planning helpers (Routines, Duplicate, Copy as text, Low-energy); 3 Pick today's one thing; 4 Day review and Week in review; 5 Rebalance.
   - [x] Part 1 done 2026-11-22 (ED-424): one grouped Day menu (Time · Plan · Day · Layout; Minimal's three items on phones, E-Minimal's list from medium width) in each platform's own menu, Day ▾ on phones in portrait, a Day menu in the Mac and iPad menu bars, "Week in review" renamed, the spread's Running late button removed. Open: real devices; Drop a routine… as a submenu of routines (it opens the Routines page).
+  - [x] Part 2 done 2026-11-22 (ED-425): the planning helpers to E-R2-22: Routines (day tiles, ring threads, its own sidebar place, two cards to a row when wide), Edit routine (Cancel · Save bar, one-line steps), Duplicate's month sheet, low-energy Today (chip, ring, what's later in one row, a centred column on Mac, web and tablets); the iPad's tab bar no longer resets a tab the app switched to. Open: real devices.
 - [ ] M20.4 Proposal flows (R2-23, ED-324):
   - Brain dump, spoken Brain dump with its permission and web states (R2-37, ED-343);
   - Break it down, Smallest step, Unstick, Help with thinking, the Reality thread and learning.

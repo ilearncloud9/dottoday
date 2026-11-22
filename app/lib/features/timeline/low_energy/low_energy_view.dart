@@ -7,6 +7,7 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_later.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -23,9 +24,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Wake Up". No counts. In place of the day pager on phones and of the
 /// today card in the Mac/web spread.
 class LowEnergyView extends ConsumerWidget {
-  const LowEnergyView({required this.today, super.key});
+  const LowEnergyView({required this.today, this.heading, super.key});
 
   final DateTime today;
+
+  /// Wide screens' own heading over the column ([LowEnergyWide]); phones
+  /// have it in Today's header.
+  final Widget? heading;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,6 +56,7 @@ class LowEnergyView extends ConsumerWidget {
         DotSpace.fabClearance,
       ),
       children: [
+        if (heading case final h?) ...[h, const SizedBox(height: DotSpace.m)],
         if (day.next case final next?)
           _next(context, ref, next, now, at)
         else
@@ -58,18 +64,18 @@ class LowEnergyView extends ConsumerWidget {
             child: Text(
               context.l10n.lowEnergyNothing,
               textAlign: TextAlign.center,
-              style: DotTheme.of(context).styles.body,
+              style: DotTheme.of(context).styles.choiceTitle,
             ),
           ),
         if (day.later.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.m),
+          const SizedBox(height: DotSpace.s),
           LaterPile(tasks: day.later, time: (o) => at(o.startUtc!)),
         ],
         if (movable.isNotEmpty && !offered) ...[
           const SizedBox(height: DotSpace.m),
           ProposeTomorrowCard(onPropose: () => _propose(context, ref, movable)),
         ],
-        const SizedBox(height: DotSpace.l),
+        const SizedBox(height: DotSpace.m),
         const NudgesOffLine(),
       ],
     );

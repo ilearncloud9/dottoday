@@ -11532,6 +11532,12 @@ abstract class AppLocalizations {
   /// **'Plan / Reality'**
   String get dayMenuPlanReality;
 
+  /// Routines page on tablets, Mac and web (E-R2-22): the subtitle, then the number of routines, e.g. 'Reusable slices of thread · 3 routines'.
+  ///
+  /// In en, this message translates to:
+  /// **'{subtitle} · {count}'**
+  String routinesSubtitleCount(String subtitle, String count);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

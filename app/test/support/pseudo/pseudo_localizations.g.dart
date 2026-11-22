@@ -6076,6 +6076,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get dayMenuPlanReality => pseudo(super.dayMenuPlanReality);
 
   @override
+  String routinesSubtitleCount(String subtitle, String count) =>
+      pseudo(super.routinesSubtitleCount(subtitle, count));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

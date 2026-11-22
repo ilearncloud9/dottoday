@@ -113,6 +113,9 @@ abstract final class DotRadii {
 
   /// Android's selected day in the week strip: a tonal pill (E-Phones).
   static const double stripPillAndroid = 22;
+
+  /// A day tile in the Routines week strip (E-R2-22: 14).
+  static const double dayTile = 14;
 }
 
 /// Dot and thread sizes (docs/10 §2.3).
@@ -410,6 +413,36 @@ abstract final class DotSize {
 
   /// The web's Day ▾ popover (E-FullA-v2 frame 2: 330 at 1280).
   static const double webDayMenu = 330;
+
+  /// The Routines page's widest on tablets, Mac and web, where its
+  /// cards sit two to a row (E-R2-22 iPad).
+  static const double routinesWide = 960;
+
+  /// A page's icon tile beside its title (E-R2-22 Routines: 32).
+  static const double pageTile = 32;
+
+  /// The small hollow ring of a routine's mini thread and the Later
+  /// pile (E-R2-22: 12, stroke 2), and the link between two rings.
+  static const double miniRing = 12;
+  static const double miniRingStroke = 2;
+  static const double miniLink = 8;
+
+  /// Narrowest a routine step keeps its length and arrows beside its
+  /// name (E-R2-22 Edit routine); narrower, they take their own line.
+  static const double stepRowMin = 330;
+
+  /// A day tile in the Routines week strip (E-R2-22: 50 high).
+  static const double dayTile = 50;
+
+  /// Low-energy's ring around the one dot (E-R2-22: 96, stroke 8; the
+  /// dot inside 44).
+  static const double lowEnergyRing = 96;
+  static const double lowEnergyRingStroke = 8;
+  static const double lowEnergyDot = 44;
+
+  /// Low energy's column on wide screens (E-R2-22 Web and Mac: 460 in
+  /// a 760 frame).
+  static const double lowEnergyColumn = 480;
 
   /// A task's dot on the phone day thread: ahead, calendar and concurrent
   /// now (Concept E §5.1); a done dot is [threadDoneDot].

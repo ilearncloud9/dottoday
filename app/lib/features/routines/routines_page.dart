@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/routines/routine_providers.dart';
@@ -10,13 +10,11 @@ import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/features/routines/routine_flows.dart';
 import 'package:dottoday/features/routines/widgets/routine_card.dart';
 import 'package:dottoday/features/routines/widgets/routine_day_strip.dart';
-import 'package:dottoday/shared/dot/count_ring.dart';
-import 'package:dottoday/shared/dot/thread.dart';
+import 'package:dottoday/features/routines/widgets/routines_header.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Routines (`B-ios-routines`, 11 C2, docs/09 M11.4): reusable slices of
@@ -35,12 +33,15 @@ class RoutinesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final routines = ref.watch(routinesProvider);
     final list = routines.value;
+    final wide = AppLayout.classOf(context) != WidthClass.compact;
     return Scaffold(
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
+            constraints: BoxConstraints(
+              maxWidth: wide ? DotSize.routinesWide : DotSize.readableColumn,
+            ),
             child: list == null
                 ? screenState([
                         routines,
@@ -79,63 +80,89 @@ class _ListState extends ConsumerState<_List> {
         ? null
         : _localDate(ref.watch(clockProvider).nowUtc(), profile.tzId);
     final day = _day ?? today;
+    final wide = AppLayout.classOf(context) != WidthClass.compact;
+    final cards = [
+      for (final r in routines)
+        RoutineCard(
+          routine: r,
+          use24h: use24h,
+          dropLabel: day == null || day == today
+              ? l10n.routineDropToday
+              : l10n.routineDropOnDay(relativeDayName(context, day, today)),
+          onDrop: day == null
+              ? null
+              : () => unawaited(
+                  dropRoutine(
+                    context,
+                    r,
+                    date: day,
+                    today: today,
+                    use24h: use24h,
+                  ),
+                ),
+          onEdit: () => unawaited(editRoutine(context, routine: r)),
+        ),
+    ];
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         DotSpace.page,
-        DotSpace.l,
+        DotSpace.s,
         DotSpace.page,
         DotSpace.fabClearance,
       ),
       children: [
-        _Header(count: routines.length),
-        const SizedBox(height: DotSpace.l),
+        RoutinesHeader(count: routines.length, wide: wide),
+        const SizedBox(height: DotSpace.m),
         if (today != null && routines.isNotEmpty) ...[
-          Text(l10n.routineDropDay.toUpperCase(), style: t.styles.caption),
-          const SizedBox(height: DotSpace.xs),
-          RoutineDayStrip(
-            today: today,
-            selected: day ?? today,
-            onSelect: (d) => setState(() => _day = d),
-          ),
-          const SizedBox(height: DotSpace.l),
-        ],
-        if (routines.isEmpty)
           Text(
-            l10n.routinesEmpty,
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            l10n.routineDropDay,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
           ),
-        for (final r in routines) ...[
-          RoutineCard(
-            routine: r,
-            use24h: use24h,
-            dropLabel: day == null || day == today
-                ? l10n.routineDropToday
-                : l10n.routineDropOnDay(relativeDayName(context, day, today)),
-            onDrop: day == null
-                ? null
-                : () => unawaited(
-                    dropRoutine(
-                      context,
-                      r,
-                      date: day,
-                      today: today,
-                      use24h: use24h,
-                    ),
-                  ),
-            onEdit: () => unawaited(editRoutine(context, routine: r)),
+          const SizedBox(height: DotSpace.xs),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: SizedBox(
+              width: wide ? DotSize.readableColumn : null,
+              child: RoutineDayStrip(
+                today: today,
+                selected: day ?? today,
+                onSelect: (d) => setState(() => _day = d),
+              ),
+            ),
           ),
           const SizedBox(height: DotSpace.m),
         ],
-        _NewRoutine(onTap: () => unawaited(editRoutine(context))),
-        const SizedBox(height: DotSpace.l),
+        if (routines.isEmpty) ...[
+          _EmptyCard(text: l10n.routinesEmpty),
+          const SizedBox(height: DotSpace.s),
+        ],
+        // Two to a row from medium width (E-R2-22 iPad, Mac and web).
+        if (wide)
+          LayoutBuilder(
+            builder: (context, box) {
+              final w = (box.maxWidth - DotSpace.s) / 2;
+              return Wrap(
+                spacing: DotSpace.s,
+                runSpacing: DotSpace.s,
+                children: [
+                  for (final c in cards) SizedBox(width: w, child: c),
+                  SizedBox(width: w, child: _newRoutine(context)),
+                ],
+              );
+            },
+          )
+        else ...[
+          for (final c in cards) ...[c, const SizedBox(height: DotSpace.s)],
+          _newRoutine(context),
+        ],
+        const SizedBox(height: DotSpace.m),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: DotSpace.s,
+          spacing: DotSpace.xs,
           children: [
             DotIcon(
-              DotGlyphs.freeRing,
+              DotGlyphs.bell,
               color: t.colors.muted,
-              size: DotSize.rowIcon,
+              size: DotSize.miniRing + DotSpace.xxs,
             ),
             Flexible(
               child: Text(
@@ -156,82 +183,27 @@ DateTime _localDate(DateTime utc, String tzId) {
   return DateTime(local.year, local.month, local.day);
 }
 
-/// ‹, "Routines", "Reusable slices of thread" and the count ring.
-class _Header extends StatelessWidget {
-  const _Header({required this.count});
+Widget _newRoutine(BuildContext context) =>
+    NewRoutineCard(onTap: () => unawaited(editRoutine(context)));
 
-  final int count;
+/// "No routines yet. …" on a card (E-R2-22 none yet).
+class _EmptyCard extends StatelessWidget {
+  const _EmptyCard({required this.text});
 
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        IconButton(
-          tooltip: l10n.settingsBack,
-          onPressed: () =>
-              context.canPop() ? context.pop() : context.go(AppRoutes.settings),
-          icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Semantics(
-                header: true,
-                child: Text(l10n.routinesTitle, style: t.styles.pageTitle),
-              ),
-              Text(
-                l10n.routinesSubtitle,
-                style: t.styles.body.copyWith(color: t.colors.muted),
-              ),
-            ],
-          ),
-        ),
-        CountRing(count: count, label: l10n.routinesCount(count)),
-      ],
-    );
-  }
-}
-
-/// "+ New routine · or save a selection from any day" in a dashed box.
-class _NewRoutine extends StatelessWidget {
-  const _NewRoutine({required this.onTap});
-
-  final VoidCallback onTap;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    return Semantics(
-      button: true,
-      label: l10n.routineNew,
-      hint: l10n.routineNewHint,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: t.colors.raised,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        child: CustomPaint(
-          painter: DashedPillPainter(color: t.colors.outline),
-          child: Padding(
-            padding: const EdgeInsets.all(DotSpace.l),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: DotSpace.s,
-              children: [
-                DotIcon(DotGlyphs.add, color: t.colors.text),
-                Text(l10n.routineNew, style: t.styles.body),
-                Text(
-                  l10n.realityMetaJoin(l10n.routineNewHint),
-                  style: t.styles.body.copyWith(color: t.colors.muted),
-                ),
-              ],
-            ),
-          ),
-        ),
+        border: Border.all(color: t.colors.outline, width: DotSpace.hairline),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DotSpace.l),
+        child: Text(text, style: t.styles.body),
       ),
     );
   }

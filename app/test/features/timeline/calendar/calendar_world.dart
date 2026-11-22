@@ -4,6 +4,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,8 @@ Future<GoRouter> pumpCalendar(
   List<Occurrence>? rows,
   double text = 1,
   UiLayout layout = UiLayout.full,
+  List<Routine> routines = const [],
+  DateTime? lowEnergyUntil,
 }) async {
   if (size != null) {
     tester.view
@@ -121,8 +124,13 @@ Future<GoRouter> pumpCalendar(
             rows ?? [...calendarMonth(), ...pastYear()],
           ),
           profile: testProfile(
-            settings: Settings(use24h: false, uiLayout: layout),
+            settings: Settings(
+              use24h: false,
+              uiLayout: layout,
+              lowEnergyUntil: lowEnergyUntil,
+            ),
           ),
+          routines: routines,
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
       ],

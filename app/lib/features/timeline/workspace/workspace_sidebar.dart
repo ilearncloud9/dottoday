@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -66,6 +64,7 @@ class _WorkspaceSidebarState extends ConsumerState<WorkspaceSidebar> {
     final locale = Localizations.localeOf(context).toLanguageTag();
     String count(int n) => NumberFormat.decimalPattern(locale).format(n);
     void go(String to) => router.go(to);
+    final routinesPath = AppRoutes.settingsPage(SettingsPage.routines);
     void pick(WorkspaceView v) {
       ref.read(lastWorkspaceViewProvider.notifier).choose(v);
       final day = today ?? DateTime.now();
@@ -164,11 +163,12 @@ class _WorkspaceSidebarState extends ConsumerState<WorkspaceSidebar> {
                           label: l10n.routinesTitle,
                           indent: true,
                           trailing: routines == 0 ? null : count(routines),
-                          onTap: () => unawaited(
-                            router.push(
-                              AppRoutes.settingsPage(SettingsPage.routines),
-                            ),
-                          ),
+                          // A sidebar destination (E-R2-22): the content
+                          // area holds the page, the row shows it.
+                          mark: path == routinesPath
+                              ? SidebarMark.view
+                              : SidebarMark.none,
+                          onTap: () => go(routinesPath),
                         ),
                         row(
                           label: l10n.dumpTitle,
@@ -218,7 +218,10 @@ class _WorkspaceSidebarState extends ConsumerState<WorkspaceSidebar> {
                 row(
                   label: l10n.navSettings,
                   glyph: DotGlyphs.settings,
-                  mark: path.startsWith(AppRoutes.settings)
+                  // Routines is its own sidebar place (E-R2-22).
+                  mark:
+                      path.startsWith(AppRoutes.settings) &&
+                          path != routinesPath
                       ? SidebarMark.place
                       : SidebarMark.none,
                   onTap: () => go(AppRoutes.settings),

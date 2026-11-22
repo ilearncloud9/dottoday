@@ -37,8 +37,11 @@ Future<void> editRoutine(BuildContext context, {Routine? routine}) async {
       _report(messenger, l10n, container, r, message);
   await showAppSheet<void>(
     context: context,
-    title: routine == null ? l10n.routineNew : l10n.routineEditTitle,
+    // The editor draws its own Cancel · title · Save row (E-R2-22).
+    scrolls: false,
     builder: (sheet) => RoutineEditor(
+      title: routine == null ? l10n.routineNew : l10n.routineEditTitle,
+      onCancel: () => Navigator.of(sheet).pop(),
       initial: initial,
       use24h: profile.settings.use24h,
       onSave: (r) {

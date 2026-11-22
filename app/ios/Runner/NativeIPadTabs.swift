@@ -30,6 +30,9 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
 
   /// Shows [items] with [selected] current, installing the controller as
   /// the window's root the first time.
+  /// True while [configure] selects a tab Flutter chose.
+  private var configuring = false
+
   func configure(_ args: [String: Any], teal: UIColor) {
     let items = args["items"] as? [[String: Any]] ?? []
     let selected = args["selected"] as? Int ?? -1
@@ -45,7 +48,14 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
       tabs.setTabs(wanted, animated: false)
     }
     let target = tabs.tabs.first { ($0.userInfo as? NSNumber)?.intValue == selected }
-    if let target, tabs.selectedTab !== target { tabs.selectedTab = target }
+    // Flutter chose this tab: UIKit's didSelectTab must not report it
+    // back as a tap, which would send the tab to its root (a route into
+    // Settings › Routines from Today landed on Settings, M20.3).
+    if let target, tabs.selectedTab !== target {
+      configuring = true
+      tabs.selectedTab = target
+      configuring = false
+    }
     // Always: the first tab is selected before anything moves the Flutter
     // view into it, and a view outside the window stops drawing.
     if let current = tabs.selectedTab { adopt(into: current) }
@@ -218,6 +228,7 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
     previousTab: UITab?
   ) {
     adopt(into: selectedTab)
+    if configuring { return }
     if let index = (selectedTab.userInfo as? NSNumber)?.intValue { onSelect(index) }
   }
 }

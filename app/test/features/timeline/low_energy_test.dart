@@ -97,7 +97,7 @@ void main() {
     expect(find.text('LATER · 6'), findsOneWidget);
     expect(find.text('Nudges are off until tomorrow\'s Wake Up'), findsOne);
     expect(find.textContaining(' of '), findsNothing, reason: 'no counts');
-    await tester.tap(find.byTooltip("Show what's later"));
+    await tester.tap(find.text("Show what's later"));
     await tester.pumpAndSettle();
     expect(find.text('Spanish lesson'), findsOneWidget);
     await _unmount(tester);

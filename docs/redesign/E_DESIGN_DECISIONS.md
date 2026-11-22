@@ -5460,6 +5460,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Found on devices and fixed:** the chip sat behind Android's floating toolbar (the bottom inset is now added); +15 min carried Need more time's icon.
 - **Checks:** analyze and format clean; 7,602 pass, 31 skipped; 154 goldens updated (the chip, the Running late button, the rename); `day_menu_kinds_test` (10 tests). `integration_test/day_menu_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). System menus can't be tapped by a test, so native runs end with the menu open. Not run: real devices.
 
+### ED-425 · M20.3 part 2: the planning helpers
+- **Date:** 2026-11-22. **Owner:** "Start part 2" ("One part": Routines, Duplicate, Copy as text and Low-energy together), then "Approve part 2" after the review page (https://claude.ai/artifact/1fxyX5jY6cxrXEh94KXwUc).
+- **Built (E-R2-22, R2-22, ED-322):** the look of the planning helpers; what they do is unchanged.
+  - **Routines:** a header per platform (‹ Planning on iPhone, ← and a repeat tile on Android, a subtitle with the count on wide windows), "Which day" over seven day tiles (the picked one filled), each card's steps as small coloured rings (`MiniRing`) with a moon for the bed anchor, two cards to a row from wide, the empty state on a card. Routines is its own sidebar place on iPad, Mac and web, marked alone.
+  - **Edit routine:** `SheetNavBar` (Cancel · title · Save on iOS, × · title · Save elsewhere; Add's iOS bar uses it too); each step on one line, colour ring, name, length pill, ↑ ↓ ×, stacked when narrow or at large text; Delete routine in text colour.
+  - **Duplicate day:** the source day is no longer marked as picked (`markInitial: false`); every month sheet puts the month at the start and ‹ › at the end.
+  - **Copy as text:** matched the board; unchanged.
+  - **Low-energy:** the date caption over "Take it easy" and a "Low-energy · on" chip that turns it off; the next task in a ring with Done and Not today side by side; what's later as one row of rings; the move-to-tomorrow offer on a tinted card. Mac, web and tablets get a centred column with its own heading (`LowEnergyWide`), where the spread had shown neither. The Settings row uses the leaf.
+- **Departures (on the review page):** the name stays in "Take it easy, Kody" when known, so on phones the chip wraps under it; phones keep Sync and the profile on the caption row and shorten the date when the long one doesn't fit; the month sheet keeps × for Cancel; iPad portrait opens Routines under the Settings tab; the name field keeps the app's style; one new string (`routinesSubtitleCount`).
+- **Found on devices and fixed:** the iPad's native tab bar reported the app's own tab switch as a tap and reset the tab to its root, so a Settings page reached from another tab landed on Settings (`NativeIPadTabs.swift`); on the web, Settings stayed marked beside Routines in the sidebar.
+- **Checks:** analyze and format clean; 7,610 pass, 31 skipped; goldens updated (routines, routine editor, routine drop, low-energy Today, the month picker, Settings) and new copy-day goldens; a sidebar test for Routines marked alone. `integration_test/planning_helpers_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

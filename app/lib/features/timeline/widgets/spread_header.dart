@@ -1,8 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_parts.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/state/day_summary.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -29,7 +27,6 @@ class SpreadHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final t = DotTheme.of(context);
     final locale = Localizations.localeOf(context).toLanguageTag();
     final isToday = date == today;
     final low = isToday && watchLowEnergy(ref);
@@ -44,38 +41,34 @@ class SpreadHeader extends ConsumerWidget {
         spacing: DotSpace.m,
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Semantics(
-                  container: true,
-                  header: true,
-                  child: Text(
-                    low
-                        ? lowEnergyTitle(context, ref)
-                        : dayTitle(context, ref, date: date, today: today),
-                    style: t.styles.pageTitle,
-                  ),
-                ),
-                Text(
-                  low
-                      // Counts are hidden in low-energy mode (11 D2).
-                      ? context.l10n.lowEnergyCaption(
-                          DateFormat.MMMMEEEEd(locale).format(date),
-                        )
-                      : _subtitle(context, ref, DateFormat.MMMMEEEEd(locale)),
-                  style: t.styles.body.copyWith(color: t.colors.muted),
-                ),
-              ],
-            ),
+            // Low energy's heading sits over its column (LowEnergyWide).
+            child: low ? const SizedBox.shrink() : _day(context, ref, locale),
           ),
-          if (low)
-            LowEnergySwitch(
-              onChanged: (on) => toggleLowEnergy(context, on: on),
-            ),
           ..._end(),
         ],
       ),
+    );
+  }
+
+  /// The greeting over "Wednesday, 21 October · 2 of 7 done".
+  Widget _day(BuildContext context, WidgetRef ref, String locale) {
+    final t = DotTheme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          container: true,
+          header: true,
+          child: Text(
+            dayTitle(context, ref, date: date, today: today),
+            style: t.styles.pageTitle,
+          ),
+        ),
+        Text(
+          _subtitle(context, ref, DateFormat.MMMMEEEEd(locale)),
+          style: t.styles.body.copyWith(color: t.colors.muted),
+        ),
+      ],
     );
   }
 

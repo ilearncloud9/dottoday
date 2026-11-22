@@ -7962,6 +7962,8 @@
   "@menuDayLowEnergy": {"description": "Mac Day menu (title case); ticked while on."},
   "dayMenuPlanReality": "Plan / Reality",
   "@dayMenuPlanReality": {"description": "Day menu: show the day as planned or as it went; off on a day with nothing recorded yet."},
+  "routinesSubtitleCount": "{subtitle} · {count}",
+  "@routinesSubtitleCount": {"description": "Routines page on tablets, Mac and web (E-R2-22): the subtitle, then the number of routines, e.g. 'Reusable slices of thread · 3 routines'.", "placeholders": {"subtitle": {"type": "String"}, "count": {"type": "String"}}},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

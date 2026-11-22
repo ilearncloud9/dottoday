@@ -1,7 +1,6 @@
 import 'package:dottoday/core/router/app_routes.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_wide.dart';
 import 'package:dottoday/features/timeline/week/days_grid.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/spread_header.dart';
@@ -47,14 +46,7 @@ class TodayThreeDays extends ConsumerWidget {
         TodayPrompt(date: shown, today: today),
         Expanded(
           child: low
-              ? Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: DotSize.readableColumn,
-                    ),
-                    child: LowEnergyView(today: today),
-                  ),
-                )
+              ? LowEnergyWide(today: today)
               : DaysGrid(
                   days: [_plus(-1), shown, _plus(1)],
                   stateKey: ValueKey(shown),

@@ -1,6 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
+import 'package:dottoday/features/timeline/low_energy/low_energy_wide.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/spread_header.dart';
@@ -30,14 +30,7 @@ class TodayDayWide extends ConsumerWidget {
         TodayPrompt(date: shown, today: today),
         Expanded(
           child: low
-              ? Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: DotSize.readableColumn,
-                    ),
-                    child: LowEnergyView(today: today),
-                  ),
-                )
+              ? LowEnergyWide(today: today)
               : ColoredBox(
                   color: DotTheme.of(context).colors.canvas,
                   child: DayPage(

@@ -1,9 +1,10 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/icon_guess/icon_guess.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
-import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/dot/mini_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:dottoday/shared/text/system_text_menu.dart';
@@ -95,8 +96,11 @@ final class RoutineStepDraft {
   }
 }
 
-/// A step row: the colour dot (tap for the next colour), name, length,
-/// and ↑ ↓ × — every control a ≥ 44 pt target with a label.
+/// A step row (E-R2-22): the colour ring (tap for the next colour), name,
+/// the length as a pill, and ↑ ↓ × on one line; the free time kept before
+/// it on a line above. Large text or a narrow sheet puts the length and
+/// the arrows on their own line, so the name keeps its width. Every
+/// control is a ≥ 44 pt target with a label.
 class RoutineStepRow extends StatelessWidget {
   const RoutineStepRow({
     required this.step,
@@ -122,98 +126,147 @@ class RoutineStepRow extends StatelessWidget {
     final title = step.name.text.isEmpty
         ? l10n.routineStepHint
         : step.name.text;
-    final lengths = {..._lengths, step.durationMin}.toList()..sort();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (!first && step.gapMin > 0)
-          Padding(
-            padding: const EdgeInsetsDirectional.only(start: DotSpace.s),
-            child: Text(
-              l10n.routineGap(formatDurationShort(l10n, step.gapMin)),
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-            ),
+    final ring = Semantics(
+      button: true,
+      label: title,
+      excludeSemantics: true,
+      child: InkResponse(
+        onTap: () {
+          final next = (step.color.index + 1) % TaskColor.values.length;
+          step.color = TaskColor.values[next];
+          onChanged();
+        },
+        radius: DotTouch.min / 2,
+        child: SizedBox.square(
+          dimension: DotTouch.min,
+          child: Center(
+            child: MiniRing(color: step.color, size: DotSize.rowIcon),
           ),
-        Row(
+        ),
+      ),
+    );
+    final name = TextField(
+      contextMenuBuilder: systemTextMenu,
+      controller: step.name,
+      maxLength: maxTitleLength,
+      minLines: 1,
+      maxLines: 3,
+      style: t.styles.body,
+      decoration: InputDecoration(
+        hintText: l10n.routineStepHint,
+        counterText: '',
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        filled: false,
+        isDense: true,
+      ),
+      onChanged: (_) => onChanged(),
+    );
+    final controls = [
+      _Length(step: step, title: title, onChanged: onChanged),
+      _Icon(DotGlyphs.arrowUp, l10n.routineMoveUp(title), onUp),
+      _Icon(DotGlyphs.arrowDown, l10n.routineMoveDown(title), onDown),
+      _Icon(DotGlyphs.close, l10n.routineRemoveStep(title), onRemove),
+    ];
+    return LayoutBuilder(
+      builder: (context, box) {
+        final stacked =
+            box.maxWidth < DotSize.stepRowMin ||
+            MediaQuery.textScalerOf(context).scale(1) > AppLayout.largeText;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TaskDot(
-              color: step.color,
-              icon: TaskIcon.fromKey(step.iconKey),
-              state: DotState.upcoming,
-              label: title,
-              size: DotSize.pickerDot,
-              onTap: () {
-                final next = (step.color.index + 1) % TaskColor.values.length;
-                step.color = TaskColor.values[next];
-                onChanged();
-              },
+            Row(
+              children: [
+                ring,
+                Expanded(child: name),
+                if (!stacked) ...controls,
+              ],
             ),
-            const SizedBox(width: DotSpace.s),
-            Expanded(
-              child: TextField(
-                contextMenuBuilder: systemTextMenu,
-                controller: step.name,
-                maxLength: maxTitleLength,
-                decoration: InputDecoration(
-                  hintText: l10n.routineStepHint,
-                  counterText: '',
-                ),
-                onChanged: (_) => onChanged(),
-              ),
-            ),
-          ],
-        ),
-        // Length and order on their own line, so the name keeps its width.
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            start: DotSize.pickerDot + DotSpace.s,
-          ),
-          child: Row(
-            children: [
-              // The system menu on the Mac and iOS (native pass).
-              DotMenuButton<int>(
-                tooltip: l10n.routineStepLength(title),
-                entries: () => [
-                  for (final m in lengths)
-                    ContextMenuEntry(
-                      value: m,
-                      label: formatDurationShort(l10n, m),
-                      checked: m == step.durationMin,
-                    ),
+            if (stacked)
+              Row(
+                children: [
+                  const SizedBox(width: DotTouch.min),
+                  controls.first,
+                  const Spacer(),
+                  ...controls.skip(1),
                 ],
-                onSelected: (m) {
-                  step.durationMin = m;
-                  onChanged();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: DotSpace.s,
-                    vertical: DotSpace.s + DotSpace.xxs,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: DotSpace.xs,
-                    children: [
-                      Text(
-                        formatDurationShort(l10n, step.durationMin),
-                        style: DotTheme.of(context).styles.body,
-                      ),
-                      DotIcon(
-                        DotGlyphs.chevronDown,
-                        color: DotTheme.of(context).colors.muted,
-                      ),
-                    ],
-                  ),
+              ),
+            if (!first && step.gapMin > 0)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: DotTouch.min,
+                  bottom: DotSpace.xs,
+                ),
+                child: Text(
+                  l10n.routineGap(formatDurationShort(l10n, step.gapMin)),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
                 ),
               ),
-              const Spacer(),
-              _Icon(DotGlyphs.chevronUp, l10n.routineMoveUp(title), onUp),
-              _Icon(DotGlyphs.chevronDown, l10n.routineMoveDown(title), onDown),
-              _Icon(DotGlyphs.close, l10n.routineRemoveStep(title), onRemove),
-            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// The length as a pill; the system menu on the Mac and iOS lists the
+/// lengths offered (native pass).
+class _Length extends StatelessWidget {
+  const _Length({
+    required this.step,
+    required this.title,
+    required this.onChanged,
+  });
+
+  final RoutineStepDraft step;
+  final String title;
+  final VoidCallback onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final lengths = {..._lengths, step.durationMin}.toList()..sort();
+    return DotMenuButton<int>(
+      tooltip: l10n.routineStepLength(title),
+      entries: () => [
+        for (final m in lengths)
+          ContextMenuEntry(
+            value: m,
+            label: formatDurationShort(l10n, m),
+            checked: m == step.durationMin,
+          ),
+      ],
+      onSelected: (m) {
+        step.durationMin = m;
+        onChanged();
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: DotTouch.min),
+        child: Center(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: t.colors.chip,
+              borderRadius: BorderRadius.circular(DotRadii.pill),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DotSpace.s + DotSpace.xxs,
+                vertical: DotSpace.xs,
+              ),
+              child: Text(
+                formatDurationShort(l10n, step.durationMin),
+                style: t.styles.rowMeta.copyWith(
+                  color: t.colors.text,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -231,9 +284,14 @@ class _Icon extends StatelessWidget {
     return IconButton(
       tooltip: tooltip,
       onPressed: onPressed,
+      constraints: const BoxConstraints.tightFor(
+        width: DotTouch.min,
+        height: DotTouch.min,
+      ),
+      padding: EdgeInsets.zero,
       icon: DotIcon(
         glyph,
-        color: onPressed == null ? t.colors.threadAhead : t.colors.text,
+        color: onPressed == null ? t.colors.threadAhead : t.colors.muted,
         size: DotSize.rowIcon,
       ),
     );

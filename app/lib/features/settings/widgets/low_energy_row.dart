@@ -25,8 +25,9 @@ class LowEnergyRow extends ConsumerWidget {
     final l10n = context.l10n;
     final now = ref.watch(clockProvider).nowUtc();
     return SettingsRow(
-      glyph: DotGlyphs.moon,
-      tint: t.tasks[TaskColor.violet].ink,
+      // The leaf, as the Low-energy · on chip (E-R2-22).
+      glyph: TaskIcon.leaf.glyph!,
+      tint: t.colors.accentInk,
       title: l10n.lowEnergyMode,
       subtitle: l10n.settingsLowEnergyDetail,
       toggle: lowEnergyOn(settings, now),

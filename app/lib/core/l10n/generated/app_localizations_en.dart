@@ -7584,6 +7584,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dayMenuPlanReality => 'Plan / Reality';
 
   @override
+  String routinesSubtitleCount(String subtitle, String count) {
+    return '$subtitle · $count';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

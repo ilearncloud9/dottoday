@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/dot/landing_strip.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Minimal Add's top (E-PhonesMinimal): on the iPhone a sheet's nav bar,
@@ -43,30 +44,11 @@ class AddMinimalHeader extends StatelessWidget {
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
-      child: Row(
-        children: [
-          TextButton(
-            onPressed: onCancel,
-            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-          ),
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(
-                l10n.addMinimalTitle,
-                textAlign: TextAlign.center,
-                style: t.styles.cardTitle,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: onAdd,
-            style: TextButton.styleFrom(
-              textStyle: t.styles.button.copyWith(fontWeight: FontWeight.w800),
-            ),
-            child: Text(l10n.addAdd),
-          ),
-        ],
+      child: SheetNavBar(
+        title: l10n.addMinimalTitle,
+        actionLabel: l10n.addAdd,
+        onCancel: onCancel,
+        onAction: onAdd,
       ),
     );
   }

@@ -30,6 +30,7 @@ Future<DateTime?> showMonthDayPicker(
   int firstDayOfWeek = 1,
   String? title,
   PlannedColors? plannedFor,
+  bool markInitial = true,
 }) => showAppSheet<DateTime>(
   context: context,
   title: title ?? context.l10n.timeMenuChangeDay,
@@ -38,6 +39,7 @@ Future<DateTime?> showMonthDayPicker(
     today: today,
     firstDayOfWeek: firstDayOfWeek,
     plannedFor: plannedFor,
+    markInitial: markInitial,
   ),
 );
 
@@ -46,6 +48,7 @@ class _MonthPicker extends StatefulWidget {
     required this.initial,
     required this.today,
     required this.firstDayOfWeek,
+    required this.markInitial,
     this.plannedFor,
   });
 
@@ -53,6 +56,10 @@ class _MonthPicker extends StatefulWidget {
   final DateTime today;
   final int firstDayOfWeek;
   final PlannedColors? plannedFor;
+
+  /// False where [initial] is the day being copied, not a pick (Duplicate
+  /// day, E-R2-22): today keeps its ring and no day is filled.
+  final bool markInitial;
 
   @override
   State<_MonthPicker> createState() => _MonthPickerState();
@@ -88,6 +95,7 @@ class _MonthPickerState extends State<_MonthPicker> {
         _cell(DateTime(_month.year, _month.month, d), locale, dots),
     ];
     final initialHere =
+        widget.markInitial &&
         widget.initial.year == _month.year &&
         widget.initial.month == _month.month;
     return Column(
@@ -112,24 +120,24 @@ class _MonthPickerState extends State<_MonthPicker> {
     );
   }
 
+  /// "November 2026" at the start, ‹ › at the end (E-R2-22 month sheet).
   Widget _header(DotTheme t, AppLocalizations l10n, String locale) => Row(
     children: [
-      IconButton(
-        tooltip: l10n.monthPrevious,
-        onPressed: () => _shift(-1),
-        icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
-      ),
       Expanded(
         child: Text(
           DateFormat.yMMMM(locale).format(_month),
-          textAlign: TextAlign.center,
           style: t.styles.cardTitle,
         ),
       ),
       IconButton(
+        tooltip: l10n.monthPrevious,
+        onPressed: () => _shift(-1),
+        icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentInk),
+      ),
+      IconButton(
         tooltip: l10n.monthNext,
         onPressed: () => _shift(1),
-        icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.text),
+        icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.accentInk),
       ),
     ],
   );

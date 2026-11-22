@@ -27,11 +27,19 @@ void main() {
       find.textContaining('Take it easy, Kody', findRichText: true),
       findsOneWidget,
     );
+    // The short date where the long one doesn't fit beside the buttons.
     expect(find.text('Wed, Oct 21 · Low-energy'), findsOneWidget);
     expect(find.text('Low-energy · on'), findsOneWidget);
     final nudges = find.text("Nudges are off until tomorrow's Wake Up");
     await tester.scrollUntilVisible(nudges, 200);
     expect(nudges, findsOneWidget);
+    // The chip turns it off in one tap (E-R2-22).
+    await tester.tap(find.text('Low-energy · on'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Take it easy, Kody', findRichText: true),
+      findsNothing,
+    );
   });
 
   testWidgets('it turns itself off at the next Wake Up', (tester) async {
