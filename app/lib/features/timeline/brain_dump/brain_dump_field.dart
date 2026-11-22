@@ -13,7 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Brain dump's text box (docs/09 M14.5, 11 §B7): the multi-line field
 /// with the mic in its bottom-end corner where on-device speech exists
 /// (D2), the first-use tip on how dictation makes lines, and the caption
-/// while listening. Typing works as before; the mic adds to it.
+/// while listening. Typing works as before; the mic adds to it. The box
+/// is filled, as Add's title box (E-Phones-2, E-R2-37).
 class BrainDumpField extends ConsumerStatefulWidget {
   const BrainDumpField({required this.controller, super.key});
 
@@ -62,41 +63,49 @@ class _BrainDumpFieldState extends ConsumerState<BrainDumpField> {
           _DictationTip(onClose: () => setState(() => _tip = false)),
           const SizedBox(height: DotSpace.s),
         ],
-        Stack(
-          children: [
-            TextField(
-              contextMenuBuilder: systemTextMenu,
-              controller: widget.controller,
-              focusNode: _focus,
-              autofocus: true,
-              minLines: 5,
-              maxLines: 12,
-              keyboardType: TextInputType.multiline,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                hintText: mic ? l10n.dumpHintMic : l10n.dumpHint,
-                // Room for the mic so text never runs under it.
-                contentPadding: mic
-                    ? const EdgeInsetsDirectional.fromSTEB(
-                        DotSpace.m,
-                        DotSpace.m,
-                        DotTouch.android,
-                        DotSpace.m,
-                      )
-                    : null,
-              ),
-            ),
-            if (mic)
-              PositionedDirectional(
-                end: DotSpace.xxs,
-                bottom: DotSpace.xxs,
-                child: DictationMic(
-                  field: widget.controller,
-                  focus: _focus,
-                  mode: DictationMode.brainDump,
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: DotTheme.of(context).colors.sunk,
+            borderRadius: BorderRadius.circular(DotRadii.tile),
+          ),
+          child: Stack(
+            children: [
+              TextField(
+                contextMenuBuilder: systemTextMenu,
+                controller: widget.controller,
+                focusNode: _focus,
+                autofocus: true,
+                minLines: 5,
+                maxLines: 12,
+                keyboardType: TextInputType.multiline,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  hintText: mic ? l10n.dumpHintMic : l10n.dumpHint,
+                  filled: false,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  // Room for the mic so text never runs under it.
+                  contentPadding: EdgeInsetsDirectional.fromSTEB(
+                    DotSpace.m,
+                    DotSpace.m,
+                    mic ? DotTouch.android : DotSpace.m,
+                    DotSpace.m,
+                  ),
                 ),
               ),
-          ],
+              if (mic)
+                PositionedDirectional(
+                  end: DotSpace.xxs,
+                  bottom: DotSpace.xxs,
+                  child: DictationMic(
+                    field: widget.controller,
+                    focus: _focus,
+                    mode: DictationMode.brainDump,
+                  ),
+                ),
+            ],
+          ),
         ),
         DictationNotice(
           field: widget.controller,

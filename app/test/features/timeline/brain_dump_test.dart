@@ -1,6 +1,7 @@
 import 'package:dottoday/core/clock/minute_tick.dart';
 import 'package:dottoday/data/thinking/local_thinking_memory.dart';
 import 'package:dottoday/domain/thinking/thinking_backend.dart';
+import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,9 +87,7 @@ void main() {
     await unmountBrainDump(tester);
   });
 
-  testWidgets('dumps are kept, searchable, and can be used again', (
-    tester,
-  ) async {
+  testWidgets('dumps are kept and can be used again', (tester) async {
     final h = await pumpBrainDump(tester);
     await planBrainDumpText(tester, _dump);
     await tester.tap(find.text('Discard'));
@@ -121,14 +120,52 @@ void main() {
     );
     await settleBrainDump(tester);
     expect(find.text('EARLIER DUMPS'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).last, 'nothing like it');
-    await tester.pump();
-    expect(find.text('Use again'), findsNothing);
-    await tester.enterText(find.byType(TextField).last, 'taxes');
-    await tester.pump();
+    // One dump: its date and length, and no search (E-Phones-2).
+    expect(find.textContaining('· 3 lines'), findsOneWidget);
+    expect(find.text('Search earlier dumps'), findsNothing);
     await tester.tap(find.text('Use again'));
     await tester.pump();
     expect(find.text(_dump), findsOneWidget);
+    await unmountBrainDump(tester);
+  });
+
+  testWidgets('more than five dumps: the search finds one', (tester) async {
+    final h = await pumpBrainDump(tester);
+    final memory = LocalThinkingMemory(h.base.db);
+    await tester.runAsync(() async {
+      for (var i = 0; i < 6; i++) {
+        await memory.rememberDump(
+          BrainDump(
+            text: i == 0 ? 'Taxes\nGym' : 'Line $i', // l10n-ignore: data
+            atUtc: DateTime.utc(2026, 10, 10 + i),
+          ),
+        );
+      }
+    });
+    await tester.runAsync(() => tester.pumpWidget(const SizedBox()));
+    await tester.runAsync(
+      () => tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            ...h.overrides,
+            minuteTickProvider.overrideWith((ref) => const Stream.empty()),
+          ],
+          child: testApp(
+            Scaffold(
+              body: SingleChildScrollView(
+                child: BrainDumpBody(today: DateTime(2026, 10, 21)),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await settleBrainDump(tester);
+    expect(find.text('Search earlier dumps'), findsOneWidget);
+    expect(find.text('Use again'), findsNWidgets(5));
+    await tester.enterText(find.byType(TextField).last, 'taxes');
+    await tester.pump();
+    expect(find.text('Use again'), findsOneWidget);
     await unmountBrainDump(tester);
   });
 

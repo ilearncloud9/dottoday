@@ -11550,6 +11550,24 @@ abstract class AppLocalizations {
   /// **'{range} · {done} of {total} done so far'**
   String reviewWeekRowDetail(String range, int done, int total);
 
+  /// Brain dump: the label before the Today / Tomorrow chips (E-Phones-2).
+  ///
+  /// In en, this message translates to:
+  /// **'Put it on'**
+  String get dumpPutOn;
+
+  /// Brain dump: how many tasks the lines make, before how it plans, e.g. '4 tasks · Plans with simple rules'.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 task} other{{count} tasks}}'**
+  String dumpTaskCount(int count);
+
+  /// Brain dump: an earlier dump's date and length, e.g. 'Mon, Nov 2 · 5 lines'.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} · {count, plural, =1{1 line} other{{count} lines}}'**
+  String dumpEarlierMeta(String date, int count);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

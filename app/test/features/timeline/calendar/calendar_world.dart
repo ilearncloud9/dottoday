@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../acceptance/slice_world.dart';
 import '../../../domain/fixtures.dart';
+import '../../../support/memory_database.dart';
 import '../../../support/test_app.dart';
 import '../../../support/timeline_fakes.dart';
 
@@ -133,6 +134,8 @@ Future<GoRouter> pumpCalendar(
           routines: routines,
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
+        // Never the person's own database on a device or the Mac.
+        ...memoryDatabaseOverrides(),
       ],
     ),
   );

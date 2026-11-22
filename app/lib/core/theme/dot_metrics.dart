@@ -580,6 +580,10 @@ abstract final class DotSize {
 
   /// Rebalance's centred panel on the Mac and the web (E-R2-35).
   static const double rebalancePanel = 420;
+
+  /// The Plan panel's Brain dump row (E-R2-37): below this width (at
+  /// 100 % text) the note goes above the mic and Plan it.
+  static const double dumpRowMin = 260;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

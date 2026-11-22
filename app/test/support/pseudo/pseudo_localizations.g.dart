@@ -6088,6 +6088,16 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.reviewWeekRowDetail(range, done, total));
 
   @override
+  String get dumpPutOn => pseudo(super.dumpPutOn);
+
+  @override
+  String dumpTaskCount(int count) => pseudo(super.dumpTaskCount(count));
+
+  @override
+  String dumpEarlierMeta(String date, int count) =>
+      pseudo(super.dumpEarlierMeta(date, count));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

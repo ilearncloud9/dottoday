@@ -10,14 +10,12 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/thinking/thinking_memory.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_field.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_flow.dart';
-import 'package:dottoday/shared/controls/dot_segmented.dart';
+import 'package:dottoday/features/timeline/brain_dump/brain_dump_parts.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
-import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:dottoday/shared/thinking/thinking_copy.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 /// "Brain dump" (11 B4, docs/09 M12.5), from Today's ⋯: write or dictate
 /// (the mic, M14.5) everything on your mind, one thing per line, pick Today or Tomorrow,
@@ -96,71 +94,63 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final empty = _text.text.trim().isEmpty;
+    final lines = LineSplitter.split(
+      _text.text,
+    ).where((l) => l.trim().isNotEmpty).length;
+    final muted = t.styles.rowMeta.copyWith(color: t.colors.muted);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.m,
       children: [
         BrainDumpField(controller: _text),
-        DotSegmented<bool>(
-          segments: [(false, l10n.sheetToday), (true, l10n.sheetTomorrow)],
-          selected: _tomorrow,
+        BrainDumpDay(
+          tomorrow: _tomorrow,
           onChanged: (v) => setState(() => _tomorrow = v),
         ),
         if (_nothing) Text(l10n.dumpNothing, style: t.styles.rowMeta),
         FilledButton(
           onPressed: empty || _busy ? null : () => unawaited(_plan(context)),
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(DotSize.primaryButton),
+            textStyle: t.styles.primaryButton,
+          ),
           child: Text(l10n.dumpPlan),
         ),
-        // Which path will answer, before the tap (M14.2).
-        if (ref.watch(thinkingStatusProvider).value case final s?)
-          Text(
-            l10n.plansWith(s),
-            textAlign: TextAlign.center,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-          ),
+        // How many tasks, which path will answer (M14.2), and that
+        // nothing is saved yet (E-Phones-2).
+        Column(
+          children: [
+            if (_caption(l10n, lines) case final caption?)
+              Text(caption, textAlign: TextAlign.center, style: muted),
+            Text(
+              l10n.proposalNothingSaved,
+              textAlign: TextAlign.center,
+              style: muted,
+            ),
+          ],
+        ),
         // Minimal (docs/14 §3): no dump history.
         if (_history.isNotEmpty && watchOnScreen(ref, FeatureId.brainDumpEntry))
-          ..._earlier(context),
+          BrainDumpEarlier(
+            history: _history,
+            search: _search,
+            onSearch: () => setState(() {}),
+            onUse: (text) => setState(() => _text.text = text),
+          ),
       ],
     );
   }
 
-  List<Widget> _earlier(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final shown = searchDumps(_history, _search.text).take(5);
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    return [
-      const SizedBox(height: DotSpace.s),
-      Semantics(
-        header: true,
-        child: Text(l10n.dumpEarlier.toUpperCase(), style: t.styles.caption),
-      ),
-      TextField(
-        contextMenuBuilder: systemTextMenu,
-        controller: _search,
-        onChanged: (_) => setState(() {}),
-        decoration: InputDecoration(hintText: l10n.dumpSearch),
-      ),
-      for (final d in shown)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(
-            LineSplitter.split(d.text).first,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: t.styles.rowTitle,
-          ),
-          subtitle: Text(
-            DateFormat.MMMEd(locale).format(d.atUtc.toLocal()),
-            style: t.styles.rowMeta,
-          ),
-          trailing: TextButton(
-            onPressed: () => setState(() => _text.text = d.text),
-            child: Text(l10n.dumpUseAgain),
-          ),
-        ),
-    ];
+  /// "4 tasks · Plans with simple rules"; either part alone when the
+  /// other is missing.
+  String? _caption(AppLocalizations l10n, int lines) {
+    final status = ref.watch(thinkingStatusProvider).value;
+    final plans = status == null ? null : l10n.plansWith(status);
+    final count = lines > 0 ? l10n.dumpTaskCount(lines) : null;
+    if (count != null && plans != null) {
+      return l10n.statusHintJoin(count, plans);
+    }
+    return count ?? plans;
   }
 
   Future<void> _plan(BuildContext context) async {

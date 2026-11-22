@@ -7599,6 +7599,31 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get dumpPutOn => 'Put it on';
+
+  @override
+  String dumpTaskCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tasks',
+      one: '1 task',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dumpEarlierMeta(String date, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines',
+      one: '1 line',
+    );
+    return '$date · $_temp0';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override
