@@ -570,6 +570,16 @@ abstract final class DotSize {
   /// The Review place's half (ED-099, E-FullA-v2): below two of these
   /// side by side, Day review and Week in review stack.
   static const double reviewHalfMin = 360;
+
+  /// Rebalance's faded ring for the day as it is (E-R2-35), beside the
+  /// proposed dot.
+  static const double proposalNowRing = 22;
+
+  /// The lock after a pinned task's time on the plan (E-R2-35).
+  static const double lockGlyph = 12;
+
+  /// Rebalance's centred panel on the Mac and the web (E-R2-35).
+  static const double rebalancePanel = 420;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

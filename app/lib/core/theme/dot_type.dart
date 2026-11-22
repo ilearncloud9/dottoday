@@ -76,6 +76,7 @@ final class DotType {
     required this.tag,
     required this.primaryButton,
     required this.chip,
+    required this.ruleChip,
     required this.stateTitle,
     required this.stateBody,
     required this.fieldError,
@@ -176,6 +177,7 @@ final class DotType {
     tag: _system(12, 20, 700, text),
     primaryButton: _manrope(17, 22, 800, text),
     chip: _manrope(14, 18, 700, text),
+    ruleChip: _manrope(13, 18, 700, text),
     stateTitle: _manrope(20, 26, 800, text),
     stateBody: _manrope(15, 21, 500, text),
     fieldError: _manrope(13, 18, 600, text),
@@ -367,6 +369,9 @@ final class DotType {
   /// Chip labels ("Today", "Tomorrow": 700 14 Manrope).
   final TextStyle chip;
 
+  /// Rebalance's rule chips (E-R2-35: 13/700, two to a phone's line).
+  final TextStyle ruleChip;
+
   /// A state's title, "This didn't load" (E-G4-7-States: 800 20/26).
   final TextStyle stateTitle;
 
@@ -453,6 +458,7 @@ final class DotType {
       tag: l(tag, other.tag),
       primaryButton: l(primaryButton, other.primaryButton),
       chip: l(chip, other.chip),
+      ruleChip: l(ruleChip, other.ruleChip),
       stateTitle: l(stateTitle, other.stateTitle),
       stateBody: l(stateBody, other.stateBody),
       fieldError: l(fieldError, other.fieldError),

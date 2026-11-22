@@ -5494,6 +5494,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the week row's numbers come from the day snapshots, as Week in review counts them, so they can differ from the day's count; medium widths keep the app's dialog (E-R2-14 draws the phone sheet centred at 640); real ‹ › buttons instead of the board's "‹ › for other days" hint; the sleep offer and Make sure I'm up stay under the night line when they apply. Two new strings (`reviewColumnCaption`, `reviewWeekRowDetail`) in en, de, es, fr.
 - **Checks:** analyze and format clean; 7,666 pass, 31 skipped; new goldens (the sheet compact and medium, Android, Week pushed, the Review place, the Day column, the pane); `review_surface_test` (6 tests). `integration_test/review_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape, the pane) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not reached: iPad landscape on the simulator (the test app relaunched in portrait); the pane is covered by its golden and widget test. Not run: real devices.
 
+### ED-428 · M20.3 part 5: Rebalance; M20.3 closed
+- **Date:** 2026-11-22. **Owner:** "Start part 5" (Rebalance centred on the Mac and web only, the other proposals keep the side panel until M20.4; Minimal's before and after built now; the Today cards wait for R2-26), then "Approve part 5" after the review page (https://claude.ai/artifact/HpbsHiRjbfVSDYGRZp9BzP).
+- **Built (E-R2-35, R2-35, ED-341):** the look of the Rebalance plan; what it does is unchanged (M11.1, M11.1b). Built strings only.
+  - **Lines:** each line leads with the task's faded ring for the day now (`NowRing`) beside its proposed dot; a pinned task's (or an event's) time carries the lock; "moved to …" is violet (was rose), shrunk amber, shifted the accent (`ProposalChangeChip`).
+  - **Rules:** Material filter chips, tinted with the check when on, outlined when off (moon on Push past Wind Down); a 13/700 `ruleChip` style so two fit a phone's line.
+  - **Expanded:** a centred panel (420, as tall as the plan; `ProposalRequest.centred`, `ProposalHost`) instead of the right-hand panel; Esc or a click outside discards. Medium keeps the dialog, phones the sheet. Other proposals keep the side panel (owner).
+  - **Minimal (docs/14 §3 C1 Simplified):** before and after only, no tags, no rules, no ×; Accept plan or Discard (`RebalancePlanList`, `RebalanceRules` read `FeatureId.rebalance`).
+  - `ProposalSheet` is as tall as its content (`MainAxisSize.min`), so the panel fits the plan.
+- **Found on the iPhone and fixed:** the native tab bar stayed above iOS's card sheet (a page route, not a popup), covering Rebalance's Discard and the foot of every full-height sheet; `NativeBarObserver` now counts `CupertinoSheetRoute` too.
+- **Departures (on the review page):** Accept plan's check stays before the words (E-Phones-2, every proposal); the struck old time keeps AM/PM; the Today cards ("Need more time?" › Catch up, "Calendar changed … Rebalance?") wait for R2-26 (owner); the lock and violet tag also show in the other proposals on the same list (routine drop, the week's carry, low-energy).
+- **Checks:** analyze and format clean; 7,686 pass, 31 skipped; new goldens `rebalance_plan` (iPhone compact and expanded, Android, Minimal) in the app's fonts; updated `rebalance_sheet` and `proposal_sheet_7`; `rebalance_look_test` (3: now rings, the centred panel with Esc and nothing written, Minimal with nothing written) and a native bar test for the card sheet. `integration_test/rebalance_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+- **M20.3 closed:** parts 1 to 5 (ED-424 to ED-428).
+
 ---
 
 ## Pending owner answers

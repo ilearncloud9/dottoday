@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// What the native iPhone bar answers (ED-128 N3).
@@ -55,8 +56,14 @@ final class NativeBarObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route is PopupRoute) popups.value++;
+    if (_covers(route)) popups.value++;
   }
+
+  /// A sheet or dialog, or iOS's card sheet (a page route, not a popup:
+  /// found on the iPhone in M20.3, where the row covered Rebalance's
+  /// Discard).
+  static bool _covers(Route<dynamic> route) =>
+      route is PopupRoute || route is CupertinoSheetRoute;
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
@@ -67,7 +74,7 @@ final class NativeBarObserver extends NavigatorObserver {
       _gone(route);
 
   void _gone(Route<dynamic> route) {
-    if (route is PopupRoute && popups.value > 0) popups.value--;
+    if (_covers(route) && popups.value > 0) popups.value--;
   }
 }
 

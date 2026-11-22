@@ -76,6 +76,8 @@ class ProposalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return Column(
+      // As tall as its content: a centred panel fits the plan (E-R2-35).
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(

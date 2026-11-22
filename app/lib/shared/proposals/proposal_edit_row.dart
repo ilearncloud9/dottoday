@@ -21,17 +21,23 @@ abstract interface class ProposalTimes {
 
 /// One line of the change list (E-Phones-2, ED-150): the proposed dot,
 /// times (old ones struck), title, tag, and × when [onRemove] is given.
+/// [nowRing] adds the task's faded ring before it, the day as it is
+/// (E-R2-35); [label] false drops the tag (Minimal's before and after).
 class ProposalEditRow extends StatelessWidget {
   const ProposalEditRow({
     required this.edit,
     required this.times,
     required this.onRemove,
+    this.nowRing = false,
+    this.label = true,
     super.key,
   });
 
   final ProposalEdit edit;
   final ProposalTimes times;
   final VoidCallback? onRemove;
+  final bool nowRing;
+  final bool label;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +55,7 @@ class ProposalEditRow extends StatelessWidget {
         child: Row(
           spacing: DotSpace.m,
           children: [
+            if (nowRing) NowRing(dot: dot),
             ProposedDot(dot: inbox ? dot : edit.after ?? dot, leaving: leaves),
             Expanded(
               child: Column(
@@ -63,11 +70,12 @@ class ProposalEditRow extends StatelessWidget {
                       color: leaves ? t.colors.muted : null,
                     ),
                   ),
-                  ProposalChangeChip(
-                    text: chip,
-                    change: edit.change,
-                    color: TaskColor.fromKey(dot.colorKey),
-                  ),
+                  if (label)
+                    ProposalChangeChip(
+                      text: chip,
+                      change: edit.change,
+                      color: TaskColor.fromKey(dot.colorKey),
+                    ),
                 ],
               ),
             ),
@@ -161,6 +169,18 @@ class _TimeLine extends StatelessWidget {
         const WidgetSpan(child: SizedBox(width: DotSpace.xs)),
         TextSpan(text: times.at(b.endUtc), style: struck),
       ],
+      // A pinned task (or an event) the plan works around (E-R2-35).
+      if (edit.change == ProposalChange.untouched) ...[
+        const WidgetSpan(child: SizedBox(width: DotSpace.xs)),
+        WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: DotIcon(
+            DotGlyphs.lock,
+            color: t.colors.muted,
+            size: DotSize.lockGlyph,
+          ),
+        ),
+      ],
     ];
     return Text.rich(TextSpan(children: spans));
   }
@@ -168,9 +188,17 @@ class _TimeLine extends StatelessWidget {
 
 /// "☾ Wind Down · 22:00", where the thread ends.
 class ProposalWindDownRow extends StatelessWidget {
-  const ProposalWindDownRow({required this.label, this.moon = true, super.key});
+  const ProposalWindDownRow({
+    required this.label,
+    this.moon = true,
+    this.nowRing = false,
+    super.key,
+  });
 
   final String label;
+
+  /// Lines up under a list whose lines lead with a [NowRing].
+  final bool nowRing;
 
   /// The moon glyph; off for the "2 h 15 free" line above it.
   final bool moon;
@@ -181,6 +209,7 @@ class ProposalWindDownRow extends StatelessWidget {
     return Row(
       spacing: DotSpace.m,
       children: [
+        if (nowRing) const SizedBox(width: DotSize.proposalNowRing),
         SizedBox(
           width: ProposedDot.extent,
           child: moon

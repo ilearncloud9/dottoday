@@ -3,8 +3,8 @@ import 'package:dottoday/domain/proposals/proposal.dart';
 import 'package:dottoday/shared/dot/overlap_knot.dart';
 import 'package:flutter/material.dart';
 
-/// What changes, tinted by kind (`B-ios-rebalance`): moves in the accent,
-/// length in amber, leaving the day in rose, untouched and to the Inbox in
+/// What changes, tinted by kind (`B-ios-rebalance`, E-R2-35): moves in
+/// the accent, length in amber, leaving the day in violet, untouched and to the Inbox in
 /// the quiet grey, in the tag's shape (E-Phones-2). Colour is
 /// never the only signal: the text says it. An overlap leads with the knot
 /// (ADR-0015): this task's strand, and a muted one for the other.
@@ -29,8 +29,8 @@ class ProposalChangeChip extends StatelessWidget {
         t.tasks[TaskColor.amber].ink,
       ),
       ProposalChange.movedToDay => (
-        t.tasks[TaskColor.rose].tint,
-        t.tasks[TaskColor.rose].ink,
+        t.tasks[TaskColor.violet].tint,
+        t.tasks[TaskColor.violet].ink,
       ),
       ProposalChange.untouched ||
       ProposalChange.overlaps ||

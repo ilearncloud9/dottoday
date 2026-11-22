@@ -13,7 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Shows the open proposal where this width shows proposals (docs/10 §4,
 /// docs/09 M10.2): a full-height bottom sheet (popover from the medium
 /// width) on phones and tablets, the right-hand panel at the expanded
-/// width — never a sheet there. Any feature opens one through
+/// width — never a sheet there — or a centred panel there when the
+/// request asks (Rebalance, E-R2-35). Any feature opens one through
 /// `activeProposalProvider`; this sits once in the app shell.
 class ProposalHost extends ConsumerStatefulWidget {
   const ProposalHost({required this.child, super.key});
@@ -32,11 +33,12 @@ class _ProposalHostState extends ConsumerState<ProposalHost> {
   Widget build(BuildContext context) {
     ref.listen(activeProposalProvider, (previous, next) {
       if (previous != null || next == null || _sheetUp) return;
+      if (_expanded && next.centred) return unawaited(_showCentred());
       if (_expanded && !next.overSheet) return;
       unawaited(_showSheet());
     });
     final request = ref.watch(activeProposalProvider);
-    if (request == null || !_expanded || request.overSheet) {
+    if (request == null || !_expanded || request.overSheet || request.centred) {
       return widget.child;
     }
     return _Panel(child: widget.child);
@@ -54,6 +56,29 @@ class _ProposalHostState extends ConsumerState<ProposalHost> {
     );
     _sheetUp = false;
     // A swipe down or a tap outside is a Discard.
+    if (mounted) ref.read(activeProposalProvider.notifier).close();
+  }
+
+  /// The centred panel over the screen (E-R2-35): as tall as the plan,
+  /// Esc or a click outside discards.
+  Future<void> _showCentred() async {
+    _sheetUp = true;
+    await showDialog<void>(
+      context: context,
+      builder: (dialog) => Dialog(
+        constraints: const BoxConstraints(
+          minWidth: DotSize.dialogMin,
+          maxWidth: DotSize.rebalancePanel,
+          maxHeight: appSheetMaxHeight,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: ProposalView(onClosed: () => Navigator.of(dialog).maybePop()),
+      ),
+    );
+    _sheetUp = false;
     if (mounted) ref.read(activeProposalProvider.notifier).close();
   }
 }

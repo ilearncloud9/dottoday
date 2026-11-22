@@ -44,6 +44,33 @@ class ProposedDot extends StatelessWidget {
   }
 }
 
+/// The task as the day has it now, before the plan (E-R2-35): a faded
+/// hollow ring in its colour, beside its [ProposedDot].
+class NowRing extends StatelessWidget {
+  const NowRing({required this.dot, super.key});
+
+  final SnapshotDot dot;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final color = TaskColor.fromKey(dot.colorKey);
+    return ExcludeSemantics(
+      child: Container(
+        width: DotSize.proposalNowRing,
+        height: DotSize.proposalNowRing,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: t.tasks[color].ring.withValues(alpha: TaskAlpha.upcoming),
+            width: DotSize.smallDotOutline,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// A 2 px dashed circle just inside its box: the proposed dot's ring and
 /// the legend's "proposed" mark.
 final class DashedRingPainter extends CustomPainter {

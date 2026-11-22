@@ -21,6 +21,8 @@ class ProposalThreadList extends StatelessWidget {
     required this.use24h,
     required this.today,
     required this.onRemove,
+    this.nowRings = false,
+    this.labels = true,
     super.key,
   });
 
@@ -31,8 +33,14 @@ class ProposalThreadList extends StatelessWidget {
   /// Today's local date (y/m/d), for "moved to tomorrow 9:00".
   final DateTime today;
 
-  /// × on a removable line, with its [ProposalEdit.id].
-  final ValueChanged<String> onRemove;
+  /// × on a removable line, with its [ProposalEdit.id]; null: no ×.
+  final ValueChanged<String>? onRemove;
+
+  /// Each line's faded ring for the day as it is (E-R2-35).
+  final bool nowRings;
+
+  /// False drops the tags: before and after only (Minimal, docs/14 C1).
+  final bool labels;
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +60,21 @@ class ProposalThreadList extends StatelessWidget {
               key: ValueKey(e.id),
               edit: e,
               times: _Times(context, location, use24h, today),
-              onRemove: e.removable ? () => onRemove(e.id) : null,
+              onRemove: switch (onRemove) {
+                final remove? when e.removable => () => remove(e.id),
+                _ => null,
+              },
+              nowRing: nowRings,
+              label: labels,
             ),
         if (_freeMinutes(proposal) case final free when free > 0)
           ProposalWindDownRow(
             label: l10n.threadFree(formatDurationShort(l10n, free)),
             moon: false,
+            nowRing: nowRings,
           ),
         ProposalWindDownRow(
+          nowRing: nowRings,
           label: l10n.threadBed(
             timeOfUtc(
               context,

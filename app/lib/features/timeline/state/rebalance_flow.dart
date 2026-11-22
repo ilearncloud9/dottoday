@@ -11,6 +11,7 @@ import 'package:dottoday/domain/scheduling/day_scheduler_service.dart';
 import 'package:dottoday/domain/scheduling/rebalance.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
+import 'package:dottoday/features/timeline/widgets/rebalance_plan.dart';
 import 'package:dottoday/features/timeline/widgets/rebalance_rules.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/widgets.dart';
@@ -101,6 +102,10 @@ ProposalRequest rebalanceRequest(
   acceptLabel: l10n.rebalanceAccept,
   acceptedMessage: l10n.rebalanceAccepted,
   footnote: l10n.rebalanceFootnote,
+  // A centred panel on the Mac and the web (E-R2-35).
+  centred: true,
+  body: (context, proposal, update) =>
+      RebalancePlanList(proposal: proposal, update: update),
   options: (context, proposal, update) => [
     RebalanceRules(onChanged: (o) => update(compute(o))),
   ],

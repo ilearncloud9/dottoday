@@ -763,7 +763,7 @@ Rules for every task in M18 to M22:
   - [x] Part 3 done 2026-11-22 (ED-423): Search or run on the Mac and the web (⌘K, web k, the toolbar): up to five tasks, Search for …, and the menus' own commands with their keys; ↑↓ ↵ Esc; Minimal's Everything else with Minimal's menus; the iPad and Android keep the Search screen. Open: Plan the day and Reflect in Minimal's finder (no menu command yet); real devices.
   - Search or run on Mac and web (R2-30, ED-333);
   - the minimal Inbox at wide widths follows docs/14 §3 (ED-333).
-- [ ] M20.3 Day menu and planning:
+- [x] M20.3 Day menu and planning (closed 2026-11-22, ED-424 to ED-428):
   - one grouped Day menu, contents per mode (ED-093; tablets ED-254);
   - Routines, Duplicate day, Copy as text and Low-energy mode (R2-22, ED-322);
   - Pick today's one thing (R2-34, ED-339);
@@ -774,6 +774,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2 done 2026-11-22 (ED-425): the planning helpers to E-R2-22: Routines (day tiles, ring threads, its own sidebar place, two cards to a row when wide), Edit routine (Cancel · Save bar, one-line steps), Duplicate's month sheet, low-energy Today (chip, ring, what's later in one row, a centred column on Mac, web and tablets); the iPad's tab bar no longer resets a tab the app switched to. Open: real devices.
   - [x] Part 3 done 2026-11-22 (ED-426): Pick today's one thing to E-R2-34: the question-led phone sheet with no ×, hollow rings and a haloed, tinted pick under TODAY and INBOX, a 460 dialog with its title and × from medium width, "· Your one thing" joined to Today's time line, the Wake Up mission sharing the list. Open: real devices.
   - [x] Part 4 done 2026-11-22 (ED-427): Day review and Week in review, one surface per layout: the E-Phones-2 sheet (card, night pill, Week in review row) with Week pushed in it on phones, the Review place with ‹ › on the Mac and web and from tablets' sidebar, the 420 pane beside the day on tablets, Minimal's Day column; `/review` in Today's branch; every entry through `openReview`. Open: iPad landscape on a device; real devices; Week in review's look (R2-24, M20.13).
+  - [x] Part 5 done 2026-11-22 (ED-428): Rebalance to E-R2-35: the day's faded ring beside each proposed dot, the lock on pinned times, violet moves, tinted rule chips (two to a phone's line), a centred panel at the expanded width (other proposals keep the side panel until M20.4), Minimal's before and after only (docs/14 C1); the iPhone's native tab bar now hides under iOS card sheets. Open: real devices; the Today cards with R2-26.
 - [ ] M20.4 Proposal flows (R2-23, ED-324):
   - Brain dump, spoken Brain dump with its permission and web states (R2-37, ED-343);
   - Break it down, Smallest step, Unstick, Help with thinking, the Reality thread and learning.

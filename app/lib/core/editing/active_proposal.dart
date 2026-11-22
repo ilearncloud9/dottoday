@@ -50,6 +50,7 @@ final class ProposalRequest {
     this.busy = false,
     this.draftOnly = false,
     this.overSheet = false,
+    this.centred = false,
     this.rulesAnswered = false,
   });
 
@@ -89,6 +90,10 @@ final class ProposalRequest {
   /// popover at every width, never in the panel the popover covers.
   final bool overSheet;
 
+  /// A centred panel at the expanded width instead of the right-hand one
+  /// (Rebalance on the Mac and the web, E-R2-35).
+  final bool centred;
+
   /// Dottoday's rules made this plan, not a model (docs/09 M14.2): the
   /// sheet may add a `StatusHint` when turning the model on would help.
   final bool rulesAnswered;
@@ -124,6 +129,7 @@ final class ProposalRequest {
     busy: busy,
     draftOnly: draftOnly,
     overSheet: overSheet,
+    centred: centred,
     rulesAnswered: rulesAnswered,
   );
 }

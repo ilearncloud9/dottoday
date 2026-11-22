@@ -5,6 +5,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:dottoday/shared/navigation/pill_tab_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -149,6 +150,47 @@ void main() {
     await tester.pumpAndSettle();
     expect(bar.visible.last, isFalse);
     Navigator.of(tester.element(find.byType(AlertDialog))).pop();
+    await tester.pumpAndSettle();
+    expect(bar.visible.last, isTrue);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets("the row hides under iOS's card sheet too (M20.3)", (
+    tester,
+  ) async {
+    await _phone(tester);
+    final bar = _FakeBar();
+    await tester.pumpWidget(
+      MaterialApp(
+        navigatorObservers: [NativeBarObserver()],
+        home: Builder(
+          builder: (context) => DotShell(
+            destinations: shellDestinations(context.l10n, inbox: 0),
+            selected: 0,
+            onSelect: (_) {},
+            onAdd: () {},
+            addLabel: context.l10n.quickAddTooltip,
+            native: bar,
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => unawaited(
+                  showCupertinoSheet<void>(
+                    context: context,
+                    scrollableBuilder: (_, _) => const SizedBox.expand(),
+                  ),
+                ),
+                child: const Text('sheet'), // l10n-ignore: test fixture
+              ),
+            ),
+          ),
+        ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    );
+    await tester.tap(find.text('sheet'));
+    await tester.pumpAndSettle();
+    expect(bar.visible.last, isFalse);
+    Navigator.of(tester.element(find.byType(SizedBox).last)).pop();
     await tester.pumpAndSettle();
     expect(bar.visible.last, isTrue);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
