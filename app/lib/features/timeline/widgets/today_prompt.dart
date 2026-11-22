@@ -12,7 +12,8 @@ import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
-import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
+import 'package:dottoday/features/timeline/review/review_presenter.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
@@ -167,7 +168,8 @@ extension on TodayPrompt {
         child: PromptNudge(
           detail: context.l10n.weekPromptDetail,
           action: context.l10n.weekPromptAction,
-          onAction: () => unawaited(showWeekReview(context, today)),
+          onAction: () =>
+              unawaited(openReview(context, day: today, page: ReviewPage.week)),
           onNotNow: () => notNow(TodayPromptKind.week),
         ),
       );
@@ -175,6 +177,8 @@ extension on TodayPrompt {
   Widget _review(BuildContext context, void Function(TodayPromptKind) notNow) =>
       PromptCard(
         title: context.l10n.reviewTitle,
+        // The card opens the whole review where this layout keeps it.
+        onTap: () => unawaited(openReview(context, day: today)),
         child: DayReviewBody(
           day: today,
           onNotNow: () => notNow(TodayPromptKind.review),

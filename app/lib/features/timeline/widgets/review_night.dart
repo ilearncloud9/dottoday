@@ -17,10 +17,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// The Wind Down review's first line (docs/15 W6): the night it plans,
 /// "7 h 20 until Wake Up at 06:30", or "7 h 45 if you wind down now"
 /// before Wind Down. A plan, never a measure: no score, no comparison.
+/// [pill] draws it on a tinted pill with the moon (E-Phones-2).
 class ReviewNightLine extends ConsumerWidget {
-  const ReviewNightLine({required this.day, super.key});
+  const ReviewNightLine({required this.day, this.pill = false, super.key});
 
   final DateTime day;
+  final bool pill;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,11 +43,38 @@ class ReviewNightLine extends ConsumerWidget {
       ends.nextWakeUtc,
       use24h: use24hFor(context, data.settings.use24h),
     );
-    return Text(
+    final t = DotTheme.of(context);
+    final text = Text(
       now.isBefore(ends.shape.bedUtc)
           ? l10n.reviewNightIfNow(length)
           : l10n.reviewNightUntil(length, wake),
-      style: DotTheme.of(context).styles.body,
+      style: pill ? t.styles.chip : t.styles.body,
+    );
+    if (!pill) return text;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: t.colors.chip,
+        borderRadius: BorderRadius.circular(DotRadii.card),
+      ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: DotSpace.l,
+          vertical: DotSpace.m,
+        ),
+        child: Row(
+          spacing: DotSpace.m,
+          children: [
+            ExcludeSemantics(
+              child: DotIcon(
+                DotGlyphs.moon,
+                color: t.colors.muted,
+                size: DotSize.rowIcon,
+              ),
+            ),
+            Expanded(child: text),
+          ],
+        ),
+      ),
     );
   }
 }

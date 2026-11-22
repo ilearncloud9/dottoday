@@ -10,33 +10,27 @@ import 'package:dottoday/features/timeline/review/week_review_parts.dart';
 import 'package:dottoday/features/timeline/review/week_review_state.dart';
 import 'package:dottoday/features/timeline/review/week_share.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
-import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// "This week" (11 D1, docs/09 M12.1, `B-ios-week-review`): a sheet on
-/// phones and a popover from the medium width, like the Day review (the
-/// right-hand panel belongs to the proposal "Place" opens). From Today's ⋯
-/// at any time, and at Wind Down on the week's last day.
-Future<void> showWeekReview(BuildContext context, DateTime today) =>
-    showAppSheet<void>(
-      context: context,
-      title: context.l10n.weekReviewTitle,
-      builder: (sheet) => WeekReviewBody(
-        today: today,
-        onClose: () => Navigator.of(sheet).pop(),
-      ),
-    );
-
-/// The review's content: dates, the seven dots (tap one for its thread),
-/// the chips, the sentence, the carry-forward and the share image, then
-/// "No streaks here — just what happened."
+/// Week in review's content (11 D1, ED-099): dates, the seven dots (tap
+/// one for its thread), the chips, the sentence, the carry-forward and the
+/// share image, then "No streaks here — just what happened." It shows
+/// wherever the review does (`openReview`); R2-24 restyles it (M20.13).
 class WeekReviewBody extends ConsumerStatefulWidget {
-  const WeekReviewBody({required this.today, this.onClose, super.key});
+  const WeekReviewBody({
+    required this.today,
+    this.onClose,
+    this.showRange = true,
+    super.key,
+  });
 
   final DateTime today;
+
+  /// False where a header above already names the week.
+  final bool showRange;
 
   /// Closes the sheet before "Place" or "Leave in Inbox" act.
   final VoidCallback? onClose;
@@ -65,13 +59,16 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
     final unfinished = unfinishedOf(days, widget.today);
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final range = _range(context, week);
     final sentence = weekSentence(context, review);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.l,
       children: [
-        Text(range, style: t.styles.body.copyWith(color: t.colors.muted)),
+        if (widget.showRange)
+          Text(
+            weekRangeLabel(context, week),
+            style: t.styles.body.copyWith(color: t.colors.muted),
+          ),
         _card(context, review, days.first.settings.use24h),
         WeekReviewChips(review: review),
         if (sentence.isNotEmpty)
@@ -178,7 +175,7 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
           children: [
             WeekShareCard(
               review: review,
-              range: _range(context, week, short: true),
+              range: weekRangeLabel(context, week, short: true),
               titles: _titles,
               boundary: _image,
             ),
@@ -205,18 +202,18 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
       ),
     );
   }
+}
 
-  /// "Oct 18 – Oct 24".
-  static String _range(
-    BuildContext context,
-    List<DateTime> week, {
-    bool short = false,
-  }) {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final f = short ? DateFormat.MMMd(locale) : DateFormat.MMMMd(locale);
-    return context.l10n.weekReviewDates(
-      f.format(week.first),
-      f.format(week.last),
-    );
-  }
+/// "October 18 – October 24" ([short]: "Oct 18 – Oct 24") for [week].
+String weekRangeLabel(
+  BuildContext context,
+  List<DateTime> week, {
+  bool short = false,
+}) {
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  final f = short ? DateFormat.MMMd(locale) : DateFormat.MMMMd(locale);
+  return context.l10n.weekReviewDates(
+    f.format(week.first),
+    f.format(week.last),
+  );
 }

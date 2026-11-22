@@ -11538,6 +11538,18 @@ abstract class AppLocalizations {
   /// **'{subtitle} · {count}'**
   String routinesSubtitleCount(String subtitle, String count);
 
+  /// Minimal Day column (Mac, web): the review's caption, e.g. 'Day review · Tue, Nov 3'.
+  ///
+  /// In en, this message translates to:
+  /// **'Day review · {date}'**
+  String reviewColumnCaption(String date);
+
+  /// Day review: the Week in review row under its title, e.g. 'Nov 2 – Nov 8 · 9 of 16 done so far'.
+  ///
+  /// In en, this message translates to:
+  /// **'{range} · {done} of {total} done so far'**
+  String reviewWeekRowDetail(String range, int done, int total);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

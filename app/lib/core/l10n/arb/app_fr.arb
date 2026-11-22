@@ -1906,6 +1906,8 @@
   "menuDayLowEnergy": "Mode basse énergie",
   "dayMenuPlanReality": "Plan / Réalité",
   "routinesSubtitleCount": "{subtitle} · {count}",
+  "reviewColumnCaption": "Bilan de la journée · {date}",
+  "reviewWeekRowDetail": "{range} · {done} sur {total} faites pour l’instant",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",
   "taskIconCategoryFitness": "Forme et sport",

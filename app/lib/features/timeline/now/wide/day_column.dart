@@ -5,6 +5,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/day_column_prefs.dart';
 import 'package:dottoday/features/timeline/editor/task_editor.dart';
+import 'package:dottoday/features/timeline/review/review_panel.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/task_m/task_m_screen.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
@@ -18,7 +20,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// the Day column, ⌥⌘I), then today's thread with its Earlier fold. A
 /// task opens in the column like the Day (ED-089, M19.6 part 6d): the
 /// minimal task screen, its More options the full editor; ✕ or Esc
-/// brings the Day back, and the Now pane stays as it is.
+/// brings the Day back, and the Now pane stays as it is. The Day review
+/// opens here the same way (ED-099, E-Minimal), without Week in review.
 class DayColumn extends ConsumerStatefulWidget {
   const DayColumn({required this.today, this.onClose, super.key});
 
@@ -52,7 +55,7 @@ class _DayColumnState extends ConsumerState<DayColumn> {
         border: BorderDirectional(start: BorderSide(color: t.colors.hairline)),
       ),
       child: id == null
-          ? _Day(today: widget.today, onClose: widget.onClose)
+          ? _dayOrReview(context)
           : CallbackShortcuts(
               bindings: {
                 const SingleActivator(LogicalKeyboardKey.escape): close,
@@ -77,6 +80,30 @@ class _DayColumnState extends ConsumerState<DayColumn> {
                       ),
               ),
             ),
+    );
+  }
+
+  /// The Day, or the review while one is open here (Esc or ✕ closes it).
+  Widget _dayOrReview(BuildContext context) {
+    final review = ref.watch(reviewBesideProvider);
+    if (review == null) {
+      return _Day(today: widget.today, onClose: widget.onClose);
+    }
+    void close() => ref.read(reviewBesideProvider.notifier).close();
+    return CallbackShortcuts(
+      bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
+      child: FocusScope(
+        autofocus: true,
+        child: Padding(
+          padding: const EdgeInsets.all(DotSpace.l),
+          child: ReviewPanel(
+            key: ValueKey(review),
+            day: review.day,
+            onClose: close,
+            column: true,
+          ),
+        ),
+      ),
     );
   }
 }

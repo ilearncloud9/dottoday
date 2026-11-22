@@ -7637,6 +7637,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String reviewColumnCaption(String date) {
+    return 'Tagesrückblick · $date';
+  }
+
+  @override
+  String reviewWeekRowDetail(String range, int done, int total) {
+    return '$range · bisher $done von $total erledigt';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

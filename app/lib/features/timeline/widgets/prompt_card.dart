@@ -3,11 +3,19 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A raised card with a caption, between the header and the day card.
+/// [onTap] makes the card itself a way in (the Wind Down card opens the
+/// review, ED-099); its buttons keep their own taps.
 class PromptCard extends StatelessWidget {
-  const PromptCard({required this.title, required this.child, super.key});
+  const PromptCard({
+    required this.title,
+    required this.child,
+    this.onTap,
+    super.key,
+  });
 
   final String title;
   final Widget child;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +31,30 @@ class PromptCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(DotRadii.card),
           border: Border.all(color: t.colors.threadAhead),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(DotSpace.l),
-          child: Semantics(
-            container: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: DotSpace.xs,
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(title.toUpperCase(), style: t.styles.caption),
+        // The ink over the card's own paint, so the card looks as before.
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onTap,
+            customBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(DotRadii.card),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(DotSpace.l),
+              child: Semantics(
+                container: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: DotSpace.xs,
+                  children: [
+                    Semantics(
+                      header: true,
+                      child: Text(title.toUpperCase(), style: t.styles.caption),
+                    ),
+                    child,
+                  ],
                 ),
-                child,
-              ],
+              ),
             ),
           ),
         ),

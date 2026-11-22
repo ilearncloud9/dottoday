@@ -12,7 +12,8 @@ import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/reveal/hint_scheduler.dart';
-import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
+import 'package:dottoday/features/timeline/review/review_presenter.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/state/hint_signals.dart';
 import 'package:dottoday/shared/learning/wake_up_explain_sheet.dart';
 import 'package:dottoday/shared/thinking/status_hint.dart';
@@ -147,7 +148,7 @@ class _RevealHintRowState extends ConsumerState<RevealHintRow> {
           context,
         ).showSnackBar(SnackBar(content: Text(context.l10n.hintWidgetHow)));
       case HintId.weekReview:
-        unawaited(showWeekReview(context, today));
+        unawaited(openReview(context, day: today, page: ReviewPage.week));
       case HintId.learnedDefaults:
         unawaited(
           context.push(AppRoutes.settingsPage(SettingsPage.everything)),

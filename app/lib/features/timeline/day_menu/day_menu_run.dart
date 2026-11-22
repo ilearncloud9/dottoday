@@ -13,14 +13,14 @@ import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
 import 'package:dottoday/features/timeline/one_thing/one_thing_sheet.dart';
-import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
+import 'package:dottoday/features/timeline/review/review_presenter.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/reality_thread.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
-import 'package:dottoday/features/timeline/widgets/day_review.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
 import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
@@ -63,9 +63,9 @@ Future<void> runDayAction(
     case DayAction.copyText:
       return copyDayAsText(context, date);
     case DayAction.reviewDay:
-      return showDayReviewSheet(context, date);
+      return openReview(context, day: date);
     case DayAction.weekReview:
-      return showWeekReview(context, today);
+      return openReview(context, day: today, page: ReviewPage.week);
     case DayAction.goToDate:
       Actions.maybeInvoke(context, const AppCommandIntent(AppCommand.goToDate));
     case DayAction.lowEnergy:

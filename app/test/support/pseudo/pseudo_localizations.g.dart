@@ -6080,6 +6080,14 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.routinesSubtitleCount(subtitle, count));
 
   @override
+  String reviewColumnCaption(String date) =>
+      pseudo(super.reviewColumnCaption(date));
+
+  @override
+  String reviewWeekRowDetail(String range, int done, int total) =>
+      pseudo(super.reviewWeekRowDetail(range, done, total));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

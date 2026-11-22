@@ -566,6 +566,10 @@ abstract final class DotSize {
   static const double pickHaloStroke = 2.5;
   static const double pickRow = 52;
   static const double pickDialog = 460;
+
+  /// The Review place's half (ED-099, E-FullA-v2): below two of these
+  /// side by side, Day review and Week in review stack.
+  static const double reviewHalfMin = 360;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

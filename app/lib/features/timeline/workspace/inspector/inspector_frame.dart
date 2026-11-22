@@ -1,7 +1,10 @@
 import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/editing/inspected_task.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
+import 'package:dottoday/features/timeline/review/review_panel.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_write.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// while nothing is picked, while the person hid it (⌥⌘I) and while the
 /// full editor has the task (it takes the inspector's place). Esc puts
 /// it away.
+///
+/// On an iPad or Android tablet it also holds the review as a 420 pane
+/// beside the day (ED-297, E-R2-14), in the inspector's place while open;
+/// it docks as a side panel does (ED-167) and floats over the grid where
+/// the days left would be too narrow.
 ///
 /// Both ways use the same tree, so a resize keeps what is typed in it.
 class InspectorFrame extends ConsumerStatefulWidget {
@@ -67,28 +75,51 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
     final id = ref.watch(inspectedTaskProvider);
     final hidden = ref.watch(inspectorHiddenProvider);
     final editing = ref.watch(editingTaskProvider) != null;
-    final shown = inspects && id != null && !hidden && !editing;
+    final touch = watchTouchContent(context, ref);
+    final review = touch ? ref.watch(reviewBesideProvider) : null;
+    final reviewing = inspects && review != null && !editing;
+    final shown = inspects && id != null && !hidden && !editing && !reviewing;
+    void closeReview() => ref.read(reviewBesideProvider.notifier).close();
     // One tree whether it shows or not: the grid keeps its scroll.
     return CallbackShortcuts(
       bindings: {
         if (shown)
           const SingleActivator(LogicalKeyboardKey.escape): () =>
               ref.read(inspectedTaskProvider.notifier).close(),
+        if (reviewing)
+          const SingleActivator(LogicalKeyboardKey.escape): closeReview,
       },
       child: Focus(
         focusNode: _focus,
         child: LayoutBuilder(
-          builder: (context, box) => _layout(
-            context,
-            docked:
-                shown &&
-                inspectorDocks(
+          builder: (context, box) => reviewing
+              ? _layout(
                   context,
-                  available: box.maxWidth,
-                  touch: watchTouchContent(context, ref),
+                  width: DotSize.sidePanel,
+                  docked: AppLayout.docks(context, available: box.maxWidth),
+                  panel: Padding(
+                    padding: const EdgeInsets.all(DotSpace.l),
+                    child: ReviewPanel(
+                      key: ValueKey(review),
+                      day: review.day,
+                      page: review.page,
+                      onClose: closeReview,
+                    ),
+                  ),
+                )
+              : _layout(
+                  context,
+                  docked:
+                      shown &&
+                      inspectorDocks(
+                        context,
+                        available: box.maxWidth,
+                        touch: touch,
+                      ),
+                  panel: shown
+                      ? WorkspaceInspector(key: ValueKey(id), id: id)
+                      : null,
                 ),
-            panel: shown ? WorkspaceInspector(key: ValueKey(id), id: id) : null,
-          ),
         ),
       ),
     );
@@ -98,9 +129,9 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
     BuildContext context, {
     required bool docked,
     required Widget? panel,
+    double width = DotSize.inspector,
   }) {
     final c = DotTheme.of(context).colors;
-    const width = DotSize.inspector;
     final inset = docked ? 0.0 : DotSpace.s;
     return Stack(
       children: [

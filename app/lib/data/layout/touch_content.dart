@@ -24,6 +24,19 @@ bool watchTouchContent(BuildContext context, WidgetRef ref) {
   if (webChrome(context)) {
     return ref.watch(coarsePointerProvider).value ?? false;
   }
+  return _touchPlatform(context);
+}
+
+/// [watchTouchContent] read once, for a command run from a menu or a
+/// shortcut (the review's presenter, ED-099).
+bool readTouchContent(BuildContext context, ProviderContainer container) {
+  if (webChrome(context)) {
+    return container.read(coarsePointerProvider).value ?? false;
+  }
+  return _touchPlatform(context);
+}
+
+bool _touchPlatform(BuildContext context) {
   return switch (Theme.of(context).platform) {
     TargetPlatform.iOS || TargetPlatform.android => true,
     TargetPlatform.macOS ||

@@ -12,7 +12,7 @@ import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/now/now_screen.dart';
-import 'package:dottoday/features/timeline/review/day_review_screen.dart';
+import 'package:dottoday/features/timeline/review/review_route.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
@@ -63,5 +63,5 @@ final appScreens = RouteScreens(
   wakeUp: (_) => const WakeUpCardScreen(),
   mission: (_, date, kind) =>
       MissionScreen(date: date, kind: MissionKind.values.byName(kind)),
-  review: (_) => const DayReviewScreen(),
+  review: (_) => const ReviewRoute(),
 );

@@ -87,7 +87,8 @@ final class RouteScreens {
   /// its `MissionKind` name.
   final Widget Function(BuildContext, String date, String kind) mission;
 
-  /// Today's Wind Down review (docs/15 W6).
+  /// `/review` (ED-099): the Review place in Full at the expanded width,
+  /// else a hand-over to Today with the review over it.
   final WidgetBuilder review;
 }
 
@@ -138,10 +139,6 @@ GoRouter buildRouter(
           state.pathParameters['kind']!,
         ),
       ),
-      GoRoute(
-        path: AppRoutes.review,
-        builder: (context, state) => screens.review(context),
-      ),
     ],
   );
 }
@@ -169,6 +166,15 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
                 context,
                 parseRouteDate(state.pathParameters['date']!)!,
               ),
+            ),
+          ),
+          // The review (ED-099) in Today's branch, so the sidebar stays
+          // beside the Review place; elsewhere it hands over to Today.
+          GoRoute(
+            path: AppRoutes.review,
+            pageBuilder: (context, _) => _samePage(
+              const ValueKey(AppRoutes.review),
+              screens.review(context),
             ),
           ),
           // The Workspace's 3 days (ED-333), on Today's page.

@@ -6,6 +6,7 @@ import 'package:dottoday/features/timeline/now/wide/day_column.dart';
 import 'package:dottoday/features/timeline/now/wide/day_edge.dart';
 import 'package:dottoday/features/timeline/now/wide/now_pane.dart';
 import 'package:dottoday/features/timeline/now/wide/now_toolbar.dart';
+import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,6 +49,7 @@ class _NowWideState extends ConsumerState<NowWide> {
   void _close() {
     setState(() => _open = false);
     ref.read(editingTaskProvider.notifier).close();
+    ref.read(reviewBesideProvider.notifier).close();
     _edge.requestFocus();
   }
 
@@ -58,7 +60,11 @@ class _NowWideState extends ConsumerState<NowWide> {
     // The apps' chrome (the Mac, iPad, Android tablets: E-Minimal 1,
     // E-R2-1 2a, 4a); the web keeps the date in the pane (frame 2).
     final app = !webChrome(context);
-    final editing = ref.watch(editingTaskProvider) != null;
+    // A task or the review opened here brings the column out (ED-089,
+    // ED-099), even when the person put the Day away.
+    final editing =
+        ref.watch(editingTaskProvider) != null ||
+        ref.watch(reviewBesideProvider) != null;
     // A task opened from the pane (Open on a dot) brings the column out
     // for it, even when the person put the Day away (ED-089).
     final hidden =
