@@ -5753,7 +5753,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get proposalOverlaps => 'ya está · se solapa';
 
   @override
-  String get weekReviewTitle => 'Esta semana';
+  String get weekReviewTitle => 'Resumen semanal';
 
   @override
   String weekReviewDates(String from, String to) {
@@ -7563,6 +7563,63 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shortcutSearchOrRun => 'Buscar o ejecutar';
+
+  @override
+  String get dayMenuTime => 'Tiempo';
+
+  @override
+  String get dayMenuPlan => 'Planificar';
+
+  @override
+  String get dayMenuNeedMoreTime => 'Necesito más tiempo';
+
+  @override
+  String get menuDayNeedMoreTime => 'Necesito más tiempo';
+
+  @override
+  String get dayMenuThenShift => 'Luego mover el resto';
+
+  @override
+  String get menuDayThenShift => 'Luego mover el resto';
+
+  @override
+  String get dayMenuShiftFromHere => 'Mover el resto desde aquí…';
+
+  @override
+  String get menuDayShiftFromHere => 'Mover el resto desde aquí…';
+
+  @override
+  String get dayMenuRebalance => 'Reajustar…';
+
+  @override
+  String get dayMenuBrainDump => 'Vaciar la mente…';
+
+  @override
+  String get menuDayBrainDump => 'Vaciar la mente…';
+
+  @override
+  String get dayMenuDropRoutine => 'Poner una rutina…';
+
+  @override
+  String get menuDayDropRoutine => 'Poner una rutina…';
+
+  @override
+  String get menuDayOneThing => 'Elegir lo único de hoy…';
+
+  @override
+  String get menuDayDuplicate => 'Duplicar día…';
+
+  @override
+  String get menuDayReview => 'Repasar el día';
+
+  @override
+  String get menuDayWeekReview => 'Resumen semanal';
+
+  @override
+  String get menuDayLowEnergy => 'Modo baja energía';
+
+  @override
+  String get dayMenuPlanReality => 'Plan / Realidad';
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

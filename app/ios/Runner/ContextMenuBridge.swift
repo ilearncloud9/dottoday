@@ -48,13 +48,7 @@ final class ContextMenuBridge {
       button?.removeFromSuperview()
     }
     let entries = args["items"] as? [[String: Any]] ?? []
-    // A divided entry starts a new group: an inline section, as iOS draws.
-    var groups: [[UIMenuElement]] = [[]]
-    for (index, entry) in entries.enumerated() {
-      if entry["divided"] as? Bool == true, !(groups.last?.isEmpty ?? true) { groups.append([]) }
-      groups[groups.count - 1].append(Self.action(entry, index: index, answer: answer))
-    }
-    button.menu = UIMenu(children: groups.map { UIMenu(options: .displayInline, children: $0) })
+    button.menu = UIMenu(children: Self.groups(entries, answer: answer))
     button.showsMenuAsPrimaryAction = true
     // A pick runs its action before the dismissal finishes; anything else
     // that ends the menu is a dismiss.
@@ -65,13 +59,43 @@ final class ContextMenuBridge {
     button.performPrimaryAction()
   }
 
-  private static func action(
-    _ entry: [String: Any], index: Int, answer: @escaping (Int) -> Void
-  ) -> UIAction {
-    let image = (entry["symbol"] as? String).flatMap { UIImage(systemName: $0) }
-    let action = UIAction(title: entry["label"] as? String ?? "", image: image) { _ in
-      answer(index)
+  /// The entries as iOS draws groups: a divided entry starts an inline
+  /// section, a header one a titled inline section (the Day menu's Time ·
+  /// Plan · Day · Layout, ED-093), and children make a submenu.
+  private static func groups(
+    _ entries: [[String: Any]], answer: @escaping (Int) -> Void
+  ) -> [UIMenuElement] {
+    var groups: [(title: String, items: [UIMenuElement])] = [("", [])]
+    for entry in entries {
+      if let header = entry["header"] as? String {
+        if groups.last?.items.isEmpty == true {
+          groups[groups.count - 1].title = header
+        } else {
+          groups.append((header, []))
+        }
+      } else if entry["divided"] as? Bool == true, !(groups.last?.items.isEmpty ?? true) {
+        groups.append(("", []))
+      }
+      groups[groups.count - 1].items.append(element(entry, answer: answer))
     }
+    return groups.map { UIMenu(title: $0.title, options: .displayInline, children: $0.items) }
+  }
+
+  private static func element(
+    _ entry: [String: Any], answer: @escaping (Int) -> Void
+  ) -> UIMenuElement {
+    let image = (entry["symbol"] as? String).flatMap { UIImage(systemName: $0) }
+    let title = entry["label"] as? String ?? ""
+    if let children = entry["children"] as? [[String: Any]], !children.isEmpty {
+      // Need more time ▸: the system's submenu.
+      let menu = UIMenu(title: title, image: image, children: groups(children, answer: answer))
+      if entry["enabled"] as? Bool == false {
+        return UIAction(title: title, image: image, attributes: .disabled) { _ in }
+      }
+      return menu
+    }
+    let index = entry["index"] as? Int ?? -1
+    let action = UIAction(title: title, image: image) { _ in answer(index) }
     if entry["enabled"] as? Bool == false { action.attributes.insert(.disabled) }
     if entry["checked"] as? Bool == true { action.state = .on }
     return action

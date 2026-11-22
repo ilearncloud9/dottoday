@@ -27,6 +27,7 @@ class TodayHeader extends ConsumerWidget {
     required this.monthOpen,
     required this.month,
     required this.onToday,
+    this.menu = true,
     super.key,
   });
 
@@ -39,6 +40,9 @@ class TodayHeader extends ConsumerWidget {
 
   /// Back to today (the pill shown away from it, `A-ios-future-month`).
   final VoidCallback onToday;
+
+  /// The header's ⋯ Day menu; off where [DayMenuChip] floats instead.
+  final bool menu;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,8 +67,9 @@ class TodayHeader extends ConsumerWidget {
               final back = !low && date != today;
               final heading = _TitleButton(title: title, monthOpen: monthOpen);
               final buttons = [
-                // The Day menu stays ⋯ until its Day ▾ chip (M20.3).
-                TodayMenu(date: date, today: today),
+                // ⋯ where no Day ▾ chip floats over the day (landscape,
+                // tablets, Minimal's Today; M20.3).
+                if (menu) TodayMenu(date: date, today: today),
                 // Sync and the profile (ED-034); Settings sits behind the
                 // profile on phones only (ED-238).
                 TodayTopActions(sync: extras),

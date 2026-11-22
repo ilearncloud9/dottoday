@@ -124,7 +124,8 @@ void main() {
     await pump(tester);
     await tester.tap(find.byTooltip('More options').hitTestable().first);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Go to date…'));
+    // The Mac's title case (E-FullA-v2).
+    await tester.tap(find.text('Go to Date…').last);
     await tester.pumpAndSettle();
     expect(find.byType(GoToDatePanel), findsOneWidget);
   });

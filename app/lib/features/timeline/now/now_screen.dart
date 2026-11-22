@@ -3,13 +3,16 @@ import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/now/now_view.dart';
+import 'package:dottoday/features/timeline/day_menu/day_menu_run.dart';
 import 'package:dottoday/features/timeline/now/now_body.dart';
 import 'package:dottoday/features/timeline/now/now_date_anchor.dart';
 import 'package:dottoday/features/timeline/now/now_inputs.dart';
 import 'package:dottoday/features/timeline/now/now_wake_up.dart';
 import 'package:dottoday/features/timeline/now/wide/now_stacked.dart';
 import 'package:dottoday/features/timeline/now/wide/now_wide.dart';
+import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
+import 'package:dottoday/features/timeline/widgets/day_menu_chip.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/widgets/today_top_actions.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -33,13 +36,18 @@ class NowScreen extends ConsumerWidget {
         case final w?) {
       return w;
     }
+    // The Mac menu bar's Day menu and ⌘K act on today here (ED-093).
+    final day = ref.watch(todayDateProvider).value;
+    Widget scoped(Widget child) => day == null
+        ? child
+        : DayActionScope(date: day, today: day, child: child);
     switch (AppLayout.classOf(context)) {
       // The Mac and web pane beside the Day column (E-Minimal, 6c).
       case WidthClass.expanded:
-        return const NowWide();
+        return scoped(const NowWide());
       // Medium (tablets, a narrow browser): the Day under Now (6e-2).
       case WidthClass.medium:
-        return const NowStacked();
+        return scoped(const NowStacked());
       case WidthClass.compact:
         break;
     }
@@ -53,53 +61,63 @@ class NowScreen extends ConsumerWidget {
       n.time,
     );
     final wakeUp = ref.watch(wakeUpCardInNowProvider).value;
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.fromLTRB(
-                DotSpace.page,
-                DotSpace.s,
-                DotSpace.page,
-                DotSize.androidBar * 2,
-              ),
-              children: [
-                _Header(
-                  today: today,
-                  now: time(now),
-                  windDown: time(shape.bedUtc),
+    return scoped(
+      Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
+            children: [
+              ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  DotSpace.page,
+                  DotSpace.s,
+                  DotSpace.page,
+                  DotSize.androidBar * 2,
                 ),
-                const SizedBox(height: DotSpace.m),
-                // A tap opens Today (E-PhonesMinimal frame 1).
-                n.horizon(
-                  context,
-                  onTap: () => context.go(AppRoutes.today),
-                  hint: context.l10n.horizonOpensToday,
-                ),
-                const SizedBox(height: DotSpace.xl),
-                // The morning's Wake Up card until it's answered, unless a
-                // task is already under way (E-R2-26 frame 4).
-                if (wakeUp != null && view is! NowRunning)
-                  NowWakeUp(model: wakeUp)
-                else
-                  NowBody(
-                    view: view,
-                    nowUtc: now,
-                    windDownUtc: shape.bedUtc,
-                    time: time,
+                children: [
+                  _Header(
+                    today: today,
+                    now: time(now),
+                    windDown: time(shape.bedUtc),
                   ),
-              ],
-            ),
-            // Day ▾ above the tab bar's end (ED-124): Minimal's Day menu,
-            // the system's own pull-down (native first).
-            PositionedDirectional(
-              end: DotSpace.page,
-              bottom: DotSize.androidBar + DotSpace.l,
-              child: TodayMenu(date: today, today: today, button: _DayChip()),
-            ),
-          ],
+                  const SizedBox(height: DotSpace.m),
+                  // A tap opens Today (E-PhonesMinimal frame 1).
+                  n.horizon(
+                    context,
+                    onTap: () => context.go(AppRoutes.today),
+                    hint: context.l10n.horizonOpensToday,
+                  ),
+                  const SizedBox(height: DotSpace.xl),
+                  // The morning's Wake Up card until it's answered, unless a
+                  // task is already under way (E-R2-26 frame 4).
+                  if (wakeUp != null && view is! NowRunning)
+                    NowWakeUp(model: wakeUp)
+                  else
+                    NowBody(
+                      view: view,
+                      nowUtc: now,
+                      windDownUtc: shape.bedUtc,
+                      time: time,
+                    ),
+                ],
+              ),
+              // Day ▾ above the tab bar's end (ED-124): Minimal's Day menu,
+              // the system's own pull-down (native first).
+              PositionedDirectional(
+                end: DotSpace.page,
+                // Above the floating bar, which sits over the system's inset.
+                bottom:
+                    DotSize.androidBar +
+                    DotSpace.l +
+                    MediaQuery.viewPaddingOf(context).bottom,
+                child: TodayMenu(
+                  date: today,
+                  today: today,
+                  button: const DayMenuChip(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -168,30 +186,3 @@ class _Header extends StatelessWidget {
 }
 
 /// The "Day ▾" chip (E-PhonesMinimal): a raised capsule.
-class _DayChip extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Container(
-      constraints: const BoxConstraints(minHeight: DotTouch.android),
-      padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
-      decoration: BoxDecoration(
-        color: t.colors.raised,
-        borderRadius: BorderRadius.circular(DotRadii.pill),
-        boxShadow: DotElevation.capsule(t.colors),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: DotSpace.xs,
-        children: [
-          Text(context.l10n.workspaceDay, style: t.styles.button),
-          DotIcon(
-            DotGlyphs.chevronDown,
-            color: t.colors.text,
-            size: DotSize.rowIcon,
-          ),
-        ],
-      ),
-    );
-  }
-}

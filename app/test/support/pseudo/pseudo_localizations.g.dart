@@ -6019,6 +6019,63 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get shortcutSearchOrRun => pseudo(super.shortcutSearchOrRun);
 
   @override
+  String get dayMenuTime => pseudo(super.dayMenuTime);
+
+  @override
+  String get dayMenuPlan => pseudo(super.dayMenuPlan);
+
+  @override
+  String get dayMenuNeedMoreTime => pseudo(super.dayMenuNeedMoreTime);
+
+  @override
+  String get menuDayNeedMoreTime => pseudo(super.menuDayNeedMoreTime);
+
+  @override
+  String get dayMenuThenShift => pseudo(super.dayMenuThenShift);
+
+  @override
+  String get menuDayThenShift => pseudo(super.menuDayThenShift);
+
+  @override
+  String get dayMenuShiftFromHere => pseudo(super.dayMenuShiftFromHere);
+
+  @override
+  String get menuDayShiftFromHere => pseudo(super.menuDayShiftFromHere);
+
+  @override
+  String get dayMenuRebalance => pseudo(super.dayMenuRebalance);
+
+  @override
+  String get dayMenuBrainDump => pseudo(super.dayMenuBrainDump);
+
+  @override
+  String get menuDayBrainDump => pseudo(super.menuDayBrainDump);
+
+  @override
+  String get dayMenuDropRoutine => pseudo(super.dayMenuDropRoutine);
+
+  @override
+  String get menuDayDropRoutine => pseudo(super.menuDayDropRoutine);
+
+  @override
+  String get menuDayOneThing => pseudo(super.menuDayOneThing);
+
+  @override
+  String get menuDayDuplicate => pseudo(super.menuDayDuplicate);
+
+  @override
+  String get menuDayReview => pseudo(super.menuDayReview);
+
+  @override
+  String get menuDayWeekReview => pseudo(super.menuDayWeekReview);
+
+  @override
+  String get menuDayLowEnergy => pseudo(super.menuDayLowEnergy);
+
+  @override
+  String get dayMenuPlanReality => pseudo(super.dayMenuPlanReality);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

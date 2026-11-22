@@ -63,36 +63,43 @@ void main() {
     expect(find.text('Tuesday, October 20 · Yesterday'), findsOneWidget);
   });
 
-  testWidgets('Running late +15: a plan, then the rest of today, with Undo', (
-    tester,
-  ) async {
-    await pumpToday(
-      tester,
-      size: const Size(1280, 1600),
-      wrap: (today) => ProposalHost(child: today),
-    );
-    expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
-    await tester.tap(find.text('Running late'));
-    await tester.pumpAndSettle();
-    // The sheet's chip (M3f.5), not the live row's own "+15 min".
-    await tester.tap(find.widgetWithText(ChoiceChip, '+15 min'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining(RegExp('move.? 15 min later')), findsOneWidget);
-    await tester.tap(find.text('Shift the rest').last); // the sheet's
-    await tester.pumpAndSettle();
-    // Rebalance in the right-hand panel (M11.1): nothing moved yet.
-    expect(find.text('10:30 AM – 11:15 AM'), findsWidgets);
-    await tester.tap(find.text('Accept plan'));
-    await tester.pumpAndSettle();
-    expect(find.text('Plan accepted'), findsOneWidget);
-    expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);
-    // The live task started before now and stays put ("… · 2 h": the
-    // card's live row keeps its time above the title, ADR-0015).
-    expect(find.textContaining('9:00 AM – 11:00 AM'), findsOneWidget);
-    await tester.tap(find.text('Undo'));
-    await tester.pumpAndSettle();
-    expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
-  });
+  testWidgets(
+    'Shift the rest from here +15: a plan, then the rest of today, with Undo',
+    (tester) async {
+      await pumpToday(
+        tester,
+        size: const Size(1280, 1600),
+        wrap: (today) => ProposalHost(child: today),
+      );
+      expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
+      // The Day menu's Time group, no separate button (ED-093).
+      await tester.tap(find.byTooltip('More options').hitTestable().first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Shift the rest from here…'));
+      await tester.pumpAndSettle();
+      // The sheet's chip (M3f.5), not the live row's own "+15 min".
+      await tester.tap(find.widgetWithText(ChoiceChip, '+15 min'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(RegExp('move.? 15 min later')),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Shift the rest').last); // the sheet's
+      await tester.pumpAndSettle();
+      // Rebalance in the right-hand panel (M11.1): nothing moved yet.
+      expect(find.text('10:30 AM – 11:15 AM'), findsWidgets);
+      await tester.tap(find.text('Accept plan'));
+      await tester.pumpAndSettle();
+      expect(find.text('Plan accepted'), findsOneWidget);
+      expect(find.text('10:45 AM – 11:30 AM'), findsOneWidget);
+      // The live task started before now and stays put ("… · 2 h": the
+      // card's live row keeps its time above the title, ADR-0015).
+      expect(find.textContaining('9:00 AM – 11:00 AM'), findsOneWidget);
+      await tester.tap(find.text('Undo'));
+      await tester.pumpAndSettle();
+      expect(find.text('10:30 AM – 11:15 AM'), findsOneWidget);
+    },
+  );
 
   group('drag between days (M3e.1)', () {
     /// Drags [title] to the same height in yesterday's column.

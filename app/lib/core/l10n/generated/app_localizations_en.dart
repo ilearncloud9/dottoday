@@ -5732,7 +5732,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get proposalOverlaps => 'already here · overlaps';
 
   @override
-  String get weekReviewTitle => 'This week';
+  String get weekReviewTitle => 'Week in review';
 
   @override
   String weekReviewDates(String from, String to) {
@@ -7525,6 +7525,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutSearchOrRun => 'Search or run';
+
+  @override
+  String get dayMenuTime => 'Time';
+
+  @override
+  String get dayMenuPlan => 'Plan';
+
+  @override
+  String get dayMenuNeedMoreTime => 'Need more time';
+
+  @override
+  String get menuDayNeedMoreTime => 'Need More Time';
+
+  @override
+  String get dayMenuThenShift => 'Then shift the rest';
+
+  @override
+  String get menuDayThenShift => 'Then Shift the Rest';
+
+  @override
+  String get dayMenuShiftFromHere => 'Shift the rest from here…';
+
+  @override
+  String get menuDayShiftFromHere => 'Shift the Rest From Here…';
+
+  @override
+  String get dayMenuRebalance => 'Rebalance…';
+
+  @override
+  String get dayMenuBrainDump => 'Brain dump…';
+
+  @override
+  String get menuDayBrainDump => 'Brain Dump…';
+
+  @override
+  String get dayMenuDropRoutine => 'Drop a routine…';
+
+  @override
+  String get menuDayDropRoutine => 'Drop a Routine…';
+
+  @override
+  String get menuDayOneThing => 'Pick Today\'s One Thing…';
+
+  @override
+  String get menuDayDuplicate => 'Duplicate Day…';
+
+  @override
+  String get menuDayReview => 'Review the Day';
+
+  @override
+  String get menuDayWeekReview => 'Week in Review';
+
+  @override
+  String get menuDayLowEnergy => 'Low-Energy Mode';
+
+  @override
+  String get dayMenuPlanReality => 'Plan / Reality';
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

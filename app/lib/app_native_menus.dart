@@ -36,6 +36,12 @@ class NativeKeyMenus extends StatefulWidget {
                     if (c.key case final key?) 'key': keyName(key),
                     'shift': c.shift,
                     if (c.alt) 'alt': true,
+                    // A submenu (Day › Need More Time ▸), ids `m.g.i.c`.
+                    if (c.children.isNotEmpty)
+                      'children': [
+                        for (final (k, child) in c.children.indexed)
+                          {'id': '$m.$g.$i.$k', 'label': child.label},
+                      ],
                   },
             ],
         ],
@@ -65,7 +71,9 @@ class _NativeKeyMenusState extends State<NativeKeyMenus> {
 
   /// Runs the command [id] names in the current menus.
   void _select(String id) {
-    final [m, g, i] = [for (final n in id.split('.')) int.parse(n)];
-    widget.menus[m].groups[g][i].onSelected?.call();
+    final path = [for (final n in id.split('.')) int.parse(n)];
+    final command = widget.menus[path[0]].groups[path[1]][path[2]];
+    final chosen = path.length > 3 ? command.children[path[3]] : command;
+    chosen.onSelected?.call();
   }
 }

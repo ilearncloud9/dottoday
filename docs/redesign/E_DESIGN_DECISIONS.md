@@ -5447,6 +5447,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** analyze and format clean; 7,591 pass, 31 skipped; four palette goldens (typed and empty, light and dark); widget tests for the bindings, the command list, keys, Search for, Esc, the iPad's fallback, ⌘K and the toolbar through the app's wiring, a11y (a gap under the section headings fixed a contrast hit against the highlighted row). `integration_test/search_or_run_test.dart` passed in Chromium and WebKit at 390 and 1280 and in the Mac app (data container unchanged by checksum); the first Mac run was refused while the screen was locked.
 - **M20.2 closed:** parts 1 to 3 (ED-421 to ED-423) approved.
 
+### ED-424 · M20.3 part 1: the grouped Day menu
+- **Date:** 2026-11-22. **Owner:** "Start M20.3" ("Five parts": Day menu, planning helpers, one thing, Day review and Week in review, Rebalance; "Sims + this Mac"), then "Approve part 1" after the review page (https://claude.ai/artifact/BkY6dnLxMGV5p7u4e715H1).
+- **Built (ED-093, G2-9; tablets ED-254):** one `DayAction` list behind every Day menu, run by `runDayAction` and the `DayActionIntent` (`DayActionScope` on Today and Now).
+  - **Full:** Time (Need more time ▸ +5, +15, +30, Then shift the rest; Shift the rest from here…; Rebalance), Plan (Brain dump, Drop a routine…, Pick today's one thing), Day (Duplicate, Copy as text, Review the day, Week in review, Go to date…), Layout (Low-energy mode, Plan / Reality, Show less). Time works today only; Need more time while a task is on, Then shift the rest and Rebalance when it runs over.
+  - **Minimal:** Show everything, Low-energy mode and Settings on phones and compact windows; E-Minimal's list from medium width.
+  - **Native first:** the iPhone's and iPad's UIMenu with titled sections and a submenu, the Mac's NSMenu with section headers (macOS 14) in title case, Material's menu on Android with a submenu, the web's popover with the minutes as chips and switches. `ContextMenuEntry` gains `header` and `children`; the bridges carry explicit indexes.
+  - **Phones in portrait:** a floating Day ▾ replaces the header's ⋯ (end on iOS, start on Android, above the bottom inset); landscape phones, tablets and Minimal's Today keep the ⋯. Minimal Now uses the same chip.
+  - **Menu bar:** a Day menu after Go on the Mac and the iPad's keyboard menu bar; ⌘K finds its commands.
+- **Changed:** "This week" reads "Week in review" (ED-099; de Wochenrückblick, fr Bilan de la semaine, es Resumen semanal). The Mac/web spread's Running late button is gone (ED-093: no separate Replan button); its sheet opens from Shift the rest from here….
+- **Departures (on the review page):** Go to date… stays in the Day group (owner, M19.5 part 5c); the web's chips sit under Need more time; Drop a routine… opens the Routines page, not a submenu; the iOS pull-down opens upward, so its groups read bottom-up.
+- **Found on devices and fixed:** the chip sat behind Android's floating toolbar (the bottom inset is now added); +15 min carried Need more time's icon.
+- **Checks:** analyze and format clean; 7,602 pass, 31 skipped; 154 goldens updated (the chip, the Running late button, the rename); `day_menu_kinds_test` (10 tests). `integration_test/day_menu_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). System menus can't be tapped by a test, so native runs end with the menu open. Not run: real devices.
+
 ---
 
 ## Pending owner answers

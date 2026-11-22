@@ -7,6 +7,7 @@ import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_idiom.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/features/timeline/day_menu/day_menu_run.dart';
 import 'package:dottoday/features/timeline/state/block_actions.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
@@ -86,26 +87,31 @@ class TodayKeys extends ConsumerWidget {
           ),
         },
         // ↑↓ / ⌘↑↓ / Delete / ↩ / Space on the shown day's tasks (F1.17).
-        child: SingleKeys(
-          bindings: {
-            WebKeys.previous: () => onSelect(plus(-1)),
-            WebKeys.next: () => onSelect(plus(1)),
-            const SingleActivator(LogicalKeyboardKey.keyT): () =>
-                onSelect(today),
-          },
-          child: TaskKeys(
-            day: shown,
-            today: today,
-            child: Focus(
-              // Never from a sheet above: on a slow web load Today mounts
-              // under an open Add sheet and took its title's keys (CI
-              // a11y-web). It takes the keys on a build once on top.
-              autofocus: _onTop(context),
-              // Catches keys only; adds nothing for screen readers.
-              includeSemantics: false,
-              // No Tab stop: Tab from here starts at Skip to content (SkipLink).
-              skipTraversal: true,
-              child: child,
+        // The Mac menu bar's Day menu and ⌘K act on the shown day (ED-093).
+        child: DayActionScope(
+          date: shown,
+          today: today,
+          child: SingleKeys(
+            bindings: {
+              WebKeys.previous: () => onSelect(plus(-1)),
+              WebKeys.next: () => onSelect(plus(1)),
+              const SingleActivator(LogicalKeyboardKey.keyT): () =>
+                  onSelect(today),
+            },
+            child: TaskKeys(
+              day: shown,
+              today: today,
+              child: Focus(
+                // Never from a sheet above: on a slow web load Today mounts
+                // under an open Add sheet and took its title's keys (CI
+                // a11y-web). It takes the keys on a build once on top.
+                autofocus: _onTop(context),
+                // Catches keys only; adds nothing for screen readers.
+                includeSemantics: false,
+                // No Tab stop: Tab from here starts at Skip to content (SkipLink).
+                skipTraversal: true,
+                child: child,
+              ),
             ),
           ),
         ),

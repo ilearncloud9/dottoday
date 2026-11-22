@@ -36,9 +36,10 @@ Future<void> _pump(
 }
 
 Future<void> _openSheet(WidgetTester tester) async {
+  // The Day menu's Time group (ED-093): the Day ▾ chip on a phone.
   await tester.tap(find.byTooltip('More options'));
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Running late…'));
+  await tester.tap(find.text('Shift the rest from here…'));
   await tester.pumpAndSettle();
 }
 

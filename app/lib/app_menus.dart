@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/day_action.dart';
 import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/shared/feedback/undo_snackbar.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,7 @@ import 'package:go_router/go_router.dart';
 
 /// Which menu: the Mac adds the system's own items by it, iPadOS places it
 /// among its own menus.
-enum AppMenuKind { app, file, edit, view, go, window }
+enum AppMenuKind { app, file, edit, view, go, day, window }
 
 /// One menu command. [key] (⌘, Ctrl elsewhere; with [shift]) is its key
 /// equivalent wherever menus show keys; null for keys a text field needs.
@@ -27,7 +28,11 @@ final class MenuCommand {
     this.shift = false,
     this.alt = false,
     this.textEdit = false,
+    this.children = const [],
   });
+
+  /// A submenu (Day › Need More Time ▸ +5 / +15 / +30, ED-093).
+  final List<MenuCommand> children;
 
   final String label;
   final VoidCallback? onSelected;
@@ -168,7 +173,57 @@ List<AppMenu> appMenus({
         command(l10n.navSearch, AppCommand.search),
       ],
     ]),
+    AppMenu(AppMenuKind.day, l10n.workspaceDay, dayMenuGroups(l10n, minimal)),
     AppMenu(AppMenuKind.window, l10n.menuWindow, const []),
+  ];
+}
+
+/// The menu bar's Day menu (ED-093): Full's Time · Plan · Day · Layout,
+/// or E-Minimal's list in [minimal]; each sends a [DayActionIntent] to
+/// the day on screen, which runs it as its Day ▾ does. Keys stay in the
+/// other menus (Copy Day as Text ⇧⌘C in Edit, Show Less ⇧⌘L in View).
+List<List<MenuCommand>> dayMenuGroups(AppLocalizations l10n, bool minimal) {
+  MenuCommand day(String label, DayAction a) =>
+      MenuCommand(label, () => sendToFocus(DayActionIntent(a)));
+  final needMore = MenuCommand(
+    l10n.menuDayNeedMoreTime,
+    null,
+    children: [
+      day(l10n.runningLateBy(5), DayAction.extend5),
+      day(l10n.runningLateBy(15), DayAction.extend15),
+      day(l10n.runningLateBy(30), DayAction.extend30),
+      day(l10n.menuDayThenShift, DayAction.thenShiftRest),
+    ],
+  );
+  final shift = day(l10n.menuDayShiftFromHere, DayAction.shiftRestFromHere);
+  final brainDump = day(l10n.menuDayBrainDump, DayAction.brainDump);
+  final routine = day(l10n.menuDayDropRoutine, DayAction.dropRoutine);
+  final duplicate = day(l10n.menuDayDuplicate, DayAction.duplicate);
+  final copy = day(l10n.menuCopyDayText, DayAction.copyText);
+  final review = day(l10n.menuDayReview, DayAction.reviewDay);
+  final lowEnergy = day(l10n.menuDayLowEnergy, DayAction.lowEnergy);
+  if (minimal) {
+    return [
+      [needMore, shift],
+      [brainDump, routine],
+      [duplicate, copy, review],
+      [lowEnergy, day(l10n.menuShowEverything, DayAction.showEverything)],
+    ];
+  }
+  return [
+    [needMore, shift, day(l10n.dayMenuRebalance, DayAction.rebalance)],
+    [brainDump, routine, day(l10n.menuDayOneThing, DayAction.oneThing)],
+    [
+      duplicate,
+      copy,
+      review,
+      day(l10n.menuDayWeekReview, DayAction.weekReview),
+    ],
+    [
+      lowEnergy,
+      day(l10n.dayMenuPlanReality, DayAction.planReality),
+      day(l10n.menuShowLess, DayAction.showLess),
+    ],
   ];
 }
 

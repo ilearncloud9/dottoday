@@ -1,7 +1,10 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/shell/native_context_menu.dart';
+import 'package:dottoday/shared/menus/flutter_menu.dart';
 import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:flutter/material.dart';
+
+export 'package:dottoday/shared/menus/flutter_menu.dart' show showFlutterMenu;
 
 /// One choice in a menu: a right-click or long-press menu, a ⋯ button's,
 /// a pop-up's.
@@ -16,7 +19,17 @@ final class ContextMenuEntry<T> {
     this.enabled = true,
     this.checked,
     this.divided = false,
+    this.header,
+    this.children = const [],
   });
+
+  /// A titled group starts here (ED-093's Time · Plan · Day · Layout).
+  final String? header;
+
+  /// Its submenu: the system's own on the Mac and iOS, a second menu on
+  /// Android, chips in the row on the web (E-FullA-v2's Need more time).
+  /// The entry's own [value] is never returned when it has children.
+  final List<ContextMenuEntry<T>> children;
 
   /// What [showContextMenu] returns when this is chosen.
   final T value;
@@ -45,8 +58,9 @@ final class ContextMenuEntry<T> {
 /// Shows [entries] at [at] (global position) and returns the chosen
 /// value, or null when dismissed. The Mac app and the iPhone and iPad
 /// apps use the system menu (NSMenu, ED-239, CR-098; UIMenu from iOS
-/// 17.4, owner 4d: each platform's own); Android keeps Material's menu,
-/// the web Flutter's, and a build without the bridge falls back to it.
+/// 17.4, owner 4d: each platform's own), headers and submenus included;
+/// Android keeps Material's menu, the web Flutter's, and a build without
+/// the bridge falls back to it ([showFlutterMenu]).
 Future<T?> showContextMenu<T>(
   BuildContext context, {
   required Offset at,
@@ -54,51 +68,36 @@ Future<T?> showContextMenu<T>(
   String? semanticLabel,
 }) async {
   if (macApp(context) || iosApp(context)) {
-    final native = await NativeContextMenu.show(at, [
-      for (final e in entries)
-        NativeMenuItem(
-          label: e.label,
-          symbol: e.symbol,
-          enabled: e.enabled,
-          shortcut: e.shortcut,
-          checked: e.checked ?? false,
-          divided: e.divided,
-        ),
+    final chosen = <T>[];
+    NativeMenuItem native(ContextMenuEntry<T> e) {
+      final index = e.children.isEmpty ? chosen.length : -1;
+      if (e.children.isEmpty) chosen.add(e.value);
+      return NativeMenuItem(
+        label: e.label,
+        index: index,
+        symbol: e.symbol,
+        enabled: e.enabled,
+        shortcut: e.shortcut,
+        checked: e.checked ?? false,
+        divided: e.divided,
+        header: e.header,
+        children: [for (final c in e.children) native(c)],
+      );
+    }
+
+    final shown = await NativeContextMenu.show(at, [
+      for (final e in entries) native(e),
     ]);
-    if (native case NativeMenuShown(:final index)) {
-      return index == null ? null : entries[index].value;
+    if (shown case NativeMenuShown(:final index)) {
+      return index == null ? null : chosen[index];
     }
   }
   if (!context.mounted) return null;
-  final t = DotTheme.of(context);
-  Widget label(ContextMenuEntry<T> e) => switch (e.glyph) {
-    final g? => Row(
-      spacing: DotSpace.m,
-      children: [
-        DotIcon(g, color: t.colors.text),
-        Flexible(child: Text(e.label)),
-      ],
-    ),
-    null => Text(e.label),
-  };
-  return showMenu<T>(
-    context: context,
-    position: RelativeRect.fromLTRB(at.dx, at.dy, at.dx, at.dy),
+  return showFlutterMenu(
+    context,
+    at: at,
+    entries: entries,
     semanticLabel: semanticLabel,
-    items: [
-      for (final e in entries) ...[
-        if (e.divided) const PopupMenuDivider(),
-        if (e.checked case final checked?)
-          CheckedPopupMenuItem(
-            value: e.value,
-            enabled: e.enabled,
-            checked: checked,
-            child: label(e),
-          )
-        else
-          PopupMenuItem(value: e.value, enabled: e.enabled, child: label(e)),
-      ],
-    ],
   );
 }
 

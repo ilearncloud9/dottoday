@@ -33,14 +33,10 @@ Widget _today(GoldenCell _) => const TodayScreen();
 
 /// The spread's own button, else the ⋯ menu's item.
 Future<void> _openLate(WidgetTester tester) async {
-  final button = find.widgetWithText(OutlinedButton, 'Running late');
-  if (button.evaluate().isNotEmpty) {
-    await tester.tap(button);
-  } else {
-    await tester.tap(find.byTooltip('More options'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Running late…'));
-  }
+  // The Day menu's Time group on every width (ED-093).
+  await tester.tap(find.byTooltip('More options').hitTestable().first);
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Shift the rest from here…'));
 }
 
 void main() {

@@ -1,83 +1,56 @@
 import 'dart:async';
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
-import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
+import 'package:dottoday/core/shortcuts/day_action.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/features/timeline/brain_dump/brain_dump_sheet.dart';
-import 'package:dottoday/features/timeline/low_energy/low_energy_actions.dart';
+import 'package:dottoday/features/timeline/day_menu/day_menu_entries.dart';
+import 'package:dottoday/features/timeline/day_menu/day_menu_run.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
-import 'package:dottoday/features/timeline/one_thing/one_thing_sheet.dart';
-import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
-import 'package:dottoday/features/timeline/widgets/copy_day_sheet.dart';
-import 'package:dottoday/features/timeline/widgets/day_review.dart';
+import 'package:dottoday/features/timeline/state/block_actions.dart';
+import 'package:dottoday/features/timeline/state/reality_thread.dart';
+import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/debug_menu.dart';
-import 'package:dottoday/features/timeline/widgets/export_day.dart';
-import 'package:dottoday/features/timeline/widgets/running_late_sheet.dart';
-import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-/// The day's ⋯ (one on every platform, beside the day dot): Running
-/// late… and Review the day on today (docs/09 M3f.5), This week (M12.1); Duplicate day… and
-/// Copy day as text on any day (M3f.6); Routines… to drop one on the day
-/// (M11.4); the debug entries in debug
-/// builds. [withLate] is false where Running late has its own button (the
-/// Mac/web spread).
-///
-/// The layout switch comes first in both layouts (docs/14 §2.6, §5): Show
-/// less here, Show everything in minimal, whose menu is that, Low-energy
-/// day and Settings only (§4).
+/// The Day menu (ED-093, G2-9; tablets ED-254): Full's Time · Plan · Day ·
+/// Layout on every platform, Minimal's three items on phones and compact
+/// windows, E-Minimal's list from medium width. Each platform's own menu
+/// (native first): the iPhone's and iPad's pull-down, the Mac's NSMenu,
+/// Material's on Android, the web's popover with the minutes as chips.
+/// [button] is the Day ▾ it opens from; without one, a ⋯.
 class TodayMenu extends ConsumerWidget {
   const TodayMenu({
     required this.date,
     required this.today,
-    this.withLate = true,
     this.button,
     super.key,
   });
 
   final DateTime date;
   final DateTime today;
-  final bool withLate;
-
-  /// The Workspace toolbar's "Day ▾" in place of ⋯ (owner, M19.2); the
-  /// items are the same until M20.3 groups them.
   final Widget? button;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
-    final low = watchLowEnergy(ref);
     final l10n = context.l10n;
-    if (!watchOnScreen(ref, FeatureId.dayMenuExtras)) {
-      return DotMenuButton<VoidCallback>(
-        tooltip: l10n.timelineMenu,
-        icon: button == null
-            ? DotIcon(DotGlyphs.more, color: t.colors.text)
-            : null,
-        child: button,
-        onSelected: (run) => run(),
-        entries: () => [
-          ContextMenuEntry(
-            value: () => setLayout(context, minimal: false),
-            label: l10n.layoutShowEverything,
-          ),
-          ContextMenuEntry(
-            value: () => toggleLowEnergy(context, on: !low),
-            label: low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode,
-          ),
-          ContextMenuEntry(
-            value: () => context.go(AppRoutes.settings),
-            label: l10n.navSettings,
-          ),
-        ],
-      );
-    }
+    final kind = !watchOnScreen(ref, FeatureId.dayMenuExtras)
+        ? (AppLayout.classOf(context) == WidthClass.compact
+              ? DayMenuKind.minimalShort
+              : DayMenuKind.minimalWide)
+        : DayMenuKind.full;
+    final state = _state(context, ref);
+    VoidCallback act(DayAction a) =>
+        () =>
+            unawaited(runDayAction(context, ref, a, date: date, today: today));
     return DotMenuButton<VoidCallback>(
       tooltip: l10n.timelineMenu,
       icon: button == null
@@ -86,70 +59,43 @@ class TodayMenu extends ConsumerWidget {
       child: button,
       onSelected: (run) => run(),
       entries: () => [
-        ContextMenuEntry(
-          value: () => setLayout(context, minimal: true),
-          label: l10n.layoutShowLess,
-        ),
-        if (date == today) ...[
-          if (withLate)
-            ContextMenuEntry(
-              value: () => unawaited(showRunningLateSheet(context, today)),
-              label: l10n.todayMenuLate,
-            ),
-          ContextMenuEntry(
-            value: () => unawaited(showDayReviewSheet(context, today)),
-            label: l10n.todayMenuReview,
-          ),
-          // Brain dump (11 B4, M12.5): everything on your mind → a plan.
-          ContextMenuEntry(
-            value: () => unawaited(showBrainDump(context, today)),
-            label: l10n.dumpTitle,
-          ),
-          // Today's one thing (15 §8, owner 2026-11-01): any time of day.
-          ContextMenuEntry(
-            value: () => unawaited(showOneThingSheet(context)),
-            label: l10n.oneThingMenu,
-          ),
-          // Low-energy mode (11 D2, M12.2): on until the next Wake Up.
-          ContextMenuEntry(
-            value: () => toggleLowEnergy(context, on: !low),
-            label: low ? l10n.lowEnergyTurnOff : l10n.lowEnergyMode,
-          ),
-          // The weekly review on demand (11 D1, M12.1).
-          ContextMenuEntry(
-            value: () => unawaited(showWeekReview(context, today)),
-            label: l10n.weekReviewTitle,
-          ),
-        ],
-        ContextMenuEntry(
-          value: () => unawaited(showDuplicateDaySheet(context, source: date)),
-          label: l10n.todayMenuDuplicate,
-        ),
-        ContextMenuEntry(
-          value: () => unawaited(copyDayAsText(context, date)),
-          label: l10n.todayMenuCopyText,
-        ),
-        // Go to date (owner, M19.5 part 5c): from the date button on
-        // screen, else Today's month.
-        ContextMenuEntry(
-          value: () => Actions.maybeInvoke(
-            context,
-            const AppCommandIntent(AppCommand.goToDate),
-          ),
-          label: l10n.todayMenuGoToDate,
-        ),
-        // Routines (11 C2, M11.4): drop one on this day.
-        ContextMenuEntry(
-          value: () => unawaited(
-            context.push(
-              AppRoutes.settingsPage(SettingsPage.routines),
-              extra: date,
-            ),
-          ),
-          label: l10n.routinesMenu,
-        ),
-        ...debugMenuItems(context),
+        ...dayMenuEntries(l10n, kind, state, act),
+        if (kind == DayMenuKind.full) ...debugMenuItems(context),
       ],
     );
+  }
+
+  /// What the menu shows now: whether a task is on, runs over, and the
+  /// low-energy and Plan / Reality switches.
+  DayMenuState _state(BuildContext context, WidgetRef ref) {
+    final blocks =
+        ref.watch(timelineDataProvider(today)).value?.blocks ?? const [];
+    final shown = date == today
+        ? blocks
+        : ref.watch(timelineDataProvider(date)).value?.blocks ?? const [];
+    final now =
+        ref.watch(minuteTickProvider).value ??
+        ref.watch(clockProvider).nowUtc();
+    final live = _live(blocks, now);
+    return DayMenuState(
+      isToday: date == today,
+      live: live != null,
+      runsOver: live != null && overrunOf(live, blocks) > 0,
+      lowEnergy: watchLowEnergy(ref),
+      reality: ref.watch(realityModeProvider),
+      realityOffered:
+          watchOnScreen(ref, FeatureId.realityThread) && hasActuals(shown),
+      mac: macApp(context),
+      web: webChrome(context),
+    );
+  }
+
+  static Occurrence? _live(List<Occurrence> blocks, DateTime now) {
+    for (final o in blocks) {
+      final start = o.startUtc;
+      if (o.status != OccurrenceStatus.planned || start == null) continue;
+      if (!start.isAfter(now) && o.endUtc!.isAfter(now)) return o;
+    }
+    return null;
   }
 }

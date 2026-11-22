@@ -8703,7 +8703,7 @@ abstract class AppLocalizations {
   /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Wind Down prompt caption.
   ///
   /// In en, this message translates to:
-  /// **'This week'**
+  /// **'Week in review'**
   String get weekReviewTitle;
 
   /// Weekly review: the week's first and last day.
@@ -11417,6 +11417,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search or run'**
   String get shortcutSearchOrRun;
+
+  /// Day menu group title (ED-093): Need more time, Shift the rest, Rebalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get dayMenuTime;
+
+  /// Day menu group title (ED-093): Brain dump, Drop a routine, Pick today's one thing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get dayMenuPlan;
+
+  /// Day menu: opens +5 / +15 / +30 for the task on now (ED-093, ED-163).
+  ///
+  /// In en, this message translates to:
+  /// **'Need more time'**
+  String get dayMenuNeedMoreTime;
+
+  /// Mac Day menu (title case): opens +5 / +15 / +30 min.
+  ///
+  /// In en, this message translates to:
+  /// **'Need More Time'**
+  String get menuDayNeedMoreTime;
+
+  /// Day menu, under Need more time: shift what comes after the task on now.
+  ///
+  /// In en, this message translates to:
+  /// **'Then shift the rest'**
+  String get dayMenuThenShift;
+
+  /// Mac Day menu (title case), under Need More Time.
+  ///
+  /// In en, this message translates to:
+  /// **'Then Shift the Rest'**
+  String get menuDayThenShift;
+
+  /// Day menu: how late, then shift the rest of today (opens the Running late sheet).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift the rest from here…'**
+  String get dayMenuShiftFromHere;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift the Rest From Here…'**
+  String get menuDayShiftFromHere;
+
+  /// Day menu: a Rebalance plan for the rest of today (R2-35).
+  ///
+  /// In en, this message translates to:
+  /// **'Rebalance…'**
+  String get dayMenuRebalance;
+
+  /// Day menu: opens Brain dump for the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Brain dump…'**
+  String get dayMenuBrainDump;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Brain Dump…'**
+  String get menuDayBrainDump;
+
+  /// Day menu: pick a routine to drop on the day (replaces Routines…, ED-093).
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a routine…'**
+  String get dayMenuDropRoutine;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Drop a Routine…'**
+  String get menuDayDropRoutine;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick Today\'s One Thing…'**
+  String get menuDayOneThing;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate Day…'**
+  String get menuDayDuplicate;
+
+  /// Mac Day menu (title case).
+  ///
+  /// In en, this message translates to:
+  /// **'Review the Day'**
+  String get menuDayReview;
+
+  /// Mac Day menu (title case): the weekly reflection (ED-099).
+  ///
+  /// In en, this message translates to:
+  /// **'Week in Review'**
+  String get menuDayWeekReview;
+
+  /// Mac Day menu (title case); ticked while on.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-Energy Mode'**
+  String get menuDayLowEnergy;
+
+  /// Day menu: show the day as planned or as it went; off on a day with nothing recorded yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan / Reality'**
+  String get dayMenuPlanReality;
 
   /// Section title in the task icon picker.
   ///

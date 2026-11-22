@@ -111,24 +111,32 @@ class AppMenuBar extends ConsumerWidget {
           type: PlatformProvidedMenuItemType.arrangeWindowsInFront,
         ),
       ],
-      AppMenuKind.file || AppMenuKind.edit || AppMenuKind.go => groups,
+      AppMenuKind.file ||
+      AppMenuKind.edit ||
+      AppMenuKind.go ||
+      AppMenuKind.day => groups,
     };
     return PlatformMenu(label: menu.label, menus: members);
   }
 
-  static PlatformMenuItem _item(MenuCommand c) => PlatformMenuItem(
-    label: c.label,
-    shortcut: switch (c.key) {
-      final key? => AppShortcuts.activator(
-        TargetPlatform.macOS,
-        key,
-        shift: c.shift,
-        alt: c.alt,
-      ),
-      null => null,
-    },
-    onSelected: c.onSelected,
-  );
+  static PlatformMenuItem _item(MenuCommand c) => c.children.isNotEmpty
+      ? PlatformMenu(
+          label: c.label,
+          menus: [for (final child in c.children) _item(child)],
+        )
+      : PlatformMenuItem(
+          label: c.label,
+          shortcut: switch (c.key) {
+            final key? => AppShortcuts.activator(
+              TargetPlatform.macOS,
+              key,
+              shift: c.shift,
+              alt: c.alt,
+            ),
+            null => null,
+          },
+          onSelected: c.onSelected,
+        );
 }
 
 /// ⌘Z / Ctrl+Z undoes the last change (Edit › Undo, M5.5) and ⇧⌘Z /

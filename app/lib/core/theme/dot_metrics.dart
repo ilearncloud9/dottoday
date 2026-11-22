@@ -408,6 +408,9 @@ abstract final class DotSize {
   /// a 1280 window).
   static const double palette = 560;
 
+  /// The web's Day ▾ popover (E-FullA-v2 frame 2: 330 at 1280).
+  static const double webDayMenu = 330;
+
   /// A task's dot on the phone day thread: ahead, calendar and concurrent
   /// now (Concept E §5.1); a done dot is [threadDoneDot].
   static const double threadDot = 34;

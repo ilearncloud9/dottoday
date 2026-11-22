@@ -55,6 +55,12 @@ final class KeyMenusBridge {
           title: menu["label"] as? String ?? "",
           identifier: UIMenu.Identifier("app.dottoday.go"), children: groups)
         builder.insertSibling(go, afterMenu: .view)
+      case "day":
+        // The Day menu after Go (ED-093): Time · Plan · Day · Layout.
+        let day = UIMenu(
+          title: menu["label"] as? String ?? "",
+          identifier: UIMenu.Identifier("app.dottoday.day"), children: groups)
+        builder.insertSibling(day, afterMenu: UIMenu.Identifier("app.dottoday.go"))
       default:
         break  // Window: the system's own.
       }
@@ -68,6 +74,10 @@ final class KeyMenusBridge {
   private static func command(_ item: [String: Any]) -> UIMenuElement? {
     guard let id = item["id"] as? String, let label = item["label"] as? String else { return nil }
     let action = #selector(AppDelegate.dottodayMenuCommand(_:))
+    if let children = item["children"] as? [[String: Any]], !children.isEmpty {
+      // Need More Time ▸ +5 / +15 / +30 / Then Shift the Rest.
+      return UIMenu(title: label, children: children.compactMap(command))
+    }
     guard let key = item["key"] as? String else {
       return UICommand(title: label, action: action, propertyList: id)
     }

@@ -1,16 +1,31 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show SingleActivator;
 
-/// One item of the Mac's system menu, as `ContextMenuBridge.swift` reads it.
+/// One item of the system menu, as `ContextMenuBridge.swift` (Mac, iOS)
+/// reads it. [index] is what the menu answers when it is chosen; an item
+/// with [children] opens them as a submenu instead.
 final class NativeMenuItem {
   const NativeMenuItem({
     required this.label,
+    this.index = -1,
     this.symbol,
     this.enabled = true,
     this.shortcut,
     this.checked = false,
     this.divided = false,
+    this.header,
+    this.children = const [],
   });
+
+  /// The answer when chosen (its place among the menu's entries).
+  final int index;
+
+  /// A titled group starts here (the Day menu's Time · Plan · Day ·
+  /// Layout, ED-093): NSMenu's section header, an inline UIMenu's title.
+  final String? header;
+
+  /// A submenu (Need more time ▸ +5 / +15 / +30).
+  final List<NativeMenuItem> children;
 
   /// A separator before this item (a new group).
   final bool divided;
@@ -31,6 +46,10 @@ final class NativeMenuItem {
     final key = shortcut;
     return {
       'label': label,
+      'index': index,
+      'header': ?header,
+      if (children.isNotEmpty)
+        'children': [for (final c in children) c.toWire()],
       'symbol': symbol,
       'enabled': enabled,
       'checked': checked,

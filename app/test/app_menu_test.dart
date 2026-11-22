@@ -106,7 +106,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('File, Edit, View, Go and Window carry the commands', (
+  testWidgets('File, Edit, View, Go, Day and Window carry the commands', (
     tester,
   ) async {
     await pump(tester);
@@ -117,8 +117,23 @@ void main() {
       'Edit',
       'View',
       'Go',
+      'Day',
       'Window',
     ]);
+    // The Day menu (ED-093): Time · Plan · Day · Layout, Need More Time ▸.
+    for (final label in [
+      'Need More Time',
+      '+5 min',
+      'Then Shift the Rest',
+      'Shift the Rest From Here…',
+      'Rebalance…',
+      'Drop a Routine…',
+      'Pick Today\'s One Thing…',
+      'Week in Review',
+      'Plan / Reality',
+    ]) {
+      expect(items, contains(label), reason: label);
+    }
     // ⌘N, ⌘1–4, ⌘/ and ⌘, are native key equivalents …
     for (final label in ['New Task', 'Today', 'Inbox', 'Week', 'Month']) {
       expect(

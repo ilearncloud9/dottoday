@@ -43,7 +43,11 @@ void main() {
     expect(
       offences(
         RegExp(r'PopupMenuButton<|showMenu<|DropdownButton<'),
-        allowed: {'shared/menus/context_menu.dart'},
+        // The shared menu: the system's own, then Flutter's (M20.3).
+        allowed: {
+          'shared/menus/context_menu.dart',
+          'shared/menus/flutter_menu.dart',
+        },
       ),
       isEmpty,
     );
