@@ -84,7 +84,12 @@ void main() {
   ) async {
     await _pump(tester);
     await _type(tester, 'roadmap');
-    final headings = ['WEDNESDAY · TODAY', 'MONDAY 19', 'FRIDAY 23', 'INBOX'];
+    final headings = [
+      'WED, OCT 21 · TODAY',
+      'MON, OCT 19',
+      'FRI, OCT 23',
+      'INBOX',
+    ];
     final ys = [
       for (final h in headings)
         tester.getTopLeft(find.textContaining(h, findRichText: true).first).dy,
@@ -119,11 +124,11 @@ void main() {
     await _pump(tester);
     await _type(tester, 'roadmap');
     await _chip(tester, 'Done');
-    expect(find.text('MONDAY 19'), findsOneWidget);
+    expect(find.text('MON, OCT 19'), findsOneWidget);
     expect(find.text('INBOX'), findsNothing);
     await _chip(tester, 'Inbox');
     expect(find.text('INBOX'), findsOneWidget);
-    expect(find.text('MONDAY 19'), findsNothing);
+    expect(find.text('MON, OCT 19'), findsNothing);
     await _type(tester, 'dentist');
     expect(find.text('No matches for “dentist”'), findsOneWidget);
     await tester.tap(find.text('Show all'));
@@ -140,13 +145,13 @@ void main() {
     await _chip(tester, 'Colour');
     await tester.tap(find.bySemanticsLabel('Violet'));
     await tester.pumpAndSettle();
-    expect(find.text('MONDAY 19'), findsOneWidget);
-    expect(find.text('FRIDAY 23'), findsNothing);
+    expect(find.text('MON, OCT 19'), findsOneWidget);
+    expect(find.text('FRI, OCT 23'), findsNothing);
     await _chip(tester, 'Violet');
-    expect(find.text('FRIDAY 23'), findsOneWidget);
+    expect(find.text('FRI, OCT 23'), findsOneWidget);
   });
 
-  testWidgets('a submitted search becomes a recent chip that searches again', (
+  testWidgets('a submitted search becomes a recent one that searches again', (
     tester,
   ) async {
     await _pump(tester);
@@ -156,12 +161,13 @@ void main() {
     await tester.tap(find.byTooltip('Clear search'));
     await tester.pumpAndSettle();
     expect(find.text('RECENT'), findsOneWidget);
-    await tester.tap(find.widgetWithText(ActionChip, 'taxes'));
+    // Phones list them (E-R2-13).
+    await tester.tap(find.bySemanticsLabel('Search for taxes again'));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(TextField, 'taxes'), findsOneWidget);
   });
 
-  testWidgets('+ Schedule hands the inbox task to the Inbox flow', (
+  testWidgets('Schedule hands the inbox task to the Inbox flow', (
     tester,
   ) async {
     final asked = <String>[];
@@ -178,13 +184,13 @@ void main() {
     final repo = await _pump(tester);
     await _type(tester, 'one-pager');
     await _chip(tester, 'Done');
-    expect(find.text('FRIDAY 23'), findsNothing);
+    expect(find.text('FRI, OCT 23'), findsNothing);
     final o = repo.rows.singleWhere(
       (o) => o.title == 'Write roadmap one-pager',
     );
     repo.put([o.copyWith(status: OccurrenceStatus.done)]);
     await tester.pumpAndSettle();
-    expect(find.text('FRIDAY 23'), findsOneWidget);
+    expect(find.text('FRI, OCT 23'), findsOneWidget);
   });
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {

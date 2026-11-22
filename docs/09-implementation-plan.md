@@ -759,6 +759,7 @@ Rules for every task in M18 to M22:
 - [ ] M20.2 Inbox and Search on every platform (R2-13, ED-295):
   Split by the owner (2026-11-21) into three parts, each with its own review page and commit: Inbox, Search, Search or run.
   - [x] Part 1 done 2026-11-22 (ED-421): the Inbox on every platform (E-R2-13): rows with where each fits and Place, the next free slot on top, Sort on the filter line, Completed and Auto-plan the week at the end, hold and move to reorder (the menu adds Move up / Move down), Minimal's Inbox at every width with Place on each row (ED-333). Open: real devices, Android tablet portrait.
+  - [x] Part 2 done 2026-11-22 (ED-422): Search on every platform: flat results on touch (E-R2-13), cards with "3 results" and Schedule on the Mac and web (E-R2-30), headings in the locale's short date, wrapping filters with Colour ⌄ and Icon ⌄, a centred no matches with Show all, Recent as a list on phones. Open: real devices, Android tablet portrait.
   - Search or run on Mac and web (R2-30, ED-333);
   - the minimal Inbox at wide widths follows docs/14 §3 (ED-333).
 - [ ] M20.3 Day menu and planning:

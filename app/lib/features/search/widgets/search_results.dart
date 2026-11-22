@@ -7,8 +7,8 @@ import 'package:dottoday/features/search/widgets/search_row.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The results under their headings: "WEDNESDAY · TODAY", "MONDAY 19",
-/// "INBOX" (`A-ios-search`).
+/// The results under their headings: "TUE, NOV 3 · TODAY", "THU, NOV 5",
+/// "INBOX" (E-R2-30; the locale's short date).
 List<Widget> searchResultSlivers(
   BuildContext context, {
   required SearchView view,
@@ -22,7 +22,8 @@ List<Widget> searchResultSlivers(
     ),
     SliverList.separated(
       itemCount: rows.length,
-      separatorBuilder: (_, _) => const SizedBox(height: DotSpace.s),
+      separatorBuilder: (context, _) =>
+          SizedBox(height: searchCards(context) ? DotSpace.s : 0),
       itemBuilder: (context, i) => SearchRow(
         task: rows[i],
         query: query,
@@ -49,16 +50,11 @@ class _Heading extends StatelessWidget {
     final Widget text = switch (group) {
       DayGroup(:final date) when date == today => _today(
         t,
-        l10n.searchGroupToday(DateFormat.EEEE(locale).format(date)),
+        l10n.searchGroupToday(DateFormat.MMMEd(locale).format(date)),
         l10n.searchFilterToday,
       ),
       DayGroup(:final date) => Text(
-        l10n
-            .searchDayLabel(
-              DateFormat.EEEE(locale).format(date),
-              DateFormat.d(locale).format(date),
-            )
-            .toUpperCase(),
+        DateFormat.MMMEd(locale).format(date).toUpperCase(),
         style: style,
       ),
       InboxGroup() => Text(l10n.searchGroupInbox.toUpperCase(), style: style),

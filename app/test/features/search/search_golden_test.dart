@@ -50,6 +50,27 @@ void main() {
     act: (t) => _type(t, 'roadmap'),
     build: (_) => _search(),
   );
+  // The Mac's Search (E-R2-30): result cards, "4 results", Schedule.
+  goldenMatrix(
+    'search_mac',
+    height: 800,
+    platform: TargetPlatform.macOS,
+    widths: const {'expanded'},
+    act: (t) => _type(t, 'roadmap'),
+    build: (_) => _search(),
+  );
+  goldenMatrix(
+    'search_mac_no_results',
+    height: 640,
+    platform: TargetPlatform.macOS,
+    widths: const {'expanded'},
+    act: (t) async {
+      await _type(t, 'zebra');
+      await t.pumpAndSettle();
+      await t.tap(find.text('Done'));
+    },
+    build: (_) => _search(),
+  );
   // §5.3: nothing typed (recent + hint) and no results.
   goldenMatrix(
     'search_empty',

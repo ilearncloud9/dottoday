@@ -109,7 +109,7 @@ enum FeatureId {
     'Mac/web spread with its greeting title, Inbox sidebar, `TaskEditor` panel',
   ),
   inboxExtras(
-    'Inbox page extras: filters, completed group, Routines button, swipe hint, Drop on today panel',
+    'Inbox page extras: filters and Sort, completed group, Auto-plan the week, swipe hint, Drop on today panel',
   ),
   sheetExtras(
     'Task sheet extras: +15, Shift the rest, Move, Edit, Alerts, Sound, Travel, Pin, calendar line',

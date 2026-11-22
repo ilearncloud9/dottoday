@@ -14,14 +14,14 @@ import 'package:dottoday/features/search/widgets/search_extras.dart';
 import 'package:dottoday/features/search/widgets/search_field.dart';
 import 'package:dottoday/features/search/widgets/search_filters.dart';
 import 'package:dottoday/features/search/widgets/search_results.dart';
-import 'package:dottoday/shared/dot/count_ring.dart';
+import 'package:dottoday/features/search/widgets/search_row.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Search S1 (docs/10 §5.2, `A-ios-search`, `A-android-search`): field,
-/// filter chips, live results grouped by day with the match highlighted,
-/// recent searches; done tasks included (R-11).
+/// Search (E-R2-13 on touch, E-R2-30 on the Mac and web): field, filter
+/// chips, live results grouped by day with the match highlighted, recent
+/// searches; done tasks included (R-11).
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
@@ -158,15 +158,16 @@ class SearchScreen extends ConsumerWidget {
 class _Header extends StatelessWidget {
   const _Header({required this.count});
 
-  /// Results shown; null hides the ring (nothing searched yet).
+  /// Results shown; null while nothing is searched.
   final int? count;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final n = count;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: Column(
@@ -183,8 +184,30 @@ class _Header extends StatelessWidget {
             ],
           ),
         ),
-        if (count case final n?)
-          CountRing(count: n, label: l10n.searchRingLabel(n)),
+        // "4 results" on the Mac and the web (E-R2-30); touch draws none.
+        if (n != null && searchCards(context))
+          Semantics(
+            liveRegion: true,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: t.colors.accentTint,
+                borderRadius: BorderRadius.circular(DotRadii.pill),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DotSpace.s + DotSpace.xxs,
+                  vertical: DotSpace.xxs,
+                ),
+                child: Text(
+                  l10n.searchRingLabel(n),
+                  style: t.styles.rowMeta.copyWith(
+                    color: t.colors.accentInk,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

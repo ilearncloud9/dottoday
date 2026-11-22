@@ -9,9 +9,9 @@ import 'package:dottoday/shared/pickers/task_icon_picker.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 
-/// All · Today · This week · Inbox · Done · Colour · Icon (`A-ios-search`;
-/// the colour/icon chips the renders cut off at the edge). One row that
-/// scrolls; chip corners are the §4 idiom.
+/// All · Today · This week · Inbox · Done · Colour ⌄ · Icon ⌄ (E-R2-13,
+/// E-R2-30), wrapping onto a second line where they need it; Colour and
+/// Icon open their pickers. Chip corners are the §4 idiom.
 class SearchFilters extends StatelessWidget {
   const SearchFilters({required this.picked, required this.onPick, super.key});
 
@@ -28,22 +28,20 @@ class SearchFilters extends StatelessWidget {
       const InboxResults(): l10n.searchFilterInbox,
       const DoneResults(): l10n.searchFilterDone,
     };
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        spacing: DotSpace.s,
-        children: [
-          for (final MapEntry(key: f, value: label) in plain.entries)
-            FilterChip(
-              label: Text(label),
-              selected: picked.runtimeType == f.runtimeType,
-              shape: dotChipShape(context),
-              onSelected: (_) => onPick(f),
-            ),
-          _colourChip(context),
-          _iconChip(context),
-        ],
-      ),
+    return Wrap(
+      spacing: DotSpace.s,
+      runSpacing: DotSpace.s,
+      children: [
+        for (final MapEntry(key: f, value: label) in plain.entries)
+          FilterChip(
+            label: Text(label),
+            selected: picked.runtimeType == f.runtimeType,
+            shape: dotChipShape(context),
+            onSelected: (_) => onPick(f),
+          ),
+        _colourChip(context),
+        _iconChip(context),
+      ],
     );
   }
 
@@ -57,11 +55,9 @@ class SearchFilters extends StatelessWidget {
       avatar: current == null
           ? null
           : CircleAvatar(backgroundColor: t.tasks[current].color),
-      label: Text(
-        current == null
-            ? context.l10n.searchFilterColour
-            : taskColorName(context.l10n, current),
-      ),
+      label: current == null
+          ? _Menu(context.l10n.searchFilterColour)
+          : Text(taskColorName(context.l10n, current)),
       selected: current != null,
       shape: dotChipShape(context),
       onSelected: (_) => current != null
@@ -84,11 +80,9 @@ class SearchFilters extends StatelessWidget {
               color: t.colors.text,
               size: DotSize.rowIcon,
             ),
-      label: Text(
-        current == null
-            ? context.l10n.searchFilterIcon
-            : taskIconName(context.l10n, current),
-      ),
+      label: current == null
+          ? _Menu(context.l10n.searchFilterIcon)
+          : Text(taskIconName(context.l10n, current)),
       selected: current != null,
       shape: dotChipShape(context),
       onSelected: (_) => current != null
@@ -121,5 +115,29 @@ class SearchFilters extends StatelessWidget {
       title: context.l10n.searchPickIcon,
     );
     if (icon != null) onPick(IconResults(icon.key));
+  }
+}
+
+/// "Colour ⌄": a chip that opens a picker.
+class _Menu extends StatelessWidget {
+  const _Menu(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ink = DefaultTextStyle.of(context).style.color;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: DotSpace.xxs,
+      children: [
+        Text(label),
+        DotIcon(
+          DotGlyphs.chevronDown,
+          color: ink ?? DotTheme.of(context).colors.text,
+          size: DotSize.rowIcon - DotSpace.xs,
+        ),
+      ],
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -10,10 +11,15 @@ import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// One result (`A-ios-search`): the task's dot in its state, the title with
-/// the match highlighted, and its meta — live ("9:00 – 11:00 · 38 min
-/// left"), done (struck, "Mon 19 · … · Done"), missed, another day, or the
-/// Inbox with "+ Schedule".
+/// Mac and web at the expanded width: results as cards at pointer sizes
+/// (E-R2-30); touch and narrow windows list them flat (E-R2-13).
+bool searchCards(BuildContext context) =>
+    !touchApp(context) && AppLayout.classOf(context) == WidthClass.expanded;
+
+/// One result (E-R2-13, E-R2-30): the task's dot in its state, the title
+/// with the match highlighted, and its meta: live ("9:00 – 11:00 · 38 min
+/// left"), done (struck, "Mon 19 · … · Done"), not done, another day, or
+/// the Inbox with Schedule.
 class SearchRow extends StatelessWidget {
   const SearchRow({
     required this.task,
@@ -36,41 +42,54 @@ class SearchRow extends StatelessWidget {
     final l10n = context.l10n;
     final info = _info(context);
     final done = task.status == OccurrenceStatus.done;
+    final cards = searchCards(context);
+    final row = Row(
+      spacing: DotSpace.m,
+      children: [
+        TaskDot(
+          color: TaskColor.fromKey(task.colorKey),
+          icon: TaskIcon.fromKey(task.iconKey),
+          state: info.state,
+          progress: info.progress,
+          label: task.title,
+          size: cards ? DotSize.macRowDot : DotSize.rowDot,
+        ),
+        Expanded(
+          child: _text(t, info, done: done, cards: cards),
+        ),
+        if (task.isInbox) _ScheduleButton(onTap: onSchedule, small: cards),
+      ],
+    );
     return Semantics(
       button: true,
       label: l10n.searchRowLabel(task.title, info.meta),
       excludeSemantics: true,
       child: Material(
-        color: t.colors.raised,
+        color: cards ? t.colors.raised : Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-          side: BorderSide(color: t.colors.outline),
+          borderRadius: BorderRadius.circular(DotRadii.card),
+          side: cards
+              ? BorderSide(color: t.colors.threadAhead)
+              : BorderSide.none,
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onOpen,
-          child: Padding(
-            padding: const EdgeInsets.all(DotSpace.l),
-            child: Row(
-              spacing: DotSpace.m,
-              children: [
-                TaskDot(
-                  color: TaskColor.fromKey(task.colorKey),
-                  icon: TaskIcon.fromKey(task.iconKey),
-                  state: info.state,
-                  progress: info.progress,
-                  label: task.title,
-                ),
-                Expanded(child: _text(t, info, done: done)),
-                if (task.isInbox)
-                  _ScheduleButton(onTap: onSchedule)
-                else
-                  DotIcon(
-                    DotGlyphs.chevronRight,
-                    color: t.colors.muted,
-                    size: DotSize.rowIcon,
-                  ),
-              ],
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: cards ? DotTouch.android : DotSize.searchRowMin,
+            ),
+            child: Padding(
+              padding: cards
+                  ? const EdgeInsets.symmetric(
+                      horizontal: DotSpace.m,
+                      vertical: DotSpace.s,
+                    )
+                  : const EdgeInsets.symmetric(
+                      horizontal: DotSpace.xs,
+                      vertical: DotSpace.xs + DotSpace.xxs,
+                    ),
+              child: row,
             ),
           ),
         ),
@@ -78,8 +97,13 @@ class SearchRow extends StatelessWidget {
     );
   }
 
-  Widget _text(DotTheme t, _Info info, {required bool done}) {
-    final base = t.styles.rowTitle.copyWith(
+  Widget _text(
+    DotTheme t,
+    _Info info, {
+    required bool done,
+    required bool cards,
+  }) {
+    final base = (cards ? t.styles.cardTitle : t.styles.rowTitle).copyWith(
       color: done ? t.colors.muted : t.colors.text,
       decoration: done ? TextDecoration.lineThrough : null,
     );
@@ -174,28 +198,33 @@ final class _Info {
   final String? left;
 }
 
-/// "+ Schedule" on an inbox result.
+/// Schedule on an Inbox result (E-R2-30).
 class _ScheduleButton extends StatelessWidget {
-  const _ScheduleButton({required this.onTap});
+  const _ScheduleButton({required this.onTap, required this.small});
 
   final VoidCallback onTap;
+
+  /// Pointer size, on the Mac and the web's cards.
+  final bool small;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    return TextButton.icon(
+    return OutlinedButton(
       onPressed: onTap,
-      style: TextButton.styleFrom(
-        backgroundColor: t.colors.accentTint,
-        foregroundColor: t.colors.accentInk,
-        shape: const StadiumBorder(),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: t.colors.text,
+        textStyle: small ? t.styles.rowMeta : t.styles.button,
+        padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
+        minimumSize: Size(
+          0,
+          small ? DotTouch.pointer + DotSpace.s : DotTouch.android,
+        ),
+        tapTargetSize: small
+            ? MaterialTapTargetSize.shrinkWrap
+            : MaterialTapTargetSize.padded,
       ),
-      icon: DotIcon(
-        DotGlyphs.add,
-        color: t.colors.accentInk,
-        size: DotSize.rowIcon,
-      ),
-      label: Text(context.l10n.inboxSchedule),
+      child: Text(context.l10n.inboxSchedule),
     );
   }
 }

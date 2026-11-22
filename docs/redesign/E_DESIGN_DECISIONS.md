@@ -5429,6 +5429,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Removed:** the count ring and "Drop a routine…" from the Inbox (Routines stays in Settings › Planning and Add; strings `inboxRingLabel`, `routineDropHere` deleted), `WideInboxHeader`, the drag handle and the round "+", the dashed next-free-slot card's own Place.
 - **Checks:** analyze and format clean; 7,565 pass, 31 skipped; the Inbox goldens updated, no other golden moved; `integration_test/inbox_test.dart` passed on the iPhone and iPad simulators, the Android phone (portrait) and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices, Android tablet portrait.
 
+### ED-422 · M20.2 part 2: Search on every platform
+- **Date:** 2026-11-22. **Owner:** "Start part 2"; then "Approve part 2" after the review page (departures listed there, accepted with it).
+- **Touch (E-R2-13, ED-295):** results as flat rows (the task's dot, the title with the match highlighted, its meta; no chevron, at least 60 tall), no count by the title; Recent as a list on phones.
+- **Mac and web (E-R2-30, ED-333):** at the expanded width without touch, results as cards at pointer sizes, "3 results" / "No results" beside the title (a live region), Schedule outlined on Inbox results; Recent as chips from medium width.
+- **Everywhere:** headings in the locale's short date ("TUE, NOV 3 · TODAY", "SUN, NOV 1", "INBOX"); the filters wrap, Colour ⌄ and Icon ⌄ opening their pickers; no matches centred with Show all as a button when a chip hides results.
+- **Departs from the boards:** past results grouped by day everywhere (R2-13 draws EARLIER, R2-30 by day); Schedule kept on phones (R2-13's phone frame has none); no trailing Show all (nothing caps the results); Past days stays under the empty field (D3, docs/14); dots keep their icons and chips M18.4's look.
+- **Removed:** the count ring by the title, the chevron on each result, the "+" in Schedule.
+- **Fixed from ED-421:** the Inbox extras row in docs/14 §3 and `FeatureId.inboxExtras` match again ("filters and Sort, completed group, Auto-plan the week, swipe hint, Drop on today panel"); the layout policy test that compares them failed after part 1's doc edit, which landed after its suite run.
+- **Checks:** analyze and format clean; 7,573 pass, 31 skipped; Search goldens updated, `search_mac` and `search_mac_no_results` added; `integration_test/search_test.dart` passed on the iPhone and iPad simulators, the Android phone (portrait) and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). In device tests typing goes first: after a chip tap (web) or a submit (iOS) the device's text input took no more typing. Not run: real devices, Android tablet portrait.
+
 ---
 
 ## Pending owner answers
