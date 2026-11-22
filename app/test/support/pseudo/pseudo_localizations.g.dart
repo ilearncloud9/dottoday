@@ -6000,6 +6000,25 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.calendarMonthPlanned(count));
 
   @override
+  String get paletteTasks => pseudo(super.paletteTasks);
+
+  @override
+  String get paletteCommands => pseudo(super.paletteCommands);
+
+  @override
+  String paletteSearchFor(String query) =>
+      pseudo(super.paletteSearchFor(query));
+
+  @override
+  String get paletteFooter => pseudo(super.paletteFooter);
+
+  @override
+  String get paletteNothing => pseudo(super.paletteNothing);
+
+  @override
+  String get shortcutSearchOrRun => pseudo(super.shortcutSearchOrRun);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

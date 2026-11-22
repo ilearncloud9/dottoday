@@ -32,6 +32,10 @@ enum AppCommand {
   /// Show or hide the Workspace's Plan panel (ED-184): ⌥⌘P on the Mac.
   togglePlanPanel,
   toggleInspector,
+
+  /// Search or run (ED-333, M20.2 part 3): ⌘K / Ctrl K, web k. The palette
+  /// on the Mac and the web; elsewhere the Search screen.
+  searchOrRun,
 }
 
 /// A key plus modifiers, relative to the platform's primary modifier
@@ -164,6 +168,7 @@ abstract final class AppShortcuts {
     AppCommand.togglePlanPanel: KeyCombo(LogicalKeyboardKey.keyP, alt: true),
     // ⌥⌘I: the right-hand pane (ED-218); the web has no key for it.
     AppCommand.toggleInspector: KeyCombo(LogicalKeyboardKey.keyI, alt: true),
+    AppCommand.searchOrRun: KeyCombo(LogicalKeyboardKey.keyK),
   };
 
   /// The web's single keys (ED-095): the browser keeps ⌘/Ctrl N, T, 1–9,
@@ -188,6 +193,7 @@ abstract final class AppShortcuts {
       shift: true,
     ),
     AppCommand.showShortcuts: CharacterActivator('?'),
+    AppCommand.searchOrRun: SingleActivator(LogicalKeyboardKey.keyK),
   };
 
   /// Whether ⌘ (meta) is the primary modifier on [platform]. Web reports the

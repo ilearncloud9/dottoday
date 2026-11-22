@@ -11382,6 +11382,42 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 planned this month} other{{count} planned this month}}'**
   String calendarMonthPlanned(int count);
 
+  /// Search or run palette (⌘K, E-R2-30): heading over the matching tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get paletteTasks;
+
+  /// Search or run palette: heading over the matching commands.
+  ///
+  /// In en, this message translates to:
+  /// **'Commands'**
+  String get paletteCommands;
+
+  /// Search or run palette: the command that opens Search with what was typed.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for “{query}”'**
+  String paletteSearchFor(String query);
+
+  /// Search or run palette footer: its keys.
+  ///
+  /// In en, this message translates to:
+  /// **'↑↓ to move · ↵ to open · esc to close'**
+  String get paletteFooter;
+
+  /// Search or run palette: no task and no command matches what was typed.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing matches'**
+  String get paletteNothing;
+
+  /// Keyboard shortcuts list: ⌘K (web k) opens the Search or run palette.
+  ///
+  /// In en, this message translates to:
+  /// **'Search or run'**
+  String get shortcutSearchOrRun;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

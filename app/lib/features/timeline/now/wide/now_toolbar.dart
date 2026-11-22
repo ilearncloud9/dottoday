@@ -1,5 +1,4 @@
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
@@ -11,7 +10,6 @@ import 'package:dottoday/features/timeline/workspace/workspace_search_field.dart
 import 'package:dottoday/shared/sync/sync_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// The apps' Minimal toolbar over Now and the Day column (E-Minimal frame
@@ -80,9 +78,14 @@ class NowToolbar extends ConsumerWidget {
               // ⌘K on the Mac; touch shows no key hints (E-R2-1).
               hint: macApp(context)
                   ? '⌘K' // l10n-ignore: a key cap
+                  : webChrome(context)
+                  ? 'k' // l10n-ignore: the web's single key
                   : null,
               compact: narrow,
-              onTap: () => context.go(AppRoutes.search),
+              onTap: () => Actions.maybeInvoke(
+                context,
+                const AppCommandIntent(AppCommand.searchOrRun),
+              ),
             ),
             ToolbarAdd(
               label: l10n.quickAddTooltip,

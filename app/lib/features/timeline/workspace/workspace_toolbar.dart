@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
@@ -129,9 +128,14 @@ class WorkspaceToolbar extends ConsumerWidget {
         label: l10n.workspaceSearchOrRun,
         hint: macApp(context)
             ? '⌘K' // l10n-ignore: a key cap
+            : webChrome(context)
+            ? 'k' // l10n-ignore: the web's single key
             : null,
         compact: !full,
-        onTap: () => router.go(AppRoutes.search),
+        onTap: () => Actions.maybeInvoke(
+          context,
+          const AppCommandIntent(AppCommand.searchOrRun),
+        ),
       ),
       if (inspector) ?trailing,
     ];

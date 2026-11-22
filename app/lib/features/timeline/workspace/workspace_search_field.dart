@@ -3,7 +3,7 @@ import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// "Search or run ⌘K": opens Search until the palette exists (M19.2).
+/// "Search or run ⌘K" (k on the web): opens the palette (M20.2 part 3).
 class SearchField extends ConsumerWidget {
   const SearchField({
     required this.label,

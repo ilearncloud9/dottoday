@@ -1,5 +1,6 @@
 import 'package:dottoday/app_add_modes.dart';
 import 'package:dottoday/app_commands.dart';
+import 'package:dottoday/app_search_or_run.dart';
 import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/editing/add_modes.dart';
 import 'package:dottoday/core/env/env.dart';
@@ -61,14 +62,19 @@ Widget _routerApp(
     Consumer(
       builder: (context, ref, _) {
         final minimal = watchSimplified(ref, FeatureId.navigation);
+        late final Map<AppCommand, VoidCallback> handlers;
+        handlers = appCommandHandlers(
+          router,
+          onQuickAdd: onQuickAdd,
+          minimal: minimal,
+          // ⌥⌘I as the app wires it (ED-218).
+          onToggleInspector: () => toggleSidePanel(ref, minimal: minimal),
+          // ⌘K, as the app wires it (M20.2 part 3).
+          onSearchOrRun: () =>
+              openSearchOrRun(router, ref, handlers, minimal: minimal),
+        );
         return AppCommandScope(
-          handlers: appCommandHandlers(
-            router,
-            onQuickAdd: onQuickAdd,
-            minimal: minimal,
-            // ⌥⌘I as the app wires it (ED-218).
-            onToggleInspector: () => toggleSidePanel(ref, minimal: minimal),
-          ),
+          handlers: handlers,
           onAddMode: onAddMode,
           // A view's ?task= opens the task, as in the app (ED-097).
           child: TaskLinkHost(

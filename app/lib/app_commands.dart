@@ -28,6 +28,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
   VoidCallback? onShortcuts,
   VoidCallback? onTogglePlanPanel,
   VoidCallback? onToggleInspector,
+  VoidCallback? onSearchOrRun,
 }) {
   // From the date button on screen (any view), else Today's own month.
   void goToDate() {
@@ -58,6 +59,7 @@ Map<AppCommand, VoidCallback> appCommandHandlers(
     AppCommand.showShortcuts: onShortcuts ?? () {},
     AppCommand.togglePlanPanel: onTogglePlanPanel ?? () {},
     AppCommand.toggleInspector: onToggleInspector ?? () {},
+    AppCommand.searchOrRun: onSearchOrRun ?? () => router.go(AppRoutes.search),
   };
 }
 

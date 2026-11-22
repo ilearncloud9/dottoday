@@ -5,6 +5,7 @@ import 'package:dottoday/app_commands.dart';
 import 'package:dottoday/app_lifecycle.dart';
 import 'package:dottoday/app_menu.dart';
 import 'package:dottoday/app_openers.dart';
+import 'package:dottoday/app_search_or_run.dart';
 import 'package:dottoday/app_shortcut_groups.dart';
 import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/editing/add_modes.dart';
@@ -101,7 +102,8 @@ class DottodayApp extends ConsumerWidget {
       // Above all routes so shortcuts work wherever focus is (M0.13).
       builder: (context, child) {
         final open = AppOpeners(router);
-        final handlers = appCommandHandlers(
+        late final Map<AppCommand, VoidCallback> handlers;
+        handlers = appCommandHandlers(
           router,
           minimal: minimalNav,
           onQuickAdd: () => openQuickAdd(router),
@@ -113,6 +115,8 @@ class DottodayApp extends ConsumerWidget {
           // ⌥⌘P (ED-184): the person shows or hides the Plan panel.
           onTogglePlanPanel: () => unawaited(togglePlanPanelHidden(ref)),
           onToggleInspector: () => toggleSidePanel(ref, minimal: minimalNav),
+          onSearchOrRun: () =>
+              openSearchOrRun(router, ref, handlers, minimal: minimalNav),
         );
         // The Mac window takes the app's theme (ED-176); a view's
         // `?task=` opens the task over it (ED-097).

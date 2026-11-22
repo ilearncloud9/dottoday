@@ -404,6 +404,10 @@ abstract final class DotSize {
   /// A Search result's least height (E-R2-13: 60).
   static const double searchRowMin = 60;
 
+  /// The Search or run palette's width (E-R2-30: 360 of an 819 frame of
+  /// a 1280 window).
+  static const double palette = 560;
+
   /// A task's dot on the phone day thread: ahead, calendar and concurrent
   /// now (Concept E §5.1); a done dot is [threadDoneDot].
   static const double threadDot = 34;

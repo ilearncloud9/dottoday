@@ -4,6 +4,8 @@ library;
 
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/search/search_screen.dart';
+import 'package:dottoday/features/search/widgets/search_or_run.dart';
+import 'package:dottoday/features/search/widgets/search_or_run_rows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +28,30 @@ Widget _search() => ProviderScope(
 
 Future<void> _type(WidgetTester tester, String text) =>
     tester.enterText(find.byType(TextField), text);
+
+/// The palette over Search with some of the Mac's menu commands, [typed]
+/// in its field.
+Future<void> _palette(WidgetTester tester, String typed) async {
+  void noop() {}
+  // Not awaited: it completes when the palette closes.
+  // ignore: unawaited_futures
+  showSearchOrRun(
+    tester.element(find.byType(SearchScreen)),
+    commands: [
+      PaletteCommand('New Task', noop, keys: '⌘N'),
+      PaletteCommand('New Brain Dump', noop, keys: '⇧⌘N'),
+      PaletteCommand('Today', noop, keys: '⌘1'),
+      PaletteCommand('Inbox', noop, keys: '⌘2'),
+      PaletteCommand('Go to Date…', noop, keys: '⇧⌘T'),
+      PaletteCommand('Show Inspector', noop, keys: '⌥⌘I'),
+    ],
+    placeholder: 'Search or run',
+  );
+  await tester.pumpAndSettle();
+  if (typed.isNotEmpty) {
+    await tester.enterText(find.byType(TextField).last, typed);
+  }
+}
 
 void main() {
   setUpAll(() async {
@@ -71,6 +97,20 @@ void main() {
     },
     build: (_) => _search(),
   );
+  // Search or run, ⌘K (E-R2-30 frame 3): tasks, then commands.
+  for (final (name, typed) in [
+    ('search_or_run', 'road'),
+    ('search_or_run_empty', ''),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 640,
+      platform: TargetPlatform.macOS,
+      widths: const {'expanded'},
+      act: (t) => _palette(t, typed),
+      build: (_) => _search(),
+    );
+  }
   // §5.3: nothing typed (recent + hint) and no results.
   goldenMatrix(
     'search_empty',

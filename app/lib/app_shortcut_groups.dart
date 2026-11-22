@@ -41,6 +41,7 @@ List<ShortcutGroup> appShortcutGroups(
           action: minimal ? l10n.shortcutGoSearch : l10n.shortcutGoMonth,
         ),
         (keys: w('/', 'F'), action: l10n.shortcutSearch),
+        (keys: w('k', 'K'), action: l10n.shortcutSearchOrRun),
         if (!web) (keys: k('['), action: l10n.shortcutBack),
         if (!web) (keys: k(']'), action: l10n.shortcutForward),
         (keys: w('⇧L', 'L', shift: true), action: l10n.shortcutToggleLayout),

@@ -7507,6 +7507,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get paletteTasks => 'Tasks';
+
+  @override
+  String get paletteCommands => 'Commands';
+
+  @override
+  String paletteSearchFor(String query) {
+    return 'Search for “$query”';
+  }
+
+  @override
+  String get paletteFooter => '↑↓ to move · ↵ to open · esc to close';
+
+  @override
+  String get paletteNothing => 'Nothing matches';
+
+  @override
+  String get shortcutSearchOrRun => 'Search or run';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

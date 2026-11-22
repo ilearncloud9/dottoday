@@ -7564,6 +7564,27 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get paletteTasks => 'Tâches';
+
+  @override
+  String get paletteCommands => 'Commandes';
+
+  @override
+  String paletteSearchFor(String query) {
+    return 'Rechercher « $query »';
+  }
+
+  @override
+  String get paletteFooter =>
+      '↑↓ pour choisir · ↵ pour ouvrir · Échap pour fermer';
+
+  @override
+  String get paletteNothing => 'Aucun résultat';
+
+  @override
+  String get shortcutSearchOrRun => 'Rechercher ou lancer';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override
