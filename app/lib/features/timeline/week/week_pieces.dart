@@ -64,11 +64,12 @@ class GridCueLine extends StatelessWidget {
             horizontal: DotSpace.s,
             vertical: DotSpace.xxs,
           ),
+          // Bold in the accent, two lines on a tall card (E-R2-23 §2).
           child: Text(
             text,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: t.styles.gridMeta.copyWith(color: t.colors.accentText),
+            style: t.styles.gridTitle.copyWith(color: t.colors.accentText),
           ),
         ),
       ),

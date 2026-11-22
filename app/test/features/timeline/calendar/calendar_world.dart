@@ -6,6 +6,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -100,6 +101,7 @@ Future<GoRouter> pumpCalendar(
   UiLayout layout = UiLayout.full,
   List<Routine> routines = const [],
   DateTime? lowEnergyUntil,
+  List<Subtask> subtasks = const [],
 }) async {
   if (size != null) {
     tester.view
@@ -132,6 +134,7 @@ Future<GoRouter> pumpCalendar(
             ),
           ),
           routines: routines,
+          subtasks: FakeSubtaskRepository(subtasks),
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
         // Never the person's own database on a device or the Mac.

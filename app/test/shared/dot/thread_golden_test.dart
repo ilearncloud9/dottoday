@@ -223,6 +223,14 @@ void main() {
     height: 460,
     build: (_) => const _Card(_smallest),
   );
+  // Android: Start at the line's end (E-R2-23 §2).
+  goldenMatrix(
+    'thread_smallest_step_android',
+    height: 460,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    build: (_) => const _Card(_smallest),
+  );
   goldenMatrix(
     'thread_one',
     height: 400,

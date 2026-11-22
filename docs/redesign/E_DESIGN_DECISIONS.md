@@ -5530,6 +5530,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** Accept keeps its check (every proposal); touch sizes kept, so long titles wrap; the built lengths (2 min to 2 h); Add keeps Create task's Steps list for accepted steps; Break this down only on a step without sub-steps, as built; every Minimal hint uses the card.
 - **Checks:** analyze and format clean; 7,727 pass, 31 skipped; new goldens `breakdown_plan` (iPhone compact and the Mac panel), `breakdown_plan_android`, `breakdown_plan_open`, `breakdown_step_length`, `breakdown_plan_rules` in the app's fonts; updated `breakdown_mini_thread_*`, `proposal_rules_hint`, `task_editor*`, `minimal_today_hint`, `task_m_*`. `integration_test/breakdown_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac with Apple Intelligence (data container unchanged by checksum). Not run: real devices.
 
+### ED-431 · M20.4 part 3: Smallest step and Unstick
+- **Date:** 2026-11-22. **Owner:** "Start part 3", then "Approve part 3" after the review page (https://claude.ai/artifact/4Zgv8oca4TJmPiuu3M96ny).
+- **Built (E-R2-23 §2, ED-324):** the look of the cues; what they do is unchanged (M10.6, M10.7). No new strings.
+  - **Smallest step (`SmallestStepLine`):** the line in accent ink at 14/700 (was the meta size); Start a small tinted pill (accentTint, 30 tall, tap target padded to the floor; was a large filled button): under the line on iPhone and iPad, at its end on Android, the Mac and the web, wrapping when it doesn't fit.
+  - **The Week card's cue (`GridCueLine`):** bold in the accent (gridTitle), up to two lines on a tall card (was one muted line).
+  - **Unstick:** already as drawn (the question, the field with →, "Step 1 added to …" with Undo).
+- **Departures (on the review page):** the notification is the system's (M20.9); "0 of 1" after Unstick is the built steps count; the Week card's line has no device shot (covered by the Week tests).
+- **Checks:** analyze and format clean; 7,731 pass, 31 skipped; `thread_smallest_step` updated, `thread_smallest_step_android` new. The journey world (`pumpCalendar`) takes subtasks. `integration_test/smallest_step_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280 (after it learned to scroll to Unstick in a short window), and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers
