@@ -270,6 +270,10 @@ final class DotColors {
   /// Chips, the Focus tile, +5 / +15 / +30 (Concept A name: [accentTint]).
   Color get tonal => accentTint;
 
+  /// A picked row in a list of choices: the accent at 8 % (E-R2-34's
+  /// one-thing pick).
+  Color get selectedRow => accent.withValues(alpha: 0.08);
+
   bool get isDark => brightness == Brightness.dark;
 
   /// Today's column on the hour grid, its header, the now line across the

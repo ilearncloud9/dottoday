@@ -5472,6 +5472,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Found on devices and fixed:** the iPad's native tab bar reported the app's own tab switch as a tap and reset the tab to its root, so a Settings page reached from another tab landed on Settings (`NativeIPadTabs.swift`); on the web, Settings stayed marked beside Routines in the sidebar.
 - **Checks:** analyze and format clean; 7,610 pass, 31 skipped; goldens updated (routines, routine editor, routine drop, low-energy Today, the month picker, Settings) and new copy-day goldens; a sidebar test for Routines marked alone. `integration_test/planning_helpers_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-426 · M20.3 part 3: Pick today's one thing
+- **Date:** 2026-11-22. **Owner:** "Start part 3", then "Approve part 3" after the review page (https://claude.ai/artifact/2wwiVPQLQWX32ffkc7R94G).
+- **Built (E-R2-34, R2-34, ED-339):** the look of the pick; what it does is unchanged (M17.7b).
+  - **Phones:** the sheet leads with "What matters most today?" as its title and has no × (drag down or tap outside). Each task is a hollow ring in its colour (`MiniRing` gains `stroke` and `halo`); the pick has a halo ring, a light accent tint (`DotColors.selectedRow`) and "· Your one thing" in accent ink, under TODAY and INBOX captions.
+  - **iPad, Mac and web:** a 460-wide dialog (`showAppSheet(maxWidth:)`, `DotSize.pickDialog`) with "Pick today's one thing" and × on top, then the question and the same list.
+  - **Today:** "· Your one thing" is joined to the row's time line ("Now, 18 min left · Your one thing" on the live row, `NowMeta` moved to `live_row_meta.dart`).
+  - **Wake Up mission:** shares the picker, so it gets the same rings; the picker's own header option is gone.
+- **Departures (on the review page):** the rows keep the app's fonts and the captions the app's caption style (the board uses the system face, slightly smaller); the dialog title reuses `missionOneThing`, so no new strings; the × is a grey circle on iPad and a plain cross elsewhere, as on every sheet; the empty case is shown by its golden only.
+- **Checks:** analyze and format clean; 7,632 pass, 31 skipped; new `one_thing_sheet` goldens (compact, expanded, Android, empty) and `one_thing_sheet_test` (5 tests); `today_one_thing` and `mission_one_thing` goldens updated. `integration_test/one_thing_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

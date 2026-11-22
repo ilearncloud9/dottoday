@@ -195,7 +195,9 @@ class _Text extends StatelessWidget {
           DotIcon(DotGlyphs.calendar, color: muted, size: DotSize.weekDot * 2),
         if (task.travel case final travel?)
           Text(l10n.rowTravelMeta(travel), style: t.styles.rowMeta),
-        if (task.oneThing) Text(l10n.oneThingMeta, style: metaStyle),
+        // "· Your one thing" (E-R2-34).
+        if (task.oneThing)
+          Text(l10n.realityMetaJoin(l10n.oneThingMeta), style: metaStyle),
       ],
     );
     final title = Text(

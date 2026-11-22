@@ -61,6 +61,9 @@ abstract final class DotRadii {
   /// Workspace blocks (18).
   static const double block = 18;
 
+  /// A choice row's tint in a pick list (E-R2-34: 16).
+  static const double choice = 16;
+
   /// Month's day cards in the Workspace (E-R2-30): 12.
   static const double monthCard = 12;
 
@@ -553,6 +556,16 @@ abstract final class DotSize {
   /// dot, its fill and state unchanged.
   static const double oneThingRing = 2;
   static const double oneThingGap = 3;
+
+  /// Pick today's one thing (E-R2-34, ED-339): each choice a 30 hollow
+  /// ring (stroke 3.5); the pick wears a 2.5 ring 5 outside it, in its
+  /// own colour. Rows 52 high; the dialog 460 wide from medium width.
+  static const double pickRing = 30;
+  static const double pickRingStroke = 3.5;
+  static const double pickHalo = 5;
+  static const double pickHaloStroke = 2.5;
+  static const double pickRow = 52;
+  static const double pickDialog = 460;
   static const double dayDot = 44;
 
   /// The day dot on the Wake Up card (docs/15 §5 step 2).

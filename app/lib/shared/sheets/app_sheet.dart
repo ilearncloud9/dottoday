@@ -26,6 +26,9 @@ const double _fullHeightShare = 0.94;
 /// tall popover) with no [AppSheet] frame, for flows that pin their own
 /// buttons to the bottom (Add, M3c).
 ///
+/// [maxWidth] caps the dialog from medium width (560 unless a board says
+/// otherwise).
+///
 /// ```dart
 /// final picked = await showAppSheet<int>(
 ///   context: context,
@@ -39,6 +42,7 @@ Future<T?> showAppSheet<T>({
   String? title,
   bool fullHeight = false,
   bool scrolls = true,
+  double maxWidth = appSheetMaxWidth,
 }) {
   final size = MediaQuery.sizeOf(context);
   final wide = size.width >= WidthClass.mediumFrom;
@@ -75,9 +79,9 @@ Future<T?> showAppSheet<T>({
       context: context,
       builder: (dialog) => Dialog(
         // Its own width, not the theme's prompt cap (G2): 560, not 480.
-        constraints: const BoxConstraints(
+        constraints: BoxConstraints(
           minWidth: DotSize.dialogMin,
-          maxWidth: appSheetMaxWidth,
+          maxWidth: maxWidth,
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(DotRadii.sheet)),

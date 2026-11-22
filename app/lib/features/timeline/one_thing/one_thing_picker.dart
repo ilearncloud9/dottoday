@@ -2,29 +2,21 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/features/timeline/one_thing/one_thing_state.dart';
-import 'package:dottoday/shared/dot/task_dot.dart';
+import 'package:dottoday/shared/dot/mini_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 
-/// The pick screen of today's one thing (docs/15 §8): today's dots, then
-/// the Inbox, each one tap. Every answer is right, so there is no confirm
-/// and no wrong pick; the current one wears the ring. The mission and
-/// Today's ⋯ share it.
+/// The pick screen of today's one thing (docs/15 §8, E-R2-34): "Every
+/// answer is right.", then today's dots and the Inbox, each one tap. There
+/// is no confirm and no wrong pick; the current one wears the ring and a
+/// tint. The question above it is the caller's: the sheet's heading
+/// (`showOneThingSheet`) or the mission's own line.
 class OneThingPicker extends StatelessWidget {
-  const OneThingPicker({
-    required this.offer,
-    required this.onPick,
-    this.header = true,
-    super.key,
-  });
+  const OneThingPicker({required this.offer, required this.onPick, super.key});
 
   final OneThingOffer offer;
   final ValueChanged<Occurrence> onPick;
-
-  /// "What matters most today?" and "Every answer is right." on top; off
-  /// where the mission's own line says it.
-  final bool header;
 
   @override
   Widget build(BuildContext context) {
@@ -34,21 +26,15 @@ class OneThingPicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (header) ...[
-          Text(l10n.oneThingAsk, style: t.styles.cardTitle),
-          const SizedBox(height: DotSpace.xs),
-        ],
         Text(
           l10n.oneThingEveryAnswer,
           style: t.styles.body.copyWith(color: t.colors.muted),
         ),
-        const SizedBox(height: DotSpace.l),
         if (offer.dots.isNotEmpty) ...[
           _Caption(l10n.oneThingToday),
           for (final o in offer.dots) _row(context, o),
         ],
         if (offer.inbox.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.m),
           _Caption(l10n.oneThingInbox),
           for (final o in offer.inbox) _row(context, o),
         ],
@@ -81,6 +67,7 @@ class OneThingPicker extends StatelessWidget {
   );
 }
 
+/// "TODAY" or "INBOX" over its choices.
 class _Caption extends StatelessWidget {
   const _Caption(this.text);
 
@@ -88,7 +75,12 @@ class _Caption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: DotSpace.xs),
+    padding: const EdgeInsetsDirectional.fromSTEB(
+      DotSpace.xs,
+      DotSpace.m + DotSpace.xxs,
+      DotSpace.xs,
+      DotSpace.xs,
+    ),
     child: Semantics(
       header: true,
       child: Text(text, style: DotTheme.of(context).styles.caption),
@@ -96,7 +88,8 @@ class _Caption extends StatelessWidget {
   );
 }
 
-/// One choice: its dot, title and time (or length, from the Inbox).
+/// One choice: its ring, title and time (or length, from the Inbox); the
+/// pick tinted, its ring haloed and "· Your one thing" in accent ink.
 class _PickRow extends StatelessWidget {
   const _PickRow({
     required this.occurrence,
@@ -116,45 +109,54 @@ class _PickRow extends StatelessWidget {
     final l10n = context.l10n;
     final o = occurrence;
     final label = l10n.rowLabel(o.title, meta);
+    const shape = BorderRadius.all(Radius.circular(DotRadii.choice));
     return Semantics(
       button: true,
       selected: picked,
       label: picked ? l10n.rowOneThing(label) : label,
       excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.android),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
-            child: Row(
-              spacing: DotSpace.m,
-              children: [
-                TaskDot(
-                  color: TaskColor.fromKey(o.colorKey),
-                  icon: TaskIcon.fromKey(o.iconKey),
-                  state: DotState.upcoming,
-                  label: o.title,
-                  oneThing: picked,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(o.title, style: t.styles.rowTitle),
-                      Text(
-                        picked ? l10n.oneThingMetaJoin(meta) : meta,
-                        style: t.styles.rowMeta,
-                      ),
-                    ],
+      child: Material(
+        color: picked ? t.colors.selectedRow : Colors.transparent,
+        borderRadius: shape,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: shape,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: DotSize.pickRow),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: DotSpace.m,
+                vertical: DotSpace.xs + DotSpace.xxs,
+              ),
+              child: Row(
+                spacing: DotSpace.m + DotSpace.xxs,
+                children: [
+                  MiniRing(
+                    color: TaskColor.fromKey(o.colorKey),
+                    size: DotSize.pickRing,
+                    stroke: DotSize.pickRingStroke,
+                    halo: picked,
                   ),
-                ),
-              ],
+                  Expanded(child: _texts(t, l10n, o)),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _texts(DotTheme t, AppLocalizations l10n, Occurrence o) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(o.title, style: t.styles.rowTitle),
+      Text(
+        picked ? l10n.oneThingMetaJoin(meta) : meta,
+        style: picked
+            ? t.styles.rowMeta.copyWith(color: t.colors.accentInk)
+            : t.styles.rowMeta,
+      ),
+    ],
+  );
 }

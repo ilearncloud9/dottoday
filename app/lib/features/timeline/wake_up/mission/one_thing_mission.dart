@@ -32,7 +32,6 @@ class _OneThingMissionState extends ConsumerState<OneThingMission> {
     }
     return OneThingPicker(
       offer: offer,
-      header: false,
       onPick: (o) => unawaited(_pick(offer.dateKey, o.id)),
     );
   }

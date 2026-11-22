@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/live_row_meta.dart';
 import 'package:dottoday/shared/dot/task_row.dart';
 import 'package:dottoday/shared/dot/thread_axis.dart';
 import 'package:dottoday/shared/dot/thread_models.dart';
@@ -137,9 +138,14 @@ class _Summary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: DotSpace.xxs,
           children: [
-            _NowMeta(range: range, now: now, style: t.styles.threadMeta),
+            // "9:00 – 11:00 · Now, 18 min left · Your one thing" (E-R2-34).
+            NowMeta(
+              range: range,
+              now: now,
+              tail: task.oneThing ? l10n.oneThingMeta : null,
+              style: t.styles.threadMeta,
+            ),
             Text(task.title, style: t.styles.liveRowTitle),
-            if (task.oneThing) Text(l10n.oneThingMeta, style: t.styles.rowMeta),
             if (task.hasSubtasks || task.reality?.note != null)
               _Progress(task: task),
           ],
@@ -160,43 +166,6 @@ class _Summary extends StatelessWidget {
           style: t.styles.rowMeta.copyWith(color: t.colors.muted),
         ),
       ],
-    );
-  }
-}
-
-/// "9:00–11:00 AM · **Now, 18 min left**" (E rules §5.3): the range, then
-/// the time left in the accent at 700.
-class _NowMeta extends StatelessWidget {
-  const _NowMeta({required this.range, required this.style, this.now});
-
-  final String range;
-  final String? now;
-  final TextStyle style;
-
-  @override
-  Widget build(BuildContext context) {
-    final now = this.now;
-    if (now == null) return Text(range, style: style);
-    final line = context.l10n.liveMeta(range, now);
-    final at = line.lastIndexOf(now);
-    if (at < 0) return Text(line, style: style);
-    return Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(text: line.substring(0, at)),
-          TextSpan(
-            text: now,
-            // Manrope is variable: bold needs the wght axis too.
-            style: DotType.emphasis(
-              TextStyle(color: DotTheme.of(context).colors.accentInk),
-              bold: true,
-              italic: false,
-            ),
-          ),
-          TextSpan(text: line.substring(at + now.length)),
-        ],
-      ),
-      style: style,
     );
   }
 }

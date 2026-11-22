@@ -62,7 +62,7 @@ void main() {
       (await _stored(tester)).oneThing,
       OneThing(date: _today, occurrenceId: pick.id),
     );
-    expect(find.text('Your one thing'), findsOneWidget);
+    expect(find.text('· Your one thing'), findsOneWidget);
     expect(_ringed(tester), hasLength(1));
   });
 
@@ -87,7 +87,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect((await _stored(tester)).oneThing?.occurrenceId, ahead[2].id);
-    expect(find.text('Your one thing'), findsOneWidget);
+    expect(find.text('· Your one thing'), findsOneWidget);
     expect(_ringed(tester), hasLength(1));
   });
 
@@ -113,7 +113,7 @@ void main() {
         oneThing: OneThing(date: '2026-10-20', occurrenceId: _ahead()[0].id),
       ),
     );
-    expect(find.text('Your one thing'), findsNothing);
+    expect(find.textContaining('Your one thing'), findsNothing);
     expect(_ringed(tester), isEmpty);
   });
 
