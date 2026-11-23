@@ -32,6 +32,7 @@ class WeekCard extends StatefulWidget {
     this.lifted = false,
     this.over = false,
     this.picked = false,
+    this.selected = false,
     this.onOpen,
     this.onCue,
     this.onMove,
@@ -54,6 +55,9 @@ class WeekCard extends StatefulWidget {
 
   /// In the Workspace inspector: the 2 px ink edge (E-FullA-v2).
   final bool picked;
+
+  /// Picked in multi-select (E-R2-6): the accent edge and the check.
+  final bool selected;
   final VoidCallback? onOpen;
 
   /// The cue tapped: Smallest step's Start or Unstick's question.
@@ -113,7 +117,9 @@ class _WeekCardState extends State<WeekCard> {
     );
     final hover = _hover && _eligible;
     // High contrast never leans on the fill or the shadow (ED-116).
-    final edge = widget.picked
+    final edge = widget.selected
+        ? c.accentFill
+        : widget.picked
         ? c.text
         : MediaQuery.highContrastOf(context)
         ? c.secondary
@@ -126,7 +132,11 @@ class _WeekCardState extends State<WeekCard> {
           ? BorderSide.none
           : BorderSide(
               color: edge,
-              width: widget.picked ? DotSpace.xxs : DotSpace.hairline,
+              width: widget.selected
+                  ? DotSize.gridPickEdge
+                  : widget.picked
+                  ? DotSpace.xxs
+                  : DotSpace.hairline,
             ),
     );
     final body = Column(
@@ -183,7 +193,11 @@ class _WeekCardState extends State<WeekCard> {
           CustomSemanticsAction(label: cue): widget.onCue!,
         ..._moveActions(l10n),
       },
-      child: _focused ? _ring(c, radius, card) : card,
+      child: _focused
+          ? gridFocusRing(c, radius, card)
+          : widget.selected
+          ? Stack(children: [card, const GridPickBadge()])
+          : card,
     );
   }
 
@@ -208,7 +222,7 @@ class _WeekCardState extends State<WeekCard> {
     );
     return Semantics(
       button: widget.onOpen != null,
-      selected: widget.picked,
+      selected: widget.picked || widget.selected,
       label: taskRowLabel(l10n, _task),
       excludeSemantics: true,
       child: move == null || !_eligible
@@ -251,41 +265,6 @@ class _WeekCardState extends State<WeekCard> {
           move(days: -1),
       CustomSemanticsAction(label: l10n.gridMoveDayAfter): () => move(days: 1),
     };
-  }
-
-  /// The focus ring (ED-211): 2 px in the focus colour after a 2 px gap
-  /// in the grid's colour, outside the block.
-  Widget _ring(DotColors c, BorderRadius radius, Widget card) {
-    const w = DotSize.smallDotOutline;
-    BoxDecoration ring(Color color, double out) => BoxDecoration(
-      borderRadius: radius.add(BorderRadius.circular(out)),
-      border: Border.all(color: color, width: w),
-    );
-    return Stack(
-      clipBehavior: Clip.none,
-      fit: StackFit.passthrough,
-      children: [
-        card,
-        Positioned.fill(
-          left: -w * 2,
-          top: -w * 2,
-          right: -w * 2,
-          bottom: -w * 2,
-          child: IgnorePointer(
-            child: DecoratedBox(decoration: ring(c.focus, w * 2)),
-          ),
-        ),
-        Positioned.fill(
-          left: -w,
-          top: -w,
-          right: -w,
-          bottom: -w,
-          child: IgnorePointer(
-            child: DecoratedBox(decoration: ring(c.canvas, w)),
-          ),
-        ),
-      ],
-    );
   }
 }
 

@@ -785,7 +785,7 @@ Rules for every task in M18 to M22:
   - [x] Part 3 done 2026-11-22 (ED-431): Smallest step and Unstick to E-R2-23 §2: the bold accent line with a small tinted Start (under it on iPhone and iPad, at its end on Android, Mac and web), the Week card's bold two-line cue; Unstick as built. Open: real devices; the notification with M20.9.
   - [x] Part 4 done 2026-11-23 (ED-432): Help with thinking to E-R2-23 §3: a Privacy group after Data (shield, Privacy · Help with thinking; out of About), the status in a tinted bold box; the page, lines, Open Settings, hint and caption as built. Open: real devices; the Data and privacy page with M20.7.
   - [x] Part 5 done 2026-11-23 (ED-433): the Reality thread and Learn my day to E-R2-23 §4: the boxed caption, Plan | Reality at the start, took / in / usually on the time line, the insight's tinted OK above Day ▾ and the web's Add, Settings › Learning with 7/10 and Ready lines (restyled in place); the explanation as built. Open: real devices; Learn my day as a page with M20.7.
-- [ ] M20.5 Moving and selecting:
+- [x] M20.5 Moving and selecting:
   - touch drag, tablet pointer and swipe (R2-25, ED-328);
   - multi-select and the selection bar (R2-6, ED-278, ED-279);
   - overlaps allowed (ADR-0015), with Shift the rest in one gesture (R-05).
@@ -793,6 +793,7 @@ Rules for every task in M18 to M22:
   - [x] Part 1 done 2026-11-23 (ED-434): touch drag on phones to E-R2-25 §1: the lifted dot follows the finger and sits above it so the landing preview shows, Shift later tasks at the top of the day at its start (tinted with ✓ when on), the web bin above Add; the rest as built. Open: real devices (haptics); the iPhone Inbox tab takes no drops (system tab bar).
   - [x] Part 2 done 2026-11-23 (ED-435): tablets and pointer to E-R2-25 §2: the week grid's drop label on a filled pill above the dashed box; hover, pointer drag and Inbox drops as built. Open: real devices, Apple Pencil.
   - [x] Part 3 done 2026-11-23 (ED-436): swipe on phone Inbox rows to E-R2-25 §3: Move to Trash with the trash icon in coral, Schedule with the calendar icon in accent; the swipe actions, hint and long-press menu as built. Open: real devices.
+  - [x] Part 4 done 2026-11-23 (ED-437): multi-select and the selection bar to E-R2-6 A: the week and 3-day grids select (a still hold, ⇧/⌘/Ctrl-click), picks across the grid's days (owner), the card centred at 470 with the board's icons, Week carries it. Open: real devices.
 - [ ] M20.6 Focus and states:
   - Focus on every platform, whole window on expanded screens (R2-9, ED-285, ED-286);
   - time states (R2-26, ED-329), day states (R2-27, ED-330) and small states (R2-28, ED-331).

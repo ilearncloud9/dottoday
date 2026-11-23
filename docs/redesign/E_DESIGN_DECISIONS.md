@@ -5584,6 +5584,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the first-row hint shows on iPhone too (the board draws it for Android), so the swipes are easy to find on both; only phone Inbox rows swipe, so tablets, the Mac and the web at 1280 are not run.
 - **Checks:** format and analyze clean; 7,739 pass, 31 skipped; new goldens `inbox_swipe_trash` and `inbox_swipe_schedule` (compact, both themes). `integration_test/inbox_swipe_test.dart` passed on the iPhone simulator, the Android phone emulator, and Chromium and WebKit at 390. Not run: real devices.
 
+### ED-437 · M20.5 part 4: multi-select and the selection bar everywhere; M20.5 done
+- **Date:** 2026-11-23. **Owner:** "Start part 4"; "Across days (Recommended)" for picks on the grid; then "Approve part 4" after the review page (https://claude.ai/artifact/M2PSEGdyCW9ZEzpEgmpGZg).
+- **Built (E-R2-6 A, ED-277 to ED-279):** no new strings.
+  - **The hour grid selects (Week, 3 days):** a still touch hold picks a block (a hold that moves still drags; its own column takes no drop where it lifted); ⇧/⌘/Ctrl-click adds; once picking a tap or click adds or removes. A picked block wears a 2.5 accent edge and a 24 check badge at its top end; done circles step aside while picking.
+  - **Picks across days on the grid** (owner): one selection may span the grid's days. Move puts all on the chosen date at their own times; Duplicate, Colour and Delete act on all; Save as routine is greyed while picks span days. The thread keeps to one day. `Picked` is now each id with its day.
+  - **The card:** centred, at most 470 wide (`DotSize.selectionCardWide`); Move, Duplicate and Colour wear the board's icons (arrow, `DotGlyphs.duplicate`, a half-filled ring); a greyed action greys its label. Week carries the card; Today and Week share `SelectionLayer` (Back ends selecting, the count announced).
+  - Overlaps and Shift the rest: as built, checked in part 1 (ED-434).
+- **Departures (on the review page):** the phone sample starts from Call with Sam, not the board's Team standup (a done task has no drag, so no hold); "Save as routine" wraps to two lines at our caption size.
+- **Checks:** format and analyze clean; 7,746 pass, 31 skipped; 12 selection goldens updated, new `workspace_grid_picks` goldens, new selection model and journey widget tests. `integration_test/select_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+- **M20.5 done** (ED-434 to ED-437).
+
 ---
 
 ## Pending owner answers

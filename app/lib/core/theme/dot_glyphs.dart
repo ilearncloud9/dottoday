@@ -170,6 +170,12 @@ abstract final class DotGlyphs {
   static const edit = DotGlyph(
     'M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z',
   );
+
+  /// Two overlapping squares: the selection card's Duplicate (E-R2-6).
+  static const duplicate = DotGlyph(
+    'M10.5 8h6A2.5 2.5 0 0 1 19 10.5v6a2.5 2.5 0 0 1-2.5 2.5h-6'
+    'A2.5 2.5 0 0 1 8 16.5v-6A2.5 2.5 0 0 1 10.5 8zM5 15V7a2 2 0 0 1 2-2h8',
+  );
   static const move = DotGlyph('M3 6h13M3 12h9M3 18h7M16 14l4 4-4 4M12 18h8');
   static const bolt = DotGlyph('M13 2L3 14h9l-1 8 10-12h-9l1-8z');
   static const rollForward = DotGlyph('M3 12h14M13 7l5 5-5 5M21 5v14');

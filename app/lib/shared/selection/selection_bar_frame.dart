@@ -35,52 +35,65 @@ class SelectionBarFrame extends StatelessWidget {
       bindings: {const SingleActivator(LogicalKeyboardKey.escape): onClose},
       child: Focus(
         autofocus: true,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: DotSpace.s + DotSpace.xxs,
-            vertical: DotSpace.s,
-          ),
-          // E-R2-6 (ED-278): the card at 26, a hairline edge, the floating
-          // shadow, 6 inside.
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: t.colors.raised,
-              borderRadius: BorderRadius.circular(DotRadii.selectionCard),
-              border: Border.all(color: t.colors.outline),
-              boxShadow: DotElevation.floating,
+        // Centred, at most 470 wide: under the grid on wide screens, the
+        // phone's width less its margins (E-R2-6, ED-278).
+        child: Center(
+          heightFactor: 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: DotSize.selectionCardWide + DotSpace.l,
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(DotSpace.xs + DotSpace.xxs),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        tooltip: l10n.selectionClose,
-                        onPressed: onClose,
-                        icon: DotIcon(DotGlyphs.close, color: t.colors.text),
-                      ),
-                      Expanded(
-                        child: Semantics(
-                          liveRegion: true,
-                          child: Text(
-                            l10n.selectionCount(count),
-                            style: t.styles.rowTitle,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(children: [for (final a in actions) _Action(a)]),
-                ],
-              ),
-            ),
+            child: _card(context, t, l10n),
           ),
         ),
       ),
     );
   }
+
+  Widget _card(BuildContext context, DotTheme t, AppLocalizations l10n) =>
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: DotSpace.s + DotSpace.xxs,
+          vertical: DotSpace.s,
+        ),
+        // E-R2-6 (ED-278): the card at 26, a hairline edge, the floating
+        // shadow, 6 inside.
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: t.colors.raised,
+            borderRadius: BorderRadius.circular(DotRadii.selectionCard),
+            border: Border.all(color: t.colors.outline),
+            boxShadow: DotElevation.floating,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(DotSpace.xs + DotSpace.xxs),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: l10n.selectionClose,
+                      onPressed: onClose,
+                      icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                    ),
+                    Expanded(
+                      child: Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          l10n.selectionCount(count),
+                          style: t.styles.rowTitle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(children: [for (final a in actions) _Action(a)]),
+              ],
+            ),
+          ),
+        ),
+      );
 }
 
 class _Action extends StatelessWidget {
@@ -113,7 +126,9 @@ class _Action extends StatelessWidget {
                   icon,
                   Text(
                     label,
-                    style: t.styles.caption.copyWith(color: t.colors.text),
+                    style: t.styles.caption.copyWith(
+                      color: onTap == null ? t.colors.tertiary : t.colors.text,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -126,7 +141,8 @@ class _Action extends StatelessWidget {
   }
 }
 
-/// The Colour action's icon: a filled accent dot in a text-coloured ring.
+/// The Colour action's icon (E-R2-6): a ring half filled, in the text
+/// colour like the other actions' glyphs.
 class ColourSwatchIcon extends StatelessWidget {
   const ColourSwatchIcon({super.key});
 
@@ -142,8 +158,12 @@ class ColourSwatchIcon extends StatelessWidget {
           height: DotSize.rowIcon,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: c.accent,
             border: Border.all(color: c.text, width: DotSize.smallDotOutline),
+            // The start half filled: a hard stop at the middle.
+            gradient: LinearGradient(
+              colors: [c.text, c.text, Colors.transparent, Colors.transparent],
+              stops: const [0, 0.5, 0.5, 1],
+            ),
           ),
         ),
       ),

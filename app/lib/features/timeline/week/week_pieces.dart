@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/timeline/week/grid_focus.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ final class WeekDayView {
     required this.snapMinutes,
     this.nowUtc,
     this.pickedId,
+    this.selected = const {},
   });
 
   final DateTime date;
@@ -41,6 +43,49 @@ final class WeekDayView {
   /// The task in the Workspace inspector (ED-170 C1): drawn with the ink
   /// edge (E-FullA-v2).
   final String? pickedId;
+
+  /// The tasks picked in multi-select on this day (E-R2-6).
+  final Set<String> selected;
+
+  /// [id]'s day and start minute, for the arrow keys between blocks.
+  GridSlot? slotOf(String id) => switch (starts[id]) {
+    final s? => (
+      day: date,
+      minute: s.startUtc.difference(axisStartUtc).inMinutes,
+    ),
+    null => null,
+  };
+}
+
+/// A picked block's check (E-R2-6): a filled accent badge at its top end,
+/// so a pick never rests on the edge's colour alone.
+class GridPickBadge extends StatelessWidget {
+  const GridPickBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    return PositionedDirectional(
+      top: DotSpace.s,
+      end: DotSpace.s,
+      child: IgnorePointer(
+        child: Container(
+          width: DotSize.gridPickBadge,
+          height: DotSize.gridPickBadge,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: c.accentFill,
+          ),
+          child: DotIcon(
+            DotGlyphs.check,
+            color: c.onAccent,
+            size: DotSize.rowIcon - DotSpace.xxs,
+            active: true,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// The cue line: quiet accent text (11 §D, no warning colour).
@@ -86,3 +131,25 @@ Widget gridLine(Color color, double y, double width) => Positioned(
   height: width,
   child: ColoredBox(color: color),
 );
+
+/// The focus ring (ED-211) around a grid block: 2 px in the focus colour
+/// after a 2 px gap in the grid's colour, outside the block.
+Widget gridFocusRing(DotColors c, BorderRadius radius, Widget card) {
+  const w = DotSize.smallDotOutline;
+  BoxDecoration ring(Color color, double out) => BoxDecoration(
+    borderRadius: radius.add(BorderRadius.circular(out)),
+    border: Border.all(color: color, width: w),
+  );
+  Widget edge(Color color, double out) => Positioned.fill(
+    left: -out,
+    top: -out,
+    right: -out,
+    bottom: -out,
+    child: IgnorePointer(child: DecoratedBox(decoration: ring(color, out))),
+  );
+  return Stack(
+    clipBehavior: Clip.none,
+    fit: StackFit.passthrough,
+    children: [card, edge(c.focus, w * 2), edge(c.canvas, w)],
+  );
+}

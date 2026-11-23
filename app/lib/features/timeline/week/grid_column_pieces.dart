@@ -1,5 +1,6 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
+import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/thread.dart';
 import 'package:flutter/material.dart';
 
@@ -163,6 +164,61 @@ List<Widget> gridDropPreview(
           ),
         ),
       ),
+    ),
+  ];
+}
+
+/// Today's stretch of the now line at [y] and the dot on the column's
+/// thread.
+List<Widget> gridNowMark(DotColors c, GridScale scale, double y) => [
+  gridLine(c.nowLineToday, y, DotSpace.hairline * 1.5),
+  Positioned(
+    left: scale.threadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
+    top: y - DotSize.gridNowDot / 2,
+    width: DotSize.gridNowDot,
+    height: DotSize.gridNowDot,
+    child: const GridNowDot(),
+  ),
+];
+
+/// Under a day column's blocks: the hour lines (today tinted), a click
+/// target on free grid ([onEmpty]) and the [thread].
+List<Widget> gridColumnBackground(
+  BuildContext context, {
+  required GridScale scale,
+  required bool today,
+  required VoidCallback? onEmpty,
+  required CustomPainter thread,
+}) {
+  final c = DotTheme.of(context).colors;
+  return [
+    Positioned.fill(
+      child: CustomPaint(
+        painter: GridLines(
+          line: c.gridLine,
+          divider: c.gridDivider,
+          tint: today ? c.gridToday : null,
+          firstLine: GridScale.leadMinutes * scale.pxPerMinute,
+        ),
+      ),
+    ),
+    // Over the painted lines (a painter takes every hit), under the
+    // blocks: a click on free grid.
+    if (onEmpty != null)
+      Positioned.fill(
+        child: ExcludeSemantics(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onEmpty,
+          ),
+        ),
+      ),
+    Positioned(
+      left: scale.threadX,
+      top: 0,
+      bottom: 0,
+      width: DotSize.gridThread,
+      child: CustomPaint(painter: thread),
     ),
   ];
 }

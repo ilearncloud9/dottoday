@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- On the week and 3-day grids you can now select several tasks, even across days: hold one still or ⇧/⌘/Ctrl-click, then tap others; the selection bar sits centred under the grid (redesign branch).
 - Swiping an Inbox row on a phone now shows an icon with each action: a bin for Move to Trash and a calendar for Schedule (redesign branch).
 - On the week grid, where a dragged task will land now shows on a pill above its drop box, so the card you are dragging never hides it (redesign branch).
 - Dragging a task shows more: the dot rides just above your finger so you can see where it will land, and Shift later tasks sits at the top of the day, tinted with a check when it is on. On the web at phone width the Trash bin no longer covers Add (redesign branch).

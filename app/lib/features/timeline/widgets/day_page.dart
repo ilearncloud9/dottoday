@@ -331,7 +331,7 @@ class DayPage extends ConsumerWidget {
               defaultMinutes: s.defaultDurationMin,
               allDayStartUtc: data.day.startUtc,
             ),
-      selectedIds: picked.day == date ? picked.ids : const {},
+      selectedIds: picked.on(date),
       pickedId: WorkspaceScope.of(context)
           ? ref.watch(inspectedTaskProvider)
           : null,

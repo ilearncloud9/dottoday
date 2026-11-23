@@ -26,6 +26,7 @@ void main() {
     ThemeMode mode, {
     String place = '/week/2026-10-21',
     bool steps = false,
+    bool twoDays = false,
     Size size = const Size(1280, 800),
   }) async {
     tester.view
@@ -41,9 +42,14 @@ void main() {
         overrides: [
           ...timelineOverrides(
             now: DateTime.utc(2026, 10, 21, 8),
-            occurrences: FakeOccurrenceRepository(
-              demoDayRows(DateTime(2026, 10, 21)),
-            ),
+            occurrences: FakeOccurrenceRepository([
+              ...demoDayRows(DateTime(2026, 10, 21)),
+              // The next day's timed tasks; its Inbox would repeat.
+              if (twoDays)
+                ...demoDayRows(
+                  DateTime(2026, 10, 22),
+                ).where((o) => o.startUtc != null),
+            ]),
             subtasks: steps
                 ? FakeSubtaskRepository(demoDaySubtasks(DateTime(2026, 10, 21)))
                 : null,
@@ -135,6 +141,34 @@ void main() {
         debugDefaultTargetPlatformOverride = null;
         FocusManager.instance.highlightStrategy =
             FocusHighlightStrategy.automatic;
+      }
+    });
+    // E-R2-6 (M20.5 part 4): ⇧-clicks pick across the grid's days; the
+    // picked blocks wear the accent edge and check, the card is centred.
+    testWidgets('golden: picks across days on the grid, ${mode.name}', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      try {
+        await pump(tester, mode, place: '/3-days/2026-10-21', twoDays: true);
+        await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+        for (final (title, at) in [
+          ('Reply to email', 0),
+          ('Reply to email', 1),
+          ('Spanish lesson', 1),
+        ]) {
+          await tester.tap(find.text(title).at(at));
+          await tester.pump();
+        }
+        await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+        await tester.pumpAndSettle();
+        expect(find.text('3 selected'), findsOneWidget);
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/workspace_grid_picks_${mode.name}.png'),
+        );
+      } finally {
+        debugDefaultTargetPlatformOverride = null;
       }
     });
     // ED-170 C1: a click picks the task into the docked inspector.

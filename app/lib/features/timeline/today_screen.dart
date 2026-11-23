@@ -5,11 +5,10 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_gate.dart';
-import 'package:dottoday/features/timeline/widgets/selection_bar.dart';
+import 'package:dottoday/features/timeline/widgets/selection_layer.dart';
 import 'package:dottoday/features/timeline/widgets/today_compact.dart';
 import 'package:dottoday/features/timeline/widgets/today_day_wide.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
@@ -85,74 +84,51 @@ class TodayScreen extends ConsumerWidget {
       );
     }
 
-    ref.listen(
-      taskSelectionProvider,
-      (before, now) => announceSelection(context, before, now),
-    );
-    final selecting = ref.watch(
-      taskSelectionProvider.select((p) => p.ids.isNotEmpty),
-    );
     // Minimal (docs/14 §3): Today alone at every width, no spread.
     final spread = !watchSimplified(ref, FeatureId.spread);
-    final screen = PopScope(
-      // Back ends selecting before it leaves the screen (R-05).
-      canPop: !selecting,
-      onPopInvokedWithResult: (popped, _) {
-        if (!popped) ref.read(taskSelectionProvider.notifier).clear();
-      },
-      child: TodayKeys(
-        shown: shown,
-        today: today,
-        onSelect: select,
-        child: Scaffold(
-          key: key,
-          // Today has no text field; a keyboard over it belongs to a sheet
-          // (Add, Type a time) that lifts itself. Resizing would squeeze the
-          // day card behind it to nothing (found after Wind Down, M5.0).
-          resizeToAvoidBottomInset: false,
-          // The day sheet runs to the bottom edge, under the floating tab
-          // bar (ADR-0015); its list insets itself by the bar's padding.
-          body: SafeArea(
-            bottom: false,
-            child: Stack(
-              children: [
-                LayoutBuilder(
-                  builder: (context, box) =>
-                      spread &&
-                          // Inside the Workspace its views stay the grid
-                          // beside the Plan panel and the inspector.
-                          (WorkspaceScope.of(context) ||
-                              AppLayout.classOf(context, width: box.maxWidth) ==
-                                  WidthClass.expanded)
-                      // The Workspace's views (ED-073, ED-333): 3 days on
-                      // the hour grid; Day the shown day alone.
-                      ? threeDays
-                            ? TodayThreeDays(
-                                shown: shown,
-                                today: today,
-                                onSelect: select,
-                              )
-                            : TodayDayWide(shown: shown, today: today)
-                      : _landscape(
-                          context,
-                          TodayCompact(
+    final screen = TodayKeys(
+      shown: shown,
+      today: today,
+      onSelect: select,
+      child: Scaffold(
+        key: key,
+        // Today has no text field; a keyboard over it belongs to a sheet
+        // (Add, Type a time) that lifts itself. Resizing would squeeze the
+        // day card behind it to nothing (found after Wind Down, M5.0).
+        resizeToAvoidBottomInset: false,
+        // The day sheet runs to the bottom edge, under the floating tab
+        // bar (ADR-0015); its list insets itself by the bar's padding.
+        body: SafeArea(
+          bottom: false,
+          child: SelectionLayer(
+            today: today,
+            child: LayoutBuilder(
+              builder: (context, box) =>
+                  spread &&
+                      // Inside the Workspace its views stay the grid
+                      // beside the Plan panel and the inspector.
+                      (WorkspaceScope.of(context) ||
+                          AppLayout.classOf(context, width: box.maxWidth) ==
+                              WidthClass.expanded)
+                  // The Workspace's views (ED-073, ED-333): 3 days on
+                  // the hour grid; Day the shown day alone.
+                  ? threeDays
+                        ? TodayThreeDays(
                             shown: shown,
                             today: today,
-                            month: month,
-                            firstDayOfWeek: profile.settings.firstDayOfWeek,
                             onSelect: select,
-                          ),
-                        ),
-                ),
-                if (selecting)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SafeArea(
-                      top: false,
-                      child: SelectionBar(today: today),
+                          )
+                        : TodayDayWide(shown: shown, today: today)
+                  : _landscape(
+                      context,
+                      TodayCompact(
+                        shown: shown,
+                        today: today,
+                        month: month,
+                        firstDayOfWeek: profile.settings.firstDayOfWeek,
+                        onSelect: select,
+                      ),
                     ),
-                  ),
-              ],
             ),
           ),
         ),

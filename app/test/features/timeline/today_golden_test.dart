@@ -35,7 +35,9 @@ Widget _today({
     if (view != null) todaySelectionProvider.overrideWith(() => _Fixed(view)),
     if (picked != null)
       taskSelectionProvider.overrideWith(
-        () => _Picked((day: DateTime(2026, 10, 21), ids: picked)),
+        () => _Picked(
+          Picked({for (final id in picked) id: DateTime(2026, 10, 21)}),
+        ),
       ),
     ...timelineOverrides(
       now: DateTime.utc(2026, 10, 21, 7, 22),

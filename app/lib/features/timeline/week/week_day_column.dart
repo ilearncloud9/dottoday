@@ -10,6 +10,7 @@ import 'package:dottoday/features/timeline/week/week_pieces.dart';
 import 'package:dottoday/shared/dot/pointer_draggable.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// A day column of the hour grid (E-FullA-v2 Week, M19.2 part 2): hour
@@ -27,6 +28,7 @@ class WeekDayColumn extends StatefulWidget {
     this.onCue,
     this.onMove,
     this.onDone,
+    this.onHold,
     this.onEmpty,
     this.proposed = const [],
     super.key,
@@ -61,6 +63,9 @@ class WeekDayColumn extends StatefulWidget {
   /// Task [id]'s done circle tapped; null draws no circles (pointer
   /// sizes, where the inspector's Done does it).
   final ValueChanged<String>? onDone;
+
+  /// Task [id] held on touch without moving: picked (E-R2-6).
+  final ValueChanged<String>? onHold;
 
   @override
   State<WeekDayColumn> createState() => _WeekDayColumnState();
@@ -106,52 +111,28 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
         if (!DragSession.live) return;
         final start = _startAt(d.offset, d.data);
         setState(() => _hover = null);
-        if (start != null) widget.onDrop(d.data, start);
+        // A hold let go where it lifted picks it (E-R2-6): no move.
+        if (start != null && !_still(d)) widget.onDrop(d.data, start);
       },
       builder: (context, _, _) => SizedBox(
         height: _height,
         child: Stack(
           // While a drop label shows, it may reach past a narrow column.
           clipBehavior: _hover == null ? Clip.hardEdge : Clip.none,
-          children: [..._background(context), ..._cards(), ..._over(context)],
+          children: [
+            ...gridColumnBackground(
+              context,
+              scale: _scale,
+              today: widget.day.isToday,
+              onEmpty: widget.onEmpty,
+              thread: _thread(DotTheme.of(context).colors),
+            ),
+            ..._cards(),
+            ..._over(context),
+          ],
         ),
       ),
     );
-  }
-
-  List<Widget> _background(BuildContext context) {
-    final c = DotTheme.of(context).colors;
-    final day = widget.day;
-    return [
-      Positioned.fill(
-        child: CustomPaint(
-          painter: GridLines(
-            line: c.gridLine,
-            divider: c.gridDivider,
-            tint: day.isToday ? c.gridToday : null,
-            firstLine: GridScale.leadMinutes * _scale.pxPerMinute,
-          ),
-        ),
-      ),
-      // Over the painted lines (a painter takes every hit), under the
-      // blocks: a click on free grid.
-      if (widget.onEmpty case final empty?)
-        Positioned.fill(
-          child: ExcludeSemantics(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: empty,
-            ),
-          ),
-        ),
-      Positioned(
-        left: _scale.threadX,
-        top: 0,
-        bottom: 0,
-        width: DotSize.gridThread,
-        child: CustomPaint(painter: _thread(c)),
-      ),
-    ];
   }
 
   /// Over the blocks: today's now line and dot, and the drop preview.
@@ -161,7 +142,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     final hover = _hover;
     return [
       ...gridProposedBlocks(context, proposed: widget.proposed, y: _y),
-      if (now != null) ..._now(c, _y(now)),
+      if (now != null) ...gridNowMark(c, _scale, _y(now)),
       if (hover != null)
         ...gridDropPreview(
           context,
@@ -204,17 +185,13 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     );
   }
 
-  /// Today's stretch of the now line and the dot on its thread.
-  List<Widget> _now(DotColors c, double y) => [
-    gridLine(c.nowLineToday, y, DotSpace.hairline * 1.5),
-    Positioned(
-      left: _scale.threadX + (DotSize.gridThread - DotSize.gridNowDot) / 2,
-      top: y - DotSize.gridNowDot / 2,
-      width: DotSize.gridNowDot,
-      height: DotSize.gridNowDot,
-      child: const GridNowDot(),
-    ),
-  ];
+  /// Whether [d] is this column's own block let go where it was.
+  bool _still(DragTargetDetails<String> d) {
+    final from = widget.day.starts[d.data]?.startUtc;
+    final box = context.findRenderObject() as RenderBox?;
+    if (from == null || box == null) return false;
+    return (box.globalToLocal(d.offset).dy - _y(from)).abs() < kTouchSlop;
+  }
 
   double _y(DateTime utc) =>
       utc.difference(widget.day.axisStartUtc).inSeconds /
@@ -274,11 +251,10 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     narrow: narrow,
     over: over,
     picked: widget.day.pickedId == task.id,
-    slot: switch (widget.day.starts[task.id]) {
-      final s? => (
-        day: widget.day.date,
-        minute: s.startUtc.difference(widget.day.axisStartUtc).inMinutes,
-      ),
+    slot: widget.day.slotOf(task.id),
+    selected: widget.day.selected.contains(task.id),
+    onHold: switch (widget.onHold) {
+      final hold? => () => hold(task.id),
       null => null,
     },
     onOpen: () => widget.onOpen(task.id),

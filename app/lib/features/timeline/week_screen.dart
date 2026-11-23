@@ -3,6 +3,7 @@ import 'package:dottoday/core/router/show_place.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/days_grid.dart';
+import 'package:dottoday/features/timeline/widgets/selection_layer.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
@@ -51,13 +52,17 @@ class WeekScreen extends ConsumerWidget {
     return Scaffold(
       key: _key,
       body: SafeArea(
-        child: DaysGrid(
-          days: days,
-          stateKey: _key,
-          onPrevious: () => show(-1),
-          onNext: () => show(1),
-          onToday: () => showWeek(thisWeek),
-          onMonth: () => context.go(AppRoutes.month),
+        // Picks may span the week's days (E-R2-6).
+        child: SelectionLayer(
+          today: today,
+          child: DaysGrid(
+            days: days,
+            stateKey: _key,
+            onPrevious: () => show(-1),
+            onNext: () => show(1),
+            onToday: () => showWeek(thisWeek),
+            onMonth: () => context.go(AppRoutes.month),
+          ),
         ),
       ),
     );

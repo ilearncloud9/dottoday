@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The multi-select bar (docs/03 §3.2, R-05): "3 selected", Move,
 /// Duplicate, Colour, Save as routine (M11.4) and Delete, at the bottom of
-/// Today while tasks are picked. Escape or Back ends selecting; see
-/// [announceSelection].
+/// Today and the hour grid while tasks are picked. Escape or Back ends
+/// selecting; see [announceSelection].
 class SelectionBar extends ConsumerWidget {
   const SelectionBar({required this.today, super.key});
 
@@ -19,16 +19,23 @@ class SelectionBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final picked = ref.watch(taskSelectionProvider);
-    final day = picked.day;
-    if (day == null) return const SizedBox.shrink();
-    final blocks = ref.watch(timelineDataProvider(day)).value?.blocks;
-    final rows = [...?blocks?.where((o) => picked.ids.contains(o.id))];
+    final days = picked.days.values.toSet().toList()..sort();
+    if (days.isEmpty) return const SizedBox.shrink();
+    // The grid may pick across its days (E-R2-6): each day's rows.
+    final rows = [
+      for (final d in days)
+        ...?ref
+            .watch(timelineDataProvider(d))
+            .value
+            ?.blocks
+            .where((o) => picked.days[o.id] == d),
+    ];
     final commands = SelectionCommands(
       context: context,
       container: ProviderScope.containerOf(context),
       rows: rows,
       today: today,
-      day: day,
+      day: days.first,
     );
     final t = DotTheme.of(context);
     final l10n = context.l10n;
@@ -37,12 +44,12 @@ class SelectionBar extends ConsumerWidget {
       onClose: ref.read(taskSelectionProvider.notifier).clear,
       actions: [
         (
-          icon: DotIcon(DotGlyphs.move, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.arrowRight, color: t.colors.text),
           label: l10n.selectionMove,
           onTap: commands.move,
         ),
         (
-          icon: DotIcon(DotGlyphs.add, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.duplicate, color: t.colors.text),
           label: l10n.selectionDuplicate,
           onTap: commands.duplicate,
         ),
@@ -52,9 +59,13 @@ class SelectionBar extends ConsumerWidget {
           onTap: commands.recolour,
         ),
         (
-          icon: DotIcon(DotGlyphs.repeat, color: t.colors.text),
+          icon: DotIcon(
+            DotGlyphs.repeat,
+            color: picked.spansDays ? t.colors.tertiary : t.colors.text,
+          ),
           label: l10n.routineSaveSelection,
-          onTap: commands.saveAsRoutine,
+          // A routine is one day's order and gaps.
+          onTap: picked.spansDays ? null : commands.saveAsRoutine,
         ),
         (
           icon: DotIcon(DotGlyphs.trash, color: t.colors.text),

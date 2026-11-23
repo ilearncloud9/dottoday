@@ -14,6 +14,7 @@ import 'package:dottoday/domain/scheduling/week_summary.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
 import 'package:dottoday/features/timeline/state/drag_actions.dart';
+import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/week/grid_axis.dart';
 import 'package:dottoday/features/timeline/week/grid_focus.dart';
@@ -28,6 +29,7 @@ import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/workspace/inspector_pick.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
+import 'package:dottoday/shared/dot/thread_select.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -197,6 +199,11 @@ class WeekView extends ConsumerWidget {
     final isToday = date == today;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final workspace = WorkspaceScope.of(context);
+    // Multi-select across the grid's days (E-R2-6): a hold, a ⇧/⌘/Ctrl
+    // click, or any tap once picking.
+    final picked = ref.watch(taskSelectionProvider);
+    void pick(String id) =>
+        ref.read(taskSelectionProvider.notifier).toggleAcross(date, id);
     return WeekDayColumn(
       day: WeekDayView(
         date: date,
@@ -212,6 +219,7 @@ class WeekView extends ConsumerWidget {
         snapMinutes: profile.settings.snapMinutes,
         pickedId: workspace ? ref.watch(inspectedTaskProvider) : null,
         nowUtc: isToday ? nowUtc : null,
+        selected: picked.on(date),
       ),
       axisMinutes: axisMinutes,
       proposed: gridProposedOn(ref, date, zone),
@@ -235,11 +243,14 @@ class WeekView extends ConsumerWidget {
       onEmpty: workspace
           ? () => ref.read(inspectedTaskProvider.notifier).close()
           : null,
-      onOpen: (id) => workspace
+      onOpen: (id) => !picked.isEmpty || selectModifierHeld()
+          ? pick(id)
+          : workspace
           ? InspectorPick.click(context, ref, id)
           : ref.read(editingTaskProvider.notifier).open(id),
-      // Touch sizes: each block's done circle (E-R2-5, ED-276).
-      onDone: watchTouchContent(context, ref)
+      onHold: pick,
+      // Touch sizes: done circles (E-R2-5, ED-276), none while picking.
+      onDone: picked.isEmpty && watchTouchContent(context, ref)
           ? (id) {
               final o = _find(ref, id);
               if (o != null) unawaited(markDone(context, ref, o));

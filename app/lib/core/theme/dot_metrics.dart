@@ -511,6 +511,15 @@ abstract final class DotSize {
   /// A selection card action, icon over label (E-R2-6: 52 tall).
   static const double selectionAction = 52;
 
+  /// The selection card at most this wide, centred (E-R2-6: 470 on
+  /// tablets, the Mac and the web; a phone's is narrower).
+  static const double selectionCardWide = 470;
+
+  /// A grid block picked in multi-select (E-R2-6): a 2.5 accent edge and
+  /// a 24 check badge at its top end, 8 in.
+  static const double gridPickEdge = 2.5;
+  static const double gridPickBadge = 24;
+
   /// A sheet's main action (E-Phones-2 "Add to day": 54 tall).
   static const double primaryButton = 54;
 
