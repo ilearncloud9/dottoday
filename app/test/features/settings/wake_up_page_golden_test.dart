@@ -8,6 +8,7 @@ import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/features/settings/pages/wake_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -25,9 +26,11 @@ import '../../support/timeline_fakes.dart';
 List<Override> _overrides(
   Settings settings, {
   AlarmCapabilities caps = const AlarmCapabilities(AlarmTier.alarm),
+  MissionSensors? sensors,
 }) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
+    missionSensors: sensors,
     profile: testProfile(settings: settings.copyWith(alarmDeviceId: 'self')),
     wakeUpAlarm: caps,
     // This iPhone rings Wake Up (ED-084): "Alarm sounds on" reads Ready.
@@ -92,6 +95,32 @@ void main() {
     height: 1000,
     widths: const {'compact'},
     overrides: _overrides(_on.copyWith(uiLayout: UiLayout.minimal)),
+    build: (_) => const WakeUpPage(),
+  );
+  // E-R2-28 (M20.6 part 5): the mission picker, each with its task icon;
+  // Walk has no sensor here and Light is blocked: listed, dimmed, why.
+  goldenMatrix(
+    'settings_mission_picker',
+    height: 900,
+    widths: const {'compact'},
+    act: (t) async {
+      await t.scrollUntilVisible(
+        find.text('Mission'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await t.tap(find.text('Mission'));
+      await t.pumpAndSettle();
+    },
+    overrides: _overrides(
+      _on.copyWith(missionMode: MissionMode.always),
+      sensors: FakeMissionSensors(
+        supports: const {
+          MissionKind.walk: MissionSupport.missing,
+          MissionKind.light: MissionSupport.denied,
+        },
+      ),
+    ),
     build: (_) => const WakeUpPage(),
   );
 }

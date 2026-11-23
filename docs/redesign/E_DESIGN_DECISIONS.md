@@ -5634,6 +5634,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the tiles keep option D's approved look (Focus plain with its bolt); the event's "Changes go back to …" line needs a linked calendar (none in the test data); tablets, the Mac and the web open tasks in M19.4's panel and inspector (the board draws only the iPhone).
 - **Checks:** format and analyze clean; 7,756 pass, 31 skipped; Alerts goldens updated; new golden `picker_alerts_full`. `integration_test/task_sheets_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-442 · M20.6 part 5: small states; M20.6 done
+- **Date:** 2026-11-23. **Owner:** "Start part 5"; "Build them (Recommended)" for the mission icons; then "Approve part 5" after the review page (https://claude.ai/artifact/FE8VqTwCTmk6hnxuMnVFXp).
+- **Built (E-R2-28, ED-331):** no new strings.
+  - **Mission icons** (owner; the board's design-only icons, ED-331): the mission picker leads each mission with its task icon (stand up, walking, light bulb, lungs, target, star) in Settings' tinted circle (`SettingsIcon`, now public); a mission the phone can't run stays listed, dimmed, with its reason, and can't be picked (a tap on it did nothing). `showChoiceSheet` gained optional `leading` icons and `disabled` options; other uses unchanged.
+  - **The week's sentence on the accent tint** in accent ink, bold ("A quiet week: nothing was planned." as drawn; every week's sentence; was grey).
+  - Already as drawn, checked: no search results; the quiet week's empty rings, 0/0, "0 of 0 done", Share.
+- **Departures (on the review page):** Move opens M19.4's When picker (the board's month is its Date… step); Missions stays the Settings row and picker (Settings' pages are M20.7); Week in review's layout is R2-24's (M20.13); No free slot, calendar access and error, and the result toasts not captured (built, unchanged).
+- **Checks:** format and analyze clean; 7,760 pass, 31 skipped; week review goldens updated; new golden `settings_mission_picker`. `integration_test/small_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: a Back after a wide review pane left the app (removed from the journey). Not run: real devices.
+- **M20.6 done** (ED-438 to ED-442).
+
 ---
 
 ## Pending owner answers

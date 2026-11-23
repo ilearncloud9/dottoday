@@ -152,7 +152,7 @@ class SettingsRow extends StatelessWidget {
         child: Row(
           spacing: DotSpace.m,
           children: [
-            _Icon(glyph: glyph, tint: tint),
+            SettingsIcon(glyph: glyph, tint: tint),
             Expanded(child: _texts(t, stacked: stacked)),
             if (value case final v? when !stacked)
               // As wide as it needs, up to 45 % of the row: short values
@@ -200,8 +200,10 @@ class SettingsRow extends StatelessWidget {
   );
 }
 
-class _Icon extends StatelessWidget {
-  const _Icon({required this.glyph, required this.tint});
+/// A Settings row's icon: [glyph] in [tint] on a circle of its tint; the
+/// mission picker's rows wear it too (E-R2-28).
+class SettingsIcon extends StatelessWidget {
+  const SettingsIcon({required this.glyph, required this.tint, super.key});
 
   final DotGlyph glyph;
   final Color tint;

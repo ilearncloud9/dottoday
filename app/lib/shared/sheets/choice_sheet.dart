@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 typedef Choice<T> = ({T value, String label, String? detail});
 
 /// Pick one of [options] (Settings › Week starts, Time format, Theme …):
-/// a list with the current one ticked. Returns the pick, or null.
+/// a list with the current one ticked. Returns the pick, or null. An
+/// option may lead with its [leading] icon; one in [disabled] stays
+/// listed, dimmed, with its detail saying why (the missions, E-R2-28).
 Future<T?> showChoiceSheet<T>(
   BuildContext context, {
   required String title,
   required List<Choice<T>> options,
   required T selected,
+  Map<T, Widget> leading = const {},
+  Set<T> disabled = const {},
 }) => showAppSheet<T>(
   context: context,
   title: title,
@@ -26,7 +30,20 @@ Future<T?> showChoiceSheet<T>(
             child: ListTile(
               minTileHeight: DotTouch.android,
               contentPadding: EdgeInsets.zero,
-              title: Text(o.label, style: t.styles.rowTitle),
+              enabled: !disabled.contains(o.value),
+              leading: switch (leading[o.value]) {
+                final icon? when disabled.contains(o.value) => Opacity(
+                  opacity: TaskAlpha.done,
+                  child: icon,
+                ),
+                final icon => icon,
+              },
+              title: Text(
+                o.label,
+                style: disabled.contains(o.value)
+                    ? t.styles.rowTitle.copyWith(color: t.colors.muted)
+                    : t.styles.rowTitle,
+              ),
               subtitle: o.detail == null
                   ? null
                   : Text(o.detail!, style: t.styles.rowMeta),

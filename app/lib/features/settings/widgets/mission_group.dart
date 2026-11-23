@@ -162,6 +162,16 @@ class _KindRow extends ConsumerWidget {
     MissionKind.oneThing,
   ];
 
+  /// The app's own task icon for [kind] (E-R2-28).
+  static TaskIcon _icon(MissionKind kind) => switch (kind) {
+    MissionKind.standUp => TaskIcon.standUp,
+    MissionKind.walk => TaskIcon.walking,
+    MissionKind.light => TaskIcon.lightBulb,
+    MissionKind.breathe => TaskIcon.lungs,
+    MissionKind.catchDot => TaskIcon.target,
+    MissionKind.oneThing => TaskIcon.star,
+  };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
@@ -184,10 +194,26 @@ class _KindRow extends ConsumerWidget {
         k: await ref.read(missionSupportProvider(k).future),
     };
     if (!context.mounted) return;
+    final t = DotTheme.of(context);
     final picked = await showChoiceSheet<MissionKind>(
       context,
       title: l10n.settingsMission,
       selected: settings.missionKind,
+      // Each with its task icon (E-R2-28, owner M20.6 part 5); one the
+      // phone can't run stays listed, dimmed, saying why.
+      leading: {
+        for (final k in _offered)
+          k: SettingsIcon(
+            glyph: _icon(k).glyph!,
+            tint: t.tasks[TaskColor.amber].ink,
+          ),
+      },
+      disabled: {
+        for (final k in _offered)
+          if (support[k] == MissionSupport.missing ||
+              support[k] == MissionSupport.denied)
+            k,
+      },
       options: [
         for (final k in _offered)
           (

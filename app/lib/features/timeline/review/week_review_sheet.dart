@@ -72,18 +72,18 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
         _card(context, review, days.first.settings.use24h),
         WeekReviewChips(review: review),
         if (sentence.isNotEmpty)
+          // E-R2-28: the sentence on the accent's tint, in its ink.
           DecoratedBox(
             decoration: BoxDecoration(
-              color: t.colors.muted.withValues(
-                alpha: t.colors.isDark
-                    ? TaskAlpha.tintDark
-                    : TaskAlpha.tintLight,
-              ),
+              color: t.colors.accentTint,
               borderRadius: BorderRadius.circular(DotRadii.card),
             ),
             child: Padding(
               padding: const EdgeInsets.all(DotSpace.l),
-              child: Text(sentence, style: t.styles.body),
+              child: Text(
+                sentence,
+                style: t.styles.cardTitle.copyWith(color: t.colors.accentInk),
+              ),
             ),
           ),
         if (unfinished.isNotEmpty)

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Choosing a Wake Up mission shows each with its icon, and one this phone can't run is dimmed with the reason; a week's summary sentence sits on a teal tint (redesign branch).
 - The Alerts editor is now a form with Done at the top, lists only the alerts you can still add, and says "Up to 5 alerts" when full; a done task's sheet shows its dot filled (redesign branch).
 - After Wind Down the Day review now floats at the bottom of Today, like "Need more time?" (redesign branch).
 - "Need more time?" now floats at the bottom of Today until you answer it, and Running late lets you pick how late and what to do, then applies it with Done (redesign branch).

@@ -794,7 +794,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2 done 2026-11-23 (ED-435): tablets and pointer to E-R2-25 §2: the week grid's drop label on a filled pill above the dashed box; hover, pointer drag and Inbox drops as built. Open: real devices, Apple Pencil.
   - [x] Part 3 done 2026-11-23 (ED-436): swipe on phone Inbox rows to E-R2-25 §3: Move to Trash with the trash icon in coral, Schedule with the calendar icon in accent; the swipe actions, hint and long-press menu as built. Open: real devices.
   - [x] Part 4 done 2026-11-23 (ED-437): multi-select and the selection bar to E-R2-6 A: the week and 3-day grids select (a still hold, ⇧/⌘/Ctrl-click), picks across the grid's days (owner), the card centred at 470 with the board's icons, Week carries it. Open: real devices.
-- [ ] M20.6 Focus and states:
+- [x] M20.6 Focus and states:
   - Focus on every platform, whole window on expanded screens (R2-9, ED-285, ED-286);
   - time states (R2-26, ED-329), day states (R2-27, ED-330) and small states (R2-28, ED-331).
   Split by the owner (2026-11-23) into five parts, each with its own review page and commit: 1 Focus (the whole window on expanded screens, replacing FocusFrame; the phone look; its two accessibility checks; Focus past its end); 2 time states on Today (past the planned end, Need more time?, Running late, the Ended alert, the Mac menu bar; Now through the day checked, built in M19.6); 3 day states (a finished day, a past day, overlaps, all-day chips, an empty today); 4 task sheets (done, past not done, a calendar event, five alerts); 5 small states (Move to, no free slot, a quiet week, no results, calendar access and errors, missions, result toasts).
@@ -802,6 +802,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2 done 2026-11-23 (ED-439): time states to E-R2-26: Need more time? and Calendar changed float at the foot of Today; Running late is a form acting on Done (owner); the past-end row, Now through the day and the menu bar as built. Open: real devices.
   - [x] Part 3 done 2026-11-23 (ED-440): day states to E-R2-27 §1: the Day review and This week float at the foot after Wind Down (owner); past day, overlaps, all-day chips and the empty day as built. Open: real devices; the Wake Up card on an empty day in M20.8.
   - [x] Part 4 done 2026-11-23 (ED-441): task sheets to E-R2-27 §2: a done task's dot filled; the Alerts editor as the board's form; done, past and event sheets as built. Open: real devices.
+  - [x] Part 5 done 2026-11-23 (ED-442): small states to E-R2-28: mission icons in the picker (owner), unrunnable missions dimmed; the week's sentence on the accent tint; the rest as built. Open: real devices.
 - [ ] M20.7 Settings:
   - six groups and "Everything else" (G2-4, ED-081 to ED-084), opened from Settings' native place (ED-238);
   - tablets (R2-11, ED-291); Planning, Sounds and Siri pages (R2-33, ED-338);
