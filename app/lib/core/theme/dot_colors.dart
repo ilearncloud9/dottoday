@@ -87,6 +87,11 @@ final class DotColors {
   factory DotColors.dark([DotAccent accent = DotAccent.fallback]) =>
       _resolve(Brightness.dark, accent.dark);
 
+  /// [brightness]'s roles around a custom App colour (ED-161, ED-221): text
+  /// and fills derived for 4.5:1, the colour itself never changed.
+  factory DotColors.custom(Brightness brightness, Color accent) =>
+      _resolve(brightness, accent);
+
   final Brightness brightness;
 
   /// E `ground`: the page background.

@@ -72,7 +72,7 @@ void main() {
         'Task starts',
         ['10 min before', "At 22:00, with tomorrow's first task"],
       ),
-      ('Theme', ['Like this device', 'English', 'Monday', '24 h']),
+      ('Theme', ['Auto', 'English', 'Monday', '24 h']),
       ('Trash', ['Data', 'Privacy', 'Help with thinking']),
       ('Send feedback', ['0.1.0 (1)']),
     ]) {
@@ -303,13 +303,30 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('accent swatch and language', (tester) async {
+  testWidgets('App colour, Theme and language (ED-161, ED-221)', (
+    tester,
+  ) async {
     final h = await pumpSettings(tester, location: '/settings/appearance');
-    final teal = find.bySemanticsLabel('Teal accent');
+    // A warm suggestion: its hex, and the nearest built-in accent beside
+    // it for older apps.
+    final blush = find.bySemanticsLabel('Blush');
+    await tester.ensureVisible(blush);
+    await tester.tap(blush);
+    await tester.pumpAndSettle();
+    expect((await storedProfile(h)).accentHex, '#E9958E');
+    expect((await storedSettings(h)).accent, 'coral');
+    // Teal, the default, clears the hex.
+    final teal = find.bySemanticsLabel('Teal');
     await tester.ensureVisible(teal);
     await tester.tap(teal);
     await tester.pumpAndSettle();
+    expect((await storedProfile(h)).accentHex, isNull);
     expect((await storedSettings(h)).accent, 'teal');
+    // Theme: the Dark thumbnail.
+    await tester.ensureVisible(find.text('Dark'));
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+    expect((await storedSettings(h)).theme, ThemePreference.dark);
     await tapSettingRow(tester, h, 'Language');
     await tester.tap(find.text('English').last);
     await tester.pumpAndSettle();

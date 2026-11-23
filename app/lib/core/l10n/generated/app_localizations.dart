@@ -11688,6 +11688,132 @@ abstract class AppLocalizations {
   /// **'“{phrase}”'**
   String siriPhraseQuoted(String phrase);
 
+  /// Layout segment: the full app (Settings › Appearance, ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Everything'**
+  String get layoutEverything;
+
+  /// Layout segment: the minimal app (Settings › Appearance, ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Less'**
+  String get layoutLess;
+
+  /// Under Layout in Settings › Appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Show everything or show less'**
+  String get layoutRowDetail;
+
+  /// Theme thumbnail: follow the device (Settings › Appearance).
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get settingsThemeAuto;
+
+  /// Settings › Appearance group and the Edit palette sheet's title (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'App colour'**
+  String get settingsAppColour;
+
+  /// Opens the App colour sheet (Settings › Appearance).
+  ///
+  /// In en, this message translates to:
+  /// **'Edit palette'**
+  String get settingsEditPalette;
+
+  /// Under the App colour swatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes the app’s colour to match your style. Existing tasks keep their colours.'**
+  String get settingsAppColourNote;
+
+  /// Edit palette note when the ink differs from the chosen colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Buttons and links use {ink} so text stays readable (4.5:1); your colour stays {colour}. Existing tasks keep their colours.'**
+  String settingsAppColourInk(String ink, String colour);
+
+  /// App colour name (screen readers): the default.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get appColourTeal;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Blush'**
+  String get appColourBlush;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Peach'**
+  String get appColourPeach;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Honey'**
+  String get appColourHoney;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Sage'**
+  String get appColourSage;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Dusk blue'**
+  String get appColourDuskBlue;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Pine'**
+  String get appColourPine;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Plum'**
+  String get appColourPlum;
+
+  /// App colour suggestion name (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Ink navy'**
+  String get appColourInkNavy;
+
+  /// Screen reader name of a custom App colour.
+  ///
+  /// In en, this message translates to:
+  /// **'Your colour {hex}'**
+  String appColourCustom(String hex);
+
+  /// Sample task in the Appearance preview (Less).
+  ///
+  /// In en, this message translates to:
+  /// **'Deep work: roadmap'**
+  String get previewTask;
+
+  /// Sample next line in the Appearance preview (Less).
+  ///
+  /// In en, this message translates to:
+  /// **'Next · Lunch 12:30'**
+  String get previewNext;
+
+  /// Screen reader label of the Appearance preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview of the app with your choices'**
+  String get previewLabel;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

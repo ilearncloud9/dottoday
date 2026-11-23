@@ -4,20 +4,18 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/test_alarm.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
+import 'package:dottoday/features/settings/appearance/layout_row.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
-import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
-import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -95,39 +93,6 @@ class MinimalSettings extends ConsumerWidget {
           afterNo: l10n.testAlarmLookLater,
         ),
       ],
-    );
-  }
-}
-
-/// Settings row 1 in both layouts (docs/14 §2.6, §4): Layout — Minimal /
-/// Full. The choice applies at once and asks nothing (§5).
-class LayoutRow extends ConsumerWidget {
-  const LayoutRow({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final minimal = ref.watch(layoutPolicyProvider.select((p) => p.isMinimal));
-    return SettingsRow(
-      glyph: DotGlyphs.dottedRow,
-      tint: t.colors.accentInk,
-      title: l10n.layoutRow,
-      value: minimal ? l10n.layoutMinimal : l10n.layoutFull,
-      onTap: () async {
-        final picked = await showChoiceSheet<bool>(
-          context,
-          title: l10n.layoutRow,
-          selected: minimal,
-          options: [
-            (value: true, label: l10n.layoutMinimal, detail: null),
-            (value: false, label: l10n.layoutFull, detail: null),
-          ],
-        );
-        if (picked != null && picked != minimal && context.mounted) {
-          setLayout(context, minimal: picked);
-        }
-      },
     );
   }
 }

@@ -4,16 +4,12 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/profile/settings_actions.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/features/settings/minimal_settings.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
-import 'package:dottoday/features/settings/widgets/format_group.dart';
 import 'package:dottoday/features/settings/widgets/learning_group.dart';
-import 'package:dottoday/features/settings/widgets/look_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_group.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -60,22 +56,10 @@ class SettingsGroupPage extends ConsumerWidget {
       SettingsPage.learning => [LearningGroup(settings: s)],
       SettingsPage.planning => [PlanningGroup(settings: s)],
       SettingsPage.reminders => [RemindersGroup(settings: s)],
-      SettingsPage.appearance => [
-        const SettingsGroup(caption: '', children: [LayoutRow()]),
-        LookGroup(
-          settings: s,
-          locale: profile.locale,
-          onLocale: (code) => unawaited(
-            updateProfile(
-              ProviderScope.containerOf(context),
-              (p) => p.copyWith(locale: code),
-            ),
-          ),
-        ),
-        FormatGroup(settings: s),
-      ],
       SettingsPage.dataPrivacy => const [DataGroup(), PrivacyGroup()],
-      _ => const [AboutGroup()],
+      SettingsPage.helpAbout => const [AboutGroup()],
+      // Their own pages (settingsPageFor), never a group page.
+      _ => const <Widget>[],
     };
   }
 }

@@ -411,6 +411,18 @@ abstract final class DotSize {
 
   static const double rowDot = 36;
 
+  /// Appearance's Theme thumbnails (E-G3-9b, ED-161): 72 × 48.
+  static const double themeThumbWidth = 72;
+  static const double themeThumbHeight = 48;
+
+  /// Narrower than this, Layout's Everything · Less goes under its title:
+  /// at the 48 pt touch height it doesn't fit beside it in a phone's card
+  /// (350 at 390, M20.7).
+  static const double layoutSegmentsBeside = 380;
+
+  /// The preview's Now ring (Less).
+  static const double previewRing = 56;
+
   /// An Inbox row's least height (E-R2-13: 64).
   static const double inboxRowMin = 64;
 

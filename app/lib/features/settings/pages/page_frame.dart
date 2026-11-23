@@ -17,6 +17,7 @@ class SettingsPageFrame extends StatelessWidget {
     required this.children,
     this.page,
     this.singleGroup = false,
+    this.pinned,
     super.key,
   });
 
@@ -27,31 +28,69 @@ class SettingsPageFrame extends StatelessWidget {
   /// One group under the title: its caption would repeat the title.
   final bool singleGroup;
 
+  /// Stays under the title while the groups scroll (Appearance's live
+  /// preview, ED-161); scrolls with them where the window is too short to
+  /// spare the room.
+  final Widget? pinned;
+
+  /// Shorter than this, [pinned] scrolls with the page (a phone on its
+  /// side, 200 % text).
+  static const _pinFrom = 560.0;
+
   @override
   Widget build(BuildContext context) {
+    const side = EdgeInsets.symmetric(horizontal: DotSpace.page);
+    final head = [
+      _TitleRow(title: title, page: page),
+      if (pinned case final p?) ...[const SizedBox(height: DotSpace.l), p],
+    ];
+    final groups = [
+      for (final child in children) ...[
+        const SizedBox(height: DotSpace.l),
+        if (singleGroup)
+          SettingsCaptionScope(hidden: true, child: child)
+        else
+          child,
+      ],
+    ];
     return Scaffold(
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(
-                DotSpace.page,
-                DotSpace.l,
-                DotSpace.page,
-                DotSpace.fabClearance,
-              ),
-              children: [
-                _TitleRow(title: title, page: page),
-                for (final child in children) ...[
-                  const SizedBox(height: DotSpace.l),
-                  if (singleGroup)
-                    SettingsCaptionScope(hidden: true, child: child)
-                  else
-                    child,
-                ],
-              ],
+            child: LayoutBuilder(
+              builder: (context, box) {
+                if (pinned == null || box.maxHeight < _pinFrom) {
+                  return ListView(
+                    padding: const EdgeInsets.fromLTRB(
+                      DotSpace.page,
+                      DotSpace.l,
+                      DotSpace.page,
+                      DotSpace.fabClearance,
+                    ),
+                    children: [...head, ...groups],
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: side.copyWith(top: DotSpace.l),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: head,
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        padding: side.copyWith(bottom: DotSpace.fabClearance),
+                        children: groups,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

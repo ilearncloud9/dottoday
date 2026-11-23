@@ -6164,6 +6164,70 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.siriPhraseQuoted(phrase));
 
   @override
+  String get layoutEverything => pseudo(super.layoutEverything);
+
+  @override
+  String get layoutLess => pseudo(super.layoutLess);
+
+  @override
+  String get layoutRowDetail => pseudo(super.layoutRowDetail);
+
+  @override
+  String get settingsThemeAuto => pseudo(super.settingsThemeAuto);
+
+  @override
+  String get settingsAppColour => pseudo(super.settingsAppColour);
+
+  @override
+  String get settingsEditPalette => pseudo(super.settingsEditPalette);
+
+  @override
+  String get settingsAppColourNote => pseudo(super.settingsAppColourNote);
+
+  @override
+  String settingsAppColourInk(String ink, String colour) =>
+      pseudo(super.settingsAppColourInk(ink, colour));
+
+  @override
+  String get appColourTeal => pseudo(super.appColourTeal);
+
+  @override
+  String get appColourBlush => pseudo(super.appColourBlush);
+
+  @override
+  String get appColourPeach => pseudo(super.appColourPeach);
+
+  @override
+  String get appColourHoney => pseudo(super.appColourHoney);
+
+  @override
+  String get appColourSage => pseudo(super.appColourSage);
+
+  @override
+  String get appColourDuskBlue => pseudo(super.appColourDuskBlue);
+
+  @override
+  String get appColourPine => pseudo(super.appColourPine);
+
+  @override
+  String get appColourPlum => pseudo(super.appColourPlum);
+
+  @override
+  String get appColourInkNavy => pseudo(super.appColourInkNavy);
+
+  @override
+  String appColourCustom(String hex) => pseudo(super.appColourCustom(hex));
+
+  @override
+  String get previewTask => pseudo(super.previewTask);
+
+  @override
+  String get previewNext => pseudo(super.previewNext);
+
+  @override
+  String get previewLabel => pseudo(super.previewLabel);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

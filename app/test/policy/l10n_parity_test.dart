@@ -52,6 +52,7 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'settingsThemeAuto', // "Auto"
     'settingsFormat', // "Format"
     'whenDate', // "Date…" is French too (the When picker, ED-099)
     'colorOlive', // « Olive » (ED-161)

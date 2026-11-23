@@ -57,6 +57,11 @@ class DottodayApp extends ConsumerWidget {
     final profile = ref.watch(currentProfileProvider).value;
     final settings = profile?.settings;
     final accent = DotAccent.fromKey(settings?.accent);
+    // A custom App colour (ED-221) wins over the named accent beside it.
+    final custom = switch (profile?.accentHex) {
+      final hex? => parseHex(hex),
+      null => null,
+    };
     // The browser tab follows the live dot (M9.7): title here, favicon and
     // badge by the listener.
     final tab = kIsWeb ? ref.watch(webLiveDotStateProvider) : WebLiveDot.none;
@@ -91,8 +96,12 @@ class DottodayApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: appLocale(profile?.locale),
-      theme: DotTheme.light(accent),
-      darkTheme: DotTheme.dark(accent),
+      theme: custom == null
+          ? DotTheme.light(accent)
+          : DotTheme.custom(Brightness.light, custom),
+      darkTheme: custom == null
+          ? DotTheme.dark(accent)
+          : DotTheme.custom(Brightness.dark, custom),
       themeMode: switch (settings?.theme) {
         ThemePreference.light => ThemeMode.light,
         ThemePreference.dark => ThemeMode.dark,

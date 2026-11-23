@@ -26,8 +26,8 @@ import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/calendars_page.dart';
 import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
-import 'package:dottoday/features/settings/pages/group_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
+import 'package:dottoday/features/settings/pages/settings_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -53,11 +53,14 @@ List<Override> _overridesWith({
   List<Override> extra = const [],
   Settings settings = const Settings(use24h: true),
   List<Occurrence> rows = const [],
+  String? accentHex,
 }) => [
   ...extra,
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
-    profile: testProfile(settings: settings).copyWith(displayName: 'Kody'),
+    profile: testProfile(
+      settings: settings,
+    ).copyWith(displayName: 'Kody', accentHex: accentHex),
     notificationPermission: permission,
     exactAlarms: exactAlarms,
     calendarGateway: calendarGateway,
@@ -74,8 +77,8 @@ List<Override> _overridesWith({
 
 Widget _settings() => const SettingsScreen();
 
-/// A group's page (M20.7 part 1): its rows left the root.
-Widget _page(SettingsPage page) => SettingsGroupPage(page: page);
+/// A group's page (M20.7): its rows left the root.
+Widget _page(SettingsPage page) => settingsPageFor(page);
 
 Future<void> _open(WidgetTester tester, String row) async {
   // The list builds lazily: scroll until the row exists.
@@ -151,6 +154,32 @@ void main() {
       widths: const {'compact', 'expanded'},
       overrides: _overrides,
       build: (_) => _page(page),
+    );
+  }
+  // M20.7 part 3 (E-G3-9b, ED-161): Appearance in Less (the preview's Now
+  // ring), with a custom App colour first, and Edit palette.
+  goldenMatrix(
+    'settings_appearance_less',
+    height: 1100,
+    widths: const {'compact'},
+    overrides: _overridesWith(
+      settings: const Settings(use24h: true, uiLayout: UiLayout.minimal),
+      accentHex: '#7A9E4A',
+    ),
+    build: (_) => _page(SettingsPage.appearance),
+  );
+  for (final (name, platform) in [
+    ('settings_edit_palette', TargetPlatform.iOS),
+    ('settings_edit_palette_android', TargetPlatform.android),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 900,
+      platform: platform,
+      widths: const {'compact'},
+      act: (t) => _open(t, 'Edit palette'),
+      overrides: _overridesWith(accentHex: '#7A9E4A'),
+      build: (_) => _page(SettingsPage.appearance),
     );
   }
   // E-R2-33: Shift later tasks, "Cancel · Shift later tasks" on iPhone,

@@ -8030,6 +8030,103 @@
       }
     }
   },
+  "layoutEverything": "Everything",
+  "@layoutEverything": {
+    "description": "Layout segment: the full app (Settings › Appearance, ED-161)."
+  },
+  "layoutLess": "Less",
+  "@layoutLess": {
+    "description": "Layout segment: the minimal app (Settings › Appearance, ED-161)."
+  },
+  "layoutRowDetail": "Show everything or show less",
+  "@layoutRowDetail": {
+    "description": "Under Layout in Settings › Appearance."
+  },
+  "settingsThemeAuto": "Auto",
+  "@settingsThemeAuto": {
+    "description": "Theme thumbnail: follow the device (Settings › Appearance)."
+  },
+  "settingsAppColour": "App colour",
+  "@settingsAppColour": {
+    "description": "Settings › Appearance group and the Edit palette sheet's title (ED-161)."
+  },
+  "settingsEditPalette": "Edit palette",
+  "@settingsEditPalette": {
+    "description": "Opens the App colour sheet (Settings › Appearance)."
+  },
+  "settingsAppColourNote": "Changes the app’s colour to match your style. Existing tasks keep their colours.",
+  "@settingsAppColourNote": {
+    "description": "Under the App colour swatches."
+  },
+  "settingsAppColourInk": "Buttons and links use {ink} so text stays readable (4.5:1); your colour stays {colour}. Existing tasks keep their colours.",
+  "@settingsAppColourInk": {
+    "description": "Edit palette note when the ink differs from the chosen colour.",
+    "placeholders": {
+      "ink": {
+        "type": "String"
+      },
+      "colour": {
+        "type": "String"
+      }
+    }
+  },
+  "appColourTeal": "Teal",
+  "@appColourTeal": {
+    "description": "App colour name (screen readers): the default."
+  },
+  "appColourBlush": "Blush",
+  "@appColourBlush": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourPeach": "Peach",
+  "@appColourPeach": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourHoney": "Honey",
+  "@appColourHoney": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourSage": "Sage",
+  "@appColourSage": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourDuskBlue": "Dusk blue",
+  "@appColourDuskBlue": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourPine": "Pine",
+  "@appColourPine": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourPlum": "Plum",
+  "@appColourPlum": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourInkNavy": "Ink navy",
+  "@appColourInkNavy": {
+    "description": "App colour suggestion name (ED-161)."
+  },
+  "appColourCustom": "Your colour {hex}",
+  "@appColourCustom": {
+    "description": "Screen reader name of a custom App colour.",
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "previewTask": "Deep work: roadmap",
+  "@previewTask": {
+    "description": "Sample task in the Appearance preview (Less)."
+  },
+  "previewNext": "Next · Lunch 12:30",
+  "@previewNext": {
+    "description": "Sample next line in the Appearance preview (Less)."
+  },
+  "previewLabel": "Preview of the app with your choices",
+  "@previewLabel": {
+    "description": "Screen reader label of the Appearance preview."
+  },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

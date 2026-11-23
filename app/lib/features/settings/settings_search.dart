@@ -51,7 +51,8 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
     SettingsPage.appearance: [
       l10n.layoutRow,
       l10n.settingsTheme,
-      l10n.settingsAccent,
+      l10n.settingsAppColour,
+      l10n.settingsEditPalette,
       l10n.settingsLanguage,
       l10n.settingsSingleKeys,
       l10n.settingsWeekStarts,

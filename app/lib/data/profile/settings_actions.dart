@@ -1,12 +1,14 @@
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/scheduling/low_energy.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -70,3 +72,20 @@ Future<Result<void, AppFailure>> setLowEnergy(
       : null;
   return updateSettings(ref, (s) => s.copyWith(lowEnergyUntil: until));
 }
+
+/// App colour (ED-161, ED-221): [colour] as `accent_hex`, with the
+/// built-in accent nearest to it in `settings.accent` for older apps; or,
+/// for a built-in [named] accent, that accent and no hex.
+Future<Result<void, AppFailure>> setAppColour(
+  ProviderContainer ref, {
+  Color? colour,
+  DotAccent named = DotAccent.fallback,
+}) => updateProfile(
+  ref,
+  (p) => p.copyWith(
+    accentHex: colour == null ? null : hexOf(colour),
+    settings: p.settings.copyWith(
+      accent: (colour == null ? named : nearestAccent(colour)).key,
+    ),
+  ),
+);

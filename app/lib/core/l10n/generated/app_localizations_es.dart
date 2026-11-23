@@ -7734,6 +7734,74 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get layoutEverything => 'Todo';
+
+  @override
+  String get layoutLess => 'Menos';
+
+  @override
+  String get layoutRowDetail => 'Mostrar todo o menos';
+
+  @override
+  String get settingsThemeAuto => 'Automático';
+
+  @override
+  String get settingsAppColour => 'Color de la app';
+
+  @override
+  String get settingsEditPalette => 'Editar paleta';
+
+  @override
+  String get settingsAppColourNote =>
+      'Cambia el color de la app a tu estilo. Las tareas existentes conservan sus colores.';
+
+  @override
+  String settingsAppColourInk(String ink, String colour) {
+    return 'Los botones y enlaces usan $ink para que el texto siga legible (4,5:1); tu color sigue siendo $colour. Las tareas existentes conservan sus colores.';
+  }
+
+  @override
+  String get appColourTeal => 'Verde azulado';
+
+  @override
+  String get appColourBlush => 'Rubor';
+
+  @override
+  String get appColourPeach => 'Melocotón';
+
+  @override
+  String get appColourHoney => 'Miel';
+
+  @override
+  String get appColourSage => 'Salvia';
+
+  @override
+  String get appColourDuskBlue => 'Azul atardecer';
+
+  @override
+  String get appColourPine => 'Pino';
+
+  @override
+  String get appColourPlum => 'Ciruela';
+
+  @override
+  String get appColourInkNavy => 'Azul tinta';
+
+  @override
+  String appColourCustom(String hex) {
+    return 'Tu color $hex';
+  }
+
+  @override
+  String get previewTask => 'Trabajo profundo: hoja de ruta';
+
+  @override
+  String get previewNext => 'Después · Almuerzo 12:30';
+
+  @override
+  String get previewLabel => 'Vista previa de la app con tus elecciones';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

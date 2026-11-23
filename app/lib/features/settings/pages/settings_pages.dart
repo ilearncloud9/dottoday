@@ -1,4 +1,5 @@
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/features/settings/appearance/appearance_page.dart';
 import 'package:dottoday/features/settings/pages/about_page.dart';
 import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/calendars_page.dart';
@@ -29,10 +30,10 @@ Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.changelog => const ChangelogPage(),
   SettingsPage.siri => const SiriPage(),
   SettingsPage.everything => const EverythingPage(),
+  SettingsPage.appearance => const AppearancePage(),
   SettingsPage.yourDay ||
   SettingsPage.planning ||
   SettingsPage.reminders ||
-  SettingsPage.appearance ||
   SettingsPage.dataPrivacy ||
   SettingsPage.helpAbout ||
   SettingsPage.wakeWindDown ||

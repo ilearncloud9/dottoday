@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+export 'app_colours.dart';
 export 'colour_math.dart';
 export 'contrast.dart';
 export 'dot_colors.dart';
@@ -71,6 +72,26 @@ final class DotTheme extends ThemeExtension<DotTheme> {
     DotAccent accent = DotAccent.fallback,
     TargetPlatform? platform,
   ]) => _themed(DotColors.dark(accent), accent, platform);
+
+  /// [brightness]'s [ThemeData] around a custom App colour (Settings ›
+  /// Appearance › Edit palette, ED-161); cached per colour like [light].
+  static ThemeData custom(
+    Brightness brightness,
+    Color accent, [
+    TargetPlatform? platform,
+  ]) {
+    final p = platform ?? defaultTargetPlatform;
+    // Dragging Edit palette's sliders passes a colour per frame: keep the
+    // few in use, not every one passed.
+    if (_customCache.length > 8) _customCache.clear();
+    return _customCache[(accent, brightness, p)] ??= _build(
+      DotColors.custom(brightness, accent),
+      p,
+    );
+  }
+
+  static final _customCache =
+      <(Color, Brightness, TargetPlatform), ThemeData>{};
 
   static ThemeData _themed(
     DotColors c,

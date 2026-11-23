@@ -7742,6 +7742,74 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get layoutEverything => 'Alles';
+
+  @override
+  String get layoutLess => 'Weniger';
+
+  @override
+  String get layoutRowDetail => 'Alles zeigen oder weniger';
+
+  @override
+  String get settingsThemeAuto => 'Automatisch';
+
+  @override
+  String get settingsAppColour => 'App-Farbe';
+
+  @override
+  String get settingsEditPalette => 'Palette bearbeiten';
+
+  @override
+  String get settingsAppColourNote =>
+      'Ändert die Farbe der App nach deinem Geschmack. Bestehende Aufgaben behalten ihre Farben.';
+
+  @override
+  String settingsAppColourInk(String ink, String colour) {
+    return 'Schaltflächen und Links nutzen $ink, damit Text lesbar bleibt (4,5:1); deine Farbe bleibt $colour. Bestehende Aufgaben behalten ihre Farben.';
+  }
+
+  @override
+  String get appColourTeal => 'Petrol';
+
+  @override
+  String get appColourBlush => 'Rosé';
+
+  @override
+  String get appColourPeach => 'Pfirsich';
+
+  @override
+  String get appColourHoney => 'Honig';
+
+  @override
+  String get appColourSage => 'Salbei';
+
+  @override
+  String get appColourDuskBlue => 'Abendblau';
+
+  @override
+  String get appColourPine => 'Kiefer';
+
+  @override
+  String get appColourPlum => 'Pflaume';
+
+  @override
+  String get appColourInkNavy => 'Tintenblau';
+
+  @override
+  String appColourCustom(String hex) {
+    return 'Deine Farbe $hex';
+  }
+
+  @override
+  String get previewTask => 'Fokusarbeit: Roadmap';
+
+  @override
+  String get previewNext => 'Danach · Mittagessen 12:30';
+
+  @override
+  String get previewLabel => 'Vorschau der App mit deiner Auswahl';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

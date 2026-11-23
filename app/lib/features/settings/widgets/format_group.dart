@@ -1,4 +1,5 @@
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/l10n/language_names.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
@@ -7,19 +8,71 @@ import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// FORMAT on Appearance (M20.7 part 1, E-Phones): Week starts and Time
-/// format (R-20), moved from Day shape.
+/// FORMAT on Appearance (E-G3-9b, ED-161): Language, Time format and
+/// Week starts on (R-20); on the web, its single-key shortcuts too.
 class FormatGroup extends StatelessWidget {
-  const FormatGroup({required this.settings, super.key});
+  const FormatGroup({
+    required this.settings,
+    required this.locale,
+    required this.onLocale,
+    super.key,
+  });
 
   final Settings settings;
+
+  /// `profiles.locale`.
+  final String locale;
+  final ValueChanged<String> onLocale;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final l10n = context.l10n;
     return SettingsGroup(
-      caption: context.l10n.settingsFormat,
-      children: [_weekStart(context, t), _timeFormat(context, t)],
+      caption: l10n.settingsFormat,
+      children: [
+        _language(context, t),
+        _timeFormat(context, t),
+        _weekStart(context, t),
+        // Web only: its single-key shortcuts can be turned off (ED-095,
+        // WCAG 2.1.4); Format is the nearest group.
+        if (webChrome(context))
+          SettingsRow(
+            glyph: DotGlyphs.bolt,
+            tint: t.tasks[TaskColor.teal].ink,
+            title: l10n.settingsSingleKeys,
+            subtitle: l10n.settingsSingleKeysHint,
+            toggle: settings.webSingleKeys,
+            onToggle: (on) =>
+                changeSettings(context, (s) => s.copyWith(webSingleKeys: on)),
+          ),
+      ],
+    );
+  }
+
+  Widget _language(BuildContext context, DotTheme t) {
+    final l10n = context.l10n;
+    final names = {
+      for (final l in AppLocalizations.supportedLocales)
+        l.languageCode: languageName(l.languageCode),
+    };
+    return SettingsRow(
+      glyph: DotGlyphs.globe,
+      tint: t.tasks[TaskColor.sky].ink,
+      title: l10n.settingsLanguage,
+      value: names[locale] ?? names.values.first,
+      onTap: () async {
+        final picked = await showChoiceSheet<String>(
+          context,
+          title: l10n.settingsLanguage,
+          selected: locale,
+          options: [
+            for (final MapEntry(key: code, value: name) in names.entries)
+              (value: code, label: name, detail: null),
+          ],
+        );
+        if (picked != null && picked != locale) onLocale(picked);
+      },
     );
   }
 

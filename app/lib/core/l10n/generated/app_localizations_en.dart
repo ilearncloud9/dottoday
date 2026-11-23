@@ -7694,6 +7694,74 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get layoutEverything => 'Everything';
+
+  @override
+  String get layoutLess => 'Less';
+
+  @override
+  String get layoutRowDetail => 'Show everything or show less';
+
+  @override
+  String get settingsThemeAuto => 'Auto';
+
+  @override
+  String get settingsAppColour => 'App colour';
+
+  @override
+  String get settingsEditPalette => 'Edit palette';
+
+  @override
+  String get settingsAppColourNote =>
+      'Changes the app’s colour to match your style. Existing tasks keep their colours.';
+
+  @override
+  String settingsAppColourInk(String ink, String colour) {
+    return 'Buttons and links use $ink so text stays readable (4.5:1); your colour stays $colour. Existing tasks keep their colours.';
+  }
+
+  @override
+  String get appColourTeal => 'Teal';
+
+  @override
+  String get appColourBlush => 'Blush';
+
+  @override
+  String get appColourPeach => 'Peach';
+
+  @override
+  String get appColourHoney => 'Honey';
+
+  @override
+  String get appColourSage => 'Sage';
+
+  @override
+  String get appColourDuskBlue => 'Dusk blue';
+
+  @override
+  String get appColourPine => 'Pine';
+
+  @override
+  String get appColourPlum => 'Plum';
+
+  @override
+  String get appColourInkNavy => 'Ink navy';
+
+  @override
+  String appColourCustom(String hex) {
+    return 'Your colour $hex';
+  }
+
+  @override
+  String get previewTask => 'Deep work: roadmap';
+
+  @override
+  String get previewNext => 'Next · Lunch 12:30';
+
+  @override
+  String get previewLabel => 'Preview of the app with your choices';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

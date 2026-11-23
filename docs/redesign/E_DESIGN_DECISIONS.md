@@ -5667,6 +5667,19 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** Start sound keeps Done and has no Cancel (each tap already saves and plays); Siri's icons stay the app's; tablets, the Mac and the web show the pages full width until part 5.
 - **Checks:** format and analyze clean; 7,870 pass, 31 skipped. Goldens updated for the row weight; new `settings_shift_sheet` (iPhone, Android) and `settings_sounds_android`. `integration_test/settings_pages_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: on the Android tablet the journey scrolled the sidebar (fixed in the journey). Not run: real devices.
 
+### ED-445 · M20.7 part 3: Appearance
+- **Date:** 2026-11-23. **Owner:** "Start part 3"; "Build now, push later (Recommended)" for migration 0017; then "Approve part 3" after the review page (https://claude.ai/artifact/GNeenLP9rRvgpRcnSLiGUo).
+- **Built (E-G3-9b, ED-161, ED-221):**
+  - **Live preview** pinned under the title (`SettingsPageFrame.pinned`; it scrolls with the page under 560 high): a small Today in the theme, App colour and layout in use; Everything (week, three dots, tabs, Create task) and Less (Now ring, Done, Next) crossfade and the card eases to its height; one label for screen readers.
+  - **Layout** as Everything · Less in `DotSegmented` (also minimal Settings' first row); under its title where the card is under 380.
+  - **Theme** as Auto · Light · Dark thumbnails of the app's own grounds.
+  - **App colour:** the current colour first, ticked, then Teal and the eight warm suggestions (`AppColourSuggestion`); Edit palette (hex, Colour and Shade, All colours, Your colours, the derived ink for 4.5:1). `setAppColour` writes `accent_hex` and the nearest built-in `accent` (ED-221); `DotTheme.custom` themes the app from it, text and fills derived, the colour unchanged. Slider picks write after the theme's quick beat.
+  - **Format:** Language, Time format, Week starts (web: single-key shortcuts). The Look group is removed; its rows moved.
+  - The shared segmented control's labels are ink (they were 3.3:1 on the dark thumb).
+- **Open (owner):** the hosted push of migration 0017 (`accent_hex`, `your_colours`); built and tested against the local database only.
+- **Departures (on the review page):** Everything · Less under the title on phones; the preview's tabs as icons; device shots don't show the re-colour (the test app's theme doesn't follow the profile; a unit test covers it); tablets, the Mac and the web full width until part 5.
+- **Checks:** format and analyze clean; 7,888 pass, 31 skipped. New goldens `settings_appearance_less`, `settings_edit_palette` (iPhone, Android); Appearance, Minimal and segmented-control goldens updated; tests for the nearest accent, the custom theme, Edit palette, Layout and a11y. `integration_test/settings_appearance_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: Edit palette's note named the old ink mid-write (fixed, iPhone rerun); App colour off-centre on wide windows (fixed, Mac rerun). Not run: real devices; the hosted database.
+
 ---
 
 ## Pending owner answers
