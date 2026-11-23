@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/sound_credits.gen.dart';
@@ -35,6 +36,7 @@ class SoundsPage extends ConsumerWidget {
     return SoundPreviewScope(
       child: SettingsPageFrame(
         title: l10n.soundsTitle,
+        page: SettingsPage.sounds,
         children: [
           if (muted) const SoundMutedBanner(),
           PageText(l10n.soundsIntro),

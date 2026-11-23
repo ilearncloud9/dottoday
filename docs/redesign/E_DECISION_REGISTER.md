@@ -1356,3 +1356,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-23, ED-440:** M20.6 part 3: day states (E-R2-27 §1): the Day review and This week float at Today's foot after Wind Down; past day, overlaps, all-day chips and the empty day as built. Approved.
 - **2026-11-23, ED-441:** M20.6 part 4: task sheets (E-R2-27 §2): a done task's dot filled; the Alerts editor as the board's form (header Done, card list, only unadded choices, Up to 5 alerts); the rest as built. Approved.
 - **2026-11-23, ED-442:** M20.6 part 5: small states (E-R2-28): mission icons in the picker, unrunnable ones dimmed; the week's sentence on the accent tint; the rest as built; M20.6 done. Approved.
+- **2026-11-23, ED-443:** M20.7 part 1: the Settings root (Your account, Search settings, six groups) and group pages holding today's rows; Format on Appearance; sentence-case captions and iPhone icon tiles; Minimal's Everything else opens the root. Approved.

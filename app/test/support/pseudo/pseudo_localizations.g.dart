@@ -6098,6 +6098,68 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.dumpEarlierMeta(date, count));
 
   @override
+  String get settingsYourAccount => pseudo(super.settingsYourAccount);
+
+  @override
+  String get settingsSearchHint => pseudo(super.settingsSearchHint);
+
+  @override
+  String settingsSearchNone(String query) =>
+      pseudo(super.settingsSearchNone(query));
+
+  @override
+  String get settingsYourDaySummary => pseudo(super.settingsYourDaySummary);
+
+  @override
+  String get settingsPlanningSummary => pseudo(super.settingsPlanningSummary);
+
+  @override
+  String get settingsRemindersSummary => pseudo(super.settingsRemindersSummary);
+
+  @override
+  String get settingsAppearance => pseudo(super.settingsAppearance);
+
+  @override
+  String get settingsAppearanceSummary =>
+      pseudo(super.settingsAppearanceSummary);
+
+  @override
+  String get settingsDataAndPrivacy => pseudo(super.settingsDataAndPrivacy);
+
+  @override
+  String get settingsDataAndPrivacySummary =>
+      pseudo(super.settingsDataAndPrivacySummary);
+
+  @override
+  String get settingsHelpAndAbout => pseudo(super.settingsHelpAndAbout);
+
+  @override
+  String get settingsHelpAndAboutSummary =>
+      pseudo(super.settingsHelpAndAboutSummary);
+
+  @override
+  String get settingsWakeWindDown => pseudo(super.settingsWakeWindDown);
+
+  @override
+  String get settingsTheTwoEnds => pseudo(super.settingsTheTwoEnds);
+
+  @override
+  String get settingsTheDayItself => pseudo(super.settingsTheDayItself);
+
+  @override
+  String get settingsLearnMyDay => pseudo(super.settingsLearnMyDay);
+
+  @override
+  String get settingsLearnMyDaySummary =>
+      pseudo(super.settingsLearnMyDaySummary);
+
+  @override
+  String get settingsFormat => pseudo(super.settingsFormat);
+
+  @override
+  String settingsBackTo(String page) => pseudo(super.settingsBackTo(page));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

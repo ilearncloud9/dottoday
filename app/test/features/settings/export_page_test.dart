@@ -151,7 +151,10 @@ void main() {
     await _tap(tester, 'Daily backup');
     expect(find.text('Go back to this backup?'), findsOneWidget);
     expect(backups.restored, isEmpty);
-    await _tap(tester, 'Restore');
+    // The dialog's button: the page's "Restore" caption reads the same now
+    // captions are sentence case (E).
+    await tester.tap(find.text('Restore').last);
+    await tester.pumpAndSettle();
     expect(backups.restored, [7]);
     expect(find.text('Backup restored'), findsOneWidget);
   });

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
@@ -35,6 +36,7 @@ class NotificationHealthPage extends ConsumerWidget {
     final checks = ref.watch(notificationHealthChecksProvider).value;
     return SettingsPageFrame(
       title: l10n.healthTitle,
+      page: SettingsPage.notifications,
       children: [
         PageText(l10n.healthIntro),
         if (checks != null)

@@ -37,13 +37,21 @@ class SettingsGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        // No caption: minimal Settings' one group (docs/14 §4 "no sections").
-        if (caption.isNotEmpty)
+        // No caption: minimal Settings' one group (docs/14 §4 "no sections"),
+        // or a page that is this one group (M20.7).
+        if (caption.isNotEmpty && !SettingsCaptionScope.hiddenAt(context))
           Padding(
             padding: const EdgeInsetsDirectional.only(start: DotSpace.xs),
             child: Semantics(
               header: true,
-              child: Text(caption.toUpperCase(), style: t.styles.caption),
+              // Sentence case, as E draws it (no uppercase captions); the
+              // Material list subheader is in the accent (E-Phones).
+              child: Text(
+                caption,
+                style: DotIdiom.of(context) == DotIdiom.cupertino
+                    ? t.styles.caption
+                    : t.styles.caption.copyWith(color: t.colors.accentInk),
+              ),
             ),
           ),
         Material(
@@ -75,6 +83,28 @@ class SettingsGroup extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Hides the captions of the groups under it: a Settings page that is one
+/// group already says its name in the title (M20.7 part 1).
+class SettingsCaptionScope extends InheritedWidget {
+  const SettingsCaptionScope({
+    required this.hidden,
+    required super.child,
+    super.key,
+  });
+
+  final bool hidden;
+
+  /// Whether a group at [context] shows no caption.
+  static bool hiddenAt(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<SettingsCaptionScope>()
+          ?.hidden ??
+      false;
+
+  @override
+  bool updateShouldNotify(SettingsCaptionScope old) => old.hidden != hidden;
 }
 
 /// One settings row: a tinted icon, title (and subtitle), then a value
@@ -200,8 +230,9 @@ class SettingsRow extends StatelessWidget {
   );
 }
 
-/// A Settings row's icon: [glyph] in [tint] on a circle of its tint; the
-/// mission picker's rows wear it too (E-R2-28).
+/// A Settings row's icon: [glyph] in [tint] on its tint — a rounded tile
+/// on iPhone, a circle on Material (E-Phones Settings); the mission
+/// picker's rows wear it too (E-R2-28).
 class SettingsIcon extends StatelessWidget {
   const SettingsIcon({required this.glyph, required this.tint, super.key});
 
@@ -213,7 +244,12 @@ class SettingsIcon extends StatelessWidget {
     width: DotSize.rowDot,
     height: DotSize.rowDot,
     decoration: BoxDecoration(
-      shape: BoxShape.circle,
+      shape: DotIdiom.of(context) == DotIdiom.cupertino
+          ? BoxShape.rectangle
+          : BoxShape.circle,
+      borderRadius: DotIdiom.of(context) == DotIdiom.cupertino
+          ? BorderRadius.circular(DotRadii.iconTile)
+          : null,
       color: tint.withValues(
         alpha: DotTheme.of(context).colors.isDark
             ? TaskAlpha.tintDark

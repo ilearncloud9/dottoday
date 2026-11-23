@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/backup/backup_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -36,6 +37,7 @@ class ExportPage extends StatelessWidget {
     );
     return SettingsPageFrame(
       title: l10n.settingsExport,
+      page: SettingsPage.export,
       children: [
         PageText(l10n.exportIntro),
         SettingsGroup(

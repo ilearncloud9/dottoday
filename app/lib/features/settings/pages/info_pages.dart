@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
@@ -27,6 +28,7 @@ class HelpPage extends StatelessWidget {
     final l10n = context.l10n;
     return SettingsPageFrame(
       title: l10n.settingsHelp,
+      page: SettingsPage.help,
       children: [
         PageText(l10n.helpIntro),
         Column(
@@ -106,6 +108,7 @@ class PrivacyPage extends ConsumerWidget {
     final policy = env.privacyPolicyUrl;
     return SettingsPageFrame(
       title: l10n.settingsPrivacy,
+      page: SettingsPage.privacy,
       children: [
         // This device's lock (M5.8), above what the page explains.
         const AppLockGroup(),

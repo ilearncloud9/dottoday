@@ -64,6 +64,9 @@ abstract final class DotRadii {
   /// A choice row's tint in a pick list (E-R2-34: 16).
   static const double choice = 16;
 
+  /// An iPhone Settings row's icon tile (E-Phones Settings: 36 square, 9).
+  static const double iconTile = 9;
+
   /// Month's day cards in the Workspace (E-R2-30): 12.
   static const double monthCard = 12;
 

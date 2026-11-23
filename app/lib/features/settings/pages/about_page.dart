@@ -22,6 +22,7 @@ class AboutPage extends ConsumerWidget {
     final version = ref.watch(appVersionProvider).value;
     return SettingsPageFrame(
       title: l10n.settingsAboutApp,
+      page: SettingsPage.about,
       children: [
         SettingsGroup(
           caption: l10n.settingsAbout,

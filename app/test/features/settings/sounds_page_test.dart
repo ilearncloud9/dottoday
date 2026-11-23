@@ -121,7 +121,7 @@ void main() {
   testWidgets('Sound effects: Haptics in app switches off, with the note '
       '(M15.7)', (tester) async {
     final (h, _) = await _pump(tester);
-    expect(find.text('SOUND EFFECTS'), findsOneWidget);
+    expect(find.text('Sound effects'), findsOneWidget);
     expect(
       find.text(
         "Sounds and haptics may not play, depending on your device's settings.",

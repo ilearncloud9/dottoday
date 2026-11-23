@@ -46,7 +46,7 @@ void main() {
       location: _page,
       overrides: cloud(fake, signedIn: false),
     );
-    expect(find.text('GOOGLE AND MICROSOFT'), findsOne);
+    expect(find.text('Google and Microsoft'), findsOne);
     expect(find.text('Connect Google Calendar'), findsNothing);
     await tester.tap(find.text('Sign in to connect Google or Microsoft'));
     await tester.pumpAndSettle();
@@ -82,7 +82,7 @@ void main() {
       calendarSources: sources,
       cloudCalendarImport: import,
     );
-    expect(find.text('KODY@GMAIL.COM'), findsOne);
+    expect(find.text('kody@gmail.com'), findsOne);
     expect(find.text('Holidays in Germany'), findsOne, reason: 'read-only');
     expect(find.text('Kody'), findsNWidgets(2), reason: 'and send back');
     await tester.tap(find.text('Kody').first);
@@ -110,7 +110,7 @@ void main() {
     await tester.tap(alertButton('Disconnect'));
     await tester.pumpAndSettle();
     expect(fake.disconnected, [sampleCloudAccount.id]);
-    expect(find.text('KODY@GMAIL.COM'), findsNothing);
+    expect(find.text('kody@gmail.com'), findsNothing);
   });
 
   testWidgets('a revoked account offers Reconnect', (tester) async {

@@ -101,6 +101,18 @@ abstract final class AppRoutes {
 enum SettingsPage {
   account,
 
+  /// The six groups of the Settings root (ED-081, E-Phones; M20.7 part 1).
+  yourDay,
+  planning,
+  reminders,
+  appearance,
+  dataPrivacy,
+  helpAbout,
+
+  /// Your day › Wake Up and Wind Down (ED-084) and Learn my day.
+  wakeWindDown,
+  learning,
+
   /// Reminders › Notification health (M6.5.8).
   notifications,
 

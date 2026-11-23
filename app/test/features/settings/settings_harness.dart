@@ -2,6 +2,7 @@ import 'package:dottoday/app_screens.dart';
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
@@ -23,6 +24,7 @@ import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/repositories/settings_repository.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
+import 'package:dottoday/features/settings/settings_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -49,6 +51,7 @@ typedef SettingsHarness = ({
   ProviderContainer container,
   FakeLinkLauncher links,
   FakeOccurrenceRepository occurrences,
+  GoRouter router,
 });
 
 /// Settings at 11:00 on the demo day for "Kody".
@@ -159,8 +162,51 @@ Future<SettingsHarness> pumpSettings(
     ),
   );
   await tester.pumpAndSettle();
-  return (container: container, links: links, occurrences: occurrences);
+  return (
+    container: container,
+    links: links,
+    occurrences: occurrences,
+    router: router,
+  );
 }
+
+/// Taps the Settings row [title]; when it isn't on the screen, first
+/// opens the page that holds it (the search index's, M20.7 part 1).
+Future<void> tapSettingRow(
+  WidgetTester tester,
+  SettingsHarness h,
+  String title,
+) async {
+  if (find.text(title).hitTestable().evaluate().isEmpty) {
+    await openSettingPage(tester, h, title);
+  }
+  final row = find.text(title).first;
+  await tester.ensureVisible(row);
+  await tester.pumpAndSettle();
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+}
+
+/// Opens the Settings page that holds the row [title].
+Future<void> openSettingPage(
+  WidgetTester tester,
+  SettingsHarness h,
+  String title,
+) async {
+  final hit = settingsIndex(
+    lookupAppLocalizations(testL10nLocale ?? const Locale('en')),
+  ).firstWhere((e) => e.title == title, orElse: () => throw StateError(title));
+  h.router.go(AppRoutes.settingsPage(hit.page));
+  await tester.pumpAndSettle();
+}
+
+/// The ‹ of a Settings page whose parent is [parent]: a tooltip on
+/// Material, a label on iPhone (M20.7).
+Finder settingsBack([String parent = 'Settings']) => find.byWidgetPredicate(
+  (w) =>
+      (w is Tooltip && w.message == 'Back to $parent') ||
+      (w is Semantics && w.properties.label == 'Back to $parent'),
+);
 
 /// The stored settings now.
 Future<Settings> storedSettings(SettingsHarness h) async {

@@ -227,7 +227,7 @@ class _Summary extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: DotSpace.s,
                     children: [
-                      Text(caption.toUpperCase(), style: t.styles.caption),
+                      Text(caption, style: t.styles.caption),
                       Text(text, style: t.styles.body),
                     ],
                   ),

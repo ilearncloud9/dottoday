@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
@@ -43,6 +44,7 @@ class AccountPage extends ConsumerWidget {
     };
     return SettingsPageFrame(
       title: l10n.settingsAccount,
+      page: SettingsPage.account,
       children: [
         SettingsGroup(
           caption: l10n.accountProfile,
@@ -132,10 +134,7 @@ class _SignedOutState extends ConsumerState<_SignedOut> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Text(
-          l10n.accountSync.toUpperCase(),
-          style: DotTheme.of(context).styles.caption,
-        ),
+        Text(l10n.accountSync, style: DotTheme.of(context).styles.caption),
         PageText(l10n.accountLocalBody),
         ...switch (_step) {
           _Step.choose => [
@@ -219,10 +218,7 @@ class _SignedIn extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Text(
-          l10n.accountSync.toUpperCase(),
-          style: DotTheme.of(context).styles.caption,
-        ),
+        Text(l10n.accountSync, style: DotTheme.of(context).styles.caption),
         Text(l10n.accountSignedInAs(email), style: t.styles.body),
         // Held from an old build's switch of accounts (CR-160 blocker 8).
         if ((ref.watch(heldTasksProvider).value ?? 0) > 0)

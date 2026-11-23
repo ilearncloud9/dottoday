@@ -4,6 +4,7 @@ library;
 
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
@@ -25,6 +26,7 @@ import 'package:dottoday/features/settings/pages/account_page.dart';
 import 'package:dottoday/features/settings/pages/calendars_page.dart';
 import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
+import 'package:dottoday/features/settings/pages/group_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +74,9 @@ List<Override> _overridesWith({
 
 Widget _settings() => const SettingsScreen();
 
+/// A group's page (M20.7 part 1): its rows left the root.
+Widget _page(SettingsPage page) => SettingsGroupPage(page: page);
+
 Future<void> _open(WidgetTester tester, String row) async {
   // The list builds lazily: scroll until the row exists.
   await tester.scrollUntilVisible(
@@ -107,7 +112,7 @@ void main() {
     overrides: _overridesWith(
       settings: const Settings(use24h: true, sleepTargetMin: 9 * 60 + 15),
     ),
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.wakeWindDown),
   );
   // Settings › Learning (docs/13 §4.1, §11): nothing yet (0/10), on the
   // way (7/10, energy 7/20), and ready (the reality thread revealed, one
@@ -119,17 +124,8 @@ void main() {
       height: 844,
       widths: const {'compact', 'expanded'},
       a11yVariants: true,
-      act: (t) async {
-        await t.scrollUntilVisible(
-          find.text('LEARNING'),
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await Scrollable.ensureVisible(t.element(find.text('LEARNING')));
-        await t.pumpAndSettle();
-      },
       overrides: _overridesWith(rows: energyHistory(count: count)),
-      build: (_) => _settings(),
+      build: (_) => _page(SettingsPage.learning),
     );
   }
   goldenMatrix(
@@ -140,14 +136,30 @@ void main() {
     overrides: _overrides,
     build: (_) => _settings(),
   );
-  // The rest of the list (LOOK, DATA, ABOUT), scrolled.
+  // M20.7 part 1: each group's page, holding today's rows.
+  for (final page in [
+    SettingsPage.yourDay,
+    SettingsPage.wakeWindDown,
+    SettingsPage.planning,
+    SettingsPage.appearance,
+    SettingsPage.dataPrivacy,
+    SettingsPage.helpAbout,
+  ]) {
+    goldenMatrix(
+      'settings_group_${page.name}',
+      height: 1100,
+      widths: const {'compact', 'expanded'},
+      overrides: _overrides,
+      build: (_) => _page(page),
+    );
+  }
   goldenMatrix(
-    'settings_lower',
-    height: 844,
-    widths: const {'compact', 'expanded'},
-    act: (tester) => tester.drag(find.byType(ListView), const Offset(0, -1200)),
+    'settings_group_android',
+    height: 915,
+    platform: TargetPlatform.android,
+    widths: const {'compact'},
     overrides: _overrides,
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.planning),
   );
   // Derived (§5.3): Different days and Send feedback.
   goldenMatrix(
@@ -156,7 +168,7 @@ void main() {
     widths: const {'compact', 'expanded'},
     act: (t) => _open(t, 'Different days'),
     overrides: _overrides,
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.wakeWindDown),
   );
   goldenMatrix(
     'settings_feedback',
@@ -164,7 +176,7 @@ void main() {
     widths: const {'compact', 'expanded'},
     act: (t) => _open(t, 'Send feedback'),
     overrides: _overrides,
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.helpAbout),
   );
   // M8.2 (derived, §5.3): the diagnostics opt-in shows what it adds.
   goldenMatrix(
@@ -177,7 +189,7 @@ void main() {
       await t.tap(find.text('Add diagnostics'));
     },
     overrides: _overrides,
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.helpAbout),
   );
   // M8.4d (derived, §5.3): REMINDERS with quiet hours on, a three-alert
   // default set, a sound and summary days; the Sound and Day-start
@@ -205,17 +217,8 @@ void main() {
     'settings_reminders',
     height: 844,
     widths: const {'compact', 'expanded'},
-    act: (t) async {
-      await t.scrollUntilVisible(
-        find.text('REMINDERS'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      // REMINDERS at the top, so the whole group is in view.
-      await Scrollable.ensureVisible(t.element(find.text('REMINDERS')));
-    },
     overrides: reminders,
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.reminders),
   );
   // Sound is its own page now (sounds_page_golden_test.dart, docs/12 §6).
   for (final (name, row) in [('settings_day_summary', 'Day-start summary')]) {
@@ -225,7 +228,7 @@ void main() {
       widths: const {'compact', 'expanded'},
       act: (t) => _open(t, row),
       overrides: reminders,
-      build: (_) => _settings(),
+      build: (_) => _page(SettingsPage.reminders),
     );
   }
   // M3f.7 sub-pages (derived, §5.3).
@@ -327,7 +330,7 @@ void main() {
     ),
     build: (_) => const AccountPage(),
   );
-  // M3f.8: notifications denied, above REMINDERS.
+  // M3f.8: notifications denied, on Reminders.
   goldenMatrix(
     'settings_notifications_off',
     height: 900,
@@ -338,7 +341,7 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     ),
     overrides: _overridesWith(permission: const _Denied()),
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.reminders),
   );
   // Android without "Alarms & reminders" (M5.6, derived).
   goldenMatrix(
@@ -351,7 +354,7 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     ),
     overrides: _overridesWith(exactAlarms: const _Inexact()),
-    build: (_) => _settings(),
+    build: (_) => _page(SettingsPage.reminders),
   );
 }
 

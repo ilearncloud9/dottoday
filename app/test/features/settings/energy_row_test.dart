@@ -20,7 +20,11 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   testWidgets('locked with the count so far', (tester) async {
-    final h = await pumpSettings(tester, rows: energyHistory(count: 7));
+    final h = await pumpSettings(
+      tester,
+      rows: energyHistory(count: 7),
+      location: '/settings/learning',
+    );
     expect(
       find.text('After 20 finished high-energy tasks · 7 so far'),
       findsOneWidget,
@@ -40,7 +44,11 @@ void main() {
   testWidgets('twenty: ready but off until the user turns it on', (
     tester,
   ) async {
-    final h = await pumpSettings(tester, rows: energyHistory());
+    final h = await pumpSettings(
+      tester,
+      rows: energyHistory(),
+      location: '/settings/learning',
+    );
     expect(find.text('ready — based on 20 completed tasks'), findsOneWidget);
     Settings settings() =>
         h.container.read(currentProfileProvider).value!.settings;

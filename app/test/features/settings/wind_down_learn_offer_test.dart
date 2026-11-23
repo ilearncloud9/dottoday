@@ -32,6 +32,7 @@ void main() {
       tester,
       settings: _target,
       wakeUpDays: _mornings(12),
+      location: '/settings/wakeWindDown',
     );
     expect(find.text(_offer), findsOneWidget);
     await tester.ensureVisible(find.text('Move it'));
@@ -48,6 +49,7 @@ void main() {
       tester,
       settings: _target,
       wakeUpDays: _mornings(12),
+      location: '/settings/wakeWindDown',
     );
     await tester.ensureVisible(find.text('Keep it'));
     await tester.tap(find.text('Keep it'));
@@ -63,6 +65,7 @@ void main() {
       tester,
       settings: const Settings(use24h: true),
       wakeUpDays: _mornings(12),
+      location: '/settings/wakeWindDown',
     );
     expect(find.text(_offer), findsNothing);
     expect(
@@ -74,7 +77,12 @@ void main() {
   testWidgets('with a target the switch shows; a few minutes offer nothing', (
     tester,
   ) async {
-    await pumpSettings(tester, settings: _target, wakeUpDays: _mornings(3));
+    await pumpSettings(
+      tester,
+      settings: _target,
+      wakeUpDays: _mornings(3),
+      location: '/settings/wakeWindDown',
+    );
     expect(find.text(_offer), findsNothing);
     expect(
       find.text('Offer to move Wind Down from how I actually get up'),

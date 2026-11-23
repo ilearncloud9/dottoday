@@ -33,8 +33,8 @@ void main() {
       expect(find.text(name), findsNWidgets(2), reason: name);
     }
     expect(find.text('Holidays'), findsOneWidget);
-    expect(find.text('SEND CHANGES BACK'), findsOneWidget);
-    expect(find.text('ICLOUD'), findsOneWidget);
+    expect(find.text('Send changes back'), findsOneWidget);
+    expect(find.text('iCloud'), findsOneWidget);
     expect(find.text('Read-only'), findsOneWidget);
     expect(find.text('Connect a calendar'), findsNothing);
   });

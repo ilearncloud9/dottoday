@@ -35,7 +35,11 @@ void main() {
     tester,
   ) async {
     final denied = _Denied(opens: false);
-    await pumpSettings(tester, permission: denied);
+    await pumpSettings(
+      tester,
+      permission: denied,
+      location: '/settings/reminders',
+    );
     expect(find.text('Notifications are off'), findsOneWidget);
     await tester.ensureVisible(find.text('Open settings'));
     await tester.tap(find.text('Open settings'));
@@ -46,14 +50,14 @@ void main() {
   });
 
   testWidgets('no notice while notifications are allowed', (tester) async {
-    await pumpSettings(tester);
+    await pumpSettings(tester, location: '/settings/reminders');
     expect(find.text('Notifications are off'), findsNothing);
   });
 
   testWidgets('the Alerts editor shows it too', (tester) async {
     final denied = _Denied(opens: true);
     await pumpSettings(tester);
-    final context = tester.element(find.text('DAY SHAPE'));
+    final context = tester.element(find.text('Search settings'));
     showAlertsEditor(
       context,
       initial: const [],

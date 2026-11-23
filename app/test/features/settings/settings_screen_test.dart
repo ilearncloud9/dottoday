@@ -19,22 +19,6 @@ import '../../support/a11y.dart';
 import '../../support/timeline_fakes.dart';
 import 'settings_harness.dart';
 
-Future<void> _tapRow(WidgetTester tester, String title) async {
-  // The list builds lazily: scroll until the row exists.
-  if (find.text(title).evaluate().isEmpty) {
-    await tester.scrollUntilVisible(
-      find.text(title),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-  }
-  final row = find.text(title).first;
-  await tester.ensureVisible(row);
-  await tester.pumpAndSettle();
-  await tester.tap(row);
-  await tester.pumpAndSettle();
-}
-
 /// Switch.adaptive draws a Cupertino switch on iPhone (§4 switch idiom).
 Finder _cupertinoSwitches() => find.byType(CupertinoSwitch);
 
@@ -57,68 +41,80 @@ final class _FakePlayer implements SoundPlayer {
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('header, groups and current values', (tester) async {
+  testWidgets('root: Your account, Search settings, six groups', (
+    tester,
+  ) async {
     await pumpSettings(tester);
     for (final text in [
       'Settings',
+      'Your account',
       'Kody · on this device',
-      'DAY SHAPE',
-      '15 h awake',
-      'Monday',
-      '24 h',
-      'PLANNING',
-      '30 min',
-      '5 min',
-      'Ask each time',
-      'REMINDERS',
-      '10 min before',
-      'At 22:00, with tomorrow\'s first task',
-      'LOOK',
-      'Like this device',
-      'English',
-      'DATA',
+      'Search settings',
+      'Your day',
+      'Planning',
+      'Reminders',
+      'Appearance',
+      'Data and privacy',
+      'Help and about',
     ]) {
       expect(find.text(text), findsWidgets, reason: text);
     }
-    // Privacy after Data (E-R2-23 §3), then About, past the built end.
-    await tester.scrollUntilVisible(
-      find.text('0.1.0 (1)'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    for (final text in ['PRIVACY', 'Help with thinking', 'ABOUT']) {
-      expect(find.text(text), findsWidgets, reason: text);
+    // Rows live on their groups' pages now (M20.7 part 1).
+    expect(find.text('Day shape'), findsNothing);
+  });
+
+  testWidgets('each group page shows its rows and values', (tester) async {
+    final h = await pumpSettings(tester);
+    for (final (row, values) in [
+      ('Wake Up', ['15 h awake', '07:00', '22:00']),
+      ('Snap to', ['30 min', '5 min', 'Ask each time']),
+      (
+        'Task starts',
+        ['10 min before', "At 22:00, with tomorrow's first task"],
+      ),
+      ('Theme', ['Like this device', 'English', 'Monday', '24 h']),
+      ('Trash', ['Data', 'Privacy', 'Help with thinking']),
+      ('Send feedback', ['0.1.0 (1)']),
+    ]) {
+      await openSettingPage(tester, h, row);
+      for (final text in [row, ...values]) {
+        await tester.scrollUntilVisible(
+          find.text(text).first,
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(find.text(text), findsWidgets, reason: text);
+      }
     }
-    // Wake Up / Wind Down under the handles and on their rows.
-    expect(find.text('07:00'), findsNWidgets(2));
-    expect(find.text('22:00'), findsNWidgets(2));
   });
 
   testWidgets('switches write at once; the platform idiom draws them', (
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    // Day shape's Wake Up alarm (docs/15 W1a) is the ninth; Planning's
-    // Start nudge (15 §11) makes eleven.
-    expect(_cupertinoSwitches(), findsNWidgets(11));
     // Off for an existing profile, so an upgrade rings nothing new (15 §11).
     expect((await storedSettings(h)).wakeUpAlarm, isFalse);
-    await _tapRow(tester, 'Wake Up alarm');
+    await tapSettingRow(tester, h, 'Wake Up alarm');
     expect((await storedSettings(h)).wakeUpAlarm, isTrue);
-    await _tapRow(tester, 'Show free time');
+    expect(_cupertinoSwitches(), findsWidgets);
+    await tapSettingRow(tester, h, 'Show free time');
     expect((await storedSettings(h)).showFreeTime, isFalse);
     // F3.3: the plan-your-inbox nudge starts off.
     expect((await storedSettings(h)).inboxNudge, isFalse);
-    await _tapRow(tester, 'Plan-your-inbox nudge');
+    await tapSettingRow(tester, h, 'Plan-your-inbox nudge');
     expect((await storedSettings(h)).inboxNudge, isTrue);
-    await _tapRow(tester, 'Roll unfinished to tomorrow');
+    await tapSettingRow(tester, h, 'Roll unfinished to tomorrow');
     expect((await storedSettings(h)).rollUnfinished, isTrue);
   });
 
   testWidgets('Android draws Material switches', (tester) async {
-    await pumpSettings(tester, platform: TargetPlatform.android);
+    await pumpSettings(
+      tester,
+      platform: TargetPlatform.android,
+      location: '/settings/planning',
+    );
     expect(_cupertinoSwitches(), findsNothing);
-    expect(find.byType(Switch), findsNWidgets(11));
+    expect(find.byType(Switch), findsWidgets);
   });
 
   testWidgets('choices: week start, time format, shift, snap, theme', (
@@ -126,7 +122,7 @@ void main() {
   ) async {
     final h = await pumpSettings(tester);
     Future<void> choose(String row, String option) async {
-      await _tapRow(tester, row);
+      await tapSettingRow(tester, h, row);
       await tester.tap(find.text(option).last);
       await tester.pumpAndSettle();
     }
@@ -148,7 +144,7 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Time format');
+    await tapSettingRow(tester, h, 'Time format');
     await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).use24h, isTrue);
@@ -156,7 +152,7 @@ void main() {
 
   testWidgets('Task starts edits the default alert set (F6.2)', (tester) async {
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Task starts');
+    await tapSettingRow(tester, h, 'Task starts');
     await tester.tap(find.text('at start'));
     await tester.tap(find.text('at end'));
     await tester.tap(find.text('Done'));
@@ -167,7 +163,7 @@ void main() {
       const Alert(kind: AlertKind.atEnd),
     ]);
     expect(find.text('10 min before +2'), findsOneWidget);
-    await _tapRow(tester, 'Task starts');
+    await tapSettingRow(tester, h, 'Task starts');
     for (final a in ['10 min before', 'at start', 'at end']) {
       await tester.tap(find.byTooltip('Remove $a'));
       await tester.pump();
@@ -184,10 +180,10 @@ void main() {
     final h = await pumpSettings(tester);
     expect((await storedSettings(h)).quietHours, isNull);
     expect(find.text('From'), findsNothing);
-    await _tapRow(tester, 'Quiet hours');
+    await tapSettingRow(tester, h, 'Quiet hours');
     expect((await storedSettings(h)).quietHours, Settings.suggestedQuietHours);
     expect(find.textContaining('22:00–07:00'), findsOneWidget);
-    await _tapRow(tester, 'From');
+    await tapSettingRow(tester, h, 'From');
     await tester.enterText(find.byType(TextField).last, '2330');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
@@ -197,7 +193,7 @@ void main() {
       (await storedSettings(h)).quietHours,
       const TimeWindow(start: '23:30', end: '07:00'),
     );
-    await _tapRow(tester, 'Quiet hours');
+    await tapSettingRow(tester, h, 'Quiet hours');
     expect((await storedSettings(h)).quietHours, isNull);
   });
 
@@ -205,9 +201,10 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    // The summary's, and Day shape's sleep target (docs/15 W4).
-    expect(find.text('Off'), findsNWidgets(2));
-    await _tapRow(tester, 'Day-start summary');
+    // The summary's; Day shape's sleep target is on its own page now.
+    await openSettingPage(tester, h, 'Day-start summary');
+    expect(find.text('Off'), findsOneWidget);
+    await tapSettingRow(tester, h, 'Day-start summary');
     await tester.tap(find.text('Monday').last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Friday').last);
@@ -228,8 +225,9 @@ void main() {
       overrides: [soundPlayerProvider.overrideWithValue(player)],
     );
     // docs/12 §3: unset is the Dot tone; the OS sound is "system".
+    await openSettingPage(tester, h, 'Sound');
     expect(find.text('Dot'), findsOneWidget);
-    await _tapRow(tester, 'Sound');
+    await tapSettingRow(tester, h, 'Sound');
     // Its own page now (docs/12 §6).
     expect(find.text('Sounds'), findsOneWidget);
     await tester.tap(find.text('Chime'));
@@ -240,14 +238,14 @@ void main() {
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).reminderSound, 'system');
     expect(player.played, [resolveSound('chime')], reason: 'nothing to play');
-    await tester.tap(find.byTooltip('Back to Settings'));
+    await tester.tap(settingsBack('Reminders'));
     await tester.pumpAndSettle();
     expect(find.text('System sound'), findsOneWidget);
   });
 
   testWidgets('Wake Up typed moves every weekday (R-20)', (tester) async {
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Wake Up');
+    await tapSettingRow(tester, h, 'Wake Up');
     await tester.enterText(find.byType(TextField).last, '630');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
@@ -264,7 +262,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    final h = await pumpSettings(tester);
+    final h = await pumpSettings(tester, location: '/settings/wakeWindDown');
     tester.semantics.increase(find.semantics.byLabel('Wake Up'));
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).boundaryFor(Weekday.mon).start, '07:15');
@@ -289,7 +287,7 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Different days');
+    await tapSettingRow(tester, h, 'Different days');
     // The sheet's seven Wind Down handles, Monday first (week starts Monday).
     final windDowns = find.semantics.byPredicate((n) => n.label == 'Wind Down');
     expect(windDowns.evaluate(), hasLength(7));
@@ -306,13 +304,13 @@ void main() {
   });
 
   testWidgets('accent swatch and language', (tester) async {
-    final h = await pumpSettings(tester);
+    final h = await pumpSettings(tester, location: '/settings/appearance');
     final teal = find.bySemanticsLabel('Teal accent');
     await tester.ensureVisible(teal);
     await tester.tap(teal);
     await tester.pumpAndSettle();
     expect((await storedSettings(h)).accent, 'teal');
-    await _tapRow(tester, 'Language');
+    await tapSettingRow(tester, h, 'Language');
     await tester.tap(find.text('English').last);
     await tester.pumpAndSettle();
     expect((await storedProfile(h)).locale, 'en');
@@ -322,7 +320,7 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester);
-    await _tapRow(tester, 'Send feedback');
+    await tapSettingRow(tester, h, 'Send feedback');
     expect(find.textContaining('Nothing your tasks say'), findsOneWidget);
     expect(find.textContaining('diagnostics.json'), findsNothing);
     await tester.tap(find.text('Write email'));
@@ -331,7 +329,7 @@ void main() {
     expect(plain.scheme, 'mailto');
     expect(plain.query, contains('0.1.0'));
     expect(plain.query, isNot(contains('body')));
-    await _tapRow(tester, 'Send feedback');
+    await tapSettingRow(tester, h, 'Send feedback');
     await tester.tap(find.text('Add diagnostics'));
     await tester.pumpAndSettle();
     // Exactly what will be added, before anything leaves the device.
@@ -350,7 +348,7 @@ void main() {
     tester,
   ) async {
     final h = await pumpSettings(tester, diagnostics: _FailingReader());
-    await _tapRow(tester, 'Send feedback');
+    await tapSettingRow(tester, h, 'Send feedback');
     await tester.tap(find.text('Add diagnostics'));
     await tester.pumpAndSettle();
     expect(
@@ -365,7 +363,7 @@ void main() {
   testWidgets('no mail app: says so', (tester) async {
     final h = await pumpSettings(tester);
     h.links.handled = false;
-    await _tapRow(tester, 'Send feedback');
+    await tapSettingRow(tester, h, 'Send feedback');
     await tester.tap(find.text('Write email'));
     await tester.pumpAndSettle();
     expect(find.text('No mail app is set up on this device.'), findsOneWidget);
@@ -385,7 +383,7 @@ void main() {
       deletedAt: DateTime.utc(2026, 10, 20),
     );
     final h = await pumpSettings(tester, rows: [gone]);
-    await _tapRow(tester, 'Trash');
+    await tapSettingRow(tester, h, 'Trash');
     expect(find.text('Old plan'), findsOneWidget);
     await tester.tap(find.text('Restore'));
     await tester.pumpAndSettle();
@@ -405,8 +403,8 @@ void main() {
       testWidgets('a11y feedback + diagnostics ${mode.name} $name', (
         tester,
       ) async {
-        await pumpSettings(tester, size: size, mode: mode);
-        await _tapRow(tester, 'Send feedback');
+        final h = await pumpSettings(tester, size: size, mode: mode);
+        await tapSettingRow(tester, h, 'Send feedback');
         await tester.tap(find.text('Add diagnostics'));
         await tester.pumpAndSettle();
         await expectA11yGuidelines(tester);

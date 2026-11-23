@@ -29,7 +29,11 @@ void main() {
     tester,
   ) async {
     final gate = _Gated();
-    await pumpSettings(tester, exactAlarms: gate);
+    await pumpSettings(
+      tester,
+      exactAlarms: gate,
+      location: '/settings/reminders',
+    );
     expect(
       find.text('Reminders may come a few minutes after their time'),
       findsOneWidget,
@@ -46,7 +50,7 @@ void main() {
   });
 
   testWidgets('nothing to say where exact timing is allowed', (tester) async {
-    await pumpSettings(tester);
+    await pumpSettings(tester, location: '/settings/reminders');
     expect(
       find.text('Reminders may come a few minutes after their time'),
       findsNothing,

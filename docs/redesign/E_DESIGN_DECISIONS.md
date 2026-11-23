@@ -5644,6 +5644,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; 7,760 pass, 31 skipped; week review goldens updated; new golden `settings_mission_picker`. `integration_test/small_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: a Back after a wide review pane left the app (removed from the journey). Not run: real devices.
 - **M20.6 done** (ED-438 to ED-442).
 
+### ED-443 · M20.7 part 1: the Settings root and group pages
+- **Date:** 2026-11-23. **Owner:** "Start M20.7"; "Five parts (Recommended)"; "Start part 1"; then "Approve part 1" after the review page (https://claude.ai/artifact/PWG2UjPf7WiGrCBALYBYiw).
+- **Built (E-Phones Settings, E-PhonesMinimal; ED-081, ED-084, ED-161, ED-321):**
+  - **The root:** Settings, Your account (avatar and the sync line; opens Account), Search settings, then six groups with icons and summaries: Your day, Planning, Reminders, Appearance, Data and privacy, Help and about. Day shape and Layout left the root.
+  - **Group pages** (`SettingsGroupPage`) hold today's rows until parts 2-4 restyle them: Your day (The two ends of your day: Wake Up and Wind Down; The day itself: Learn my day), Wake Up and Wind Down (Day shape's rows), Learn my day, Planning, Reminders, Appearance (Layout, Look, and a new Format group with Week starts and Time format), Data and privacy (Data, Privacy), Help and about. A one-group page hides its caption.
+  - **Places** (`settings_places.dart`): each page's title, summary, icon, colour and parent. Page titles wear the icon; the back button names the parent (iPhone "‹ Your day" above the title; Material ← beside it; "Back to …" for screen readers; new strings `settingsBackTo`, `settingsFormat`).
+  - **Search settings:** an index of row and page titles; matches list with their page and open it; "No settings match …" otherwise. Each platform's own field: `CupertinoSearchTextField` (the app's glyph and type, grown to 48 pt, no 20 pt clear button) and M3 `SearchBar`.
+  - **E's style across Settings:** captions in sentence case (E has no uppercase captions; muted on iPhone, accent on Material), iPhone icons in 9 pt rounded tiles (`DotRadii.iconTile`), circles on Material; Android "← Settings" title row and a filled account card.
+  - **Minimal:** its nine rows under the title (the old account header removed, as drawn); Everything else… opens the same root as Full, with the app Search row kept under it (no Search tab in minimal, docs/14 §3).
+- **Departures (on the review page):** Android group pages keep cards (Android mirrors iPhone); Your day has no footers or schedule values and Learn my day no "On" (part 4); long Android titles wrap in the large title style; the iPhone search clears from the keyboard.
+- **Checks:** format and analyze clean; 7,858 pass, 31 skipped. Settings goldens updated, new `settings_group_*`; captions and tiles changed onboarding reminders, search empty and task editor sound goldens; `settings_lower` removed (the long root is gone). `integration_test/settings_root_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: the iPhone search icon drew a "?" box (CupertinoIcons isn't bundled; fixed); the Material title touched its icon (gap added after the runs). Not run: real devices.
+
 ---
 
 ## Pending owner answers

@@ -5,6 +5,7 @@ import 'package:dottoday/features/settings/pages/calendars_page.dart';
 import 'package:dottoday/features/settings/pages/changelog_page.dart';
 import 'package:dottoday/features/settings/pages/data_pages.dart';
 import 'package:dottoday/features/settings/pages/everything_page.dart';
+import 'package:dottoday/features/settings/pages/group_pages.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
 import 'package:dottoday/features/settings/pages/siri_page.dart';
@@ -28,4 +29,12 @@ Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.changelog => const ChangelogPage(),
   SettingsPage.siri => const SiriPage(),
   SettingsPage.everything => const EverythingPage(),
+  SettingsPage.yourDay ||
+  SettingsPage.planning ||
+  SettingsPage.reminders ||
+  SettingsPage.appearance ||
+  SettingsPage.dataPrivacy ||
+  SettingsPage.helpAbout ||
+  SettingsPage.wakeWindDown ||
+  SettingsPage.learning => SettingsGroupPage(page: page),
 };

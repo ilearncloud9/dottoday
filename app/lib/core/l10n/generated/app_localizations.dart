@@ -11568,6 +11568,120 @@ abstract class AppLocalizations {
   /// **'{date} · {count, plural, =1{1 line} other{{count} lines}}'**
   String dumpEarlierMeta(String date, int count);
 
+  /// Settings root: the first row, opening the account page (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Your account'**
+  String get settingsYourAccount;
+
+  /// Settings root: the search field's hint (ED-081).
+  ///
+  /// In en, this message translates to:
+  /// **'Search settings'**
+  String get settingsSearchHint;
+
+  /// Settings search: nothing matched what was typed.
+  ///
+  /// In en, this message translates to:
+  /// **'No settings match “{query}”'**
+  String settingsSearchNone(String query);
+
+  /// Settings root: what the Your day group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up and Wind Down, learning'**
+  String get settingsYourDaySummary;
+
+  /// Settings root: what the Planning group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Durations, snap, shifting, nudges, Routines'**
+  String get settingsPlanningSummary;
+
+  /// Settings root: what the Reminders group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts, sounds, quiet hours, health'**
+  String get settingsRemindersSummary;
+
+  /// Settings group: theme, app colour, layout, language and time (ED-161).
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearance;
+
+  /// Settings root: what the Appearance group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Layout, theme, app colour, language, time'**
+  String get settingsAppearanceSummary;
+
+  /// Settings group: calendars, export and backups, Trash, privacy and app lock.
+  ///
+  /// In en, this message translates to:
+  /// **'Data and privacy'**
+  String get settingsDataAndPrivacy;
+
+  /// Settings root: what the Data and privacy group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendars, export and backups, Trash, app lock'**
+  String get settingsDataAndPrivacySummary;
+
+  /// Settings group: help, what's new, Siri and Shortcuts, feedback, about.
+  ///
+  /// In en, this message translates to:
+  /// **'Help and about'**
+  String get settingsHelpAndAbout;
+
+  /// Settings root: what the Help and about group holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Help, what’s new, Siri and Shortcuts, feedback'**
+  String get settingsHelpAndAboutSummary;
+
+  /// Settings › Your day: the row and page for the two ends of the day (ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up and Wind Down'**
+  String get settingsWakeWindDown;
+
+  /// Settings › Your day: caption over Wake Up and Wind Down.
+  ///
+  /// In en, this message translates to:
+  /// **'The two ends of your day'**
+  String get settingsTheTwoEnds;
+
+  /// Settings › Your day: caption over Learn my day.
+  ///
+  /// In en, this message translates to:
+  /// **'The day itself'**
+  String get settingsTheDayItself;
+
+  /// Settings › Your day: the row and page for what Dottoday learns (docs/13).
+  ///
+  /// In en, this message translates to:
+  /// **'Learn my day'**
+  String get settingsLearnMyDay;
+
+  /// Settings › Your day: what Learn my day holds.
+  ///
+  /// In en, this message translates to:
+  /// **'Reality thread, durations, energy'**
+  String get settingsLearnMyDaySummary;
+
+  /// Appearance page group caption: Week starts and Time format (M20.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get settingsFormat;
+
+  /// Back button label on a Settings page: returns to its parent page (M20.7).
+  ///
+  /// In en, this message translates to:
+  /// **'Back to {page}'**
+  String settingsBackTo(String page);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

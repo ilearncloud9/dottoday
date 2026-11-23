@@ -55,6 +55,7 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
     final desktop = caps?.blockers.contains(AlarmBlocker.notAPhone) ?? false;
     return SettingsPageFrame(
       title: l10n.settingsWakeUpOptions,
+      page: SettingsPage.wakeUp,
       children: [
         if (desktop) PageText(l10n.wakeUpDesktopNote),
         Align(

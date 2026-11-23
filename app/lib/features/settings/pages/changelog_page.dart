@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/system/system_providers.dart';
@@ -33,6 +34,7 @@ class _ChangelogPageState extends ConsumerState<ChangelogPage> {
         : releasesUpTo(current);
     return SettingsPageFrame(
       title: l10n.settingsWhatsNew,
+      page: SettingsPage.changelog,
       children: [
         PageText(l10n.changelogIntro),
         for (final r in releases)

@@ -22,6 +22,7 @@ void main() {
     testWidgets('the row is ${siri ? 'listed' : 'hidden'}', (tester) async {
       await pumpSettings(
         tester,
+        location: AppRoutes.settingsPage(SettingsPage.helpAbout),
         overrides: [siriAvailableProvider.overrideWithValue(siri)],
       );
       await _toAbout(tester);
@@ -35,6 +36,7 @@ void main() {
   testWidgets('the row opens the page', (tester) async {
     await pumpSettings(
       tester,
+      location: AppRoutes.settingsPage(SettingsPage.helpAbout),
       overrides: [siriAvailableProvider.overrideWithValue(true)],
     );
     await _toAbout(tester);
@@ -42,7 +44,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Siri & Shortcuts'));
     await tester.pumpAndSettle();
-    expect(find.text('What you can say'.toUpperCase()), findsOneWidget);
+    expect(find.text('What you can say'), findsOneWidget);
   });
 
   testWidgets('the page: five phrases, how to ask, Open Shortcuts', (
@@ -77,7 +79,7 @@ void main() {
   }
 }
 
-/// About is the list's last group, past the lazily built end.
+/// About's rows end with Send feedback.
 Future<void> _toAbout(WidgetTester tester) => tester.scrollUntilVisible(
   find.text('Send feedback'), // l10n-ignore: test finder
   300,

@@ -7682,6 +7682,72 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsYourAccount => 'Votre compte';
+
+  @override
+  String get settingsSearchHint => 'Rechercher dans les réglages';
+
+  @override
+  String settingsSearchNone(String query) {
+    return 'Aucun réglage ne correspond à « $query »';
+  }
+
+  @override
+  String get settingsYourDaySummary =>
+      'Réveil et fin de journée, apprentissage';
+
+  @override
+  String get settingsPlanningSummary =>
+      'Durées, aimantation, décalage, rappels, routines';
+
+  @override
+  String get settingsRemindersSummary => 'Alertes, sons, heures calmes, état';
+
+  @override
+  String get settingsAppearance => 'Apparence';
+
+  @override
+  String get settingsAppearanceSummary =>
+      'Disposition, thème, couleur de l’app, langue, heure';
+
+  @override
+  String get settingsDataAndPrivacy => 'Données et confidentialité';
+
+  @override
+  String get settingsDataAndPrivacySummary =>
+      'Calendriers, export et sauvegardes, corbeille, verrouillage';
+
+  @override
+  String get settingsHelpAndAbout => 'Aide et à propos';
+
+  @override
+  String get settingsHelpAndAboutSummary =>
+      'Aide, nouveautés, Siri et Raccourcis, avis';
+
+  @override
+  String get settingsWakeWindDown => 'Réveil et fin de journée';
+
+  @override
+  String get settingsTheTwoEnds => 'Les deux bouts de votre journée';
+
+  @override
+  String get settingsTheDayItself => 'La journée elle-même';
+
+  @override
+  String get settingsLearnMyDay => 'Apprendre ma journée';
+
+  @override
+  String get settingsLearnMyDaySummary => 'Fil de la réalité, durées, énergie';
+
+  @override
+  String get settingsFormat => 'Format';
+
+  @override
+  String settingsBackTo(String page) {
+    return 'Retour à $page';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

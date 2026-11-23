@@ -28,7 +28,13 @@ Future<SettingsHarness> _openTrash(
   Size size = const Size(390, 4200),
   ThemeMode mode = ThemeMode.light,
 }) async {
-  final h = await pumpSettings(tester, rows: _rows, size: size, mode: mode);
+  final h = await pumpSettings(
+    tester,
+    rows: _rows,
+    size: size,
+    mode: mode,
+    location: '/settings/dataPrivacy',
+  );
   if (find.text('Trash').evaluate().isEmpty) {
     await tester.scrollUntilVisible(
       find.text('Trash'),

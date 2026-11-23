@@ -42,20 +42,33 @@ void main() {
 
   testWidgets('each row opens its page; ‹ comes back', (tester) async {
     await pumpSettings(tester);
-    for (final (row, heading) in [
-      ('Calendars', 'Calendars'),
-      ('Export', 'Export'),
-      ('Help', 'Help'),
-      ('Privacy', 'Privacy'),
-      ('About Dottoday', 'About Dottoday'),
-      ('Kody · on this device', 'Account'),
+    // M20.7 part 1: a group from the root, a page from its group, and ‹
+    // back through the parent named on it.
+    for (final (group, row, heading) in [
+      ('Data and privacy', 'Calendars', 'Calendars'),
+      ('Data and privacy', 'Export', 'Export'),
+      ('Data and privacy', 'Privacy', 'Privacy'),
+      ('Help and about', 'Help', 'Help'),
+      ('Help and about', 'About Dottoday', 'About Dottoday'),
     ]) {
-      await _tap(tester, row);
-      expect(find.text(heading), findsOneWidget, reason: row);
-      await tester.tap(find.byTooltip('Back to Settings'));
+      await _tap(tester, group);
+      // The row, not a caption that reads the same ("Privacy").
+      await tester.tap(
+        find.descendant(of: find.byType(InkWell), matching: find.text(row)),
+      );
       await tester.pumpAndSettle();
-      expect(find.text('DAY SHAPE'), findsOneWidget, reason: row);
+      expect(find.text(heading), findsWidgets, reason: row);
+      await tester.tap(settingsBack(group));
+      await tester.pumpAndSettle();
+      await tester.tap(settingsBack());
+      await tester.pumpAndSettle();
+      expect(find.text('Search settings'), findsOneWidget, reason: row);
     }
+    await _tap(tester, 'Kody · on this device');
+    expect(find.text('Account'), findsOneWidget);
+    await tester.tap(settingsBack());
+    await tester.pumpAndSettle();
+    expect(find.text('Search settings'), findsOneWidget);
   });
 
   group('Account', () {
@@ -247,7 +260,7 @@ void main() {
       whatsNewSeen: '0.0.9',
     );
     await _tap(tester, "What's new");
-    expect(find.text('VERSION 0.1.0 · ON THIS DEVICE'), findsOneWidget);
+    expect(find.text('Version 0.1.0 · on this device'), findsOneWidget);
     // One bullet per line of the notes (PRD F11).
     expect(find.textContaining('shift everything after it'), findsOneWidget);
     expect(find.textContaining('Send feedback from Settings'), findsOneWidget);
@@ -269,7 +282,7 @@ void main() {
     });
   }
 
-  // Concept E stacks a Settings page's large title under "‹ Settings" at
+  // Concept E stacks a Settings page's large title under "‹ Reminders" at
   // every text size (E-R2-20 frame 07, docs/design-references/concept-e;
   // ED-360). A long word still wraps at its space, never mid-word. Real
   // fonts: the test font draws every letter a full square wide.
@@ -286,7 +299,7 @@ void main() {
           size: const Size(390, 2400),
           location: AppRoutes.settingsPage(SettingsPage.notifications),
         );
-        final back = tester.getRect(find.byTooltip('Back to Settings'));
+        final back = tester.getRect(settingsBack('Reminders'));
         final title = tester.getRect(find.text('Notification health'));
         expect(title.top >= back.bottom, stacked, reason: '$back $title');
       });

@@ -1,38 +1,26 @@
-import 'dart:async';
-
-import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/settings_return.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/profile/settings_actions.dart';
-import 'package:dottoday/data/sync/sync_providers.dart';
-import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
-import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/minimal_settings.dart';
-import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
-import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
-import 'package:dottoday/features/settings/widgets/learning_group.dart';
-import 'package:dottoday/features/settings/widgets/look_group.dart';
-import 'package:dottoday/features/settings/widgets/planning_group.dart';
-import 'package:dottoday/features/settings/widgets/reminders_group.dart';
-import 'package:dottoday/shared/settings/profile_avatar.dart';
+import 'package:dottoday/features/settings/pages/group_pages.dart';
+import 'package:dottoday/features/settings/settings_places.dart';
+import 'package:dottoday/features/settings/settings_search.dart';
+import 'package:dottoday/features/settings/widgets/account_row.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
-import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Settings P1 (docs/10 §5.2, `A-ios-settings`, `A-android-settings`):
-/// DAY SHAPE, PLANNING, REMINDERS, LOOK, DATA, ABOUT, plus PRD F8's
-/// snapping, shift default, alerts default, language, trash, feedback and
-/// changelog. Every change applies at once (03 §3.7). Layout is the first
-/// row in both layouts; minimal shows [MinimalSettings] (docs/14 §4).
+/// Settings (M20.7 part 1, E-Phones Settings): the title, then
+/// [SettingsRoot] — Your account, Search settings and six groups (Your
+/// day, Planning, Reminders, Appearance, Data and privacy, Help and
+/// about), each opening its page. Every change applies at once (03 §3.7).
+/// Minimal shows [MinimalSettings] (docs/14 §4).
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -77,28 +65,12 @@ class SettingsScreen extends ConsumerWidget {
                 DotSpace.fabClearance,
               ),
               children: [
-                if (phone)
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: BackButton(onPressed: back),
-                  ),
-                _Header(
-                  profile: profile,
-                  sync:
-                      ref.watch(syncStatusProvider).value ??
-                      SyncStatus.localOnly,
-                  now: ref.watch(clockProvider).nowUtc(),
-                ),
-                const SizedBox(height: DotSpace.xl),
+                _RootTitle(onBack: phone ? back : null),
+                const SizedBox(height: DotSpace.l),
                 if (minimal)
                   MinimalSettings(settings: s)
-                else ...[
-                  const SettingsGroup(caption: '', children: [LayoutRow()]),
-                  for (final group in settingsGroups(context, profile, s)) ...[
-                    const SizedBox(height: DotSpace.xl),
-                    group,
-                  ],
-                ],
+                else
+                  const SettingsRoot(),
               ],
             ),
           ),
@@ -116,109 +88,62 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-/// The full Settings tree's groups: the Settings tab in full, and minimal's
-/// Everything else… page.
-List<Widget> settingsGroups(
-  BuildContext context,
-  Profile profile,
-  Settings s,
-) => [
-  DayShapeGroup(settings: s),
-  PlanningGroup(settings: s),
-  LearningGroup(settings: s),
-  RemindersGroup(settings: s),
-  LookGroup(
-    settings: s,
-    locale: profile.locale,
-    onLocale: (code) => unawaited(
-      updateProfile(
-        ProviderScope.containerOf(context),
-        (p) => p.copyWith(locale: code),
-      ),
-    ),
-  ),
-  const DataGroup(),
-  const PrivacyGroup(),
-  const AboutGroup(),
-];
+/// Your account, then Search settings over the six groups: the root of
+/// Full, and of minimal's Everything else… (E-PhonesMinimal, ED-084).
+class SettingsRoot extends StatelessWidget {
+  const SettingsRoot({super.key});
 
-/// "Settings", "Kody · on this device" — or "Kody · synced just now" when
-/// signed in (`A-ios-settings`, M6.3) — and the initial in a circle. The
-/// name and avatar open Settings › Account (M3f.7).
-class _Header extends StatelessWidget {
-  const _Header({required this.profile, required this.sync, required this.now});
+  @override
+  Widget build(BuildContext context) => const Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: DotSpace.xl,
+    children: [
+      AccountCard(),
+      SettingsSearch(child: SettingsRootGroups()),
+    ],
+  );
+}
 
-  final Profile profile;
-  final SyncStatus sync;
-  final DateTime now;
+/// The root's six groups, each opening its page (M20.7 part 1): the
+/// Settings tab in full, and minimal's Everything else… page.
+class SettingsRootGroups extends StatelessWidget {
+  const SettingsRootGroups({super.key});
+
+  @override
+  Widget build(BuildContext context) => SettingsGroup(
+    caption: '',
+    children: [for (final page in settingsRootGroups) PlaceRow(page)],
+  );
+}
+
+/// "Settings": under ‹ on iPhone, beside ← on Material (E-Phones); the
+/// back button only on phones, which open Settings from the profile.
+class _RootTitle extends StatelessWidget {
+  const _RootTitle({required this.onBack});
+
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final name = profile.displayName?.trim();
-    final hasName = name != null && name.isNotEmpty;
-    return InkWell(
-      borderRadius: BorderRadius.circular(DotRadii.card),
-      onTap: () =>
-          unawaited(context.push(AppRoutes.settingsPage(SettingsPage.account))),
-      child: _row(t, l10n, name ?? '', hasName: hasName),
+    final title = Semantics(
+      header: true,
+      child: Text(context.l10n.navSettings, style: t.styles.pageTitle),
     );
-  }
-
-  String _subtitle(
-    AppLocalizations l10n,
-    String name, {
-    required bool hasName,
-  }) {
-    if (sync.state == SyncState.synced && sync.conflicts.isEmpty) {
-      final ago = syncAgo(l10n, sync.lastSyncedUtc, now);
-      return hasName
-          ? l10n.settingsSynced(name, ago)
-          : l10n.settingsSyncedNoName(ago);
+    final back = onBack;
+    if (back == null) return title;
+    final button = BackButton(onPressed: back);
+    if (DotIdiom.of(context) == DotIdiom.cupertino) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [button, title],
+      );
     }
-    final line = syncLineText(l10n, sync, now);
-    if (line == null) {
-      return hasName
-          ? l10n.settingsLocalOnly(name)
-          : l10n.settingsLocalOnlyNoName;
-    }
-    return hasName ? l10n.settingsNameAndStatus(name, line) : line;
-  }
-
-  Widget _row(
-    DotTheme t,
-    AppLocalizations l10n,
-    String name, {
-    required bool hasName,
-  }) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.s,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Semantics(
-                header: true,
-                child: Text(l10n.navSettings, style: t.styles.pageTitle),
-              ),
-              Text(
-                _subtitle(l10n, name, hasName: hasName),
-                style: t.styles.body.copyWith(color: t.colors.muted),
-              ),
-            ],
-          ),
-        ),
-        Semantics(
-          button: true,
-          label: hasName
-              ? l10n.settingsAvatarLabel(name)
-              : l10n.settingsAccount,
-          hint: l10n.settingsAccount,
-          excludeSemantics: true,
-          child: ProfileAvatar(name: hasName ? name : ''),
-        ),
+        button,
+        Expanded(child: title),
       ],
     );
   }

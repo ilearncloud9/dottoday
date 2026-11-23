@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/logging/error_handlers.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/calendar_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
@@ -36,6 +37,7 @@ class CalendarsPage extends ConsumerWidget {
     final settings = ref.watch(currentProfileProvider).value?.settings;
     return SettingsPageFrame(
       title: l10n.settingsCalendars,
+      page: SettingsPage.calendars,
       children: [
         PageText(l10n.calendarsIntro),
         ..._source(context, ref),

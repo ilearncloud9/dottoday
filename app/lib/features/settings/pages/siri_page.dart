@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
@@ -22,6 +23,7 @@ class SiriPage extends ConsumerWidget {
     final l10n = context.l10n;
     return SettingsPageFrame(
       title: l10n.settingsSiri,
+      page: SettingsPage.siri,
       children: [
         PageText(l10n.siriIntro),
         PageText(l10n.siriHowTo),

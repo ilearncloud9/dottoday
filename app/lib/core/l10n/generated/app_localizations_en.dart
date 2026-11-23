@@ -7624,6 +7624,71 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsYourAccount => 'Your account';
+
+  @override
+  String get settingsSearchHint => 'Search settings';
+
+  @override
+  String settingsSearchNone(String query) {
+    return 'No settings match “$query”';
+  }
+
+  @override
+  String get settingsYourDaySummary => 'Wake Up and Wind Down, learning';
+
+  @override
+  String get settingsPlanningSummary =>
+      'Durations, snap, shifting, nudges, Routines';
+
+  @override
+  String get settingsRemindersSummary => 'Alerts, sounds, quiet hours, health';
+
+  @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get settingsAppearanceSummary =>
+      'Layout, theme, app colour, language, time';
+
+  @override
+  String get settingsDataAndPrivacy => 'Data and privacy';
+
+  @override
+  String get settingsDataAndPrivacySummary =>
+      'Calendars, export and backups, Trash, app lock';
+
+  @override
+  String get settingsHelpAndAbout => 'Help and about';
+
+  @override
+  String get settingsHelpAndAboutSummary =>
+      'Help, what’s new, Siri and Shortcuts, feedback';
+
+  @override
+  String get settingsWakeWindDown => 'Wake Up and Wind Down';
+
+  @override
+  String get settingsTheTwoEnds => 'The two ends of your day';
+
+  @override
+  String get settingsTheDayItself => 'The day itself';
+
+  @override
+  String get settingsLearnMyDay => 'Learn my day';
+
+  @override
+  String get settingsLearnMyDaySummary => 'Reality thread, durations, energy';
+
+  @override
+  String get settingsFormat => 'Format';
+
+  @override
+  String settingsBackTo(String page) {
+    return 'Back to $page';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

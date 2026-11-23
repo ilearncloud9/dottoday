@@ -34,7 +34,7 @@ void main() {
       find.textContaining('removes your copy on this device'),
       findsOneWidget,
     );
-    expect(find.text('REMOVED FROM THIS DEVICE'), findsOneWidget);
+    expect(find.text('Removed from this device'), findsOneWidget);
     expect(
       find.text(
         '42 tasks, your settings and 3 changes that haven’t synced. '
