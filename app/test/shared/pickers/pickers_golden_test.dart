@@ -165,4 +165,27 @@ void main() {
       ),
     ),
   );
+  // E-R2-27 §2: five alerts already: every Add chip off, "Up to 5 alerts".
+  goldenMatrix(
+    'picker_alerts_full',
+    height: 780,
+    widths: const {'compact'},
+    act: _open,
+    build: (_) => _opener(
+      (c) => unawaited(
+        showAlertsEditor(
+          c,
+          initial: const [
+            Alert(kind: AlertKind.before, offsetMin: 60),
+            Alert(kind: AlertKind.before, offsetMin: 30),
+            Alert(kind: AlertKind.before, offsetMin: 10),
+            Alert(kind: AlertKind.atStart),
+            Alert(kind: AlertKind.atEnd),
+          ],
+          windDown: true,
+          onWindDown: (_) {},
+        ),
+      ),
+    ),
+  );
 }

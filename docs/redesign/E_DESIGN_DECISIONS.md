@@ -5625,6 +5625,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** a past day keeps "‹ Today" leading the row (ED-386, later than this board's "● Today" pill); the empty today is ED-386's approved empty day; the Wake Up card on an empty day as built (its look is R2-19, M20.8); the device shots overlap two tasks, a golden shows three.
 - **Checks:** format and analyze clean; 7,752 pass, 31 skipped; Day review goldens updated; new golden `today_overlap_chain`; the week-prompt and Day-review tests read the floating card; the calendar test world takes a clock (`now`). `integration_test/day_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-441 · M20.6 part 4: task sheets
+- **Date:** 2026-11-23. **Owner:** "Start part 4", then "Approve part 4" after the review page (https://claude.ai/artifact/EDiiqxm45JxjDJxGqb544C).
+- **Built (E-R2-27 §2, ED-330), on option D's sheet (ED-398):** no new strings.
+  - **A done task's header dot is filled**, as on the thread (`TaskFormHeader.done`; was the ring).
+  - **The Alerts editor is the board's form:** `SheetNavBar` (iPhone Cancel · Alerts · Done; elsewhere × · Alerts · Done; the foot's Done button removed; Cancel or a swipe drops the changes, as dismissing did); the alerts in a raised card with ×, no bell; under "ADD AN ALERT" only the choices not added yet, all off at five; "Up to 5 alerts" (`alertsMax`) in accent ink; the Wind Down reminder in its own card. Every opener gets it (option D, the Mac/web form, Add, Settings › Reminders).
+  - Already as drawn, checked: a done task's first tile reads Not done; a past task's Shift the rest is off; a calendar event is editable with no Pinned row.
+- **Departures (on the review page):** the tiles keep option D's approved look (Focus plain with its bolt); the event's "Changes go back to …" line needs a linked calendar (none in the test data); tablets, the Mac and the web open tasks in M19.4's panel and inspector (the board draws only the iPhone).
+- **Checks:** format and analyze clean; 7,756 pass, 31 skipped; Alerts goldens updated; new golden `picker_alerts_full`. `integration_test/task_sheets_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

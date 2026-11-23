@@ -6,6 +6,7 @@ import 'package:dottoday/domain/validation/field_rules.dart' show maxAlerts;
 import 'package:dottoday/shared/feedback/permission_notice.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 /// "10 min before", "At start", "At end", "5 min overdue".
@@ -28,10 +29,12 @@ const alertChoices = [
   Alert(kind: AlertKind.overdue, offsetMin: 10),
 ];
 
-/// The Alerts editor (docs/10 §5.3, docs/09 M3f.2, R-10): the task's
-/// alerts with ×, the choices to add (up to [maxAlerts]), and — when
-/// [onWindDown] is given — the every-evening Wind Down reminder. Returns the
-/// alerts in time order, or null when dismissed.
+/// The Alerts editor (docs/10 §5.3, docs/09 M3f.2, R-10; E-R2-27 §2):
+/// a form, Cancel (×) · Alerts · Done; the task's alerts in a card with ×,
+/// the choices to add (up to [maxAlerts], then "Up to 5 alerts"), and —
+/// when [onWindDown] is given — the every-evening Wind Down reminder in its
+/// own card. Returns the alerts in time order on Done, or null when
+/// dismissed.
 Future<List<Alert>?> showAlertsEditor(
   BuildContext context, {
   required List<Alert> initial,
@@ -40,7 +43,6 @@ Future<List<Alert>?> showAlertsEditor(
   Future<bool> Function()? deniedOpenSettings,
 }) => showAppSheet<List<Alert>>(
   context: context,
-  title: context.l10n.alertsTitle,
   builder: (_) => _Alerts(
     initial: initial,
     windDown: windDown,
@@ -103,56 +105,100 @@ class _AlertsState extends State<_Alerts> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
+        SheetNavBar(
+          title: l10n.alertsTitle,
+          actionLabel: l10n.alertsDone,
+          onCancel: () => Navigator.of(context).pop(),
+          onAction: () => Navigator.of(context).pop(_alerts),
+        ),
         if (widget.deniedOpenSettings case final open?)
           PermissionNotice(onOpenSettings: open),
-        if (_alerts.isEmpty) Text(l10n.sheetNoAlerts, style: t.styles.body),
-        for (final a in _alerts)
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            minTileHeight: DotTouch.android,
-            leading: DotIcon(DotGlyphs.bell, color: t.colors.muted),
-            title: Text(alertLabel(l10n, a), style: t.styles.body),
-            trailing: IconButton(
-              tooltip: l10n.alertsRemove(alertLabel(l10n, a)),
-              onPressed: () => setState(() => _alerts.remove(a)),
-              icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
-            ),
+        if (_alerts.isEmpty)
+          Text(l10n.sheetNoAlerts, style: t.styles.body)
+        else
+          _Card(
+            children: [
+              for (final a in _alerts)
+                ListTile(
+                  minTileHeight: DotTouch.android,
+                  title: Text(alertLabel(l10n, a), style: t.styles.body),
+                  trailing: IconButton(
+                    tooltip: l10n.alertsRemove(alertLabel(l10n, a)),
+                    onPressed: () => setState(() => _alerts.remove(a)),
+                    icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+                  ),
+                ),
+            ],
           ),
         Text(l10n.alertsAdd.toUpperCase(), style: t.styles.caption),
         Wrap(
           spacing: DotSpace.xs,
           runSpacing: DotSpace.xs,
           children: [
+            // Only those not added yet (E-R2-27); all off at the limit.
             for (final a in alertChoices)
-              ActionChip(
-                label: Text(alertLabel(l10n, a)),
-                shape: dotChipShape(context),
-                onPressed: full || _alerts.contains(a) ? null : () => _add(a),
-              ),
+              if (!_alerts.contains(a))
+                ActionChip(
+                  label: Text(alertLabel(l10n, a)),
+                  shape: dotChipShape(context),
+                  onPressed: full ? null : () => _add(a),
+                ),
           ],
         ),
-        if (full) Text(l10n.alertsMax, style: t.styles.rowMeta),
-        if (widget.onWindDown case final set?)
-          MergeSemantics(
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.alertsWindDown, style: t.styles.body),
-              subtitle: Text(
-                l10n.alertsWindDownDetail,
-                style: t.styles.rowMeta,
-              ),
-              onTap: () => _windDownTo(!_windDown, set),
-              trailing: DotSwitch(
-                value: _windDown,
-                onChanged: (v) => _windDownTo(v, set),
-              ),
-            ),
+        if (full)
+          Text(
+            l10n.alertsMax,
+            style: t.styles.cardTitle.copyWith(color: t.colors.accentInk),
           ),
-        FilledButton(
-          onPressed: () => Navigator.of(context).pop(_alerts),
-          child: Text(l10n.alertsDone),
-        ),
+        if (widget.onWindDown case final set?)
+          _Card(
+            children: [
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(l10n.alertsWindDown, style: t.styles.body),
+                  subtitle: Text(
+                    l10n.alertsWindDownDetail,
+                    style: t.styles.rowMeta,
+                  ),
+                  onTap: () => _windDownTo(!_windDown, set),
+                  trailing: DotSwitch(
+                    value: _windDown,
+                    onChanged: (v) => _windDownTo(v, set),
+                  ),
+                ),
+              ),
+            ],
+          ),
       ],
+    );
+  }
+}
+
+/// A raised card of rows split by hairlines (E-R2-27's grouped list); a
+/// Material, so the rows' ink shows.
+class _Card extends StatelessWidget {
+  const _Card({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    return Material(
+      color: c.raised,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DotRadii.card),
+        side: BorderSide(color: c.outline),
+      ),
+      child: Column(
+        children: [
+          for (final (i, row) in children.indexed) ...[
+            if (i > 0) Divider(height: DotSpace.hairline, color: c.outline),
+            row,
+          ],
+        ],
+      ),
     );
   }
 }

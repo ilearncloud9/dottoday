@@ -19,6 +19,7 @@ class TaskFormHeader extends StatelessWidget {
     this.summary,
     this.card = false,
     this.trailing,
+    this.done = false,
     super.key,
   });
 
@@ -37,6 +38,9 @@ class TaskFormHeader extends StatelessWidget {
   /// At the end: option D's done circle on a task that exists (ED-086).
   final Widget? trailing;
 
+  /// A done task: the dot filled, as on the thread (E-R2-27 §2).
+  final bool done;
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -49,6 +53,7 @@ class TaskFormHeader extends StatelessWidget {
         _Look(
           color: color,
           icon: icon,
+          done: done,
           onTap: onLook,
           label: l10n.colourIconTitle,
         ),
@@ -92,10 +97,12 @@ class _Look extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.label,
+    this.done = false,
   });
 
   final TaskColor color;
   final TaskIcon icon;
+  final bool done;
   final ValueChanged<Rect?> onTap;
   final String label;
 
@@ -118,7 +125,7 @@ class _Look extends StatelessWidget {
               TaskDot(
                 color: color,
                 icon: icon,
-                state: DotState.upcoming,
+                state: done ? DotState.done : DotState.upcoming,
                 label: label,
                 size: DotSize.formRing,
               ),

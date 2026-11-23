@@ -52,6 +52,7 @@ class TaskDHead extends ConsumerWidget {
       color: color,
       icon: icon,
       card: android,
+      done: draft.status == OccurrenceStatus.done,
       summary: _summary(context, ref),
       onLook: (at) => unawaited(_look(context, color, icon, at)),
       title: TaskFormTitleField(

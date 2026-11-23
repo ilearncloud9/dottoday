@@ -801,6 +801,7 @@ Rules for every task in M18 to M22:
   - [x] Part 1 done 2026-11-23 (ED-438): Focus to E-R2-9 B: one route at every width, the whole window in two columns on expanded ones with the iPad's native navigation hidden; restyled; the ring's one spoken label; past its end as built. Open: real devices.
   - [x] Part 2 done 2026-11-23 (ED-439): time states to E-R2-26: Need more time? and Calendar changed float at the foot of Today; Running late is a form acting on Done (owner); the past-end row, Now through the day and the menu bar as built. Open: real devices.
   - [x] Part 3 done 2026-11-23 (ED-440): day states to E-R2-27 §1: the Day review and This week float at the foot after Wind Down (owner); past day, overlaps, all-day chips and the empty day as built. Open: real devices; the Wake Up card on an empty day in M20.8.
+  - [x] Part 4 done 2026-11-23 (ED-441): task sheets to E-R2-27 §2: a done task's dot filled; the Alerts editor as the board's form; done, past and event sheets as built. Open: real devices.
 - [ ] M20.7 Settings:
   - six groups and "Everything else" (G2-4, ED-081 to ED-084), opened from Settings' native place (ED-238);
   - tablets (R2-11, ED-291); Planning, Sounds and Siri pages (R2-33, ED-338);
