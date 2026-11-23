@@ -27,7 +27,8 @@ final class ThreadReality {
     this.usualWhy,
   });
 
-  /// "usually 2 h 20" under the live row's progress (M11.3 learning).
+  /// "usually 2 h 20" at the end of the live row's time line (M11.3
+  /// learning, E-R2-23 §4).
   final String? usual;
 
   /// How [usual] was worked out, on tap (docs/13 §6).
@@ -40,7 +41,8 @@ final class ThreadReality {
   /// started yet".
   final String? meta;
 
-  /// Under the title: "took 34 min"; on the live row "1 h 14 in".
+  /// Joined onto the time line: "took 34 min"; on the live row "1 h 14
+  /// in" (E-R2-23 §4).
   final String? note;
   final GhostShift ghost;
 

@@ -88,8 +88,8 @@ TodayLearning todayLearning(
   return (offer: offer, note: note, highlight: highlight);
 }
 
-/// One muted line under the card's header, with a × to hide it until
-/// tomorrow when [onHide] is set.
+/// One line in a sunk box under the card's header, with a × to hide it
+/// until tomorrow when [onHide] is set.
 class _NoteLine extends StatelessWidget {
   const _NoteLine({required this.text, this.onHide});
 
@@ -100,37 +100,53 @@ class _NoteLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final hide = onHide;
+    // A sunk box under the header, its words in the text colour
+    // (E-R2-23 §4 "still learning").
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         DotSpace.l,
         0,
-        DotSpace.xs,
+        DotSpace.l,
         DotSpace.xs,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              text,
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-            ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: t.colors.sunk,
+          borderRadius: BorderRadius.circular(DotRadii.tile),
+        ),
+        child: Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(
+            DotSpace.m,
+            hide == null ? DotSpace.s : 0,
+            hide == null ? DotSpace.m : 0,
+            hide == null ? DotSpace.s : 0,
           ),
-          if (hide != null)
-            IconButton(
-              onPressed: hide,
-              tooltip: context.l10n.learnCaptionHide,
-              // 48 covers both floors (44 pt, 48 dp).
-              constraints: const BoxConstraints.tightFor(
-                width: DotTouch.android,
-                height: DotTouch.android,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  text,
+                  style: t.styles.smallChip.copyWith(color: t.colors.text),
+                ),
               ),
-              icon: DotIcon(
-                DotGlyphs.close,
-                color: t.colors.muted,
-                size: DotSize.rowIcon,
-              ),
-            ),
-        ],
+              if (hide != null)
+                IconButton(
+                  onPressed: hide,
+                  tooltip: context.l10n.learnCaptionHide,
+                  // 48 covers both floors (44 pt, 48 dp).
+                  constraints: const BoxConstraints.tightFor(
+                    width: DotTouch.android,
+                    height: DotTouch.android,
+                  ),
+                  icon: DotIcon(
+                    DotGlyphs.close,
+                    color: t.colors.muted,
+                    size: DotSize.rowIcon,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

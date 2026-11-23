@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- The Reality thread is redesigned: while it is still learning the note sits in a box, Plan | Reality sits under the date, each task's real times, how long it took and how long it usually takes are on one line, the insight's OK no longer hides behind the Day or Add button, and Settings › Learning shows progress as 7/10 and "Ready for 12 tasks" (redesign branch).
 - Settings has a Privacy group after Data, where Privacy and Help with thinking now live (no longer under About), and Privacy shows what helps you think on this device in a highlighted box (redesign branch).
 - Smallest step's "Just … · 15 min?" is bold in the accent with a small Start beside or under it, and Week's cards show it the same way (redesign branch).
 - Break it down is redesigned: the task sits at the top of the plan, each step is one row with a ring showing its share of the task and a small length chip, a step's length is picked from chips, and the simple-rules note is a tinted box with Don't show again. In Show less, hints like "Break it into steps?" sit on a card with Show me and Not now (redesign branch).

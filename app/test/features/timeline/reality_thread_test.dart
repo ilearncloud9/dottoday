@@ -48,13 +48,13 @@ void main() {
     // Finished: real times, the plan's start, how long it took.
     expect(find.text('6:57 AM – 7:31 AM'), findsOneWidget);
     expect(find.text('· planned 6:45 AM'), findsOneWidget);
-    expect(find.text('took 34 min'), findsOneWidget);
+    // How long it took and has run join the time line (E-R2-23 §4).
+    expect(find.text('· took 34 min'), findsOneWidget);
     // Under way since 9:10, planned 9–11.
     expect(
-      find.text('9:10 AM – now · planned 9:00 AM – 11:00 AM'),
+      find.text('9:10 AM – now · planned 9:00 AM – 11:00 AM · 12 min in'),
       findsOneWidget,
     );
-    expect(find.text('12 min in'), findsOneWidget);
     // The next one, never "late".
     expect(find.text('· not started yet'), findsWidgets);
     expect(find.textContaining('late'), findsNothing);
@@ -104,15 +104,17 @@ void main() {
     );
     await tester.tap(find.text('Reality'));
     await tester.pumpAndSettle();
-    expect(find.text('usually 2 h 20'), findsOneWidget);
+    // The live row's time line ends in it (E-R2-23 §4).
+    final live = find.textContaining('· usually 2 h 20');
+    expect(live, findsOneWidget);
     // docs/13 §6: the live row's and the strip's values explain themselves.
-    await tester.tap(find.text('usually 2 h 20'));
+    await tester.tap(live);
     await tester.pumpAndSettle();
     expect(find.text('based on your last 4 times · median'), findsOneWidget);
     await tester.tap(find.textContaining('usually takes you'));
     await tester.pumpAndSettle();
     expect(find.text('based on your last 4 times · median'), findsNWidgets(2));
-    await tester.tap(find.text('usually 2 h 20'));
+    await tester.tap(live);
     await tester.tap(find.textContaining('usually takes you'));
     await tester.pumpAndSettle();
     const strip =
@@ -121,7 +123,7 @@ void main() {
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
     expect(find.text(strip), findsNothing);
-    expect(find.text('usually 2 h 20'), findsOneWidget, reason: 'stays');
+    expect(live, findsOneWidget, reason: 'stays');
   });
 
   testWidgets('no strip on the plan, or without history', (tester) async {

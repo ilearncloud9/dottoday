@@ -6,6 +6,7 @@ import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
 import 'package:dottoday/features/timeline/state/today_selection.dart';
 import 'package:dottoday/features/timeline/widgets/all_day_chips.dart';
+import 'package:dottoday/features/timeline/widgets/day_foot_inset.dart';
 import 'package:dottoday/features/timeline/widgets/day_menu_chip.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/reveal_hint_row.dart';
@@ -53,7 +54,12 @@ class TodayCompact extends ConsumerWidget {
     final ios = DotIdiom.of(context) == DotIdiom.cupertino;
     return Stack(
       children: [
-        day,
+        // What sits at the day's foot (the reality insight) clears Day ▾
+        // (E-R2-23 §4).
+        DayFootInset(
+          extra: DotSpace.l + DotTouch.android + DotSpace.s,
+          child: day,
+        ),
         PositionedDirectional(
           start: ios ? null : DotSpace.page,
           end: ios ? DotSpace.page : null,

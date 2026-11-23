@@ -137,9 +137,10 @@ class DayCard extends StatelessWidget {
     final top = [
       if (reality case final r?)
         Padding(
-          padding: const EdgeInsetsDirectional.only(end: DotSpace.l),
+          padding: const EdgeInsetsDirectional.only(start: DotSpace.l),
+          // At the start, under the date (E-R2-23 §4).
           child: Align(
-            alignment: AlignmentDirectional.centerEnd,
+            alignment: AlignmentDirectional.centerStart,
             child: _RealitySwitch(toggle: r),
           ),
         ),

@@ -9,7 +9,7 @@ import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// "● Deep work usually takes you 2 h 20 · Add will suggest it   OK"
+/// "Deep work usually takes you 2 h 20 · Add will suggest it   (OK)"
 /// under the Reality thread (`B-ios-reality-thread`, 11 C3, docs/09
 /// M11.3). OK puts it away for this task, this session; a tap on the
 /// sentence explains it (docs/13 §6).
@@ -49,17 +49,6 @@ class RealityInsightStrip extends ConsumerWidget {
           child: Row(
             spacing: DotSpace.m,
             children: [
-              ExcludeSemantics(
-                child: SizedBox.square(
-                  dimension: DotSize.weekDot * 1.5,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: t.colors.accent,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
               Expanded(
                 child: LearnedLine(
                   text: l10n.learnInsight(
@@ -80,7 +69,12 @@ class RealityInsightStrip extends ConsumerWidget {
                   style: t.styles.body,
                 ),
               ),
+              // OK in a tinted pill (E-R2-23 §4).
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: t.colors.accentTint,
+                  foregroundColor: t.colors.accentInk,
+                ),
                 onPressed: () => ref
                     .read(dismissedInsightsProvider.notifier)
                     .dismiss(task.id),

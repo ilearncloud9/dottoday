@@ -83,6 +83,10 @@ abstract final class DotGlyphs {
     '${_r(5, 11, 14, 10, 2)}M8 11V7a4 4 0 0 1 8 0v4',
   );
 
+  /// Lines shortening down: Settings › Learning's step lengths
+  /// (E-R2-23 §4).
+  static const stepLines = DotGlyph('M5 7h14M5 12h10M5 17h6');
+
   /// Settings › Privacy (E-R2-23 §3).
   static const shield = DotGlyph(
     'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6'

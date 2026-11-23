@@ -5547,6 +5547,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the Privacy page keeps the built sections the board leaves out (App lock at the top per ED-325, Searches, crash reports when configured, the policy link); no title tile until M20.7 (owner's choice). Device shots show each device's real state; off, getting ready and downloading are goldens.
 - **Checks:** analyze and format clean; 7,731 pass, 31 skipped; `privacy_ai_status_*` and the Settings goldens that show the list's end updated. Settings and Siri tests scroll to About. The journey world (`pumpCalendar`) sets `envProvider` as bootstrap does. `integration_test/help_with_thinking_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac with Apple Intelligence on (data container unchanged by checksum). Not run: real devices.
 
+### ED-433 · M20.4 part 5: the Reality thread and Learn my day; M20.4 closed
+- **Date:** 2026-11-23. **Owner:** "Start part 5"; answers "Restyle the group" and "Keep the built line"; then "Approve part 5" after the review page (https://claude.ai/artifact/EruKfGcmYCdzLAao8uxWWN). This closes M20.4 (ED-429 to ED-433).
+- **Built (E-R2-23 §4, ED-324):** the look; what learning does is unchanged (M11.2, M11.3, docs/13). No new strings.
+  - **Still learning (`today_learning.dart`):** the caption in a sunk box (tile radius) in smallChip and the text colour, with × (was a muted line).
+  - **Plan | Reality (`DayCard`):** at the start under the date (was at the end).
+  - **Reality rows:** `ThreadReality.note` ("took 50 min", "1 h 7 in") joins the time line (`TaskRow`, `LiveRow`; was under the title). The live row's time line ends in "usually 2 h 20", underlined in accent ink: `LearnedLine` gains `lead` and `linkStyle`, so the whole line stays the one 48 px control that opens the built explanation (owner kept it over the board's card and alert).
+  - **The insight (`RealityInsightStrip`):** no leading dot; OK a tinted pill. It respects the bottom inset (the web's floating Add covered its OK) and sits above Day ▾ on phones in portrait through `DayFootInset` (new, timeline feature), so the thread itself scrolls as before.
+  - **Settings › Learning (`LearningGroup`, restyled in place; owner):** the reality row's "7/10" at its end (was a ring under it), bars icon; Task and Step lengths say "Ready for N" in the subtitle once any is ready; `DotGlyphs.stepLines` (new) for Step lengths. Energy suggestions as built. Learn my day as a page waits for M20.7.
+- **Departures (on the review page):** no ✓ in Plan | Reality (the app's segmented control); the Mac and web Day show Plan | Reality but no insight and fold finished runs into Earlier (as built).
+- **Checks:** format and analyze clean; 7,731 pass, 31 skipped; Reality, learning caption and highlight, Settings › Learning, slice cases, Workspace, task D and web Add popover goldens updated. `pumpCalendar` takes `learningMeta`. `integration_test/reality_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum, two runs). Not run: real devices.
+
 ---
 
 ## Pending owner answers

@@ -775,7 +775,7 @@ Rules for every task in M18 to M22:
   - [x] Part 3 done 2026-11-22 (ED-426): Pick today's one thing to E-R2-34: the question-led phone sheet with no ×, hollow rings and a haloed, tinted pick under TODAY and INBOX, a 460 dialog with its title and × from medium width, "· Your one thing" joined to Today's time line, the Wake Up mission sharing the list. Open: real devices.
   - [x] Part 4 done 2026-11-22 (ED-427): Day review and Week in review, one surface per layout: the E-Phones-2 sheet (card, night pill, Week in review row) with Week pushed in it on phones, the Review place with ‹ › on the Mac and web and from tablets' sidebar, the 420 pane beside the day on tablets, Minimal's Day column; `/review` in Today's branch; every entry through `openReview`. Open: iPad landscape on a device; real devices; Week in review's look (R2-24, M20.13).
   - [x] Part 5 done 2026-11-22 (ED-428): Rebalance to E-R2-35: the day's faded ring beside each proposed dot, the lock on pinned times, violet moves, tinted rule chips (two to a phone's line), a centred panel at the expanded width (other proposals keep the side panel until M20.4), Minimal's before and after only (docs/14 C1); the iPhone's native tab bar now hides under iOS card sheets. Open: real devices; the Today cards with R2-26.
-- [ ] M20.4 Proposal flows (R2-23, ED-324):
+- [x] M20.4 Proposal flows (R2-23, ED-324; closed 2026-11-23, ED-429 to ED-433):
   - Brain dump, spoken Brain dump with its permission and web states (R2-37, ED-343);
   - Break it down, Smallest step, Unstick, Help with thinking, the Reality thread and learning.
   Each one has a test that nothing is written before Accept.
@@ -784,6 +784,7 @@ Rules for every task in M18 to M22:
   - [x] Part 2 done 2026-11-22 (ED-430): Break it down to E-R2-23 §1: the task at the card's top, one-line steps (⠿, share ring, wrapping title, small grey length chip, ⌄), the dashed Add a step, the opened step tinted, How long is this step? as chips, the boxed simple-rules hint, Show less hints on a card. Open: real devices.
   - [x] Part 3 done 2026-11-22 (ED-431): Smallest step and Unstick to E-R2-23 §2: the bold accent line with a small tinted Start (under it on iPhone and iPad, at its end on Android, Mac and web), the Week card's bold two-line cue; Unstick as built. Open: real devices; the notification with M20.9.
   - [x] Part 4 done 2026-11-23 (ED-432): Help with thinking to E-R2-23 §3: a Privacy group after Data (shield, Privacy · Help with thinking; out of About), the status in a tinted bold box; the page, lines, Open Settings, hint and caption as built. Open: real devices; the Data and privacy page with M20.7.
+  - [x] Part 5 done 2026-11-23 (ED-433): the Reality thread and Learn my day to E-R2-23 §4: the boxed caption, Plan | Reality at the start, took / in / usually on the time line, the insight's tinted OK above Day ▾ and the web's Add, Settings › Learning with 7/10 and Ready lines (restyled in place); the explanation as built. Open: real devices; Learn my day as a page with M20.7.
 - [ ] M20.5 Moving and selecting:
   - touch drag, tablet pointer and swipe (R2-25, ED-328);
   - multi-select and the selection bar (R2-6, ED-278, ED-279);

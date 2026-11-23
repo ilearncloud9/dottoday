@@ -25,6 +25,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/cap_time_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/day_drag.dart';
+import 'package:dottoday/features/timeline/widgets/day_foot_inset.dart';
 import 'package:dottoday/features/timeline/widgets/day_hours_header.dart';
 import 'package:dottoday/features/timeline/widgets/empty_day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/later_row.dart';
@@ -272,10 +273,18 @@ class DayPage extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(child: card),
-        RealityInsightStrip(
-          task: insight.task,
-          usualMinutes: insight.usualMinutes,
-          samples: insight.samples,
+        // Above whatever the shell keeps at the bottom (the tab bar, the
+        // web's floating Add), as the board floats it (E-R2-23 §4).
+        Padding(
+          padding: EdgeInsets.only(bottom: DayFootInset.of(context)),
+          child: SafeArea(
+            top: false,
+            child: RealityInsightStrip(
+              task: insight.task,
+              usualMinutes: insight.usualMinutes,
+              samples: insight.samples,
+            ),
+          ),
         ),
       ],
     );

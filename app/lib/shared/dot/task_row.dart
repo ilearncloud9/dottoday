@@ -185,6 +185,9 @@ class _Text extends StatelessWidget {
         Text(task.reality?.range ?? task.timeRange, style: metaStyle),
         if (task.reality?.meta case final m?)
           Text(l10n.realityMetaJoin(m), style: _plan(t)),
+        // "· took 50 min" on the time line (E-R2-23 §4).
+        if (task.reality?.note case final n?)
+          Text(l10n.realityMetaJoin(n), style: _plan(t)),
         if (task.state == DotState.missed && task.reality == null)
           Text(l10n.rowMissedMeta, style: t.styles.rowMeta),
         if (task.pinned)
@@ -207,13 +210,9 @@ class _Text extends StatelessWidget {
         color: done || task.state == DotState.skipped ? muted : null,
       ),
     );
-    final note = switch (task.reality?.note) {
-      final n? => Text(n, style: _plan(t)),
-      null => null,
-    };
     final stacked = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [meta, title, ?note],
+      children: [meta, title],
     );
     // The day thread's rows keep the time above the title at every width
     // (Concept E, E-FullA-v2 web Day). Smaller wide rows put it beside.
@@ -227,7 +226,7 @@ class _Text extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [title, ?note],
+                    children: [title],
                   ),
                 ),
               ],

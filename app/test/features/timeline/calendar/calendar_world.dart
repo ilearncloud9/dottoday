@@ -3,6 +3,7 @@ import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -104,6 +105,7 @@ Future<GoRouter> pumpCalendar(
   List<Routine> routines = const [],
   DateTime? lowEnergyUntil,
   List<Subtask> subtasks = const [],
+  LearningMetaState learningMeta = const LearningMetaState(),
 }) async {
   if (size != null) {
     tester.view
@@ -137,6 +139,7 @@ Future<GoRouter> pumpCalendar(
           ),
           routines: routines,
           subtasks: FakeSubtaskRepository(subtasks),
+          learningMeta: learningMeta,
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
         // Settings › Privacy reads it (M8.6); bootstrap() sets it in the app.

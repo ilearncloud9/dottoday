@@ -122,48 +122,75 @@ class _Summary extends StatelessWidget {
       null => task.timeRange,
     };
     final rowLabel = taskRowLabel(l10n, task);
-    final summary = Semantics(
-      button: onOpen != null,
-      label: task.hasSubtasks
-          ? l10n.rowWithSubtasks(
-              rowLabel,
-              l10n.liveSubtasks(task.subtasksDone, task.subtasksTotal),
-            )
-          : rowLabel,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onOpen,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: DotSpace.xxs,
-          children: [
-            // "9:00 – 11:00 · Now, 18 min left · Your one thing" (E-R2-34).
-            NowMeta(
-              range: range,
-              now: now,
-              tail: task.oneThing ? l10n.oneThingMeta : null,
-              style: t.styles.threadMeta,
-            ),
-            Text(task.title, style: t.styles.liveRowTitle),
-            if (task.hasSubtasks || task.reality?.note != null)
-              _Progress(task: task),
-          ],
-        ),
-      ),
+    final label = task.hasSubtasks
+        ? l10n.rowWithSubtasks(
+            rowLabel,
+            l10n.liveSubtasks(task.subtasksDone, task.subtasksTotal),
+          )
+        : rowLabel;
+    Widget open(Widget child) => InkWell(
+      onTap: onOpen,
+      borderRadius: BorderRadius.circular(DotRadii.card),
+      child: child,
     );
+    // "9:00 – 11:00 · Now, 18 min left · Your one thing" (E-R2-34).
+    final meta = NowMeta(
+      range: range,
+      now: now,
+      tail: task.oneThing ? l10n.oneThingMeta : null,
+      style: t.styles.threadMeta,
+    );
+    final title = Text(task.title, style: t.styles.liveRowTitle);
     final usual = task.reality?.usual;
-    if (usual == null) return summary;
-    // Outside the row's merged label, so the explanation is its own
-    // control for screen readers (docs/13 §6).
+    if (usual == null) {
+      return Semantics(
+        button: onOpen != null,
+        label: label,
+        excludeSemantics: true,
+        child: open(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xxs,
+            children: [
+              meta,
+              title,
+              if (task.hasSubtasks) _Progress(task: task),
+            ],
+          ),
+        ),
+      );
+    }
+    // "… · 1 h 37 in · usually 2 h 20" (E-R2-23 §4): the time line ends
+    // in the learned length, underlined in the accent; the line is its own
+    // control, outside the row's merged label (docs/13 §6).
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        summary,
         LearnedLine(
+          lead: task.oneThing ? l10n.liveMeta(range, l10n.oneThingMeta) : range,
           text: usual,
           explanation: task.reality?.usualWhy,
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.threadMeta,
+          linkStyle: TextStyle(
+            color: t.colors.accentInk,
+            decoration: TextDecoration.underline,
+            decorationColor: t.colors.accentInk,
+          ),
+        ),
+        Semantics(
+          button: onOpen != null,
+          label: label,
+          excludeSemantics: true,
+          child: open(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: DotSpace.xxs,
+              children: [
+                title,
+                if (task.hasSubtasks) _Progress(task: task),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -172,11 +199,11 @@ class _Summary extends StatelessWidget {
 
 /// "9:10 – now · planned 9:00 – 11:00" on the Reality thread (11 C3).
 String _realityMeta(AppLocalizations l10n, ThreadTask task, ThreadReality r) {
-  final range = r.range ?? task.timeRange;
-  return switch (r.meta) {
-    final m? => l10n.liveMeta(range, m),
-    null => range,
-  };
+  var line = r.range ?? task.timeRange;
+  if (r.meta case final m?) line = l10n.liveMeta(line, m);
+  // How long it has run joins the time line (E-R2-23 §4).
+  if (r.note case final n?) line = l10n.liveMeta(line, n);
+  return line;
 }
 
 /// "◔ 1 of 3   38 min left" under the live title.
@@ -208,10 +235,6 @@ class _Progress extends StatelessWidget {
               ),
             ],
           ),
-        // The Reality thread says how long it has run (11 C3); the plan's
-        // time left is on the meta line (E rules §5.3).
-        if (task.reality?.note case final ran?)
-          Text(ran, style: t.styles.stripWeekday),
       ],
     );
   }

@@ -59,6 +59,8 @@ class LearnedLine extends StatefulWidget {
     required this.text,
     this.explanation,
     this.style,
+    this.lead,
+    this.linkStyle,
     super.key,
   });
 
@@ -67,6 +69,14 @@ class LearnedLine extends StatefulWidget {
 
   /// The host's caption style; muted row meta by default.
   final TextStyle? style;
+
+  /// Words before [text] on the same line ("9:05 – now · planned … · 1 h
+  /// 37 in"), so the Reality thread's time line ends in the learned value
+  /// (E-R2-23 §4). The whole line stays the one target.
+  final String? lead;
+
+  /// [text]'s own look after [lead]: the accent, underlined.
+  final TextStyle? linkStyle;
 
   @override
   State<LearnedLine> createState() => _LearnedLineState();
@@ -119,6 +129,23 @@ class _LearnedLineState extends State<LearnedLine> {
     );
   }
 
+  /// [LearnedLine.text], after [LearnedLine.lead] when there is one.
+  Widget _text(BuildContext context, TextStyle style) {
+    final lead = widget.lead;
+    if (lead == null) return Text(widget.text, style: style);
+    final line = context.l10n.liveMeta(lead, widget.text);
+    final at = line.lastIndexOf(widget.text);
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(text: line.substring(0, at)),
+          TextSpan(text: widget.text, style: widget.linkStyle),
+        ],
+      ),
+      style: style,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -126,7 +153,7 @@ class _LearnedLineState extends State<LearnedLine> {
     final style =
         widget.style ?? t.styles.rowMeta.copyWith(color: t.colors.muted);
     final e = widget.explanation;
-    if (e == null) return Text(widget.text, style: style);
+    if (e == null) return _text(context, style);
     final line = Semantics(
       button: true,
       expanded: _open,
@@ -142,7 +169,7 @@ class _LearnedLineState extends State<LearnedLine> {
           constraints: const BoxConstraints(minHeight: DotTouch.android),
           child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Text(widget.text, style: style),
+            child: _text(context, style),
           ),
         ),
       ),
