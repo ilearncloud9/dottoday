@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Settings › Planning shows its values and its switches in two groups with how many routines you have; choices such as Shift later tasks open a card with Cancel on iPhone and radio buttons on Android; Siri phrases are shown in quotes (redesign branch).
 - Settings opens on six groups (Your day, Planning, Reminders, Appearance, Data and privacy, Help and about) with Your account and a settings search; each group has its own page, and Week starts and Time format are under Appearance (redesign branch).
 - Choosing a Wake Up mission shows each with its icon, and one this phone can't run is dimmed with the reason; a week's summary sentence sits on a teal tint (redesign branch).
 - The Alerts editor is now a form with Done at the top, lists only the alerts you can still add, and says "Up to 5 alerts" when full; a done task's sheet shows its dot filled (redesign branch).

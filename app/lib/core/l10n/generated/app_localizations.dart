@@ -11682,6 +11682,12 @@ abstract class AppLocalizations {
   /// **'Back to {page}'**
   String settingsBackTo(String page);
 
+  /// A Siri phrase as said, in this language's quotation marks (Settings › Siri & Shortcuts, E-R2-33).
+  ///
+  /// In en, this message translates to:
+  /// **'“{phrase}”'**
+  String siriPhraseQuoted(String phrase);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

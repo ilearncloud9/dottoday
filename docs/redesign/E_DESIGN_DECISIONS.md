@@ -5656,6 +5656,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** Android group pages keep cards (Android mirrors iPhone); Your day has no footers or schedule values and Learn my day no "On" (part 4); long Android titles wrap in the large title style; the iPhone search clears from the keyboard.
 - **Checks:** format and analyze clean; 7,858 pass, 31 skipped. Settings goldens updated, new `settings_group_*`; captions and tiles changed onboarding reminders, search empty and task editor sound goldens; `settings_lower` removed (the long root is gone). `integration_test/settings_root_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: the iPhone search icon drew a "?" box (CupertinoIcons isn't bundled; fixed); the Material title touched its icon (gap added after the runs). Not run: real devices.
 
+### ED-444 · M20.7 part 2: Planning, Sounds and Siri pages; pick sheets
+- **Date:** 2026-11-23. **Owner:** "Start part 2"; then "Approve part 2" after the review page (https://claude.ai/artifact/GYpDnap2hNXZABvB5xLKsH).
+- **Built (E-R2-33, ED-338; rows, order and strings as built):**
+  - **Planning** in two groups: Default duration, Routines (with how many, when there are any), Snap to, Shift later tasks; then the switches, Low-energy mode last.
+  - **Pick sheets** (`showChoiceSheet`: Shift later tasks, Week starts, Theme, …): the options in a card; on iPhone under "Cancel · title" with a check (`SheetNavBar` gained an optional action), elsewhere under the title and × with M3 radio buttons (`SettingsChoiceMark`). A tap picks and closes.
+  - **Sounds:** regular-weight rows; radio buttons on Material. The Start and Done sound sheets: "title · Done" pinned (`SheetNavBar` gained an optional Cancel), the list scrolling under it.
+  - **Siri & Shortcuts:** the phrases in each language's quotes (new string `siriPhraseQuoted`), the Shortcuts note as the group's footer.
+  - **Settings row titles in regular weight** (the `body` style), as E draws them; Past days, onboarding and the task's sound list share the row.
+- **Departures (on the review page):** Start sound keeps Done and has no Cancel (each tap already saves and plays); Siri's icons stay the app's; tablets, the Mac and the web show the pages full width until part 5.
+- **Checks:** format and analyze clean; 7,870 pass, 31 skipped. Goldens updated for the row weight; new `settings_shift_sheet` (iPhone, Android) and `settings_sounds_android`. `integration_test/settings_pages_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: on the Android tablet the journey scrolled the sidebar (fixed in the journey). Not run: real devices.
+
 ---
 
 ## Pending owner answers

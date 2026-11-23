@@ -153,6 +153,22 @@ void main() {
       build: (_) => _page(page),
     );
   }
+  // E-R2-33: Shift later tasks, "Cancel · Shift later tasks" on iPhone,
+  // the title row and radio buttons on Android.
+  for (final (name, platform) in [
+    ('settings_shift_sheet', TargetPlatform.iOS),
+    ('settings_shift_sheet_android', TargetPlatform.android),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 844,
+      platform: platform,
+      widths: const {'compact'},
+      act: (t) => _open(t, 'Shift later tasks'),
+      overrides: _overrides,
+      build: (_) => _page(SettingsPage.planning),
+    );
+  }
   goldenMatrix(
     'settings_group_android',
     height: 915,

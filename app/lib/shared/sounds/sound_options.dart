@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/settings/settings_choice_mark.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 
@@ -81,11 +82,9 @@ class _OptionRow extends StatelessWidget {
         contentPadding: const EdgeInsetsDirectional.symmetric(
           horizontal: DotSpace.m,
         ),
-        title: Text(option.label, style: t.styles.rowTitle),
+        title: Text(option.label, style: t.styles.body),
         subtitle: detail == null ? null : Text(detail, style: t.styles.rowMeta),
-        trailing: selected
-            ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
-            : null,
+        trailing: SettingsChoiceMark(selected: selected),
         onTap: onTap,
       ),
     );

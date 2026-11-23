@@ -165,7 +165,7 @@ class SettingsRow extends StatelessWidget {
         3 * DotSpace.m -
         DotSize.rowIcon -
         valueWidth;
-    return !longestWordFits(context, title, t.styles.rowTitle, titleWidth);
+    return !longestWordFits(context, title, t.styles.body, titleWidth);
   }
 
   Widget _build(BuildContext context, double width) {
@@ -221,7 +221,8 @@ class SettingsRow extends StatelessWidget {
   Widget _texts(DotTheme t, {required bool stacked}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: t.styles.rowTitle),
+      // Regular weight, as E draws Settings rows (E-R2-33).
+      Text(title, style: t.styles.body),
       if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
       if (value case final v? when stacked)
         Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),

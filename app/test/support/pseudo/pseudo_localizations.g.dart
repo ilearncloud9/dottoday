@@ -6160,6 +6160,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String settingsBackTo(String page) => pseudo(super.settingsBackTo(page));
 
   @override
+  String siriPhraseQuoted(String phrase) =>
+      pseudo(super.siriPhraseQuoted(phrase));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

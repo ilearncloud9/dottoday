@@ -1930,6 +1930,7 @@
   "settingsLearnMyDaySummary": "Hilo de la realidad, duraciones, energía",
   "settingsFormat": "Formato",
   "settingsBackTo": "Volver a {page}",
+  "siriPhraseQuoted": "«{phrase}»",
   "taskIconCategoryPlanning": "Planificación y ritmo",
   "taskIconCategoryHealth": "Salud y cuerpo",
   "taskIconCategoryFitness": "Fitness y deporte",

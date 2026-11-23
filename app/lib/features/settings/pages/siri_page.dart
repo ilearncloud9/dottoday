@@ -65,19 +65,22 @@ class SiriPage extends ConsumerWidget {
               SettingsRow(
                 glyph: glyph,
                 tint: color,
-                title: phrase,
+                // In quotes, as said (E-R2-33); the words stay exactly
+                // AppShortcuts' (`siri_phrases_test`).
+                title: l10n.siriPhraseQuoted(phrase),
                 subtitle: detail,
               ),
           ],
         ),
         SettingsGroup(
           caption: l10n.siriShortcutsCaption,
+          // Under the card, as drawn (E-R2-33), not in the row.
+          footer: l10n.siriShortcutsBody,
           children: [
             SettingsRow(
               glyph: DotGlyphs.share,
               tint: t.tasks[TaskColor.teal].ink,
               title: l10n.siriOpenShortcuts,
-              subtitle: l10n.siriShortcutsBody,
               onTap: () => unawaited(
                 ref.read(linkLauncherProvider).open(shortcutsAppUri),
               ),

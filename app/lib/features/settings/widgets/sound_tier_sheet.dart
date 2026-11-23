@@ -5,13 +5,15 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:dottoday/shared/sounds/sound_options.dart';
 import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// The Start or Done list in a sheet: a tap picks and plays; Done closes
-/// and stops the preview.
+/// The Start or Done list in a sheet under "title · Done" (E-R2-33's
+/// Start sound): a tap picks, saves and plays; Done closes and stops the
+/// preview. No Cancel: each tap is already saved.
 Future<void> showSoundTierSheet(
   BuildContext context, {
   required String title,
@@ -20,30 +22,37 @@ Future<void> showSoundTierSheet(
   required Settings Function(Settings, String) write,
 }) => showAppSheet<void>(
   context: context,
-  title: title,
+  // The bar stays put; only the list scrolls under it.
+  scrolls: false,
   builder: (_) => SoundPreviewScope(
     child: Consumer(
       builder: (context, ref, _) {
         final settings = ref.watch(currentProfileProvider).value?.settings;
         if (settings == null) return const SizedBox.shrink();
         return Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: DotSpace.s,
           children: [
+            SheetNavBar(
+              title: title,
+              actionLabel: context.l10n.alertsDone,
+              onAction: () => Navigator.of(context).pop(),
+            ),
             if (ref.watch(deviceMutedProvider).value ?? false)
               const SoundMutedBanner(),
-            SoundOptionList(
-              sections: sections,
-              selected: selected(settings),
-              onPick: (key) {
-                if (key == null) return;
-                changeSettings(context, (s) => write(s, key));
-                previewSound(ref, key);
-              },
-            ),
-            FilledButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(context.l10n.alertsDone),
+            Flexible(
+              child: SingleChildScrollView(
+                child: SoundOptionList(
+                  sections: sections,
+                  selected: selected(settings),
+                  onPick: (key) {
+                    if (key == null) return;
+                    changeSettings(context, (s) => write(s, key));
+                    previewSound(ref, key);
+                  },
+                ),
+              ),
             ),
           ],
         );

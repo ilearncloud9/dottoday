@@ -8021,6 +8021,15 @@
       }
     }
   },
+  "siriPhraseQuoted": "“{phrase}”",
+  "@siriPhraseQuoted": {
+    "description": "A Siri phrase as said, in this language's quotation marks (Settings › Siri & Shortcuts, E-R2-33).",
+    "placeholders": {
+      "phrase": {
+        "type": "String"
+      }
+    }
+  },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

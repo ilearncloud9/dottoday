@@ -56,7 +56,8 @@ void main() {
       overrides: [siriAvailableProvider.overrideWithValue(true)],
     );
     for (final p in _phrases) {
-      expect(find.text(p), findsOneWidget, reason: p);
+      // In quotes, as said (E-R2-33).
+      expect(find.text('“$p”'), findsOneWidget, reason: p);
     }
     expect(find.textContaining('hold the side button'), findsOneWidget);
     await tester.tap(find.text('Open Shortcuts'));

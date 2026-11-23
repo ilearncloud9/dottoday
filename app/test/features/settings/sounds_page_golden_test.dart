@@ -43,6 +43,16 @@ void main() {
     overrides: _overrides(const Settings()),
     build: (_) => const SoundsPage(),
   );
+  // Android: the same page in Material, a radio button on the choice
+  // (E-R2-33).
+  goldenMatrix(
+    'settings_sounds_android',
+    height: 1000,
+    platform: TargetPlatform.android,
+    widths: const {'compact'},
+    overrides: _overrides(const Settings()),
+    build: (_) => const SoundsPage(),
+  );
   goldenMatrix(
     'settings_sounds_muted',
     // The banner at the top (1x, 2x), then at 200 % text the Also group,

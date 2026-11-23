@@ -8,15 +8,21 @@ import 'package:flutter/material.dart';
 class SheetNavBar extends StatelessWidget {
   const SheetNavBar({
     required this.title,
-    required this.actionLabel,
-    required this.onCancel,
-    required this.onAction,
+    this.onCancel,
+    this.actionLabel,
+    this.onAction,
     super.key,
   });
 
   final String title;
-  final String actionLabel;
-  final VoidCallback onCancel;
+
+  /// Null for a pick list, where a tap on a row is the answer (E-R2-33
+  /// Shift later tasks: "Cancel · Shift later tasks").
+  final String? actionLabel;
+
+  /// Null where each tap already saves (the sound lists): no Cancel, since
+  /// there is nothing to take back; Done closes.
+  final VoidCallback? onCancel;
 
   /// Null while there is nothing to save.
   final VoidCallback? onAction;
@@ -25,38 +31,47 @@ class SheetNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final ios = DotIdiom.of(context) == DotIdiom.cupertino;
-    final action = TextButton(
-      onPressed: onAction,
-      style: TextButton.styleFrom(
-        textStyle: t.styles.button.copyWith(fontWeight: FontWeight.w800),
-      ),
-      child: Text(actionLabel),
+    final label = actionLabel;
+    final cancel = TextButton(
+      onPressed: onCancel,
+      child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
     );
+    // A missing side: an unseen copy of Cancel keeps the title centred.
+    final spacer = ExcludeSemantics(
+      child: Visibility.maintain(visible: false, child: cancel),
+    );
+    final action = label == null
+        ? spacer
+        : TextButton(
+            onPressed: onAction,
+            style: TextButton.styleFrom(
+              textStyle: t.styles.button.copyWith(fontWeight: FontWeight.w800),
+            ),
+            child: Text(label),
+          );
     if (!ios) {
       return Row(
         spacing: DotSpace.xs,
         children: [
-          IconButton(
-            tooltip: context.l10n.sheetClose,
-            onPressed: onCancel,
-            icon: DotIcon(DotGlyphs.close, color: t.colors.text),
-          ),
+          if (onCancel != null)
+            IconButton(
+              tooltip: context.l10n.sheetClose,
+              onPressed: onCancel,
+              icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+            ),
           Expanded(
             child: Semantics(
               header: true,
               child: Text(title, style: t.styles.sheetTitleAndroid),
             ),
           ),
-          action,
+          if (label != null) action,
         ],
       );
     }
     return Row(
       children: [
-        TextButton(
-          onPressed: onCancel,
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-        ),
+        if (onCancel == null) spacer else cancel,
         Expanded(
           child: Semantics(
             header: true,

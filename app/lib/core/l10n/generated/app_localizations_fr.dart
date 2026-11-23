@@ -7748,6 +7748,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String siriPhraseQuoted(String phrase) {
+    return '« $phrase »';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

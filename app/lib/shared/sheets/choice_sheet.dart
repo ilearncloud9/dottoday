@@ -1,14 +1,19 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/settings/settings_choice_mark.dart';
+import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 /// One option of a [showChoiceSheet].
 typedef Choice<T> = ({T value, String label, String? detail});
 
-/// Pick one of [options] (Settings › Week starts, Time format, Theme …):
-/// a list with the current one ticked. Returns the pick, or null. An
-/// option may lead with its [leading] icon; one in [disabled] stays
-/// listed, dimmed, with its detail saying why (the missions, E-R2-28).
+/// Pick one of [options] (Settings › Week starts, Shift later tasks,
+/// Theme …): the options in a card, the current one marked — a check on
+/// iPhone under "Cancel · title", a radio button elsewhere (E-R2-33). A
+/// tap is the answer. Returns the pick, or null. An option may lead with
+/// its [leading] icon; one in [disabled] stays listed, dimmed, with its
+/// detail saying why (the missions, E-R2-28).
 Future<T?> showChoiceSheet<T>(
   BuildContext context, {
   required String title,
@@ -16,44 +21,80 @@ Future<T?> showChoiceSheet<T>(
   required T selected,
   Map<T, Widget> leading = const {},
   Set<T> disabled = const {},
-}) => showAppSheet<T>(
-  context: context,
-  title: title,
-  builder: (sheet) {
-    final t = DotTheme.of(sheet);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (final o in options)
-          Semantics(
-            selected: o.value == selected,
-            child: ListTile(
-              minTileHeight: DotTouch.android,
-              contentPadding: EdgeInsets.zero,
-              enabled: !disabled.contains(o.value),
-              leading: switch (leading[o.value]) {
-                final icon? when disabled.contains(o.value) => Opacity(
-                  opacity: TaskAlpha.done,
-                  child: icon,
-                ),
-                final icon => icon,
-              },
-              title: Text(
-                o.label,
-                style: disabled.contains(o.value)
-                    ? t.styles.rowTitle.copyWith(color: t.colors.muted)
-                    : t.styles.rowTitle,
-              ),
-              subtitle: o.detail == null
-                  ? null
-                  : Text(o.detail!, style: t.styles.rowMeta),
-              trailing: o.value == selected
-                  ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
-                  : null,
+}) {
+  final ios = DotIdiom.of(context) == DotIdiom.cupertino;
+  return showAppSheet<T>(
+    context: context,
+    title: ios ? null : title,
+    builder: (sheet) {
+      final card = SettingsGroup(
+        caption: '',
+        children: [
+          for (final o in options)
+            _ChoiceRow(
+              choice: o,
+              selected: o.value == selected,
+              disabled: disabled.contains(o.value),
+              leading: leading[o.value],
               onTap: () => Navigator.of(sheet).pop(o.value),
             ),
-          ),
-      ],
+        ],
+      );
+      if (!ios) return card;
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: DotSpace.m,
+        children: [
+          SheetNavBar(title: title, onCancel: () => Navigator.of(sheet).pop()),
+          card,
+        ],
+      );
+    },
+  );
+}
+
+class _ChoiceRow<T> extends StatelessWidget {
+  const _ChoiceRow({
+    required this.choice,
+    required this.selected,
+    required this.disabled,
+    required this.leading,
+    required this.onTap,
+  });
+
+  final Choice<T> choice;
+  final bool selected;
+  final bool disabled;
+  final Widget? leading;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final detail = choice.detail;
+    final icon = leading;
+    return Semantics(
+      selected: selected,
+      child: ListTile(
+        minTileHeight: DotTouch.android,
+        contentPadding: const EdgeInsetsDirectional.symmetric(
+          horizontal: DotSpace.l,
+        ),
+        enabled: !disabled,
+        leading: icon == null || !disabled
+            ? icon
+            : Opacity(opacity: TaskAlpha.done, child: icon),
+        title: Text(
+          choice.label,
+          style: disabled
+              ? t.styles.body.copyWith(color: t.colors.muted)
+              : t.styles.body,
+        ),
+        subtitle: detail == null ? null : Text(detail, style: t.styles.rowMeta),
+        trailing: SettingsChoiceMark(selected: selected),
+        onTap: onTap,
+      ),
     );
-  },
-);
+  }
+}
