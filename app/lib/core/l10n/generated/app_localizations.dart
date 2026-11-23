@@ -10767,7 +10767,7 @@ abstract class AppLocalizations {
   /// Explain sheet line 4: where to turn each off.
   ///
   /// In en, this message translates to:
-  /// **'Each has its own switch in Settings › Day shape › Wake Up options.'**
+  /// **'Each has its own switch in Settings › Your day › Wake Up and Wind Down.'**
   String get wakeUpExplainOff;
 
   /// Coach mark on the card's Start the day (docs/15 §11).
@@ -11813,6 +11813,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview of the app with your choices'**
   String get previewLabel;
+
+  /// Tonight card's heading (Settings › Wake Up and Wind Down, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight · {day}'**
+  String wwdTonight(String day);
+
+  /// Tonight card line: tonight's Wind Down time.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down {time}'**
+  String wwdWindDownAt(String time);
+
+  /// Tonight card line: tomorrow's Wake Up time.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up {time}'**
+  String wwdWakeUpAt(String time);
+
+  /// Tonight card: the night's length, the Wake Up alarm on.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} of night · alarm on'**
+  String wwdNightAlarmOn(String duration);
+
+  /// Tonight card: the night's length, the Wake Up alarm off.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} of night · alarm off'**
+  String wwdNightAlarmOff(String duration);
+
+  /// A schedule card's night length.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} of night'**
+  String wwdNight(String duration);
+
+  /// Caption over the schedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Your week'**
+  String get wwdYourWeek;
+
+  /// Schedule name: Monday to Friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get wwdWeekdays;
+
+  /// Schedule name: Saturday and Sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekend'**
+  String get wwdWeekend;
+
+  /// Schedule name: all seven days.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get wwdEveryDay;
+
+  /// Schedule name for other days (their names follow).
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get wwdDays;
+
+  /// Consecutive days of a schedule, e.g. Mon–Fri.
+  ///
+  /// In en, this message translates to:
+  /// **'{from}–{to}'**
+  String wwdDayRange(String from, String to);
+
+  /// A schedule card: its Wake Up rings.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm on'**
+  String get wwdAlarmOn;
+
+  /// A schedule card: its Wake Up doesn't ring.
+  ///
+  /// In en, this message translates to:
+  /// **'No alarm'**
+  String get wwdNoAlarm;
+
+  /// Adds a schedule (Wake Up and Wind Down).
+  ///
+  /// In en, this message translates to:
+  /// **'Add a schedule'**
+  String get wwdAddSchedule;
+
+  /// Under the schedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Each night runs from that day’s Wind Down to the next morning’s Wake Up.'**
+  String get wwdWeekFooter;
+
+  /// Caption: sleep target and the night on the day dot.
+  ///
+  /// In en, this message translates to:
+  /// **'The night'**
+  String get wwdTheNight;
 
   /// Section title in the task icon picker.
   ///

@@ -21,9 +21,10 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
       l10n.settingsWakeUp,
       l10n.settingsWakeUpAlarm,
       l10n.settingsWindDown,
-      l10n.settingsPerWeekday,
+      l10n.wwdAddSchedule,
       l10n.settingsShowNight,
       l10n.settingsSleepTarget,
+      l10n.settingsWindDownReminder,
     ],
     SettingsPage.learning: [
       l10n.settingsLearningDurations,
@@ -46,7 +47,6 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
       l10n.settingsSound,
       l10n.settingsQuietHours,
       l10n.settingsDaySummary,
-      l10n.settingsWindDownReminder,
     ],
     SettingsPage.appearance: [
       l10n.layoutRow,
@@ -65,7 +65,9 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
     for (final MapEntry(key: page, value: titles) in rows.entries)
       for (final title in titles) (title: title, page: page),
     for (final page in p)
-      if (page != SettingsPage.everything)
+      // Everything else is minimal's way in; Wake Up options is part of
+      // Wake Up and Wind Down now.
+      if (page != SettingsPage.everything && page != SettingsPage.wakeUp)
         (title: settingsPlace(l10n, page).title, page: page),
   ];
 }

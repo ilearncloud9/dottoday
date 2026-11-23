@@ -75,7 +75,7 @@ void main() {
 
   testWidgets('off: the switch, the test and health only', (tester) async {
     await _pump(tester, settings: const Settings(use24h: true));
-    expect(find.text('Wake Up options'), findsOneWidget);
+    expect(find.text('Wake Up and Wind Down'), findsWidgets);
     expect(find.text('Alarm sound'), findsNothing);
     expect(find.text('Snooze length'), findsNothing);
     expect(find.text('Notification health'), findsOneWidget);

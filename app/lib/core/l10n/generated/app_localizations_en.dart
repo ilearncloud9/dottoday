@@ -7056,7 +7056,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Each has its own switch in Settings › Day shape › Wake Up options.';
+      'Each has its own switch in Settings › Your day › Wake Up and Wind Down.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7760,6 +7760,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get previewLabel => 'Preview of the app with your choices';
+
+  @override
+  String wwdTonight(String day) {
+    return 'Tonight · $day';
+  }
+
+  @override
+  String wwdWindDownAt(String time) {
+    return 'Wind Down $time';
+  }
+
+  @override
+  String wwdWakeUpAt(String time) {
+    return 'Wake Up $time';
+  }
+
+  @override
+  String wwdNightAlarmOn(String duration) {
+    return '$duration of night · alarm on';
+  }
+
+  @override
+  String wwdNightAlarmOff(String duration) {
+    return '$duration of night · alarm off';
+  }
+
+  @override
+  String wwdNight(String duration) {
+    return '$duration of night';
+  }
+
+  @override
+  String get wwdYourWeek => 'Your week';
+
+  @override
+  String get wwdWeekdays => 'Weekdays';
+
+  @override
+  String get wwdWeekend => 'Weekend';
+
+  @override
+  String get wwdEveryDay => 'Every day';
+
+  @override
+  String get wwdDays => 'Days';
+
+  @override
+  String wwdDayRange(String from, String to) {
+    return '$from–$to';
+  }
+
+  @override
+  String get wwdAlarmOn => 'Alarm on';
+
+  @override
+  String get wwdNoAlarm => 'No alarm';
+
+  @override
+  String get wwdAddSchedule => 'Add a schedule';
+
+  @override
+  String get wwdWeekFooter =>
+      'Each night runs from that day’s Wind Down to the next morning’s Wake Up.';
+
+  @override
+  String get wwdTheNight => 'The night';
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

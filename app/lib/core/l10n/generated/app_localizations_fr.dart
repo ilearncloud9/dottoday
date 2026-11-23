@@ -7107,7 +7107,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Chacun a son interrupteur dans Réglages › Forme de la journée › Options du réveil.';
+      'Chacun a son interrupteur dans Réglages › Votre journée › Réveil et Détente.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7725,7 +7725,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aide, nouveautés, Siri et Raccourcis, avis';
 
   @override
-  String get settingsWakeWindDown => 'Réveil et fin de journée';
+  String get settingsWakeWindDown => 'Réveil et Détente';
 
   @override
   String get settingsTheTwoEnds => 'Les deux bouts de votre journée';
@@ -7819,6 +7819,72 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get previewLabel => 'Aperçu de l’app avec tes choix';
+
+  @override
+  String wwdTonight(String day) {
+    return 'Ce soir · $day';
+  }
+
+  @override
+  String wwdWindDownAt(String time) {
+    return 'Détente $time';
+  }
+
+  @override
+  String wwdWakeUpAt(String time) {
+    return 'Réveil $time';
+  }
+
+  @override
+  String wwdNightAlarmOn(String duration) {
+    return '$duration de nuit · alarme activée';
+  }
+
+  @override
+  String wwdNightAlarmOff(String duration) {
+    return '$duration de nuit · alarme désactivée';
+  }
+
+  @override
+  String wwdNight(String duration) {
+    return '$duration de nuit';
+  }
+
+  @override
+  String get wwdYourWeek => 'Ta semaine';
+
+  @override
+  String get wwdWeekdays => 'Semaine';
+
+  @override
+  String get wwdWeekend => 'Week-end';
+
+  @override
+  String get wwdEveryDay => 'Tous les jours';
+
+  @override
+  String get wwdDays => 'Jours';
+
+  @override
+  String wwdDayRange(String from, String to) {
+    return '$from–$to';
+  }
+
+  @override
+  String get wwdAlarmOn => 'Alarme activée';
+
+  @override
+  String get wwdNoAlarm => 'Pas d’alarme';
+
+  @override
+  String get wwdAddSchedule => 'Ajouter un horaire';
+
+  @override
+  String get wwdWeekFooter =>
+      'Chaque nuit va de la détente du jour au réveil du lendemain matin.';
+
+  @override
+  String get wwdTheNight => 'La nuit';
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';

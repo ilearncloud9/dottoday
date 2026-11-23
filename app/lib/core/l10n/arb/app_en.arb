@@ -7702,7 +7702,7 @@
   "@wakeUpExplainCard": {"description": "Explain sheet line 2: what the card does."},
   "wakeUpExplainCheck": "If nothing has started a few minutes later, one gentle check asks.",
   "@wakeUpExplainCheck": {"description": "Explain sheet line 3: what the check does."},
-  "wakeUpExplainOff": "Each has its own switch in Settings › Day shape › Wake Up options.",
+  "wakeUpExplainOff": "Each has its own switch in Settings › Your day › Wake Up and Wind Down.",
   "@wakeUpExplainOff": {"description": "Explain sheet line 4: where to turn each off."},
   "wakeUpDiscoveryStartDay": "Tap when you're up — your day's thread starts from here.",
   "@wakeUpDiscoveryStartDay": {"description": "Coach mark on the card's Start the day (docs/15 §11)."},
@@ -8126,6 +8126,112 @@
   "previewLabel": "Preview of the app with your choices",
   "@previewLabel": {
     "description": "Screen reader label of the Appearance preview."
+  },
+  "wwdTonight": "Tonight · {day}",
+  "@wwdTonight": {
+    "description": "Tonight card's heading (Settings › Wake Up and Wind Down, ED-084).",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdWindDownAt": "Wind Down {time}",
+  "@wwdWindDownAt": {
+    "description": "Tonight card line: tonight's Wind Down time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdWakeUpAt": "Wake Up {time}",
+  "@wwdWakeUpAt": {
+    "description": "Tonight card line: tomorrow's Wake Up time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdNightAlarmOn": "{duration} of night · alarm on",
+  "@wwdNightAlarmOn": {
+    "description": "Tonight card: the night's length, the Wake Up alarm on.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdNightAlarmOff": "{duration} of night · alarm off",
+  "@wwdNightAlarmOff": {
+    "description": "Tonight card: the night's length, the Wake Up alarm off.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdNight": "{duration} of night",
+  "@wwdNight": {
+    "description": "A schedule card's night length.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdYourWeek": "Your week",
+  "@wwdYourWeek": {
+    "description": "Caption over the schedules."
+  },
+  "wwdWeekdays": "Weekdays",
+  "@wwdWeekdays": {
+    "description": "Schedule name: Monday to Friday."
+  },
+  "wwdWeekend": "Weekend",
+  "@wwdWeekend": {
+    "description": "Schedule name: Saturday and Sunday."
+  },
+  "wwdEveryDay": "Every day",
+  "@wwdEveryDay": {
+    "description": "Schedule name: all seven days."
+  },
+  "wwdDays": "Days",
+  "@wwdDays": {
+    "description": "Schedule name for other days (their names follow)."
+  },
+  "wwdDayRange": "{from}–{to}",
+  "@wwdDayRange": {
+    "description": "Consecutive days of a schedule, e.g. Mon–Fri.",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdAlarmOn": "Alarm on",
+  "@wwdAlarmOn": {
+    "description": "A schedule card: its Wake Up rings."
+  },
+  "wwdNoAlarm": "No alarm",
+  "@wwdNoAlarm": {
+    "description": "A schedule card: its Wake Up doesn't ring."
+  },
+  "wwdAddSchedule": "Add a schedule",
+  "@wwdAddSchedule": {
+    "description": "Adds a schedule (Wake Up and Wind Down)."
+  },
+  "wwdWeekFooter": "Each night runs from that day’s Wind Down to the next morning’s Wake Up.",
+  "@wwdWeekFooter": {
+    "description": "Under the schedules."
+  },
+  "wwdTheNight": "The night",
+  "@wwdTheNight": {
+    "description": "Caption: sleep target and the night on the day dot."
   },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},

@@ -11,8 +11,12 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/wake_wind/schedule_cards.dart';
+import 'package:dottoday/features/settings/wake_wind/tonight_card.dart';
+import 'package:dottoday/features/settings/wake_wind/wind_down_reminder_row.dart';
 import 'package:dottoday/features/settings/widgets/alarm_device_row.dart';
 import 'package:dottoday/features/settings/widgets/mission_group.dart';
+import 'package:dottoday/features/settings/widgets/night_rows.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_card_group.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_check_group.dart';
@@ -24,21 +28,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Settings › Day shape › Wake Up options (docs/15 §9, M17.2–M17.3;
-/// derived from `SettingsGroup` rows): the alarm switch with this device's
-/// tier and fix, sound, snooze, the check and missions (15 §8) while it is
-/// on, the Morning card, a real test alarm and Notification health. Minimal
-/// mode shows the two switches and the sound, with the rest behind More
-/// options (15 §10). The header links How it works; on a Mac or the web it
-/// says the switches ring on the phone and sync (15 §11).
-class WakeUpPage extends ConsumerStatefulWidget {
-  const WakeUpPage({super.key});
+/// Settings › Your day › Wake Up and Wind Down (E-Phones, ED-084; M20.7
+/// part 4a): Tonight, your week as schedules with Add a schedule, the
+/// night (sleep target, the night on the day dot), the Wake Up alarm
+/// (docs/15 §9: the switch with this device's tier and fix, sound, snooze,
+/// the check and missions while it is on, a real test alarm), and
+/// reminders (Wind Down reminder, the Morning card). Minimal mode shows the
+/// switches and the sound, with the rest behind More options (15 §10). On
+/// a Mac or the web it says the alarm rings on the phone and syncs (§11).
+class WakeWindDownPage extends ConsumerStatefulWidget {
+  const WakeWindDownPage({super.key});
 
   @override
-  ConsumerState<WakeUpPage> createState() => _WakeUpPageState();
+  ConsumerState<WakeWindDownPage> createState() => _WakeWindDownPageState();
 }
 
-class _WakeUpPageState extends ConsumerState<WakeUpPage> {
+class _WakeWindDownPageState extends ConsumerState<WakeWindDownPage> {
   /// Minimal mode's "More options", open for this visit only.
   var _more = false;
 
@@ -54,16 +59,15 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
     final caps = ref.watch(alarmCapabilitiesNowProvider).value;
     final desktop = caps?.blockers.contains(AlarmBlocker.notAPhone) ?? false;
     return SettingsPageFrame(
-      title: l10n.settingsWakeUpOptions,
-      page: SettingsPage.wakeUp,
+      title: l10n.settingsWakeWindDown,
+      page: SettingsPage.wakeWindDown,
       children: [
         if (desktop) PageText(l10n.wakeUpDesktopNote),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: TextButton(
-            onPressed: () => unawaited(showWakeUpExplainSheet(context)),
-            child: Text(l10n.wakeUpHowItWorks),
-          ),
+        if (profile != null) TonightCard(profile: profile),
+        ScheduleCards(settings: settings),
+        SettingsGroup(
+          caption: l10n.wwdTheNight,
+          children: nightRows(context, settings),
         ),
         SettingsGroup(
           caption: l10n.wakeUpAlarmCaption,
@@ -73,12 +77,23 @@ class _WakeUpPageState extends ConsumerState<WakeUpPage> {
               AlarmDeviceRow(profile: profile),
           ],
         ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton(
+            onPressed: () => unawaited(showWakeUpExplainSheet(context)),
+            child: Text(l10n.wakeUpHowItWorks),
+          ),
+        ),
         if (settings.wakeUpAlarm) ...[
           WakeUpSoundGroup(settings: settings, full: full),
           if (full) WakeUpSnoozeGroup(settings: settings),
           if (full) WakeUpCheckGroup(settings: settings),
           MissionGroup(settings: settings, full: full),
         ],
+        SettingsGroup(
+          caption: l10n.settingsReminders,
+          children: [WindDownReminderRow(settings: settings)],
+        ),
         WakeUpCardGroup(settings: settings, full: full),
         if (!full)
           Align(

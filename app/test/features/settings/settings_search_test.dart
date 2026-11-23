@@ -30,7 +30,10 @@ void main() {
     final pages = {for (final e in settingsIndex(l10n)) e.page};
     expect(
       pages,
-      SettingsPage.values.toSet().difference({SettingsPage.everything}),
+      SettingsPage.values.toSet().difference({
+        SettingsPage.everything,
+        SettingsPage.wakeUp,
+      }),
     );
   });
 
@@ -70,8 +73,9 @@ void main() {
     expect(find.text('The two ends of your day'), findsOneWidget);
     await tester.tap(find.text('Wake Up and Wind Down'));
     await tester.pumpAndSettle();
-    expect(find.text('Different days'), findsOneWidget);
-    expect(find.text('Day shape'), findsNothing, reason: 'one group');
+    // Tonight and the week as schedules (ED-084), not Day shape's rows.
+    expect(find.text('Your week'), findsOneWidget);
+    expect(find.text('Every day'), findsOneWidget);
     await tester.tap(settingsBack('Your day'));
     await tester.pumpAndSettle();
     expect(h.router.state.uri.path, '/settings/yourDay');

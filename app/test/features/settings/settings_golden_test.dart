@@ -156,6 +156,32 @@ void main() {
       build: (_) => _page(page),
     );
   }
+  // M20.7 part 4a (ED-084): Wake Up and Wind Down with Weekdays and a
+  // Weekend that winds down after midnight, the alarm on.
+  for (final (name, platform) in [
+    ('settings_wake_wind_split', TargetPlatform.iOS),
+    ('settings_wake_wind_split_android', TargetPlatform.android),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 1400,
+      platform: platform,
+      widths: const {'compact'},
+      overrides: _overridesWith(
+        settings: Settings(
+          use24h: false,
+          wakeUpAlarm: true,
+          dayBoundaries: {
+            for (final d in Weekday.values)
+              d: d.index < 5
+                  ? const TimeWindow(start: '06:30', end: '23:00')
+                  : const TimeWindow(start: '08:30', end: '24:30'),
+          },
+        ),
+      ),
+      build: (_) => _page(SettingsPage.wakeWindDown),
+    );
+  }
   // M20.7 part 3 (E-G3-9b, ED-161): Appearance in Less (the preview's Now
   // ring), with a custom App colour first, and Edit palette.
   goldenMatrix(
@@ -211,7 +237,8 @@ void main() {
     'settings_weekdays',
     height: 844,
     widths: const {'compact', 'expanded'},
-    act: (t) => _open(t, 'Different days'),
+    // The schedule's Edit (the per-weekday sheet until M20.7 part 4b).
+    act: (t) => _open(t, 'Edit'),
     overrides: _overrides,
     build: (_) => _page(SettingsPage.wakeWindDown),
   );

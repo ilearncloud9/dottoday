@@ -8,7 +8,6 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
-import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/learning_group.dart';
 import 'package:dottoday/features/settings/widgets/planning_group.dart';
 import 'package:dottoday/features/settings/widgets/reminders_group.dart';
@@ -52,7 +51,6 @@ class SettingsGroupPage extends ConsumerWidget {
           children: const [PlaceRow(SettingsPage.learning)],
         ),
       ],
-      SettingsPage.wakeWindDown => [DayShapeGroup(settings: s)],
       SettingsPage.learning => [LearningGroup(settings: s)],
       SettingsPage.planning => [PlanningGroup(settings: s)],
       SettingsPage.reminders => [RemindersGroup(settings: s)],

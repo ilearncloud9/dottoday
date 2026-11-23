@@ -8,8 +8,6 @@ import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
-import 'package:dottoday/domain/time/day_boundaries.dart';
-import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
 import 'package:dottoday/features/settings/widgets/quiet_hours_row.dart';
 import 'package:dottoday/features/settings/widgets/reminder_sheets.dart';
@@ -76,7 +74,6 @@ class RemindersGroup extends ConsumerWidget {
   Widget _group(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final bed = windowMinutes(commonWindow(settings).end);
     return SettingsGroup(
       caption: l10n.settingsReminders,
       children: [
@@ -104,17 +101,6 @@ class RemindersGroup extends ConsumerWidget {
           title: l10n.settingsDaySummary,
           value: daySummaryText(context, settings.daySummaryDays),
           onTap: () => unawaited(showDaySummarySheet(context)),
-        ),
-        SettingsRow(
-          glyph: DotGlyphs.moon,
-          tint: t.tasks[TaskColor.violet].ink,
-          title: l10n.settingsWindDownReminder,
-          subtitle: l10n.settingsWindDownReminderDetail(
-            clockText(context, bed, settings.use24h),
-          ),
-          toggle: settings.windDownReminder,
-          onToggle: (v) =>
-              changeSettings(context, (s) => s.copyWith(windDownReminder: v)),
         ),
         const HealthSummaryRow(),
       ],

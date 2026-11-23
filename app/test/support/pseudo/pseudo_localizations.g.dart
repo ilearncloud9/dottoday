@@ -6228,6 +6228,60 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get previewLabel => pseudo(super.previewLabel);
 
   @override
+  String wwdTonight(String day) => pseudo(super.wwdTonight(day));
+
+  @override
+  String wwdWindDownAt(String time) => pseudo(super.wwdWindDownAt(time));
+
+  @override
+  String wwdWakeUpAt(String time) => pseudo(super.wwdWakeUpAt(time));
+
+  @override
+  String wwdNightAlarmOn(String duration) =>
+      pseudo(super.wwdNightAlarmOn(duration));
+
+  @override
+  String wwdNightAlarmOff(String duration) =>
+      pseudo(super.wwdNightAlarmOff(duration));
+
+  @override
+  String wwdNight(String duration) => pseudo(super.wwdNight(duration));
+
+  @override
+  String get wwdYourWeek => pseudo(super.wwdYourWeek);
+
+  @override
+  String get wwdWeekdays => pseudo(super.wwdWeekdays);
+
+  @override
+  String get wwdWeekend => pseudo(super.wwdWeekend);
+
+  @override
+  String get wwdEveryDay => pseudo(super.wwdEveryDay);
+
+  @override
+  String get wwdDays => pseudo(super.wwdDays);
+
+  @override
+  String wwdDayRange(String from, String to) =>
+      pseudo(super.wwdDayRange(from, to));
+
+  @override
+  String get wwdAlarmOn => pseudo(super.wwdAlarmOn);
+
+  @override
+  String get wwdNoAlarm => pseudo(super.wwdNoAlarm);
+
+  @override
+  String get wwdAddSchedule => pseudo(super.wwdAddSchedule);
+
+  @override
+  String get wwdWeekFooter => pseudo(super.wwdWeekFooter);
+
+  @override
+  String get wwdTheNight => pseudo(super.wwdTheNight);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

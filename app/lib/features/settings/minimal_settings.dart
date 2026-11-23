@@ -49,7 +49,7 @@ class MinimalSettings extends ConsumerWidget {
           caption: '',
           children: [
             const LayoutRow(),
-            ...DayShapeGroup(settings: settings).times(context),
+            ...dayTimeRows(context, settings),
             SettingsRow(
               glyph: DotGlyphs.bell,
               tint: t.colors.accentInk,

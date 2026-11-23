@@ -1,7 +1,6 @@
 import 'package:dottoday/data/feedback/diagnostics_reader.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/sound/sound_player.dart';
-import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -9,7 +8,6 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/feedback/feedback_diagnostics.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
-import 'package:dottoday/shared/dot/day_shape_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -66,12 +64,18 @@ void main() {
   testWidgets('each group page shows its rows and values', (tester) async {
     final h = await pumpSettings(tester);
     for (final (row, values) in [
-      ('Wake Up', ['15 h awake', '07:00', '22:00']),
-      ('Snap to', ['30 min', '5 min', 'Ask each time']),
       (
-        'Task starts',
-        ['10 min before', "At 22:00, with tomorrow's first task"],
+        'Wake Up',
+        [
+          'Every day',
+          '07:00',
+          '22:00',
+          '9 h of night',
+          "At 22:00, with tomorrow's first task",
+        ],
       ),
+      ('Snap to', ['30 min', '5 min', 'Ask each time']),
+      ('Task starts', ['10 min before']),
       ('Theme', ['Auto', 'English', 'Monday', '24 h']),
       ('Trash', ['Data', 'Privacy', 'Help with thinking']),
       ('Send feedback', ['0.1.0 (1)']),
@@ -243,51 +247,16 @@ void main() {
     expect(find.text('System sound'), findsOneWidget);
   });
 
-  testWidgets('Wake Up typed moves every weekday (R-20)', (tester) async {
-    final h = await pumpSettings(tester);
-    await tapSettingRow(tester, h, 'Wake Up');
-    await tester.enterText(find.byType(TextField).last, '630');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    await tester.tap(find.text('Done'));
-    await tester.pumpAndSettle();
-    final s = await storedSettings(h);
-    for (final d in Weekday.values) {
-      expect(s.boundaryFor(d).start, '06:30');
-    }
-    expect(find.text('15 h 30 awake'), findsOneWidget);
-  });
-
-  testWidgets('slider: the screen reader steps a handle; a drag is one write', (
-    tester,
-  ) async {
-    final handle = tester.ensureSemantics();
-    final h = await pumpSettings(tester, location: '/settings/wakeWindDown');
-    tester.semantics.increase(find.semantics.byLabel('Wake Up'));
-    await tester.pumpAndSettle();
-    expect((await storedSettings(h)).boundaryFor(Weekday.mon).start, '07:15');
-    final writes = h.container.read(writeUseCaseProvider) as FakeWriteUseCase;
-    final before = writes.applied.length;
-    await tester.drag(
-      find
-          .descendant(
-            of: find.byType(DayShapeSlider),
-            matching: find.byType(GestureDetector),
-          )
-          .first,
-      const Offset(-80, 0),
-    );
-    await tester.pumpAndSettle();
-    expect(writes.applied.length, before + 1);
-    handle.dispose();
-  });
-
   testWidgets('Different days: a custom Saturday shows on the row', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    final h = await pumpSettings(tester);
-    await tapSettingRow(tester, h, 'Different days');
+    final h = await pumpSettings(tester, location: '/settings/wakeWindDown');
+    // The schedule's Edit (the per-weekday sheet until M20.7 part 4b).
+    await tester.ensureVisible(find.text('Edit').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Edit').first);
+    await tester.pumpAndSettle();
     // The sheet's seven Wind Down handles, Monday first (week starts Monday).
     final windDowns = find.semantics.byPredicate((n) => n.label == 'Wind Down');
     expect(windDowns.evaluate(), hasLength(7));

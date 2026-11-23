@@ -9,7 +9,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
-import 'package:dottoday/features/settings/pages/wake_up_page.dart';
+import 'package:dottoday/features/settings/wake_wind/wake_wind_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -66,7 +66,7 @@ void main() {
     height: 1600,
     a11yVariants: true,
     act: (t) async {
-      final page = t.element(find.byType(WakeUpPage));
+      final page = t.element(find.byType(WakeWindDownPage));
       if (MediaQuery.textScalerOf(page).scale(1) <= 1) return;
       await t.scrollUntilVisible(
         find.text('Snooze limit'),
@@ -76,7 +76,7 @@ void main() {
       await t.pumpAndSettle();
     },
     overrides: _overrides(_on),
-    build: (_) => const WakeUpPage(),
+    build: (_) => const WakeWindDownPage(),
   );
   goldenMatrix(
     'settings_wake_up_alarms_off',
@@ -88,14 +88,14 @@ void main() {
         AlarmBlocker.alarmsDenied,
       ]),
     ),
-    build: (_) => const WakeUpPage(),
+    build: (_) => const WakeWindDownPage(),
   );
   goldenMatrix(
     'settings_wake_up_minimal',
     height: 1000,
     widths: const {'compact'},
     overrides: _overrides(_on.copyWith(uiLayout: UiLayout.minimal)),
-    build: (_) => const WakeUpPage(),
+    build: (_) => const WakeWindDownPage(),
   );
   // E-R2-28 (M20.6 part 5): the mission picker, each with its task icon;
   // Walk has no sensor here and Light is blocked: listed, dimmed, why.
@@ -121,6 +121,6 @@ void main() {
         },
       ),
     ),
-    build: (_) => const WakeUpPage(),
+    build: (_) => const WakeWindDownPage(),
   );
 }

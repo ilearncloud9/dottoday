@@ -7089,7 +7089,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Cada uno tiene su interruptor en Ajustes › Forma del día › Opciones del despertar.';
+      'Cada uno tiene su interruptor en Ajustes › Tu día › Despertar y Desconexión.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7800,6 +7800,72 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get previewLabel => 'Vista previa de la app con tus elecciones';
+
+  @override
+  String wwdTonight(String day) {
+    return 'Esta noche · $day';
+  }
+
+  @override
+  String wwdWindDownAt(String time) {
+    return 'Desconexión $time';
+  }
+
+  @override
+  String wwdWakeUpAt(String time) {
+    return 'Despertar $time';
+  }
+
+  @override
+  String wwdNightAlarmOn(String duration) {
+    return '$duration de noche · alarma activada';
+  }
+
+  @override
+  String wwdNightAlarmOff(String duration) {
+    return '$duration de noche · alarma desactivada';
+  }
+
+  @override
+  String wwdNight(String duration) {
+    return '$duration de noche';
+  }
+
+  @override
+  String get wwdYourWeek => 'Tu semana';
+
+  @override
+  String get wwdWeekdays => 'Entre semana';
+
+  @override
+  String get wwdWeekend => 'Fin de semana';
+
+  @override
+  String get wwdEveryDay => 'Todos los días';
+
+  @override
+  String get wwdDays => 'Días';
+
+  @override
+  String wwdDayRange(String from, String to) {
+    return '$from–$to';
+  }
+
+  @override
+  String get wwdAlarmOn => 'Alarma activada';
+
+  @override
+  String get wwdNoAlarm => 'Sin alarma';
+
+  @override
+  String get wwdAddSchedule => 'Añadir un horario';
+
+  @override
+  String get wwdWeekFooter =>
+      'Cada noche va de la desconexión de ese día al despertar de la mañana siguiente.';
+
+  @override
+  String get wwdTheNight => 'La noche';
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

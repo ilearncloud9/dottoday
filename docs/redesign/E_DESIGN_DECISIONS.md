@@ -5680,6 +5680,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** Everything · Less under the title on phones; the preview's tabs as icons; device shots don't show the re-colour (the test app's theme doesn't follow the profile; a unit test covers it); tablets, the Mac and the web full width until part 5.
 - **Checks:** format and analyze clean; 7,888 pass, 31 skipped. New goldens `settings_appearance_less`, `settings_edit_palette` (iPhone, Android); Appearance, Minimal and segmented-control goldens updated; tests for the nearest accent, the custom theme, Edit palette, Layout and a11y. `integration_test/settings_appearance_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Found: Edit palette's note named the old ink mid-write (fixed, iPhone rerun); App colour off-centre on wide windows (fixed, Mac rerun). Not run: real devices; the hosted database.
 
+### ED-446 · M20.7 part 4a: the Wake Up and Wind Down page
+- **Date:** 2026-11-24. **Owner:** "Start part 4"; answers: "In settings (Recommended)" for the per-schedule alarm and reminder days, "Two parts (Recommended)" (4a the page, 4b the schedule sheet); then "Approve part 4a" after the review page (https://claude.ai/artifact/D44xNWCBqgK3PXLZnd92Xp).
+- **Built (E-Phones, ED-084):**
+  - **Tonight:** today's Wind Down and tomorrow's Wake Up between the moon and the sun, the night's length, alarm on or off.
+  - **Your week as schedules** (`domain/time/schedules.dart`: the stored per-weekday windows grouped, never stored; `nightAfter` counts each night to the next morning's Wake Up, after midnight too): Every day, Weekdays, Weekend or the days by name, with Wake Up, Wind Down (clock time, as drawn), the night and Edit; Add a schedule; how nights are counted.
+  - **One page:** the Wake Up options page merged in (its route lands here): the night (sleep target, the night on the day dot), the Wake Up alarm with its options, How it works and the test alarm, and Reminders (the Wind Down reminder, moved from Settings › Reminders; the Morning card).
+  - Day shape's slider and Different days removed (schedules replace them); minimal Settings keeps its rows (`dayTimeRows`).
+  - The How it works sheet names Settings › Your day › Wake Up and Wind Down; German and French page names use the app's own words (Aufstehen und Abendruhe; Réveil et Détente).
+- **Departures (on the review page):** until 4b, Edit and Add open the per-weekday sheet and "Alarm on" follows the one switch; the alarm's options keep their groups and the check stays with the alarm; tablets, the Mac and the web full width until part 5.
+- **Checks:** format and analyze clean; 7,902 pass, 31 skipped. New golden `settings_wake_wind_split` (iPhone, Android); Wake Up, Reminders and How it works goldens updated; tests for schedules, the page and a11y; the slider's tests removed with it. `integration_test/settings_wake_wind_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers
