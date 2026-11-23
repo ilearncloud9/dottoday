@@ -31,7 +31,21 @@ class FocusStepCard extends StatelessWidget {
     final l10n = context.l10n;
     final step = state.step;
     final left = state.stepLeft;
-    final done = state.steps.where((s) => s.done).length;
+    final meta = t.styles.cardTitle.copyWith(color: t.colors.muted);
+    final usual = switch (state.stepLearned) {
+      Learned(usualMinutes: final usual?, :final samples) => LearnedLine(
+        text: l10n.learnUsually(formatDurationShort(l10n, usual)),
+        explanation: LearnedExplanation.perTitle(
+          l10n,
+          samples: samples,
+          title: taskTitle,
+          reset: onResetLearning,
+        ),
+        style: meta,
+      ),
+      _ => null,
+    };
+    // E-R2-9: "STEP 3 OF 4", the step, then "8:00 left · usually 20 min".
     return DecoratedBox(
       decoration: BoxDecoration(
         color: t.colors.raised,
@@ -43,83 +57,36 @@ class FocusStepCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.l),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.m,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: DotSpace.xxs,
           children: [
-            MergeSemantics(
-              child: Row(
-                spacing: DotSpace.m,
+            if (step != null)
+              Text(
+                l10n
+                    .focusStep(state.stepIndex! + 1, state.steps.length)
+                    .toUpperCase(),
+                style: t.styles.caption,
+              ),
+            Text(
+              step?.title ?? l10n.focusAllSteps,
+              style: t.styles.promptTitle,
+            ),
+            if (left != null || usual != null)
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: DotSpace.s,
                 children: [
-                  ExcludeSemantics(
-                    child: SizedBox.square(
-                      dimension: DotSize.pickerDot,
-                      child: CircularProgressIndicator(
-                        value: state.steps.isEmpty
-                            ? 1
-                            : done / state.steps.length,
-                        strokeWidth: DotSize.liveRing,
-                        color: t.colors.accent,
-                        backgroundColor: t.colors.threadAhead,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (step != null)
-                          Text(
-                            l10n
-                                .focusStep(
-                                  state.stepIndex! + 1,
-                                  state.steps.length,
-                                )
-                                .toUpperCase(),
-                            style: t.styles.caption,
-                          ),
-                        Text(
-                          step?.title ?? l10n.focusAllSteps,
-                          style: t.styles.rowTitle,
-                        ),
-                      ],
-                    ),
-                  ),
                   if (left != null)
                     Text(
                       l10n.liveActivityLeft(countdown(left)),
-                      style: t.styles.rowTitle.copyWith(
-                        color: t.colors.accentInk,
-                      ),
+                      style: meta.copyWith(color: t.colors.accentInk),
                     ),
+                  if (left != null && usual != null)
+                    ExcludeSemantics(
+                      child: Text('·', style: meta), // l10n-ignore: separator
+                    ),
+                  ?usual,
                 ],
-              ),
-            ),
-            if (state.stepProgress case final p?)
-              ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(DotRadii.pill),
-                ),
-                child: LinearProgressIndicator(
-                  value: p,
-                  minHeight: DotSize.segment,
-                  color: t.colors.accent,
-                  backgroundColor: t.colors.threadAhead,
-                ),
-              ),
-            // The timer runs on the step's usual length (docs/13 §5).
-            if (state.stepLearned case Learned(
-              usualMinutes: final usual?,
-              :final samples,
-            ))
-              LearnedLine(
-                text: l10n.learnUsually(formatDurationShort(l10n, usual)),
-                explanation: LearnedExplanation.perTitle(
-                  l10n,
-                  samples: samples,
-                  title: taskTitle,
-                  reset: onResetLearning,
-                ),
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
               ),
           ],
         ),
@@ -150,14 +117,20 @@ class FocusStepThread extends StatelessWidget {
               Expanded(
                 child: Text(
                   s.title,
-                  style: t.styles.body.copyWith(
-                    color: s.done
-                        ? t.colors.muted
-                        : i == state.stepIndex
-                        ? t.colors.accentInk
-                        : null,
-                    decoration: s.done ? TextDecoration.lineThrough : null,
-                  ),
+                  style:
+                      (i == state.stepIndex && !s.done
+                              ? t.styles.cardTitle
+                              : t.styles.body)
+                          .copyWith(
+                            color: s.done
+                                ? t.colors.muted
+                                : i == state.stepIndex
+                                ? t.colors.accentInk
+                                : null,
+                            decoration: s.done
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
                 ),
               ),
             ],

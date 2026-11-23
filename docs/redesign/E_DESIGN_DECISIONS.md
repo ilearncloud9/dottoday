@@ -5595,6 +5595,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; 7,746 pass, 31 skipped; 12 selection goldens updated, new `workspace_grid_picks` goldens, new selection model and journey widget tests. `integration_test/select_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 - **M20.5 done** (ED-434 to ED-437).
 
+### ED-438 · M20.6 part 1: Focus on every platform
+- **Date:** 2026-11-23. **Owner:** "Start M20.6", "Five parts (Recommended)", "Start part 1", then "Approve part 1" after the review page (https://claude.ai/artifact/U2ssd8M2X7mbQhadGiREYK).
+- **Built (E-R2-9, ED-284 to ED-286; E-R2-26 §3, ED-329):** no new strings.
+  - **One Focus, the whole window:** Focus is the `/focus/:id` route at every width (`openFocus` always pushes); `FocusFrame` (the content-area form) is removed, replaced. `FocusLayout`: on expanded windows two columns from one top, the pair centred (ring, time, title, time left; step card, steps, toggles, actions, note); one readable column below. The tabs underneath keep their state; Esc, ‹ Today or Back leaves; an owner switch closes it. `focusTaskProvider` is now set by the screen while it is up.
+  - **Native navigation:** `NativeBar.setHidden` ("hidden" on the channel), raised by `NativeBarObserver.wholeWindow` while Focus is up: the iPad's tabs, sidebar and + hide (`setTabBarHidden`, `sidebar.isHidden`; configure keeps the + away meanwhile); the iPhone row fades; a dialog closing over Focus keeps it away.
+  - **Look (E-R2-9):** `FocusRing.screen` (200, 168 on the whole window; 15 stroke on a 20 % track of the task's colour; no disc; 64 glyph, plain stroke), missions keep their ring; title `emptyTitle`; time left `liveRowTitle` in accent ink; the step card "STEP 3 OF 4", the step (`promptTitle`), "8:00 left · usually 20 min" (its small ring and progress bar removed, as drawn); the current step bold.
+  - **Accessibility:** the ring is one image whose label is the time left, the text under it excluded; reduced motion already zero via the theme.
+  - **Past its end:** as built (ring full, "0 min left", +15 min and Done with toasts).
+- **Departures (on the review page):** the sample's icon is the app's focus block; "0:00 left" from the sample clock; Task details from ⋯ leaves Focus at every width; Mac shots without window chrome (harness).
+- **Tooling:** `tool/device_tests.sh` `KEEP_BOOT=1` keeps a rotated iPad simulator rotated.
+- **Checks:** format and analyze clean; 7,748 pass, 31 skipped; Focus goldens updated; `focus_frame_test` became `focus_screen_test` (two columns, the tab kept, native navigation hidden, Esc, owner switch, the ring's one label); a native-bar test for hiding; the Today harness and week cues test gained a Focus route. `integration_test/focus_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

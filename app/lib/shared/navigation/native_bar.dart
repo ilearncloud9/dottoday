@@ -42,6 +42,10 @@ abstract interface class NativeBar {
   /// Fades the row out (false) under a Flutter sheet or dialog, or back.
   Future<void> setVisible({required bool visible});
 
+  /// Takes the row, or the iPad's tabs and sidebar, out of sight while a
+  /// whole-window screen (Focus, ED-285) is up (true), or back.
+  Future<void> setHidden({required bool hidden});
+
   /// Takes the row away (the shell left the compact phone layout).
   Future<void> remove();
 
@@ -53,6 +57,10 @@ abstract interface class NativeBar {
 final class NativeBarObserver extends NavigatorObserver {
   /// Open sheets and dialogs.
   static final popups = ValueNotifier<int>(0);
+
+  /// Whole-window screens up (Focus, ED-285): the native navigation hides
+  /// while any is. Each raises it while mounted.
+  static final wholeWindow = ValueNotifier<int>(0);
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
@@ -110,12 +118,14 @@ class _NativeBarShellState extends State<NativeBarShell> {
     super.initState();
     _events = widget.native.events.listen(_onEvent);
     NativeBarObserver.popups.addListener(_onPopups);
+    NativeBarObserver.wholeWindow.addListener(_onWholeWindow);
   }
 
   @override
   void dispose() {
     unawaited(_events?.cancel());
     NativeBarObserver.popups.removeListener(_onPopups);
+    NativeBarObserver.wholeWindow.removeListener(_onWholeWindow);
     unawaited(widget.native.remove());
     super.dispose();
   }
@@ -125,8 +135,17 @@ class _NativeBarShellState extends State<NativeBarShell> {
     NativeBarAdd() => widget.bar.onAdd?.call(),
   };
 
+  void _onWholeWindow() => unawaited(
+    widget.native.setHidden(hidden: NativeBarObserver.wholeWindow.value > 0),
+  );
+
+  // A dialog closing over a whole-window screen keeps the row away.
   void _onPopups() => unawaited(
-    widget.native.setVisible(visible: NativeBarObserver.popups.value == 0),
+    widget.native.setVisible(
+      visible:
+          NativeBarObserver.popups.value == 0 &&
+          NativeBarObserver.wholeWindow.value == 0,
+    ),
   );
 
   @override

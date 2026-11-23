@@ -57,6 +57,13 @@ Future<void> pumpToday(
         : AppRoutes.day(date),
     // Today and its days are one page, as in the app (ED-097).
     routes: [
+      // Focus over Today (ED-285): a stand-in naming its task.
+      GoRoute(
+        path: AppRoutes.focusPattern,
+        builder: (_, state) => Text(
+          'Focus ${state.pathParameters['id']}', // l10n-ignore: test stand-in
+        ),
+      ),
       GoRoute(
         path: AppRoutes.today,
         pageBuilder: (_, _) => NoTransitionPage(

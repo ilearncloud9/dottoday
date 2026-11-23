@@ -17,6 +17,9 @@ abstract final class TaskAlpha {
   /// Unfilled track of a live dot's ring.
   static const track = 0.25;
 
+  /// Unfilled track of the Focus screen's ring (E-R2-9).
+  static const focusTrack = 0.2;
+
   /// Minimal's orb (E rules §5.3, ED-106): its centre is the task's colour
   /// at 8 % (indigo's `#F1F0FB`), its shadow at 16 %.
   static const orbCentre = 0.08;

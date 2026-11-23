@@ -1,5 +1,5 @@
-import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/week/week_card.dart';
@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/week_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/timeline_fakes.dart';
@@ -47,11 +48,22 @@ Future<(FakeOccurrenceRepository, ProviderContainer)> _pump(
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: DotTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const WeekScreen(),
+        routerConfig: GoRouter(
+          routes: [
+            GoRoute(path: '/', builder: (_, _) => const WeekScreen()),
+            // Focus is a route (ED-285): a stand-in naming its task.
+            GoRoute(
+              path: AppRoutes.focusPattern,
+              builder: (_, state) => Text(
+                'Focus ${state.pathParameters['id']}', // l10n-ignore: stand-in
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -63,12 +75,12 @@ void main() {
   setUpAll(tz_data.initializeTimeZones);
 
   testWidgets('Smallest step: the cue line opens Focus', (tester) async {
-    final (_, container) = await _pump(tester);
+    await _pump(tester);
     final cue = find.text('Just Gather documents · 10 min?');
     expect(cue, findsOneWidget);
     await tester.tap(cue);
     await tester.pumpAndSettle();
-    expect(container.read(focusTaskProvider), 'cue-21');
+    expect(find.text('Focus cue-21'), findsOneWidget);
   });
 
   testWidgets('Unstick: the cue asks in a sheet; the answer is step 1', (

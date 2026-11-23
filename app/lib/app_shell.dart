@@ -11,7 +11,6 @@ import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
-import 'package:dottoday/features/focus/focus_screen.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
@@ -122,13 +121,10 @@ class AppShell extends ConsumerWidget {
               focusNode: content,
               // Proposals (M10.2): a sheet on phones, the panel when wide.
               child: ProposalHost(
-                // Focus on Mac/web takes the content area (M10.5).
                 // A routine dropped from Add (M11.4).
                 child: RoutineDropHost(
                   // Several lines from minimal Add (docs/14 §3 B4).
-                  child: BrainDumpHost(
-                    child: EditorPanelFrame(child: FocusFrame(child: shell)),
-                  ),
+                  child: BrainDumpHost(child: EditorPanelFrame(child: shell)),
                 ),
               ),
             ),

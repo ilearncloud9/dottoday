@@ -127,6 +127,10 @@ abstract final class DotSize {
   /// (Inbox, Search; §4 expanded).
   static const double readableColumn = 640;
 
+  /// Each side of Focus on an expanded window (E-R2-9 B, ED-285): the
+  /// ring and title, the step and actions, at most this wide.
+  static const double focusSide = 400;
+
   /// The iPhone's glass capsule in Today's top row (ED-034): 48 tall (the
   /// board's 44 plus 4, so Sync keeps the 48 target the device sweep
   /// checks), with the 32 profile circle and a 20 Sync glyph (Android's
@@ -621,6 +625,13 @@ abstract final class DotSize {
   /// docs/09 M10.5), its stroke and the glyph inside.
   static const double focusRing = 160;
   static const double focusRingStroke = 22;
+
+  /// The Focus screen's ring (E-R2-9, ED-286): 200 on phones and narrow
+  /// windows, 168 on the whole window; a 15 stroke, a 64 glyph.
+  static const double focusScreenRing = 200;
+  static const double focusScreenRingWide = 168;
+  static const double focusScreenStroke = 15;
+  static const double focusScreenGlyph = 64;
 
   /// The mission screen's ring (docs/15 §8: 120 px).
   static const double missionRing = 120;

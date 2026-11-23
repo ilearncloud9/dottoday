@@ -80,6 +80,10 @@ final class ChannelNativeBar implements NativeBar {
       _channel.invokeMethod('visible', visible);
 
   @override
+  Future<void> setHidden({required bool hidden}) =>
+      _channel.invokeMethod('hidden', hidden);
+
+  @override
   Future<void> remove() => _channel.invokeMethod('remove');
 
   /// SF Symbols in native chrome (ED-260, CR-014); Today keeps the app's

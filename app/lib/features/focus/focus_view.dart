@@ -1,22 +1,23 @@
 import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
-import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/focus/focus_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/scheduling/learning_providers.dart';
 import 'package:dottoday/data/tasks/task_view.dart';
+import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/focus/focus_state.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/features/focus/focus_actions.dart';
 import 'package:dottoday/features/focus/focus_deep_work.dart';
+import 'package:dottoday/features/focus/focus_layout.dart';
 import 'package:dottoday/features/focus/focus_parts.dart';
 import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
-import 'package:dottoday/shared/menus/context_menu.dart';
 import 'package:dottoday/shared/sounds/sound_preview.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
@@ -111,104 +112,116 @@ class _FocusViewState extends ConsumerState<FocusView> {
       learning: ref.watch(learningIndexProvider).value,
     );
     final step = state.step;
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            DotSpace.page,
-            DotSpace.s,
-            DotSpace.page,
-            DotSpace.xl,
+    return FocusLayout(
+      top: FocusTopBar(id: widget.id, onLeave: widget.onLeave),
+      hero: [
+        Center(
+          // One image with a spoken label: the time left (E-R2-9 a11y).
+          child: Semantics(
+            image: true,
+            label: l10n.liveMinutesLeft(state.minutesLeft),
+            child: FocusRing.screen(
+              progress: state.progress,
+              color: TaskColor.fromKey(task.colorKey),
+              icon: TaskIcon.fromKey(task.iconKey),
+              size: AppLayout.classOf(context) == WidthClass.expanded
+                  ? DotSize.focusScreenRingWide
+                  : DotSize.focusScreenRing,
+            ),
           ),
-          children: [
-            _TopBar(id: widget.id, onLeave: widget.onLeave),
-            const SizedBox(height: DotSpace.xl),
-            Center(
-              child: FocusRing(
-                progress: state.progress,
-                color: TaskColor.fromKey(task.colorKey),
-                icon: TaskIcon.fromKey(task.iconKey),
-              ),
-            ),
-            const SizedBox(height: DotSpace.xl),
-            Text(
-              _range(context, view),
-              textAlign: TextAlign.center,
-              style: t.styles.body.copyWith(color: t.colors.muted),
-            ),
-            Semantics(
-              header: true,
-              child: Text(
-                task.title,
-                textAlign: TextAlign.center,
-                style: t.styles.pageTitle,
-              ),
-            ),
-            Text(
-              l10n.liveMinutesLeft(state.minutesLeft),
-              textAlign: TextAlign.center,
-              style: t.styles.topBarTitle.copyWith(color: t.colors.accentInk),
-            ),
-            const SizedBox(height: DotSpace.xl),
-            if (state.steps.isNotEmpty) ...[
-              FocusStepCard(
-                state: state,
-                taskTitle: task.title,
-                onResetLearning: () => ref
-                    .read(learningMetaProvider.notifier)
-                    .resetUndoable(
-                      task.title,
-                      ref.read(clockProvider).nowUtc(),
-                    ),
-              ),
-              const SizedBox(height: DotSpace.l),
-              FocusStepThread(state: state),
-              const SizedBox(height: DotSpace.l),
-            ],
-            _toggles(context, task.endUtc),
-            const SizedBox(height: DotSpace.xl),
-            FilledButton.icon(
-              onPressed: () => unawaited(_done(context, view)),
-              icon: DotIcon(DotGlyphs.check, color: t.colors.onAccent),
-              label: Text(l10n.liveDone),
-            ),
-            const SizedBox(height: DotSpace.s),
-            Row(
-              spacing: DotSpace.s,
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => unawaited(_actions.extend(context, task)),
-                    child: Text(l10n.liveExtend),
-                  ),
-                ),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: step == null
-                        ? null
-                        : () => unawaited(_actions.nextStep(context, step)),
-                    iconAlignment: IconAlignment.end,
-                    icon: DotIcon(
-                      DotGlyphs.chevronRight,
-                      color: step == null ? t.colors.muted : t.colors.text,
-                      size: DotSize.rowIcon,
-                    ),
-                    label: Text(l10n.focusNextStep),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: DotSpace.l),
-            Text(
-              l10n.focusBreakThrough,
-              textAlign: TextAlign.center,
-              style: t.styles.caption.copyWith(color: t.colors.muted),
-            ),
-          ],
         ),
-      ),
+        const SizedBox(height: DotSpace.l),
+        Text(
+          _range(context, view),
+          textAlign: TextAlign.center,
+          style: t.styles.body.copyWith(color: t.colors.muted),
+        ),
+        // E-R2-9: the title at 28–30, 800.
+        Semantics(
+          header: true,
+          child: Text(
+            task.title,
+            textAlign: TextAlign.center,
+            style: t.styles.emptyTitle,
+          ),
+        ),
+        // Said once, by the ring.
+        ExcludeSemantics(
+          child: Text(
+            l10n.liveMinutesLeft(state.minutesLeft),
+            textAlign: TextAlign.center,
+            style: t.styles.liveRowTitle.copyWith(color: t.colors.accentInk),
+          ),
+        ),
+      ],
+      detail: [
+        if (state.steps.isNotEmpty) ...[
+          FocusStepCard(
+            state: state,
+            taskTitle: task.title,
+            onResetLearning: () => ref
+                .read(learningMetaProvider.notifier)
+                .resetUndoable(task.title, ref.read(clockProvider).nowUtc()),
+          ),
+          const SizedBox(height: DotSpace.l),
+          FocusStepThread(state: state),
+          const SizedBox(height: DotSpace.l),
+        ],
+        _toggles(context, task.endUtc),
+        const SizedBox(height: DotSpace.xl),
+        ..._actionsColumn(context, view, step),
+      ],
     );
+  }
+
+  /// Done, then +15 min and Next step, then the break-through note.
+  List<Widget> _actionsColumn(
+    BuildContext context,
+    TaskView view,
+    Subtask? step,
+  ) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return [
+      FilledButton.icon(
+        onPressed: () => unawaited(_done(context, view)),
+        icon: DotIcon(DotGlyphs.check, color: t.colors.onAccent),
+        label: Text(l10n.liveDone),
+      ),
+      const SizedBox(height: DotSpace.s),
+      Row(
+        spacing: DotSpace.s,
+        children: [
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () =>
+                  unawaited(_actions.extend(context, view.occurrence)),
+              child: Text(l10n.liveExtend),
+            ),
+          ),
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: step == null
+                  ? null
+                  : () => unawaited(_actions.nextStep(context, step)),
+              iconAlignment: IconAlignment.end,
+              icon: DotIcon(
+                DotGlyphs.chevronRight,
+                color: step == null ? t.colors.muted : t.colors.text,
+                size: DotSize.rowIcon,
+              ),
+              label: Text(l10n.focusNextStep),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: DotSpace.l),
+      Text(
+        l10n.focusBreakThrough,
+        textAlign: TextAlign.center,
+        style: t.styles.caption.copyWith(color: t.colors.muted),
+      ),
+    ];
   }
 
   /// The two toggles side by side (`B-ios-focus`); stacked at large text
@@ -264,50 +277,6 @@ class _FocusViewState extends ConsumerState<FocusView> {
     return context.l10n.focusRange(
       context.l10n.threadTimeRange(at(start), at(end)),
       length,
-    );
-  }
-}
-
-/// "‹ Today", "FOCUS", and ⋯ with Task details.
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.id, required this.onLeave});
-
-  final String id;
-  final VoidCallback onLeave;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    return Row(
-      children: [
-        TextButton.icon(
-          onPressed: onLeave,
-          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentInk),
-          label: Text(l10n.focusBack),
-        ),
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Text(
-              l10n.focusTitle.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: t.styles.caption,
-            ),
-          ),
-        ),
-        DotMenuButton<VoidCallback>(
-          tooltip: l10n.focusMore,
-          icon: DotIcon(DotGlyphs.more, color: t.colors.text),
-          onSelected: (run) => run(),
-          entries: () => [
-            ContextMenuEntry(
-              value: () => openTask(context, id),
-              label: l10n.focusOpenTask,
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

@@ -20,6 +20,7 @@ final class _FakeBar implements NativeBar {
 
   final configured = <ShellBar>[];
   final visible = <bool>[];
+  final hidden = <bool>[];
   var removed = false;
   final _events = StreamController<NativeBarEvent>.broadcast();
 
@@ -31,6 +32,10 @@ final class _FakeBar implements NativeBar {
   @override
   Future<void> setVisible({required bool visible}) async =>
       this.visible.add(visible);
+
+  @override
+  Future<void> setHidden({required bool hidden}) async =>
+      this.hidden.add(hidden);
 
   @override
   Future<void> remove() async => removed = true;
@@ -217,5 +222,21 @@ void main() {
       expect(find.text('Today'), findsNothing);
       expect(bar.configured, isNotEmpty);
     }
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('iPad: the tabs and sidebar hide while a whole-window screen '
+      'is up (Focus, ED-285), and come back', (tester) async {
+    tester.view
+      ..physicalSize = const Size(1180, 820)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final bar = _FakeBar(NativeBarKind.pad);
+    await tester.pumpWidget(_shell(bar));
+    NativeBarObserver.wholeWindow.value++;
+    await tester.pump();
+    expect(bar.hidden.last, isTrue);
+    NativeBarObserver.wholeWindow.value--;
+    await tester.pump();
+    expect(bar.hidden.last, isFalse);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

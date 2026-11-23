@@ -1351,3 +1351,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-23, ED-435:** M20.5 part 2: tablets and pointer (E-R2-25 §2): the week grid's drop label on a filled pill above the drop box; hover, pointer and Inbox drops as built. Approved.
 - **2026-11-23, ED-436:** M20.5 part 3: swipe on phone Inbox rows (E-R2-25 §3): Move to Trash with the trash icon in coral, Schedule with the calendar icon in accent; the swipe actions as built. Approved.
 - **2026-11-23, ED-437:** M20.5 part 4: multi-select and the selection bar everywhere (E-R2-6): the hour grid selects, picks across its days, the card centred at 470 with the board's icons; M20.5 done. Approved.
+- **2026-11-23, ED-438:** M20.6 part 1: Focus on every platform (E-R2-9 B): one Focus route, two columns on expanded windows with the iPad's native navigation hidden; restyled to the board; the ring's one spoken label. Approved.

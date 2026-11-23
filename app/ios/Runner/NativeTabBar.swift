@@ -51,6 +51,10 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
         let visible = call.arguments as? Bool ?? true
         if self.kind == "pad" { self.padSetVisible(visible) } else { self.setVisible(visible) }
         result(nil)
+      case "hidden":
+        let hidden = call.arguments as? Bool ?? false
+        if self.kind == "pad" { self.padSetHidden(hidden) } else { self.setVisible(!hidden) }
+        result(nil)
       case "remove":
         self.remove()
         result(nil)
@@ -89,6 +93,11 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
   private func padSetVisible(_ visible: Bool) {
     guard #available(iOS 18.0, *) else { return }
     (pad as? NativeIPadTabs)?.setVisible(visible)
+  }
+
+  private func padSetHidden(_ hidden: Bool) {
+    guard #available(iOS 18.0, *) else { return }
+    (pad as? NativeIPadTabs)?.setHidden(hidden)
   }
 
   // MARK: Building

@@ -1,4 +1,3 @@
-import 'package:dottoday/core/editing/focus_task.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
@@ -36,8 +35,9 @@ Future<void> _key(WidgetTester tester, LogicalKeyboardKey key) async {
 
 /// The titles picked on Today.
 List<String> _picked(WidgetTester tester, FakeOccurrenceRepository repo) {
+  // Under Focus's route Today is offstage, still there.
   final ids = ProviderScope.containerOf(
-    tester.element(find.byType(TodayScreen)),
+    tester.element(find.byType(TodayScreen, skipOffstage: false)),
   ).read(taskSelectionProvider).ids;
   return [
     for (final o in repo.rows)
@@ -220,16 +220,13 @@ void main() {
     });
 
     testWidgets('Ctrl+Shift+F focuses on the picked task', (tester) async {
-      // Wide: Focus fills the window through its provider (ED-286).
+      // Wide: Focus takes the whole window, its own route (ED-285).
       await pumpToday(tester, repo: repo, size: const Size(1280, 900));
       await _pickNth(tester, 3);
       final picked = _picked(tester, repo).single;
       await _ctrl(tester, LogicalKeyboardKey.keyF, shift: true);
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(TodayScreen)),
-      );
       final id = repo.rows.singleWhere((o) => o.title == picked).id;
-      expect(container.read(focusTaskProvider), id);
+      expect(find.text('Focus $id'), findsOneWidget);
       expect(_picked(tester, repo), isEmpty);
     });
   });

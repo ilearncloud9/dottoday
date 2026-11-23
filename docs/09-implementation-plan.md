@@ -797,6 +797,8 @@ Rules for every task in M18 to M22:
 - [ ] M20.6 Focus and states:
   - Focus on every platform, whole window on expanded screens (R2-9, ED-285, ED-286);
   - time states (R2-26, ED-329), day states (R2-27, ED-330) and small states (R2-28, ED-331).
+  Split by the owner (2026-11-23) into five parts, each with its own review page and commit: 1 Focus (the whole window on expanded screens, replacing FocusFrame; the phone look; its two accessibility checks; Focus past its end); 2 time states on Today (past the planned end, Need more time?, Running late, the Ended alert, the Mac menu bar; Now through the day checked, built in M19.6); 3 day states (a finished day, a past day, overlaps, all-day chips, an empty today); 4 task sheets (done, past not done, a calendar event, five alerts); 5 small states (Move to, no free slot, a quiet week, no results, calendar access and errors, missions, result toasts).
+  - [x] Part 1 done 2026-11-23 (ED-438): Focus to E-R2-9 B: one route at every width, the whole window in two columns on expanded ones with the iPad's native navigation hidden; restyled; the ring's one spoken label; past its end as built. Open: real devices.
 - [ ] M20.7 Settings:
   - six groups and "Everything else" (G2-4, ED-081 to ED-084), opened from Settings' native place (ED-238);
   - tablets (R2-11, ED-291); Planning, Sounds and Siri pages (R2-33, ED-338);

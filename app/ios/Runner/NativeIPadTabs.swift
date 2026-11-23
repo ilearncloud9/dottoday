@@ -11,6 +11,9 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
   private let onSelect: (Int) -> Void
   private let onAdd: () -> Void
   private var controller: PadTabsController?
+
+  /// A whole-window screen (Focus) is up: tabs, sidebar and + stay away.
+  private var wholeWindow = false
   private var add: UIButton?
   private weak var flutter: FlutterViewController?
   private var hosts: [String: UIViewController] = [:]
@@ -39,7 +42,8 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
     guard let tabs = install(teal: teal) else { return }
     tabs.view.tintColor = teal
     add?.accessibilityLabel = args["addLabel"] as? String
-    add?.isHidden = !(args["showAdd"] as? Bool ?? true)
+    // A whole-window screen keeps it away until it closes.
+    add?.isHidden = wholeWindow || !(args["showAdd"] as? Bool ?? true)
     // One UITab per place for the controller's life: a tab owns its
     // container, and UIKit refuses a container shared by two tabs (the
     // set changes with width: Week is not a phone place).
@@ -75,6 +79,18 @@ final class NativeIPadTabs: NSObject, UITabBarControllerDelegate {
     }
     add.isUserInteractionEnabled = visible
     add.accessibilityElementsHidden = !visible
+  }
+
+  /// While a whole-window screen is up (Focus, ED-285) the tabs and the
+  /// sidebar go away and the Flutter view takes the window; back after.
+  func setHidden(_ hidden: Bool) {
+    wholeWindow = hidden
+    guard let tabs = controller else { return }
+    let animated = !UIAccessibility.isReduceMotionEnabled
+    tabs.setTabBarHidden(hidden, animated: animated)
+    tabs.sidebar.isHidden = hidden
+    add?.isHidden = hidden
+    add?.accessibilityElementsHidden = hidden
   }
 
   // MARK: Building

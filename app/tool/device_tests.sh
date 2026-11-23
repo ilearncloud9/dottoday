@@ -238,13 +238,14 @@ run_one() {
 # Start clean: a system alert left over from an earlier run sits over
 # everything (found in M6.5.12: an hours-old notification prompt covered a
 # whole sweep). iOS: reboot the simulator, which drops it; Android: close
-# system dialogs.
-if [[ "$platform" == ios ]]; then
+# system dialogs. KEEP_BOOT=1 keeps the simulator as it is (a reboot turns
+# it back upright: an iPad run in landscape is rotated first).
+if [[ "$platform" == ios && "${KEEP_BOOT:-}" != 1 ]]; then
   udid="${device:-booted}"
   [[ "$udid" == booted ]] && udid=$(xcrun simctl list devices booted | grep -o "[0-9A-F-]\{36\}" | head -1)
   xcrun simctl shutdown "$udid" >/dev/null 2>&1 || true
   xcrun simctl boot "$udid" && xcrun simctl bootstatus "$udid" -b >/dev/null
-else
+elif [[ "$platform" != ios ]]; then
   a shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null 2>&1 || true
 fi
 

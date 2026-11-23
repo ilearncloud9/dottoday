@@ -1,20 +1,18 @@
 import 'dart:async';
-import 'package:dottoday/core/layout/app_layout.dart';
 
 import 'package:dottoday/core/router/app_routes.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'focus_task.g.dart';
 
-/// The task in Focus on Mac/web: a centred view in the content area with
-/// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
-/// `/focus/:id` full screen instead. Held in core, like `EditingTask`, so
-/// any screen can open Focus without importing it.
+/// The task in Focus (docs/09 M10.5), set by the Focus screen while it is
+/// up; null = none. Focus is the `/focus/:id` route at every width (the
+/// whole window on expanded ones, ED-285). Held in core, like
+/// `EditingTask`, so any screen can tell Focus is up without importing it;
+/// an owner switch clears it, which closes the screen.
 @Riverpod(keepAlive: true)
 class FocusTask extends _$FocusTask {
   // Ends at every change of owner (CR-160 I5).
@@ -45,19 +43,13 @@ class FocusRequest extends _$FocusRequest {
   void request(String id) => state = (id: id, seq: (state?.seq ?? 0) + 1);
 }
 
-/// Opens Focus for task [id] where this width shows it (11 A3): the
-/// content area at the expanded width, else the full-screen route.
+/// Opens Focus for task [id]: the full-screen route at every width, over
+/// the shell, whose tabs keep their state (11 A3, ED-285).
 ///
 /// ```dart
 /// openFocus(context, liveTask.id); // one tap on the live dot
 /// ```
 void openFocus(BuildContext context, String id) {
-  if (AppLayout.classOf(context) == WidthClass.expanded) {
-    ProviderScope.containerOf(
-      context,
-    ).read(focusTaskProvider.notifier).open(id);
-    return;
-  }
   final router = GoRouter.of(context);
   // Already there (a tile's link and its queued Start focus): once.
   if (router.state.uri.path == AppRoutes.focus(id)) return;

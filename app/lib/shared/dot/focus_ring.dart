@@ -14,7 +14,17 @@ class FocusRing extends StatelessWidget {
     required this.icon,
     this.size = DotSize.focusRing,
     super.key,
-  });
+  }) : screen = false;
+
+  /// The Focus screen's ring (E-R2-9): a 15 stroke on a track of the
+  /// task's colour, no disc inside, the glyph at 64 in its plain stroke.
+  const FocusRing.screen({
+    required this.progress,
+    required this.color,
+    required this.icon,
+    this.size = DotSize.focusScreenRing,
+    super.key,
+  }) : screen = true;
 
   /// 0–1.
   final double progress;
@@ -23,6 +33,9 @@ class FocusRing extends StatelessWidget {
 
   /// [DotSize.focusRing], or [DotSize.missionRing]; the stroke scales.
   final double size;
+
+  /// The Focus screen's look ([FocusRing.screen]).
+  final bool screen;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +53,13 @@ class FocusRing extends StatelessWidget {
             painter: _RingPainter(
               sweep: sweep,
               color: swatch.color,
-              track: t.colors.threadAhead,
-              inner: t.colors.raised,
-              stroke: DotSize.focusRingStroke * size / DotSize.focusRing,
+              track: screen
+                  ? swatch.color.withValues(alpha: TaskAlpha.focusTrack)
+                  : t.colors.threadAhead,
+              inner: screen ? null : t.colors.raised,
+              stroke: screen
+                  ? DotSize.focusScreenStroke
+                  : DotSize.focusRingStroke * size / DotSize.focusRing,
             ),
             child: child,
           ),
@@ -52,8 +69,10 @@ class FocusRing extends StatelessWidget {
                 : DotIcon(
                     glyph,
                     color: swatch.color,
-                    size: DotSize.focusGlyph * size / DotSize.focusRing,
-                    active: true,
+                    size: screen
+                        ? DotSize.focusScreenGlyph
+                        : DotSize.focusGlyph * size / DotSize.focusRing,
+                    active: !screen,
                   ),
           ),
         ),
@@ -74,14 +93,16 @@ final class _RingPainter extends CustomPainter {
   final double sweep;
   final Color color;
   final Color track;
-  final Color inner;
+  final Color? inner;
   final double stroke;
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
     final radius = size.shortestSide / 2 - stroke / 2;
-    canvas.drawCircle(center, radius - stroke / 2, Paint()..color = inner);
+    if (inner case final fill?) {
+      canvas.drawCircle(center, radius - stroke / 2, Paint()..color = fill);
+    }
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke;
