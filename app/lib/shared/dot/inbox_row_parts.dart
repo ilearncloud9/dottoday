@@ -217,17 +217,29 @@ class _PickCheck extends StatelessWidget {
 class _SwipeLabel extends StatelessWidget {
   const _SwipeLabel({
     required this.text,
+    required this.glyph,
     required this.color,
+    required this.ink,
     required this.alignment,
+    this.glyphAfter = false,
   });
 
   final String text;
+
+  /// Trash before "Move to Trash", the calendar after "Schedule"
+  /// (E-R2-25 §3).
+  final DotGlyph glyph;
+  final bool glyphAfter;
   final Color color;
+
+  /// The words and the icon, in the side's own ink.
+  final Color ink;
   final AlignmentGeometry alignment;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final icon = DotIcon(glyph, color: ink, size: DotSize.rowIcon);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: color,
@@ -237,7 +249,15 @@ class _SwipeLabel extends StatelessWidget {
         alignment: alignment,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: DotSpace.xl),
-          child: Text(text, style: t.styles.button),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: DotSpace.s,
+            children: [
+              if (!glyphAfter) icon,
+              Text(text, style: t.styles.button.copyWith(color: ink)),
+              if (glyphAfter) icon,
+            ],
+          ),
         ),
       ),
     );

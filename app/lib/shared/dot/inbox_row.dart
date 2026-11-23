@@ -113,13 +113,18 @@ class InboxRow extends StatelessWidget {
               },
               background: _SwipeLabel(
                 text: l10n.inboxTrash,
+                glyph: DotGlyphs.trash,
                 // Coral, the palette's warm colour, marks the destructive side.
                 color: t.tasks[TaskColor.coral].tint,
+                ink: t.tasks[TaskColor.coral].ink,
                 alignment: AlignmentDirectional.centerStart,
               ),
               secondaryBackground: _SwipeLabel(
                 text: l10n.inboxSchedule,
+                glyph: DotGlyphs.calendar,
+                glyphAfter: true,
                 color: t.colors.accentTint,
+                ink: t.colors.accentInk,
                 alignment: AlignmentDirectional.centerEnd,
               ),
               child: _Card(row: this),

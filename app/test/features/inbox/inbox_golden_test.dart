@@ -84,6 +84,28 @@ void main() {
     },
     build: (_) => _inbox(sampleInbox()),
   );
+  // E-R2-25 §3: a row half swiped each way, held (Move to Trash with
+  // the trash icon; Schedule with the calendar).
+  for (final (name, row, dx) in [
+    ('inbox_swipe_trash', 'Go for a run', 160.0),
+    ('inbox_swipe_schedule', 'Call Mum', -160.0),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 500,
+      widths: const {'compact'},
+      act: (tester) async {
+        final g = await tester.startGesture(tester.getCenter(find.text(row)));
+        for (var i = 1; i <= 8; i++) {
+          await g.moveBy(Offset(dx / 8, 0));
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        await tester.pump(const Duration(milliseconds: 300));
+        addTearDown(g.up);
+      },
+      build: (_) => _inbox(sampleInbox()),
+    );
+  }
   // §5.4 empty state: "Inbox is clear".
   goldenMatrix(
     'inbox_empty',

@@ -5576,6 +5576,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the iPad in portrait has no Plan panel, so the Inbox drop runs on the Android tablet, the Mac and the web; the hover tint is the built one.
 - **Checks:** format and analyze clean; 7,731 pass, 31 skipped; `workspace_grid_states` golden updated. `integration_test/tablet_drag_test.dart` passed on the iPad simulator (portrait), the Android tablet emulator (landscape), Chromium and WebKit at 1280, and the Mac (data container unchanged by checksum). Not run: real devices, Apple Pencil.
 
+### ED-436 · M20.5 part 3: swipe on phone Inbox rows
+- **Date:** 2026-11-23. **Owner:** "Start part 3", then "Approve part 3" after the review page (https://claude.ai/artifact/G5SMWxUNLtA9r3ULkajYLi).
+- **Built (E-R2-25 §3, ED-328):** one look change; what a swipe does is unchanged. No new strings.
+  - **The swipe backgrounds (`InboxRow`):** Move to Trash (start → end) carries the trash icon before the words, in coral ink on the coral tint (was plain text); Schedule (end → start) carries the calendar icon after the words, in accent ink on the accent tint.
+  - Already as drawn: a full swipe acts (Trash with Undo, or the schedule sheet), the direction flips for right-to-left, the first-row hint, the long-press menu.
+- **Departures (on the review page):** the first-row hint shows on iPhone too (the board draws it for Android), so the swipes are easy to find on both; only phone Inbox rows swipe, so tablets, the Mac and the web at 1280 are not run.
+- **Checks:** format and analyze clean; 7,739 pass, 31 skipped; new goldens `inbox_swipe_trash` and `inbox_swipe_schedule` (compact, both themes). `integration_test/inbox_swipe_test.dart` passed on the iPhone simulator, the Android phone emulator, and Chromium and WebKit at 390. Not run: real devices.
+
 ---
 
 ## Pending owner answers
