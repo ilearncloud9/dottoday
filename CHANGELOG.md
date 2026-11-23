@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Settings has a Privacy group after Data, where Privacy and Help with thinking now live (no longer under About), and Privacy shows what helps you think on this device in a highlighted box (redesign branch).
 - Smallest step's "Just … · 15 min?" is bold in the accent with a small Start beside or under it, and Week's cards show it the same way (redesign branch).
 - Break it down is redesigned: the task sits at the top of the plan, each step is one row with a ring showing its share of the task and a small length chip, a step's length is picked from chips, and the simple-rules note is a tinted box with Don't show again. In Show less, hints like "Break it into steps?" sit on a card with Show me and Not now (redesign branch).
 - Brain dump is redesigned: the lines go in a filled box with the mic in its corner, you pick Today or Tomorrow from "Put it on" chips, the caption counts the tasks, and earlier dumps sit on a card with their date and length. On the Mac and the web the Plan panel's Brain dump has the mic too, where speech works on the device (redesign branch).

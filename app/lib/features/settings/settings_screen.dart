@@ -138,6 +138,7 @@ List<Widget> settingsGroups(
     ),
   ),
   const DataGroup(),
+  const PrivacyGroup(),
   const AboutGroup(),
 ];
 

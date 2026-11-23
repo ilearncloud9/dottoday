@@ -77,9 +77,16 @@ void main() {
       'Like this device',
       'English',
       'DATA',
-      'ABOUT',
-      '0.1.0 (1)',
     ]) {
+      expect(find.text(text), findsWidgets, reason: text);
+    }
+    // Privacy after Data (E-R2-23 §3), then About, past the built end.
+    await tester.scrollUntilVisible(
+      find.text('0.1.0 (1)'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    for (final text in ['PRIVACY', 'Help with thinking', 'ABOUT']) {
       expect(find.text(text), findsWidgets, reason: text);
     }
     // Wake Up / Wind Down under the handles and on their rows.

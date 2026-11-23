@@ -66,6 +66,31 @@ class DataGroup extends ConsumerWidget {
   }
 }
 
+/// PRIVACY, straight after Data (E-R2-23 §3, ED-324): Settings › Privacy,
+/// the home of Help with thinking. M20.7 puts both groups on the Data and
+/// privacy page.
+class PrivacyGroup extends StatelessWidget {
+  const PrivacyGroup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return SettingsGroup(
+      caption: l10n.settingsPrivacy,
+      children: [
+        SettingsRow(
+          glyph: DotGlyphs.shield,
+          tint: t.tasks[TaskColor.violet].ink,
+          title: l10n.settingsPrivacy,
+          subtitle: l10n.privacyThinkingTitle,
+          onTap: () => _open(context, SettingsPage.privacy),
+        ),
+      ],
+    );
+  }
+}
+
 /// The Sync row's value: conflicts first, else the state.
 String _syncValue(AppLocalizations l10n, SyncStatus s) {
   if (s.conflicts.isNotEmpty) return l10n.bannerConflicts(s.conflicts.length);
@@ -78,8 +103,8 @@ String _syncValue(AppLocalizations l10n, SyncStatus s) {
   };
 }
 
-/// ABOUT: Help, Siri & Shortcuts (iPhone, M14.3), Privacy, About Dottoday (version, What's new, licences;
-/// pages, M3f.7) and Send feedback (PRD F11, R-19).
+/// ABOUT: Help, Siri & Shortcuts (iPhone, M14.3), About Dottoday (version,
+/// What's new, licences; pages, M3f.7) and Send feedback (PRD F11, R-19).
 class AboutGroup extends ConsumerWidget {
   const AboutGroup({super.key});
 
@@ -106,12 +131,6 @@ class AboutGroup extends ConsumerWidget {
             subtitle: l10n.settingsSiriDetail,
             onTap: () => _open(context, SettingsPage.siri),
           ),
-        SettingsRow(
-          glyph: DotGlyphs.lock,
-          tint: t.tasks[TaskColor.teal].ink,
-          title: l10n.settingsPrivacy,
-          onTap: () => _open(context, SettingsPage.privacy),
-        ),
         SettingsRow(
           glyph: DotGlyphs.today,
           tint: t.tasks[TaskColor.amber].ink,

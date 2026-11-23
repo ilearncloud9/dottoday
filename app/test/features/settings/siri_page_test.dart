@@ -24,6 +24,7 @@ void main() {
         tester,
         overrides: [siriAvailableProvider.overrideWithValue(siri)],
       );
+      await _toAbout(tester);
       expect(
         find.text('Siri & Shortcuts'),
         siri ? findsOneWidget : findsNothing,
@@ -36,6 +37,7 @@ void main() {
       tester,
       overrides: [siriAvailableProvider.overrideWithValue(true)],
     );
+    await _toAbout(tester);
     await tester.ensureVisible(find.text('Siri & Shortcuts'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Siri & Shortcuts'));
@@ -74,3 +76,10 @@ void main() {
     });
   }
 }
+
+/// About is the list's last group, past the lazily built end.
+Future<void> _toAbout(WidgetTester tester) => tester.scrollUntilVisible(
+  find.text('Send feedback'), // l10n-ignore: test finder
+  300,
+  scrollable: find.byType(Scrollable).first,
+);

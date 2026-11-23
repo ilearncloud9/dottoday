@@ -82,6 +82,13 @@ abstract final class DotGlyphs {
   static final lock = DotGlyph(
     '${_r(5, 11, 14, 10, 2)}M8 11V7a4 4 0 0 1 8 0v4',
   );
+
+  /// Settings › Privacy (E-R2-23 §3).
+  static const shield = DotGlyph(
+    'M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6'
+    'a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0'
+    'C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z',
+  );
   static const repeat = DotGlyph(
     'M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14'
     'M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3',

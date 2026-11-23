@@ -5,13 +5,13 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
 import 'package:dottoday/data/thinking/thinking_settings.dart';
 import 'package:dottoday/domain/thinking/thinking_status.dart';
-import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/shared/thinking/thinking_copy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Settings › Privacy › Help with thinking's status (docs/09 M14.2): what
-/// answers on this device now and the exact next step, per vendor; Open
+/// answers on this device now and the exact next step, per vendor, in a
+/// tinted box (E-R2-23 §3); Open
 /// Settings only where the OS has a link (on iPhone with the note that it
 /// opens Dottoday's own page). Re-read on resume (`app_lifecycle.dart`).
 class ThinkingStatusBlock extends ConsumerWidget {
@@ -27,7 +27,23 @@ class ThinkingStatusBlock extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: DotSpace.s,
       children: [
-        PageText(l10n.thinkingStatusLine(status)),
+        // The status in a tinted box, bold (E-R2-23 §3).
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: t.colors.accentTint,
+            borderRadius: BorderRadius.circular(DotRadii.card),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DotSpace.m,
+              vertical: DotSpace.s,
+            ),
+            child: Text(
+              l10n.thinkingStatusLine(status),
+              style: t.styles.chip.copyWith(color: t.colors.accentInk),
+            ),
+          ),
+        ),
         if (status.opensSettings) ...[
           Align(
             alignment: AlignmentDirectional.centerStart,

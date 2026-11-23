@@ -1,4 +1,6 @@
 import 'package:dottoday/app_screens.dart';
+import 'package:dottoday/core/env/env.dart';
+import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
@@ -137,6 +139,13 @@ Future<GoRouter> pumpCalendar(
           subtasks: FakeSubtaskRepository(subtasks),
         ),
         siriTipDueProvider.overrideWith((ref) => Stream.value(false)),
+        // Settings › Privacy reads it (M8.6); bootstrap() sets it in the app.
+        envProvider.overrideWithValue(
+          Env(
+            supabaseUrl: Uri.parse('https://example.supabase.co'),
+            supabaseAnonKey: 'anon',
+          ),
+        ),
         // Never the person's own database on a device or the Mac.
         ...memoryDatabaseOverrides(),
       ],

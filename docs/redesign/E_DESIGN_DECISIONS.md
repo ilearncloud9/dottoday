@@ -5539,6 +5539,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the notification is the system's (M20.9); "0 of 1" after Unstick is the built steps count; the Week card's line has no device shot (covered by the Week tests).
 - **Checks:** analyze and format clean; 7,731 pass, 31 skipped; `thread_smallest_step` updated, `thread_smallest_step_android` new. The journey world (`pumpCalendar`) takes subtasks. `integration_test/smallest_step_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280 (after it learned to scroll to Unstick in a short window), and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-432 · M20.4 part 4: Help with thinking
+- **Date:** 2026-11-23. **Owner:** "Start part 4"; answers "Privacy group under Data" and "Status box only"; then "Approve part 4" after the review page (https://claude.ai/artifact/LeC4iEEQWvDZMVQgC5YbG7).
+- **Built (E-R2-23 §3, ED-324):** the page, every status line, Open Settings and its iPhone note, Clear thinking history, the hint and Brain dump's caption were built in M14.2. No new strings.
+  - **`PrivacyGroup`:** a Privacy group straight after Data on the Settings list: one row, `DotGlyphs.shield` (new) in violet, "Privacy" over "Help with thinking". The Privacy row left About. M20.7 moves Data and Privacy onto the Data and privacy page (owner's choice; the board draws that page).
+  - **`ThinkingStatusBlock`:** the status line in a tinted box (accentTint, card radius) in the chip style and accent ink (was a muted paragraph).
+- **Departures (on the review page):** the Privacy page keeps the built sections the board leaves out (App lock at the top per ED-325, Searches, crash reports when configured, the policy link); no title tile until M20.7 (owner's choice). Device shots show each device's real state; off, getting ready and downloading are goldens.
+- **Checks:** analyze and format clean; 7,731 pass, 31 skipped; `privacy_ai_status_*` and the Settings goldens that show the list's end updated. Settings and Siri tests scroll to About. The journey world (`pumpCalendar`) sets `envProvider` as bootstrap does. `integration_test/help_with_thinking_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac with Apple Intelligence on (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers
