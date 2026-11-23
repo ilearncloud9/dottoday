@@ -111,6 +111,8 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
       builder: (context, _, _) => SizedBox(
         height: _height,
         child: Stack(
+          // While a drop label shows, it may reach past a narrow column.
+          clipBehavior: _hover == null ? Clip.hardEdge : Clip.none,
           children: [..._background(context), ..._cards(), ..._over(context)],
         ),
       ),

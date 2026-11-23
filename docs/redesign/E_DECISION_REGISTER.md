@@ -1348,3 +1348,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-23, ED-432:** M20.4 part 4: Help with thinking (E-R2-23 §3): a Privacy group after Data with the shield row; the Privacy status in a tinted bold box; the rest as built. Approved.
 - **2026-11-23, ED-433:** M20.4 part 5: the Reality thread and Learn my day (E-R2-23 §4): the boxed caption, Plan | Reality at the start, took / in / usually on the time line, the insight's tinted OK above Day ▾, Settings › Learning's 7/10 and Ready lines. Approved; M20.4 closed.
 - **2026-11-23, ED-434:** M20.5 part 1: touch drag on phones (E-R2-25 §1): the lifted dot above the finger so the preview shows, Shift later tasks at the day's start (tinted with ✓ when on), the web bin above Add. Approved.
+- **2026-11-23, ED-435:** M20.5 part 2: tablets and pointer (E-R2-25 §2): the week grid's drop label on a filled pill above the drop box; hover, pointer and Inbox drops as built. Approved.

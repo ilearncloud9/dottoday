@@ -5568,6 +5568,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** the iPhone's Inbox tab takes no drops (the system tab bar, native first); tablets' week-grid drop box and pointer hover are part 2.
 - **Checks:** format and analyze clean; 7,731 pass, 31 skipped; `shift_chip` goldens updated. `integration_test/touch_drag_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices (haptics).
 
+### ED-435 · M20.5 part 2: tablets and pointer
+- **Date:** 2026-11-23. **Owner:** "Start part 2", then "Approve part 2" after the review page (https://claude.ai/artifact/KYXRAE5BLR1MNULM3tdVk8).
+- **Built (E-R2-25 §2, ED-328):** one look change; what a drop writes is unchanged. No new strings.
+  - **The drop label (`gridDropPreview`):** "Wed · 11:00 – 11:45 AM" on a filled accent pill just above the dashed drop box (was inside the box, where the lifted card covered it). The day column stops clipping only while a drop shows, so the pill may reach past a narrow column without letting overlap shadows bleed at rest.
+  - Already as drawn: the 250 ms touch hold, the dimmed original, the dashed box, the flat pointer hover (ED-116), a pointer lifting at once, Inbox rows dragged as a chip onto a day, the toasts with Undo, snapping, past-day drops.
+- **Departures (on the review page):** the iPad in portrait has no Plan panel, so the Inbox drop runs on the Android tablet, the Mac and the web; the hover tint is the built one.
+- **Checks:** format and analyze clean; 7,731 pass, 31 skipped; `workspace_grid_states` golden updated. `integration_test/tablet_drag_test.dart` passed on the iPad simulator (portrait), the Android tablet emulator (landscape), Chromium and WebKit at 1280, and the Mac (data container unchanged by checksum). Not run: real devices, Apple Pencil.
+
 ---
 
 ## Pending owner answers

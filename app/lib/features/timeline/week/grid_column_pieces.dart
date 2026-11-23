@@ -102,9 +102,10 @@ class GridNowDot extends StatelessWidget {
   }
 }
 
-/// Where a dragged task would land (E-FullA-v2 Week): its time's box,
-/// dashed in the accent over a light tint, with [label] ("Wed · 11:30 –
-/// 12:00") inside.
+/// Where a dragged task would land (E-FullA-v2 Week, E-R2-25 §2): its
+/// time's box, dashed in the accent over a light tint, with [label] ("Wed
+/// · 11:30 – 12:00") on a filled pill just above it, so the lifted card
+/// over the box never hides it.
 List<Widget> gridDropPreview(
   BuildContext context, {
   required double top,
@@ -131,16 +132,32 @@ List<Widget> gridDropPreview(
               color: c.gridDrop,
               borderRadius: BorderRadius.circular(DotRadii.block),
             ),
+          ),
+        ),
+      ),
+    ),
+    // Above the box: moved up by its own height.
+    Positioned(
+      left: DotSize.gridInset,
+      top: top - DotSpace.xxs,
+      child: IgnorePointer(
+        child: FractionalTranslation(
+          translation: const Offset(0, -1),
+          child: DecoratedBox(
+            decoration: ShapeDecoration(
+              color: c.accent,
+              shape: const StadiumBorder(),
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: DotSpace.s + DotSpace.hairline,
-                vertical: DotSpace.xxs + DotSpace.hairline,
+                horizontal: DotSpace.s,
+                vertical: DotSpace.xxs,
               ),
               child: Text(
                 label,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: scale.pill(t.styles).copyWith(color: c.accentText),
+                maxLines: 1,
+                softWrap: false,
+                style: scale.pill(t.styles).copyWith(color: c.onAccent),
               ),
             ),
           ),
