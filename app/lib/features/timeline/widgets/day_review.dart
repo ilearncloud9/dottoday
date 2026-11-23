@@ -79,7 +79,13 @@ class DayReviewBody extends ConsumerWidget {
             l10n.reviewSummary(review.done, review.total),
             style: t.styles.cardTitle,
           ),
-          Text(ask, style: t.styles.body),
+          // E-R2-27: "Nothing left to move" in the accent.
+          Text(
+            ask,
+            style: review.hasRest
+                ? t.styles.body
+                : t.styles.body.copyWith(color: t.colors.accentInk),
+          ),
           ?staying,
           _buttons(context, ref, review, roll),
           ...tail,

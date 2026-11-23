@@ -153,7 +153,7 @@ void main() {
       tester,
     ) async {
       await _pump(tester, at: windDown);
-      expect(find.text('DAY REVIEW'), findsOneWidget);
+      expect(find.text('Day review'), findsOneWidget);
       expect(find.text('Send the rest to the Inbox?'), findsOneWidget);
       await tester.tap(find.textContaining('to Inbox'));
       await tester.pumpAndSettle();
@@ -184,9 +184,9 @@ void main() {
       await _pump(tester, at: windDown);
       await tester.tap(find.text('Not now'));
       await tester.pumpAndSettle();
-      expect(find.text('DAY REVIEW'), findsNothing);
+      expect(find.text('Day review'), findsNothing);
       await _pump(tester);
-      expect(find.text('DAY REVIEW'), findsNothing);
+      expect(find.text('Day review'), findsNothing);
     });
   });
 

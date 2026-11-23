@@ -1353,3 +1353,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-23, ED-437:** M20.5 part 4: multi-select and the selection bar everywhere (E-R2-6): the hour grid selects, picks across its days, the card centred at 470 with the board's icons; M20.5 done. Approved.
 - **2026-11-23, ED-438:** M20.6 part 1: Focus on every platform (E-R2-9 B): one Focus route, two columns on expanded windows with the iPad's native navigation hidden; restyled to the board; the ring's one spoken label. Approved.
 - **2026-11-23, ED-439:** M20.6 part 2: time states on Today (E-R2-26): Need more time? and Calendar changed float at Today's foot; Running late is a form that acts on Done; the rest as built. Approved.
+- **2026-11-23, ED-440:** M20.6 part 3: day states (E-R2-27 §1): the Day review and This week float at Today's foot after Wind Down; past day, overlaps, all-day chips and the empty day as built. Approved.

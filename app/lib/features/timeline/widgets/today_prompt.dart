@@ -29,15 +29,12 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Above today's thread (docs/09 M3f.5): from Wind Down, the Day review
-/// while one-off tasks are unfinished; before it, with "Running-late
-/// nudge" on, "Running late?" once a task ended unticked; otherwise, with
-/// the "Plan your inbox" nudge on, that card (F3.3, [InboxNudgeCard]).
-/// On the week's last day, after the Day review, "This week" (M12.1).
-/// "Not now" puts it away for the day (this session). Nothing on other
-/// days. A task over [rebalanceOverrunMin] past its end opens Rebalance;
-/// before the nudge, an event the calendar moved into the plan offers it
-/// ([CalendarMovedPrompt], M11.1b).
+/// Above today's thread (docs/09 M3f.5): before Wind Down, with the "Plan
+/// your inbox" nudge on, that card (F3.3, [InboxNudgeCard]) and the Siri
+/// tip, when nothing more pressing floats at the foot ([TodayFloatPrompt]:
+/// "Need more time?", "Calendar changed", the Day review, This week).
+/// Nothing on other days. A task over [rebalanceOverrunMin] past its end
+/// opens Rebalance from "Need more time?".
 ///
 /// Minimal layout (docs/14 §3): no "Need more time?", This week, Inbox or
 /// Siri card; in their place, at most one reveal hint a day ([hint]). The
@@ -63,22 +60,9 @@ class TodayPrompt extends ConsumerWidget {
     final at = _promptState(ref, today);
     if (at == null) return const SizedBox.shrink();
     final (:data, :dismissed, :now, :shape) = at;
-    void notNow(TodayPromptKind kind) =>
-        ref.read(dismissedPromptsProvider.notifier).dismiss(kind, today);
-    if (!now.isBefore(shape.bedUtc)) {
-      // A fully-done day gets its review too: the night line and the
-      // sleep offer live there (owner, 2026-10-31).
-      if (!dismissed.contains((TodayPromptKind.review, today)) &&
-          reviewOf(data.blocks).total > 0) {
-        return _review(context, notNow);
-      }
-      final weekEnds =
-          reviewWeek(today, data.settings.firstDayOfWeek).last == today &&
-          watchOnScreen(ref, FeatureId.weekPrompt);
-      return weekEnds && !dismissed.contains((TodayPromptKind.week, today))
-          ? _week(context, notNow)
-          : const SizedBox.shrink();
-    }
+    // After Wind Down the Day review or This week floats at the foot
+    // ([TodayFloatPrompt], E-R2-27).
+    if (!now.isBefore(shape.bedUtc)) return const SizedBox.shrink();
     // A pressing one floats at Today's foot instead ([TodayFloatPrompt]).
     if (_pressing(context, ref, today, at) != null) {
       return const SizedBox.shrink();
@@ -104,9 +88,10 @@ class TodayPrompt extends ConsumerWidget {
   }
 }
 
-/// "Need more time?" or "Calendar changed … Rebalance?" floating at the
-/// foot of Today (E-R2-26 §1, ED-329; owner, M20.6 part 2): above the tab
-/// bar, until answered. Nothing on other days, after Wind Down, while
+/// The card floating at the foot of Today, above the tab bar, until
+/// answered: before Wind Down "Need more time?" or "Calendar changed …
+/// Rebalance?" (E-R2-26 §1, ED-329; owner, M20.6 part 2), after it the Day
+/// review or This week (E-R2-27 §1; part 3). Nothing on other days, while
 /// tasks are picked, or in low-energy mode.
 class TodayFloatPrompt extends ConsumerWidget {
   const TodayFloatPrompt({required this.today, super.key});
@@ -120,9 +105,8 @@ class TodayFloatPrompt extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     final at = _promptState(ref, today);
-    if (at == null || !at.now.isBefore(at.shape.bedUtc)) {
-      return const SizedBox.shrink();
-    }
+    if (at == null) return const SizedBox.shrink();
+    if (!at.now.isBefore(at.shape.bedUtc)) return _night(context, ref, at);
     return _pressing(context, ref, today, at) ?? const SizedBox.shrink();
   }
 }
@@ -227,28 +211,44 @@ Future<void> _late(
   );
 }
 
-extension on TodayPrompt {
-  /// Sunday at Wind Down (the week's last day): the weekly review (11 D1).
-  Widget _week(BuildContext context, void Function(TodayPromptKind) notNow) =>
-      PromptCard(
-        title: context.l10n.weekReviewTitle,
-        child: PromptNudge(
-          detail: context.l10n.weekPromptDetail,
-          action: context.l10n.weekPromptAction,
-          onAction: () =>
-              unawaited(openReview(context, day: today, page: ReviewPage.week)),
-          onNotNow: () => notNow(TodayPromptKind.week),
-        ),
-      );
-
-  Widget _review(BuildContext context, void Function(TodayPromptKind) notNow) =>
-      PromptCard(
-        title: context.l10n.reviewTitle,
-        // The card opens the whole review where this layout keeps it.
-        onTap: () => unawaited(openReview(context, day: today)),
-        child: DayReviewBody(
-          day: today,
-          onNotNow: () => notNow(TodayPromptKind.review),
-        ),
-      );
+/// After Wind Down (E-R2-27 §1, owner M20.6 part 3): the Day review while
+/// the day had tasks (a fully-done day too: the night line and the sleep
+/// offer live there, owner 2026-10-31), else on the week's last day "This
+/// week" (M12.1); "Not now" puts each away for the day.
+Widget _night(BuildContext context, WidgetRef ref, _PromptState at) {
+  final (:data, :dismissed, now: _, shape: _) = at;
+  final today = data.day.date;
+  void notNow(TodayPromptKind kind) =>
+      ref.read(dismissedPromptsProvider.notifier).dismiss(kind, today);
+  if (!dismissed.contains((TodayPromptKind.review, today)) &&
+      reviewOf(data.blocks).total > 0) {
+    return PromptCard(
+      title: context.l10n.reviewTitle,
+      floating: true,
+      // The card opens the whole review where this layout keeps it.
+      onTap: () => unawaited(openReview(context, day: today)),
+      child: DayReviewBody(
+        day: today,
+        onNotNow: () => notNow(TodayPromptKind.review),
+      ),
+    );
+  }
+  final weekEnds =
+      reviewWeek(today, data.settings.firstDayOfWeek).last == today &&
+      watchOnScreen(ref, FeatureId.weekPrompt);
+  if (!weekEnds || dismissed.contains((TodayPromptKind.week, today))) {
+    return const SizedBox.shrink();
+  }
+  // Sunday at Wind Down (the week's last day): the weekly review (11 D1).
+  return PromptCard(
+    title: context.l10n.weekReviewTitle,
+    floating: true,
+    child: PromptNudge(
+      detail: context.l10n.weekPromptDetail,
+      action: context.l10n.weekPromptAction,
+      onAction: () =>
+          unawaited(openReview(context, day: today, page: ReviewPage.week)),
+      onNotNow: () => notNow(TodayPromptKind.week),
+    ),
+  );
 }

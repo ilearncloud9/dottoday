@@ -94,7 +94,8 @@ List<Occurrence> pastYear() => [
 ];
 
 /// The app at [size] on its platform (the test's variant), opened on the
-/// Calendar's month, in Full. A device run passes no [size]: its own.
+/// Calendar's month, in Full, at [now] (10:42 in Berlin unless given). A
+/// device run passes no [size]: its own.
 Future<GoRouter> pumpCalendar(
   WidgetTester tester, {
   Size? size,
@@ -106,6 +107,7 @@ Future<GoRouter> pumpCalendar(
   DateTime? lowEnergyUntil,
   List<Subtask> subtasks = const [],
   LearningMetaState learningMeta = const LearningMetaState(),
+  DateTime? now,
 }) async {
   if (size != null) {
     tester.view
@@ -126,7 +128,7 @@ Future<GoRouter> pumpCalendar(
       themeMode: mode,
       overrides: [
         ...timelineOverrides(
-          now: sliceAt(9, 42),
+          now: now ?? sliceAt(9, 42),
           occurrences: FakeOccurrenceRepository(
             rows ?? [...calendarMonth(), ...pastYear()],
           ),

@@ -26,7 +26,8 @@ Future<void> _pump(WidgetTester tester, DateTime today, DateTime now) async {
       ),
       child: testApp(
         Scaffold(
-          body: TodayPrompt(date: today, today: today),
+          // After Wind Down it floats at Today's foot (E-R2-27).
+          body: TodayFloatPrompt(today: today),
         ),
       ),
     ),

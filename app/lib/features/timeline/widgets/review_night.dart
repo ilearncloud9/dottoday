@@ -48,7 +48,10 @@ class ReviewNightLine extends ConsumerWidget {
       now.isBefore(ends.shape.bedUtc)
           ? l10n.reviewNightIfNow(length)
           : l10n.reviewNightUntil(length, wake),
-      style: pill ? t.styles.chip : t.styles.body,
+      // On Today's card it is a quiet line under the title (E-R2-27).
+      style: pill
+          ? t.styles.chip
+          : t.styles.body.copyWith(color: t.colors.muted),
     );
     if (!pill) return text;
     return DecoratedBox(

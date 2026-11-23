@@ -5617,6 +5617,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Found in tests and fixed:** the option rows in a coloured box hid their ink; the group is a Material card.
 - **Checks:** format and analyze clean; 7,748 pass, 31 skipped; goldens `today_late_nudge` and `today_running_late` updated; the Running late, Calendar-moved and 3-days tests pick then press Done. `integration_test/time_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-440 · M20.6 part 3: day states
+- **Date:** 2026-11-23. **Owner:** "Start part 3"; "Foot, as drawn (Recommended)" for the Day review; then "Approve part 3" after the review page (https://claude.ai/artifact/YJ5J75ARizMDg1WBnJk7QD).
+- **Built (E-R2-27 §1, ED-330):** no new strings.
+  - **After Wind Down the Day review floats at Today's foot** (owner), like "Need more time?" (ED-439): `TodayFloatPrompt` shows the Day review, else on the week's last day This week (was at the top of the day); bold title, the night line muted, "Nothing left to move" in the accent when all is done; the one-time sleep offer stays inside while it applies. No celebration, no score.
+  - Already as drawn, checked: a past day ("· not done", a skipped task dashed and faded with a muted title, no prompts, free time without "add here"); three tasks overlapping as a chain of pairwise knots, nothing compacted; all-day items as tinted chips above the day.
+- **Departures (on the review page):** a past day keeps "‹ Today" leading the row (ED-386, later than this board's "● Today" pill); the empty today is ED-386's approved empty day; the Wake Up card on an empty day as built (its look is R2-19, M20.8); the device shots overlap two tasks, a golden shows three.
+- **Checks:** format and analyze clean; 7,752 pass, 31 skipped; Day review goldens updated; new golden `today_overlap_chain`; the week-prompt and Day-review tests read the floating card; the calendar test world takes a clock (`now`). `integration_test/day_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers
