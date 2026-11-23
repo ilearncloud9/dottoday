@@ -2,6 +2,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -62,6 +63,8 @@ void main() {
       expect(find.text('based on your last 4 times · median'), findsOneWidget);
       await tester.tap(find.text('Shift the rest').last);
       await tester.pumpAndSettle();
+      await tester.tap(_formDone); // the form acts on Done
+      await tester.pumpAndSettle();
       expect(
         find.text('The rest of today, 30 min later · here\'s a plan'),
         findsOneWidget,
@@ -82,6 +85,8 @@ void main() {
         reason: 'partial before anything moves (R-17)',
       );
       await tester.tap(find.text('Shift the rest').last);
+      await tester.pumpAndSettle();
+      await tester.tap(_formDone); // the form acts on Done
       await tester.pumpAndSettle();
       // Rebalance (M11.1): the plan, nothing written yet.
       expect(
@@ -106,6 +111,8 @@ void main() {
       await _openSheet(tester);
       await tester.tap(find.text('Skip “Deep work: roadmap”'));
       await tester.pumpAndSettle();
+      await tester.tap(_formDone); // the form acts on Done
+      await tester.pumpAndSettle();
       expect(_row('Deep work: roadmap').status, OccurrenceStatus.skipped);
       expect(
         _row('Reply to email').startUtc,
@@ -129,6 +136,8 @@ void main() {
         findsOneWidget,
       );
       await tester.tap(find.text('Shorten “Deep work: roadmap”'));
+      await tester.pumpAndSettle();
+      await tester.tap(_formDone); // the form acts on Done
       await tester.pumpAndSettle();
       final deep = _row('Deep work: roadmap');
       expect(deep.startUtc, DateTime.utc(2026, 10, 21, 7, 30));
@@ -189,7 +198,7 @@ void main() {
       tester,
     ) async {
       await _pump(tester, at: late);
-      expect(find.text('NEED MORE TIME?'), findsOneWidget);
+      expect(find.text('Need more time?'), findsOneWidget);
       expect(find.text('“Design review” ended 30 min ago'), findsOneWidget);
       await tester.tap(find.text('Catch up'));
       await tester.pumpAndSettle();
@@ -216,7 +225,7 @@ void main() {
         at: late,
         settings: const Settings(use24h: false, runningLateNudge: false),
       );
-      expect(find.text('NEED MORE TIME?'), findsNothing);
+      expect(find.text('Need more time?'), findsNothing);
     });
   });
 
@@ -234,3 +243,9 @@ void main() {
     handle.dispose();
   });
 }
+
+/// The Running late form's Done (M20.6 part 2), not a task's.
+final _formDone = find.descendant(
+  of: find.byType(SheetNavBar),
+  matching: find.text('Done'),
+);

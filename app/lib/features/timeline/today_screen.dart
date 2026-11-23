@@ -12,6 +12,7 @@ import 'package:dottoday/features/timeline/widgets/selection_layer.dart';
 import 'package:dottoday/features/timeline/widgets/today_compact.dart';
 import 'package:dottoday/features/timeline/widgets/today_day_wide.dart';
 import 'package:dottoday/features/timeline/widgets/today_keys.dart';
+import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/today_three_days.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
@@ -102,33 +103,52 @@ class TodayScreen extends ConsumerWidget {
           bottom: false,
           child: SelectionLayer(
             today: today,
-            child: LayoutBuilder(
-              builder: (context, box) =>
-                  spread &&
-                      // Inside the Workspace its views stay the grid
-                      // beside the Plan panel and the inspector.
-                      (WorkspaceScope.of(context) ||
-                          AppLayout.classOf(context, width: box.maxWidth) ==
-                              WidthClass.expanded)
-                  // The Workspace's views (ED-073, ED-333): 3 days on
-                  // the hour grid; Day the shown day alone.
-                  ? threeDays
-                        ? TodayThreeDays(
+            child: Stack(
+              children: [
+                LayoutBuilder(
+                  builder: (context, box) =>
+                      spread &&
+                          // Inside the Workspace its views stay the grid
+                          // beside the Plan panel and the inspector.
+                          (WorkspaceScope.of(context) ||
+                              AppLayout.classOf(context, width: box.maxWidth) ==
+                                  WidthClass.expanded)
+                      // The Workspace's views (ED-073, ED-333): 3 days on
+                      // the hour grid; Day the shown day alone.
+                      ? threeDays
+                            ? TodayThreeDays(
+                                shown: shown,
+                                today: today,
+                                onSelect: select,
+                              )
+                            : TodayDayWide(shown: shown, today: today)
+                      : _landscape(
+                          context,
+                          TodayCompact(
                             shown: shown,
                             today: today,
+                            month: month,
+                            firstDayOfWeek: profile.settings.firstDayOfWeek,
                             onSelect: select,
-                          )
-                        : TodayDayWide(shown: shown, today: today)
-                  : _landscape(
-                      context,
-                      TodayCompact(
-                        shown: shown,
-                        today: today,
-                        month: month,
-                        firstDayOfWeek: profile.settings.firstDayOfWeek,
-                        onSelect: select,
+                          ),
+                        ),
+                ),
+                // "Need more time?" and "Calendar changed" float at the
+                // foot, above the tab bar (E-R2-26 §1, ED-329).
+                if (shown == today)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SafeArea(
+                      top: false,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: DotSize.readableColumn,
+                        ),
+                        child: TodayFloatPrompt(today: today),
                       ),
                     ),
+                  ),
+              ],
             ),
           ),
         ),

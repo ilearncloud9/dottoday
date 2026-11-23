@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- "Need more time?" now floats at the bottom of Today until you answer it, and Running late lets you pick how late and what to do, then applies it with Done (redesign branch).
 - Focus fills the whole window on tablets, the Mac and the web, with the ring and title on one side and the step and actions on the other; its ring and step card follow the new design (redesign branch).
 - On the week and 3-day grids you can now select several tasks, even across days: hold one still or ⇧/⌘/Ctrl-click, then tap others; the selection bar sits centred under the grid (redesign branch).
 - Swiping an Inbox row on a phone now shows an icon with each action: a bin for Move to Trash and a calendar for Schedule (redesign branch).

@@ -68,7 +68,11 @@ Future<(ProposalHarness, ProviderContainer)> _pump(WidgetTester tester) async {
         Scaffold(
           body: ProposalHost(
             child: ListView(
-              children: [TodayPrompt(date: today, today: today)],
+              children: [
+                TodayPrompt(date: today, today: today),
+                // The move floats at Today's foot (E-R2-26 §1).
+                TodayFloatPrompt(today: today),
+              ],
             ),
           ),
         ),
@@ -112,11 +116,11 @@ void main() {
     final (_, c) = await _pump(tester);
     expect(find.text('Rebalance'), findsNothing);
     await _move_(tester, c);
-    expect(find.text('CALENDAR CHANGED'), findsOneWidget);
+    expect(find.text('Calendar changed'), findsOneWidget);
     expect(find.text('Standup moved to 1:45 PM · Rebalance?'), findsOneWidget);
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
-    expect(find.text('CALENDAR CHANGED'), findsNothing);
+    expect(find.text('Calendar changed'), findsNothing);
     expect(c.read(calendarMovesProvider), isEmpty);
     await _unmount(tester);
   });

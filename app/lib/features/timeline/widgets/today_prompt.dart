@@ -16,6 +16,7 @@ import 'package:dottoday/features/timeline/review/review_presenter.dart';
 import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
+import 'package:dottoday/features/timeline/state/task_selection.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/state/today_prompts.dart';
 import 'package:dottoday/features/timeline/widgets/calendar_moved_prompt.dart';
@@ -59,22 +60,9 @@ class TodayPrompt extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (date != today) return const SizedBox.shrink();
-    // Low-energy mode: every nudge is off until Wake Up (11 D2, M12.2).
-    if (watchLowEnergy(ref)) return const SizedBox.shrink();
-    final data = ref.watch(timelineDataProvider(today)).value;
-    if (data == null) return const SizedBox.shrink();
-    final dismissed = ref.watch(dismissedPromptsProvider);
-    final now =
-        ref.watch(minuteTickProvider).value ??
-        ref.watch(clockProvider).nowUtc();
-    // The effective Wind Down opens the review (docs/15 W4).
-    final shape =
-        ref.watch(dayEndsProvider(today)).value?.shape ??
-        DayShape.on(
-          data.day.location,
-          today,
-          data.settings.boundaryFor(data.day.weekday),
-        );
+    final at = _promptState(ref, today);
+    if (at == null) return const SizedBox.shrink();
+    final (:data, :dismissed, :now, :shape) = at;
     void notNow(TodayPromptKind kind) =>
         ref.read(dismissedPromptsProvider.notifier).dismiss(kind, today);
     if (!now.isBefore(shape.bedUtc)) {
@@ -91,76 +79,155 @@ class TodayPrompt extends ConsumerWidget {
           ? _week(context, notNow)
           : const SizedBox.shrink();
     }
-    final move = moveToRebalance(
-      ref.watch(calendarMovesProvider).values,
-      data.blocks,
-      now,
-    );
-    if (move != null) return CalendarMovedPrompt(move: move, data: data);
-    final missed = watchOnScreen(ref, FeatureId.needMoreTimeNudge)
-        ? missedTask(data.blocks, now)
-        : null;
-    if (!data.settings.runningLateNudge ||
-        missed == null ||
-        dismissed.contains((TodayPromptKind.late, today))) {
-      // Nothing more pressing: the once-a-day inbox card (F3.3), and the
-      // once-ever Siri tip on iPhone (M14.3; each hides itself).
-      if (!watchOnScreen(ref, FeatureId.inboxNudge)) {
-        return hint ?? const SizedBox.shrink();
-      }
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          InboxNudgeCard(
-            enabled: data.settings.inboxNudge,
-            today: today,
-            shape: shape,
-            now: now,
-          ),
-          if (watchOnScreen(ref, FeatureId.siri)) const SiriTipCard(),
-          ?hint,
-        ],
-      );
+    // A pressing one floats at Today's foot instead ([TodayFloatPrompt]).
+    if (_pressing(context, ref, today, at) != null) {
+      return const SizedBox.shrink();
     }
-    return PromptCard(
-      title: context.l10n.lateNudgeTitle,
-      child: PromptNudge(
-        detail: context.l10n.lateNudgeDetail(
-          missed.title,
-          now.difference(missed.endUtc!).inMinutes,
+    // Nothing more pressing: the once-a-day inbox card (F3.3), and the
+    // once-ever Siri tip on iPhone (M14.3; each hides itself).
+    if (!watchOnScreen(ref, FeatureId.inboxNudge)) {
+      return hint ?? const SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        InboxNudgeCard(
+          enabled: data.settings.inboxNudge,
+          today: today,
+          shape: shape,
+          now: now,
         ),
-        action: context.l10n.lateNudgeAction,
-        onAction: () => unawaited(_late(context, missed, now)),
-        onNotNow: () => notNow(TodayPromptKind.late),
-      ),
+        if (watchOnScreen(ref, FeatureId.siri)) const SiriTipCard(),
+        ?hint,
+      ],
     );
   }
 }
 
-extension on TodayPrompt {
-  /// The nudge's action: a task more than [rebalanceOverrunMin] past its
-  /// end opens Rebalance straight away (11 C1, M11.1) with the overrun
-  /// rounded up to 5 min; a fresher one the Running late sheet.
-  Future<void> _late(BuildContext context, Occurrence missed, DateTime now) {
-    final over = now.difference(missed.endUtc!).inMinutes;
-    if (over <= rebalanceOverrunMin) {
-      return showRunningLateSheet(context, today);
-    }
-    final l10n = context.l10n;
-    final delta = (over / 5).ceil() * 5;
-    return openRebalance(
-      ProviderScope.containerOf(context, listen: false),
-      l10n,
-      today: today,
-      fromUtc: now,
-      deltaMin: delta,
-      subtitle: l10n.rebalanceRanOver(
-        missed.title,
-        formatDurationShort(l10n, delta),
-      ),
-    );
-  }
+/// "Need more time?" or "Calendar changed … Rebalance?" floating at the
+/// foot of Today (E-R2-26 §1, ED-329; owner, M20.6 part 2): above the tab
+/// bar, until answered. Nothing on other days, after Wind Down, while
+/// tasks are picked, or in low-energy mode.
+class TodayFloatPrompt extends ConsumerWidget {
+  const TodayFloatPrompt({required this.today, super.key});
 
+  final DateTime today;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // The selection bar has the foot while tasks are picked.
+    if (!ref.watch(taskSelectionProvider.select((p) => p.isEmpty))) {
+      return const SizedBox.shrink();
+    }
+    final at = _promptState(ref, today);
+    if (at == null || !at.now.isBefore(at.shape.bedUtc)) {
+      return const SizedBox.shrink();
+    }
+    return _pressing(context, ref, today, at) ?? const SizedBox.shrink();
+  }
+}
+
+/// What both prompts read about today; null while it loads or in
+/// low-energy mode (every nudge is off until Wake Up, 11 D2, M12.2).
+typedef _PromptState = ({
+  TimelineData data,
+  Set<(TodayPromptKind, DateTime)> dismissed,
+  DateTime now,
+  DayShape shape,
+});
+
+_PromptState? _promptState(WidgetRef ref, DateTime today) {
+  if (watchLowEnergy(ref)) return null;
+  final data = ref.watch(timelineDataProvider(today)).value;
+  if (data == null) return null;
+  final now =
+      ref.watch(minuteTickProvider).value ?? ref.watch(clockProvider).nowUtc();
+  // The effective Wind Down opens the review (docs/15 W4).
+  final shape =
+      ref.watch(dayEndsProvider(today)).value?.shape ??
+      DayShape.on(
+        data.day.location,
+        today,
+        data.settings.boundaryFor(data.day.weekday),
+      );
+  return (
+    data: data,
+    dismissed: ref.watch(dismissedPromptsProvider),
+    now: now,
+    shape: shape,
+  );
+}
+
+/// Before Wind Down: an event the calendar moved into the plan
+/// ([CalendarMovedPrompt], M11.1b), else "Need more time?" once a task
+/// ended unticked, with the "Running-late nudge" on; null when neither.
+Widget? _pressing(
+  BuildContext context,
+  WidgetRef ref,
+  DateTime today,
+  _PromptState at,
+) {
+  final (:data, :dismissed, :now, shape: _) = at;
+  final move = moveToRebalance(
+    ref.watch(calendarMovesProvider).values,
+    data.blocks,
+    now,
+  );
+  if (move != null) return CalendarMovedPrompt(move: move, data: data);
+  final missed = watchOnScreen(ref, FeatureId.needMoreTimeNudge)
+      ? missedTask(data.blocks, now)
+      : null;
+  if (!data.settings.runningLateNudge ||
+      missed == null ||
+      dismissed.contains((TodayPromptKind.late, today))) {
+    return null;
+  }
+  return PromptCard(
+    title: context.l10n.lateNudgeTitle,
+    floating: true,
+    child: PromptNudge(
+      detail: context.l10n.lateNudgeDetail(
+        missed.title,
+        now.difference(missed.endUtc!).inMinutes,
+      ),
+      action: context.l10n.lateNudgeAction,
+      onAction: () => unawaited(_late(context, today, missed, now)),
+      onNotNow: () => ref
+          .read(dismissedPromptsProvider.notifier)
+          .dismiss(TodayPromptKind.late, today),
+    ),
+  );
+}
+
+/// The nudge's action: a task more than [rebalanceOverrunMin] past its end
+/// opens Rebalance straight away (11 C1, M11.1) with the overrun rounded
+/// up to 5 min; a fresher one the Running late sheet.
+Future<void> _late(
+  BuildContext context,
+  DateTime today,
+  Occurrence missed,
+  DateTime now,
+) {
+  final over = now.difference(missed.endUtc!).inMinutes;
+  if (over <= rebalanceOverrunMin) {
+    return showRunningLateSheet(context, today);
+  }
+  final l10n = context.l10n;
+  final delta = (over / 5).ceil() * 5;
+  return openRebalance(
+    ProviderScope.containerOf(context, listen: false),
+    l10n,
+    today: today,
+    fromUtc: now,
+    deltaMin: delta,
+    subtitle: l10n.rebalanceRanOver(
+      missed.title,
+      formatDurationShort(l10n, delta),
+    ),
+  );
+}
+
+extension on TodayPrompt {
   /// Sunday at Wind Down (the week's last day): the weekly review (11 D1).
   Widget _week(BuildContext context, void Function(TodayPromptKind) notNow) =>
       PromptCard(

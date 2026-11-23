@@ -5607,6 +5607,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Tooling:** `tool/device_tests.sh` `KEEP_BOOT=1` keeps a rotated iPad simulator rotated.
 - **Checks:** format and analyze clean; 7,748 pass, 31 skipped; Focus goldens updated; `focus_frame_test` became `focus_screen_test` (two columns, the tab kept, native navigation hidden, Esc, owner switch, the ring's one label); a native-bar test for hiding; the Today harness and week cues test gained a Focus route. `integration_test/focus_test.dart` passed on the iPhone and iPad (landscape) simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
 
+### ED-439 · M20.6 part 2: time states on Today
+- **Date:** 2026-11-23. **Owner:** "Start part 2"; "Bottom, as drawn (Recommended)" for the Today card; "Choose, then Done (Recommended)" for Running late; then "Approve part 2" after the review page (https://claude.ai/artifact/Th3CQaRacN2arkcpN1wqK3).
+- **Built (E-R2-26 §1 and §4, ED-329; the Today cards M20.3 left for R2-26, ED-428):** no new strings.
+  - **The pressing card floats at Today's foot:** "Need more time?" and "Calendar changed … Rebalance?" (`TodayFloatPrompt`) above the tab bar, until answered, at most the readable width; `PromptCard(floating: true)`: corners 22, the floating shadow, the bold sentence-case title (was an uppercase caption at the top of the day). The other prompts (Inbox, Siri tip, Day review, week, hints) stay at the top (`TodayPrompt`). Nothing while tasks are picked.
+  - **Running late is a form** (owner): `SheetNavBar` (iPhone Cancel · Running late · Done; elsewhere × · title · Done), "How late" (`lateAmount`) over +5/+15/+30, then Shift the rest, Skip and Shorten as an adaptive radio list in a raised card (`LateOptionGroup`); the first that can is picked; nothing happens until Done; Cancel or a swipe changes nothing. What each does is unchanged (Shift the rest through Rebalance; Skip and Shorten with Undo).
+  - Already as drawn: the past-end row "· not done", muted; Catch up opens Rebalance past 10 min; Now through the day (M19.6); Focus past its end (ED-438); the Mac menu bar moving on to Next up (checked in code, not captured).
+- **Departures (on the review page):** the amount chips keep the app's tinted style; tablets and the Mac show the form as the centred dialog.
+- **Found in tests and fixed:** the option rows in a coloured box hid their ink; the group is a Material card.
+- **Checks:** format and analyze clean; 7,748 pass, 31 skipped; goldens `today_late_nudge` and `today_running_late` updated; the Running late, Calendar-moved and 3-days tests pick then press Done. `integration_test/time_states_test.dart` passed on the iPhone and iPad simulators, the Android phone and tablet emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices.
+
 ---
 
 ## Pending owner answers

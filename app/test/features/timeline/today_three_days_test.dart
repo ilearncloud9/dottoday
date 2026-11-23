@@ -4,6 +4,7 @@ import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/timeline/week/week_board.dart';
 import 'package:dottoday/features/timeline/widgets/today_three_days.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -86,6 +87,8 @@ void main() {
       );
       await tester.tap(find.text('Shift the rest').last); // the sheet's
       await tester.pumpAndSettle();
+      await tester.tap(_formDone); // the form acts on Done
+      await tester.pumpAndSettle();
       // Rebalance in the right-hand panel (M11.1): nothing moved yet.
       expect(find.text('10:30 AM – 11:15 AM'), findsWidgets);
       await tester.tap(find.text('Accept plan'));
@@ -159,3 +162,9 @@ void main() {
     }
   });
 }
+
+/// The Running late form's Done (M20.6 part 2), not a task's.
+final _formDone = find.descendant(
+  of: find.byType(SheetNavBar),
+  matching: find.text('Done'),
+);

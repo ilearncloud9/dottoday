@@ -5,21 +5,28 @@ import 'package:flutter/material.dart';
 /// A raised card with a caption, between the header and the day card.
 /// [onTap] makes the card itself a way in (the Wind Down card opens the
 /// review, ED-099); its buttons keep their own taps.
+///
+/// [floating]: the card that floats at the foot of Today (E-R2-26 §1,
+/// ED-329: "Need more time?", "Calendar changed"): corners 22, the
+/// floating shadow, a bold sentence-case title.
 class PromptCard extends StatelessWidget {
   const PromptCard({
     required this.title,
     required this.child,
     this.onTap,
+    this.floating = false,
     super.key,
   });
 
   final String title;
   final Widget child;
   final VoidCallback? onTap;
+  final bool floating;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final radius = floating ? DotRadii.tile : DotRadii.card;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: DotSpace.page,
@@ -28,8 +35,11 @@ class PromptCard extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: t.colors.raised,
-          borderRadius: BorderRadius.circular(DotRadii.card),
-          border: Border.all(color: t.colors.threadAhead),
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(
+            color: floating ? t.colors.outline : t.colors.threadAhead,
+          ),
+          boxShadow: floating ? DotElevation.floating : null,
         ),
         // The ink over the card's own paint, so the card looks as before.
         child: Material(
@@ -37,19 +47,27 @@ class PromptCard extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(DotRadii.card),
+              borderRadius: BorderRadius.circular(radius),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(DotSpace.l),
+              padding: floating
+                  ? const EdgeInsets.symmetric(
+                      horizontal: DotSpace.l,
+                      vertical: DotSpace.m,
+                    )
+                  : const EdgeInsets.all(DotSpace.l),
               child: Semantics(
                 container: true,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: DotSpace.xs,
                   children: [
                     Semantics(
                       header: true,
-                      child: Text(title.toUpperCase(), style: t.styles.caption),
+                      child: floating
+                          ? Text(title, style: t.styles.rowTitle)
+                          : Text(title.toUpperCase(), style: t.styles.caption),
                     ),
                     child,
                   ],

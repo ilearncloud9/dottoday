@@ -18,9 +18,11 @@ import 'package:dottoday/features/timeline/state/late_actions.dart';
 import 'package:dottoday/features/timeline/state/rebalance_flow.dart';
 import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/widgets/day_actions.dart';
+import 'package:dottoday/features/timeline/widgets/running_late_options.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/learning/learned_line.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/sheet_nav_bar.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,18 +31,19 @@ import 'package:timezone/timezone.dart' as tz;
 /// What the sheet was closed with.
 enum _Late { shift, skip, shorten }
 
-/// "Running late" (docs/09 M3f.5, R-04): how late (+5 / +15 / +30), then
-/// shift the rest of today — as a Rebalance proposal, written only on
-/// Accept (M11.1) — skip the task at hand, or shorten it so nothing after
-/// it moves. Skip and Shorten write one batch with Undo; a pinned task
-/// stops the shift and the preview says so (R-17).
+/// "Running late" (docs/09 M3f.5, R-04; E-R2-26 §1, ED-329): a form, how
+/// late (+5 / +15 / +30), then one of shift the rest of today — as a
+/// Rebalance proposal, written only on Accept (M11.1) — skip the task at
+/// hand, or shorten it so nothing after it moves. Nothing happens until
+/// Done; Cancel or a swipe changes nothing (owner, M20.6 part 2). Skip and
+/// Shorten write one batch with Undo; a pinned task stops the shift and
+/// the preview says so (R-17).
 Future<void> showRunningLateSheet(BuildContext context, DateTime today) async {
   final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final picked = await showAppSheet<(_Late, int)>(
     context: context,
-    title: l10n.runningLate,
     builder: (_) => _LateSheet(today: today),
   );
   final data = container.read(timelineDataProvider(today)).value;
@@ -107,7 +110,7 @@ class _LateSheet extends ConsumerStatefulWidget {
   ConsumerState<_LateSheet> createState() => _LateSheetState();
 }
 
-/// A leaf: only the chosen amount.
+/// A leaf: the chosen amount and way.
 class _LateSheetState extends ConsumerState<_LateSheet> {
   static const _choices = [5, 15, 30];
 
@@ -116,7 +119,8 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
   /// Set once the user picks an amount; until then the history may.
   bool _picked = false;
 
-  void _close(_Late choice) => Navigator.of(context).pop((choice, _minutes));
+  /// The way picked; null until a tap, which leaves the first that can.
+  _Late? _way;
 
   /// How much longer [target] usually takes, as the default amount and its
   /// reason, explained on tap (M11.3, docs/13 §6); null keeps the default.
@@ -159,29 +163,43 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         ref.watch(clockProvider).nowUtc();
     final target = lateTarget(data.blocks, now);
     final why = _learnedAmount(context, target);
+    final l10n = context.l10n;
+    final t = DotTheme.of(context);
+    final ways = <_Late, LateOption>{
+      _Late.shift: _shift(context, data, now),
+      if (target != null) ...{
+        _Late.skip: _skip(context, target),
+        _Late.shorten: _shorten(context, target, data),
+      },
+    };
+    final open = [
+      for (final e in ways.entries)
+        if (e.value.enabled) e.key,
+    ];
+    final way = open.contains(_way) ? _way : open.firstOrNull;
+    final keys = ways.keys.toList();
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.s,
       children: [
+        SheetNavBar(
+          title: l10n.runningLate,
+          actionLabel: l10n.sheetDone,
+          onCancel: () => Navigator.of(context).pop(),
+          onAction: way == null
+              ? null
+              : () => Navigator.of(context).pop((way, _minutes)),
+        ),
+        Text(l10n.lateAmount, style: t.styles.caption),
         _amounts(context),
-        if (why != null)
-          Padding(
-            padding: const EdgeInsets.only(top: DotSpace.xs),
-            child: why,
-          ),
-        _shiftTile(context, data, now),
-        if (target == null)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: DotSpace.m),
-            child: Text(
-              context.l10n.lateNothingLeft,
-              style: DotTheme.of(context).styles.rowMeta,
-            ),
-          )
-        else ...[
-          _skipTile(context, target),
-          _shortenTile(context, target, data),
-        ],
+        ?why,
+        LateOptionGroup(
+          options: ways.values.toList(),
+          selected: way == null ? null : keys.indexOf(way),
+          onSelect: (i) => setState(() => _way = keys[i]),
+        ),
+        if (target == null) Text(l10n.lateNothingLeft, style: t.styles.rowMeta),
       ],
     );
   }
@@ -209,7 +227,7 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
     );
   }
 
-  Widget _shiftTile(BuildContext context, TimelineData data, DateTime now) {
+  LateOption _shift(BuildContext context, TimelineData data, DateTime now) {
     final l10n = context.l10n;
     final fixed = ref.watch(readOnlyCalendarIdsProvider).value;
     final report = const DaySchedulerService()
@@ -223,8 +241,7 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         )
         .report;
     final moved = report.movedIds.length;
-    return _Option(
-      glyph: DotGlyphs.rollForward,
+    return (
       title: l10n.lateShiftRest,
       detail: switch (report.blockedById) {
         final pin? when moved > 0 => l10n.lateShiftPreviewPartial(
@@ -234,18 +251,17 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
         ),
         _ => l10n.lateShiftPreview(moved, _minutes),
       },
-      onTap: moved == 0 ? null : () => _close(_Late.shift),
+      enabled: moved > 0,
     );
   }
 
-  Widget _skipTile(BuildContext context, Occurrence target) => _Option(
-    glyph: DotGlyphs.arrowRight,
+  LateOption _skip(BuildContext context, Occurrence target) => (
     title: context.l10n.lateSkip(target.title),
     detail: context.l10n.lateSkipDetail,
-    onTap: () => _close(_Late.skip),
+    enabled: true,
   );
 
-  Widget _shortenTile(
+  LateOption _shorten(
     BuildContext context,
     Occurrence target,
     TimelineData data,
@@ -258,43 +274,12 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
       target.endUtc!,
       use24h: use24hFor(context, data.settings.use24h),
     );
-    return _Option(
-      glyph: DotGlyphs.clock,
+    return (
       title: l10n.lateShorten(target.title),
       detail: shorter == null
           ? l10n.lateShortenTooShort(_minutes)
           : l10n.lateShortenDetail(_minutes, end),
-      onTap: shorter == null ? null : () => _close(_Late.shorten),
-    );
-  }
-}
-
-/// One way to catch up: icon, what it does, and what it will change.
-class _Option extends StatelessWidget {
-  const _Option({
-    required this.glyph,
-    required this.title,
-    required this.detail,
-    required this.onTap,
-  });
-
-  final DotGlyph glyph;
-  final String title;
-  final String detail;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final color = onTap == null ? t.colors.muted : t.colors.text;
-    return ListTile(
-      onTap: onTap,
-      enabled: onTap != null,
-      contentPadding: EdgeInsets.zero,
-      minTileHeight: DotTouch.android,
-      leading: DotIcon(glyph, color: color),
-      title: Text(title, style: t.styles.body.copyWith(color: color)),
-      subtitle: Text(detail, style: t.styles.rowMeta),
+      enabled: shorter != null,
     );
   }
 }

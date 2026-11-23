@@ -35,8 +35,10 @@ class CalendarMovedPrompt extends ConsumerWidget {
     );
     void dismiss() =>
         ref.read(calendarMovesProvider.notifier).dismiss(move.occurrenceId);
+    // It floats at Today's foot (E-R2-26 §1, [TodayFloatPrompt]).
     return PromptCard(
       title: l10n.calendarMovedTitle,
+      floating: true,
       child: PromptNudge(
         detail: l10n.calendarMovedDetail(move.title, time),
         action: l10n.calendarMovedAction,
