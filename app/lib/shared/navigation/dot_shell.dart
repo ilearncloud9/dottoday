@@ -224,11 +224,15 @@ class DotShell extends StatelessWidget {
         };
         final onTrash = onTrashTask;
         if (onTrash == null) return shell;
-        // Above the add button on phones; the bottom-end corner on the
-        // rail, which has no floating add button.
-        final lift = width == WidthClass.compact
-            ? PillTabShell.height + DotSpace.l * 2
-            : 0.0;
+        // Above the add button on phones (on the web's bar, above its
+        // floating Add; E-R2-25 §1); the bottom-end corner on the rail,
+        // which has no floating add button.
+        final lift = switch (width) {
+          WidthClass.compact when webChrome(context) =>
+            DotSize.webBar + DotSpace.fabClearance,
+          WidthClass.compact => PillTabShell.height + DotSpace.l * 2,
+          _ => 0.0,
+        };
         return Stack(
           children: [
             shell,

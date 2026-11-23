@@ -172,9 +172,18 @@ class _ThreadState extends State<Thread> {
     _shift.value = start;
     _calendar.value = calendar ?? false;
     _settle();
+    // At the top of the day's visible area (E-R2-25 §1).
+    final day = Scrollable.maybeOf(context)?.context.findRenderObject();
+    final overlay = Overlay.of(context).context.findRenderObject();
+    final area = day is RenderBox && overlay is RenderBox
+        ? day.localToGlobal(Offset.zero, ancestor: overlay) & day.size
+        : null;
     final chip = OverlayEntry(
-      builder: (_) =>
-          ShiftChip(on: _shift, calendar: calendar == null ? null : _calendar),
+      builder: (_) => ShiftChip(
+        on: _shift,
+        calendar: calendar == null ? null : _calendar,
+        area: area,
+      ),
     );
     Overlay.of(context).insert(chip);
     _chip = chip;

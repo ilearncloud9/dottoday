@@ -5558,6 +5558,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Departures (on the review page):** no ✓ in Plan | Reality (the app's segmented control); the Mac and web Day show Plan | Reality but no insight and fold finished runs into Earlier (as built).
 - **Checks:** format and analyze clean; 7,731 pass, 31 skipped; Reality, learning caption and highlight, Settings › Learning, slice cases, Workspace, task D and web Add popover goldens updated. `pumpCalendar` takes `learningMeta`. `integration_test/reality_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum, two runs). Not run: real devices.
 
+### ED-434 · M20.5 part 1: touch drag on phones
+- **Date:** 2026-11-23. **Owner:** "Start M20.5", "Four parts" (1 phone touch drag; 2 tablets and pointer with the Mac and web; 3 swipe on phone Inbox rows; 4 multi-select and the selection bar with overlaps and Shift the rest), then "Approve part 1" after the review page (https://claude.ai/artifact/Qx1DQ1WnD3svsecohgbfZd).
+- **Built (E-R2-25 §1, ED-328):** what dragging shows; what a drop writes is unchanged. No new strings.
+  - **The lifted dot (`LiftedDot`, `DraggableTaskRow`):** follows the finger across (a drag anchor at the dot's middle; down the day it keeps the row's own place, which the drop's time is read from) and sits one dot above the finger, so the landing preview stays readable (it covered it). `HoldOrMouseDraggable` takes the anchor and draws on the root overlay, above the page's chips.
+  - **Shift later tasks (`ShiftChip`):** at the top of the day's visible area, at its start, under the week strip (was centred at the top of the screen); off on the card colour, on in the accent tint with ✓ in accent ink (was filled teal). Calendar events too matches.
+  - **The Trash bin:** on the web at phone width it sits above the floating Add (`DotSize.webBar` + `fabClearance`; it overlapped Add).
+  - Already as drawn: the 250 ms hold, the dimmed row, the landing preview, All day on the Wake Up cap, the bin's ink fill, the Inbox tab, the toasts with Undo.
+- **Departures (on the review page):** the iPhone's Inbox tab takes no drops (the system tab bar, native first); tablets' week-grid drop box and pointer hover are part 2.
+- **Checks:** format and analyze clean; 7,731 pass, 31 skipped; `shift_chip` goldens updated. `integration_test/touch_drag_test.dart` passed on the iPhone and iPad (portrait) simulators, the Android phone and tablet (landscape) emulators, Chromium and WebKit at 390 and 1280, and the Mac (data container unchanged by checksum). Not run: real devices (haptics).
+
 ---
 
 ## Pending owner answers

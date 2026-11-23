@@ -789,6 +789,8 @@ Rules for every task in M18 to M22:
   - touch drag, tablet pointer and swipe (R2-25, ED-328);
   - multi-select and the selection bar (R2-6, ED-278, ED-279);
   - overlaps allowed (ADR-0015), with Shift the rest in one gesture (R-05).
+  Split by the owner (2026-11-23) into four parts, each with its own review page and commit: 1 phone touch drag; 2 tablets and pointer (with the Mac and web); 3 swipe on phone Inbox rows; 4 multi-select and the selection bar everywhere, with overlaps and Shift the rest.
+  - [x] Part 1 done 2026-11-23 (ED-434): touch drag on phones to E-R2-25 §1: the lifted dot follows the finger and sits above it so the landing preview shows, Shift later tasks at the top of the day at its start (tinted with ✓ when on), the web bin above Add; the rest as built. Open: real devices (haptics); the iPhone Inbox tab takes no drops (system tab bar).
 - [ ] M20.6 Focus and states:
   - Focus on every platform, whole window on expanded screens (R2-9, ED-285, ED-286);
   - time states (R2-26, ED-329), day states (R2-27, ED-330) and small states (R2-28, ED-331).

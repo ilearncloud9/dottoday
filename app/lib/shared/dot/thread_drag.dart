@@ -110,13 +110,20 @@ class _DraggableTaskRowState extends State<DraggableTaskRow> {
   Widget build(BuildContext context) {
     if (!widget.task.movable) return widget.child;
     final id = widget.task.id;
+    final dot = ThreadScale.of(context).dot;
     return HoldOrMouseDraggable<String>(
+      // The dot follows the finger across (E-R2-25 §1); down the day it
+      // keeps the row's own place, which the drop's time is read from.
+      anchor: (draggable, context, position) => Offset(
+        dot / 2,
+        childDragAnchorStrategy(draggable, context, position).dy,
+      ),
       data: id,
       feedback: LiftedDot(
         color: widget.task.color,
         icon: widget.task.icon,
         hint: widget.hint,
-        size: ThreadScale.of(context).dot,
+        size: dot,
       ),
       childWhenDragging: Opacity(opacity: TaskAlpha.done, child: widget.child),
       callbacks: DragCallbacks(
@@ -174,6 +181,16 @@ class LiftedDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    // A dot above the finger, so the landing preview under it stays in
+    // view (E-R2-25 §1). Only the picture moves: the drop still reads
+    // the row's own place.
+    return Transform.translate(
+      offset: Offset(0, -(size + DotSpace.s)),
+      child: _row(t),
+    );
+  }
+
+  Widget _row(DotTheme t) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       spacing: DotSpace.s,

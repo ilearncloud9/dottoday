@@ -49,6 +49,8 @@ final class DragCallbacks {
 ///
 /// Two draggables, one per device group, so each pointer meets exactly
 /// one recognizer; a click without movement still reaches the row's tap.
+/// The lifted picture sits on the root overlay, over the page's own
+/// floating chips ("Shift later tasks", E-R2-25 §1).
 class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
   const HoldOrMouseDraggable({
     required this.data,
@@ -56,10 +58,14 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
     required this.childWhenDragging,
     required this.callbacks,
     required this.child,
+    this.anchor = childDragAnchorStrategy,
     super.key,
   });
 
   final T data;
+
+  /// Where the finger holds [feedback]; the row's own place by default.
+  final DragAnchorStrategy anchor;
   final Widget feedback;
   final Widget childWhenDragging;
   final DragCallbacks callbacks;
@@ -74,6 +80,7 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
     }
 
     return _MouseDraggable<T>(
+      anchor: anchor,
       data: data,
       feedback: feedback,
       childWhenDragging: childWhenDragging,
@@ -85,6 +92,7 @@ class HoldOrMouseDraggable<T extends Object> extends StatelessWidget {
           ? null
           : (_, _) => c.onFinished!(),
       child: _HoldDraggable<T>(
+        anchor: anchor,
         haptic: AppHaptics.enabledOf(context),
         data: data,
         feedback: feedback,
@@ -109,6 +117,7 @@ final _held = PointerDeviceKind.values.toSet().difference(_mouse);
 
 class _MouseDraggable<T extends Object> extends Draggable<T> {
   const _MouseDraggable({
+    required DragAnchorStrategy anchor,
     required super.data,
     required super.feedback,
     required super.childWhenDragging,
@@ -118,7 +127,7 @@ class _MouseDraggable<T extends Object> extends Draggable<T> {
     required super.child,
     super.onDragCompleted,
     super.onDraggableCanceled,
-  });
+  }) : super(dragAnchorStrategy: anchor, rootOverlay: true);
 
   @override
   MultiDragGestureRecognizer createRecognizer(
@@ -130,6 +139,7 @@ class _MouseDraggable<T extends Object> extends Draggable<T> {
 
 class _HoldDraggable<T extends Object> extends Draggable<T> {
   const _HoldDraggable({
+    required DragAnchorStrategy anchor,
     required this.haptic,
     required super.data,
     required super.feedback,
@@ -140,7 +150,7 @@ class _HoldDraggable<T extends Object> extends Draggable<T> {
     required super.child,
     super.onDragCompleted,
     super.onDraggableCanceled,
-  });
+  }) : super(dragAnchorStrategy: anchor, rootOverlay: true);
 
   /// Whether the lift ticks (Settings › Sounds › Haptics in app): read in
   /// build, since the recognizer has no context.
