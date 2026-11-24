@@ -19,7 +19,9 @@ import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:dottoday/shared/account/sign_in_parts.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
+import 'package:dottoday/shared/text/system_text_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,23 +44,38 @@ class AccountPage extends ConsumerWidget {
       AsyncError() => const LocalOnly(),
       _ => null,
     };
+    final form = settingsFormFits(context);
     return SettingsPageFrame(
       title: l10n.settingsAccount,
       page: SettingsPage.account,
+      form: true,
       children: [
-        SettingsGroup(
-          caption: l10n.accountProfile,
-          children: [
-            SettingsRow(
-              glyph: DotGlyphs.person,
-              tint: t.colors.accentInk,
-              title: l10n.accountName,
-              value: name == null || name.isEmpty ? l10n.accountNameNone : name,
-              onTap: () => unawaited(renameProfile(context, name ?? '')),
-            ),
-          ],
-        ),
+        if (form)
+          FormLine(
+            label: l10n.accountName,
+            child: _NameField(name: name ?? ''),
+          )
+        else
+          SettingsGroup(
+            caption: l10n.accountProfile,
+            children: [
+              SettingsRow(
+                glyph: DotGlyphs.person,
+                tint: t.colors.accentInk,
+                title: l10n.accountName,
+                value: name == null || name.isEmpty
+                    ? l10n.accountNameNone
+                    : name,
+                onTap: () => unawaited(renameProfile(context, name ?? '')),
+              ),
+            ],
+          ),
+        if (form && account != null) const FormBreak(),
         switch (account) {
+          LocalOnly() when form => FormLine(
+            label: l10n.accountSync,
+            child: const _SignedOut(),
+          ),
           LocalOnly() => const _SignedOut(),
           SignedIn(:final email) => _SignedIn(email: email),
           null => const SizedBox.shrink(),
@@ -134,7 +151,8 @@ class _SignedOutState extends ConsumerState<_SignedOut> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Text(l10n.accountSync, style: DotTheme.of(context).styles.caption),
+        if (!settingsFormAt(context))
+          Text(l10n.accountSync, style: DotTheme.of(context).styles.caption),
         PageText(l10n.accountLocalBody),
         ...switch (_step) {
           _Step.choose => [
@@ -214,6 +232,9 @@ class _SignedIn extends ConsumerWidget {
       );
     }
 
+    if (settingsFormAt(context)) {
+      return _signedInForm(context, ref, signOut, owner: owner, later: later);
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -252,6 +273,140 @@ class _SignedIn extends ConsumerWidget {
           child: Text(l10n.accountDelete),
         ),
       ],
+    );
+  }
+}
+
+extension on _SignedIn {
+  /// Signed in on a Mac/web form (ED-450): Sync: who, then Sign out and
+  /// Sign out everywhere side by side; Delete account… alone below a rule.
+  Widget _signedInForm(
+    BuildContext context,
+    WidgetRef ref,
+    void Function({bool everywhere}) signOut, {
+    required String? owner,
+    required bool later,
+  }) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.m,
+      children: [
+        FormLine(
+          label: l10n.accountSync,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.s,
+            children: [
+              Text(
+                l10n.accountSignedInAs(email),
+                style: t.styles.inspectorValue,
+              ),
+              if ((ref.watch(heldTasksProvider).value ?? 0) > 0)
+                FormHelp(l10n.accountHeldTasks),
+              if (later && owner != null)
+                FormButton(
+                  label: l10n.settingsFormOpen(l10n.accountChooseSettings),
+                  onPressed: () => unawaited(
+                    ref
+                        .read(accountActionsProvider)
+                        .decideSettingsLater(owner, later: false),
+                  ),
+                ),
+              Wrap(
+                spacing: DotSpace.s,
+                runSpacing: DotSpace.xs,
+                children: [
+                  FormButton(label: l10n.accountSignOut, onPressed: signOut),
+                  FormButton(
+                    label: l10n.accountSignOutEverywhere,
+                    onPressed: () => signOut(everywhere: true),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const FormBreak(),
+        FormLine(
+          child: FormButton(
+            label: l10n.accountDeleteFormButton,
+            onPressed: owner == null
+                ? null
+                : () => unawaited(deleteAccountFlow(context, owner)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The name, edited in place on a Mac/web form (ED-450): saved on Return
+/// or when the field loses focus.
+class _NameField extends StatefulWidget {
+  const _NameField({required this.name});
+
+  final String name;
+
+  @override
+  State<_NameField> createState() => _NameFieldState();
+}
+
+/// A leaf: the field's text and focus.
+class _NameFieldState extends State<_NameField> {
+  late final _controller = TextEditingController(text: widget.name);
+  final _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focus.addListener(_onFocus);
+  }
+
+  @override
+  void didUpdateWidget(_NameField old) {
+    super.didUpdateWidget(old);
+    // A name saved elsewhere shows here unless it is being typed.
+    if (old.name != widget.name && !_focus.hasFocus) {
+      _controller.text = widget.name;
+    }
+  }
+
+  @override
+  void dispose() {
+    _focus
+      ..removeListener(_onFocus)
+      ..dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onFocus() {
+    if (!_focus.hasFocus) _save();
+  }
+
+  void _save() =>
+      unawaited(saveProfileName(context, widget.name, _controller.text));
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: DotSize.formNameField),
+      child: TextField(
+        controller: _controller,
+        focusNode: _focus,
+        contextMenuBuilder: systemTextMenu,
+        style: t.styles.inspectorValue,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          isDense: true,
+          hintText: context.l10n.accountNameNone,
+          border: const OutlineInputBorder(),
+        ),
+        onSubmitted: (_) => _save(),
+      ),
     );
   }
 }

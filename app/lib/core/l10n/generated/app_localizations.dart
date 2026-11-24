@@ -12192,6 +12192,138 @@ abstract class AppLocalizations {
   /// **'{day}, in {schedule}'**
   String schDayInOther(String day, String schedule);
 
+  /// Mac/web Settings form: a control's label in the label column (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'{label}:'**
+  String settingsFormLabel(String label);
+
+  /// Mac/web Settings form: a button that opens another page (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'{page}…'**
+  String settingsFormOpen(String page);
+
+  /// Mac/web Planning form: label beside Show free time (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get planningFormDay;
+
+  /// Mac/web Planning form: label beside the nudge checkboxes (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Nudges'**
+  String get planningFormNudges;
+
+  /// Mac/web Planning form: label beside Roll unfinished to tomorrow (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Unfinished'**
+  String get planningFormUnfinished;
+
+  /// Mac/web Planning form: label beside Low-energy mode (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Energy'**
+  String get planningFormEnergy;
+
+  /// Mac/web Planning form: button that opens Plan › Routines (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Open Routines'**
+  String get settingsOpenRoutines;
+
+  /// Mac/web Reminders form: adds an alert to Task starts (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Add…'**
+  String get remindersAddAlert;
+
+  /// Mac/web Reminders form: screen-reader label of an alert chip's remove button (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {alert}'**
+  String remindersRemoveAlert(String alert);
+
+  /// Mac/web Reminders form: opens the Sounds page (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'All sounds…'**
+  String get remindersAllSounds;
+
+  /// Mac/web Reminders form: opens Notification health (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Check…'**
+  String get healthCheckButton;
+
+  /// Mac Notification health: label over this Mac's checks (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'This Mac'**
+  String get healthThisMac;
+
+  /// Web Notification health: label over this browser's checks (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser'**
+  String get healthThisBrowser;
+
+  /// Mac/web Sounds form: the play button beside a sound (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Play {sound}'**
+  String soundsPlay(String sound);
+
+  /// Mac/web Missions: first line, as the Mac and the web never ring (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Missions run on the phone or tablet that rings Wake Up. This page sets them for it.'**
+  String get missionsRunOnPhone;
+
+  /// Mac/web Missions: detail under Walk and Light, whose sensor is on the ringing phone (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Uses a sensor on the phone that rings'**
+  String get missionSensorOnPhone;
+
+  /// Mac/web Learn my day form: label beside Energy suggestions (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get learningFormSuggestions;
+
+  /// Mac/web Export form: the button on each format's row (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Export…'**
+  String get exportFormButton;
+
+  /// Mac Export form: label beside the local backups (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'On this Mac'**
+  String get exportOnThisMac;
+
+  /// Web Export form: label beside the local backups (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'In this browser'**
+  String get exportInThisBrowser;
+
+  /// Mac/web Account form: opens the delete-account dialogs (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account…'**
+  String get accountDeleteFormButton;
+
+  /// Mac/web Your day: one schedule in the Wake Up and Wind Down row's summary, e.g. 'Weekdays 6:30 AM · 11:00 PM' (ED-450).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {wake} · {windDown}'**
+  String yourDayScheduleLine(String name, String wake, String windDown);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

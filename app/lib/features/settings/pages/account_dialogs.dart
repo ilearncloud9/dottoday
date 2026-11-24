@@ -11,8 +11,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// "Your name": the greeting's and the avatar's name (Settings › Account).
 /// An empty name clears it.
 Future<void> renameProfile(BuildContext context, String current) async {
-  final container = ProviderScope.containerOf(context, listen: false);
-  final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
   final name = await showTextAlert(
     context,
@@ -21,8 +19,22 @@ Future<void> renameProfile(BuildContext context, String current) async {
     action: l10n.accountNameSave,
     cancel: l10n.editorCancel,
   );
-  if (name == null || name.trim() == current) return;
+  if (name == null || !context.mounted) return;
+  await saveProfileName(context, current, name);
+}
+
+/// Saves [name] as the profile's name when it changed from [current];
+/// empty clears it. A failure says why in a snackbar.
+Future<void> saveProfileName(
+  BuildContext context,
+  String current,
+  String name,
+) async {
   final trimmed = name.trim();
+  if (trimmed == current) return;
+  final container = ProviderScope.containerOf(context, listen: false);
+  final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
   final result = await updateProfile(
     container,
     (p) => p.copyWith(displayName: trimmed.isEmpty ? null : trimmed),

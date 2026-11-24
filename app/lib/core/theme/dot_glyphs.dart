@@ -121,6 +121,9 @@ abstract final class DotGlyphs {
   static final mic = DotGlyph(
     '${_r(9, 2, 6, 12, 3)}M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8',
   );
+
+  /// ▶ beside a sound on the Mac/web Sounds form: hear it (ED-450).
+  static const play = DotGlyph('M8 5.5v13l10-6.5z');
   static const sound = DotGlyph(
     'M11 5L6 9H2v6h4l5 4V5zM15.5 8.5q2 3.5 0 7M18.5 5.5q4 6.5 0 13',
   );

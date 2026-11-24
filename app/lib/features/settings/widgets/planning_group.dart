@@ -10,6 +10,7 @@ import 'package:dottoday/features/settings/widgets/low_energy_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:dottoday/shared/duration/duration_sheet.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,7 @@ class PlanningGroup extends StatelessWidget {
         tint: t.colors.muted,
         title: l10n.settingsShowFree,
         subtitle: l10n.settingsShowFreeDetail,
+        formLabel: l10n.planningFormDay,
         toggle: settings.showFreeTime,
         onToggle: (v) =>
             changeSettings(context, (s) => s.copyWith(showFreeTime: v)),
@@ -81,6 +83,7 @@ class PlanningGroup extends StatelessWidget {
         tint: t.tasks[TaskColor.coral].ink,
         title: l10n.settingsLateNudge,
         subtitle: l10n.settingsLateNudgeDetail,
+        formLabel: l10n.planningFormNudges,
         toggle: settings.runningLateNudge,
         onToggle: (v) =>
             changeSettings(context, (s) => s.copyWith(runningLateNudge: v)),
@@ -110,6 +113,7 @@ class PlanningGroup extends StatelessWidget {
         tint: t.tasks[TaskColor.teal].ink,
         title: l10n.settingsRoll,
         subtitle: l10n.settingsRollDetail,
+        formLabel: l10n.planningFormUnfinished,
         toggle: settings.rollUnfinished,
         onToggle: (v) =>
             changeSettings(context, (s) => s.copyWith(rollUnfinished: v)),
@@ -140,6 +144,13 @@ class PlanningGroup extends StatelessWidget {
       tint: t.tasks[TaskColor.sky].ink,
       title: l10n.settingsSnap,
       value: l10n.settingsSnapValue(settings.snapMinutes),
+      choices: formChoices(
+        values: Settings.snapChoices.toList()..sort(),
+        selected: settings.snapMinutes,
+        label: l10n.settingsSnapValue,
+        onPick: (m) =>
+            changeSettings(context, (s) => s.copyWith(snapMinutes: m)),
+      ),
       onTap: () async {
         final picked = await showChoiceSheet<int>(
           context,
@@ -169,6 +180,13 @@ class PlanningGroup extends StatelessWidget {
       tint: t.tasks[TaskColor.violet].ink,
       title: l10n.settingsShiftLater,
       value: label(settings.shiftFollowers),
+      choices: formChoices(
+        values: ShiftFollowersPolicy.values,
+        selected: settings.shiftFollowers,
+        label: label,
+        onPick: (p) =>
+            changeSettings(context, (s) => s.copyWith(shiftFollowers: p)),
+      ),
       onTap: () async {
         final picked = await showChoiceSheet<ShiftFollowersPolicy>(
           context,
@@ -196,18 +214,23 @@ class _RoutinesRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final count = ref.watch(routinesProvider).value?.length;
+    final form = settingsFormAt(context);
+    final path = AppRoutes.settingsPage(SettingsPage.routines);
     return SettingsRow(
       glyph: DotGlyphs.repeat,
       tint: t.tasks[TaskColor.mint].ink,
       title: context.l10n.routinesTitle,
-      value: count == null || count == 0
+      formButton: context.l10n.settingsOpenRoutines,
+      // The form's button names the page instead (ED-450).
+      value: count == null || count == 0 || form
           ? null
           : NumberFormat.decimalPattern(
               Localizations.localeOf(context).toLanguageTag(),
             ).format(count),
-      onTap: () => unawaited(
-        context.push(AppRoutes.settingsPage(SettingsPage.routines)),
-      ),
+      // On a Mac/web form it opens the sidebar's Routines (E-R2-22).
+      onTap: form
+          ? () => context.go(path)
+          : () => unawaited(context.push(path)),
     );
   }
 }

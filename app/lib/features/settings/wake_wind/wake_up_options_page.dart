@@ -44,6 +44,7 @@ class _WakeUpOptionsState extends ConsumerState<WakeUpOptionsPage> {
     return SettingsPageFrame(
       title: l10n.settingsWakeUpOptions,
       page: SettingsPage.wakeUp,
+      form: true,
       children: [
         if (desktop) PageText(l10n.wakeUpDesktopNote),
         Align(

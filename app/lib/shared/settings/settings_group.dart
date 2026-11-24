@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +23,15 @@ class SettingsGroup extends StatelessWidget {
     required this.caption,
     required this.children,
     this.footer,
+    this.list = false,
     super.key,
   });
 
   final String caption;
+
+  /// Rows that only open other pages: they stay the list's rows on a Mac
+  /// or web form page too (ED-450).
+  final bool list;
   final List<Widget> children;
 
   /// A muted note under the card ("Learning happens on your device …").
@@ -33,6 +40,16 @@ class SettingsGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final form = settingsFormAt(context);
+    if (form && !list) return _form(context);
+    // A list group on a form page keeps its rows as rows (ED-450).
+    if (form) {
+      return SettingsFormScope(form: false, child: _card(context, t));
+    }
+    return _card(context, t);
+  }
+
+  Widget _card(BuildContext context, DotTheme t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -83,6 +100,19 @@ class SettingsGroup extends StatelessWidget {
       ],
     );
   }
+
+  /// On a Mac/web form page (ED-450): a hairline, then the rows as form
+  /// lines; the caption is dropped (rows carry their own labels) and the
+  /// footer is help under the controls.
+  Widget _form(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: DotSpace.m,
+    children: [
+      if (!settingsFormFirstAt(context)) const FormBreak(),
+      ...children,
+      if (footer case final f?) FormLine(child: FormHelp(f)),
+    ],
+  );
 }
 
 /// Hides the captions of the groups under it: a Settings page that is one
@@ -124,10 +154,36 @@ class SettingsRow extends StatelessWidget {
     this.action = false,
     this.accentValue = false,
     this.selected = false,
+    this.formLabel,
+    this.choices,
+    this.formButton,
+    this.formReady,
+    this.choiceHeaders,
     super.key,
   });
 
   final DotGlyph glyph;
+
+  /// On a Mac/web form page (ED-450): the label beside a checkbox or an
+  /// action ("Nudges:"); null lines it up under the label above.
+  final String? formLabel;
+
+  /// On a Mac/web form page: the pop-up menu's choices, picked in place
+  /// of [onTap]'s sheet.
+  final List<FormChoice>? choices;
+
+  /// Group titles in the pop-up, by the index of each group's first choice.
+  final Map<int, String>? choiceHeaders;
+
+  /// On a Mac/web form page: a button that runs [onTap] ("Check…",
+  /// "Open Routines") beside [value], in place of the pop-up face; beside
+  /// the pop-up when there are [choices] ("All sounds…").
+  final String? formButton;
+
+  /// On a Mac/web form page, a row that only tells: done when true, an
+  /// open ring while still under way (Learn my day); null shows its icon
+  /// (Notification health's checks).
+  final bool? formReady;
 
   /// Icon colour (a task colour or the accent ink); the circle is its tint.
   final Color tint;
@@ -159,8 +215,96 @@ class SettingsRow extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) =>
-      LayoutBuilder(builder: (context, box) => _build(context, box.maxWidth));
+  Widget build(BuildContext context) {
+    if (settingsFormAt(context)) return _form(context);
+    return LayoutBuilder(
+      builder: (context, box) => _build(context, box.maxWidth),
+    );
+  }
+
+  /// The row as a form line (ED-450): a switch is a checkbox, a value a
+  /// pop-up (a menu with [choices], else a face that opens [onTap]'s
+  /// sheet), an action or a page a button.
+  Widget _form(BuildContext context) {
+    final on = toggle;
+    if (on != null) {
+      return FormLine(
+        label: formLabel,
+        child: FormCheck(
+          value: on,
+          title: title,
+          detail: subtitle,
+          below: below,
+          onChanged: onToggle,
+        ),
+      );
+    }
+    final help = [if (subtitle case final s?) FormHelp(s), ?below];
+    Widget line(String? label, Widget control) => FormLine(
+      label: label,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: DotSpace.xs,
+        children: [control, ...help],
+      ),
+    );
+    if (action) {
+      return line(formLabel, FormButton(label: title, onPressed: onTap));
+    }
+    if (choices case final cs?) {
+      return line(
+        title,
+        Wrap(
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            FormMenu(
+              title: title,
+              value: value ?? '',
+              choices: cs,
+              headers: choiceHeaders ?? const {},
+            ),
+            ?trailing,
+            if (formButton case final b?)
+              FormButton(label: b, onPressed: onTap),
+          ],
+        ),
+      );
+    }
+    if (formButton case final b?) {
+      final t = DotTheme.of(context);
+      return line(
+        title,
+        Wrap(
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            if (value case final v?)
+              Text(
+                v,
+                style: t.styles.inspectorValue.copyWith(
+                  color: accentValue ? t.colors.accentInk : t.colors.text,
+                ),
+              ),
+            ?trailing,
+            FormButton(label: b, onPressed: onTap),
+          ],
+        ),
+      );
+    }
+    if (value case final v?) {
+      return line(title, FormButton(label: v, onPressed: onTap, menu: true));
+    }
+    if (onTap == null) {
+      return FormLine(label: formLabel, child: _status(context));
+    }
+    return line(
+      formLabel,
+      FormButton(label: context.l10n.settingsFormOpen(title), onPressed: onTap),
+    );
+  }
 
   /// At large text a word of the title may not fit beside the value
   /// ("Bedt / ime" at 200 %): the value then goes under the title, so
@@ -237,6 +381,42 @@ class SettingsRow extends StatelessWidget {
     return Semantics(
       selected: true,
       child: Ink(decoration: paneSelectedFill(context), child: tap),
+    );
+  }
+
+  /// A row that only tells, as a form line: a small mark, the title and
+  /// its detail, then whatever it carries ("6/10", a fix button).
+  Widget _status(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    final mark = switch (formReady) {
+      true => _FormMark(glyph: DotGlyphs.check, tint: c.success),
+      false => const _FormMark(),
+      null => _FormMark(glyph: glyph, tint: tint),
+    };
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.s + DotSpace.xxs,
+      children: [
+        mark,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xxs,
+            children: [
+              Text(
+                title,
+                style: t.styles.inspectorValue.copyWith(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              if (subtitle case final s?) FormHelp(s),
+              ?below,
+            ],
+          ),
+        ),
+        ?trailing,
+      ],
     );
   }
 
@@ -325,4 +505,44 @@ BoxDecoration paneSelectedFill(BuildContext context) {
     color: c.paneSelectedMaterial,
     borderRadius: BorderRadius.circular(DotRadii.paneRowAndroid),
   );
+}
+
+/// A form status line's mark (ED-450): [glyph] on its tint in a small
+/// circle, or an open ring while something is still under way.
+class _FormMark extends StatelessWidget {
+  const _FormMark({this.glyph, this.tint});
+
+  final DotGlyph? glyph;
+  final Color? tint;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = DotTheme.of(context).colors;
+    final g = glyph;
+    final ink = tint ?? c.muted;
+    return Container(
+      width: DotSize.formCheck + DotSpace.xs,
+      height: DotSize.formCheck + DotSpace.xs,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: g == null
+            ? null
+            : ink.withValues(
+                alpha: c.isDark ? TaskAlpha.tintDark : TaskAlpha.tintLight,
+              ),
+        border: g == null
+            ? Border.all(color: c.hairlineStrong, width: 1.5)
+            : null,
+      ),
+      child: g == null
+          ? null
+          : Center(
+              child: DotIcon(
+                g,
+                color: ink,
+                size: DotSize.formCheck - DotSpace.xs,
+              ),
+            ),
+    );
+  }
 }

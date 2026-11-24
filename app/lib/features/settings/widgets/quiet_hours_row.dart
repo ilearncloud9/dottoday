@@ -7,6 +7,7 @@ import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class QuietHoursRow extends StatelessWidget {
         (s) => s.copyWith(quietHours: on ? Settings.suggestedQuietHours : null),
       ),
     );
+    if (settingsFormAt(context)) return _form(context, toggle);
     if (quiet == null) return toggle;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,6 +54,63 @@ class QuietHoursRow extends StatelessWidget {
           return TimeWindow(start: quiet.start, end: v);
         }),
       ],
+    );
+  }
+
+  /// On a Mac/web form (ED-450): the checkbox, then From and Until as
+  /// time fields on one line, dimmed while it is off.
+  Widget _form(BuildContext context, SettingsRow toggle) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    final quiet = settings.quietHours;
+    final shown = quiet ?? Settings.suggestedQuietHours;
+    Widget end(String title, String hhmm, TimeWindow Function(String) w) {
+      final minute = windowMinutes(hhmm);
+      return FormButton(
+        label: clockText(context, minute, settings.use24h),
+        onPressed: quiet == null
+            ? null
+            : () => unawaited(_pick(context, title, minute, w)),
+      );
+    }
+
+    final word = t.styles.inspectorValue.copyWith(
+      color: t.colors.ink2,
+      fontWeight: FontWeight.w400,
+    );
+    return FormLine(
+      label: l10n.settingsQuietHours,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: DotSpace.s,
+        children: [
+          FormCheck(
+            value: quiet != null,
+            title: toggle.title,
+            detail: toggle.subtitle,
+            onChanged: toggle.onToggle,
+          ),
+          Wrap(
+            spacing: DotSpace.s,
+            runSpacing: DotSpace.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(l10n.settingsQuietFrom, style: word),
+              end(
+                l10n.settingsQuietFrom,
+                shown.start,
+                (v) => TimeWindow(start: v, end: shown.end),
+              ),
+              Text(l10n.settingsQuietUntil, style: word),
+              end(
+                l10n.settingsQuietUntil,
+                shown.end,
+                (v) => TimeWindow(start: shown.start, end: v),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

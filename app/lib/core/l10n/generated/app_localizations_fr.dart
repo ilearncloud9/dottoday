@@ -8073,6 +8073,84 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String settingsFormLabel(String label) {
+    return '$label :';
+  }
+
+  @override
+  String settingsFormOpen(String page) {
+    return '$page…';
+  }
+
+  @override
+  String get planningFormDay => 'Journée';
+
+  @override
+  String get planningFormNudges => 'Rappels doux';
+
+  @override
+  String get planningFormUnfinished => 'Inachevé';
+
+  @override
+  String get planningFormEnergy => 'Énergie';
+
+  @override
+  String get settingsOpenRoutines => 'Ouvrir les routines';
+
+  @override
+  String get remindersAddAlert => 'Ajouter…';
+
+  @override
+  String remindersRemoveAlert(String alert) {
+    return 'Retirer $alert';
+  }
+
+  @override
+  String get remindersAllSounds => 'Tous les sons…';
+
+  @override
+  String get healthCheckButton => 'Vérifier…';
+
+  @override
+  String get healthThisMac => 'Ce Mac';
+
+  @override
+  String get healthThisBrowser => 'Ce navigateur';
+
+  @override
+  String soundsPlay(String sound) {
+    return 'Écouter $sound';
+  }
+
+  @override
+  String get missionsRunOnPhone =>
+      'Les missions se font sur le téléphone ou la tablette qui sonne au réveil. Cette page les règle pour lui.';
+
+  @override
+  String get missionSensorOnPhone =>
+      'Utilise un capteur du téléphone qui sonne';
+
+  @override
+  String get learningFormSuggestions => 'Suggestions';
+
+  @override
+  String get exportFormButton => 'Exporter…';
+
+  @override
+  String get exportOnThisMac => 'Sur ce Mac';
+
+  @override
+  String get exportInThisBrowser => 'Dans ce navigateur';
+
+  @override
+  String get accountDeleteFormButton => 'Supprimer le compte…';
+
+  @override
+  String yourDayScheduleLine(String name, String wake, String windDown) {
+    return '$name $wake · $windDown';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

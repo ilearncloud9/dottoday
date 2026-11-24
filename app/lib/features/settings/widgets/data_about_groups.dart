@@ -31,6 +31,7 @@ class DataGroup extends ConsumerWidget {
     final sync = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
     return SettingsGroup(
       caption: l10n.settingsData,
+      list: true,
       children: [
         SettingsRow(
           glyph: DotGlyphs.repeat,
@@ -78,6 +79,7 @@ class PrivacyGroup extends StatelessWidget {
     final l10n = context.l10n;
     return SettingsGroup(
       caption: l10n.settingsPrivacy,
+      list: true,
       children: [
         SettingsRow(
           glyph: DotGlyphs.shield,

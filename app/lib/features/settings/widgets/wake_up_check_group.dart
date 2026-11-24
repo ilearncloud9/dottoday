@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class WakeUpCheckGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final on = settings.wakeUpCheck;
     return SettingsGroup(
       caption: l10n.wakeUpCheckCaption,
       children: [
@@ -29,24 +31,49 @@ class WakeUpCheckGroup extends StatelessWidget {
           tint: t.tasks[TaskColor.mint].ink,
           title: l10n.wakeUpCheckRow,
           subtitle: l10n.wakeUpCheckRowDetail,
+          formLabel: l10n.wakeUpCheckCaption,
           toggle: settings.wakeUpCheck,
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(wakeUpCheck: v)),
         ),
-        if (settings.wakeUpCheck) ...[
+        // A Mac/web form keeps them, dimmed while the check is off
+        // (ED-450).
+        if (on || settingsFormAt(context)) ...[
           SettingsRow(
             glyph: DotGlyphs.clock,
             tint: t.colors.accentInk,
             title: l10n.wakeUpCheckAfterRow,
             value: l10n.durationMinutes(settings.wakeUpCheckMin),
-            onTap: () => unawaited(_pickAfter(context)),
+            choices: on
+                ? formChoices(
+                    values: wakeUpCheckChoices,
+                    selected: settings.wakeUpCheckMin,
+                    label: l10n.durationMinutes,
+                    onPick: (m) => changeSettings(
+                      context,
+                      (s) => s.copyWith(wakeUpCheckMin: m),
+                    ),
+                  )
+                : null,
+            onTap: on ? () => unawaited(_pickAfter(context)) : null,
           ),
           SettingsRow(
             glyph: DotGlyphs.bell,
             tint: t.colors.accentInk,
             title: l10n.wakeUpCheckAsRow,
             value: _tier(l10n, loud: settings.wakeUpCheckLoud),
-            onTap: () => unawaited(_pickTier(context)),
+            choices: on
+                ? formChoices(
+                    values: const [false, true],
+                    selected: settings.wakeUpCheckLoud,
+                    label: (loud) => _tier(l10n, loud: loud),
+                    onPick: (loud) => changeSettings(
+                      context,
+                      (s) => s.copyWith(wakeUpCheckLoud: loud),
+                    ),
+                  )
+                : null,
+            onTap: on ? () => unawaited(_pickTier(context)) : null,
           ),
         ],
       ],

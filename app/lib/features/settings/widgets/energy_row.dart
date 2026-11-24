@@ -33,6 +33,7 @@ class EnergyRow extends ConsumerWidget {
       glyph: DotGlyphs.bolt,
       tint: t.tasks[TaskColor.amber].ink,
       title: l10n.settingsEnergy,
+      formLabel: l10n.learningFormSuggestions,
       subtitle: switch ((ready, on)) {
         (false, _) => l10n.settingsEnergyLocked(total, done),
         (true, false) => l10n.settingsEnergyReady(done),

@@ -8062,6 +8062,84 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String settingsFormLabel(String label) {
+    return '$label:';
+  }
+
+  @override
+  String settingsFormOpen(String page) {
+    return '$page …';
+  }
+
+  @override
+  String get planningFormDay => 'Tag';
+
+  @override
+  String get planningFormNudges => 'Hinweise';
+
+  @override
+  String get planningFormUnfinished => 'Unerledigt';
+
+  @override
+  String get planningFormEnergy => 'Energie';
+
+  @override
+  String get settingsOpenRoutines => 'Routinen öffnen';
+
+  @override
+  String get remindersAddAlert => 'Hinzufügen …';
+
+  @override
+  String remindersRemoveAlert(String alert) {
+    return '$alert entfernen';
+  }
+
+  @override
+  String get remindersAllSounds => 'Alle Töne …';
+
+  @override
+  String get healthCheckButton => 'Prüfen …';
+
+  @override
+  String get healthThisMac => 'Dieser Mac';
+
+  @override
+  String get healthThisBrowser => 'Dieser Browser';
+
+  @override
+  String soundsPlay(String sound) {
+    return '$sound abspielen';
+  }
+
+  @override
+  String get missionsRunOnPhone =>
+      'Missionen laufen auf dem Telefon oder Tablet, das den Wecker klingeln lässt. Hier stellst du sie dafür ein.';
+
+  @override
+  String get missionSensorOnPhone =>
+      'Nutzt einen Sensor des klingelnden Telefons';
+
+  @override
+  String get learningFormSuggestions => 'Vorschläge';
+
+  @override
+  String get exportFormButton => 'Exportieren …';
+
+  @override
+  String get exportOnThisMac => 'Auf diesem Mac';
+
+  @override
+  String get exportInThisBrowser => 'In diesem Browser';
+
+  @override
+  String get accountDeleteFormButton => 'Konto löschen …';
+
+  @override
+  String yourDayScheduleLine(String name, String wake, String windDown) {
+    return '$name $wake · $windDown';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

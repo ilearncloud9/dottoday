@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +36,7 @@ class TestAlarmCard extends StatelessWidget {
         TestAlarmRow(
           title: l10n.testAlarmRow,
           subtitle: l10n.testAlarmRowDetail,
+          formLabel: l10n.testAlarmCaption,
           onSend: onSend,
           onCancel: onCancel,
           now: now,
@@ -60,8 +62,12 @@ class TestAlarmRow extends StatefulWidget {
     this.subtitle,
     this.action = false,
     this.initial = TestAlarmStep.idle,
+    this.formLabel,
     super.key,
   });
+
+  /// Its label on a Mac/web form ("Check it works", ED-450).
+  final String? formLabel;
 
   /// "Send me a test alarm", or Wake Up's "Send a test alarm" (E-Phones).
   final String title;
@@ -145,7 +151,9 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
       tint: t.colors.accentInk,
       title: widget.title,
       subtitle: widget.subtitle,
-      action: widget.action,
+      // A button on a Mac/web form (ED-450).
+      action: widget.action || settingsFormAt(context),
+      formLabel: widget.formLabel,
       onTap: _step == TestAlarmStep.idle
           ? () => setState(() => _step = TestAlarmStep.explain)
           : null,

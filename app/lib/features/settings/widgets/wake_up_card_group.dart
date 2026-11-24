@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class WakeUpCardGroup extends StatelessWidget {
           tint: t.tasks[TaskColor.amber].ink,
           title: l10n.wakeUpCardRow,
           subtitle: l10n.wakeUpCardRowDetail,
+          formLabel: l10n.wakeUpCardCaption,
           toggle: on,
           onToggle: (v) =>
               changeSettings(context, (s) => s.copyWith(wakeUpCard: v)),
@@ -81,13 +83,28 @@ class WakeUpCardGroup extends StatelessWidget {
             // Amber, as E-R2-32 draws it.
             tint: t.tasks[TaskColor.amber].ink,
           ),
-          if (settings.wakeUpLateOffer)
+          // A Mac/web form keeps it, dimmed while the offer is off
+          // (ED-450).
+          if (settings.wakeUpLateOffer || settingsFormAt(context))
             SettingsRow(
               glyph: DotGlyphs.clock,
               tint: t.colors.accentInk,
               title: l10n.wakeUpLateOfferAfterRow,
               value: l10n.durationMinutes(settings.wakeUpLateMin),
-              onTap: () => unawaited(_pickLate(context)),
+              choices: settings.wakeUpLateOffer
+                  ? formChoices(
+                      values: wakeUpLateChoices,
+                      selected: settings.wakeUpLateMin,
+                      label: l10n.durationMinutes,
+                      onPick: (m) => changeSettings(
+                        context,
+                        (s) => s.copyWith(wakeUpLateMin: m),
+                      ),
+                    )
+                  : null,
+              onTap: settings.wakeUpLateOffer
+                  ? () => unawaited(_pickLate(context))
+                  : null,
             ),
         ],
       ],

@@ -4,6 +4,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,8 +20,13 @@ class SettingsPageFrame extends StatelessWidget {
     this.page,
     this.singleGroup = false,
     this.pinned,
+    this.form = false,
     super.key,
   });
+
+  /// Drawn as a Mac/web form where [settingsFormFits] (ED-450): only the
+  /// pages drawn that way say so; the others keep the phone rows there.
+  final bool form;
 
   final String title;
   final List<Widget> children;
@@ -41,17 +47,21 @@ class SettingsPageFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const side = EdgeInsets.symmetric(horizontal: DotSpace.page);
+    final asForm = form && settingsFormFits(context);
     final head = [
-      _TitleRow(title: title, page: page),
+      _TitleRow(title: title, page: page, form: asForm),
       if (pinned case final p?) ...[const SizedBox(height: DotSpace.l), p],
     ];
     final groups = [
-      for (final child in children) ...[
+      for (final (i, child) in children.indexed) ...[
         const SizedBox(height: DotSpace.l),
-        if (singleGroup)
-          SettingsCaptionScope(hidden: true, child: child)
-        else
-          child,
+        SettingsFormScope(
+          form: asForm,
+          first: i == 0,
+          child: singleGroup
+              ? SettingsCaptionScope(hidden: true, child: child)
+              : child,
+        ),
       ],
     ];
     return Scaffold(
@@ -106,10 +116,13 @@ class SettingsPageFrame extends StatelessWidget {
 /// health" at 200 % on a 390 px phone). On iPhone a placed page has
 /// "‹ Parent" above its icon and title, as UIKit's back button.
 class _TitleRow extends StatelessWidget {
-  const _TitleRow({required this.title, this.page});
+  const _TitleRow({required this.title, this.page, this.form = false});
 
   final String title;
   final SettingsPage? page;
+
+  /// A Mac/web form page: "‹ Parent" above the title, as on iPad (ED-450).
+  final bool form;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +147,7 @@ class _TitleRow extends StatelessWidget {
         ],
       );
     }
-    if (place != null && DotIdiom.of(context) == DotIdiom.cupertino) {
+    if (place != null && (form || DotIdiom.of(context) == DotIdiom.cupertino)) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

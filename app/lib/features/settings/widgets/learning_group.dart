@@ -35,6 +35,7 @@ class LearningGroup extends ConsumerWidget {
           glyph: DotGlyphs.clock,
           tint: t.colors.accentInk,
           title: l10n.settingsLearningDurations,
+          formReady: (p?.tasksReady ?? 0) > 0,
           subtitle:
               _ready(p?.tasksReady, l10n.settingsLearningTasksReady) ??
               l10n.settingsLearningDurationsPending(th.taskMinSamples),
@@ -43,6 +44,7 @@ class LearningGroup extends ConsumerWidget {
           glyph: DotGlyphs.stepLines,
           tint: t.tasks[TaskColor.violet].ink,
           title: l10n.settingsLearningSteps,
+          formReady: (p?.stepsReady ?? 0) > 0,
           subtitle:
               _ready(p?.stepsReady, l10n.settingsLearningStepsReady) ??
               l10n.settingsLearningStepsPending(th.stepMinSamples),
@@ -66,6 +68,8 @@ class LearningGroup extends ConsumerWidget {
         tint: t.colors.accentInk,
         title: l10n.settingsLearningReality,
         subtitle: l10n.settingsLearningRealityReady,
+        formLabel: l10n.settingsLearning,
+        formReady: true,
       );
     }
     final done = math.min(p?.realityRuns ?? 0, total);
@@ -75,6 +79,8 @@ class LearningGroup extends ConsumerWidget {
       tint: t.colors.accentInk,
       title: l10n.settingsLearningReality,
       subtitle: l10n.settingsLearningRealityPending(total),
+      formLabel: l10n.settingsLearning,
+      formReady: false,
       trailing: Semantics(
         label: l10n.settingsLearningProgressLabel(done, total),
         excludeSemantics: true,

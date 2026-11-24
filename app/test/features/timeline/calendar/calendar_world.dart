@@ -5,13 +5,16 @@ import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/data/tips/siri_tip_due.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/routine.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
+import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -108,6 +111,10 @@ Future<GoRouter> pumpCalendar(
   List<Subtask> subtasks = const [],
   LearningMetaState learningMeta = const LearningMetaState(),
   DateTime? now,
+  Settings Function(Settings)? settings,
+  List<Device> devices = const [],
+  AlarmCapabilities wakeUpAlarm = const AlarmCapabilities(AlarmTier.alarm),
+  List<Override> extra = const [],
 }) async {
   if (size != null) {
     tester.view
@@ -133,12 +140,16 @@ Future<GoRouter> pumpCalendar(
             rows ?? [...calendarMonth(), ...pastYear()],
           ),
           profile: testProfile(
-            settings: Settings(
-              use24h: false,
-              uiLayout: layout,
-              lowEnergyUntil: lowEnergyUntil,
+            settings: (settings ?? (s) => s)(
+              Settings(
+                use24h: false,
+                uiLayout: layout,
+                lowEnergyUntil: lowEnergyUntil,
+              ),
             ),
           ),
+          devices: devices,
+          wakeUpAlarm: wakeUpAlarm,
           routines: routines,
           subtasks: FakeSubtaskRepository(subtasks),
           learningMeta: learningMeta,
@@ -153,6 +164,7 @@ Future<GoRouter> pumpCalendar(
         ),
         // Never the person's own database on a device or the Mac.
         ...memoryDatabaseOverrides(),
+        ...extra,
       ],
     ),
   );

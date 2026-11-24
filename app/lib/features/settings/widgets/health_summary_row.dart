@@ -33,6 +33,7 @@ class HealthSummaryRow extends ConsumerWidget {
         _ => t.colors.accentInk,
       },
       title: l10n.healthTitle,
+      formButton: l10n.healthCheckButton,
       value: switch (problems) {
         null => null,
         0 => l10n.healthAllGood,

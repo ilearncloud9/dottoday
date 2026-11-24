@@ -153,6 +153,21 @@ abstract final class DotSize {
   /// pane"). Narrower, Settings stacks as on phones (M20.7 part 5a).
   static const double settingsDetailMin = 390;
 
+  /// Mac/web Settings pages as forms (E-FullA-v2, ED-450): the
+  /// right-aligned "Label:" column, the gap to its control, a control's
+  /// height (pop-ups, buttons, fields), the checkbox and a time field.
+  static const double formLabel = 150;
+  static const double formGap = 14;
+  static const double formControl = 26;
+  static const double formCheck = 16;
+
+  /// Account's Name field on a Mac/web form (ED-450).
+  static const double formNameField = 240;
+
+  /// Narrower than this beside the label column, a form row stacks its
+  /// label over its control (200 % text, a narrow pane).
+  static const double formControlMin = 280;
+
   /// The iPhone's glass capsule in Today's top row (ED-034): 48 tall (the
   /// board's 44 plus 4, so Sync keeps the 48 target the device sweep
   /// checks), with the 32 profile circle and a 20 Sync glyph (Android's
@@ -835,6 +850,12 @@ enum WidthClass {
       : width >= mediumFrom
       ? medium
       : compact;
+}
+
+/// A control that can't be used right now (a Mac/web form's checkbox,
+/// button or radio, ED-450): drawn at this opacity, its reason beside it.
+abstract final class DotOpacity {
+  static const double disabled = 0.45;
 }
 
 /// How much of the frosted Android chrome is its fill (ED-125): the

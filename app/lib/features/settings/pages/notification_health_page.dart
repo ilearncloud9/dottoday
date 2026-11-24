@@ -37,12 +37,24 @@ class NotificationHealthPage extends ConsumerWidget {
     return SettingsPageFrame(
       title: l10n.healthTitle,
       page: SettingsPage.notifications,
+      form: true,
       children: [
         PageText(l10n.healthIntro),
         if (checks != null)
           SettingsGroup(
             caption: l10n.healthCaption,
-            children: [for (final c in checks) HealthRow(check: c)],
+            children: [
+              for (final (i, c) in checks.indexed)
+                HealthRow(
+                  check: c,
+                  // "This Mac:" / "This browser:" by the first (ED-450).
+                  formLabel: i > 0
+                      ? null
+                      : webChrome(context)
+                      ? l10n.healthThisBrowser
+                      : l10n.healthThisMac,
+                ),
+            ],
           ),
         TestAlarmCard(
           onSend: ref.read(testAlarmProvider.notifier).send,
@@ -57,7 +69,10 @@ class NotificationHealthPage extends ConsumerWidget {
 
 /// One check: what it is, what to do, and its fix.
 class HealthRow extends ConsumerWidget {
-  const HealthRow({required this.check, super.key});
+  const HealthRow({required this.check, this.formLabel, super.key});
+
+  /// Beside the first check on a Mac/web form (ED-450).
+  final String? formLabel;
 
   /// Text scale past which a fix button moves under the row's text.
   static const _stackAbove = 1.3;
@@ -96,6 +111,7 @@ class HealthRow extends ConsumerWidget {
       },
       title: title,
       subtitle: detail,
+      formLabel: formLabel,
       trailing: stacked ? null : button,
       below: under.isEmpty
           ? null

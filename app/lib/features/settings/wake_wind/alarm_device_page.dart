@@ -13,6 +13,7 @@ import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/widgets/alarm_device_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/settings/settings_choice_mark.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,21 +59,33 @@ class _AlarmDevicePageState extends ConsumerState<AlarmDevicePage> {
         if (!d.canRing) d,
     ];
     Widget row(Device d) => _DeviceRow(device: d, profile: profile, self: self);
+    // A Mac/web form: each list beside its label, in a bordered list
+    // (ED-450).
+    Widget list(String label, List<Device> devices) => FormLine(
+      label: label,
+      child: FormList(children: [for (final d in devices) row(d)]),
+    );
     return SettingsPageFrame(
       title: l10n.settingsAlarmSoundsOn,
       page: SettingsPage.alarmDevice,
+      form: true,
       children: [
         PageText(l10n.wwdDevicesIntro),
-        if (ringable.isNotEmpty)
-          SettingsGroup(
-            caption: l10n.wwdCanRing,
-            children: [for (final d in ringable) row(d)],
-          ),
-        if (never.isNotEmpty)
-          SettingsGroup(
-            caption: l10n.wwdCantRing,
-            children: [for (final d in never) row(d)],
-          ),
+        if (settingsFormFits(context)) ...[
+          if (ringable.isNotEmpty) list(l10n.wwdCanRing, ringable),
+          if (never.isNotEmpty) list(l10n.wwdCantRing, never),
+        ] else ...[
+          if (ringable.isNotEmpty)
+            SettingsGroup(
+              caption: l10n.wwdCanRing,
+              children: [for (final d in ringable) row(d)],
+            ),
+          if (never.isNotEmpty)
+            SettingsGroup(
+              caption: l10n.wwdCantRing,
+              children: [for (final d in never) row(d)],
+            ),
+        ],
       ],
     );
   }
@@ -100,6 +113,33 @@ class _DeviceRow extends ConsumerWidget {
         device.canRing && device.id == profile.settings.alarmDeviceId;
     final (state, ready) = _state(context, now, chosen: chosen);
     final title = deviceLabel(l10n, device, self: self);
+    final pick = device.canRing
+        ? () => changeSettings(
+            context,
+            (s) => s.copyWith(alarmDeviceId: device.id),
+          )
+        : null;
+    if (settingsFormAt(context)) {
+      return Semantics(
+        inMutuallyExclusiveGroup: device.canRing,
+        checked: device.canRing ? chosen : null,
+        enabled: device.canRing,
+        child: FormListRow(
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: DotSpace.s + DotSpace.xxs,
+            children: [
+              FormRadioMark(selected: chosen, enabled: device.canRing),
+              _Badge(device: device),
+            ],
+          ),
+          title: title,
+          detail: state == null ? null : _Chip(text: state, ready: ready),
+          dimmed: !device.canRing,
+          onTap: pick,
+        ),
+      );
+    }
     return Semantics(
       selected: chosen,
       button: device.canRing,

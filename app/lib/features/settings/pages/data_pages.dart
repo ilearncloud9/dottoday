@@ -9,6 +9,7 @@ import 'package:dottoday/domain/backup/backup_service.dart';
 import 'package:dottoday/domain/export/export_files.dart';
 import 'package:dottoday/features/settings/pages/export_flows.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,6 +36,7 @@ class ExportPage extends StatelessWidget {
       subtitle: detail,
       onTap: () => unawaited(exportAs(context, f)),
     );
+    if (settingsFormFits(context)) return const _ExportForm();
     return SettingsPageFrame(
       title: l10n.settingsExport,
       page: SettingsPage.export,
@@ -86,6 +88,93 @@ class ExportPage extends StatelessWidget {
   }
 }
 
+/// Export on a Mac/web form (ED-450): each format with its own Export…
+/// (the save panel on the Mac, a download on the web), Import a backup…,
+/// and the backups kept "On this Mac" / "In this browser".
+class _ExportForm extends StatelessWidget {
+  const _ExportForm();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    Widget format(
+      DotGlyph glyph,
+      TaskColor color,
+      String title,
+      String detail,
+      ExportFormat f,
+    ) => FormListRow(
+      leading: SettingsIcon(glyph: glyph, tint: t.tasks[color].ink),
+      title: title,
+      detail: FormHelp(detail),
+      trailing: FormButton(
+        label: l10n.exportFormButton,
+        onPressed: () => unawaited(exportAs(context, f)),
+      ),
+    );
+    return SettingsPageFrame(
+      title: l10n.settingsExport,
+      page: SettingsPage.export,
+      form: true,
+      children: [
+        PageText(l10n.exportIntro),
+        FormLine(
+          label: l10n.exportFormats,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: DotSpace.s,
+            children: [
+              FormList(
+                children: [
+                  format(
+                    DotGlyphs.share,
+                    TaskColor.mint,
+                    l10n.exportJson,
+                    l10n.exportJsonDetail,
+                    ExportFormat.json,
+                  ),
+                  format(
+                    DotGlyphs.week,
+                    TaskColor.sky,
+                    l10n.exportCsv,
+                    l10n.exportCsvDetail,
+                    ExportFormat.csv,
+                  ),
+                  format(
+                    DotGlyphs.calendar,
+                    TaskColor.violet,
+                    l10n.exportIcs,
+                    l10n.exportIcsDetail,
+                    ExportFormat.ics,
+                  ),
+                ],
+              ),
+              FormHelp(l10n.exportPlain),
+            ],
+          ),
+        ),
+        const FormBreak(),
+        FormLine(
+          label: l10n.exportRestore,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: DotSpace.xs,
+            children: [
+              FormButton(
+                label: l10n.exportImport,
+                onPressed: () => unawaited(importBackup(context)),
+              ),
+              FormHelp(l10n.exportImportDetail),
+            ],
+          ),
+        ),
+        const _LocalBackups(),
+      ],
+    );
+  }
+}
+
 /// ON THIS DEVICE: each local backup, newest first; a tap goes back to it.
 class _LocalBackups extends ConsumerWidget {
   const _LocalBackups();
@@ -100,6 +189,33 @@ class _LocalBackups extends ConsumerWidget {
         ref.watch(currentProfileProvider).value?.tzId ??
         'UTC'; // l10n-ignore: zone id
     final list = ref.watch(backupListProvider).value ?? const <BackupInfo>[];
+    if (settingsFormAt(context)) {
+      return FormLine(
+        label: webChrome(context)
+            ? l10n.exportInThisBrowser
+            : l10n.exportOnThisMac,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: DotSpace.s,
+          children: [
+            if (list.isEmpty)
+              Text(l10n.exportBackupsNone, style: t.styles.inspectorValue)
+            else
+              FormList(
+                children: [
+                  for (final b in list)
+                    FormListRow(
+                      title: backupLabel(b.createdAtUtc, tzId, locale),
+                      detail: FormHelp(_reason(l10n, b.reason)),
+                      onTap: () => unawaited(restoreBackup(context, b)),
+                    ),
+                ],
+              ),
+            FormHelp(l10n.exportBackupsNote),
+          ],
+        ),
+      );
+    }
     return SettingsGroup(
       caption: l10n.exportBackups,
       children: [

@@ -15,6 +15,7 @@ import 'package:dottoday/features/settings/wake_wind/mission_pickers.dart';
 import 'package:dottoday/features/settings/widgets/mission_text.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/shared/pickers/weekday_chips.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +50,22 @@ class MissionsRow extends ConsumerWidget {
   }
 }
 
-bool _able(WidgetRef ref) =>
-    ref.watch(alarmCapabilitiesNowProvider).value?.tier == AlarmTier.alarm;
+/// Missions can be set here: on a phone that rings like an alarm, or on
+/// a Mac or the web, which never ring and set them for the phone that
+/// does (ED-450, E-FullA-v2).
+bool _able(WidgetRef ref) {
+  final caps = ref.watch(alarmCapabilitiesNowProvider).value;
+  return caps?.tier == AlarmTier.alarm || _remote(ref);
+}
+
+/// A Mac or the web: missions run on another device.
+bool _remote(WidgetRef ref) =>
+    ref
+        .watch(alarmCapabilitiesNowProvider)
+        .value
+        ?.blockers
+        .contains(AlarmBlocker.notAPhone) ??
+    false;
 
 /// Wake Up and Wind Down › Missions (E-R2-28, ED-331; docs/15 §8–§9):
 /// when missions run (off by default) and on which days, then while on
@@ -73,7 +88,9 @@ class MissionsPage extends ConsumerWidget {
     return SettingsPageFrame(
       title: l10n.settingsMissions,
       page: SettingsPage.missions,
+      form: true,
       children: [
+        if (_remote(ref)) PageText(l10n.missionsRunOnPhone),
         SettingsGroup(
           caption: '',
           children: [
@@ -95,8 +112,24 @@ class MissionsPage extends ConsumerWidget {
           SettingsGroup(
             caption: l10n.settingsMission,
             children: [
-              for (final k in offeredMissions)
-                _MissionChoice(kind: k, chosen: settings.missionKind == k),
+              if (settingsFormFits(context))
+                FormLine(
+                  label: l10n.settingsMission,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: DotSpace.xs,
+                    children: [
+                      for (final k in offeredMissions)
+                        _MissionChoice(
+                          kind: k,
+                          chosen: settings.missionKind == k,
+                        ),
+                    ],
+                  ),
+                )
+              else
+                for (final k in offeredMissions)
+                  _MissionChoice(kind: k, chosen: settings.missionKind == k),
               if (settings.missionKind == MissionKind.walk)
                 SettingsRow(
                   glyph: DotGlyphs.clock,
@@ -173,9 +206,22 @@ class _MissionChoice extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final support = ref.watch(missionSupportProvider(kind)).value;
+    // On a Mac or the web the sensor is the ringing phone's, not this
+    // device's (ED-450).
+    final remote = _remote(ref);
+    final support = remote
+        ? null
+        : ref.watch(missionSupportProvider(kind)).value;
     final blocked =
         support == MissionSupport.missing || support == MissionSupport.denied;
+    if (settingsFormAt(context)) {
+      return FormRadio(
+        selected: chosen,
+        title: missionKindText(l10n, kind),
+        detail: _detail(l10n, support, remote: remote),
+        onTap: blocked ? null : () => unawaited(_pick(context, ref, support)),
+      );
+    }
     return ChoiceRow<MissionKind>(
       choice: (
         value: kind,
@@ -198,6 +244,21 @@ class _MissionChoice extends ConsumerWidget {
       onTap: blocked ? null : () => unawaited(_pick(context, ref, support)),
     );
   }
+
+  /// Why it can't run, or what it needs; on a Mac or the web, that Walk
+  /// and Light use the phone's sensor.
+  String? _detail(
+    AppLocalizations l10n,
+    MissionSupport? support, {
+    required bool remote,
+  }) => switch (support) {
+    _ when remote && kind.usesSensor => l10n.missionSensorOnPhone,
+    MissionSupport.missing => l10n.missionSensorMissing,
+    MissionSupport.denied => l10n.missionSensorDenied,
+    _ when kind == MissionKind.oneThing => l10n.missionOneThingNeeds,
+    _ when kind.onScreen => l10n.missionOnScreenNote,
+    _ => null,
+  };
 
   Future<void> _pick(
     BuildContext context,

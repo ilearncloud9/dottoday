@@ -52,6 +52,7 @@ const _sameAsEnglish = {
     'layoutMinimal',
   },
   'fr': {
+    'learningFormSuggestions', // « Suggestions » (ED-450)
     'settingsThemeAuto', // "Auto"
     'settingsFormat', // "Format"
     'whenDate', // "Date…" is French too (the When picker, ED-099)

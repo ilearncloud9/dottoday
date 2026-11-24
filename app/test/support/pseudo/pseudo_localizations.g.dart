@@ -6432,6 +6432,75 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.schDayInOther(day, schedule));
 
   @override
+  String settingsFormLabel(String label) =>
+      pseudo(super.settingsFormLabel(label));
+
+  @override
+  String settingsFormOpen(String page) => pseudo(super.settingsFormOpen(page));
+
+  @override
+  String get planningFormDay => pseudo(super.planningFormDay);
+
+  @override
+  String get planningFormNudges => pseudo(super.planningFormNudges);
+
+  @override
+  String get planningFormUnfinished => pseudo(super.planningFormUnfinished);
+
+  @override
+  String get planningFormEnergy => pseudo(super.planningFormEnergy);
+
+  @override
+  String get settingsOpenRoutines => pseudo(super.settingsOpenRoutines);
+
+  @override
+  String get remindersAddAlert => pseudo(super.remindersAddAlert);
+
+  @override
+  String remindersRemoveAlert(String alert) =>
+      pseudo(super.remindersRemoveAlert(alert));
+
+  @override
+  String get remindersAllSounds => pseudo(super.remindersAllSounds);
+
+  @override
+  String get healthCheckButton => pseudo(super.healthCheckButton);
+
+  @override
+  String get healthThisMac => pseudo(super.healthThisMac);
+
+  @override
+  String get healthThisBrowser => pseudo(super.healthThisBrowser);
+
+  @override
+  String soundsPlay(String sound) => pseudo(super.soundsPlay(sound));
+
+  @override
+  String get missionsRunOnPhone => pseudo(super.missionsRunOnPhone);
+
+  @override
+  String get missionSensorOnPhone => pseudo(super.missionSensorOnPhone);
+
+  @override
+  String get learningFormSuggestions => pseudo(super.learningFormSuggestions);
+
+  @override
+  String get exportFormButton => pseudo(super.exportFormButton);
+
+  @override
+  String get exportOnThisMac => pseudo(super.exportOnThisMac);
+
+  @override
+  String get exportInThisBrowser => pseudo(super.exportInThisBrowser);
+
+  @override
+  String get accountDeleteFormButton => pseudo(super.accountDeleteFormButton);
+
+  @override
+  String yourDayScheduleLine(String name, String wake, String windDown) =>
+      pseudo(super.yourDayScheduleLine(name, wake, windDown));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

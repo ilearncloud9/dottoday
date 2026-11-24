@@ -29,6 +29,7 @@ class LowEnergyRow extends ConsumerWidget {
       glyph: TaskIcon.leaf.glyph!,
       tint: t.colors.accentInk,
       title: l10n.lowEnergyMode,
+      formLabel: l10n.planningFormEnergy,
       subtitle: l10n.settingsLowEnergyDetail,
       toggle: lowEnergyOn(settings, now),
       onToggle: (on) {
