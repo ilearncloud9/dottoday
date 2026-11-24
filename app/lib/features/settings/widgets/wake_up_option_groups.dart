@@ -11,6 +11,7 @@ import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/features/settings/widgets/sound_tier_sheet.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:dottoday/shared/sounds/sound_sections.dart';
@@ -53,6 +54,7 @@ List<Widget> wakeUpSoundRows(
         tint: t.tasks[TaskColor.violet].ink,
         title: l10n.wakeUpVary,
         value: settings.wakeUpVarySound ? l10n.wwdOn : l10n.wwdOff,
+        formButton: l10n.settingsFormOpen(l10n.schChange),
         onTap: () => unawaited(
           context.push(AppRoutes.settingsPage(SettingsPage.varySound)),
         ),
@@ -85,6 +87,11 @@ String _ramp(AppLocalizations l10n, int seconds) =>
 List<Widget> wakeUpSnoozeRows(BuildContext context, Settings settings) {
   final t = DotTheme.of(context);
   final l10n = context.l10n;
+  final limit = switch (settings.wakeUpSnoozeMax) {
+    0 => l10n.wakeUpSnoozeNoLimit,
+    final n => '$n', // l10n-ignore: a count
+  };
+  if (settingsFormAt(context)) return [_snoozeForm(context, settings, limit)];
   return [
     SettingsRow(
       glyph: DotGlyphs.moon,
@@ -107,14 +114,61 @@ List<Widget> wakeUpSnoozeRows(BuildContext context, Settings settings) {
         tint: t.colors.accentInk,
         title: l10n.wakeUpSnoozeLimit,
         // The count alone, as E-Phones draws it; the picker says "times".
-        value: switch (settings.wakeUpSnoozeMax) {
-          0 => l10n.wakeUpSnoozeNoLimit,
-          final n => '$n', // l10n-ignore: a count
-        },
+        value: limit,
         onTap: () => unawaited(_pickLimit(context, settings)),
       ),
     ],
   ];
+}
+
+/// Snooze on a Mac/web form (ED-452): the checkbox, then its length and
+/// limit on one line, dimmed while it is off.
+Widget _snoozeForm(BuildContext context, Settings settings, String limit) {
+  final t = DotTheme.of(context);
+  final l10n = context.l10n;
+  final on = settings.wakeUpSnooze;
+  final word = t.styles.inspectorValue.copyWith(
+    color: t.colors.ink2,
+    fontWeight: FontWeight.w400,
+  );
+  return FormLine(
+    label: l10n.wakeUpSnoozeRow,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: DotSpace.s,
+      children: [
+        FormCheck(
+          value: on,
+          title: l10n.wakeUpSnoozeRow,
+          onChanged: (v) =>
+              changeSettings(context, (s) => s.copyWith(wakeUpSnooze: v)),
+        ),
+        Wrap(
+          spacing: DotSpace.s,
+          runSpacing: DotSpace.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(l10n.wakeUpSnoozeLength, style: word),
+            FormButton(
+              label: l10n.durationMinutes(settings.wakeUpSnoozeMin),
+              menu: true,
+              onPressed: on
+                  ? () => unawaited(_pickLength(context, settings))
+                  : null,
+            ),
+            Text(l10n.wakeUpSnoozeLimit, style: word),
+            FormButton(
+              label: limit,
+              menu: true,
+              onPressed: on
+                  ? () => unawaited(_pickLimit(context, settings))
+                  : null,
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }
 
 Future<void> _pickLength(BuildContext context, Settings settings) async {

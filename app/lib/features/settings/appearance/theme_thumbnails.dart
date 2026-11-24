@@ -4,6 +4,7 @@ import 'package:dottoday/core/theme/tokens.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,35 @@ class ThemeGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    String label(ThemePreference p) => switch (p) {
+      ThemePreference.system => l10n.settingsThemeAuto,
+      ThemePreference.light => l10n.settingsThemeLight,
+      ThemePreference.dark => l10n.settingsThemeDark,
+    };
+    // On a Mac/web form: "Theme:" and the three thumbnails (ED-452).
+    if (settingsFormAt(context)) {
+      return SettingsGroup(
+        caption: l10n.settingsTheme,
+        formBreak: false,
+        children: [
+          FormLine(
+            label: l10n.settingsTheme,
+            child: Wrap(
+              spacing: DotSpace.l,
+              runSpacing: DotSpace.s,
+              children: [
+                for (final p in ThemePreference.values)
+                  _Thumb(
+                    preference: p,
+                    label: label(p),
+                    selected: p == settings.theme,
+                  ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
     return SettingsGroup(
       caption: l10n.settingsTheme,
       children: [

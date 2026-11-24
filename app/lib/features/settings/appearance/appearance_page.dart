@@ -29,6 +29,7 @@ class AppearancePage extends ConsumerWidget {
       title: settingsPlace(l10n, SettingsPage.appearance).title,
       page: SettingsPage.appearance,
       pinned: const AppearancePreview(),
+      form: true,
       children: [
         if (profile != null) ...[
           SettingsGroup(caption: l10n.layoutRow, children: const [LayoutRow()]),

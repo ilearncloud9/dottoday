@@ -41,6 +41,7 @@ class MissionsRow extends ConsumerWidget {
       title: l10n.settingsMissions,
       subtitle: able ? null : l10n.missionNeedsAlarm,
       value: missionModeText(l10n, settings.missionMode),
+      formButton: l10n.settingsFormOpen(l10n.settingsMissions),
       onTap: able
           ? () => unawaited(
               context.push(AppRoutes.settingsPage(SettingsPage.missions)),

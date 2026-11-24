@@ -8092,6 +8092,80 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsFormKeyboard => 'Keyboard';
+
+  @override
+  String wwdAlarmSoundsOnDevice(String device) {
+    return 'Alarm sounds on: $device';
+  }
+
+  @override
+  String get wwdMacNeverRingsLine =>
+      'This Mac never rings Wake Up. It edits the schedule; the phone rings it.';
+
+  @override
+  String get wwdWebNeverRingsLine =>
+      'This browser never rings Wake Up. It edits the schedule; the phone rings it.';
+
+  @override
+  String get wwdNoAlarmDevice => 'No phone chosen yet';
+
+  @override
+  String get wwdColDay => 'Day';
+
+  @override
+  String get wwdColSchedule => 'Schedule';
+
+  @override
+  String get wwdColNight => 'Night';
+
+  @override
+  String wwdColAlarm(String device) {
+    return 'Alarm ($device)';
+  }
+
+  @override
+  String wwdDialHelp(String schedule) {
+    return 'Selected: $schedule. Drag the moon or the sun, or Tab to it and use ← → (5 min), Shift ← → (30 min).';
+  }
+
+  @override
+  String get wwdTableFoot =>
+      'Editing a day’s time splits it from its schedule, with Undo. Click a schedule’s name to change its days, times and alarm days.';
+
+  @override
+  String wwdDaySplit(String day) {
+    return '$day has its own times now';
+  }
+
+  @override
+  String wwdDayTime(String field, String day) {
+    return '$field, $day';
+  }
+
+  @override
+  String wwdChangeSchedule(String schedule) {
+    return 'Change $schedule';
+  }
+
+  @override
+  String get wwdFormMorning => 'Morning';
+
+  @override
+  String get wwdMorningCardOn => 'Wake Up card on';
+
+  @override
+  String get wwdMorningCardOff => 'Wake Up card off';
+
+  @override
+  String wwdMorningCheck(String duration) {
+    return 'Check after $duration';
+  }
+
+  @override
+  String get wwdMorningNoCheck => 'No start check';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

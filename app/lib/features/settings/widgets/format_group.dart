@@ -3,6 +3,7 @@ import 'package:dottoday/core/l10n/language_names.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/choice_sheet.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class FormatGroup extends StatelessWidget {
             tint: t.tasks[TaskColor.teal].ink,
             title: l10n.settingsSingleKeys,
             subtitle: l10n.settingsSingleKeysHint,
+            formLabel: l10n.settingsFormKeyboard,
             toggle: settings.webSingleKeys,
             onToggle: (on) =>
                 changeSettings(context, (s) => s.copyWith(webSingleKeys: on)),
@@ -61,6 +63,14 @@ class FormatGroup extends StatelessWidget {
       tint: t.tasks[TaskColor.sky].ink,
       title: l10n.settingsLanguage,
       value: names[locale] ?? names.values.first,
+      choices: formChoices(
+        values: names.keys,
+        selected: locale,
+        label: (code) => names[code]!,
+        onPick: (code) {
+          if (code != locale) onLocale(code);
+        },
+      ),
       onTap: () async {
         final picked = await showChoiceSheet<String>(
           context,
@@ -86,6 +96,13 @@ class FormatGroup extends StatelessWidget {
       tint: t.tasks[TaskColor.sky].ink,
       title: l10n.settingsWeekStarts,
       value: name(settings.firstDayOfWeek),
+      choices: formChoices(
+        values: const [1, 7, 6],
+        selected: settings.firstDayOfWeek,
+        label: name,
+        onPick: (d) =>
+            changeSettings(context, (s) => s.copyWith(firstDayOfWeek: d)),
+      ),
       onTap: () async {
         final picked = await showChoiceSheet<int>(
           context,
@@ -119,6 +136,13 @@ class FormatGroup extends StatelessWidget {
       tint: t.colors.muted,
       title: l10n.settingsTimeFormat,
       value: label(current),
+      choices: formChoices(
+        values: _Format.values,
+        selected: current,
+        label: label,
+        onPick: (f) =>
+            changeSettings(context, (s) => s.copyWith(use24h: f.use24h)),
+      ),
       onTap: () async {
         // An enum, not bool?: a dismissed sheet's null must not read as
         // "like this device".

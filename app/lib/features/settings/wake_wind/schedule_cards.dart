@@ -19,8 +19,8 @@ class ScheduleCards extends StatelessWidget {
 
   final Settings settings;
 
-  /// The schedules' dots, in order.
-  static const _dots = [
+  /// The schedules' dots, in order (the Mac/web week table too).
+  static const dots = [
     TaskColor.violet,
     TaskColor.amber,
     TaskColor.teal,
@@ -49,7 +49,7 @@ class ScheduleCards extends StatelessWidget {
         for (final (i, s) in schedules.indexed)
           _ScheduleCard(
             schedule: s,
-            dot: _dots[i % _dots.length],
+            dot: dots[i % dots.length],
             settings: settings,
             onEdit: () => unawaited(showScheduleSheet(context, days: s.days)),
           ),

@@ -1,7 +1,7 @@
 // Mac/web Settings pages as forms (docs/09 M20.7 part 5b, ED-450): the
 // drawn pages in the detail pane as "Label:" forms; a checkbox and a
-// pop-up write what the phone rows did; Reminders opens Sounds and
-// Notification health in the pane; Export and Account. Run on the Mac and
+// pop-up write what the phone rows did; Reminders opens Sounds in the
+// pane; Export; Appearance and Wake Up and Wind Down (5c, ED-452). Run on the Mac and
 // the web at 1280 (tablets keep the phone rows, covered by settings_panes).
 // In-memory data:
 //   SWEEP_TARGET=integration_test/settings_forms_test.dart tool/mac_sweep.sh
@@ -10,6 +10,7 @@
 //   SHOTS=settings_forms node tool/slice/web_journey.mjs <url> expanded <b>
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
+import 'package:dottoday/features/settings/wake_wind/week_table.dart';
 import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,6 +82,22 @@ void main() {
       await tester.pumpAndSettle();
       expect(_detail(find.text('Export…')), findsNWidgets(3)); // l10n-ignore
       await shot('4_export');
+
+      // 4 · Appearance: the form under the preview (ED-452).
+      await tester.tap(_list(find.text('Appearance')).first); // l10n-ignore
+      await tester.pumpAndSettle();
+      expect(_detail(find.byType(FormMenu)), findsWidgets);
+      await shot('5_appearance');
+
+      // 5 · Wake Up and Wind Down: the dial and the week table.
+      await tester.tap(_list(find.text('Your day')).first); // l10n-ignore
+      await tester.pumpAndSettle();
+      await tester.tap(
+        _detail(find.text('Wake Up and Wind Down')).first, // l10n-ignore
+      );
+      await tester.pumpAndSettle();
+      expect(_detail(find.byType(WeekTable)), findsOneWidget);
+      await shot('6_wake_wind');
       router.go(AppRoutes.today);
       await tester.pumpAndSettle();
     });

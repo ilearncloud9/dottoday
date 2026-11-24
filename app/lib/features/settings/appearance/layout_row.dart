@@ -3,6 +3,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/shared/controls/dot_segmented.dart';
 import 'package:dottoday/shared/layout/layout_switch.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,18 @@ class LayoutRow extends ConsumerWidget {
       selected: minimal,
       onChanged: choose,
     );
+    // On a Mac/web form: "Layout:" and the control, its words under it
+    // (ED-452).
+    if (settingsFormAt(context)) {
+      return FormLine(
+        label: l10n.layoutRow,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: DotSpace.xs,
+          children: [control, FormHelp(l10n.layoutRowDetail)],
+        ),
+      );
+    }
     return LayoutBuilder(
       builder: (context, box) {
         final beside = box.maxWidth >= DotSize.layoutSegmentsBeside;

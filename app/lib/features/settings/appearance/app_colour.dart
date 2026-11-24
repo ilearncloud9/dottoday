@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/appearance/edit_palette_sheet.dart';
 import 'package:dottoday/shared/pickers/block_names.dart';
 import 'package:dottoday/shared/pickers/look/look_parts.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,6 +53,31 @@ class AppColourGroup extends ConsumerWidget {
     final edit = Text(l10n.settingsEditPalette);
     void open() => unawaited(showEditPalette(context));
     final cupertino = DotIdiom.of(context) == DotIdiom.cupertino;
+    // On a Mac/web form: "App colour:", the swatches, Edit palette… and
+    // the note under them (ED-452).
+    if (settingsFormAt(context)) {
+      return SettingsGroup(
+        caption: l10n.settingsAppColour,
+        formBreak: false,
+        children: [
+          FormLine(
+            label: l10n.settingsAppColour,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: DotSpace.xs,
+              children: [
+                Wrap(children: swatches),
+                FormButton(
+                  label: l10n.settingsFormOpen(l10n.settingsEditPalette),
+                  onPressed: open,
+                ),
+                FormHelp(l10n.settingsAppColourNote),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
     return SettingsGroup(
       caption: l10n.settingsAppColour,
       footer: l10n.settingsAppColourNote,

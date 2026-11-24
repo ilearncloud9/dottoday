@@ -118,7 +118,7 @@ class ScheduleBody extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final night = nightMinutes(draft.window);
-    final target = _targetLine(l10n, night);
+    final target = sleepTargetLine(l10n, settings, night);
     final dial = Column(
       spacing: DotSpace.s,
       children: [
@@ -150,20 +150,6 @@ class ScheduleBody extends StatelessWidget {
       ),
       child: dial,
     );
-  }
-
-  /// "30 min under your 8 h sleep target", "Matches …"; none without a
-  /// target.
-  String? _targetLine(AppLocalizations l10n, int night) {
-    final target = settings.sleepTargetMin;
-    if (target == null) return null;
-    final goal = formatDurationShort(l10n, target);
-    final gap = night - target;
-    if (gap == 0) return l10n.schMatchesTarget(goal);
-    final by = formatDurationShort(l10n, gap.abs());
-    return gap < 0
-        ? l10n.schUnderTarget(by, goal)
-        : l10n.schOverTarget(by, goal);
   }
 }
 

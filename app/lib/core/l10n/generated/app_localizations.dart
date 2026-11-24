@@ -12324,6 +12324,120 @@ abstract class AppLocalizations {
   /// **'{name} {wake} · {windDown}'**
   String yourDayScheduleLine(String name, String wake, String windDown);
 
+  /// Web Appearance form: label beside Single-key shortcuts (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard'**
+  String get settingsFormKeyboard;
+
+  /// Mac/web Wake Up and Wind Down: the line naming the device that rings (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm sounds on: {device}'**
+  String wwdAlarmSoundsOnDevice(String device);
+
+  /// Mac Wake Up and Wind Down: under Alarm sounds on (E-FullA-v2, ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'This Mac never rings Wake Up. It edits the schedule; the phone rings it.'**
+  String get wwdMacNeverRingsLine;
+
+  /// Web Wake Up and Wind Down: under Alarm sounds on (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser never rings Wake Up. It edits the schedule; the phone rings it.'**
+  String get wwdWebNeverRingsLine;
+
+  /// Mac/web Wake Up and Wind Down: Alarm sounds on before a device is chosen (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'No phone chosen yet'**
+  String get wwdNoAlarmDevice;
+
+  /// Mac/web week table column (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get wwdColDay;
+
+  /// Mac/web week table column (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get wwdColSchedule;
+
+  /// Mac/web week table column (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get wwdColNight;
+
+  /// Mac/web week table column: whether the day rings on the device (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm ({device})'**
+  String wwdColAlarm(String device);
+
+  /// Mac/web Wake Up and Wind Down: help beside the dial (E-FullA-v2, ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Selected: {schedule}. Drag the moon or the sun, or Tab to it and use ← → (5 min), Shift ← → (30 min).'**
+  String wwdDialHelp(String schedule);
+
+  /// Mac/web week table footnote (E-FullA-v2, ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Editing a day’s time splits it from its schedule, with Undo. Click a schedule’s name to change its days, times and alarm days.'**
+  String get wwdTableFoot;
+
+  /// Toast after a day's time is edited in the week table, with Undo (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'{day} has its own times now'**
+  String wwdDaySplit(String day);
+
+  /// Screen-reader name of a time field in the week table, e.g. 'Wake Up, Monday' (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'{field}, {day}'**
+  String wwdDayTime(String field, String day);
+
+  /// Screen-reader name of a schedule name in the week table: opens its sheet (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Change {schedule}'**
+  String wwdChangeSchedule(String schedule);
+
+  /// Mac/web Reminders: label beside the Wake Up card and start check summary (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get wwdFormMorning;
+
+  /// Mac/web Reminders' Morning line (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up card on'**
+  String get wwdMorningCardOn;
+
+  /// Mac/web Reminders' Morning line (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up card off'**
+  String get wwdMorningCardOff;
+
+  /// Mac/web Reminders' Morning line: Check I've started (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'Check after {duration}'**
+  String wwdMorningCheck(String duration);
+
+  /// Mac/web Reminders' Morning line when Check I've started is off (ED-452).
+  ///
+  /// In en, this message translates to:
+  /// **'No start check'**
+  String get wwdMorningNoCheck;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -8140,6 +8140,80 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get settingsFormKeyboard => 'Tastatur';
+
+  @override
+  String wwdAlarmSoundsOnDevice(String device) {
+    return 'Wecker klingelt auf: $device';
+  }
+
+  @override
+  String get wwdMacNeverRingsLine =>
+      'Dieser Mac klingelt nie zum Aufwachen. Er bearbeitet den Plan; das Telefon klingelt.';
+
+  @override
+  String get wwdWebNeverRingsLine =>
+      'Dieser Browser klingelt nie zum Aufwachen. Er bearbeitet den Plan; das Telefon klingelt.';
+
+  @override
+  String get wwdNoAlarmDevice => 'Noch kein Telefon gewählt';
+
+  @override
+  String get wwdColDay => 'Tag';
+
+  @override
+  String get wwdColSchedule => 'Plan';
+
+  @override
+  String get wwdColNight => 'Nacht';
+
+  @override
+  String wwdColAlarm(String device) {
+    return 'Wecker ($device)';
+  }
+
+  @override
+  String wwdDialHelp(String schedule) {
+    return 'Ausgewählt: $schedule. Ziehe Mond oder Sonne, oder wähle sie mit Tab und nutze ← → (5 Min.), Umschalt ← → (30 Min.).';
+  }
+
+  @override
+  String get wwdTableFoot =>
+      'Änderst du die Zeit eines Tages, löst er sich aus seinem Plan, mit Rückgängig. Klicke auf den Namen eines Plans, um Tage, Zeiten und Weckertage zu ändern.';
+
+  @override
+  String wwdDaySplit(String day) {
+    return '$day hat jetzt eigene Zeiten';
+  }
+
+  @override
+  String wwdDayTime(String field, String day) {
+    return '$field, $day';
+  }
+
+  @override
+  String wwdChangeSchedule(String schedule) {
+    return '$schedule ändern';
+  }
+
+  @override
+  String get wwdFormMorning => 'Morgen';
+
+  @override
+  String get wwdMorningCardOn => 'Aufwachkarte an';
+
+  @override
+  String get wwdMorningCardOff => 'Aufwachkarte aus';
+
+  @override
+  String wwdMorningCheck(String duration) {
+    return 'Prüfen nach $duration';
+  }
+
+  @override
+  String get wwdMorningNoCheck => 'Keine Startprüfung';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

@@ -3,6 +3,7 @@ import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/alert.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/features/settings/wake_wind/week_table.dart';
 import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -171,5 +172,61 @@ void main() {
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     expect(find.text('Kody'), findsWidgets);
+  }, variant: mac);
+
+  testWidgets('Appearance: Time format and Week starts as pop-ups', (
+    tester,
+  ) async {
+    await open(tester, SettingsPage.appearance);
+    expect(find.text('Week starts:'), findsOneWidget);
+    await tester.tap(find.byTooltip('Week starts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sunday').last);
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: find.byType(FormMenu), matching: find.text('Sunday')),
+      findsOneWidget,
+    );
+  }, variant: mac);
+
+  testWidgets('Wake Up and Wind Down: the week as a table, no Tonight', (
+    tester,
+  ) async {
+    await open(tester, SettingsPage.wakeWindDown);
+    expect(find.byType(WeekTable), findsOneWidget);
+    expect(find.textContaining('Tonight'), findsNothing);
+    expect(find.text('Send a test alarm'), findsNothing);
+    expect(find.text('Monday'), findsOneWidget);
+  }, variant: mac);
+
+  testWidgets('a day typed in the table leaves its schedule, with Undo', (
+    tester,
+  ) async {
+    await open(tester, SettingsPage.wakeWindDown);
+    await tester.tap(find.bySemanticsLabel('Wake Up, Monday'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).last, '615');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Monday has its own times now'), findsOneWidget);
+    expect(find.text('6:15 AM'), findsOneWidget);
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text('6:15 AM'), findsNothing);
+  }, variant: mac);
+
+  testWidgets("the Alarm column is each day's Ring on these days", (
+    tester,
+  ) async {
+    await open(tester, SettingsPage.wakeWindDown);
+    final monday = find.bySemanticsLabel(RegExp(r'^Wake Up alarm, Monday'));
+    expect(monday, findsOneWidget);
+    final box = find.ancestor(of: monday, matching: find.byType(FormCheck));
+    final before = tester.widget<FormCheck>(box.first).value;
+    await tester.tap(monday);
+    await tester.pumpAndSettle();
+    expect(tester.widget<FormCheck>(box.first).value, !before);
   }, variant: mac);
 }

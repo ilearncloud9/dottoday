@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -10,7 +11,9 @@ import 'package:dottoday/features/settings/wake_wind/alarm_group.dart';
 import 'package:dottoday/features/settings/wake_wind/reminders_group.dart';
 import 'package:dottoday/features/settings/wake_wind/schedule_cards.dart';
 import 'package:dottoday/features/settings/wake_wind/tonight_card.dart';
+import 'package:dottoday/features/settings/wake_wind/week_panel.dart';
 import 'package:dottoday/features/settings/widgets/night_rows.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,15 +46,25 @@ class _WakeWindDownPageState extends ConsumerState<WakeWindDownPage> {
     final full = !minimal || _more;
     final caps = ref.watch(alarmCapabilitiesNowProvider).value;
     final desktop = caps?.blockers.contains(AlarmBlocker.notAPhone) ?? false;
+    // The Mac and the web (ED-452): the dial, Alarm sounds on and the
+    // week table in place of Tonight and the schedule cards.
+    final form = settingsFormFits(context);
     return SettingsPageFrame(
       title: l10n.settingsWakeWindDown,
       page: SettingsPage.wakeWindDown,
+      form: true,
+      maxWidth: form ? DotSize.wwdPageMax : DotSize.readableColumn,
       children: [
-        if (desktop) PageText(l10n.wakeUpDesktopNote),
-        TonightCard(profile: profile),
-        ScheduleCards(settings: settings),
+        if (form)
+          WeekPanel(profile: profile)
+        else ...[
+          if (desktop) PageText(l10n.wakeUpDesktopNote),
+          TonightCard(profile: profile),
+          ScheduleCards(settings: settings),
+        ],
         SettingsGroup(
           caption: l10n.wwdTheNight,
+          formHeading: true,
           children: nightRows(context, settings),
         ),
         WakeUpAlarmGroup(profile: profile, full: full),

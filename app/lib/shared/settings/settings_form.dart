@@ -139,8 +139,12 @@ class FormCheck extends StatelessWidget {
     required this.onChanged,
     this.detail,
     this.below,
+    this.semanticLabel,
     super.key,
   });
+
+  /// For screen readers when [title] is empty (a table cell's checkbox).
+  final String? semanticLabel;
 
   final bool value;
   final String title;
@@ -175,6 +179,7 @@ class FormCheck extends StatelessWidget {
       child: Semantics(
         checked: value,
         enabled: on,
+        label: semanticLabel,
         child: InkWell(
           onTap: on ? () => onChanged!(!value) : null,
           borderRadius: BorderRadius.circular(DotRadii.field),
@@ -195,12 +200,13 @@ class FormCheck extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: DotSpace.xxs,
                       children: [
-                        Text(
-                          title,
-                          style: t.styles.inspectorValue.copyWith(
-                            fontWeight: FontWeight.w400,
+                        if (title.isNotEmpty)
+                          Text(
+                            title,
+                            style: t.styles.inspectorValue.copyWith(
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
                         if (detail case final d?) FormHelp(d),
                         ?below,
                       ],
@@ -335,12 +341,17 @@ class FormButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.menu = false,
+    this.semanticLabel,
     super.key,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final bool menu;
+
+  /// What it is for screen readers when [label] alone says too little
+  /// ("Wake Up, Monday" for a table's 6:30 AM); the label is its value.
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +360,8 @@ class FormButton extends StatelessWidget {
       button: true,
       enabled: onPressed != null,
       excludeSemantics: true,
-      label: label,
+      label: semanticLabel ?? label,
+      value: semanticLabel == null ? null : label,
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(DotRadii.field),

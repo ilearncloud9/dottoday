@@ -1,7 +1,9 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/schedules.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
+import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -76,4 +78,16 @@ String weekdayFull(BuildContext context, Weekday d) => DateFormat.EEEE(
   };
   String at(int h) => f.format(DateTime(2024, 1, 1, h));
   return (top: at(0), right: at(6), bottom: at(12), left: at(18));
+}
+
+/// "30 min under your 8 h sleep target", "Matches your 8 h sleep target";
+/// null without a target. [night] is the night's minutes.
+String? sleepTargetLine(AppLocalizations l10n, Settings settings, int night) {
+  final target = settings.sleepTargetMin;
+  if (target == null) return null;
+  final goal = formatDurationShort(l10n, target);
+  final gap = night - target;
+  if (gap == 0) return l10n.schMatchesTarget(goal);
+  final by = formatDurationShort(l10n, gap.abs());
+  return gap < 0 ? l10n.schUnderTarget(by, goal) : l10n.schOverTarget(by, goal);
 }

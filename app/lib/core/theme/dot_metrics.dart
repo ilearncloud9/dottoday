@@ -164,6 +164,16 @@ abstract final class DotSize {
   /// Account's Name field on a Mac/web form (ED-450).
   static const double formNameField = 240;
 
+  /// Wake Up and Wind Down on a Mac/web form (ED-452): the night dial's
+  /// width, and the content width from which the dial sits beside the
+  /// week table (a 920 pane) instead of above it.
+  static const double wwdDial = 280;
+  static const double wwdSideBySide = 860;
+
+  /// Widest Wake Up and Wind Down's form grows, so the dial can sit
+  /// beside the table (ED-452); other pages keep [readableColumn].
+  static const double wwdPageMax = 1120;
+
   /// Narrower than this beside the label column, a form row stacks its
   /// label over its control (200 % text, a narrow pane).
   static const double formControlMin = 280;
@@ -769,6 +779,10 @@ abstract final class DotTouch {
   /// none. A tooltip's overlay re-parents the routes' semantics, and on the
   /// web that drops the focused field's keys (CI a11y-web, 2026-11-01).
   static const tooltipWait = Duration(milliseconds: 500);
+
+  /// A dial drag pauses this long before its times are written: one
+  /// write per move, not one per frame (Wake Up and Wind Down, ED-452).
+  static const dragSettle = Duration(milliseconds: 400);
 }
 
 /// Concept E's glass elevation (ED-210), light values; the dark theme's

@@ -21,8 +21,12 @@ class SettingsPageFrame extends StatelessWidget {
     this.singleGroup = false,
     this.pinned,
     this.form = false,
+    this.maxWidth = DotSize.readableColumn,
     super.key,
   });
+
+  /// Widest the page's column grows before it centres.
+  final double maxWidth;
 
   /// Drawn as a Mac/web form where [settingsFormFits] (ED-450): only the
   /// pages drawn that way say so; the others keep the phone rows there.
@@ -69,7 +73,7 @@ class SettingsPageFrame extends StatelessWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
+            constraints: BoxConstraints(maxWidth: maxWidth),
             child: LayoutBuilder(
               builder: (context, box) {
                 if (pinned == null || box.maxHeight < _pinFrom) {

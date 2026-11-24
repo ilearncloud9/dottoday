@@ -49,16 +49,19 @@ void main() {
     SettingsPage.learning,
     SettingsPage.export,
     SettingsPage.account,
+    SettingsPage.appearance,
+    SettingsPage.wakeWindDown,
   ];
 
   Future<void> open(
     WidgetTester tester,
     SettingsPage page,
-    ThemeMode mode,
-  ) async {
+    ThemeMode mode, {
+    Size size = wide,
+  }) async {
     final router = await pumpCalendar(
       tester,
-      size: wide,
+      size: size,
       mode: mode,
       settings: _seeded,
       devices: _devices,
@@ -104,7 +107,27 @@ void main() {
     }
   }
 
-  for (final page in [SettingsPage.notifications, SettingsPage.export]) {
+  // From a 920 pane the dial sits beside the table (ED-452).
+  testWidgets('mac wakeWindDown wide light', (tester) async {
+    await open(
+      tester,
+      SettingsPage.wakeWindDown,
+      ThemeMode.light,
+      size: const Size(1600, 1000),
+    );
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile(
+        'goldens/settings_form_mac_wakeWindDown_wide_light.png',
+      ),
+    );
+  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
+
+  for (final page in [
+    SettingsPage.notifications,
+    SettingsPage.export,
+    SettingsPage.appearance,
+  ]) {
     testWidgets('web ${page.name} light', (tester) async {
       debugWebChromeOverride = true;
       addTearDown(() => debugWebChromeOverride = null);
@@ -121,6 +144,18 @@ void main() {
 /// three alerts; quiet hours on.
 Settings _seeded(Settings s) => s.copyWith(
   wakeUpAlarm: true,
+  // E-FullA-v2's week: Weekdays 6:30–11:00 PM, Weekend 8:30–12:30 AM.
+  dayBoundaries: {
+    for (final d in Weekday.values)
+      d: d.index < 5
+          ? const TimeWindow(start: '06:30', end: '23:00')
+          : const TimeWindow(start: '08:30', end: '24:30'),
+  },
+  wakeUpAlarmDays: {
+    for (final d in Weekday.values)
+      if (d.index < 5) d,
+  },
+  sleepTargetMin: 480,
   wakeUpCard: true,
   wakeUpCheck: true,
   missionMode: MissionMode.always,

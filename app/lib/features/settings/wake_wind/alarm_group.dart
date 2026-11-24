@@ -9,6 +9,7 @@ import 'package:dottoday/features/settings/widgets/alarm_device_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_option_groups.dart';
 import 'package:dottoday/shared/notifications/test_alarm_card.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,27 +36,32 @@ class WakeUpAlarmGroup extends ConsumerWidget {
     final settings = profile.settings;
     final on = settings.wakeUpAlarm;
     final alarm = ref.read(testAlarmProvider.notifier);
+    // On a Mac/web form, Alarm sounds on sits above the table and only the
+    // phone can ring a test (ED-452).
+    final form = settingsFormAt(context);
     return SettingsGroup(
       caption: l10n.settingsWakeUpAlarm,
+      formHeading: true,
       footer: _footer(l10n, on: on),
       children: [
         WakeUpAlarmRow(on: on, ring: true),
         if (on) ...[
-          AlarmDeviceRow(profile: profile),
+          if (!form) AlarmDeviceRow(profile: profile),
           ...wakeUpSoundRows(context, settings, full: full),
           if (full) ...wakeUpSnoozeRows(context, settings),
           MissionsRow(settings: settings),
         ],
-        TestAlarmRow(
-          title: l10n.wwdSendTestAlarm,
-          action: true,
-          onSend: alarm.sendWakeUp,
-          // A test alarm is meant to ring after the phone is locked, so
-          // leaving the page keeps it.
-          onCancel: () async {},
-          now: ref.read(clockProvider).nowUtc,
-          afterNo: l10n.wakeUpTestLookHere,
-        ),
+        if (!form)
+          TestAlarmRow(
+            title: l10n.wwdSendTestAlarm,
+            action: true,
+            onSend: alarm.sendWakeUp,
+            // A test alarm is meant to ring after the phone is locked, so
+            // leaving the page keeps it.
+            onCancel: () async {},
+            now: ref.read(clockProvider).nowUtc,
+            afterNo: l10n.wakeUpTestLookHere,
+          ),
       ],
     );
   }

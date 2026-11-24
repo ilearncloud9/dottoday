@@ -22,6 +22,7 @@ class WindDownReminderRow extends StatelessWidget {
       tint: t.tasks[TaskColor.violet].ink,
       title: l10n.settingsWindDownReminder,
       subtitle: l10n.settingsWindDownReminderDetail,
+      formLabel: l10n.settingsWindDown,
       toggle: settings.windDownReminder,
       onToggle: (v) =>
           changeSettings(context, (s) => s.copyWith(windDownReminder: v)),

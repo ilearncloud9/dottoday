@@ -8134,6 +8134,80 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get settingsFormKeyboard => 'Teclado';
+
+  @override
+  String wwdAlarmSoundsOnDevice(String device) {
+    return 'La alarma suena en: $device';
+  }
+
+  @override
+  String get wwdMacNeverRingsLine =>
+      'Este Mac nunca suena al despertar. Edita el horario; el teléfono suena.';
+
+  @override
+  String get wwdWebNeverRingsLine =>
+      'Este navegador nunca suena al despertar. Edita el horario; el teléfono suena.';
+
+  @override
+  String get wwdNoAlarmDevice => 'Ningún teléfono elegido';
+
+  @override
+  String get wwdColDay => 'Día';
+
+  @override
+  String get wwdColSchedule => 'Horario';
+
+  @override
+  String get wwdColNight => 'Noche';
+
+  @override
+  String wwdColAlarm(String device) {
+    return 'Alarma ($device)';
+  }
+
+  @override
+  String wwdDialHelp(String schedule) {
+    return 'Seleccionado: $schedule. Arrastra la luna o el sol, o llega con Tab y usa ← → (5 min), Mayús ← → (30 min).';
+  }
+
+  @override
+  String get wwdTableFoot =>
+      'Cambiar la hora de un día lo separa de su horario, con Deshacer. Haz clic en el nombre de un horario para cambiar sus días, horas y días de alarma.';
+
+  @override
+  String wwdDaySplit(String day) {
+    return '$day tiene ahora sus propias horas';
+  }
+
+  @override
+  String wwdDayTime(String field, String day) {
+    return '$field, $day';
+  }
+
+  @override
+  String wwdChangeSchedule(String schedule) {
+    return 'Cambiar $schedule';
+  }
+
+  @override
+  String get wwdFormMorning => 'Mañana';
+
+  @override
+  String get wwdMorningCardOn => 'Tarjeta de despertar activada';
+
+  @override
+  String get wwdMorningCardOff => 'Tarjeta de despertar desactivada';
+
+  @override
+  String wwdMorningCheck(String duration) {
+    return 'Comprobar tras $duration';
+  }
+
+  @override
+  String get wwdMorningNoCheck => 'Sin comprobación';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

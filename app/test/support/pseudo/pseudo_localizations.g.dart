@@ -6501,6 +6501,67 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.yourDayScheduleLine(name, wake, windDown));
 
   @override
+  String get settingsFormKeyboard => pseudo(super.settingsFormKeyboard);
+
+  @override
+  String wwdAlarmSoundsOnDevice(String device) =>
+      pseudo(super.wwdAlarmSoundsOnDevice(device));
+
+  @override
+  String get wwdMacNeverRingsLine => pseudo(super.wwdMacNeverRingsLine);
+
+  @override
+  String get wwdWebNeverRingsLine => pseudo(super.wwdWebNeverRingsLine);
+
+  @override
+  String get wwdNoAlarmDevice => pseudo(super.wwdNoAlarmDevice);
+
+  @override
+  String get wwdColDay => pseudo(super.wwdColDay);
+
+  @override
+  String get wwdColSchedule => pseudo(super.wwdColSchedule);
+
+  @override
+  String get wwdColNight => pseudo(super.wwdColNight);
+
+  @override
+  String wwdColAlarm(String device) => pseudo(super.wwdColAlarm(device));
+
+  @override
+  String wwdDialHelp(String schedule) => pseudo(super.wwdDialHelp(schedule));
+
+  @override
+  String get wwdTableFoot => pseudo(super.wwdTableFoot);
+
+  @override
+  String wwdDaySplit(String day) => pseudo(super.wwdDaySplit(day));
+
+  @override
+  String wwdDayTime(String field, String day) =>
+      pseudo(super.wwdDayTime(field, day));
+
+  @override
+  String wwdChangeSchedule(String schedule) =>
+      pseudo(super.wwdChangeSchedule(schedule));
+
+  @override
+  String get wwdFormMorning => pseudo(super.wwdFormMorning);
+
+  @override
+  String get wwdMorningCardOn => pseudo(super.wwdMorningCardOn);
+
+  @override
+  String get wwdMorningCardOff => pseudo(super.wwdMorningCardOff);
+
+  @override
+  String wwdMorningCheck(String duration) =>
+      pseudo(super.wwdMorningCheck(duration));
+
+  @override
+  String get wwdMorningNoCheck => pseudo(super.wwdMorningNoCheck);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

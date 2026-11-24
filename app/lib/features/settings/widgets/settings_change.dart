@@ -13,10 +13,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void changeSettings(
   BuildContext context,
   Settings Function(Settings settings) change,
+) => settingsWriter(context)(change);
+
+/// [changeSettings] bound now, for a write that may come after [context]
+/// is gone (a drag that settles as its page closes).
+void Function(Settings Function(Settings) change) settingsWriter(
+  BuildContext context,
 ) {
-  final container = ProviderScope.containerOf(context);
+  final container = ProviderScope.containerOf(context, listen: false);
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
+  return (change) => _write(container, messenger, l10n, change);
+}
+
+void _write(
+  ProviderContainer container,
+  ScaffoldMessengerState messenger,
+  AppLocalizations l10n,
+  Settings Function(Settings settings) change,
+) {
   unawaited(
     updateSettings(container, change).then((result) {
       if (result case Err(:final failure)) {

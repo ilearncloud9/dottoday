@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/wake_up_card.dart';
 import 'package:dottoday/features/settings/wake_wind/wind_down_reminder_row.dart';
+import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,45 @@ class WakeWindRemindersGroup extends StatelessWidget {
     final check = settings.wakeUpAlarm && settings.wakeUpCheck;
     void options() =>
         unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp)));
+    // On a Mac/web form the card and the check share one Morning line
+    // with Wake Up options… (ED-452).
+    if (settingsFormAt(context)) {
+      return SettingsGroup(
+        caption: l10n.settingsReminders,
+        formHeading: true,
+        footer: settings.wakeUpAlarm ? null : l10n.wwdRemindersFooterOff,
+        children: [
+          WindDownReminderRow(settings: settings),
+          FormLine(
+            label: l10n.wwdFormMorning,
+            child: Wrap(
+              spacing: DotSpace.s,
+              runSpacing: DotSpace.xs,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  l10n.statusHintJoin(
+                    wakeUpCardOn(settings)
+                        ? l10n.wwdMorningCardOn
+                        : l10n.wwdMorningCardOff,
+                    check
+                        ? l10n.wwdMorningCheck(
+                            l10n.durationMinutes(settings.wakeUpCheckMin),
+                          )
+                        : l10n.wwdMorningNoCheck,
+                  ),
+                  style: t.styles.inspectorValue,
+                ),
+                FormButton(
+                  label: l10n.settingsFormOpen(l10n.settingsWakeUpOptions),
+                  onPressed: options,
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
     return SettingsGroup(
       caption: l10n.settingsReminders,
       footer: settings.wakeUpAlarm ? null : l10n.wwdRemindersFooterOff,

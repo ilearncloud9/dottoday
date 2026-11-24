@@ -8151,6 +8151,80 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get settingsFormKeyboard => 'Clavier';
+
+  @override
+  String wwdAlarmSoundsOnDevice(String device) {
+    return 'Le réveil sonne sur : $device';
+  }
+
+  @override
+  String get wwdMacNeverRingsLine =>
+      'Ce Mac ne sonne jamais au réveil. Il modifie l’horaire ; le téléphone sonne.';
+
+  @override
+  String get wwdWebNeverRingsLine =>
+      'Ce navigateur ne sonne jamais au réveil. Il modifie l’horaire ; le téléphone sonne.';
+
+  @override
+  String get wwdNoAlarmDevice => 'Aucun téléphone choisi';
+
+  @override
+  String get wwdColDay => 'Jour';
+
+  @override
+  String get wwdColSchedule => 'Horaire';
+
+  @override
+  String get wwdColNight => 'Nuit';
+
+  @override
+  String wwdColAlarm(String device) {
+    return 'Réveil ($device)';
+  }
+
+  @override
+  String wwdDialHelp(String schedule) {
+    return 'Sélection : $schedule. Fais glisser la lune ou le soleil, ou atteins-les avec Tab et utilise ← → (5 min), Maj ← → (30 min).';
+  }
+
+  @override
+  String get wwdTableFoot =>
+      'Modifier l’heure d’un jour le sépare de son horaire, avec Annuler. Clique sur le nom d’un horaire pour changer ses jours, ses heures et ses jours de réveil.';
+
+  @override
+  String wwdDaySplit(String day) {
+    return '$day a maintenant ses propres heures';
+  }
+
+  @override
+  String wwdDayTime(String field, String day) {
+    return '$field, $day';
+  }
+
+  @override
+  String wwdChangeSchedule(String schedule) {
+    return 'Modifier $schedule';
+  }
+
+  @override
+  String get wwdFormMorning => 'Matin';
+
+  @override
+  String get wwdMorningCardOn => 'Carte du réveil activée';
+
+  @override
+  String get wwdMorningCardOff => 'Carte du réveil désactivée';
+
+  @override
+  String wwdMorningCheck(String duration) {
+    return 'Vérifier après $duration';
+  }
+
+  @override
+  String get wwdMorningNoCheck => 'Pas de vérification';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

@@ -24,8 +24,18 @@ class SettingsGroup extends StatelessWidget {
     required this.children,
     this.footer,
     this.list = false,
+    this.formBreak = true,
+    this.formHeading = false,
     super.key,
   });
+
+  /// On a form page, [caption] as the section's heading (Wake Up and Wind
+  /// Down's The night, Wake Up alarm, Reminders, ED-452).
+  final bool formHeading;
+
+  /// On a form page, a hairline above it; off where groups run on as one
+  /// section (Appearance's Layout, Theme and App colour, ED-452).
+  final bool formBreak;
 
   final String caption;
 
@@ -108,7 +118,17 @@ class SettingsGroup extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.stretch,
     spacing: DotSpace.m,
     children: [
-      if (!settingsFormFirstAt(context)) const FormBreak(),
+      if (formBreak && !settingsFormFirstAt(context)) const FormBreak(),
+      if (formHeading && caption.isNotEmpty)
+        Semantics(
+          header: true,
+          child: Text(
+            caption,
+            style: DotTheme.of(
+              context,
+            ).styles.inspectorLabel.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ),
       ...children,
       if (footer case final f?) FormLine(child: FormHelp(f)),
     ],
