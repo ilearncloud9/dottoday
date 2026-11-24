@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Wake Up and Wind Down groups the Wake Up alarm as in the design, and Wake Up options, Missions, Alarm sounds on and Vary the sound open as their own pages (redesign branch).
 - Settings › Your day › Wake Up and Wind Down shows tonight, your week as schedules, the night, the Wake Up alarm and the Wind Down reminder on one page (redesign branch).
 - Settings › Appearance has a live preview, Layout as Everything or Less, theme thumbnails, and App colour with warm suggestions and your own colour from Edit palette (redesign branch).
 - Settings › Planning shows its values and its switches in two groups with how many routines you have; choices such as Shift later tasks open a card with Cancel on iPhone and radio buttons on Android; Siri phrases are shown in quotes (redesign branch).

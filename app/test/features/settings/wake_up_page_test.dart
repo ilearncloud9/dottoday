@@ -9,21 +9,23 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/timeline_fakes.dart';
 import 'settings_harness.dart';
 
-// Settings › Wake Up alarm › Sound and snooze (docs/15 §9, M17.2): every
-// option the alarm has is a row; rows the alarm doesn't use while off, or
-// this device can't use, are not drawn.
+// Wake Up and Wind Down's Wake Up alarm and Reminders (E-Phones, ED-084),
+// and the pages they open: Wake Up options (E-R2-32, ED-337; E-R2-38,
+// ED-344), Missions (E-R2-28, ED-331) and Vary the sound (owner
+// 2026-11-24). Every option the alarm has is a row (docs/15 §9).
 
 const _on = Settings(use24h: true, wakeUpAlarm: true);
 
 Future<SettingsHarness> _pump(
   WidgetTester tester, {
   Settings settings = _on,
+  SettingsPage page = SettingsPage.wakeWindDown,
   FakeAlarmGateway? gateway,
   List<Device> devices = const [],
 }) => pumpSettings(
   tester,
   settings: settings,
-  location: AppRoutes.settingsPage(SettingsPage.wakeUp),
+  location: AppRoutes.settingsPage(page),
   alarmGateway: gateway,
   devices: devices,
 );
@@ -60,43 +62,82 @@ void main() {
         _device('ipad', DeviceForm.tablet, rings: false),
       ],
     );
-    expect(find.text('Alarm sounds on'), findsOneWidget);
     expect(find.text('This iPhone'), findsOneWidget);
-    expect(find.text('Ready · 07:00'), findsOneWidget);
+    // When it last confirmed the times (E-Phones).
+    expect(find.textContaining('Ready · confirmed '), findsOneWidget);
     await _tap(tester, 'Alarm sounds on');
+    // Its own page (E-Phones "Alarm sounds on").
+    expect(find.text('Can ring'), findsOneWidget);
+    expect(
+      find.text(
+        'Your schedule syncs to every device. Only the device you choose '
+        'rings Wake Up; the others stay quiet.',
+      ),
+      findsOneWidget,
+    );
     await _tap(tester, 'iPad');
     expect((await storedSettings(h)).alarmDeviceId, 'ipad');
   });
 
-  testWidgets('Alarm sounds on: hidden while the alarm is off', (tester) async {
-    await _pump(tester, settings: const Settings(use24h: true));
-    expect(find.text('Alarm sounds on'), findsNothing);
-  });
-
-  testWidgets('off: the switch, the test and health only', (tester) async {
-    await _pump(tester, settings: const Settings(use24h: true));
-    expect(find.text('Wake Up and Wind Down'), findsWidgets);
-    expect(find.text('Alarm sound'), findsNothing);
-    expect(find.text('Snooze length'), findsNothing);
-    expect(find.text('Notification health'), findsOneWidget);
-  });
-
-  testWidgets('on: sound, vary, ramp and snooze, with their defaults', (
+  testWidgets('off: the switch and the test, the board footers', (
     tester,
   ) async {
+    await _pump(tester, settings: const Settings(use24h: true));
+    for (final text in [
+      'Wake Up alarm',
+      'Ring like an alarm',
+      'Off: Wake Up is a normal reminder',
+      'Send a test alarm',
+      'Turn it on to ring full screen over the lock screen at Wake Up. '
+          "Sound, snooze and missions appear here when it's on.",
+      'Wake Up card and the start check follow the alarm until you set '
+          'them yourself.',
+    ]) {
+      expect(find.text(text), findsOneWidget, reason: text);
+    }
+    for (final text in ['Alarm sounds on', 'Sound', 'Snooze length']) {
+      expect(find.text(text), findsNothing, reason: text);
+    }
+    // Health is on Settings › Reminders (E-R2-20), not here.
+    expect(find.text('Notification health'), findsNothing);
+    // The card and the check read Off (and the sleep target, above).
+    expect(find.text('Off'), findsNWidgets(3));
+  });
+
+  testWidgets('on: one group with the board rows and footer', (tester) async {
     await _pump(tester);
     for (final row in [
-      'Alarm sound',
-      'Vary the sound',
+      'Ring like an alarm',
+      'Full screen over the lock screen',
+      'Alarm sounds on',
+      'Sound',
       'Volume ramp',
+      'Vary the sound',
+      'Snooze',
       'Snooze length',
       'Snooze limit',
+      'Missions',
+      'Send a test alarm',
+      'Shown only when Ring like an alarm is on. One sound and snooze for '
+          'every schedule; each schedule chooses its own alarm days.',
+      'Wake Up card',
+      'Check after 10 min',
     ]) {
       expect(find.text(row), findsOneWidget, reason: row);
     }
     expect(find.text('30 s'), findsOneWidget);
     expect(find.text('9 min'), findsOneWidget);
-    expect(find.text('3 times'), findsOneWidget);
+    expect(find.text('3'), findsOneWidget);
+  });
+
+  testWidgets('iPhone: no volume ramp; its own footer', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    await _pump(tester, settings: const Settings(use24h: true));
+    expect(find.textContaining('(iOS 26 and later)'), findsOneWidget);
+    await _tap(tester, 'Ring like an alarm');
+    expect(find.text('Volume ramp'), findsNothing);
+    expect(find.text('Vary the sound'), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
   });
 
   testWidgets('picks write; snooze off hides its length and limit', (
@@ -109,22 +150,20 @@ void main() {
     await _tap(tester, 'Snooze limit');
     await _tap(tester, 'No limit');
     expect((await storedSettings(h)).wakeUpSnoozeMax, 0);
-    await _tap(tester, 'Vary the sound');
-    expect((await storedSettings(h)).wakeUpVarySound, isTrue);
-    await _tap(tester, 'Rings again a few minutes later.');
+    await _tap(tester, 'Snooze');
     expect((await storedSettings(h)).wakeUpSnooze, isFalse);
     expect(find.text('Snooze length'), findsNothing);
   });
 
-  testWidgets('Vary the sound: choose 2–6, the calm three to start', (
-    tester,
-  ) async {
-    final h = await _pump(
+  testWidgets('Vary the sound: its page, then choose 2–6', (tester) async {
+    final h = await _pump(tester);
+    await _tap(tester, 'Vary the sound');
+    await _tap(
       tester,
-      settings: _on.copyWith(wakeUpVarySound: true),
+      'A different alarm sound each day, so it stays easy to '
+      'hear.',
     );
-    expect(find.text('3 sounds'), findsOneWidget);
-    await _tap(tester, 'Sounds to vary');
+    expect((await storedSettings(h)).wakeUpVarySound, isTrue);
     await _tap(tester, 'Rain');
     expect((await storedSettings(h)).wakeUpRotationIds.toSet(), {
       ...defaultWakeUpRotationIds,
@@ -141,21 +180,11 @@ void main() {
     expect((await storedSettings(h)).wakeUpRotationIds, hasLength(2));
   });
 
-  testWidgets('iPhone: no volume ramp (AlarmKit sets the volume)', (
-    tester,
-  ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-    await _pump(tester);
-    expect(find.text('Volume ramp'), findsNothing);
-    expect(find.text('Vary the sound'), findsOneWidget);
-    debugDefaultTargetPlatformOverride = null;
-  });
-
-  testWidgets('minimal: switch and sound, the rest behind More options', (
+  testWidgets('minimal: the sound, the rest behind More options', (
     tester,
   ) async {
     await _pump(tester, settings: _on.copyWith(uiLayout: UiLayout.minimal));
-    expect(find.text('Alarm sound'), findsOneWidget);
+    expect(find.text('Sound'), findsOneWidget);
     expect(find.text('Snooze length'), findsNothing);
     await _tap(tester, 'More options');
     expect(find.text('Snooze length'), findsOneWidget);
@@ -165,7 +194,7 @@ void main() {
   testWidgets('the test alarm goes through the gateway', (tester) async {
     final gateway = FakeAlarmGateway();
     await _pump(tester, gateway: gateway);
-    await _tap(tester, 'Send me a test alarm');
+    await _tap(tester, 'Send a test alarm');
     await _tap(tester, 'Send');
     expect(gateway.tests.single.id, 'wakeup:test');
   });
@@ -177,17 +206,20 @@ void main() {
       settings: const Settings(use24h: true),
       gateway: gateway,
     );
-    await _tap(tester, "Rings like an alarm at Wake Up on days you've planned");
+    await _tap(tester, 'Ring like an alarm');
     expect((await storedSettings(h)).wakeUpAlarm, isTrue);
     expect(gateway.authorizationRequests, 1);
   });
 
-  testWidgets('Morning card: follows the alarm until chosen; its rows', (
+  testWidgets('Wake Up card opens Wake Up options: How it works, card, check', (
     tester,
   ) async {
     final h = await _pump(tester);
+    await _tap(tester, 'Wake Up card');
+    expect(find.text('Wake Up options'), findsWidgets);
+    expect(find.text('How it works'), findsOneWidget);
     expect(find.text('Show it when I first open the app'), findsOneWidget);
-    await _tap(tester, 'Offer to shift the day when I\'m up after plan');
+    await _tap(tester, "Offer to shift the day when I'm up after plan");
     expect((await storedSettings(h)).wakeUpLateOffer, isFalse);
     expect(find.text('Offer after'), findsNothing);
     expect(find.text('Check after'), findsOneWidget, reason: "the check's");
@@ -200,7 +232,7 @@ void main() {
     tester,
   ) async {
     final handle = tester.ensureSemantics();
-    await _pump(tester);
+    await _pump(tester, page: SettingsPage.wakeUp);
     for (final row in ['Offer after', 'Check after']) {
       await tester.ensureVisible(find.text(row));
       expect(
@@ -210,19 +242,49 @@ void main() {
       );
     }
     expect(find.bySemanticsLabel(RegExp('(^|\n)After\n')), findsNothing);
-    // Each picker's title names its setting too.
-    await _tap(tester, 'Offer after');
-    expect(find.text('Offer after'), findsNWidgets(2));
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
     await _tap(tester, 'Check after');
     expect(find.text('Check after'), findsNWidgets(2));
     handle.dispose();
   });
 
-  testWidgets('Morning card off for anyone without Wake Up', (tester) async {
-    await _pump(tester, settings: const Settings(use24h: true));
+  testWidgets('Wake Up options without the alarm: the card, no check', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      settings: const Settings(use24h: true),
+      page: SettingsPage.wakeUp,
+    );
     expect(find.text('Morning card'), findsWidgets);
     expect(find.text('Show it when I first open the app'), findsNothing);
+    expect(find.text("Check I've started"), findsNothing);
+  });
+
+  testWidgets('Missions: the row opens its page; the list picks', (
+    tester,
+  ) async {
+    final h = await _pump(
+      tester,
+      settings: _on.copyWith(missionMode: MissionMode.always),
+    );
+    await _tap(tester, 'Missions');
+    for (final text in [
+      'Mission',
+      'Stand up',
+      'Walk',
+      'Breathe',
+      'Backup mission',
+    ]) {
+      expect(find.text(text), findsWidgets, reason: text);
+    }
+    await _tap(tester, 'Breathe');
+    expect((await storedSettings(h)).missionKind, MissionKind.breathe);
+  });
+
+  testWidgets('Missions off: only when they run', (tester) async {
+    await _pump(tester, page: SettingsPage.missions);
+    expect(find.text('Missions'), findsWidgets);
+    expect(find.text('Stand up'), findsNothing);
+    expect(find.text('Backup mission'), findsNothing);
   });
 }

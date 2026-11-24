@@ -8,11 +8,9 @@ import 'package:flutter/material.dart';
 /// Where "Send me a test alarm" stands.
 enum TestAlarmStep { idle, explain, waiting, ask, rang, notRang }
 
-/// "Send me a test alarm" (docs/09 M6.5.9, 11 A0; derived from
-/// `SettingsGroup`): the row, then the owner's explanation with Send, a
-/// countdown while the alarm is on its way, and "Did it ring?". Leaving
-/// before it rings cancels it. A leaf: the caller owns scheduling.
-class TestAlarmCard extends StatefulWidget {
+/// "Check it works › Send me a test alarm" (docs/09 M6.5.9, 11 A0;
+/// E-R2-20, ED-317): [TestAlarmRow] in its own group.
+class TestAlarmCard extends StatelessWidget {
   const TestAlarmCard({
     required this.onSend,
     required this.onCancel,
@@ -21,6 +19,56 @@ class TestAlarmCard extends StatefulWidget {
     this.initial = TestAlarmStep.idle,
     super.key,
   });
+
+  final Future<DateTime> Function() onSend;
+  final Future<void> Function() onCancel;
+  final DateTime Function() now;
+  final String afterNo;
+  final TestAlarmStep initial;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return SettingsGroup(
+      caption: l10n.testAlarmCaption,
+      children: [
+        TestAlarmRow(
+          title: l10n.testAlarmRow,
+          subtitle: l10n.testAlarmRowDetail,
+          onSend: onSend,
+          onCancel: onCancel,
+          now: now,
+          afterNo: afterNo,
+          initial: initial,
+        ),
+      ],
+    );
+  }
+}
+
+/// The test alarm's row and its five steps (E-R2-20, ED-317): the row,
+/// the owner's explanation with Send, a countdown while the alarm is on
+/// its way, and "Did it ring?". Leaving before it rings calls [onCancel].
+/// A leaf: the caller owns scheduling.
+class TestAlarmRow extends StatefulWidget {
+  const TestAlarmRow({
+    required this.title,
+    required this.onSend,
+    required this.onCancel,
+    required this.now,
+    required this.afterNo,
+    this.subtitle,
+    this.action = false,
+    this.initial = TestAlarmStep.idle,
+    super.key,
+  });
+
+  /// "Send me a test alarm", or Wake Up's "Send a test alarm" (E-Phones).
+  final String title;
+  final String? subtitle;
+
+  /// Drawn as an action row (E-Phones): accent title, no chevron.
+  final bool action;
 
   /// Schedules it; returns when it is due.
   final Future<DateTime> Function() onSend;
@@ -38,10 +86,10 @@ class TestAlarmCard extends StatefulWidget {
   final TestAlarmStep initial;
 
   @override
-  State<TestAlarmCard> createState() => _TestAlarmCardState();
+  State<TestAlarmRow> createState() => _TestAlarmRowState();
 }
 
-class _TestAlarmCardState extends State<TestAlarmCard> {
+class _TestAlarmRowState extends State<TestAlarmRow> {
   late var _step = widget.initial;
 
   /// A preview of the waiting step (goldens) shows the full minute.
@@ -92,20 +140,16 @@ class _TestAlarmCardState extends State<TestAlarmCard> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    return SettingsGroup(
-      caption: l10n.testAlarmCaption,
-      children: [
-        SettingsRow(
-          glyph: DotGlyphs.bell,
-          tint: t.colors.accentInk,
-          title: l10n.testAlarmRow,
-          subtitle: l10n.testAlarmRowDetail,
-          onTap: _step == TestAlarmStep.idle
-              ? () => setState(() => _step = TestAlarmStep.explain)
-              : null,
-          below: _step == TestAlarmStep.idle ? null : _below(t, l10n),
-        ),
-      ],
+    return SettingsRow(
+      glyph: DotGlyphs.bell,
+      tint: t.colors.accentInk,
+      title: widget.title,
+      subtitle: widget.subtitle,
+      action: widget.action,
+      onTap: _step == TestAlarmStep.idle
+          ? () => setState(() => _step = TestAlarmStep.explain)
+          : null,
+      below: _step == TestAlarmStep.idle ? null : _below(t, l10n),
     );
   }
 

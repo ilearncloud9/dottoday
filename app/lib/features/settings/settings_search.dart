@@ -20,11 +20,16 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
     SettingsPage.wakeWindDown: [
       l10n.settingsWakeUp,
       l10n.settingsWakeUpAlarm,
+      l10n.wwdRingLikeAlarm,
+      l10n.wakeUpSnoozeRow,
+      l10n.wwdSendTestAlarm,
       l10n.settingsWindDown,
       l10n.wwdAddSchedule,
       l10n.settingsShowNight,
       l10n.settingsSleepTarget,
       l10n.settingsWindDownReminder,
+      l10n.wwdWakeUpCard,
+      l10n.wakeUpCheckRow,
     ],
     SettingsPage.learning: [
       l10n.settingsLearningDurations,
@@ -65,9 +70,8 @@ List<SettingsEntry> settingsIndex(AppLocalizations l10n) {
     for (final MapEntry(key: page, value: titles) in rows.entries)
       for (final title in titles) (title: title, page: page),
     for (final page in p)
-      // Everything else is minimal's way in; Wake Up options is part of
-      // Wake Up and Wind Down now.
-      if (page != SettingsPage.everything && page != SettingsPage.wakeUp)
+      // Everything else is minimal's way in.
+      if (page != SettingsPage.everything)
         (title: settingsPlace(l10n, page).title, page: page),
   ];
 }

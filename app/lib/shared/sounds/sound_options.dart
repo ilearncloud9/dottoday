@@ -24,13 +24,21 @@ final class SoundSection {
 
 /// The sound pickers' list (docs/12 §6): each section a group of rows, the
 /// chosen one checked. A tap calls [onPick], which picks and previews.
+/// With [picked], several are chosen (Vary the sound) and the rows in
+/// [disabled] can't change.
 class SoundOptionList extends StatelessWidget {
   const SoundOptionList({
     required this.sections,
     required this.selected,
     required this.onPick,
+    this.picked,
+    this.disabled = const {},
     super.key,
   });
+
+  /// The chosen keys of a list that takes several.
+  final Set<String?>? picked;
+  final Set<String?> disabled;
 
   final List<SoundSection> sections;
 
@@ -50,8 +58,12 @@ class SoundOptionList extends StatelessWidget {
             for (final option in section.options)
               _OptionRow(
                 option: option,
-                selected: option.key == selected,
-                onTap: () => onPick(option.key),
+                selected:
+                    picked?.contains(option.key) ?? option.key == selected,
+                multiple: picked != null,
+                onTap: disabled.contains(option.key)
+                    ? null
+                    : () => onPick(option.key),
               ),
           ],
         ),
@@ -63,12 +75,14 @@ class _OptionRow extends StatelessWidget {
   const _OptionRow({
     required this.option,
     required this.selected,
+    required this.multiple,
     required this.onTap,
   });
 
   final SoundOption option;
   final bool selected;
-  final VoidCallback onTap;
+  final bool multiple;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +98,8 @@ class _OptionRow extends StatelessWidget {
         ),
         title: Text(option.label, style: t.styles.body),
         subtitle: detail == null ? null : Text(detail, style: t.styles.rowMeta),
-        trailing: SettingsChoiceMark(selected: selected),
+        trailing: SettingsChoiceMark(selected: selected, multiple: multiple),
+        enabled: onTap != null,
         onTap: onTap,
       ),
     );

@@ -71,7 +71,7 @@ void main() {
           '07:00',
           '22:00',
           '9 h of night',
-          "At 22:00, with tomorrow's first task",
+          "At Wind Down, with tomorrow's first task",
         ],
       ),
       ('Snap to', ['30 min', '5 min', 'Ask each time']),
@@ -98,7 +98,7 @@ void main() {
     final h = await pumpSettings(tester);
     // Off for an existing profile, so an upgrade rings nothing new (15 §11).
     expect((await storedSettings(h)).wakeUpAlarm, isFalse);
-    await tapSettingRow(tester, h, 'Wake Up alarm');
+    await tapSettingRow(tester, h, 'Ring like an alarm');
     expect((await storedSettings(h)).wakeUpAlarm, isTrue);
     expect(_cupertinoSwitches(), findsWidgets);
     await tapSettingRow(tester, h, 'Show free time');

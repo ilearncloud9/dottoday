@@ -1749,9 +1749,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsWindDownReminder => 'Rappel de détente';
 
   @override
-  String settingsWindDownReminderDetail(String time) {
-    return 'À $time, avec la première tâche de demain';
-  }
+  String get settingsWindDownReminderDetail =>
+      'À la Détente, avec la première tâche de demain';
 
   @override
   String get settingsLook => 'Apparence';
@@ -6461,9 +6460,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsWakeUpOptions => 'Options du réveil';
 
   @override
-  String get wakeUpAlarmCaption => 'Alarme';
-
-  @override
   String get wakeUpFixUpdate => 'Comment mettre à jour';
 
   @override
@@ -6473,21 +6469,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wakeUpRamp => 'Montée du volume';
 
   @override
-  String get wakeUpRampDetail =>
-      'Commence plus doucement et monte jusqu\'au volume de l\'alarme.';
-
-  @override
   String get wakeUpRampOff => 'Désactivée';
 
   @override
   String get wakeUpSnooze => 'Répéter';
-
-  @override
-  String get wakeUpSnoozeCaption => 'Répétition';
-
-  @override
-  String get wakeUpSnoozeDetail =>
-      'Sonne à nouveau quelques minutes plus tard.';
 
   @override
   String get wakeUpSnoozeLength => 'Durée de répétition';
@@ -6500,9 +6485,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wakeUpSnoozeRow => 'Répétition';
-
-  @override
-  String get wakeUpSoundCaption => 'Son';
 
   @override
   String get wakeUpSoundRow => 'Son de l\'alarme';
@@ -6768,7 +6750,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String alarmDeviceReadyAt(String time) {
-    return 'Prêt · $time';
+    return 'Prêt · confirmé à $time';
   }
 
   @override
@@ -6782,10 +6764,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get alarmDeviceOffline => 'Hors ligne';
-
-  @override
-  String get alarmDeviceNote =>
-      'Seul ce téléphone ou cette tablette sonne au réveil. Un Mac et le web ne sonnent jamais.';
 
   @override
   String get deviceMac => 'Mac';
@@ -7022,17 +7000,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String wakeUpRotationCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count sons',
-      one: '1 son',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get healthWakeUpDnd => 'Ne pas déranger rend votre réveil muet';
 
   @override
@@ -7107,7 +7074,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Chacun a son interrupteur dans Réglages › Votre journée › Réveil et Détente.';
+      'Chacun a son interrupteur dans Réglages › Votre journée › Réveil et Détente › Options du réveil.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7885,6 +7852,83 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wwdTheNight => 'La nuit';
+
+  @override
+  String get wwdRingLikeAlarm => 'Sonner comme une alarme';
+
+  @override
+  String get wwdAlarmOffLine => 'Désactivé : le réveil est un rappel normal';
+
+  @override
+  String wwdAlarmGradeOn(String device) {
+    return 'Qualité alarme sur cet $device';
+  }
+
+  @override
+  String get wwdAlarmFullScreen => 'En plein écran sur l\'écran verrouillé';
+
+  @override
+  String get wwdAlarmFooterOn =>
+      'Visible seulement quand « Sonner comme une alarme » est activé. Un son et une répétition pour tous les horaires ; chaque horaire choisit ses propres jours d\'alarme.';
+
+  @override
+  String get wwdAlarmFooterOffIos =>
+      'Active-le pour sonner malgré le mode Silence et la Concentration au réveil (iOS 26 et ultérieur). Le son, la répétition et les missions apparaissent ici quand il est activé.';
+
+  @override
+  String get wwdAlarmFooterOffAndroid =>
+      'Active-le pour sonner en plein écran sur l\'écran verrouillé au réveil. Le son, la répétition et les missions apparaissent ici quand il est activé.';
+
+  @override
+  String get wwdRemindersFooterOff =>
+      'La carte du réveil et la vérification du début suivent l\'alarme jusqu\'à ce que tu les règles toi-même.';
+
+  @override
+  String get wwdWakeUpCard => 'Carte du réveil';
+
+  @override
+  String wwdCheckAfterValue(String duration) {
+    return 'Vérifier après $duration';
+  }
+
+  @override
+  String get wwdOn => 'Activé';
+
+  @override
+  String get wwdOff => 'Désactivé';
+
+  @override
+  String get wwdSendTestAlarm => 'Envoyer une alarme de test';
+
+  @override
+  String get wwdDevicesIntro =>
+      'Ton horaire se synchronise sur tous tes appareils. Seul l\'appareil choisi sonne au réveil ; les autres restent silencieux.';
+
+  @override
+  String get wwdCanRing => 'Peut sonner';
+
+  @override
+  String get wwdCantRing => 'Ne peut pas sonner';
+
+  @override
+  String get wwdNeverRings => 'Le Mac et le web ne sonnent jamais au réveil';
+
+  @override
+  String wwdDeviceAlarmsOff(String device) {
+    return 'Alarmes désactivées pour Dottoday · corrige-le sur l\'$device';
+  }
+
+  @override
+  String wwdLastSeen(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'il y a $days jours',
+      one: 'hier',
+      zero: 'aujourd\'hui',
+    );
+    return 'Vu pour la dernière fois $_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';

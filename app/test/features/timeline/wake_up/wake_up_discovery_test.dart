@@ -8,7 +8,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/settings/pages/info_pages.dart';
-import 'package:dottoday/features/settings/wake_wind/wake_wind_page.dart';
+import 'package:dottoday/features/settings/wake_wind/wake_up_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -205,34 +205,29 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       find.text(
-        'Each has its own switch in Settings › Your day › Wake Up and Wind Down.',
+        'Each has its own switch in Settings › Your day › Wake Up and Wind Down '
+        '› Wake Up options.',
       ),
       findsOneWidget,
     );
     expect(find.text('Alarm-grade wake-up is on.'), findsOneWidget);
   });
 
-  testWidgets(
-    'Wake Up and Wind Down: How it works; on a Mac, where they ring',
-    (tester) async {
-      const note =
-          'These ring on your phone. Change them there or here; they sync.';
-      await _pumpPage(tester, const WakeWindDownPage());
-      // Under Tonight and the schedules: built once scrolled to.
-      await tester.scrollUntilVisible(
-        find.text('How it works'),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
-      expect(find.text('How it works'), findsOneWidget);
-      expect(find.text(note), findsNothing);
-      await tester.pumpWidget(const SizedBox.shrink());
-      await _pumpPage(
-        tester,
-        const WakeWindDownPage(),
-        caps: const AlarmCapabilities(AlarmTier.none, [AlarmBlocker.notAPhone]),
-      );
-      expect(find.text(note), findsOneWidget);
-    },
-  );
+  testWidgets('Wake Up options: How it works; on a Mac, where they ring', (
+    tester,
+  ) async {
+    const note =
+        'These ring on your phone. Change them there or here; they sync.';
+    // Above the groups (E-R2-38, ED-344).
+    await _pumpPage(tester, const WakeUpOptionsPage());
+    expect(find.text('How it works'), findsOneWidget);
+    expect(find.text(note), findsNothing);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await _pumpPage(
+      tester,
+      const WakeUpOptionsPage(),
+      caps: const AlarmCapabilities(AlarmTier.none, [AlarmBlocker.notAPhone]),
+    );
+    expect(find.text(note), findsOneWidget);
+  });
 }

@@ -121,6 +121,8 @@ class SettingsRow extends StatelessWidget {
     this.onToggle,
     this.trailing,
     this.below,
+    this.action = false,
+    this.accentValue = false,
     super.key,
   });
 
@@ -142,6 +144,14 @@ class SettingsRow extends StatelessWidget {
 
   /// Under the title, full width (the accent swatches).
   final Widget? below;
+
+  /// A row that does something rather than opens a page ("Send a test
+  /// alarm", E-Phones): its title in the accent, no chevron.
+  final bool action;
+
+  /// The value in the accent, as E-Phones draws "Alarm sounds on · This
+  /// iPhone".
+  final bool accentValue;
 
   @override
   Widget build(BuildContext context) =>
@@ -194,13 +204,15 @@ class SettingsRow extends StatelessWidget {
                 child: Text(
                   v,
                   textAlign: TextAlign.end,
-                  style: t.styles.body.copyWith(color: t.colors.muted),
+                  style: t.styles.body.copyWith(
+                    color: accentValue ? t.colors.accentInk : t.colors.muted,
+                  ),
                 ),
               ),
             ?trailing,
             if (on != null)
               DotSwitch(value: on, onChanged: onToggle)
-            else if (onTap != null)
+            else if (onTap != null && !action)
               DotIcon(
                 DotGlyphs.chevronRight,
                 color: t.colors.muted,
@@ -222,7 +234,12 @@ class SettingsRow extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       // Regular weight, as E draws Settings rows (E-R2-33).
-      Text(title, style: t.styles.body),
+      Text(
+        title,
+        style: action
+            ? t.styles.body.copyWith(color: t.colors.accentInk)
+            : t.styles.body,
+      ),
       if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
       if (value case final v? when stacked)
         Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),

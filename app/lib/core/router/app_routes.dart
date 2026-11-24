@@ -119,8 +119,18 @@ enum SettingsPage {
   /// Reminders › Sounds (docs/12 §6).
   sounds,
 
-  /// Day shape › Wake Up alarm › Sound and snooze (docs/15 §9, M17.2).
+  /// Wake Up and Wind Down › Wake Up options: the Morning card and the
+  /// start check (E-R2-32, ED-337; How it works, E-R2-38, ED-344).
   wakeUp,
+
+  /// Wake Up and Wind Down › Missions (E-R2-28, ED-331).
+  missions,
+
+  /// Wake Up and Wind Down › Alarm sounds on (E-Phones, ED-084).
+  alarmDevice,
+
+  /// Wake Up and Wind Down › Vary the sound (docs/15 §9; owner 2026-11-24).
+  varySound,
   calendars,
 
   /// Routines (11 C2, M11.4), also from Today ⋯ and Add.

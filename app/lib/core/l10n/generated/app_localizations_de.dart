@@ -1749,9 +1749,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsWindDownReminder => 'Erinnerung zur Abendruhe';
 
   @override
-  String settingsWindDownReminderDetail(String time) {
-    return 'Um $time, mit der ersten Aufgabe von morgen';
-  }
+  String get settingsWindDownReminderDetail =>
+      'Zur Abendruhe, mit der ersten Aufgabe von morgen';
 
   @override
   String get settingsLook => 'Aussehen';
@@ -6451,9 +6450,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsWakeUpOptions => 'Aufstehen-Optionen';
 
   @override
-  String get wakeUpAlarmCaption => 'Wecker';
-
-  @override
   String get wakeUpFixUpdate => 'So aktualisierst du';
 
   @override
@@ -6463,21 +6459,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get wakeUpRamp => 'Lauter werden';
 
   @override
-  String get wakeUpRampDetail =>
-      'Beginnt leiser und wird bis zu deiner Weckerlautstärke lauter.';
-
-  @override
   String get wakeUpRampOff => 'Aus';
 
   @override
   String get wakeUpSnooze => 'Schlummern';
-
-  @override
-  String get wakeUpSnoozeCaption => 'Schlummern';
-
-  @override
-  String get wakeUpSnoozeDetail =>
-      'Klingelt ein paar Minuten später noch einmal.';
 
   @override
   String get wakeUpSnoozeLength => 'Schlummerdauer';
@@ -6490,9 +6475,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wakeUpSnoozeRow => 'Schlummern';
-
-  @override
-  String get wakeUpSoundCaption => 'Ton';
 
   @override
   String get wakeUpSoundRow => 'Weckton';
@@ -6758,7 +6740,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String alarmDeviceReadyAt(String time) {
-    return 'Bereit · $time';
+    return 'Bereit · bestätigt $time';
   }
 
   @override
@@ -6772,10 +6754,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get alarmDeviceOffline => 'Offline';
-
-  @override
-  String get alarmDeviceNote =>
-      'Nur dieses eine Smartphone oder Tablet klingelt zum Aufwachen. Mac und Web klingeln nie.';
 
   @override
   String get deviceMac => 'Mac';
@@ -7012,17 +6990,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String wakeUpRotationCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count Töne',
-      one: '1 Ton',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get healthWakeUpDnd => '„Nicht stören“ lässt deinen Wecker stumm';
 
   @override
@@ -7098,7 +7065,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Jedes hat einen eigenen Schalter unter Einstellungen › Dein Tag › Aufstehen und Abendruhe.';
+      'Jedes hat einen eigenen Schalter unter Einstellungen › Dein Tag › Aufstehen und Abendruhe › Aufstehen-Optionen.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7874,6 +7841,83 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wwdTheNight => 'Die Nacht';
+
+  @override
+  String get wwdRingLikeAlarm => 'Wie ein Wecker klingeln';
+
+  @override
+  String get wwdAlarmOffLine => 'Aus: Aufstehen ist eine normale Erinnerung';
+
+  @override
+  String wwdAlarmGradeOn(String device) {
+    return 'Wecker-Qualität auf diesem $device';
+  }
+
+  @override
+  String get wwdAlarmFullScreen => 'Vollbild über dem Sperrbildschirm';
+
+  @override
+  String get wwdAlarmFooterOn =>
+      'Nur sichtbar, wenn „Wie ein Wecker klingeln“ an ist. Ein Ton und eine Schlummerfunktion für alle Zeitpläne; jeder Zeitplan wählt seine eigenen Wecktage.';
+
+  @override
+  String get wwdAlarmFooterOffIos =>
+      'Schalte es ein, damit es beim Aufstehen trotz Stumm und Fokus klingelt (ab iOS 26). Ton, Schlummern und Missionen erscheinen hier, wenn es an ist.';
+
+  @override
+  String get wwdAlarmFooterOffAndroid =>
+      'Schalte es ein, damit es beim Aufstehen im Vollbild über dem Sperrbildschirm klingelt. Ton, Schlummern und Missionen erscheinen hier, wenn es an ist.';
+
+  @override
+  String get wwdRemindersFooterOff =>
+      'Aufstehen-Karte und Startprüfung folgen dem Wecker, bis du sie selbst einstellst.';
+
+  @override
+  String get wwdWakeUpCard => 'Aufstehen-Karte';
+
+  @override
+  String wwdCheckAfterValue(String duration) {
+    return 'Prüfen nach $duration';
+  }
+
+  @override
+  String get wwdOn => 'An';
+
+  @override
+  String get wwdOff => 'Aus';
+
+  @override
+  String get wwdSendTestAlarm => 'Testalarm senden';
+
+  @override
+  String get wwdDevicesIntro =>
+      'Dein Zeitplan wird auf alle Geräte synchronisiert. Nur das gewählte Gerät klingelt zum Aufstehen; die anderen bleiben still.';
+
+  @override
+  String get wwdCanRing => 'Kann klingeln';
+
+  @override
+  String get wwdCantRing => 'Kann nicht klingeln';
+
+  @override
+  String get wwdNeverRings => 'Mac und Web klingeln nie zum Aufstehen';
+
+  @override
+  String wwdDeviceAlarmsOff(String device) {
+    return 'Wecker für Dottoday aus · auf dem $device beheben';
+  }
+
+  @override
+  String wwdLastSeen(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'vor $days Tagen',
+      one: 'gestern',
+      zero: 'heute',
+    );
+    return 'Zuletzt gesehen $_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

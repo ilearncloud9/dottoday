@@ -40,12 +40,13 @@ void main() {
     expect(find.text('Add a schedule'), findsOneWidget);
   });
 
-  testWidgets('Wake Up options lands on the same page', (tester) async {
+  testWidgets('Wake Up options is its own page (E-R2-32)', (tester) async {
     await pumpSettings(
       tester,
       location: AppRoutes.settingsPage(SettingsPage.wakeUp),
     );
-    expect(find.text('Your week'), findsOneWidget);
+    expect(find.text('Your week'), findsNothing);
+    expect(find.text('How it works'), findsOneWidget);
   });
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {

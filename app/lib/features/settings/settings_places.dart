@@ -89,6 +89,27 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         colour: TaskColor.amber,
         parent: SettingsPage.wakeWindDown,
       ),
+      SettingsPage.missions => (
+        title: l10n.settingsMissions,
+        summary: null,
+        glyph: DotGlyphs.bolt,
+        colour: TaskColor.amber,
+        parent: SettingsPage.wakeWindDown,
+      ),
+      SettingsPage.alarmDevice => (
+        title: l10n.settingsAlarmSoundsOn,
+        summary: null,
+        glyph: TaskIcon.flipphone.glyph!,
+        colour: TaskColor.slate,
+        parent: SettingsPage.wakeWindDown,
+      ),
+      SettingsPage.varySound => (
+        title: l10n.wakeUpVary,
+        summary: null,
+        glyph: DotGlyphs.repeat,
+        colour: TaskColor.violet,
+        parent: SettingsPage.wakeWindDown,
+      ),
       SettingsPage.notifications => (
         title: l10n.healthTitle,
         summary: null,

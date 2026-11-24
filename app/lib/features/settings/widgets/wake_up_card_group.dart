@@ -33,10 +33,11 @@ class WakeUpCardGroup extends StatelessWidget {
       DotGlyph glyph,
       String title,
       bool value,
-      Settings Function(Settings, bool) write,
-    ) => SettingsRow(
+      Settings Function(Settings, bool) write, {
+      Color? tint,
+    }) => SettingsRow(
       glyph: glyph,
-      tint: t.colors.accentInk,
+      tint: tint ?? t.colors.accentInk,
       title: title,
       toggle: value,
       onToggle: (v) => changeSettings(context, (s) => write(s, v)),
@@ -77,6 +78,8 @@ class WakeUpCardGroup extends StatelessWidget {
             l10n.wakeUpLateOfferRow,
             settings.wakeUpLateOffer,
             (s, v) => s.copyWith(wakeUpLateOffer: v),
+            // Amber, as E-R2-32 draws it.
+            tint: t.tasks[TaskColor.amber].ink,
           ),
           if (settings.wakeUpLateOffer)
             SettingsRow(

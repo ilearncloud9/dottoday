@@ -1379,8 +1379,8 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsWindDownReminder => pseudo(super.settingsWindDownReminder);
 
   @override
-  String settingsWindDownReminderDetail(String time) =>
-      pseudo(super.settingsWindDownReminderDetail(time));
+  String get settingsWindDownReminderDetail =>
+      pseudo(super.settingsWindDownReminderDetail);
 
   @override
   String get settingsLook => pseudo(super.settingsLook);
@@ -5119,9 +5119,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsWakeUpOptions => pseudo(super.settingsWakeUpOptions);
 
   @override
-  String get wakeUpAlarmCaption => pseudo(super.wakeUpAlarmCaption);
-
-  @override
   String get wakeUpFixUpdate => pseudo(super.wakeUpFixUpdate);
 
   @override
@@ -5131,19 +5128,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get wakeUpRamp => pseudo(super.wakeUpRamp);
 
   @override
-  String get wakeUpRampDetail => pseudo(super.wakeUpRampDetail);
-
-  @override
   String get wakeUpRampOff => pseudo(super.wakeUpRampOff);
 
   @override
   String get wakeUpSnooze => pseudo(super.wakeUpSnooze);
-
-  @override
-  String get wakeUpSnoozeCaption => pseudo(super.wakeUpSnoozeCaption);
-
-  @override
-  String get wakeUpSnoozeDetail => pseudo(super.wakeUpSnoozeDetail);
 
   @override
   String get wakeUpSnoozeLength => pseudo(super.wakeUpSnoozeLength);
@@ -5156,9 +5144,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get wakeUpSnoozeRow => pseudo(super.wakeUpSnoozeRow);
-
-  @override
-  String get wakeUpSoundCaption => pseudo(super.wakeUpSoundCaption);
 
   @override
   String get wakeUpSoundRow => pseudo(super.wakeUpSoundRow);
@@ -5386,9 +5371,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get alarmDeviceOffline => pseudo(super.alarmDeviceOffline);
 
   @override
-  String get alarmDeviceNote => pseudo(super.alarmDeviceNote);
-
-  @override
   String get deviceMac => pseudo(super.deviceMac);
 
   @override
@@ -5597,10 +5579,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String wakeUpRotationDetail(int min, int max) =>
       pseudo(super.wakeUpRotationDetail(min, max));
-
-  @override
-  String wakeUpRotationCount(int count) =>
-      pseudo(super.wakeUpRotationCount(count));
 
   @override
   String get healthWakeUpDnd => pseudo(super.healthWakeUpDnd);
@@ -6280,6 +6258,66 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get wwdTheNight => pseudo(super.wwdTheNight);
+
+  @override
+  String get wwdRingLikeAlarm => pseudo(super.wwdRingLikeAlarm);
+
+  @override
+  String get wwdAlarmOffLine => pseudo(super.wwdAlarmOffLine);
+
+  @override
+  String wwdAlarmGradeOn(String device) =>
+      pseudo(super.wwdAlarmGradeOn(device));
+
+  @override
+  String get wwdAlarmFullScreen => pseudo(super.wwdAlarmFullScreen);
+
+  @override
+  String get wwdAlarmFooterOn => pseudo(super.wwdAlarmFooterOn);
+
+  @override
+  String get wwdAlarmFooterOffIos => pseudo(super.wwdAlarmFooterOffIos);
+
+  @override
+  String get wwdAlarmFooterOffAndroid => pseudo(super.wwdAlarmFooterOffAndroid);
+
+  @override
+  String get wwdRemindersFooterOff => pseudo(super.wwdRemindersFooterOff);
+
+  @override
+  String get wwdWakeUpCard => pseudo(super.wwdWakeUpCard);
+
+  @override
+  String wwdCheckAfterValue(String duration) =>
+      pseudo(super.wwdCheckAfterValue(duration));
+
+  @override
+  String get wwdOn => pseudo(super.wwdOn);
+
+  @override
+  String get wwdOff => pseudo(super.wwdOff);
+
+  @override
+  String get wwdSendTestAlarm => pseudo(super.wwdSendTestAlarm);
+
+  @override
+  String get wwdDevicesIntro => pseudo(super.wwdDevicesIntro);
+
+  @override
+  String get wwdCanRing => pseudo(super.wwdCanRing);
+
+  @override
+  String get wwdCantRing => pseudo(super.wwdCantRing);
+
+  @override
+  String get wwdNeverRings => pseudo(super.wwdNeverRings);
+
+  @override
+  String wwdDeviceAlarmsOff(String device) =>
+      pseudo(super.wwdDeviceAlarmsOff(device));
+
+  @override
+  String wwdLastSeen(int days) => pseudo(super.wwdLastSeen(days));
 
   @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);

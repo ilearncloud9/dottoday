@@ -1742,9 +1742,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWindDownReminder => 'Wind Down reminder';
 
   @override
-  String settingsWindDownReminderDetail(String time) {
-    return 'At $time, with tomorrow\'s first task';
-  }
+  String get settingsWindDownReminderDetail =>
+      'At Wind Down, with tomorrow\'s first task';
 
   @override
   String get settingsLook => 'Look';
@@ -6414,9 +6413,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWakeUpOptions => 'Wake Up options';
 
   @override
-  String get wakeUpAlarmCaption => 'Alarm';
-
-  @override
   String get wakeUpFixUpdate => 'How to update';
 
   @override
@@ -6426,20 +6422,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wakeUpRamp => 'Volume ramp';
 
   @override
-  String get wakeUpRampDetail =>
-      'Starts quieter and rises to your alarm volume.';
-
-  @override
   String get wakeUpRampOff => 'Off';
 
   @override
   String get wakeUpSnooze => 'Snooze';
-
-  @override
-  String get wakeUpSnoozeCaption => 'Snooze';
-
-  @override
-  String get wakeUpSnoozeDetail => 'Rings again a few minutes later.';
 
   @override
   String get wakeUpSnoozeLength => 'Snooze length';
@@ -6452,9 +6438,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wakeUpSnoozeRow => 'Snooze';
-
-  @override
-  String get wakeUpSoundCaption => 'Sound';
 
   @override
   String get wakeUpSoundRow => 'Alarm sound';
@@ -6719,7 +6702,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String alarmDeviceReadyAt(String time) {
-    return 'Ready · $time';
+    return 'Ready · confirmed $time';
   }
 
   @override
@@ -6733,10 +6716,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alarmDeviceOffline => 'Offline';
-
-  @override
-  String get alarmDeviceNote =>
-      'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.';
 
   @override
   String get deviceMac => 'Mac';
@@ -6971,17 +6950,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String wakeUpRotationCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count sounds',
-      one: '1 sound',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get healthWakeUpDnd => 'Do Not Disturb keeps your Wake Up alarm quiet';
 
   @override
@@ -7056,7 +7024,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wakeUpExplainOff =>
-      'Each has its own switch in Settings › Your day › Wake Up and Wind Down.';
+      'Each has its own switch in Settings › Your day › Wake Up and Wind Down › Wake Up options.';
 
   @override
   String get wakeUpDiscoveryStartDay =>
@@ -7826,6 +7794,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wwdTheNight => 'The night';
+
+  @override
+  String get wwdRingLikeAlarm => 'Ring like an alarm';
+
+  @override
+  String get wwdAlarmOffLine => 'Off: Wake Up is a normal reminder';
+
+  @override
+  String wwdAlarmGradeOn(String device) {
+    return 'Alarm-grade on this $device';
+  }
+
+  @override
+  String get wwdAlarmFullScreen => 'Full screen over the lock screen';
+
+  @override
+  String get wwdAlarmFooterOn =>
+      'Shown only when Ring like an alarm is on. One sound and snooze for every schedule; each schedule chooses its own alarm days.';
+
+  @override
+  String get wwdAlarmFooterOffIos =>
+      'Turn it on to ring through Silent and Focus at Wake Up (iOS 26 and later). Sound, snooze and missions appear here when it\'s on.';
+
+  @override
+  String get wwdAlarmFooterOffAndroid =>
+      'Turn it on to ring full screen over the lock screen at Wake Up. Sound, snooze and missions appear here when it\'s on.';
+
+  @override
+  String get wwdRemindersFooterOff =>
+      'Wake Up card and the start check follow the alarm until you set them yourself.';
+
+  @override
+  String get wwdWakeUpCard => 'Wake Up card';
+
+  @override
+  String wwdCheckAfterValue(String duration) {
+    return 'Check after $duration';
+  }
+
+  @override
+  String get wwdOn => 'On';
+
+  @override
+  String get wwdOff => 'Off';
+
+  @override
+  String get wwdSendTestAlarm => 'Send a test alarm';
+
+  @override
+  String get wwdDevicesIntro =>
+      'Your schedule syncs to every device. Only the device you choose rings Wake Up; the others stay quiet.';
+
+  @override
+  String get wwdCanRing => 'Can ring';
+
+  @override
+  String get wwdCantRing => 'Can\'t ring';
+
+  @override
+  String get wwdNeverRings => 'Mac and web never ring Wake Up';
+
+  @override
+  String wwdDeviceAlarmsOff(String device) {
+    return 'Alarms off for Dottoday · fix it on the $device';
+  }
+
+  @override
+  String wwdLastSeen(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days ago',
+      one: 'yesterday',
+      zero: 'today',
+    );
+    return 'Last seen $_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';

@@ -2658,14 +2658,9 @@
   "@settingsWindDownReminder": {
     "description": "Settings switch."
   },
-  "settingsWindDownReminderDetail": "At {time}, with tomorrow's first task",
+  "settingsWindDownReminderDetail": "At Wind Down, with tomorrow's first task",
   "@settingsWindDownReminderDetail": {
-    "description": "Subtitle of Wind Down reminder.",
-    "placeholders": {
-      "time": {
-        "type": "String"
-      }
-    }
+    "description": "Wind Down reminder row: when it comes (E-Phones, ED-084)."
   },
   "settingsLook": "Look",
   "@settingsLook": {
@@ -7356,24 +7351,16 @@
   },
   "settingsWakeUpOptions": "Wake Up options",
   "@settingsWakeUpOptions": {"description": "Day shape row under Wake Up alarm: opens its sound and snooze page."},
-  "wakeUpAlarmCaption": "Alarm",
-  "@wakeUpAlarmCaption": {"description": "Wake Up alarm page: caption over the switch."},
   "wakeUpFixUpdate": "How to update",
   "@wakeUpFixUpdate": {"description": "Wake Up row button on an iPhone below iOS 26: how to update iOS."},
   "wakeUpMoreOptions": "More options",
   "@wakeUpMoreOptions": {"description": "Wake Up alarm page in minimal mode: shows the remaining rows."},
   "wakeUpRamp": "Volume ramp",
   "@wakeUpRamp": {"description": "Wake Up alarm row (Android): how long the alarm takes to reach full volume."},
-  "wakeUpRampDetail": "Starts quieter and rises to your alarm volume.",
-  "@wakeUpRampDetail": {"description": "Under Volume ramp."},
   "wakeUpRampOff": "Off",
   "@wakeUpRampOff": {"description": "Volume ramp value: starts at full volume."},
   "wakeUpSnooze": "Snooze",
   "@wakeUpSnooze": {"description": "Button on the ringing Wake Up alarm."},
-  "wakeUpSnoozeCaption": "Snooze",
-  "@wakeUpSnoozeCaption": {"description": "Wake Up alarm page: caption over the snooze rows."},
-  "wakeUpSnoozeDetail": "Rings again a few minutes later.",
-  "@wakeUpSnoozeDetail": {"description": "Under the Snooze switch."},
   "wakeUpSnoozeLength": "Snooze length",
   "@wakeUpSnoozeLength": {"description": "Wake Up alarm row: minutes until a snoozed alarm rings again."},
   "wakeUpSnoozeLimit": "Snooze limit",
@@ -7382,8 +7369,6 @@
   "@wakeUpSnoozeNoLimit": {"description": "Snooze limit value."},
   "wakeUpSnoozeRow": "Snooze",
   "@wakeUpSnoozeRow": {"description": "Wake Up alarm switch: whether the alarm offers snooze."},
-  "wakeUpSoundCaption": "Sound",
-  "@wakeUpSoundCaption": {"description": "Wake Up alarm page: caption over the sound rows."},
   "wakeUpSoundRow": "Alarm sound",
   "@wakeUpSoundRow": {"description": "Wake Up alarm row: which Start sound it rings with."},
   "wakeUpStop": "I'm up",
@@ -7514,8 +7499,8 @@
   "@deviceThis": {"description": "The device being used now, e.g. 'This iPhone'.", "placeholders": {"device": {"type": "String"}}},
   "alarmDeviceReady": "Ready",
   "@alarmDeviceReady": {"description": "Alarm sounds on: the chosen device rings Wake Up."},
-  "alarmDeviceReadyAt": "Ready · {time}",
-  "@alarmDeviceReadyAt": {"description": "Alarm sounds on: the chosen device rings at its next Wake Up time.", "placeholders": {"time": {"type": "String"}}},
+  "alarmDeviceReadyAt": "Ready · confirmed {time}",
+  "@alarmDeviceReadyAt": {"description": "Alarm sounds on: the chosen device is ready; time is when it last confirmed the times (E-Phones, ED-084).", "placeholders": {"time": {"type": "String"}}},
   "alarmDeviceWaiting": "Waiting to sync",
   "@alarmDeviceWaiting": {"description": "Alarm sounds on: the chosen device hasn't synced the change yet."},
   "alarmDeviceAlarmsOff": "Alarms off on that device",
@@ -7524,8 +7509,6 @@
   "@alarmDeviceNone": {"description": "Alarm sounds on: no device is chosen."},
   "alarmDeviceOffline": "Offline",
   "@alarmDeviceOffline": {"description": "Alarm sounds on: the chosen device hasn't been seen for a day."},
-  "alarmDeviceNote": "Only this one phone or tablet rings Wake Up. A Mac and the web never ring.",
-  "@alarmDeviceNote": {"description": "Alarm sounds on: the line under the row."},
   "deviceMac": "Mac",
   "@deviceMac": {"description": "A device on the account list, named by its kind."},
   "deviceWeb": "Web browser",
@@ -7660,8 +7643,6 @@
   "@wakeUpRotationTitle": {"description": "Settings row and sheet title: which Start sounds Vary the sound rotates (docs/15 §9)."},
   "wakeUpRotationDetail": "Pick {min} to {max}. One plays each morning, in turn.",
   "@wakeUpRotationDetail": {"description": "Under the sheet title.", "placeholders": {"min": {"type": "int"}, "max": {"type": "int"}}},
-  "wakeUpRotationCount": "{count, plural, one{1 sound} other{{count} sounds}}",
-  "@wakeUpRotationCount": {"description": "Row value: how many sounds rotate.", "placeholders": {"count": {"type": "int"}}},
   "healthWakeUpDnd": "Do Not Disturb keeps your Wake Up alarm quiet",
   "@healthWakeUpDnd": {"description": "Health panel, Wake Up row: DND doesn't let alarms through (docs/15 §2)."},
   "healthWakeUpDndDetail": "Allow alarms in Do Not Disturb so it rings.",
@@ -7702,7 +7683,7 @@
   "@wakeUpExplainCard": {"description": "Explain sheet line 2: what the card does."},
   "wakeUpExplainCheck": "If nothing has started a few minutes later, one gentle check asks.",
   "@wakeUpExplainCheck": {"description": "Explain sheet line 3: what the check does."},
-  "wakeUpExplainOff": "Each has its own switch in Settings › Your day › Wake Up and Wind Down.",
+  "wakeUpExplainOff": "Each has its own switch in Settings › Your day › Wake Up and Wind Down › Wake Up options.",
   "@wakeUpExplainOff": {"description": "Explain sheet line 4: where to turn each off."},
   "wakeUpDiscoveryStartDay": "Tap when you're up — your day's thread starts from here.",
   "@wakeUpDiscoveryStartDay": {"description": "Coach mark on the card's Start the day (docs/15 §11)."},
@@ -8232,6 +8213,102 @@
   "wwdTheNight": "The night",
   "@wwdTheNight": {
     "description": "Caption: sleep target and the night on the day dot."
+  },
+  "wwdRingLikeAlarm": "Ring like an alarm",
+  "@wwdRingLikeAlarm": {
+    "description": "Wake Up and Wind Down › Wake Up alarm: the switch row's title (E-Phones, ED-084)."
+  },
+  "wwdAlarmOffLine": "Off: Wake Up is a normal reminder",
+  "@wwdAlarmOffLine": {
+    "description": "The switch row's line while the alarm is off on a phone (E-Phones, ED-084)."
+  },
+  "wwdAlarmGradeOn": "Alarm-grade on this {device}",
+  "@wwdAlarmGradeOn": {
+    "description": "The switch row's line on an iPhone or iPad that rings like an alarm (E-Phones, ED-084). device: iPhone or iPad.",
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdAlarmFullScreen": "Full screen over the lock screen",
+  "@wwdAlarmFullScreen": {
+    "description": "The switch row's line on Android when it rings like an alarm (E-Phones Android, ED-084)."
+  },
+  "wwdAlarmFooterOn": "Shown only when Ring like an alarm is on. One sound and snooze for every schedule; each schedule chooses its own alarm days.",
+  "@wwdAlarmFooterOn": {
+    "description": "Footer under the Wake Up alarm group while it is on (E-Phones, ED-084)."
+  },
+  "wwdAlarmFooterOffIos": "Turn it on to ring through Silent and Focus at Wake Up (iOS 26 and later). Sound, snooze and missions appear here when it's on.",
+  "@wwdAlarmFooterOffIos": {
+    "description": "Footer under the Wake Up alarm group while it is off, on iPhone and iPad (E-Phones alarm off, ED-084)."
+  },
+  "wwdAlarmFooterOffAndroid": "Turn it on to ring full screen over the lock screen at Wake Up. Sound, snooze and missions appear here when it's on.",
+  "@wwdAlarmFooterOffAndroid": {
+    "description": "Footer under the Wake Up alarm group while it is off, on Android (owner 2026-11-24; new copy for review)."
+  },
+  "wwdRemindersFooterOff": "Wake Up card and the start check follow the alarm until you set them yourself.",
+  "@wwdRemindersFooterOff": {
+    "description": "Footer under Reminders while the alarm is off (E-Phones alarm off, ED-084)."
+  },
+  "wwdWakeUpCard": "Wake Up card",
+  "@wwdWakeUpCard": {
+    "description": "Reminders row that opens Wake Up options (E-Phones, ED-084)."
+  },
+  "wwdCheckAfterValue": "Check after {duration}",
+  "@wwdCheckAfterValue": {
+    "description": "Check I've started row's value while on (E-Phones, ED-337). duration: e.g. 10 min.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdOn": "On",
+  "@wwdOn": {
+    "description": "A row's value while its feature is on."
+  },
+  "wwdOff": "Off",
+  "@wwdOff": {
+    "description": "A row's value while its feature is off."
+  },
+  "wwdSendTestAlarm": "Send a test alarm",
+  "@wwdSendTestAlarm": {
+    "description": "Wake Up alarm row that starts the test alarm steps (E-Phones, ED-084; steps R2-20, ED-317)."
+  },
+  "wwdDevicesIntro": "Your schedule syncs to every device. Only the device you choose rings Wake Up; the others stay quiet.",
+  "@wwdDevicesIntro": {
+    "description": "Alarm sounds on page: the intro (E-Phones, ED-084)."
+  },
+  "wwdCanRing": "Can ring",
+  "@wwdCanRing": {
+    "description": "Alarm sounds on page: group of phones and tablets."
+  },
+  "wwdCantRing": "Can't ring",
+  "@wwdCantRing": {
+    "description": "Alarm sounds on page: group of Macs and browsers."
+  },
+  "wwdNeverRings": "Mac and web never ring Wake Up",
+  "@wwdNeverRings": {
+    "description": "Alarm sounds on page: a Mac or browser's line."
+  },
+  "wwdDeviceAlarmsOff": "Alarms off for Dottoday · fix it on the {device}",
+  "@wwdDeviceAlarmsOff": {
+    "description": "Alarm sounds on page: a device with Dottoday's alarms off. device: iPhone, iPad, Android phone…",
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "wwdLastSeen": "Last seen {days, plural, =0{today} =1{yesterday} other{{days} days ago}}",
+  "@wwdLastSeen": {
+    "description": "Alarm sounds on page: a device not seen lately (E-Phones, ED-084).",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},

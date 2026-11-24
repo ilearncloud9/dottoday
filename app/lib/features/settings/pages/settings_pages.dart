@@ -11,6 +11,10 @@ import 'package:dottoday/features/settings/pages/info_pages.dart';
 import 'package:dottoday/features/settings/pages/notification_health_page.dart';
 import 'package:dottoday/features/settings/pages/siri_page.dart';
 import 'package:dottoday/features/settings/pages/sounds_page.dart';
+import 'package:dottoday/features/settings/wake_wind/alarm_device_page.dart';
+import 'package:dottoday/features/settings/wake_wind/missions_page.dart';
+import 'package:dottoday/features/settings/wake_wind/vary_sound_page.dart';
+import 'package:dottoday/features/settings/wake_wind/wake_up_options_page.dart';
 import 'package:dottoday/features/settings/wake_wind/wake_wind_page.dart';
 import 'package:flutter/widgets.dart';
 
@@ -19,9 +23,11 @@ Widget settingsPageFor(SettingsPage page) => switch (page) {
   SettingsPage.account => const AccountPage(),
   SettingsPage.notifications => const NotificationHealthPage(),
   SettingsPage.sounds => const SoundsPage(),
-  // Wake Up options is part of Wake Up and Wind Down now (ED-084); its
-  // links land there.
-  SettingsPage.wakeUp || SettingsPage.wakeWindDown => const WakeWindDownPage(),
+  SettingsPage.wakeWindDown => const WakeWindDownPage(),
+  SettingsPage.wakeUp => const WakeUpOptionsPage(),
+  SettingsPage.missions => const MissionsPage(),
+  SettingsPage.alarmDevice => const AlarmDevicePage(),
+  SettingsPage.varySound => const VarySoundPage(),
   SettingsPage.calendars => const CalendarsPage(),
   // Composed in app_screens (features don't import each other).
   SettingsPage.routines => const SizedBox.shrink(),

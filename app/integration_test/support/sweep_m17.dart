@@ -41,43 +41,31 @@ Future<void> sweepM17(
   await shot('settings_wake_up');
 
   router.go('/settings/wakeUp');
-  await until(find.text('Snooze length'));
+  await until(find.text('How it works'));
   await rest();
   await shot('wake_up_options');
 
-  // Discovery's explain sheet (M17.6) and the sounds that rotate.
+  // Discovery's explain sheet (M17.6), on Wake Up options (E-R2-38).
   await tester.tap(find.text('How it works'));
   await rest();
   await shot('wake_up_explain');
   Navigator.of(tester.element(find.byType(WakeUpExplain))).pop();
   await rest();
-  // Sounds to vary shows once Vary the sound is on; it goes back off.
-  final vary = find.text('Vary the sound');
-  await tester.dragUntilVisible(
-    vary,
-    find.byType(Scrollable).first,
-    const Offset(0, -300),
-  );
-  // A run stopped midway may have left it on: flip it only when off.
+
+  // Vary the sound's page: the sounds that rotate show once it is on; it
+  // goes back off. A run stopped midway may have left it on.
+  router.go('/settings/varySound');
+  await until(find.text('Vary the sound'));
   final wasOff = find.text('Sounds to vary').evaluate().isEmpty;
+  final vary = find.text(
+    'A different alarm sound each day, so it stays easy to hear.',
+  );
   if (wasOff) {
     await tester.tap(vary);
     await rest();
   }
-  await tester.dragUntilVisible(
-    find.text('Sounds to vary'),
-    find.byType(Scrollable).first,
-    const Offset(0, -300),
-  );
-  await tester.tap(find.text('Sounds to vary'));
-  await rest();
   await shot('wake_up_rotation');
-  Navigator.of(tester.element(find.text('Dawn chorus').last)).pop();
-  await rest();
   if (wasOff) {
-    // Scrolled above the screen by the drag to "Sounds to vary".
-    await tester.ensureVisible(vary);
-    await rest();
     await tester.tap(vary);
     await rest();
   }

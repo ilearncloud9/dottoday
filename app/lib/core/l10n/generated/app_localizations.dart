@@ -2652,11 +2652,11 @@ abstract class AppLocalizations {
   /// **'Wind Down reminder'**
   String get settingsWindDownReminder;
 
-  /// Subtitle of Wind Down reminder.
+  /// Wind Down reminder row: when it comes (E-Phones, ED-084).
   ///
   /// In en, this message translates to:
-  /// **'At {time}, with tomorrow\'s first task'**
-  String settingsWindDownReminderDetail(String time);
+  /// **'At Wind Down, with tomorrow\'s first task'**
+  String get settingsWindDownReminderDetail;
 
   /// Settings group caption.
   ///
@@ -9726,12 +9726,6 @@ abstract class AppLocalizations {
   /// **'Wake Up options'**
   String get settingsWakeUpOptions;
 
-  /// Wake Up alarm page: caption over the switch.
-  ///
-  /// In en, this message translates to:
-  /// **'Alarm'**
-  String get wakeUpAlarmCaption;
-
   /// Wake Up row button on an iPhone below iOS 26: how to update iOS.
   ///
   /// In en, this message translates to:
@@ -9750,12 +9744,6 @@ abstract class AppLocalizations {
   /// **'Volume ramp'**
   String get wakeUpRamp;
 
-  /// Under Volume ramp.
-  ///
-  /// In en, this message translates to:
-  /// **'Starts quieter and rises to your alarm volume.'**
-  String get wakeUpRampDetail;
-
   /// Volume ramp value: starts at full volume.
   ///
   /// In en, this message translates to:
@@ -9767,18 +9755,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Snooze'**
   String get wakeUpSnooze;
-
-  /// Wake Up alarm page: caption over the snooze rows.
-  ///
-  /// In en, this message translates to:
-  /// **'Snooze'**
-  String get wakeUpSnoozeCaption;
-
-  /// Under the Snooze switch.
-  ///
-  /// In en, this message translates to:
-  /// **'Rings again a few minutes later.'**
-  String get wakeUpSnoozeDetail;
 
   /// Wake Up alarm row: minutes until a snoozed alarm rings again.
   ///
@@ -9803,12 +9779,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Snooze'**
   String get wakeUpSnoozeRow;
-
-  /// Wake Up alarm page: caption over the sound rows.
-  ///
-  /// In en, this message translates to:
-  /// **'Sound'**
-  String get wakeUpSoundCaption;
 
   /// Wake Up alarm row: which Start sound it rings with.
   ///
@@ -10200,10 +10170,10 @@ abstract class AppLocalizations {
   /// **'Ready'**
   String get alarmDeviceReady;
 
-  /// Alarm sounds on: the chosen device rings at its next Wake Up time.
+  /// Alarm sounds on: the chosen device is ready; time is when it last confirmed the times (E-Phones, ED-084).
   ///
   /// In en, this message translates to:
-  /// **'Ready · {time}'**
+  /// **'Ready · confirmed {time}'**
   String alarmDeviceReadyAt(String time);
 
   /// Alarm sounds on: the chosen device hasn't synced the change yet.
@@ -10229,12 +10199,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Offline'**
   String get alarmDeviceOffline;
-
-  /// Alarm sounds on: the line under the row.
-  ///
-  /// In en, this message translates to:
-  /// **'Only this one phone or tablet rings Wake Up. A Mac and the web never ring.'**
-  String get alarmDeviceNote;
 
   /// A device on the account list, named by its kind.
   ///
@@ -10638,12 +10602,6 @@ abstract class AppLocalizations {
   /// **'Pick {min} to {max}. One plays each morning, in turn.'**
   String wakeUpRotationDetail(int min, int max);
 
-  /// Row value: how many sounds rotate.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, one{1 sound} other{{count} sounds}}'**
-  String wakeUpRotationCount(int count);
-
   /// Health panel, Wake Up row: DND doesn't let alarms through (docs/15 §2).
   ///
   /// In en, this message translates to:
@@ -10767,7 +10725,7 @@ abstract class AppLocalizations {
   /// Explain sheet line 4: where to turn each off.
   ///
   /// In en, this message translates to:
-  /// **'Each has its own switch in Settings › Your day › Wake Up and Wind Down.'**
+  /// **'Each has its own switch in Settings › Your day › Wake Up and Wind Down › Wake Up options.'**
   String get wakeUpExplainOff;
 
   /// Coach mark on the card's Start the day (docs/15 §11).
@@ -11915,6 +11873,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The night'**
   String get wwdTheNight;
+
+  /// Wake Up and Wind Down › Wake Up alarm: the switch row's title (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Ring like an alarm'**
+  String get wwdRingLikeAlarm;
+
+  /// The switch row's line while the alarm is off on a phone (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Off: Wake Up is a normal reminder'**
+  String get wwdAlarmOffLine;
+
+  /// The switch row's line on an iPhone or iPad that rings like an alarm (E-Phones, ED-084). device: iPhone or iPad.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm-grade on this {device}'**
+  String wwdAlarmGradeOn(String device);
+
+  /// The switch row's line on Android when it rings like an alarm (E-Phones Android, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Full screen over the lock screen'**
+  String get wwdAlarmFullScreen;
+
+  /// Footer under the Wake Up alarm group while it is on (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Shown only when Ring like an alarm is on. One sound and snooze for every schedule; each schedule chooses its own alarm days.'**
+  String get wwdAlarmFooterOn;
+
+  /// Footer under the Wake Up alarm group while it is off, on iPhone and iPad (E-Phones alarm off, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn it on to ring through Silent and Focus at Wake Up (iOS 26 and later). Sound, snooze and missions appear here when it\'s on.'**
+  String get wwdAlarmFooterOffIos;
+
+  /// Footer under the Wake Up alarm group while it is off, on Android (owner 2026-11-24; new copy for review).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn it on to ring full screen over the lock screen at Wake Up. Sound, snooze and missions appear here when it\'s on.'**
+  String get wwdAlarmFooterOffAndroid;
+
+  /// Footer under Reminders while the alarm is off (E-Phones alarm off, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up card and the start check follow the alarm until you set them yourself.'**
+  String get wwdRemindersFooterOff;
+
+  /// Reminders row that opens Wake Up options (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up card'**
+  String get wwdWakeUpCard;
+
+  /// Check I've started row's value while on (E-Phones, ED-337). duration: e.g. 10 min.
+  ///
+  /// In en, this message translates to:
+  /// **'Check after {duration}'**
+  String wwdCheckAfterValue(String duration);
+
+  /// A row's value while its feature is on.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get wwdOn;
+
+  /// A row's value while its feature is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get wwdOff;
+
+  /// Wake Up alarm row that starts the test alarm steps (E-Phones, ED-084; steps R2-20, ED-317).
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test alarm'**
+  String get wwdSendTestAlarm;
+
+  /// Alarm sounds on page: the intro (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Your schedule syncs to every device. Only the device you choose rings Wake Up; the others stay quiet.'**
+  String get wwdDevicesIntro;
+
+  /// Alarm sounds on page: group of phones and tablets.
+  ///
+  /// In en, this message translates to:
+  /// **'Can ring'**
+  String get wwdCanRing;
+
+  /// Alarm sounds on page: group of Macs and browsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t ring'**
+  String get wwdCantRing;
+
+  /// Alarm sounds on page: a Mac or browser's line.
+  ///
+  /// In en, this message translates to:
+  /// **'Mac and web never ring Wake Up'**
+  String get wwdNeverRings;
+
+  /// Alarm sounds on page: a device with Dottoday's alarms off. device: iPhone, iPad, Android phone…
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms off for Dottoday · fix it on the {device}'**
+  String wwdDeviceAlarmsOff(String device);
+
+  /// Alarm sounds on page: a device not seen lately (E-Phones, ED-084).
+  ///
+  /// In en, this message translates to:
+  /// **'Last seen {days, plural, =0{today} =1{yesterday} other{{days} days ago}}'**
+  String wwdLastSeen(int days);
 
   /// Section title in the task icon picker.
   ///

@@ -30,10 +30,7 @@ void main() {
     final pages = {for (final e in settingsIndex(l10n)) e.page};
     expect(
       pages,
-      SettingsPage.values.toSet().difference({
-        SettingsPage.everything,
-        SettingsPage.wakeUp,
-      }),
+      SettingsPage.values.toSet().difference({SettingsPage.everything}),
     );
   });
 
