@@ -5745,6 +5745,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; 8,066 pass, 31 skipped (the first run's 3 failures fixed: the 5a Mac Appearance goldens, now a form, and a raw duration made a token). `settings_form_test` +4, new goldens for Appearance and Wake Up and Wind Down (light, dark, wide). `integration_test/settings_forms_test.dart` passed on the Mac app (no window captures: the capture tool could not bring the window forward), Chromium and WebKit at 1280. Not run: real devices.
 - **Approved:** 2026-11-24, owner: "Approve part 5c".
 
+### ED-454 · M20.8 split, and what to draw first
+- **Date:** 2026-11-24. **Owner:** "Start M20.8"; then "Five parts (Recommended)"; "Draw them first" for the card's undrawn states; "Draw them first" for the card at other widths; "Yes, in part 3 (Recommended)" for the tablet mission set.
+- **Parts (each with its own review page and commit):** 1 the explainer (R2-38, ED-344: `wakeUpExplainOff`'s new copy; Help › How does Wake Up work? as four lines plus this device's tier line) and a check of the items already built (Wind Down after midnight, #81 and M20.7 parts 4b and 5c; the Alarms off tag, ED-447); 2 the card as the thread, the late start on the Wake Up cap with Shift the rest? → ProposalSheet, and iPad docking (E-R2-19-B); 3 the missions on the dawn sky (Walk's ring and walker, Stand up, Light, Breathe with the fingertip, Pick today's one thing, Catch the dot with four shaped dots, 3 taps, "Tap the blue circle"; the ring in the App colour's dark-surface shade) and the tablet set; 4 the Android ringing screen (phone, Minimal, tablet landscape); 5 the iPhone snooze Live Activity and Dynamic Island in the dawn style.
+- **Drawn first, before part 2 builds them:** the card's empty-day, first-morning, low-energy and Minimal states (built, not on E-R2-19-B), and the card on an Android tablet's full width, Android medium widths and the Mac and the web.
+- **Tablet set (part 3):** a tablet chosen as the alarm device offers only Breathe, Catch the dot and Pick today's one thing (ED-336); a movement mission picked before falls back to Breathe.
+
+### ED-455 · M20.8 part 1: the explainer, and the items already done
+- **Date:** 2026-11-24. **Owner:** "Approve part 1" after the review page (https://claude.ai/artifact/G8a9TVX3j5qg3snMsjXRja).
+- **Checked, no code:** the R2-38 explainer (ED-344) is built as drawn: How it works on Wake Up options (a sheet on phones, the centred dialog up to 560 wide from medium width); Help › How does Wake Up work? with the same four lines and this device's tier line; `wakeUpExplainOff`'s new path in en, de, fr, es. Wind Down after midnight is done (#81; M20.7 parts 4b and 5c store 12:30 AM as 24:30). The Alarms off tag is done (ED-447).
+- **Open, not M20.8:** Help inside a Mac Settings window (ED-405).
+- **Approved:** 2026-11-24, owner: "Approve part 1".
+
 ---
 
 ## Pending owner answers

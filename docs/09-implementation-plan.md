@@ -826,6 +826,8 @@ Rules for every task in M18 to M22:
   - the explainer (R2-38, ED-344);
   - Wind Down after midnight, on the day model from #81;
   - the "Alarms off" device tag in the alarm device picker, "Alarms off for Dottoday · fix it on the iPad" (ED-205, ED-213; moved from M18.3 by the owner, 2026-11-17).
+  Split by the owner (2026-11-24, ED-454) into five parts, each with its own review page and commit: 1 the explainer and a check of the done items; 2 the card as the thread, the late start and docking (the card's undrawn states and widths drawn first); 3 the missions on the dawn sky and the tablet set; 4 the Android ringing screen; 5 the iPhone snooze Live Activity.
+  - [x] Part 1 done 2026-11-24 (ED-455): the explainer (R2-38) checked as built; Wind Down after midnight (#81, M20.7 4b/5c) and the Alarms off tag (ED-447) already done. No code. Open: real devices.
 - [ ] M20.9 Notifications and system surfaces: task alerts, the Wind Down summary, Reminders, health and the test alarm (R2-20, ED-317); widgets, Live Activity, the menu bar and controls reading `DaySnapshot` only (R2-17, ED-309). These are visual changes only; delivery stays exactly-once (R-10). Also the Mac Now mini window, Window › Show Now ⌥⌘0: a native non-activating panel fed by the day snapshot and the status-item channel, with Need More Time +5 / +15 / +30 (ED-066, CR-042, CR-097, ED-260). It is not a second Flutter window and not a new target.
 - [ ] M20.10 Data safety and sync:
   - Data and privacy, Export and backups, import and restore, Trash with Delete now and Empty Trash (R2-21, ED-319, ED-336);
