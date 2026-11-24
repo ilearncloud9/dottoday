@@ -47,7 +47,8 @@ Future<void> Function(WidgetTester) _show(
   await tester.pump();
 };
 
-/// Catch the dot drifts forever; with reduced motion it holds still.
+/// Catch the dot drifts, Walk's walker walks and Stand up's phone tilts
+/// forever; with reduced motion they hold still.
 Widget _still(Widget child) => Builder(
   builder: (context) => MediaQuery(
     data: MediaQuery.of(context).copyWith(disableAnimations: true),
@@ -65,7 +66,8 @@ void main() {
     a11yVariants: true,
     overrides: _overrides(walk),
     act: _show(walk, const StepsReading(Duration(seconds: 4), 7)),
-    build: (_) => const MissionScreen(date: _date, kind: MissionKind.walk),
+    build: (_) =>
+        _still(const MissionScreen(date: _date, kind: MissionKind.walk)),
   );
   final minimal = FakeMissionSensors();
   goldenMatrix(
@@ -74,7 +76,8 @@ void main() {
     widths: const {'compact'},
     overrides: _overrides(minimal, layout: UiLayout.minimal),
     act: _show(minimal, const StepsReading(Duration(seconds: 4), 7)),
-    build: (_) => const MissionScreen(date: _date, kind: MissionKind.walk),
+    build: (_) =>
+        _still(const MissionScreen(date: _date, kind: MissionKind.walk)),
   );
   final light = FakeMissionSensors();
   goldenMatrix(
@@ -91,19 +94,22 @@ void main() {
     height: 800,
     widths: const {'compact'},
     overrides: _overrides(up),
-    build: (_) => const MissionScreen(date: _date, kind: MissionKind.standUp),
+    build: (_) =>
+        _still(const MissionScreen(date: _date, kind: MissionKind.standUp)),
   );
   goldenMatrix(
     'mission_breathe',
     height: 800,
-    widths: const {'compact'},
+    // Tablets run it, in landscape (E-R2-19-B-2, ED-336).
+    widths: const {'compact', 'expanded'},
     overrides: _overrides(FakeMissionSensors()),
     build: (_) => const MissionScreen(date: _date, kind: MissionKind.breathe),
   );
   goldenMatrix(
     'mission_catch_dot',
     height: 800,
-    widths: const {'compact'},
+    // Tablets run it, in landscape (E-R2-19-B-2, ED-336).
+    widths: const {'compact', 'expanded'},
     overrides: _overrides(FakeMissionSensors()),
     build: (_) =>
         _still(const MissionScreen(date: _date, kind: MissionKind.catchDot)),
@@ -112,7 +118,8 @@ void main() {
   goldenMatrix(
     'mission_one_thing',
     height: 1000,
-    widths: const {'compact'},
+    // Tablets run it, in landscape (E-R2-19-B-2, ED-336).
+    widths: const {'compact', 'expanded'},
     a11yVariants: true,
     overrides: _overrides(FakeMissionSensors()),
     build: (_) => const MissionScreen(date: _date, kind: MissionKind.oneThing),

@@ -122,6 +122,18 @@ abstract final class DotGlyphs {
     '${_r(9, 2, 6, 12, 3)}M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8',
   );
 
+  /// Breathe's fingertip (E-R2-19-B `ms-finger`, a 20 × 28 box), filled.
+  static const fingertip = DotGlyph(
+    'M8 26c-3 0-5-2-6-5l-1.6-5c-.4-1.2.9-2.2 1.9-1.4L5 16.6V4a1.8 1.8 0 0 1 '
+    '3.6 0v8l.4-.6a1.8 1.8 0 0 1 3.3 1l.2-.3a1.8 1.8 0 0 1 3.3 1.1l.3-.2a1.7 '
+    '1.7 0 0 1 2.7 1.4V20c0 3.4-2.6 6-6 6z',
+  );
+
+  /// Light's bulb (E-R2-19-B, a 24 × 30 box): the glass, then its base.
+  static const bulb = DotGlyph(
+    'M8 20c0-2-3-4-3-8a7 7 0 0 1 14 0c0 4-3 6-3 8zM9 23h6M10 26h4',
+  );
+
   /// ▶ beside a sound on the Mac/web Sounds form: hear it (ED-450).
   static const play = DotGlyph('M8 5.5v13l10-6.5z');
   static const sound = DotGlyph(

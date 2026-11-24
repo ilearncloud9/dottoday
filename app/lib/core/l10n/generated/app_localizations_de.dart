@@ -6903,7 +6903,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get missionCatchTap => 'Tipp auf den Punkt';
+  String get missionCatchTap => 'Tippe auf den blauen Kreis';
 
   @override
   String missionCatchCount(int done, int total) {
@@ -8216,6 +8216,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String wakeUpCardMovedTo(String time) {
     return '→ $time';
+  }
+
+  @override
+  String missionStepsOf(int total) {
+    return 'von $total Schritten';
   }
 
   @override

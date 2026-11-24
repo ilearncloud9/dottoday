@@ -709,6 +709,32 @@ abstract final class DotSize {
 
   /// The mission screen's ring (docs/15 §8: 120 px).
   static const double missionRing = 120;
+
+  /// A mission on the dawn sky (E-R2-19-B): the ring, its stroke, and the
+  /// walker's height on Walk's ground line.
+  static const double dawnRing = 236;
+  static const double dawnRingStroke = 16;
+  static const double dawnWalker = 88;
+
+  /// The width E-R2-19-B draws a phone's sky at, which Catch the dot's
+  /// paths are measured in.
+  static const double dawnSkyWidth = 390;
+  static const double dawnSkyHeight = 844;
+
+  /// Stand up's phone (46 × 80) and Light's bulb (70 × 90) in the ring.
+  static const double missionPhoneWidth = 46;
+  static const double missionPhoneHeight = 80;
+  static const double missionBulbWidth = 70;
+  static const double missionBulbHeight = 90;
+
+  /// Breathe's fingertip (40 × 56) and the press under it (44).
+  static const double missionFingerWidth = 40;
+  static const double missionFingerHeight = 56;
+  static const double missionPress = 44;
+
+  /// Catch the dot's dots: 72 on phones, 96 on tablets (E-R2-19-B-2).
+  static const double catchDot = 72;
+  static const double catchDotTablet = 96;
   static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;

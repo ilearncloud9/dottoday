@@ -8,8 +8,8 @@ import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/mission_progress.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/one_thing.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_parts.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
-import 'package:dottoday/shared/dot/focus_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -111,8 +111,12 @@ void main() {
     expect(find.text('Walk 20 steps'), findsOneWidget);
     h.sensors.push(const StepsReading(Duration(seconds: 2), 7));
     await _tick(tester);
-    expect(find.text('7 of 20 steps'), findsOneWidget);
+    expect(find.bySemanticsLabel('7 of 20 steps'), findsOneWidget);
     h.sensors.push(const StepsReading(Duration(seconds: 9), 21));
+    await _tick(tester);
+    // The walker stands with its check for a moment first (E-R2-19-B).
+    expect(h.gateway.dismissed, isEmpty);
+    await tester.pump(DotDawnMotion.walkDone);
     await _settle(tester);
     expect(h.gateway.dismissed, [_id]);
     expect(find.text('card'), findsOneWidget);
@@ -147,7 +151,7 @@ void main() {
 
   testWidgets('Breathe: three held breaths', (tester) async {
     final h = await _pump(tester, MissionKind.breathe);
-    final ring = find.byType(FocusRing);
+    final ring = find.byType(DawnRing);
     for (var i = 0; i < breaths; i++) {
       final gesture = await tester.startGesture(tester.getCenter(ring));
       await tester.pump();
@@ -164,7 +168,7 @@ void main() {
   testWidgets('Breathe: letting go early just waits, no fail', (tester) async {
     final h = await _pump(tester, MissionKind.breathe);
     final gesture = await tester.startGesture(
-      tester.getCenter(find.byType(FocusRing)),
+      tester.getCenter(find.byType(DawnRing)),
     );
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
@@ -174,13 +178,13 @@ void main() {
     expect(h.gateway.dismissed, isEmpty);
   });
 
-  testWidgets('Catch the dot: five catches; screen readers tap a button', (
+  testWidgets('Catch the dot: three catches; screen readers tap a button', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
     final h = await _pump(tester, MissionKind.catchDot);
     for (var i = 0; i < catchTaps; i++) {
-      await tester.tap(find.bySemanticsLabel('Tap the dot'));
+      tester.semantics.tap(find.semantics.byLabel('Tap the blue circle'));
       await tester.pump();
     }
     await _settle(tester);

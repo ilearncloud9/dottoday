@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/colour_math.dart';
 import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:dottoday/core/theme/dot_components.dart';
 import 'package:dottoday/core/theme/dot_metrics.dart';
@@ -12,6 +13,7 @@ export 'app_colours.dart';
 export 'colour_math.dart';
 export 'contrast.dart';
 export 'dot_colors.dart';
+export 'dot_dawn.dart';
 export 'dot_glyphs.dart';
 export 'dot_icon.dart';
 export 'dot_idiom.dart';
@@ -72,6 +74,23 @@ final class DotTheme extends ThemeExtension<DotTheme> {
     DotAccent accent = DotAccent.fallback,
     TargetPlatform? platform,
   ]) => _themed(DotColors.dark(accent), accent, platform);
+
+  /// The app's [brightness] theme for its App colour: the custom colour
+  /// when one is set ([accentHex], ED-221), else the named [accentKey].
+  /// The mission's dawn sky asks for the dark one in either mode.
+  static ThemeData forApp(
+    Brightness brightness, {
+    String? accentKey,
+    String? accentHex,
+    TargetPlatform? platform,
+  }) {
+    final custom = accentHex == null ? null : parseHex(accentHex);
+    if (custom != null) return DotTheme.custom(brightness, custom, platform);
+    final accent = DotAccent.fromKey(accentKey);
+    return brightness == Brightness.dark
+        ? DotTheme.dark(accent, platform)
+        : DotTheme.light(accent, platform);
+  }
 
   /// [brightness]'s [ThemeData] around a custom App colour (Settings ›
   /// Appearance › Edit palette, ED-161); cached per colour like [light].

@@ -9,16 +9,20 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/breathe_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/cant_right_now.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/catch_dot_mission.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_parts.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/one_thing_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/sensor_mission.dart';
+import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// A morning's mission (docs/15 §8), opened by "I'm up" (or iOS's Stop)
 /// on a mission morning while the alarm waits to re-ring. It shows the
@@ -40,6 +44,14 @@ class MissionScreen extends ConsumerStatefulWidget {
 }
 
 class _MissionScreenState extends ConsumerState<MissionScreen> {
+  /// What runs here: on a tablet (a shortest side of 600 or more, the rule
+  /// the device list uses) a movement mission falls back to Breathe
+  /// (ED-336, ED-454).
+  MissionKind get _kind => tabletMission(
+    widget.kind,
+    tablet: MediaQuery.sizeOf(context).shortestSide >= WidthClass.mediumFrom,
+  );
+
   Timer? _keep;
   var _ready = false;
   var _ended = false;
@@ -55,6 +67,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
   @override
   void dispose() {
     _keep?.cancel();
+    _caught.dispose();
     super.dispose();
   }
 
@@ -62,7 +75,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     final sensors = ref.read(missionSensorsProvider);
     final runs =
         !await sensors.driving() &&
-        await sensors.support(widget.kind) == MissionSupport.ready;
+        await sensors.support(_kind) == MissionSupport.ready;
     if (!mounted) return;
     if (!runs) return _end();
     setState(() => _ready = true);
@@ -88,36 +101,80 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     if (mounted) context.go(AppRoutes.wakeUp);
   }
 
+  /// Catch the dot's catches, shared by its dots and its hint.
+  final _caught = ValueNotifier(0);
+
+  /// Walk is done: the walker stands with its check for a moment before
+  /// the morning goes on (E-R2-19-B `wk-done`).
+  var _walked = false;
+
+  /// Light: the room is bright enough now (`ms-lit`).
+  var _lit = false;
+
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final steps =
-        ref.watch(currentProfileProvider).value?.settings.missionSteps ?? 20;
-    return Scaffold(
-      backgroundColor: t.colors.surface,
-      body: SafeArea(
-        child: !_ready
-            ? const SizedBox.shrink()
-            : ListView(
-                padding: const EdgeInsets.all(DotSpace.l),
-                children: [
-                  const SizedBox(height: DotSpace.xl),
-                  Text(
-                    _line(context.l10n, steps),
-                    style: t.styles.pageTitle,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: DotSpace.xl),
-                  Center(child: _mission(steps)),
-                  const SizedBox(height: DotSpace.xl),
-                  CantRightNow(onSkip: () => unawaited(_end(skipped: true))),
-                ],
-              ),
+    final profile = ref.watch(currentProfileProvider).value;
+    final settings = profile?.settings;
+    final steps = settings?.missionSteps ?? 20;
+    // The sky is dark in either mode: the mission reads in the app's dark
+    // theme, its App colour in its dark-surface shade (E-R2-19-B).
+    final dark = DotTheme.forApp(
+      Brightness.dark,
+      accentKey: settings?.accent,
+      accentHex: profile?.accentHex,
+      platform: Theme.of(context).platform,
+    );
+    return Theme(
+      data: dark,
+      child: Builder(
+        builder: (context) => Scaffold(
+          body: !_ready || profile == null
+              ? const DecoratedBox(
+                  decoration: BoxDecoration(gradient: DotDawn.gradient),
+                  child: SizedBox.expand(),
+                )
+              : _dawn(context, profile, steps),
+        ),
       ),
     );
   }
 
-  String _line(AppLocalizations l10n, int steps) => switch (widget.kind) {
+  Widget _dawn(BuildContext context, Profile profile, int steps) {
+    void done() => unawaited(_end());
+    final catching = _kind == MissionKind.catchDot;
+    return DawnScaffold(
+      time: timeOfUtc(
+        context,
+        tz.getLocation(profile.tzId),
+        ref.read(clockProvider).nowUtc(),
+        use24h: use24hFor(context, profile.settings.use24h),
+      ),
+      title: _line(context.l10n, steps),
+      mission: catching
+          ? CatchDotHint(caught: _caught, onDone: done)
+          : _mission(steps),
+      over: catching ? CatchDotField(caught: _caught, onDone: done) : null,
+      ground: switch (_kind) {
+        MissionKind.walk => DawnWalker(done: _walked),
+        MissionKind.light => DawnRoomLight(level: _lit ? 1 : 0),
+        _ => null,
+      },
+      cantRightNow: CantRightNow(onSkip: () => unawaited(_end(skipped: true))),
+    );
+  }
+
+  /// Walk's last step: the walker stands with its check, then the morning
+  /// goes on; with reduced motion it goes on at once.
+  void _walkedIt() {
+    setState(() => _walked = true);
+    if (DotTheme.of(context).motion.isReduced) {
+      unawaited(_end());
+      return;
+    }
+    unawaited(Future<void>.delayed(DotDawnMotion.walkDone).then((_) => _end()));
+  }
+
+  String _line(AppLocalizations l10n, int steps) => switch (_kind) {
     MissionKind.standUp => l10n.missionLineStandUp,
     MissionKind.walk => l10n.missionLineWalk(steps),
     MissionKind.light => l10n.missionLineLight,
@@ -128,16 +185,16 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
 
   Widget _mission(int steps) {
     void done() => unawaited(_end());
-    return switch (widget.kind) {
+    return switch (_kind) {
       MissionKind.breathe => BreatheMission(onDone: done),
-      MissionKind.catchDot => CatchDotMission(onDone: done),
       MissionKind.oneThing => OneThingMission(onDone: done),
       _ => SensorMission(
-        kind: widget.kind,
+        kind: _kind,
         steps: steps,
         sensors: ref.read(missionSensorsProvider),
-        onDone: done,
+        onDone: _kind == MissionKind.walk ? _walkedIt : done,
         onUnavailable: done,
+        onLit: (lit) => setState(() => _lit = lit),
       ),
     };
   }

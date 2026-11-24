@@ -176,7 +176,24 @@ const breatheIn = Duration(seconds: 4);
 const breatheOut = Duration(seconds: 3);
 const breaths = 3;
 
-/// Catch the dot (15 §8): [catchTaps] taps on a dot that drifts once
-/// round its path every [catchLoop], slow and forgiving.
-const catchTaps = 5;
+/// The missions a tablet runs (ED-336): none that needs movement, so not
+/// Stand up, Walk or Light.
+const tabletMissions = {
+  MissionKind.breathe,
+  MissionKind.catchDot,
+  MissionKind.oneThing,
+};
+
+/// The mission that runs for [kind]: on a [tablet], a movement mission
+/// falls back to Breathe (ED-454).
+///
+/// ```dart
+/// tabletMission(MissionKind.walk, tablet: true); // MissionKind.breathe
+/// ```
+MissionKind tabletMission(MissionKind kind, {required bool tablet}) =>
+    tablet && !tabletMissions.contains(kind) ? MissionKind.breathe : kind;
+
+/// Catch the dot (15 §8; ED-336): [catchTaps] taps on the blue circle,
+/// whose loop round the sky takes [catchLoop], slow and forgiving.
+const catchTaps = 3;
 const catchLoop = Duration(seconds: 10);

@@ -229,4 +229,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.widget<FormCheck>(box.first).value, !before);
   }, variant: mac);
+
+  testWidgets('Missions on a tablet that rings: only the three (ED-336)', (
+    tester,
+  ) async {
+    await open(
+      tester,
+      SettingsPage.missions,
+      devices: [
+        Device(
+          id: 'iphone',
+          userId: testUserId,
+          platform: DevicePlatform.ios,
+          form: DeviceForm.tablet,
+          canRing: true,
+          alarmOn: true,
+          lastSeenUtc: DateTime.utc(2026, 11, 3, 8),
+        ),
+      ],
+    );
+    expect(find.widgetWithText(FormRadio, 'Breathe'), findsOneWidget);
+    expect(find.widgetWithText(FormRadio, 'Catch the dot'), findsOneWidget);
+    expect(find.widgetWithText(FormRadio, 'Walk'), findsNothing);
+    expect(find.widgetWithText(FormRadio, 'Stand up'), findsNothing);
+  }, variant: mac);
 }

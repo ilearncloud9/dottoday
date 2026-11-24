@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/devices/device_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/wake_up/wake_up_providers.dart';
+import 'package:dottoday/domain/devices/device.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
+import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/wake_wind/mission_pickers.dart';
@@ -85,6 +88,15 @@ class MissionsPage extends ConsumerWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final mode = settings.missionMode;
+    // A tablet that rings offers only the missions that need no movement
+    // (ED-336); a movement mission picked before shows as Breathe, which
+    // is what runs there (ED-454).
+    final tablet = _ringsOnTablet(ref, settings);
+    final offered = [
+      for (final k in offeredMissions)
+        if (!tablet || tabletMissions.contains(k)) k,
+    ];
+    final kind = tabletMission(settings.missionKind, tablet: tablet);
     final on = _able(ref) && mode != MissionMode.off;
     return SettingsPageFrame(
       title: l10n.settingsMissions,
@@ -120,18 +132,15 @@ class MissionsPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: DotSpace.xs,
                     children: [
-                      for (final k in offeredMissions)
-                        _MissionChoice(
-                          kind: k,
-                          chosen: settings.missionKind == k,
-                        ),
+                      for (final k in offered)
+                        _MissionChoice(kind: k, chosen: kind == k),
                     ],
                   ),
                 )
               else
-                for (final k in offeredMissions)
-                  _MissionChoice(kind: k, chosen: settings.missionKind == k),
-              if (settings.missionKind == MissionKind.walk)
+                for (final k in offered)
+                  _MissionChoice(kind: k, chosen: kind == k),
+              if (kind == MissionKind.walk)
                 SettingsRow(
                   glyph: DotGlyphs.clock,
                   tint: t.colors.accentInk,
@@ -275,4 +284,16 @@ class _MissionChoice extends ConsumerWidget {
       changeSettings(context, (s) => s.copyWith(missionKind: kind));
     }
   }
+}
+
+/// Whether the device that rings Wake Up is a tablet (ED-336).
+bool _ringsOnTablet(WidgetRef ref, Settings settings) {
+  final id = ref.watch(currentProfileProvider).value?.id;
+  if (id == null) return false;
+  final device = ref
+      .watch(devicesProvider(id))
+      .value
+      ?.where((d) => d.id == settings.alarmDeviceId)
+      .firstOrNull;
+  return device?.form == DeviceForm.tablet;
 }

@@ -81,6 +81,10 @@ final class DotType {
     required this.stateBody,
     required this.fieldError,
     required this.toast,
+    required this.dawnTime,
+    required this.dawnTitle,
+    required this.dawnCount,
+    required this.dawnStatus,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -182,6 +186,13 @@ final class DotType {
     stateBody: _manrope(15, 21, 500, text),
     fieldError: _manrope(13, 18, 600, text),
     toast: _manrope(15, 20, 600, text),
+    // The dawn sky over a mission (E-R2-19-B): the time in the system's
+    // light face, 56/60; the mission's line 24/800; the count in its ring
+    // 34/38/800; what to do 15/600.
+    dawnTime: _system(56, 60, 300, text),
+    dawnTitle: _manrope(24, 30, 800, text),
+    dawnCount: _manrope(34, 38, 800, text),
+    dawnStatus: _manrope(15, 20, 600, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -386,6 +397,14 @@ final class DotType {
   /// of it.
   final TextStyle toast;
 
+  /// The time over a Wake Up mission on the dawn sky (E-R2-19-B).
+  final TextStyle dawnTime;
+
+  /// The mission's line, the count in its ring and what to do under it.
+  final TextStyle dawnTitle;
+  final TextStyle dawnCount;
+  final TextStyle dawnStatus;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -464,6 +483,10 @@ final class DotType {
       stateBody: l(stateBody, other.stateBody),
       fieldError: l(fieldError, other.fieldError),
       toast: l(toast, other.toast),
+      dawnTime: l(dawnTime, other.dawnTime),
+      dawnTitle: l(dawnTitle, other.dawnTitle),
+      dawnCount: l(dawnCount, other.dawnCount),
+      dawnStatus: l(dawnStatus, other.dawnStatus),
     );
   }
 }

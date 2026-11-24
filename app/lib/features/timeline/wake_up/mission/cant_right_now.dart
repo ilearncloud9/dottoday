@@ -56,31 +56,56 @@ class _CantRightNowState extends State<CantRightNow>
         onPointerDown: (_) => _start(),
         onPointerUp: (_) => _stop(),
         onPointerCancel: (_) => _stop(),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.android),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                l10n.missionCantNow,
-                style: t.styles.rowTitle.copyWith(color: t.colors.accentInk),
-              ),
-              Text(l10n.missionCantNowHint, style: t.styles.rowMeta),
-              const SizedBox(height: DotSpace.xs),
-              SizedBox(
-                width: DotSize.missionRing,
-                child: AnimatedBuilder(
-                  animation: _hold,
-                  builder: (context, _) => LinearProgressIndicator(
-                    value: _hold.value,
-                    color: t.colors.accentInk,
-                    backgroundColor: t.colors.threadAhead,
+        // The dawn sky's outlined pill (E-R2-19-B); the hold fills it from
+        // the start edge, and "Hold for 5 seconds" sits under it. Dark ink:
+        // white on the sky's first light is 2:1, under the 4.5:1 floor.
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: DotSpace.xs,
+          children: [
+            Container(
+              constraints: const BoxConstraints(minHeight: DotTouch.min),
+              decoration: const ShapeDecoration(
+                shape: StadiumBorder(
+                  side: BorderSide(
+                    color: DotDawn.inkDark,
+                    width: DotSpace.xxs - DotSpace.hairline / 2,
                   ),
                 ),
               ),
-            ],
-          ),
+              clipBehavior: Clip.antiAlias,
+              child: AnimatedBuilder(
+                animation: _hold,
+                builder: (context, child) => DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        DotDawn.track,
+                        DotDawn.track,
+                        Colors.transparent,
+                      ],
+                      stops: [0, _hold.value, _hold.value],
+                    ),
+                  ),
+                  child: child,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: DotSpace.l + DotSpace.xxs,
+                    vertical: DotSpace.s,
+                  ),
+                  child: Text(
+                    l10n.missionCantNow,
+                    style: t.styles.chip.copyWith(color: DotDawn.inkDark),
+                  ),
+                ),
+              ),
+            ),
+            Text(
+              l10n.missionCantNowHint,
+              style: t.styles.gridMeta.copyWith(color: DotDawn.inkDark),
+            ),
+          ],
         ),
       ),
     );

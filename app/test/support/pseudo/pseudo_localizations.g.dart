@@ -6566,6 +6566,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.wakeUpCardMovedTo(time));
 
   @override
+  String missionStepsOf(int total) => pseudo(super.missionStepsOf(total));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

@@ -147,6 +147,26 @@ void main() {
     });
   });
 
+  test('a tablet runs no movement mission: they fall back to Breathe', () {
+    expect(tabletMissions, {
+      MissionKind.breathe,
+      MissionKind.catchDot,
+      MissionKind.oneThing,
+    });
+    for (final k in [
+      MissionKind.standUp,
+      MissionKind.walk,
+      MissionKind.light,
+    ]) {
+      expect(tabletMission(k, tablet: true), MissionKind.breathe);
+      expect(tabletMission(k, tablet: false), k);
+    }
+    expect(
+      tabletMission(MissionKind.catchDot, tablet: true),
+      MissionKind.catchDot,
+    );
+  });
+
   test('on-screen missions are the three that only wake you', () {
     expect(MissionKind.values.where((k) => k.onScreen), [
       MissionKind.breathe,

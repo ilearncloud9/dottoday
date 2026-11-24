@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - On the Mac and the web, Settings pages are laid out as forms with labels, checkboxes and pop-up menus, and Missions can be set there for the phone that rings (redesign branch).
 - On the Mac and the web, Wake Up and Wind Down shows the night dial beside a week table you can edit day by day, and Appearance is a form like the other Settings pages (redesign branch).
 - The Wake Up card now shows your day as a thread from Wake Up, with where things would move if you're up late, and on tablets, the Mac and the web it opens beside Today (redesign branch).
+- Wake Up missions now play on a dawn sky and move as designed (the walker walks, the phone tilts, the bulb glows, the ring breathes, the dots glide); Catch the dot is three taps on the blue circle among four shapes, and tablets offer only the missions that need no moving around (redesign branch).
 - Wake Up and Wind Down's schedules open a sheet with the night dial: pick the days, drag the moon and the sun, choose which days ring and remind, or remove a schedule with Undo (redesign branch).
 - Wake Up and Wind Down groups the Wake Up alarm as in the design, and Wake Up options, Missions, Alarm sounds on and Vary the sound open as their own pages (redesign branch).
 - Settings › Your day › Wake Up and Wind Down shows tonight, your week as schedules, the night, the Wake Up alarm and the Wind Down reminder on one page (redesign branch).

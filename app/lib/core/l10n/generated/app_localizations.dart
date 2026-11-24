@@ -10452,10 +10452,10 @@ abstract class AppLocalizations {
   /// **'Breath {done} of {total}'**
   String missionBreathCount(int done, int total);
 
-  /// Catch the dot's button for screen readers.
+  /// Catch the dot: the one dot to tap, by shape and colour, never colour alone (ED-336); also its screen-reader button.
   ///
   /// In en, this message translates to:
-  /// **'Tap the dot'**
+  /// **'Tap the blue circle'**
   String get missionCatchTap;
 
   /// Catch the dot's count.
@@ -12443,6 +12443,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'→ {time}'**
   String wakeUpCardMovedTo(String time);
+
+  /// Walk mission: under the step count inside the ring, e.g. '6' over 'of 20 steps' (E-R2-19-B).
+  ///
+  /// In en, this message translates to:
+  /// **'of {total} steps'**
+  String missionStepsOf(int total);
 
   /// Section title in the task icon picker.
   ///
