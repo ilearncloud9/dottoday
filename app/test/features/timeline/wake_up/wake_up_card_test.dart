@@ -2,7 +2,9 @@ import 'package:dottoday/data/writes/write_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_dock.dart';
 import 'package:dottoday/shared/proposals/proposal_sheet.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -34,9 +36,10 @@ void main() {
   ) async {
     final h = await pumpWakeUp(tester);
     expect(find.text('Good morning. Wednesday, October 21.'), findsOneWidget);
-    expect(find.text('FIRST'), findsOneWidget);
+    // The thread from Wake Up (E-R2-19-B): Wake Up, the first dot, the next.
+    expect(find.text('Wake Up'), findsOneWidget);
     expect(find.text('Deep work: roadmap'), findsOneWidget);
-    expect(find.text('NEXT'), findsOneWidget);
+    expect(find.text('Design review'), findsOneWidget);
     expect(h.days[_date]?.cardShownAtUtc, todayTestNow);
   });
 
@@ -160,9 +163,9 @@ void main() {
       settings: wakeUpOn.copyWith(uiLayout: UiLayout.minimal),
     );
     expect(find.text('Deep work: roadmap'), findsOneWidget);
-    expect(find.text('NEXT'), findsNothing);
+    expect(find.text('Design review'), findsNothing);
     await _tap(tester, 'Show my day');
-    expect(find.text('NEXT'), findsOneWidget);
+    expect(find.text('Design review'), findsOneWidget);
   });
 
   testWidgets('low energy: the first dot and Start only', (tester) async {
@@ -173,7 +176,8 @@ void main() {
       ),
     );
     expect(find.text('Deep work: roadmap'), findsOneWidget);
-    expect(find.text('NEXT'), findsNothing);
+    expect(find.text('Design review'), findsNothing);
+    expect(find.text('Low-energy · on'), findsOneWidget);
     expect(find.text('Show my day'), findsNothing);
     expect(find.text('Start the day'), findsOneWidget);
   });
@@ -199,6 +203,28 @@ void main() {
     await pumpWakeUp(tester);
     await expectA11yGuidelines(tester);
     handle.dispose();
+  });
+
+  group('docks beside Today from the expanded width (ED-456)', () {
+    const wide = Size(1280, 900);
+
+    testWidgets('on the first open after Wake Up; Later closes the panel', (
+      tester,
+    ) async {
+      await pumpWakeUp(tester, location: '/today', size: wide);
+      expect(find.byType(WakeUpCardPanel), findsOneWidget);
+      expect(find.text('today'), findsOneWidget, reason: 'Today beside it');
+      expect(find.byType(WakeUpCardScreen), findsNothing);
+      await _tap(tester, 'Later');
+      expect(find.byType(WakeUpCardPanel), findsNothing);
+      expect(find.text('today'), findsOneWidget);
+    });
+
+    testWidgets("a notification's I'm up docks it too", (tester) async {
+      await pumpWakeUp(tester, size: wide);
+      expect(find.byType(WakeUpCardPanel), findsOneWidget);
+      expect(find.text('today'), findsOneWidget);
+    });
   });
 
   group('opens by itself', () {

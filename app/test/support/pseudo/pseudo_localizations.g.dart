@@ -6562,6 +6562,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get wwdMorningNoCheck => pseudo(super.wwdMorningNoCheck);
 
   @override
+  String wakeUpCardMovedTo(String time) =>
+      pseudo(super.wakeUpCardMovedTo(time));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

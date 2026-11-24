@@ -2056,6 +2056,7 @@
   "wwdMorningCardOff": "Aufwachkarte aus",
   "wwdMorningCheck": "Prüfen nach {duration}",
   "wwdMorningNoCheck": "Keine Startprüfung",
+  "wakeUpCardMovedTo": "→ {time}",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

@@ -2056,6 +2056,7 @@
   "wwdMorningCardOff": "Carte du réveil désactivée",
   "wwdMorningCheck": "Vérifier après {duration}",
   "wwdMorningNoCheck": "Pas de vérification",
+  "wakeUpCardMovedTo": "→ {time}",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",
   "taskIconCategoryFitness": "Forme et sport",

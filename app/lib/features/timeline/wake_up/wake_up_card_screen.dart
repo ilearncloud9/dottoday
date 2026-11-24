@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/editing/editing_task.dart';
+import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -13,15 +14,15 @@ import 'package:dottoday/features/timeline/wake_up/wake_up_card_actions.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_body.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_state.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_coach_mark.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_dock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// The Wake Up card (docs/15 §5, M17.3): full screen over Today, once a
-/// day. It reads the day and writes nothing of its own but the day row:
-/// Start opens Focus on the first dot (its own start write) or marks the
-/// day started, and Shift the rest opens Rebalance's ProposalSheet, which
-/// writes only on Accept. Later and × close it.
+/// The Wake Up card (docs/15 §5, M17.3; E-R2-19-B, ED-314): full screen
+/// over Today below the expanded width, its content in a 480 column on
+/// medium widths (ED-456). From the expanded width the route hands over to
+/// the panel docked beside Today ([WakeUpDocked]), as on iPad.
 class WakeUpCardScreen extends ConsumerStatefulWidget {
   const WakeUpCardScreen({super.key});
 
@@ -30,75 +31,31 @@ class WakeUpCardScreen extends ConsumerStatefulWidget {
 }
 
 class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
-  var _marked = false;
-
-  /// The coach mark whose showing this visit already recorded.
-  HintId? _coached;
+  var _handedOver = false;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final model = ref.watch(wakeUpCardProvider).value;
-    final minimal = watchSimplified(ref, FeatureId.wakeUpCard);
-    if (model != null && !_marked) {
-      _marked = true;
-      unawaited(
-        ref
-            .read(wakeUpDayRepositoryProvider)
-            .markCardShown(model.dateKey, ref.read(clockProvider).nowUtc()),
-      );
-    }
-    final coach = model == null ? null : watchCardCoachMark(ref, model);
-    if (coach != null && _coached != coach) {
-      _coached = coach;
-      final container = ProviderScope.containerOf(context, listen: false);
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => unawaited(recordHintShown(container, coach)),
-      );
+    if (AppLayout.classOf(context) == WidthClass.expanded) {
+      // A notification's "I'm up" lands here: dock it beside Today instead.
+      if (!_handedOver) {
+        _handedOver = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          ref.read(wakeUpDockedProvider.notifier).open();
+          context.go(AppRoutes.today);
+        });
+      }
+      return Scaffold(backgroundColor: t.colors.surface);
     }
     return Scaffold(
       backgroundColor: t.colors.surface,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: IconButton(
-                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                onPressed: _close,
-                icon: DotIcon(DotGlyphs.close, color: t.colors.text),
-              ),
-            ),
-            Expanded(
-              child: model == null
-                  ? const SizedBox.shrink()
-                  : WakeUpCardBody(
-                      model: model,
-                      minimal: minimal,
-                      onOpenTask: (id) => openTask(context, id),
-                      onShift: (min) => unawaited(
-                        shiftTheRest(context, model, min, close: _close),
-                      ),
-                      onStart: () => unawaited(
-                        startTheDay(
-                          ref,
-                          model,
-                          openFocus: (id) =>
-                              context.pushReplacement(AppRoutes.focus(id)),
-                          close: () {
-                            if (mounted) _close();
-                          },
-                        ),
-                      ),
-                      onLater: _close,
-                      onPlan: () => context.go(AppRoutes.add),
-                      onMissionsOff: (off) =>
-                          unawaited(answerMissionsOff(context, off)),
-                      coachMark: coach,
-                    ),
-            ),
-          ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: DotSize.wakeCardColumn),
+            child: WakeUpCard(onClose: _close, replaceWithFocus: true),
+          ),
         ),
       ),
     );
@@ -110,5 +67,89 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
     } else {
       context.go(AppRoutes.today);
     }
+  }
+}
+
+/// The card itself, wherever it is shown: its own screen or the panel
+/// beside Today. It reads the day and writes nothing of its own but the day
+/// row: Start opens Focus on the first dot (its own start write) or marks
+/// the day started, and Shift the rest opens Rebalance's ProposalSheet,
+/// which writes only on Accept. Later and × call [onClose].
+class WakeUpCard extends ConsumerStatefulWidget {
+  const WakeUpCard({
+    required this.onClose,
+    this.replaceWithFocus = false,
+    super.key,
+  });
+
+  final VoidCallback onClose;
+
+  /// Its own screen gives way to Focus; the panel opens Focus over Today.
+  final bool replaceWithFocus;
+
+  @override
+  ConsumerState<WakeUpCard> createState() => _WakeUpCardState();
+}
+
+class _WakeUpCardState extends ConsumerState<WakeUpCard> {
+  var _marked = false;
+
+  /// The coach mark whose showing this visit already recorded.
+  HintId? _coached;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = ref.watch(wakeUpCardProvider).value;
+    final minimal = watchSimplified(ref, FeatureId.wakeUpCard);
+    if (model == null) return const SizedBox.shrink();
+    if (!_marked) {
+      _marked = true;
+      unawaited(
+        ref
+            .read(wakeUpDayRepositoryProvider)
+            .markCardShown(model.dateKey, ref.read(clockProvider).nowUtc()),
+      );
+    }
+    final coach = watchCardCoachMark(ref, model);
+    if (coach != null && _coached != coach) {
+      _coached = coach;
+      final container = ProviderScope.containerOf(context, listen: false);
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(recordHintShown(container, coach)),
+      );
+    }
+    final close = widget.onClose;
+    return WakeUpCardBody(
+      model: model,
+      minimal: minimal,
+      onClose: close,
+      onOpenTask: (id) => openTask(context, id),
+      onShift: (min) =>
+          unawaited(shiftTheRest(context, model, min, close: close)),
+      onStart: () => unawaited(
+        startTheDay(
+          ref,
+          model,
+          openFocus: (id) {
+            if (widget.replaceWithFocus) {
+              context.pushReplacement(AppRoutes.focus(id));
+              return;
+            }
+            close();
+            unawaited(context.push(AppRoutes.focus(id)));
+          },
+          close: () {
+            if (mounted) close();
+          },
+        ),
+      ),
+      onLater: close,
+      onPlan: () {
+        close();
+        context.go(AppRoutes.add);
+      },
+      onMissionsOff: (off) => unawaited(answerMissionsOff(context, off)),
+      coachMark: coach,
+    );
   }
 }

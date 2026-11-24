@@ -88,6 +88,9 @@ void main() {
     expect(find.text('Start the day'), findsOneWidget);
     expect(find.text('Show my day'), findsNothing, reason: 'the horizon');
     expect(find.text('NEXT UP'), findsNothing);
+    // The thread card is taller than the old one: Now scrolls to Later.
+    await tester.ensureVisible(find.text('Later'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Later'));
     await tester.pumpAndSettle();
     expect(find.text('Start the day'), findsNothing);

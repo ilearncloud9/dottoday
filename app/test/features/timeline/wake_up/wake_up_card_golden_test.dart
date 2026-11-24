@@ -7,6 +7,8 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/wake_up_day.dart';
 import 'package:dottoday/features/timeline/wake_up/wake_up_card_screen.dart';
+import 'package:dottoday/features/timeline/wake_up/wake_up_dock.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -46,12 +48,29 @@ void main() {
   // The demo day is built while the matrix is declared.
   tz_data.initializeTimeZones();
   setUpAll(loadAppFonts);
+  // The thread card (E-R2-19-B): phones and medium widths, where it is
+  // its own screen (ED-456).
   goldenMatrix(
     'wake_up_card',
     height: 1000,
+    widths: const {'compact', 'medium'},
     a11yVariants: true,
     overrides: _overrides(),
     build: (_) => const WakeUpCardScreen(),
+  );
+  // From the expanded width the card docks at the left of Today (ED-456).
+  goldenMatrix(
+    'wake_up_card_docked',
+    height: 900,
+    widths: const {'expanded'},
+    overrides: _overrides(),
+    build: (_) => const Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        WakeUpCardPanel(),
+        Expanded(child: SizedBox.expand()),
+      ],
+    ),
   );
   goldenMatrix(
     'wake_up_card_minimal',

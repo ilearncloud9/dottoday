@@ -672,6 +672,21 @@ abstract final class DotSize {
   /// The day dot on the Wake Up card (docs/15 §5 step 2).
   static const double wakeUpDayDot = 96;
 
+  /// The Wake Up card as the thread (E-R2-19-B, ED-314): the time column,
+  /// the mark column and its marks (Wake Up's sun, the first dot, the rest),
+  /// the line between them, the gap between rows, and the widths it docks
+  /// at beside Today (ED-456) and centres in on medium widths.
+  static const double wakeCardTime = 58;
+  static const double wakeCardMark = 48;
+  static const double wakeCardSun = 40;
+  static const double wakeCardFirst = 48;
+  static const double wakeCardDot = 36;
+  static const double wakeCardLine = 3;
+  static const double wakeCardGap = 16;
+  static const double wakeCardDock = 380;
+  static const double wakeCardDockAndroid = 400;
+  static const double wakeCardColumn = 480;
+
   /// The day dot on Today's one-line header, beside the date and ⋯ so
   /// "October 21, 2026 ⌄" fits a 390 pt phone (ADR-0015).
   static const double headerDayDot = 36;

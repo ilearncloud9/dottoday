@@ -8208,6 +8208,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wwdMorningNoCheck => 'Sin comprobación';
 
   @override
+  String wakeUpCardMovedTo(String time) {
+    return '→ $time';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

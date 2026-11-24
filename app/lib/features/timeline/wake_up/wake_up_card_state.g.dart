@@ -53,25 +53,28 @@ final class WakeUpCardProvider
 String _$wakeUpCardHash() => r'5a65b38922d163bfd5a59634c9b449ed12fde32c';
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
-/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
-/// full-screen route opens by itself (15 §10).
+/// `wakeUpCardDue`). Every platform (ED-456: tablets ring; the Mac and the
+/// web open it on the first open after Wake Up), never in Minimal: there
+/// the card is folded into a phone's Now ([wakeUpCardInNow]; owner,
+/// E-R2-26 frame 4), so no card opens by itself (15 §10).
 
 @ProviderFor(wakeUpCardDueNow)
 final wakeUpCardDueNowProvider = WakeUpCardDueNowProvider._();
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
-/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
-/// full-screen route opens by itself (15 §10).
+/// `wakeUpCardDue`). Every platform (ED-456: tablets ring; the Mac and the
+/// web open it on the first open after Wake Up), never in Minimal: there
+/// the card is folded into a phone's Now ([wakeUpCardInNow]; owner,
+/// E-R2-26 frame 4), so no card opens by itself (15 §10).
 
 final class WakeUpCardDueNowProvider
     extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
     with $FutureModifier<String?>, $FutureProvider<String?> {
   /// Today's key when the card should open by itself now, else null (15 §5,
-  /// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
-  /// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
-  /// full-screen route opens by itself (15 §10).
+  /// `wakeUpCardDue`). Every platform (ED-456: tablets ring; the Mac and the
+  /// web open it on the first open after Wake Up), never in Minimal: there
+  /// the card is folded into a phone's Now ([wakeUpCardInNow]; owner,
+  /// E-R2-26 frame 4), so no card opens by itself (15 §10).
   WakeUpCardDueNowProvider._()
     : super(
         from: null,
@@ -97,7 +100,7 @@ final class WakeUpCardDueNowProvider
   }
 }
 
-String _$wakeUpCardDueNowHash() => r'7b96626ce845963e85bb29452f4895c27e15cb97';
+String _$wakeUpCardDueNowHash() => r'33ea7dc0b953745430c92b796f90eaf7d3810355';
 
 /// The card Minimal's Now shows in place of its body on a phone, else
 /// null: the same once-a-day window as the card's own screen, until Start

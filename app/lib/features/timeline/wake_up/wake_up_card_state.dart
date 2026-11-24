@@ -82,6 +82,10 @@ final class WakeUpCardModel {
   int? get lateMin =>
       lateStartMin(day: day, shape: shape, nowUtc: nowUtc, settings: settings);
 
+  /// When "I'm up" stopped the alarm, or now: the Wake Up row's time on a
+  /// late start (E-R2-19-B frame 4).
+  DateTime get upUtc => day?.stoppedAtUtc ?? nowUtc;
+
   /// Low-energy mode (D2): the first dot and Start only.
   bool get lowEnergy => lowEnergyOn(settings, nowUtc);
 }
@@ -123,12 +127,13 @@ Future<WakeUpCardModel> wakeUpCard(Ref ref) async {
 }
 
 /// Today's key when the card should open by itself now, else null (15 §5,
-/// `wakeUpCardDue`). Phones only, and never in Minimal: there the card is
-/// folded into Now ([wakeUpCardInNow]; owner, E-R2-26 frame 4), so no
-/// full-screen route opens by itself (15 §10).
+/// `wakeUpCardDue`). Every platform (ED-456: tablets ring; the Mac and the
+/// web open it on the first open after Wake Up), never in Minimal: there
+/// the card is folded into a phone's Now ([wakeUpCardInNow]; owner,
+/// E-R2-26 frame 4), so no card opens by itself (15 §10).
 @riverpod
 Future<String?> wakeUpCardDueNow(Ref ref) async {
-  if (!currentHealthPlatform().isPhone || _minimal(ref)) return null;
+  if (_minimal(ref)) return null;
   final m = await ref.watch(wakeUpCardProvider.future);
   return _due(m) ? m.dateKey : null;
 }

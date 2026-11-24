@@ -8166,6 +8166,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wwdMorningNoCheck => 'No start check';
 
   @override
+  String wakeUpCardMovedTo(String time) {
+    return '→ $time';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

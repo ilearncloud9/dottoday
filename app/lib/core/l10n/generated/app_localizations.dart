@@ -12438,6 +12438,12 @@ abstract class AppLocalizations {
   /// **'No start check'**
   String get wwdMorningNoCheck;
 
+  /// Wake Up card on a late start: where Shift the rest? would move a dot, e.g. '→ 7:10 AM' (E-R2-19-B).
+  ///
+  /// In en, this message translates to:
+  /// **'→ {time}'**
+  String wakeUpCardMovedTo(String time);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

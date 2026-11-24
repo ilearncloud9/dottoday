@@ -8650,6 +8650,8 @@
   "@wwdMorningCheck": {"description": "Mac/web Reminders' Morning line: Check I've started (ED-452).", "placeholders": {"duration": {"type": "String"}}},
   "wwdMorningNoCheck": "No start check",
   "@wwdMorningNoCheck": {"description": "Mac/web Reminders' Morning line when Check I've started is off (ED-452)."},
+  "wakeUpCardMovedTo": "→ {time}",
+  "@wakeUpCardMovedTo": {"description": "Wake Up card on a late start: where Shift the rest? would move a dot, e.g. '→ 7:10 AM' (E-R2-19-B).", "placeholders": {"time": {"type": "String"}}},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

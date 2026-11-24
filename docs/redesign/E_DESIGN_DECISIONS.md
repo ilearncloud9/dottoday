@@ -5757,6 +5757,20 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Open, not M20.8:** Help inside a Mac Settings window (ED-405).
 - **Approved:** 2026-11-24, owner: "Approve part 1".
 
+### ED-456 · M20.8 part 2: the card's other states and widths, drawn
+- **Date:** 2026-11-24. **Owner:** "Draw them first" (ED-454), then "Approve drawings" after the board (https://claude.ai/artifact/MhjARFo5jvJFThXN4LTgcn, version `1795550576-1bcb`).
+- **States (E-R2-19-B's thread card, the app's own words):** Empty day: "Nothing planned yet", Wake Up on an open thread line, the events and Inbox chips, Plan today as the main button. First morning: the normal card with its built line above Start the day. Low energy: Wake Up and the first dot with its first step only, under the Low-energy · on chip. Minimal: Wake Up with the late line, the first dot with its new time, Shift the rest? with its line, Show my day above Start the day.
+- **Widths:** from the expanded width the card docks at the left of Today on every platform, as on iPad (Android tablets 400, the Mac and the web 380 between the sidebar and Today); below it the phone card full screen, its content in a 480 column at the centre. The Mac and the web show the card only on the first open after Wake Up, with that option on.
+- **Approved:** 2026-11-24, owner: "Approve drawings".
+
+### ED-457 · M20.8 part 2: the card as your thread, the late start and docking
+- **Date:** 2026-11-24. **Owner:** "Approve drawings" (ED-456); review page: https://claude.ai/artifact/VFbgTuqtKN35s1CYk3vXJB.
+- **Built (E-R2-19-B, ED-314; ED-456):** the Wake Up card is Today's thread from Wake Up: the greeting with ×, "9 planned · ends …", Wake Up's sun, the first dot large with its first step in a box tinted its colour, up to four next dots on the line, then the events and Inbox chips. A late start shows "You're up 25 min after plan." on Wake Up (at the time you got up) and "→ 7:10 AM" under each dot Shift the rest? would move, from the same Rebalance its sheet proposes; Shift the rest? sits beside "This moves what's left; nothing changes until you accept." The empty-day, first-morning, low-energy and Minimal states as drawn. The day dot ring is gone from the card (the board has none). From the expanded width the card docks at the left of Today on every platform (400 on Android tablets, 380 elsewhere), and a notification's "I'm up" hands over to the dock; below, its own screen in a 480 column.
+- **Opening rule (ED-456):** the card now opens by itself on tablets, the Mac and the web too, not phones only; Minimal still never opens it (a phone's Now holds it).
+- **How:** `wake_up_card_parts.dart` rewritten (thread rows, line, sun, step, chips, shift row); `WakeUpCard` shared by the screen and `WakeUpCardPanel`; `WakeUpDocked` provider read by Today's gate. One new string ("→ {time}"), translated. No new dependency, no schema change.
+- **Checks:** format and analyze clean; 8,059 pass, 31 skipped; the first run's 3 failures fixed and rerun (Minimal Now's card goldens, and a Now test that scrolls to Later now). New docking tests (opens beside Today, Later closes it, a notification's I'm up docks it); goldens for the card, the docked panel and the four states; the old expanded full-screen goldens removed. A test caught the docked panel lacking its own Material surface; fixed. `integration_test/wake_up_card_test.dart` passed on the Mac app, Chromium and WebKit. Not run: simulators, emulators, real devices.
+- **Approved:** 2026-11-24, owner: "Approve part 2".
+
 ---
 
 ## Pending owner answers

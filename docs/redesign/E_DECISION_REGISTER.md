@@ -1369,3 +1369,5 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-24, ED-453:** M20.7 part 5c: Appearance and Wake Up and Wind Down built as Mac/web forms to ED-452 (dial, Alarm sounds on, week table with split-and-Undo, headed sections); M20.7 part 5 done. Approved.
 - **2026-11-24, ED-454:** M20.8 in five parts (explainer; card, late start, docking; missions and the tablet set; Android ringing screen; iPhone snooze Live Activity); the card's undrawn states and other widths drawn first. Approved.
 - **2026-11-24, ED-455:** M20.8 part 1: the explainer (R2-38) and Wind Down after midnight and the Alarms off tag checked as already built; no code. Approved.
+- **2026-11-24, ED-456:** M20.8 part 2 drawings: the Wake Up card's empty-day, first-morning, low-energy and Minimal states, and its docking beside Today from the expanded width on every platform (phone card in a 480 column below). Approved.
+- **2026-11-24, ED-457:** M20.8 part 2: the Wake Up card as your thread (E-R2-19-B), its four other states, the late start's new times and Shift the rest?, and docking beside Today from the expanded width on every platform. Approved.
