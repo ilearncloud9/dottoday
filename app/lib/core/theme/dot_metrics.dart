@@ -67,6 +67,10 @@ abstract final class DotRadii {
   /// An iPhone Settings row's icon tile (E-Phones Settings: 36 square, 9).
   static const double iconTile = 9;
 
+  /// The open page's row in Settings' list pane on Android tablets
+  /// (E-R2-11, M3 list-detail): 14.
+  static const double paneRowAndroid = 14;
+
   /// Month's day cards in the Workspace (E-R2-30): 12.
   static const double monthCard = 12;
 
@@ -136,6 +140,18 @@ abstract final class DotSize {
   /// Each side of Focus on an expanded window (E-R2-9 B, ED-285): the
   /// ring and title, the step and actions, at most this wide.
   static const double focusSide = 400;
+
+  /// Settings' list pane in two panes (E-R2-11, ED-291; E-FullA-v2 web):
+  /// 380 on iPad, 412 on Android tablets (M3 list-detail), 360 on the Mac
+  /// and the web.
+  static const double settingsListIos = 380;
+  static const double settingsListAndroid = 412;
+  static const double settingsListWide = 360;
+
+  /// Narrowest the detail pane may be beside the list: the phone width
+  /// its pages are drawn at (E-R2-11 "at phone sizes, widened to their
+  /// pane"). Narrower, Settings stacks as on phones (M20.7 part 5a).
+  static const double settingsDetailMin = 390;
 
   /// The iPhone's glass capsule in Today's top row (ED-034): 48 tall (the
   /// board's 44 plus 4, so Sync keeps the 48 target the device sweep

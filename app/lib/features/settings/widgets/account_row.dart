@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -7,11 +5,12 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/shared/settings/profile_avatar.dart';
+import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 /// "Your account" at the top of Settings (M20.7 part 1, E-Phones): the
 /// initial in a circle, then "Kody · synced just now" — or "Kody · on this
@@ -31,6 +30,12 @@ class AccountCard extends ConsumerWidget {
     final name = profile.displayName?.trim() ?? '';
     final hasName = name.isNotEmpty;
     final cupertino = DotIdiom.of(context) == DotIdiom.cupertino;
+    // Tinted like a group while Account is open beside the list (owner,
+    // part 5a).
+    final selected = SettingsPaneScope.selectedAt(
+      context,
+      SettingsPage.account,
+    );
     return Material(
       color: cupertino ? t.colors.raised : t.colors.chip,
       shape: RoundedRectangleBorder(
@@ -45,6 +50,7 @@ class AccountCard extends ConsumerWidget {
         name,
         hasName: hasName,
         subtitle: _subtitle(l10n, sync, now, name, hasName: hasName),
+        selected: selected,
       ),
     );
   }
@@ -56,38 +62,41 @@ class AccountCard extends ConsumerWidget {
     String name, {
     required bool hasName,
     required String subtitle,
+    required bool selected,
   }) {
-    return Semantics(
-      button: true,
-      label: hasName ? l10n.settingsAvatarLabel(name) : l10n.settingsAccount,
-      child: InkWell(
-        onTap: () => unawaited(
-          context.push(AppRoutes.settingsPage(SettingsPage.account)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(DotSpace.l),
-          child: Row(
-            spacing: DotSpace.m,
-            children: [
-              ExcludeSemantics(child: ProfileAvatar(name: name)),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.settingsYourAccount, style: t.styles.rowTitle),
-                    Text(subtitle, style: t.styles.rowMeta),
-                  ],
-                ),
+    final tap = InkWell(
+      onTap: () => openSettingsPage(context, SettingsPage.account),
+      child: Padding(
+        padding: const EdgeInsets.all(DotSpace.l),
+        child: Row(
+          spacing: DotSpace.m,
+          children: [
+            ExcludeSemantics(child: ProfileAvatar(name: name)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.settingsYourAccount, style: t.styles.rowTitle),
+                  Text(subtitle, style: t.styles.rowMeta),
+                ],
               ),
-              DotIcon(
-                DotGlyphs.chevronRight,
-                color: t.colors.muted,
-                size: DotSize.rowIcon,
-              ),
-            ],
-          ),
+            ),
+            DotIcon(
+              DotGlyphs.chevronRight,
+              color: t.colors.muted,
+              size: DotSize.rowIcon,
+            ),
+          ],
         ),
       ),
+    );
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: hasName ? l10n.settingsAvatarLabel(name) : l10n.settingsAccount,
+      child: selected
+          ? Ink(decoration: paneSelectedFill(context), child: tap)
+          : tap,
     );
   }
 

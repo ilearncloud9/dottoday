@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +125,15 @@ class _TitleRow extends StatelessWidget {
     final icon = place == null
         ? null
         : SettingsIcon(glyph: place.glyph, tint: t.tasks[place.colour].ink);
+    if (settingsDetailWithoutBack(context, page)) {
+      return Row(
+        spacing: DotSpace.m,
+        children: [
+          ?icon,
+          Expanded(child: heading),
+        ],
+      );
+    }
     if (place != null && DotIdiom.of(context) == DotIdiom.cupertino) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,8 +192,11 @@ class _TitleRow extends StatelessWidget {
       };
 
   /// Back to the parent page, also when the page was opened by a link.
+  /// In two panes it always goes to the parent, so a page opened from
+  /// the list never backs into the list's own root (part 5a).
   void _onBack(BuildContext context) {
-    if (context.canPop()) return context.pop();
+    final inPanes = SettingsPaneScope.paneAt(context) != null;
+    if (!inPanes && context.canPop()) return context.pop();
     final parent = page == null
         ? null
         : settingsPlace(context.l10n, page!).parent;

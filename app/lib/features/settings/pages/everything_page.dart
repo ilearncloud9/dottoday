@@ -1,7 +1,9 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/features/settings/pages/group_pages.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,11 @@ class EverythingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // In two panes the root is in the list pane (owner, part 5a); the
+    // detail shows Your day.
+    if (SettingsPaneScope.paneAt(context) == SettingsPane.detail) {
+      return const SettingsGroupPage(page: SettingsPage.yourDay);
+    }
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     return SettingsPageFrame(

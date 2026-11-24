@@ -279,6 +279,15 @@ final class DotColors {
   /// one-thing pick).
   Color get selectedRow => accent.withValues(alpha: 0.08);
 
+  /// The open page's row in Settings' list pane on iPad: ink at 8 %
+  /// (light), cream at 10 % (dark) (E-R2-11, ED-291).
+  Color get paneSelectedIos =>
+      isDark ? const Color(0x1AFFF5EB) : const Color(0x14241F2B);
+
+  /// The same on Android tablets: the accent at 12 % (E-R2-11, M3
+  /// list-detail). The Mac and the web use [selectedWeb] (E-FullA-v2).
+  Color get paneSelectedMaterial => accent.withValues(alpha: 0.12);
+
   bool get isDark => brightness == Brightness.dark;
 
   /// Today's column on the hour grid, its header, the now line across the

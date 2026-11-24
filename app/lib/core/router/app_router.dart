@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/auth_callback.dart';
 import 'package:dottoday/core/router/deep_link_guard.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// The five top-level tabs, in branch order (docs/03 §2). The shell maps
@@ -39,6 +39,8 @@ final class RouteScreens {
     required this.search,
     required this.settings,
     required this.settingsPage,
+    required this.settingsFrame,
+    required this.settingsInPlace,
     required this.month,
     required this.weekOn,
     required this.monthOn,
@@ -65,6 +67,15 @@ final class RouteScreens {
   /// push's `extra` (Routines' target day, M11.4); links never carry one.
   final Widget Function(BuildContext, SettingsPage page, Object? extra)
   settingsPage;
+
+  /// Wraps the Settings tab's navigator: the list pane beside it on wide
+  /// windows (M20.7 part 5a, E-R2-11).
+  final Widget Function(BuildContext, Widget navigator) settingsFrame;
+
+  /// Whether [SettingsPage] replaces the detail in place, with no push
+  /// (a group picked from the list pane, E-R2-11); [context] is the
+  /// Settings navigator's.
+  final bool Function(BuildContext, SettingsPage page) settingsInPlace;
   final WidgetBuilder month;
 
   /// Week opening on the week around a date (`/week/<date>`, ED-097).
@@ -116,8 +127,17 @@ GoRouter buildRouter(
         _redirect(state.uri, onAuthCallback, onAdd, taskPlace),
     errorBuilder: (context, state) => screens.today(context),
     routes: [
-      StatefulShellRoute.indexedStack(
+      StatefulShellRoute(
         builder: (context, state, shell) => screens.shell(context, shell),
+        navigatorContainerBuilder: (context, shell, children) => _BranchStack(
+          index: shell.currentIndex,
+          children: [
+            for (final (i, child) in children.indexed)
+              i == ShellTab.settings.index
+                  ? screens.settingsFrame(context, child)
+                  : child,
+          ],
+        ),
         branches: _branches(screens),
       ),
       // Never shown: the redirect sends a task link to its place.
@@ -227,11 +247,21 @@ List<StatefulShellBranch> _branches(RouteScreens screens) => [
           GoRoute(
             path: ':page',
             // Redirect already allow-listed the page name.
-            builder: (context, state) => screens.settingsPage(
-              context,
-              SettingsPage.byName(state.pathParameters['page']!)!,
-              state.extra,
-            ),
+            pageBuilder: (context, state) {
+              final page = SettingsPage.byName(state.pathParameters['page']!)!;
+              final child = screens.settingsPage(context, page, state.extra);
+              // A group picked in the list pane swaps the detail, as iPad
+              // and M3 list-detail do; sub-pages still push (E-R2-18).
+              if (screens.settingsInPlace(context, page)) {
+                return NoTransitionPage(key: state.pageKey, child: child);
+              }
+              return MaterialPage(
+                key: state.pageKey,
+                name: state.name,
+                restorationId: state.pageKey.value,
+                child: child,
+              );
+            },
           ),
       ],
     ),
@@ -303,3 +333,25 @@ ValueKey<String> _tabPage(ShellTab tab) => ValueKey(tab.path);
 /// updates it in place, with no transition.
 Page<void> _samePage(LocalKey key, Widget child) =>
     NoTransitionPage(key: key, child: child);
+
+/// The tab branches, one shown at a time, as `StatefulShellRoute
+/// .indexedStack` lays them out: hidden branches keep their state with
+/// their tickers off. Its own so the Settings branch can be framed.
+class _BranchStack extends StatelessWidget {
+  const _BranchStack({required this.index, required this.children});
+
+  final int index;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => IndexedStack(
+    index: index,
+    children: [
+      for (final (i, child) in children.indexed)
+        Offstage(
+          offstage: i != index,
+          child: TickerMode(enabled: i == index, child: child),
+        ),
+    ],
+  );
+}

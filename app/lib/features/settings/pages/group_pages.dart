@@ -1,11 +1,10 @@
-import 'dart:async';
-
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/features/settings/widgets/data_about_groups.dart';
 import 'package:dottoday/features/settings/widgets/learning_group.dart';
@@ -14,7 +13,6 @@ import 'package:dottoday/features/settings/widgets/reminders_group.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 /// A Settings group's page (M20.7 part 1, E-Phones Settings): the root's
 /// six groups and the pages under Your day. Until parts 2–4 restyle them
@@ -77,7 +75,8 @@ class PlaceRow extends StatelessWidget {
       tint: t.tasks[place.colour].ink,
       title: place.title,
       subtitle: place.summary,
-      onTap: () => unawaited(context.push(AppRoutes.settingsPage(page))),
+      selected: SettingsPaneScope.selectedAt(context, page),
+      onTap: () => openSettingsPage(context, page),
     );
   }
 }

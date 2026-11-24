@@ -9,6 +9,8 @@ import 'package:dottoday/features/inbox/inbox_screen.dart';
 import 'package:dottoday/features/routines/routines_page.dart';
 import 'package:dottoday/features/search/search_screen.dart';
 import 'package:dottoday/features/settings/pages/settings_pages.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
+import 'package:dottoday/features/settings/panes/settings_panes.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/timeline/month_screen.dart';
 import 'package:dottoday/features/timeline/now/now_screen.dart';
@@ -45,6 +47,8 @@ final appScreens = RouteScreens(
   settingsPage: (_, page, extra) => page == SettingsPage.routines
       ? RoutinesPage(dropOn: extra is DateTime ? extra : null)
       : settingsPageFor(page),
+  settingsFrame: (_, navigator) => SettingsPanes(navigator: navigator),
+  settingsInPlace: settingsInPlace,
   month: (_) => const WorkspaceFrame(child: MonthScreen()),
   weekOn: (_, date) => PhoneWeek(
     to: AppRoutes.monthOf(date),

@@ -7,6 +7,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/clock_time.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/widgets/night_rows.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
 import 'package:dottoday/features/settings/widgets/wake_up_alarm_row.dart';
@@ -14,7 +15,6 @@ import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:dottoday/shared/time_input/time_input_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// Wake Up, its alarm (docs/15 W1a), Wake Up options and Wind Down, "same
@@ -53,8 +53,8 @@ List<Widget> dayTimeRows(BuildContext context, Settings settings) {
       glyph: DotGlyphs.sound,
       tint: t.tasks[TaskColor.amber].ink,
       title: l10n.settingsWakeUpOptions,
-      onTap: () =>
-          unawaited(context.push(AppRoutes.settingsPage(SettingsPage.wakeUp))),
+      selected: SettingsPaneScope.selectedAt(context, SettingsPage.wakeUp),
+      onTap: () => openSettingsPage(context, SettingsPage.wakeUp),
     ),
     SettingsRow(
       glyph: DotGlyphs.moon,

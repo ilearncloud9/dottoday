@@ -123,6 +123,7 @@ class SettingsRow extends StatelessWidget {
     this.below,
     this.action = false,
     this.accentValue = false,
+    this.selected = false,
     super.key,
   });
 
@@ -152,6 +153,10 @@ class SettingsRow extends StatelessWidget {
   /// The value in the accent, as E-Phones draws "Alarm sounds on · This
   /// iPhone".
   final bool accentValue;
+
+  /// The page open beside Settings' list in two panes (E-R2-11, ED-291):
+  /// the row is tinted and says it is selected.
+  final bool selected;
 
   @override
   Widget build(BuildContext context) =>
@@ -227,7 +232,12 @@ class SettingsRow extends StatelessWidget {
         child: InkWell(onTap: () => onToggle?.call(!on), child: row),
       );
     }
-    return InkWell(onTap: onTap, child: row);
+    final tap = InkWell(onTap: onTap, child: row);
+    if (!selected) return tap;
+    return Semantics(
+      selected: true,
+      child: Ink(decoration: paneSelectedFill(context), child: tap),
+    );
   }
 
   Widget _texts(DotTheme t, {required bool stacked}) => Column(
@@ -300,4 +310,19 @@ class DotSwitch extends StatelessWidget {
           )
         : Switch(value: value, onChanged: onChanged);
   }
+}
+
+/// The open page's tint in Settings' list pane (M20.7 part 5a): iPad's
+/// neutral fill and Android's rounded accent tint (E-R2-11, ED-291), the
+/// web sidebar's selected colour on the Mac and the web (E-FullA-v2).
+BoxDecoration paneSelectedFill(BuildContext context) {
+  final c = DotTheme.of(context).colors;
+  if (!touchApp(context)) return BoxDecoration(color: c.selectedWeb);
+  if (DotIdiom.of(context) == DotIdiom.cupertino) {
+    return BoxDecoration(color: c.paneSelectedIos);
+  }
+  return BoxDecoration(
+    color: c.paneSelectedMaterial,
+    borderRadius: BorderRadius.circular(DotRadii.paneRowAndroid),
+  );
 }

@@ -64,6 +64,9 @@ void main() {
       expect(off, lessThan(DotSpace.page * 2));
     });
 
+    // From the expanded width Settings is two panes (M20.7 part 5a,
+    // settings_panes_test).
+    if (width >= 840) continue;
     testWidgets('$width: Settings is one centred column beside the rail', (
       tester,
     ) async {

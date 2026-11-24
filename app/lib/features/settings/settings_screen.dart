@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/settings_return.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
@@ -7,6 +8,8 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/settings/minimal_settings.dart';
 import 'package:dottoday/features/settings/pages/group_pages.dart';
+import 'package:dottoday/features/settings/pages/settings_pages.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/features/settings/settings_search.dart';
 import 'package:dottoday/features/settings/widgets/account_row.dart';
@@ -39,9 +42,24 @@ class SettingsScreen extends ConsumerWidget {
     }
     final s = profile.settings;
     final minimal = watchSimplified(ref, FeatureId.notifications);
+    final pane = SettingsPaneScope.paneAt(context);
+    // In two panes the root is the list; its place in the detail shows
+    // the page Settings opens on (owner, part 5a): Your day, or Minimal's
+    // Account and sync.
+    if (pane == SettingsPane.detail) {
+      return settingsPageFor(
+        minimal ? SettingsPage.account : SettingsPage.yourDay,
+      );
+    }
     // Phones open Settings from the profile, not a tab (ED-238): Back and
-    // its button return to where it was opened.
+    // its button return to where it was opened. The Android tablet's list
+    // pane keeps ←, as E-R2-11 draws it.
     final phone = AppLayout.classOf(context) == WidthClass.compact;
+    final withBack =
+        phone ||
+        (pane == SettingsPane.list &&
+            touchApp(context) &&
+            DotIdiom.of(context) == DotIdiom.material);
     void back() => context.go(ref.read(settingsReturnProvider.notifier).take());
     final page = Scaffold(
       key: _key,
@@ -65,7 +83,7 @@ class SettingsScreen extends ConsumerWidget {
                 DotSpace.fabClearance,
               ),
               children: [
-                _RootTitle(onBack: phone ? back : null),
+                _RootTitle(onBack: withBack ? back : null),
                 const SizedBox(height: DotSpace.l),
                 if (minimal)
                   MinimalSettings(settings: s)

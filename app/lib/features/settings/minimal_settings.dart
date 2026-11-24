@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -11,6 +9,7 @@ import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/features/settings/appearance/layout_row.dart';
+import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
 import 'package:dottoday/features/settings/widgets/health_summary_row.dart';
 import 'package:dottoday/features/settings/widgets/settings_change.dart';
@@ -18,7 +17,6 @@ import 'package:dottoday/shared/notifications/test_alarm_card.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 /// Minimal Settings (docs/14 §4): one page, nine rows, no sections —
 /// Layout, Wake Up, Wake Up alarm, Wake Up options, Wind Down, Remind me
@@ -37,8 +35,9 @@ class MinimalSettings extends ConsumerWidget {
     final checks = ref.watch(notificationHealthChecksProvider).value;
     final off = checks != null && healthProblems(checks) > 0;
     final alarm = ref.read(testAlarmProvider.notifier);
-    void open(SettingsPage page) =>
-        unawaited(context.push(AppRoutes.settingsPage(page)));
+    void open(SettingsPage page) => openSettingsPage(context, page);
+    bool picked(SettingsPage page) =>
+        SettingsPaneScope.selectedAt(context, page);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.xl,
@@ -70,12 +69,14 @@ class MinimalSettings extends ConsumerWidget {
               glyph: DotGlyphs.calendar,
               tint: t.colors.accentInk,
               title: l10n.settingsCalendars,
+              selected: picked(SettingsPage.calendars),
               onTap: () => open(SettingsPage.calendars),
             ),
             SettingsRow(
               glyph: DotGlyphs.person,
               tint: t.colors.accentInk,
               title: l10n.settingsAccountAndSync,
+              selected: picked(SettingsPage.account),
               onTap: () => open(SettingsPage.account),
             ),
             SettingsRow(
