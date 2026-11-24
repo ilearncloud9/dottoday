@@ -8,18 +8,15 @@ part of 'task_selection.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Multi-select on the Today screen. Picking on another day starts over
-/// there: the bar acts on one day at a time.
+/// Multi-select on Today and the hour grid.
 
 @ProviderFor(TaskSelection)
 final taskSelectionProvider = TaskSelectionProvider._();
 
-/// Multi-select on the Today screen. Picking on another day starts over
-/// there: the bar acts on one day at a time.
+/// Multi-select on Today and the hour grid.
 final class TaskSelectionProvider
     extends $NotifierProvider<TaskSelection, Picked> {
-  /// Multi-select on the Today screen. Picking on another day starts over
-  /// there: the bar acts on one day at a time.
+  /// Multi-select on Today and the hour grid.
   TaskSelectionProvider._()
     : super(
         from: null,
@@ -47,10 +44,9 @@ final class TaskSelectionProvider
   }
 }
 
-String _$taskSelectionHash() => r'5245aee01d0ddeedff1ac1282f42371f77e2dfc4';
+String _$taskSelectionHash() => r'cfd1cb91c1dbe665a740015da415b366fa2ae2d2';
 
-/// Multi-select on the Today screen. Picking on another day starts over
-/// there: the bar acts on one day at a time.
+/// Multi-select on Today and the hour grid.
 
 abstract class _$TaskSelection extends $Notifier<Picked> {
   Picked build();

@@ -61,6 +61,17 @@ void main() {
     expect(fire, isNot(contains(DateTime.utc(2026, 10, 23, 20))));
   });
 
+  test("only on each schedule's reminder days (ED-448)", () {
+    final fire = _windDowns(
+      const Settings(windDownReminderDays: {Weekday.wed, Weekday.sat}),
+    ).map((n) => n.fireAtUtc);
+    // Wed 21 and Sat 24 October.
+    expect(fire, [
+      DateTime.utc(2026, 10, 21, 20),
+      DateTime.utc(2026, 10, 24, 20),
+    ]);
+  });
+
   test('off: none', () {
     expect(_windDowns(const Settings(windDownReminder: false)), isEmpty);
   });

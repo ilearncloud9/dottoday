@@ -37,16 +37,7 @@ List<Widget> wakeUpSoundRows(
       tint: t.tasks[TaskColor.slate].ink,
       title: l10n.settingsSound,
       value: soundDisplayName(l10n, sound),
-      onTap: () => unawaited(
-        showSoundTierSheet(
-          context,
-          title: l10n.wakeUpSoundRow,
-          sections: startSoundSections(l10n),
-          selected: (s) =>
-              resolveStartSound(s.wakeUpSoundId ?? s.startSoundId).id,
-          write: (s, key) => s.copyWith(wakeUpSoundId: key),
-        ),
-      ),
+      onTap: () => unawaited(pickWakeUpSound(context)),
     ),
     if (full && currentHealthPlatform() != HealthPlatform.iphone)
       SettingsRow(
@@ -160,3 +151,20 @@ Future<void> _pickLimit(BuildContext context, Settings settings) async {
 
 String _limit(AppLocalizations l10n, int times) =>
     times == 0 ? l10n.wakeUpSnoozeNoLimit : l10n.wakeUpSnoozeTimes(times);
+
+/// The Wake Up sound's picker, shared by every schedule: the Sound row
+/// and the schedule sheet's Sound and snooze (owner 2026-11-24).
+Future<void> pickWakeUpSound(BuildContext context) => showSoundTierSheet(
+  context,
+  title: context.l10n.wakeUpSoundRow,
+  sections: startSoundSections(context.l10n),
+  selected: (s) => resolveStartSound(s.wakeUpSoundId ?? s.startSoundId).id,
+  write: (s, key) => s.copyWith(wakeUpSoundId: key),
+);
+
+/// The Wake Up sound's name ("Dawn chorus").
+String wakeUpSoundName(AppLocalizations l10n, Settings settings) =>
+    soundDisplayName(
+      l10n,
+      resolveStartSound(settings.wakeUpSoundId ?? settings.startSoundId),
+    );

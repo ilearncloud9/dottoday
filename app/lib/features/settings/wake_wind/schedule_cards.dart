@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/domain/time/schedules.dart';
+import 'package:dottoday/features/settings/wake_wind/schedule_sheet/schedule_sheet.dart';
+import 'package:dottoday/features/settings/wake_wind/schedule_sheet/schedule_text.dart';
 import 'package:dottoday/features/settings/widgets/day_shape_group.dart';
-import 'package:dottoday/features/settings/widgets/weekday_sheet.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 
@@ -35,9 +35,6 @@ class ScheduleCards extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final schedules = schedulesOf(settings, firstDay: settings.firstDayOfWeek);
-    // Until the schedule sheet (M20.7 part 4b), Edit and Add open the
-    // per-weekday sheet.
-    void edit() => unawaited(showWeekdaySheet(context));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.m,
@@ -54,7 +51,16 @@ class ScheduleCards extends StatelessWidget {
             schedule: s,
             dot: _dots[i % _dots.length],
             settings: settings,
-            onEdit: edit,
+            onEdit: () => unawaited(showScheduleSheet(context, days: s.days)),
+          ),
+        // Each day its own schedule: nothing left to add (E-Phones checks
+        // "Every day covered").
+        if (schedules.length == 7)
+          Padding(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: DotSpace.xs,
+            ),
+            child: Text(l10n.schAllCovered, style: t.styles.body),
           ),
         if (schedules.length < 7)
           Material(
@@ -65,7 +71,7 @@ class ScheduleCards extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              onTap: edit,
+              onTap: () => unawaited(showScheduleSheet(context)),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: DotTouch.android),
                 child: Padding(
@@ -119,15 +125,12 @@ class _ScheduleCard extends StatelessWidget {
     final l10n = context.l10n;
     final days = schedule.days;
     final kind = scheduleKind(days);
-    final name = switch (kind) {
-      ScheduleKind.everyDay => l10n.wwdEveryDay,
-      ScheduleKind.weekdays => l10n.wwdWeekdays,
-      ScheduleKind.weekend => l10n.wwdWeekend,
-      ScheduleKind.days => l10n.wwdDays,
-    };
+    final name = scheduleName(l10n, days);
     final wake = windowMinutes(schedule.window.start);
     final windDown = windowMinutes(schedule.window.end);
-    final rings = settings.wakeUpAlarm;
+    // Rings when the alarm is on and this schedule's days ring (ED-448).
+    final rings =
+        settings.wakeUpAlarm && days.every(settings.wakeUpAlarmDays.contains);
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
       decoration: BoxDecoration(
@@ -155,7 +158,7 @@ class _ScheduleCard extends StatelessWidget {
               Text(name, style: t.styles.rowTitle),
               if (kind != ScheduleKind.everyDay)
                 Text(
-                  _daysText(context, days),
+                  daysText(context, days),
                   style: t.styles.body.copyWith(color: t.colors.muted),
                 ),
               Row(
@@ -223,21 +226,6 @@ class _ScheduleCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// "Mon–Fri" for consecutive days, else "Mon, Wed".
-  String _daysText(BuildContext context, List<Weekday> days) {
-    final l10n = context.l10n;
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final names = [for (final d in days) weekdayName(locale, d)];
-    final run = [
-      for (var i = 1; i < days.length; i++)
-        (days[i].index - days[i - 1].index) % 7 == 1,
-    ].every((b) => b);
-    if (days.length > 2 && run) {
-      return l10n.wwdDayRange(names.first, names.last);
-    }
-    return names.reduce(l10n.listJoin);
   }
 }
 

@@ -1650,18 +1650,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsWindDown => 'Desconexión';
 
   @override
-  String get settingsPerWeekday => 'Días distintos';
-
-  @override
   String get settingsSameEveryDay => 'Igual todos los días';
 
   @override
   String settingsCustomDays(String days) {
     return '$days';
   }
-
-  @override
-  String get settingsUseEveryday => 'Igual que todos los días';
 
   @override
   String get settingsWeekStarts => 'La semana empieza';
@@ -7912,6 +7906,154 @@ class AppLocalizationsEs extends AppLocalizations {
       zero: 'hoy',
     );
     return 'Visto por última vez $_temp0';
+  }
+
+  @override
+  String get schNew => 'Nuevo horario';
+
+  @override
+  String get schAdd => 'Añadir';
+
+  @override
+  String get schSave => 'Guardar';
+
+  @override
+  String get schDaysCaption => 'Días';
+
+  @override
+  String get schTimes => 'Desconexión y despertar';
+
+  @override
+  String get schOfNight => 'de noche';
+
+  @override
+  String schUnderTarget(String duration, String target) {
+    return '$duration por debajo de tu objetivo de $target de sueño';
+  }
+
+  @override
+  String schOverTarget(String duration, String target) {
+    return '$duration por encima de tu objetivo de $target de sueño';
+  }
+
+  @override
+  String schMatchesTarget(String target) {
+    return 'Coincide con tu objetivo de $target de sueño';
+  }
+
+  @override
+  String get schDragHint =>
+      'Arrastra la luna o el sol, o toca una hora para escribirla.';
+
+  @override
+  String schFocusHint(String end) {
+    return 'Seleccionado: $end; las flechas lo mueven 5 min.';
+  }
+
+  @override
+  String get schRingDays => 'Sonar estos días';
+
+  @override
+  String schRingAt(String days, String time) {
+    return '$days a las $time';
+  }
+
+  @override
+  String get schRingOff => 'Activa primero «Sonar como una alarma»';
+
+  @override
+  String get schSoundSnooze => 'Sonido y repetición';
+
+  @override
+  String schSoundSnoozeValue(String sound, String length, String limit) {
+    return '$sound · $length · hasta $limit';
+  }
+
+  @override
+  String schSoundNoLimit(String sound, String length) {
+    return '$sound · $length · sin límite';
+  }
+
+  @override
+  String schSoundNoSnooze(String sound) {
+    return '$sound · sin repetición';
+  }
+
+  @override
+  String get schSharedFooter =>
+      'El sonido y la repetición son comunes a todos los horarios (Despertar y Desconexión › Alarma al despertar).';
+
+  @override
+  String get schRemindDays => 'Recordatorios estos días';
+
+  @override
+  String get schRemove => 'Quitar este horario';
+
+  @override
+  String schRemoveNote(String times) {
+    return 'Sus días vuelven a $times, sin alarma. Podrás deshacerlo.';
+  }
+
+  @override
+  String schRemoved(String name) {
+    return '$name quitado';
+  }
+
+  @override
+  String get schTakenTitle => 'Este día ya tiene un horario';
+
+  @override
+  String get schTakenMessage => '¿Quieres cambiarlo?';
+
+  @override
+  String get schChange => 'Cambiar';
+
+  @override
+  String schCheckBoth(String action) {
+    return 'La desconexión y el despertar no pueden ser a la misma hora. Elige también al menos un día. $action no se activa hasta que ambos estén listos.';
+  }
+
+  @override
+  String schCheckSame(String action) {
+    return 'La desconexión y el despertar no pueden ser a la misma hora. $action no se activa hasta que cambies una.';
+  }
+
+  @override
+  String schCheckNoDays(String action) {
+    return 'Elige al menos un día. $action no se activa hasta entonces.';
+  }
+
+  @override
+  String schShortNight(String duration) {
+    return 'Es una noche de $duration. ¿La mantienes?';
+  }
+
+  @override
+  String schShortDay(String duration) {
+    return 'Quedan $duration de día.';
+  }
+
+  @override
+  String schAfterMidnight(String time, String days) {
+    return 'La desconexión a las $time es después de medianoche, así que cierra el día de $days (en el punto del día, como su noche).';
+  }
+
+  @override
+  String schDayOf(String day) {
+    return '$day';
+  }
+
+  @override
+  String schAnd(String first, String last) {
+    return '$first y $last';
+  }
+
+  @override
+  String get schAllCovered => 'Los siete días tienen un horario';
+
+  @override
+  String schDayInOther(String day, String schedule) {
+    return '$day, en $schedule';
   }
 
   @override

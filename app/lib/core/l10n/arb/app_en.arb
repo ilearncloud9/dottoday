@@ -2522,10 +2522,6 @@
   "@settingsWindDown": {
     "description": "Settings row; also the DAY SHAPE handle's name."
   },
-  "settingsPerWeekday": "Different days",
-  "@settingsPerWeekday": {
-    "description": "Settings row: per-weekday Wake Up / Wind Down."
-  },
   "settingsSameEveryDay": "Same every day",
   "@settingsSameEveryDay": {
     "description": "Per-weekday row value when no day differs."
@@ -2538,10 +2534,6 @@
         "type": "String"
       }
     }
-  },
-  "settingsUseEveryday": "Same as every day",
-  "@settingsUseEveryday": {
-    "description": "Per-weekday sheet: reset this day to the everyday times."
   },
   "settingsWeekStarts": "Week starts",
   "@settingsWeekStarts": {
@@ -8307,6 +8299,272 @@
     "placeholders": {
       "days": {
         "type": "int"
+      }
+    }
+  },
+  "schNew": "New schedule",
+  "@schNew": {
+    "description": "Title of the schedule sheet when adding one (E-Phones New schedule)."
+  },
+  "schAdd": "Add",
+  "@schAdd": {
+    "description": "The new schedule sheet's action."
+  },
+  "schSave": "Save",
+  "@schSave": {
+    "description": "The schedule sheet's action when editing."
+  },
+  "schDaysCaption": "Days",
+  "@schDaysCaption": {
+    "description": "Caption above the day picker in the schedule sheet."
+  },
+  "schTimes": "Wind Down and Wake Up",
+  "@schTimes": {
+    "description": "Caption above the night dial."
+  },
+  "schOfNight": "of night",
+  "@schOfNight": {
+    "description": "Under the night's length in the dial: '7 h 30' / 'of night'."
+  },
+  "schUnderTarget": "{duration} under your {target} sleep target",
+  "@schUnderTarget": {
+    "description": "Below the dial: the night is shorter than the sleep target.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "schOverTarget": "{duration} over your {target} sleep target",
+  "@schOverTarget": {
+    "description": "Below the dial: the night is longer than the sleep target.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "schMatchesTarget": "Matches your {target} sleep target",
+  "@schMatchesTarget": {
+    "description": "Below the dial: the night equals the sleep target.",
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "schDragHint": "Drag the moon or the sun, or tap a time to type it.",
+  "@schDragHint": {
+    "description": "Hint under the time fields on iPhone."
+  },
+  "schFocusHint": "Focused: {end} — arrow keys move it 5 min.",
+  "@schFocusHint": {
+    "description": "Shown while a dial handle has keyboard focus.",
+    "placeholders": {
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "schRingDays": "Ring on these days",
+  "@schRingDays": {
+    "description": "Switch in the schedule sheet: the alarm rings on this schedule's days."
+  },
+  "schRingAt": "{days} at {time}",
+  "@schRingAt": {
+    "description": "Under Ring on these days: 'Mon–Fri at 6:30 AM'.",
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "schRingOff": "Turn on Ring like an alarm first",
+  "@schRingOff": {
+    "description": "Under the dimmed Ring on these days while the alarm is off (owner 2026-11-24)."
+  },
+  "schSoundSnooze": "Sound and snooze",
+  "@schSoundSnooze": {
+    "description": "Row in the schedule sheet; opens the sound picker."
+  },
+  "schSoundSnoozeValue": "{sound} · {length} · up to {limit}",
+  "@schSoundSnoozeValue": {
+    "description": "'Dawn chorus · 9 min · up to 3'.",
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "schSoundNoLimit": "{sound} · {length} · no limit",
+  "@schSoundNoLimit": {
+    "description": "Sound and snooze value with no snooze limit.",
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "length": {
+        "type": "String"
+      }
+    }
+  },
+  "schSoundNoSnooze": "{sound} · no snooze",
+  "@schSoundNoSnooze": {
+    "description": "Sound and snooze value with snooze off.",
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      }
+    }
+  },
+  "schSharedFooter": "Sound and snooze are shared by all schedules (Wake Up and Wind Down › Wake Up alarm).",
+  "@schSharedFooter": {
+    "description": "Footer under the schedule sheet's Wake Up alarm group."
+  },
+  "schRemindDays": "Reminders on these days",
+  "@schRemindDays": {
+    "description": "Caption above the Wind Down reminder in the schedule sheet."
+  },
+  "schRemove": "Remove this schedule",
+  "@schRemove": {
+    "description": "Button at the end of the schedule sheet."
+  },
+  "schRemoveNote": "Its days go back to {times} with no alarm. Undo is offered.",
+  "@schRemoveNote": {
+    "description": "Under Remove this schedule (owner 2026-11-24: the default day, no alarm).",
+    "placeholders": {
+      "times": {
+        "type": "String"
+      }
+    }
+  },
+  "schRemoved": "{name} removed",
+  "@schRemoved": {
+    "description": "Undo toast after removing a schedule.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schTakenTitle": "This day already has a schedule",
+  "@schTakenTitle": {
+    "description": "Alert title when picking a day that is in another schedule (owner 2026-11-24)."
+  },
+  "schTakenMessage": "Would you like to change it?",
+  "@schTakenMessage": {
+    "description": "Alert message when picking a day that is in another schedule."
+  },
+  "schChange": "Change",
+  "@schChange": {
+    "description": "Alert button: move the day into this schedule."
+  },
+  "schCheckBoth": "Wind Down and Wake Up can't be the same time. Pick at least one day too. {action} stays off until both are set.",
+  "@schCheckBoth": {
+    "description": "Schedule sheet check (E-Phones New schedule checks).",
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "schCheckSame": "Wind Down and Wake Up can't be the same time. {action} stays off until you change one.",
+  "@schCheckSame": {
+    "description": "Schedule sheet check: same times.",
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "schCheckNoDays": "Pick at least one day. {action} stays off until you do.",
+  "@schCheckNoDays": {
+    "description": "Schedule sheet check: no days.",
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "schShortNight": "That's a {duration} night. Keep it?",
+  "@schShortNight": {
+    "description": "Schedule sheet check: night under 3 h; Save still works.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "schShortDay": "That leaves {duration} of day.",
+  "@schShortDay": {
+    "description": "Schedule sheet check: day under 4 h; Save still works.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "schAfterMidnight": "Wind Down {time} is after midnight, so it ends {days} day (shown on the day dot as their evening).",
+  "@schAfterMidnight": {
+    "description": "Schedule sheet note when Wind Down is after midnight (E-Phones Weekend).",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "schDayOf": "{day}'s",
+  "@schDayOf": {
+    "description": "One day in the after-midnight note: 'Saturday's'.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schAnd": "{first} and {last}",
+  "@schAnd": {
+    "description": "Joins the last two days in a list.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "schAllCovered": "All seven days have a schedule",
+  "@schAllCovered": {
+    "description": "Replaces Add a schedule when each day has its own schedule (E-Phones checks)."
+  },
+  "schDayInOther": "{day}, in {schedule}",
+  "@schDayInOther": {
+    "description": "Screen reader label of a day that belongs to another schedule.",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "schedule": {
+        "type": "String"
       }
     }
   },

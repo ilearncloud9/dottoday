@@ -247,31 +247,6 @@ void main() {
     expect(find.text('System sound'), findsOneWidget);
   });
 
-  testWidgets('Different days: a custom Saturday shows on the row', (
-    tester,
-  ) async {
-    final handle = tester.ensureSemantics();
-    final h = await pumpSettings(tester, location: '/settings/wakeWindDown');
-    // The schedule's Edit (the per-weekday sheet until M20.7 part 4b).
-    await tester.ensureVisible(find.text('Edit').first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Edit').first);
-    await tester.pumpAndSettle();
-    // The sheet's seven Wind Down handles, Monday first (week starts Monday).
-    final windDowns = find.semantics.byPredicate((n) => n.label == 'Wind Down');
-    expect(windDowns.evaluate(), hasLength(7));
-    tester.semantics.increase(windDowns.at(5));
-    await tester.pumpAndSettle();
-    final s = await storedSettings(h);
-    expect(s.boundaryFor(Weekday.sat).end, '22:15');
-    expect(s.boundaryFor(Weekday.mon).end, '22:00');
-    expect(find.text('Same as every day'), findsOneWidget);
-    await tester.tap(find.text('Same as every day'));
-    await tester.pumpAndSettle();
-    expect((await storedSettings(h)).boundaryFor(Weekday.sat).end, '22:00');
-    handle.dispose();
-  });
-
   testWidgets('App colour, Theme and language (ED-161, ED-221)', (
     tester,
   ) async {

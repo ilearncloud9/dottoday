@@ -16,7 +16,8 @@ import 'package:timezone/timezone.dart' as tz;
 /// duplicates (R-10).
 abstract final class DayReminders {
   /// One reminder at each day's effective Wind Down in `(fromUtc, toUtc]`
-  /// (that weekday's own window, pulled earlier by a sleep target before
+  /// on the days in `windDownReminderDays` (ED-448) (that weekday's own
+  /// window, pulled earlier by a sleep target before
   /// an early tomorrow, docs/15 W4), with the id of the next day's first
   /// planned task.
   ///
@@ -33,23 +34,24 @@ abstract final class DayReminders {
     required Set<int> used,
   }) => [
     for (final (date, _) in _days(settings, location, fromUtc, toUtc))
-      if (_windDownOn(settings, location, occurrences, date, fromUtc)
-          case final at when at.isAfter(fromUtc) && !at.isAfter(toUtc))
-        PlannedNotification(
-          id: uniqueNotificationId(
-            used,
-            'windDown:${_key(date)}',
-            PlannedNotification.windDownIndex,
+      if (settings.windDownReminderDays.contains(_weekdayOf(date)))
+        if (_windDownOn(settings, location, occurrences, date, fromUtc)
+            case final at when at.isAfter(fromUtc) && !at.isAfter(toUtc))
+          PlannedNotification(
+            id: uniqueNotificationId(
+              used,
+              'windDown:${_key(date)}',
+              PlannedNotification.windDownIndex,
+            ),
+            occurrenceId:
+                _blocksOn(occurrences, location, _next(date)).firstOrNull?.id ??
+                '',
+            alertIndex: PlannedNotification.windDownIndex,
+            fireAtUtc: at,
+            kind: AlertKind.atEnd,
+            silent: inQuietHours(location, at, settings.quietHours),
+            purpose: NotificationPurpose.windDown,
           ),
-          occurrenceId:
-              _blocksOn(occurrences, location, _next(date)).firstOrNull?.id ??
-              '',
-          alertIndex: PlannedNotification.windDownIndex,
-          fireAtUtc: at,
-          kind: AlertKind.atEnd,
-          silent: inQuietHours(location, at, settings.quietHours),
-          purpose: NotificationPurpose.windDown,
-        ),
   ];
 
   /// Day [date]'s effective Wind Down (docs/15 W4): earlier before an
@@ -69,8 +71,9 @@ abstract final class DayReminders {
   ).bedUtc;
 
   /// The Wake Up alarm (docs/15 W1, M17.1): loud at each day's Wake Up in
-  /// `(fromUtc, toUtc]`, on that weekday's own window, for days that have a
-  /// block ("only days I've planned", 15 §9). It ignores quiet hours like
+  /// `(fromUtc, toUtc]` whose weekday rings (`wakeUpAlarmDays`, each
+  /// schedule's Ring on these days, ED-448), on that weekday's own window,
+  /// for days that have a block ("only days I've planned", 15 §9). It ignores quiet hours like
   /// every loud start (15 §2), and `occurrenceId` is the day's first block,
   /// so the alarm says what the day starts with and re-posts when that
   /// changes.
@@ -88,23 +91,24 @@ abstract final class DayReminders {
     required Set<int> used,
   }) => [
     for (final (date, shape) in _days(settings, location, fromUtc, toUtc))
-      if (shape.wakeUtc.isAfter(fromUtc) && !shape.wakeUtc.isAfter(toUtc))
-        if (_blocksOn(occurrences, location, date).firstOrNull
-            case final first?)
-          PlannedNotification(
-            id: uniqueNotificationId(
-              used,
-              'wakeup:${_key(date)}',
-              PlannedNotification.wakeUpIndex,
+      if (settings.wakeUpAlarmDays.contains(_weekdayOf(date)))
+        if (shape.wakeUtc.isAfter(fromUtc) && !shape.wakeUtc.isAfter(toUtc))
+          if (_blocksOn(occurrences, location, date).firstOrNull
+              case final first?)
+            PlannedNotification(
+              id: uniqueNotificationId(
+                used,
+                'wakeup:${_key(date)}',
+                PlannedNotification.wakeUpIndex,
+              ),
+              occurrenceId: first.id,
+              alertIndex: PlannedNotification.wakeUpIndex,
+              fireAtUtc: shape.wakeUtc,
+              kind: AlertKind.atStart,
+              sound: wakeUpSound(settings, date).id,
+              loud: true,
+              purpose: NotificationPurpose.wakeUp,
             ),
-            occurrenceId: first.id,
-            alertIndex: PlannedNotification.wakeUpIndex,
-            fireAtUtc: shape.wakeUtc,
-            kind: AlertKind.atStart,
-            sound: wakeUpSound(settings, date).id,
-            loud: true,
-            purpose: NotificationPurpose.wakeUp,
-          ),
   ];
 
   /// "Your day: 6 blocks, first at 08:00" at Wake Up on each weekday in
@@ -125,8 +129,7 @@ abstract final class DayReminders {
     final out = <PlannedNotification>[];
     for (final (date, shape) in _days(settings, location, fromUtc, toUtc)) {
       final at = shape.wakeUtc;
-      final weekday = Weekday.values[date.weekday - 1];
-      if (!settings.daySummaryDays.contains(weekday)) continue;
+      if (!settings.daySummaryDays.contains(_weekdayOf(date))) continue;
       if (!at.isAfter(fromUtc) || at.isAfter(toUtc)) continue;
       final blocks = _blocksOn(occurrences, location, date);
       if (blocks.isEmpty) continue;
@@ -225,3 +228,6 @@ bool inQuietHours(tz.Location location, DateTime fireAtUtc, TimeWindow? quiet) {
 
 int _minutes(String hhmm) =>
     int.parse(hhmm.substring(0, 2)) * 60 + int.parse(hhmm.substring(3, 5));
+
+/// [date]'s weekday.
+Weekday _weekdayOf(DateTime date) => Weekday.values[date.weekday - 1];

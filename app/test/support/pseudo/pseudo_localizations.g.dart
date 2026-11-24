@@ -1288,17 +1288,11 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get settingsWindDown => pseudo(super.settingsWindDown);
 
   @override
-  String get settingsPerWeekday => pseudo(super.settingsPerWeekday);
-
-  @override
   String get settingsSameEveryDay => pseudo(super.settingsSameEveryDay);
 
   @override
   String settingsCustomDays(String days) =>
       pseudo(super.settingsCustomDays(days));
-
-  @override
-  String get settingsUseEveryday => pseudo(super.settingsUseEveryday);
 
   @override
   String get settingsWeekStarts => pseudo(super.settingsWeekStarts);
@@ -6318,6 +6312,124 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String wwdLastSeen(int days) => pseudo(super.wwdLastSeen(days));
+
+  @override
+  String get schNew => pseudo(super.schNew);
+
+  @override
+  String get schAdd => pseudo(super.schAdd);
+
+  @override
+  String get schSave => pseudo(super.schSave);
+
+  @override
+  String get schDaysCaption => pseudo(super.schDaysCaption);
+
+  @override
+  String get schTimes => pseudo(super.schTimes);
+
+  @override
+  String get schOfNight => pseudo(super.schOfNight);
+
+  @override
+  String schUnderTarget(String duration, String target) =>
+      pseudo(super.schUnderTarget(duration, target));
+
+  @override
+  String schOverTarget(String duration, String target) =>
+      pseudo(super.schOverTarget(duration, target));
+
+  @override
+  String schMatchesTarget(String target) =>
+      pseudo(super.schMatchesTarget(target));
+
+  @override
+  String get schDragHint => pseudo(super.schDragHint);
+
+  @override
+  String schFocusHint(String end) => pseudo(super.schFocusHint(end));
+
+  @override
+  String get schRingDays => pseudo(super.schRingDays);
+
+  @override
+  String schRingAt(String days, String time) =>
+      pseudo(super.schRingAt(days, time));
+
+  @override
+  String get schRingOff => pseudo(super.schRingOff);
+
+  @override
+  String get schSoundSnooze => pseudo(super.schSoundSnooze);
+
+  @override
+  String schSoundSnoozeValue(String sound, String length, String limit) =>
+      pseudo(super.schSoundSnoozeValue(sound, length, limit));
+
+  @override
+  String schSoundNoLimit(String sound, String length) =>
+      pseudo(super.schSoundNoLimit(sound, length));
+
+  @override
+  String schSoundNoSnooze(String sound) =>
+      pseudo(super.schSoundNoSnooze(sound));
+
+  @override
+  String get schSharedFooter => pseudo(super.schSharedFooter);
+
+  @override
+  String get schRemindDays => pseudo(super.schRemindDays);
+
+  @override
+  String get schRemove => pseudo(super.schRemove);
+
+  @override
+  String schRemoveNote(String times) => pseudo(super.schRemoveNote(times));
+
+  @override
+  String schRemoved(String name) => pseudo(super.schRemoved(name));
+
+  @override
+  String get schTakenTitle => pseudo(super.schTakenTitle);
+
+  @override
+  String get schTakenMessage => pseudo(super.schTakenMessage);
+
+  @override
+  String get schChange => pseudo(super.schChange);
+
+  @override
+  String schCheckBoth(String action) => pseudo(super.schCheckBoth(action));
+
+  @override
+  String schCheckSame(String action) => pseudo(super.schCheckSame(action));
+
+  @override
+  String schCheckNoDays(String action) => pseudo(super.schCheckNoDays(action));
+
+  @override
+  String schShortNight(String duration) =>
+      pseudo(super.schShortNight(duration));
+
+  @override
+  String schShortDay(String duration) => pseudo(super.schShortDay(duration));
+
+  @override
+  String schAfterMidnight(String time, String days) =>
+      pseudo(super.schAfterMidnight(time, days));
+
+  @override
+  String schDayOf(String day) => pseudo(super.schDayOf(day));
+
+  @override
+  String schAnd(String first, String last) => pseudo(super.schAnd(first, last));
+
+  @override
+  String get schAllCovered => pseudo(super.schAllCovered);
+
+  @override
+  String schDayInOther(String day, String schedule) =>
+      pseudo(super.schDayInOther(day, schedule));
 
   @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);

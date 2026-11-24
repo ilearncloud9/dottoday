@@ -122,6 +122,9 @@ abstract final class DotRadii {
 
   /// A day tile in the Routines week strip (E-R2-22: 14).
   static const double dayTile = 14;
+
+  /// Android's day chips in a schedule sheet (E-Phones "✓Mon").
+  static const double dayChipAndroid = 8;
 }
 
 /// Dot and thread sizes (docs/10 §2.3).
@@ -830,4 +833,45 @@ abstract final class ChromeAlpha {
 
   /// The iPhone glass capsule's blur (16 on E-Phones, ED-034).
   static const double glassBlur = 16;
+}
+
+/// The night dial in a schedule sheet (ED-083's layout rule, ED-084): 240
+/// to 360 across, never stretched; the band is 12 % of it; labels sit
+/// outside the band and only four of them.
+abstract final class DotDial {
+  static const double min = 240;
+  static const double max = 360;
+  static const double bandShare = 0.12;
+
+  /// Room outside the band for the 12 AM / 6 AM / 12 PM / 6 PM labels.
+  static const double labelRoom = 30;
+
+  /// The moon and sun handles (a 44 pt touch target).
+  static const double handle = 44;
+
+  /// The night line along the inside of the night band.
+  static const double nightLine = 3;
+
+  /// The hour ticks: 6 pt, 12 pt at 12 and 6; inset from the band.
+  static const double tick = 6;
+  static const double tickMajor = 12;
+  static const double tickInset = 10;
+
+  /// The dotted day ring inside the band.
+  static const double dot = 1.6;
+  static const double dotInset = 4;
+
+  /// One dot every 15 minutes of the day.
+  static const int dotEvery = 15;
+
+  /// The night's length in the centre, tried at each size in turn; when
+  /// none fits it goes below the dial (ED-083 fit test).
+  static const List<double> durationSizes = [34, 30, 28, 26];
+
+  /// From this text scale the duration always sits below.
+  static const double belowFromScale = 1.35;
+
+  /// A handle moves 5 min a step, 30 with Shift (E-FullA-v2 Mac panel).
+  static const int step = 5;
+  static const int bigStep = 30;
 }

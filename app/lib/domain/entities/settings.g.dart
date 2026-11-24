@@ -64,7 +64,17 @@ _Settings _$SettingsFromJson(Map<String, dynamic> json) => _Settings(
   runningLateNudge: json['runningLateNudge'] as bool? ?? true,
   rollUnfinished: json['rollUnfinished'] as bool? ?? false,
   windDownReminder: json['windDownReminder'] as bool? ?? true,
+  windDownReminderDays:
+      (json['windDownReminderDays'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$WeekdayEnumMap, e))
+          .toSet() ??
+      allWeekdays,
   wakeUpAlarm: json['wakeUpAlarm'] as bool? ?? false,
+  wakeUpAlarmDays:
+      (json['wakeUpAlarmDays'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$WeekdayEnumMap, e))
+          .toSet() ??
+      allWeekdays,
   alarmDeviceId: json['alarmDeviceId'] as String?,
   wakeUpSoundId: json['wakeUpSoundId'] as String?,
   wakeUpVarySound: json['wakeUpVarySound'] as bool? ?? false,
@@ -163,7 +173,13 @@ Map<String, dynamic> _$SettingsToJson(_Settings instance) => <String, dynamic>{
   'runningLateNudge': instance.runningLateNudge,
   'rollUnfinished': instance.rollUnfinished,
   'windDownReminder': instance.windDownReminder,
+  'windDownReminderDays': instance.windDownReminderDays
+      .map((e) => _$WeekdayEnumMap[e]!)
+      .toList(),
   'wakeUpAlarm': instance.wakeUpAlarm,
+  'wakeUpAlarmDays': instance.wakeUpAlarmDays
+      .map((e) => _$WeekdayEnumMap[e]!)
+      .toList(),
   'alarmDeviceId': instance.alarmDeviceId,
   'wakeUpSoundId': instance.wakeUpSoundId,
   'wakeUpVarySound': instance.wakeUpVarySound,

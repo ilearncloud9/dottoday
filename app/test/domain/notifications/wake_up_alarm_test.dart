@@ -71,6 +71,23 @@ void main() {
     expect(_loudTask(plan, 'wed-1'), isTrue);
   });
 
+  test('only on the days that ring (ED-448): other days keep the task', () {
+    final thu = _task('thu-1', DateTime.utc(2026, 10, 22, 9));
+    final plan = _plan([
+      ...wed,
+      thu,
+    ], settings: _on.copyWith(wakeUpAlarmDays: {Weekday.thu}));
+    expect([for (final n in _wakeUps(plan)) n.occurrenceId], ['thu-1']);
+    // Wednesday's first task still reminds, as a normal reminder.
+    expect(
+      plan.where(
+        (n) =>
+            n.occurrenceId == 'wed-1' && n.purpose == NotificationPurpose.task,
+      ),
+      isNotEmpty,
+    );
+  });
+
   test('on a phone: loud at Wake Up, with the Start sound', () {
     final alarms = _wakeUps(_plan(wed));
     expect(alarms, hasLength(1));

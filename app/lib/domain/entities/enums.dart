@@ -63,6 +63,17 @@ enum UiLayout { minimal, full }
 /// Weekday keys of `settings.dayBoundaries`, ISO order (Monday first).
 enum Weekday { mon, tue, wed, thu, fri, sat, sun }
 
+/// Every weekday, Monday first: the default of the per-day settings sets.
+const allWeekdays = <Weekday>{
+  Weekday.mon,
+  Weekday.tue,
+  Weekday.wed,
+  Weekday.thu,
+  Weekday.fri,
+  Weekday.sat,
+  Weekday.sun,
+};
+
 /// Where a routine sits on a day (docs/05 `routines`, 11 C2): its first
 /// step at Wake Up, its last step ending at Wind Down, or a fixed time.
 enum RoutineAnchor { wake, bed, time }

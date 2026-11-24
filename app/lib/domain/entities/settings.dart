@@ -73,10 +73,18 @@ abstract class Settings with _$Settings {
     // The Wind Down reminder. Stored as `bedtimeReminder` until schema 11
     // and Supabase 0011 moved it (owner, 2026-11-01: Wind Down everywhere).
     @Default(true) bool windDownReminder,
+    // The days each schedule's Wind Down reminder fires (ED-448, M20.7
+    // part 4b: "Reminders on these days"). A missing key reads as every
+    // day, as before.
+    @Default(allWeekdays) Set<Weekday> windDownReminderDays,
     // Settings › Day shape › Wake Up alarm (docs/15 W1, M17.1): the Wake Up
     // time rings like an alarm on phones. A missing key reads as off, so an
     // upgrade rings nothing new (15 §11); onboarding offers it on.
     @Default(false) bool wakeUpAlarm,
+    // The days the alarm rings (ED-448, M20.7 part 4b: each schedule's
+    // "Ring on these days"); other days keep Wake Up as a normal reminder.
+    // A missing key reads as every day, as before.
+    @Default(allWeekdays) Set<Weekday> wakeUpAlarmDays,
     // "Alarm sounds on" (ED-084, docs/15 §9a): the one device (its
     // `devices.id`) that arms Wake Up. Null until one is chosen: every
     // phone then rings as before, and the first one to sync with the alarm

@@ -11,6 +11,7 @@ class SheetNavBar extends StatelessWidget {
     this.onCancel,
     this.actionLabel,
     this.onAction,
+    this.filledOnAndroid = false,
     super.key,
   });
 
@@ -26,6 +27,10 @@ class SheetNavBar extends StatelessWidget {
 
   /// Null while there is nothing to save.
   final VoidCallback? onAction;
+
+  /// Android's action as a filled button (E-Phones Android Edit Weekdays
+  /// "Save" pill); a text button otherwise.
+  final bool filledOnAndroid;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +70,10 @@ class SheetNavBar extends StatelessWidget {
               child: Text(title, style: t.styles.sheetTitleAndroid),
             ),
           ),
-          if (label != null) action,
+          if (label != null)
+            filledOnAndroid
+                ? FilledButton(onPressed: onAction, child: Text(label))
+                : action,
         ],
       );
     }

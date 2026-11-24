@@ -2478,12 +2478,6 @@ abstract class AppLocalizations {
   /// **'Wind Down'**
   String get settingsWindDown;
 
-  /// Settings row: per-weekday Wake Up / Wind Down.
-  ///
-  /// In en, this message translates to:
-  /// **'Different days'**
-  String get settingsPerWeekday;
-
   /// Per-weekday row value when no day differs.
   ///
   /// In en, this message translates to:
@@ -2495,12 +2489,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{days}'**
   String settingsCustomDays(String days);
-
-  /// Per-weekday sheet: reset this day to the everyday times.
-  ///
-  /// In en, this message translates to:
-  /// **'Same as every day'**
-  String get settingsUseEveryday;
 
   /// Settings row.
   ///
@@ -11987,6 +11975,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last seen {days, plural, =0{today} =1{yesterday} other{{days} days ago}}'**
   String wwdLastSeen(int days);
+
+  /// Title of the schedule sheet when adding one (E-Phones New schedule).
+  ///
+  /// In en, this message translates to:
+  /// **'New schedule'**
+  String get schNew;
+
+  /// The new schedule sheet's action.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get schAdd;
+
+  /// The schedule sheet's action when editing.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get schSave;
+
+  /// Caption above the day picker in the schedule sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Days'**
+  String get schDaysCaption;
+
+  /// Caption above the night dial.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down and Wake Up'**
+  String get schTimes;
+
+  /// Under the night's length in the dial: '7 h 30' / 'of night'.
+  ///
+  /// In en, this message translates to:
+  /// **'of night'**
+  String get schOfNight;
+
+  /// Below the dial: the night is shorter than the sleep target.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} under your {target} sleep target'**
+  String schUnderTarget(String duration, String target);
+
+  /// Below the dial: the night is longer than the sleep target.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} over your {target} sleep target'**
+  String schOverTarget(String duration, String target);
+
+  /// Below the dial: the night equals the sleep target.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches your {target} sleep target'**
+  String schMatchesTarget(String target);
+
+  /// Hint under the time fields on iPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag the moon or the sun, or tap a time to type it.'**
+  String get schDragHint;
+
+  /// Shown while a dial handle has keyboard focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focused: {end} — arrow keys move it 5 min.'**
+  String schFocusHint(String end);
+
+  /// Switch in the schedule sheet: the alarm rings on this schedule's days.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring on these days'**
+  String get schRingDays;
+
+  /// Under Ring on these days: 'Mon–Fri at 6:30 AM'.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} at {time}'**
+  String schRingAt(String days, String time);
+
+  /// Under the dimmed Ring on these days while the alarm is off (owner 2026-11-24).
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on Ring like an alarm first'**
+  String get schRingOff;
+
+  /// Row in the schedule sheet; opens the sound picker.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound and snooze'**
+  String get schSoundSnooze;
+
+  /// 'Dawn chorus · 9 min · up to 3'.
+  ///
+  /// In en, this message translates to:
+  /// **'{sound} · {length} · up to {limit}'**
+  String schSoundSnoozeValue(String sound, String length, String limit);
+
+  /// Sound and snooze value with no snooze limit.
+  ///
+  /// In en, this message translates to:
+  /// **'{sound} · {length} · no limit'**
+  String schSoundNoLimit(String sound, String length);
+
+  /// Sound and snooze value with snooze off.
+  ///
+  /// In en, this message translates to:
+  /// **'{sound} · no snooze'**
+  String schSoundNoSnooze(String sound);
+
+  /// Footer under the schedule sheet's Wake Up alarm group.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound and snooze are shared by all schedules (Wake Up and Wind Down › Wake Up alarm).'**
+  String get schSharedFooter;
+
+  /// Caption above the Wind Down reminder in the schedule sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders on these days'**
+  String get schRemindDays;
+
+  /// Button at the end of the schedule sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this schedule'**
+  String get schRemove;
+
+  /// Under Remove this schedule (owner 2026-11-24: the default day, no alarm).
+  ///
+  /// In en, this message translates to:
+  /// **'Its days go back to {times} with no alarm. Undo is offered.'**
+  String schRemoveNote(String times);
+
+  /// Undo toast after removing a schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} removed'**
+  String schRemoved(String name);
+
+  /// Alert title when picking a day that is in another schedule (owner 2026-11-24).
+  ///
+  /// In en, this message translates to:
+  /// **'This day already has a schedule'**
+  String get schTakenTitle;
+
+  /// Alert message when picking a day that is in another schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to change it?'**
+  String get schTakenMessage;
+
+  /// Alert button: move the day into this schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get schChange;
+
+  /// Schedule sheet check (E-Phones New schedule checks).
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down and Wake Up can\'t be the same time. Pick at least one day too. {action} stays off until both are set.'**
+  String schCheckBoth(String action);
+
+  /// Schedule sheet check: same times.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down and Wake Up can\'t be the same time. {action} stays off until you change one.'**
+  String schCheckSame(String action);
+
+  /// Schedule sheet check: no days.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one day. {action} stays off until you do.'**
+  String schCheckNoDays(String action);
+
+  /// Schedule sheet check: night under 3 h; Save still works.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s a {duration} night. Keep it?'**
+  String schShortNight(String duration);
+
+  /// Schedule sheet check: day under 4 h; Save still works.
+  ///
+  /// In en, this message translates to:
+  /// **'That leaves {duration} of day.'**
+  String schShortDay(String duration);
+
+  /// Schedule sheet note when Wind Down is after midnight (E-Phones Weekend).
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Down {time} is after midnight, so it ends {days} day (shown on the day dot as their evening).'**
+  String schAfterMidnight(String time, String days);
+
+  /// One day in the after-midnight note: 'Saturday's'.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}\'s'**
+  String schDayOf(String day);
+
+  /// Joins the last two days in a list.
+  ///
+  /// In en, this message translates to:
+  /// **'{first} and {last}'**
+  String schAnd(String first, String last);
+
+  /// Replaces Add a schedule when each day has its own schedule (E-Phones checks).
+  ///
+  /// In en, this message translates to:
+  /// **'All seven days have a schedule'**
+  String get schAllCovered;
+
+  /// Screen reader label of a day that belongs to another schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}, in {schedule}'**
+  String schDayInOther(String day, String schedule);
 
   /// Section title in the task icon picker.
   ///

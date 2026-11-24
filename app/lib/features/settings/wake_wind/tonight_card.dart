@@ -83,7 +83,7 @@ class TonightCard extends ConsumerWidget {
                     style: bold,
                   ),
                   Text(
-                    s.wakeUpAlarm
+                    s.wakeUpAlarm && s.wakeUpAlarmDays.contains(tomorrow)
                         ? l10n.wwdNightAlarmOn(night)
                         : l10n.wwdNightAlarmOff(night),
                     style: t.styles.rowMeta,

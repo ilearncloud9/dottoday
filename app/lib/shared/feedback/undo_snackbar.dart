@@ -34,11 +34,13 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
   AppLocalizations l10n, {
   required String message,
   required VoidCallback onUndo,
+  double? paneWidth,
 }) {
   messenger.hideCurrentSnackBar();
   final shown = messenger.showSnackBar(
     dotToast(
       messenger,
+      paneWidth: paneWidth,
       UndoToast(
         message: message,
         action: l10n.undoAction,
@@ -76,7 +78,11 @@ abstract final class UndoToasts {
 /// Apple platforms) and centred on the content beside the rail or the
 /// sidebar, never under it (ED-334). The body closes it, so the messenger
 /// never times it out on its own (ED-281: it waits while held).
-SnackBar dotToast(ScaffoldMessengerState messenger, Widget body) {
+SnackBar dotToast(
+  ScaffoldMessengerState messenger,
+  Widget body, {
+  double? paneWidth,
+}) {
   final context = messenger.context;
   final window = MediaQuery.sizeOf(context).width;
   final wide = window >= WidthClass.mediumFrom && !AppLayout.isShort(context);
@@ -107,6 +113,24 @@ SnackBar dotToast(ScaffoldMessengerState messenger, Widget body) {
   }
   final apple = appleChrome(context);
   final width = apple ? DotSize.toastWide : DotSize.toastWideMaterial;
+  // Shown from a pane with its own scaffold (Settings beside the iPad's
+  // sidebar): laid out in that pane, which already sits right of the
+  // navigation. Window margins left it 60 px wide there (M20.7 part 4b).
+  final pane = paneWidth;
+  if (pane != null && pane < window - DotSpace.hairline) {
+    final side = ((pane - width) / 2).clamp(DotSpace.l, pane);
+    final lead = !webChrome(context) && !apple ? DotSpace.l : side;
+    return SnackBar(
+      content: body,
+      persist: true,
+      padding: padding,
+      margin: EdgeInsetsDirectional.only(
+        start: lead,
+        end: (pane - lead - width).clamp(DotSpace.l, pane),
+        bottom: DotSpace.l,
+      ),
+    );
+  }
   final start = _navigationWidth(context, window);
   // Android tablets: the M3 snackbar at the start of the content (E-R2-7);
   // the iPad, the Mac and the web centre it under the content.

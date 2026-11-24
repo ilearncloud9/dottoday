@@ -1647,18 +1647,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsWindDown => 'Wind Down';
 
   @override
-  String get settingsPerWeekday => 'Different days';
-
-  @override
   String get settingsSameEveryDay => 'Same every day';
 
   @override
   String settingsCustomDays(String days) {
     return '$days';
   }
-
-  @override
-  String get settingsUseEveryday => 'Same as every day';
 
   @override
   String get settingsWeekStarts => 'Week starts';
@@ -7870,6 +7864,154 @@ class AppLocalizationsEn extends AppLocalizations {
       zero: 'today',
     );
     return 'Last seen $_temp0';
+  }
+
+  @override
+  String get schNew => 'New schedule';
+
+  @override
+  String get schAdd => 'Add';
+
+  @override
+  String get schSave => 'Save';
+
+  @override
+  String get schDaysCaption => 'Days';
+
+  @override
+  String get schTimes => 'Wind Down and Wake Up';
+
+  @override
+  String get schOfNight => 'of night';
+
+  @override
+  String schUnderTarget(String duration, String target) {
+    return '$duration under your $target sleep target';
+  }
+
+  @override
+  String schOverTarget(String duration, String target) {
+    return '$duration over your $target sleep target';
+  }
+
+  @override
+  String schMatchesTarget(String target) {
+    return 'Matches your $target sleep target';
+  }
+
+  @override
+  String get schDragHint =>
+      'Drag the moon or the sun, or tap a time to type it.';
+
+  @override
+  String schFocusHint(String end) {
+    return 'Focused: $end — arrow keys move it 5 min.';
+  }
+
+  @override
+  String get schRingDays => 'Ring on these days';
+
+  @override
+  String schRingAt(String days, String time) {
+    return '$days at $time';
+  }
+
+  @override
+  String get schRingOff => 'Turn on Ring like an alarm first';
+
+  @override
+  String get schSoundSnooze => 'Sound and snooze';
+
+  @override
+  String schSoundSnoozeValue(String sound, String length, String limit) {
+    return '$sound · $length · up to $limit';
+  }
+
+  @override
+  String schSoundNoLimit(String sound, String length) {
+    return '$sound · $length · no limit';
+  }
+
+  @override
+  String schSoundNoSnooze(String sound) {
+    return '$sound · no snooze';
+  }
+
+  @override
+  String get schSharedFooter =>
+      'Sound and snooze are shared by all schedules (Wake Up and Wind Down › Wake Up alarm).';
+
+  @override
+  String get schRemindDays => 'Reminders on these days';
+
+  @override
+  String get schRemove => 'Remove this schedule';
+
+  @override
+  String schRemoveNote(String times) {
+    return 'Its days go back to $times with no alarm. Undo is offered.';
+  }
+
+  @override
+  String schRemoved(String name) {
+    return '$name removed';
+  }
+
+  @override
+  String get schTakenTitle => 'This day already has a schedule';
+
+  @override
+  String get schTakenMessage => 'Would you like to change it?';
+
+  @override
+  String get schChange => 'Change';
+
+  @override
+  String schCheckBoth(String action) {
+    return 'Wind Down and Wake Up can\'t be the same time. Pick at least one day too. $action stays off until both are set.';
+  }
+
+  @override
+  String schCheckSame(String action) {
+    return 'Wind Down and Wake Up can\'t be the same time. $action stays off until you change one.';
+  }
+
+  @override
+  String schCheckNoDays(String action) {
+    return 'Pick at least one day. $action stays off until you do.';
+  }
+
+  @override
+  String schShortNight(String duration) {
+    return 'That\'s a $duration night. Keep it?';
+  }
+
+  @override
+  String schShortDay(String duration) {
+    return 'That leaves $duration of day.';
+  }
+
+  @override
+  String schAfterMidnight(String time, String days) {
+    return 'Wind Down $time is after midnight, so it ends $days day (shown on the day dot as their evening).';
+  }
+
+  @override
+  String schDayOf(String day) {
+    return '$day\'s';
+  }
+
+  @override
+  String schAnd(String first, String last) {
+    return '$first and $last';
+  }
+
+  @override
+  String get schAllCovered => 'All seven days have a schedule';
+
+  @override
+  String schDayInOther(String day, String schedule) {
+    return '$day, in $schedule';
   }
 
   @override

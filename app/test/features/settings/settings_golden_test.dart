@@ -232,12 +232,13 @@ void main() {
     overrides: _overrides,
     build: (_) => _page(SettingsPage.planning),
   );
-  // Derived (§5.3): Different days and Send feedback.
+  // A schedule's Edit opens its sheet over the page (E-Phones Edit
+  // Weekdays, M20.7 part 4b); a dialog from medium up until part 5.
+  // Derived (§5.3): Send feedback.
   goldenMatrix(
-    'settings_weekdays',
+    'settings_schedule_sheet',
     height: 844,
     widths: const {'compact', 'expanded'},
-    // The schedule's Edit (the per-weekday sheet until M20.7 part 4b).
     act: (t) => _open(t, 'Edit'),
     overrides: _overrides,
     build: (_) => _page(SettingsPage.wakeWindDown),

@@ -100,7 +100,7 @@ void main() {
               schemaVersion: 21,
               purpose: ExportPurpose.export,
               date: '2026-11-11',
-              targetBytes: 2048,
+              targetBytes: 2560,
             )
             as MultipartSplit;
     await expectUnchanged(

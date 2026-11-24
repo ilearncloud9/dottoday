@@ -8,23 +8,26 @@ part of 'focus_task.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The task in Focus on Mac/web: a centred view in the content area with
-/// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
-/// `/focus/:id` full screen instead. Held in core, like `EditingTask`, so
-/// any screen can open Focus without importing it.
+/// The task in Focus (docs/09 M10.5), set by the Focus screen while it is
+/// up; null = none. Focus is the `/focus/:id` route at every width (the
+/// whole window on expanded ones, ED-285). Held in core, like
+/// `EditingTask`, so any screen can tell Focus is up without importing it;
+/// an owner switch clears it, which closes the screen.
 
 @ProviderFor(FocusTask)
 final focusTaskProvider = FocusTaskProvider._();
 
-/// The task in Focus on Mac/web: a centred view in the content area with
-/// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
-/// `/focus/:id` full screen instead. Held in core, like `EditingTask`, so
-/// any screen can open Focus without importing it.
+/// The task in Focus (docs/09 M10.5), set by the Focus screen while it is
+/// up; null = none. Focus is the `/focus/:id` route at every width (the
+/// whole window on expanded ones, ED-285). Held in core, like
+/// `EditingTask`, so any screen can tell Focus is up without importing it;
+/// an owner switch clears it, which closes the screen.
 final class FocusTaskProvider extends $NotifierProvider<FocusTask, String?> {
-  /// The task in Focus on Mac/web: a centred view in the content area with
-  /// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
-  /// `/focus/:id` full screen instead. Held in core, like `EditingTask`, so
-  /// any screen can open Focus without importing it.
+  /// The task in Focus (docs/09 M10.5), set by the Focus screen while it is
+  /// up; null = none. Focus is the `/focus/:id` route at every width (the
+  /// whole window on expanded ones, ED-285). Held in core, like
+  /// `EditingTask`, so any screen can tell Focus is up without importing it;
+  /// an owner switch clears it, which closes the screen.
   FocusTaskProvider._()
     : super(
         from: null,
@@ -54,10 +57,11 @@ final class FocusTaskProvider extends $NotifierProvider<FocusTask, String?> {
 
 String _$focusTaskHash() => r'89447fa7e44630a59a544f3e97a00eba5da47e0c';
 
-/// The task in Focus on Mac/web: a centred view in the content area with
-/// the rail kept (docs/09 M10.5, docs/10 §4); null = none. Phones push
-/// `/focus/:id` full screen instead. Held in core, like `EditingTask`, so
-/// any screen can open Focus without importing it.
+/// The task in Focus (docs/09 M10.5), set by the Focus screen while it is
+/// up; null = none. Focus is the `/focus/:id` route at every width (the
+/// whole window on expanded ones, ED-285). Held in core, like
+/// `EditingTask`, so any screen can tell Focus is up without importing it;
+/// an owner switch clears it, which closes the screen.
 
 abstract class _$FocusTask extends $Notifier<String?> {
   String? build();
