@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign out, sync not confirmed, Android tablet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 28px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500;" aria-hidden="true">
+    <span>9:41</span>
+    <span style="width: 22px; height: 11px; border-radius: 2px; background: currentColor; opacity: .85;"></span>
+  </div>
+  <div style="flex: 1 1 auto; display: flex; min-height: 0; padding-bottom: 4px;">
+  <nav aria-label="Settings" style="width: 360px; flex: none; padding: 0 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px;">
+    <div style="height: 64px; display: flex; align-items: center; gap: 8px; padding: 0 4px 0 0;">
+      <button type="button" aria-label="Back" style="width: 48px; height: 48px; border: none; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+      <div style="font-family: Roboto, sans-serif; font-size: 22px; font-weight: 400;">Settings</div>
+    </div>
+      <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-radius: 28px; font-family: Roboto, sans-serif; font-size: 16px;">Your day</div>
+      <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-radius: 28px; font-family: Roboto, sans-serif; font-size: 16px;">Planning</div>
+      <div aria-current="page" style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-radius: 28px; font-family: Roboto, sans-serif; font-size: 16px; background: {{t.aTonal}}; color: {{t.aTonalInk}}; font-weight: 500;">Account</div>
+      <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-radius: 28px; font-family: Roboto, sans-serif; font-size: 16px;">Data and privacy</div>
+  </nav>
+  <div style="flex: 1 1 auto; margin: 0 24px 0 0; border-radius: 28px; background: {{t.surface}}; display: flex; flex-direction: column; min-width: 0;">
+    <div style="height: 64px; display: flex; align-items: center; padding: 0 24px;">
+      <div style="font-family: Roboto, sans-serif; font-size: 22px; font-weight: 400;">Account</div>
+    </div>
+    <div style="padding: 0 24px; display: flex; flex-direction: column; gap: 4px; max-width: 600px;">
+      <div style="font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500; color: {{t.accentText}}; padding: 8px 0;">Sync</div>
+      <div style="font-size: 16px; line-height: 24px;">Signed in as sam@example.com</div>
+      <div style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">Nothing waiting to sync</div>
+    </div>
+
+  </div>
+  </div>
+  <div style="height: 20px; display: flex; align-items: center; justify-content: center;" aria-hidden="true"><span style="width: 120px; height: 4px; border-radius: 2px; background: {{t.ink}}; opacity: .5;"></span></div>
+  <div style="position: absolute; inset: 0; background: {{t.scrim}};"></div>
+  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+  <div role="alertdialog" aria-modal="true" aria-labelledby="ata2u-title" aria-describedby="ata2u-body" style="width: 440px; box-sizing: border-box; background: {{t.sheet}}; border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+    <div style="color: {{t.accentText}};">
+      <svg width="24" height="24" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M6 15.5h9.5a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 6.3 7.6 4 4 0 0 0 6 15.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M11 9.5v4M9 11.5l2 2 2-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2 id="ata2u-title" style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 700; text-align: center;">Sync hasn’t been confirmed yet</h2>
+    <p id="ata2u-body" style="margin: 0; font-size: 14px; line-height: 20px; color: {{t.ink2}};">Dottoday hasn’t confirmed that everything reached your account. Anything that didn’t is saved on this device for sam@example.com and can sync when you sign in again with this account. They stay on this device under this account.</p>
+    <div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; padding-top: 8px;">
+      <button type="button" style="height: 48px; border-radius: 24px; border: none; background: {{t.aTonal}}; color: {{t.aTonalInk}}; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500;">Stay signed in</button>
+      <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: center;">Dottoday tries to sync them now.</div>
+      <button type="button" style="height: 48px; border-radius: 24px; border: none; background: transparent; color: {{t.accentText}}; font-family: Roboto, sans-serif; font-size: 14px; font-weight: 500;">Sign out and keep them here</button>
+    </div>
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? {"ground": "#171416", "sidebar": "#1F1B1E", "selected": "#1E3A37", "surface": "#1F1B1E", "sheet": "#2F2A30", "ink": "#F3ECE4", "ink2": "#E2DAD6", "secondary": "#C7BEC4", "outline": "#8C838A", "hair": "#3E373D", "accent": "#5BC4B8", "onAccent": "#0C2523", "accentText": "#5BC4B8", "tonal": "#1E3A37", "tonalInk": "#A3E2D9", "aTonal": "#1E3A37", "aTonalInk": "#A3E2D9", "scrim": "rgba(0,0,0,.55)", "ring": "#28232A", "ringInner": "#1F1B1E", "link": "#5BC4B8", "sep": "#3E373D"}
+      : {"ground": "#FBF7F1", "sidebar": "#F3ECE2", "selected": "#D9ECE9", "surface": "#FFFDF9", "sheet": "#FFFDF9", "ink": "#241F2B", "ink2": "#4E4757", "secondary": "#6A6273", "outline": "#DDD7E0", "hair": "#DDD7E0", "accent": "#11615C", "onAccent": "#FFFFFF", "accentText": "#11615C", "tonal": "#E2EFEC", "tonalInk": "#0B4642", "aTonal": "#CFE8E4", "aTonalInk": "#062F2C", "scrim": "rgba(36,31,43,.30)", "ring": "#EDE7DF", "ringInner": "#F6F1EA", "link": "#11615C", "sep": "#E6DFE6"};
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

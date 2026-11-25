@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Which settings to keep, iPad</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; display: flex; flex-direction: column; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 24px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; font-weight: 600;" aria-hidden="true">
+    <span>9:41&#160;&#160;Tue Nov 17</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 24px; height: 11px; border-radius: 3px; border: 1px solid currentColor; box-sizing: border-box; padding: 1px;"><span style="display: block; width: 70%; height: 100%; border-radius: 1px; background: currentColor;"></span></span></span>
+  </div>
+  <div style="flex: 1 1 auto; display: flex; align-items: center; justify-content: center;">
+  <div style="width: 680px; display: flex; flex-direction: column; gap: 18px;">
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.2px;">Which settings should Dottoday use?</h1>
+      <p style="margin: 0; font-size: 15px; line-height: 22px; color: {{t.secondary}};">Your account already has settings. This device had different ones before you signed in. Your tasks won’t be deleted.</p>
+    </div>
+    <fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-wrap: wrap; gap: 12px;">
+      <legend style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Settings to use</legend>
+      <label style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 22px; background: {{t.surface}}; border: 2px solid {{t.accent}};">
+        <span style="display: flex; align-items: center; gap: 12px; min-height: 44px; margin: -10px 0;">
+          <input type="radio" name="settings-ipad" value="account" checked="checked" style="width: 22px; height: 22px; margin: 0; accent-color: {{t.accent}};">
+          <span style="font-size: 17px; font-weight: 700;">Your account’s settings</span>
+        </span>
+        <span style="display: grid; grid-template-columns: minmax(104px, max-content) minmax(0, 1fr); row-gap: 8px; column-gap: 8px; font-size: 14px; line-height: 20px; padding-left: 34px;">
+          <span style="color: {{t.secondary}};">Time zone</span><span>Berlin</span>
+          <span style="color: {{t.secondary}};">Language</span><span>Deutsch</span>
+          <span style="color: {{t.secondary}};">Your day</span><span>7:00 AM – 11:00 PM</span>
+          <span style="color: {{t.secondary}};">Layout</span><span>Full</span>
+        </span>
+      </label>
+      <label style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 22px; background: {{t.surface}}; border: 2px solid {{t.hair}};">
+        <span style="display: flex; align-items: center; gap: 12px; min-height: 44px; margin: -10px 0;">
+          <input type="radio" name="settings-ipad" value="device" style="width: 22px; height: 22px; margin: 0; accent-color: {{t.accent}};">
+          <span style="font-size: 17px; font-weight: 700;">This device’s settings</span>
+        </span>
+        <span style="display: grid; grid-template-columns: minmax(104px, max-content) minmax(0, 1fr); row-gap: 8px; column-gap: 8px; font-size: 14px; line-height: 20px; padding-left: 34px;">
+          <span style="color: {{t.secondary}};">Time zone</span><span>Tokyo</span>
+          <span style="color: {{t.secondary}};">Language</span><span>English</span>
+          <span style="color: {{t.secondary}};">Your day</span><span>6:30 AM – 10:30 PM</span>
+          <span style="color: {{t.secondary}};">Layout</span><span>Minimal</span>
+        </span>
+      </label>
+    </fieldset>
+    <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}};">Only the settings that differ are shown.</div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding-top: 4px;">
+      <button type="button" style="height: 52px; padding: 0 22px; border-radius: 26px; border: none; background: transparent; color: {{t.link}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700; white-space: nowrap;">Decide later</button>
+      <button type="button" style="height: 52px; padding: 0 28px; border-radius: 26px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700; white-space: nowrap;">Continue</button>
+    </div>
+    <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: right;">Until you choose, your account’s settings stay. You can choose in Settings › Account.</div>
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? {"ground": "#171416", "sidebar": "#1F1B1E", "selected": "#1E3A37", "surface": "#1F1B1E", "sheet": "#2F2A30", "ink": "#F3ECE4", "ink2": "#E2DAD6", "secondary": "#C7BEC4", "outline": "#8C838A", "hair": "#3E373D", "accent": "#5BC4B8", "onAccent": "#0C2523", "accentText": "#5BC4B8", "tonal": "#1E3A37", "tonalInk": "#A3E2D9", "aTonal": "#1E3A37", "aTonalInk": "#A3E2D9", "scrim": "rgba(0,0,0,.55)", "ring": "#28232A", "ringInner": "#1F1B1E", "link": "#5BC4B8", "sep": "#3E373D"}
+      : {"ground": "#FBF7F1", "sidebar": "#F3ECE2", "selected": "#D9ECE9", "surface": "#FFFDF9", "sheet": "#FFFDF9", "ink": "#241F2B", "ink2": "#4E4757", "secondary": "#6A6273", "outline": "#DDD7E0", "hair": "#DDD7E0", "accent": "#11615C", "onAccent": "#FFFFFF", "accentText": "#11615C", "tonal": "#E2EFEC", "tonalInk": "#0B4642", "aTonal": "#CFE8E4", "aTonalInk": "#062F2C", "scrim": "rgba(36,31,43,.30)", "ring": "#EDE7DF", "ringInner": "#F6F1EA", "link": "#11615C", "sep": "#E6DFE6"};
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

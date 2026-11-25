@@ -39,7 +39,7 @@ Concept E was approved for production implementation on 2026-11-15 (ED-353). The
 
 **Snapshot:** `references/concept-e/v3.27-working/` (docs at approval) and `v3.28-working/` (approved labels, ED-354), each with SHA256SUMS. Canvas version `1794787239-a691`.
 
-**CR-160 account screens:** approved as the E-CR160 boards, ED-222 to ED-230 (owner, 2026-11-17, ED-362). [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merged to main on 2026-11-16 (CR-160 closed by the owner) and is merged into this branch; M20.12 builds the screens on top of it.
+**CR-160 account screens:** approved as the E-CR160 boards, ED-222 to ED-230 (owner, 2026-11-17, ED-362). [ilearncloud9/dottoday#75](https://github.com/ilearncloud9/dottoday/pull/75) merged to main on 2026-11-16 (CR-160 closed by the owner) and is merged into this branch; M20.12 builds the screens on top of it. Tablets: the `Tablet…` (iPad) and `AndroidTablet…` frames on the same board (owner, 2026-11-17, ED-365).
 
 ## Current state at a glance (2026-11-14, after ED-335)
 

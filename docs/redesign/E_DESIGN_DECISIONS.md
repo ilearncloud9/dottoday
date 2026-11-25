@@ -4860,6 +4860,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checked, no change:** the repeat marker (ED-208) is the loop icon after the time.
 - **Checks:** `flutter analyze` clean; `dart format` clean; `flutter test --exclude-tags supabase` 6,916 passing; 36 new goldens (`thread_earlier`, `thread_earlier_open`, `thread_outside_plain`), 236 regenerated.
 
+### ED-365 · Tablet frames for the account screens (E-CR160)
+- **Date:** 2026-11-17. **Owner:** "yes you can draw the tablet frames for the account screens", after the check that E-CR160 (ED-222 to ED-230, approved for M20.12 by ED-362) drew iPhone, Android and Mac/web only, and the tablet checklist row still read "Waiting on CR-160".
+- **Board:** E-CR160, https://claude.ai/artifact/MaCdg3soqyxnFcxN5G9vja, version 56 (`1794934922-ed76`), two new rows under "After Decide later". 24 frames, each light frame with a `…Dark` twin:
+  - **iPad, landscape 1180 × 820:** `TabletA1`, `TabletA2`, `TabletA2Unconfirmed`, `TabletA3`, `TabletB1`, `TabletAccountChoose`.
+  - **Android tablet, expanded 1280 × 800:** `AndroidTabletA1`, `AndroidTabletA2`, `AndroidTabletA2Unconfirmed`, `AndroidTabletA3`, `AndroidTabletB1`, `AndroidTabletAccountChoose`.
+- **What the frames show (approved 2026-11-17, owner: "Approve ED-365"):**
+  - **Same copy, actions and states** as the phone and Mac/web frames; no new strings. A1/A2 rules (condA note) are unchanged.
+  - **A1, A2, A2 unconfirmed:** the dialog centres on the window over Settings in two panes (R2-11 rule: the Settings list, then Account). iPad uses the iPhone dialog (A1 buttons side by side; A2 tonal icon, Stay signed in first, stacked). Android uses the Android phone dialog (A1 text buttons at the end; A2 centred icon, tonal Stay signed in). Widths: A1 440 (iPad) / 400 (Android), A2 440.
+  - **A3 and B1:** a centred column (A3 440, B1 680), so B1's two choices sit side by side as on Mac/web; Decide later and Continue sit at the end, right-aligned, with Continue last.
+  - **Choose settings (B1 later):** the row in the Account detail pane.
+  - **Sizes:** 44 pt targets and the iPhone type on iPad; 48 dp and the Android type on Android tablets.
+- **Rule:** the width class picks the layout, never the device (ED-171). Below 600 the phone frames apply; from 600 the tablet frames' arrangement with touch sizes. iPad with a hardware keyboard: Esc cancels, as on Mac/web.
+- **Records:** E_TABLET_CHECKLIST.md (Account screens row), E_CR160_HANDOFF.md (board line), STATUS.md, E_DECISION_REGISTER.md; snapshots v3.30-working (`e-cr160/`, drawn) and v3.31-working (approved).
+- **Approved:** 2026-11-17, owner: "Approve ED-365". These frames are the tablet design for M20.12, beside the phone and Mac/web frames (ED-362).
+- Nothing built.
+
 ### ED-366 · M18.4 part 1: sheets, the proposal, chips, tags and menus
 - **Date:** 2026-11-17. **Owner:** "Yes, as proposed" (M18.4 in three parts; the sync screens of E-G4-7-States stay in M20.10, native menus come with M18.5 / M19), "A, as the boards" (the sheet colour), and "Approve, rows in part 2" after the part 1 review page.
 - **Sheet colour (A):** sheets sit on the page ground, `#FBF7F1` light and `#171416` dark, with cards inside in `#FFFDF9` / `#28232A`, as every E-Phones-2 frame draws them. This replaces ED-174's `#2F2A30` sheet level and the `#FFFDF9` in rules §7.1 for sheets; the `sheet` token now holds the ground values.
@@ -5807,6 +5823,12 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** router tests for both cases; the missions journey passed on the Android phone and tablet emulators. Not run: the iOS Simulator.
 - **Found while checking (not fixed here):** at 200 % text on the phone, the missions crowd: the time wraps, the walker crosses the title, and Stand up's title runs into Can't right now (part 3).
 
+### ED-463 · The missions at the largest text
+- **Date:** 2026-11-25. **Owner:** "Yes, fix it first", then "Approve the fix" after the review page (https://claude.ai/artifact/NMqfXe8VYCNPB1s4ijiu4L); found after ED-462's check found the missions crowding at 200 % text on the phone emulator.
+- **Found:** the time ("9:22 AM", 56) wrapped onto two lines; Walk's walker and its ground line crossed "Walk 20 steps"; Stand up's and Light's "0 of 3 s" grew wider than the ring; the words ran down to Can't right now. The 200 % goldens existed only for Walk and Pick today's one thing and didn't flag overlap.
+- **Fixed:** the time and the counts inside the ring keep their display size, the rule approved for the ringing screen (ED-459 option A); every other word still follows the text size. Walk keeps its words in the room above the walker (`DawnScaffold.groundLine`), scrolling if they ever need more; at 100 % it sits where it did (within 1 px of the approved golden).
+- **Checks:** new `mission_screen_test` group "at 200 % text" (real fonts): the time on one line, Walk's words above the walker, Stand up's, Light's and Breathe's words above Can't right now; it fails on the old Walk layout. 200 % goldens added for Stand up, Light, Breathe and Catch the dot. The missions journey at 200 % passed on the Android phone emulator, shots checked. Format and analyze clean; 8,129 pass, 31 skipped. Not run: the iOS Simulator, real devices.
+
 ---
 
 ## Pending owner answers
@@ -5823,12 +5845,6 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 | 69ac6f26 | iOS switch on-state: teal or system green? | Offered on 2026-11-03. No answer (ED-041). **Answered 2026-11-05: teal (G3-4 option A, ED-112).** |
 | 69ac6f26 | iOS system greys and colours below 4.5:1 contrast (tab labels #8E8E93 at about 3.1:1): keep native, or darken? | Raised on 2026-11-03. The swipe colours were reverted, but the tab labels were never decided (ED-042). |
 | 323fc074 | Simplify the web orb to match C's plainer web orb? | Offered on 2026-11-03. No answer (ED-052). **Presented 2026-11-05 as option B of G3-2 (ED-105); not chosen: G3-2 resolved as A (ED-106).** |
-### ED-463 · The missions at the largest text
-- **Date:** 2026-11-25. **Owner:** "Yes, fix it first", then "Approve the fix" after the review page (https://claude.ai/artifact/NMqfXe8VYCNPB1s4ijiu4L); found after ED-462's check found the missions crowding at 200 % text on the phone emulator.
-- **Found:** the time ("9:22 AM", 56) wrapped onto two lines; Walk's walker and its ground line crossed "Walk 20 steps"; Stand up's and Light's "0 of 3 s" grew wider than the ring; the words ran down to Can't right now. The 200 % goldens existed only for Walk and Pick today's one thing and didn't flag overlap.
-- **Fixed:** the time and the counts inside the ring keep their display size, the rule approved for the ringing screen (ED-459 option A); every other word still follows the text size. Walk keeps its words in the room above the walker (`DawnScaffold.groundLine`), scrolling if they ever need more; at 100 % it sits where it did (within 1 px of the approved golden).
-- **Checks:** new `mission_screen_test` group "at 200 % text" (real fonts): the time on one line, Walk's words above the walker, Stand up's, Light's and Breathe's words above Can't right now; it fails on the old Walk layout. 200 % goldens added for Stand up, Light, Breathe and Catch the dot. The missions journey at 200 % passed on the Android phone emulator, shots checked. Format and analyze clean; 8,129 pass, 31 skipped. Not run: the iOS Simulator, real devices.
-
 | 94195952 | Flatten the hover-lift shadow on Lunch (web workspace)? | Offered on 2026-11-03. No answer (ED-053). **Answered 2026-11-06: hybrid C (ED-116): flat hover tint, lift only while dragging.** |
 | 5f96cf43 | The minimal-phone choices (tab names, Settings location, Earlier row, tap-to-Focus, time summary, tab-label grey). | Listed on 2026-11-04 as "small choices you might want to check". No answer (ED-055). **Close-out (ED-335): answered by G1-5, G2-3 and G2-4 (ED-068, ED-084, ED-238) and the approved E-PhonesMinimal.** |
 | 55c6e2ea | C minimal phones: "Tell me what to keep or change". | No answer. This is a C board, so it only matters as a reference for E. **Close-out (ED-335): superseded; C is history.** |

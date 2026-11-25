@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Account, choose settings later, iPad</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 24px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; font-weight: 600;" aria-hidden="true">
+    <span>9:41&#160;&#160;Tue Nov 17</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 24px; height: 11px; border-radius: 3px; border: 1px solid currentColor; box-sizing: border-box; padding: 1px;"><span style="display: block; width: 70%; height: 100%; border-radius: 1px; background: currentColor;"></span></span></span>
+  </div>
+  <div style="flex: 1 1 auto; display: flex; min-height: 0;">
+  <nav aria-label="Settings" style="width: 320px; flex: none; background: {{t.sidebar}}; padding: 12px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; font-family: -apple-system, system-ui, sans-serif;">
+    <div style="font-size: 34px; line-height: 41px; font-weight: 700; padding: 8px 6px 14px;">Settings</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Your day</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Planning</div>
+      <div aria-current="page" style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px; background: {{t.selected}}; font-weight: 600;">Account</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Data and privacy</div>
+  </nav>
+  <div style="flex: 1 1 auto; padding: 20px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 640px;">
+    <div style="font-family: -apple-system, system-ui, sans-serif; font-size: 34px; line-height: 41px; font-weight: 700;">Account</div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: {{t.secondary}}; letter-spacing: 0.4px;">SYNC</div>
+      <div style="background: {{t.surface}}; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 15px;">Signed in as sam@example.com</div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.secondary}};">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>Synced</span>
+        </div>
+      </div>
+    </div>
+    <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 16px; box-sizing: border-box; border-radius: 20px; background: {{t.surface}}; color: {{t.ink}}; text-decoration: none;">
+      <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 16px; line-height: 22px; font-weight: 700;">Choose settings</span>
+        <span style="font-size: 14px; line-height: 20px; color: {{t.secondary}};">This device had different settings when you signed in.</span>
+      </span>
+      <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true" style="flex: none; color: {{t.secondary}};"><path d="M2 2l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? {"ground": "#171416", "sidebar": "#1F1B1E", "selected": "#1E3A37", "surface": "#1F1B1E", "sheet": "#2F2A30", "ink": "#F3ECE4", "ink2": "#E2DAD6", "secondary": "#C7BEC4", "outline": "#8C838A", "hair": "#3E373D", "accent": "#5BC4B8", "onAccent": "#0C2523", "accentText": "#5BC4B8", "tonal": "#1E3A37", "tonalInk": "#A3E2D9", "aTonal": "#1E3A37", "aTonalInk": "#A3E2D9", "scrim": "rgba(0,0,0,.55)", "ring": "#28232A", "ringInner": "#1F1B1E", "link": "#5BC4B8", "sep": "#3E373D"}
+      : {"ground": "#FBF7F1", "sidebar": "#F3ECE2", "selected": "#D9ECE9", "surface": "#FFFDF9", "sheet": "#FFFDF9", "ink": "#241F2B", "ink2": "#4E4757", "secondary": "#6A6273", "outline": "#DDD7E0", "hair": "#DDD7E0", "accent": "#11615C", "onAccent": "#FFFFFF", "accentText": "#11615C", "tonal": "#E2EFEC", "tonalInk": "#0B4642", "aTonal": "#CFE8E4", "aTonalInk": "#062F2C", "scrim": "rgba(36,31,43,.30)", "ring": "#EDE7DF", "ringInner": "#F6F1EA", "link": "#11615C", "sep": "#E6DFE6"};
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

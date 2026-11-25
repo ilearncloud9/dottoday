@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sign out with unsynced changes, iPad</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: {{t.ground}}; color: {{t.ink}}; font-family: Manrope, sans-serif;">
+  <div style="height: 24px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; font-weight: 600;" aria-hidden="true">
+    <span>9:41&#160;&#160;Tue Nov 17</span>
+    <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 24px; height: 11px; border-radius: 3px; border: 1px solid currentColor; box-sizing: border-box; padding: 1px;"><span style="display: block; width: 70%; height: 100%; border-radius: 1px; background: currentColor;"></span></span></span>
+  </div>
+  <div style="flex: 1 1 auto; display: flex; min-height: 0;">
+  <nav aria-label="Settings" style="width: 320px; flex: none; background: {{t.sidebar}}; padding: 12px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; font-family: -apple-system, system-ui, sans-serif;">
+    <div style="font-size: 34px; line-height: 41px; font-weight: 700; padding: 8px 6px 14px;">Settings</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Your day</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Planning</div>
+      <div aria-current="page" style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px; background: {{t.selected}}; font-weight: 600;">Account</div>
+      <div style="min-height: 44px; padding: 0 14px; display: flex; align-items: center; border-radius: 10px; font-size: 17px;">Data and privacy</div>
+  </nav>
+  <div style="flex: 1 1 auto; padding: 20px 40px; display: flex; flex-direction: column; gap: 20px; max-width: 640px;">
+    <div style="font-family: -apple-system, system-ui, sans-serif; font-size: 34px; line-height: 41px; font-weight: 700;">Account</div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-size: 13px; font-weight: 700; color: {{t.secondary}}; letter-spacing: 0.4px;">SYNC</div>
+      <div style="background: {{t.surface}}; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 15px;">Signed in as sam@example.com</div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: {{t.secondary}};">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8a5 5 0 0 1 8.5-3.5M13 8a5 5 0 0 1-8.5 3.5M11.5 2v2.5H9M4.5 14v-2.5H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>3 changes waiting to sync</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  <div style="position: absolute; inset: 0; background: {{t.scrim}};"></div>
+  <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+  <div role="alertdialog" aria-modal="true" aria-labelledby="ipa2-title" aria-describedby="ipa2-body" style="width: 440px; box-sizing: border-box; background: {{t.sheet}}; border-radius: 28px; padding: 28px 24px 20px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="width: 44px; height: 44px; border-radius: 22px; background: {{t.tonal}}; color: {{t.tonalInk}}; display: flex; align-items: center; justify-content: center;">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M6 15.5h9.5a3.5 3.5 0 0 0 .4-7A5 5 0 0 0 6.3 7.6 4 4 0 0 0 6 15.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M11 9.5v4M9 11.5l2 2 2-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2 id="ipa2-title" style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.2px;">3 changes haven’t synced yet</h2>
+    <p id="ipa2-body" style="margin: 0; font-size: 15px; line-height: 22px; color: {{t.ink2}};">They’re saved on this device for sam@example.com and haven’t reached your account yet. They can sync when you sign in again with this account. They stay on this device under this account.</p>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 4px;">
+      <button type="button" style="height: 52px; border-radius: 26px; border: none; background: {{t.accent}}; color: {{t.onAccent}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Stay signed in</button>
+      <div style="font-size: 13px; line-height: 18px; color: {{t.secondary}}; text-align: center;">Dottoday tries to sync them now.</div>
+      <button type="button" style="height: 52px; border-radius: 26px; border: 1.5px solid {{t.outline}}; background: transparent; color: {{t.ink}}; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700;">Sign out and keep them here</button>
+    </div>
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const t = dark
+      ? {"ground": "#171416", "sidebar": "#1F1B1E", "selected": "#1E3A37", "surface": "#1F1B1E", "sheet": "#2F2A30", "ink": "#F3ECE4", "ink2": "#E2DAD6", "secondary": "#C7BEC4", "outline": "#8C838A", "hair": "#3E373D", "accent": "#5BC4B8", "onAccent": "#0C2523", "accentText": "#5BC4B8", "tonal": "#1E3A37", "tonalInk": "#A3E2D9", "aTonal": "#1E3A37", "aTonalInk": "#A3E2D9", "scrim": "rgba(0,0,0,.55)", "ring": "#28232A", "ringInner": "#1F1B1E", "link": "#5BC4B8", "sep": "#3E373D"}
+      : {"ground": "#FBF7F1", "sidebar": "#F3ECE2", "selected": "#D9ECE9", "surface": "#FFFDF9", "sheet": "#FFFDF9", "ink": "#241F2B", "ink2": "#4E4757", "secondary": "#6A6273", "outline": "#DDD7E0", "hair": "#DDD7E0", "accent": "#11615C", "onAccent": "#FFFFFF", "accentText": "#11615C", "tonal": "#E2EFEC", "tonalInk": "#0B4642", "aTonal": "#CFE8E4", "aTonalInk": "#062F2C", "scrim": "rgba(36,31,43,.30)", "ring": "#EDE7DF", "ringInner": "#F6F1EA", "link": "#11615C", "sep": "#E6DFE6"};
+    return { t };
+  }
+}
+</script>
+</body>
+</html>

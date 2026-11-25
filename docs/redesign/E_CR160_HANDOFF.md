@@ -4,7 +4,7 @@
 - **This file proves no acceptance criterion.** Finished mockups do not satisfy criterion 2 (safe sign-out) or criterion 7 (no silent settings replacement). Only the build's checks in `docs/cr-160-verification.md` can do that, and on 2026-11-09 they read:
   - criterion 2: PARTIAL (I7 share-extension race and the misleading offline error are still open);
   - criterion 7: PASS (automated) only. B1 has not been tapped on any platform run.
-- **Board:** E-CR160, https://claude.ai/artifact/MaCdg3soqyxnFcxN5G9vja, version `1794224830-1be6`, snapshot v1.96-working. Each light frame has a `…Dark` twin.
+- **Board:** E-CR160, https://claude.ai/artifact/MaCdg3soqyxnFcxN5G9vja, version `1794224830-1be6`, snapshot v1.96-working. Each light frame has a `…Dark` twin. **Tablets (2026-11-17, ED-365, approved):** `Tablet…` (iPad) and `AndroidTablet…` frames for A1, A2, A2 unconfirmed, A3, B1 and Choose settings, version 56 (`1794934922-ed76`), snapshot v3.30-working.
 - **Build facts:** read only, from `fix/cr-160-account-ownership` at `ff3266eb`, plus the uncommitted changes in that session's worktree, which is marked "(local)" where it matters. Nothing on the branch, the board, or in auth, sync or Supabase was changed to write this.
 - **Applies to every screen below:**
   - **Styling.** The built screens use today's DotTheme, not Concept E's Manrope type, teal accent and tokens (verification blocker 6). Matching the frames' look is implementation-pending everywhere.
