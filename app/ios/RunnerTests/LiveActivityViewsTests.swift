@@ -51,6 +51,15 @@ final class LiveActivityViewsTests: XCTestCase {
     }
   }
 
+  /// A long title wraps, up to three lines inside iOS's height cap for a
+  /// Live Activity (owner: no title cut short at two lines).
+  func testLongTitleWraps() throws {
+    var long = state
+    long.title = "Prepare the quarterly roadmap review with the design team"
+    try check("lock_screen_long", width: 360) { LiveLockScreenSample(state: long, frozenAt: now) }
+    try check("island_expanded_long", width: 370) { LiveIslandExpandedPreview(state: long, frozenAt: now) }
+  }
+
   func testIslandExpanded() throws {
     try check("island_expanded", width: 370) {
       LiveIslandExpandedPreview(state: state, frozenAt: now)

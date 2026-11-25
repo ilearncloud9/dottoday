@@ -178,7 +178,7 @@ struct LiveLockScreenView: View {
       HStack(spacing: 10) {
         LiveRing(state: state, color: p.dot, size: 44, now: frozenAt ?? Date())
         VStack(alignment: .leading, spacing: 1) {
-          Text(state.title).font(Manrope.font(17, .heavy)).foregroundStyle(p.ink).lineLimit(1)
+          Text(state.title).font(Manrope.font(17, .heavy)).foregroundStyle(p.ink).lineLimit(3).fixedSize(horizontal: false, vertical: true)
           Text(state.range).font(Manrope.font(13, .semibold)).foregroundStyle(p.muted).lineLimit(1)
           (LiveCountdown.text(state, frozenAt: frozenAt).font(Manrope.font(13, .heavy)).foregroundColor(p.ink)
             + Text(state.count.isEmpty ? "" : " · " + state.count).font(Manrope.font(13, .semibold))
@@ -226,7 +226,7 @@ struct LiveIslandText: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 2) {
-      Text(state.title).font(.system(size: 16, weight: .bold)).foregroundStyle(.white).lineLimit(1)
+      Text(state.title).font(.system(size: 16, weight: .bold)).foregroundStyle(.white).lineLimit(3).fixedSize(horizontal: false, vertical: true)
       (LiveCountdown.text(state, frozenAt: frozenAt) + Text(state.count.isEmpty ? "" : " · " + state.count))
         .font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.75)).lineLimit(1)
     }
