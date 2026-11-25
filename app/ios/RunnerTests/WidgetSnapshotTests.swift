@@ -52,4 +52,19 @@ final class WidgetSnapshotTests: XCTestCase {
     XCTAssertNil(DotActions.currentBlock(at: at(130), defaults: defaults))
     XCTAssertEqual(DotActions.currentBlock(orNext: true, at: at(130), defaults: defaults)?.id, "reply")
   }
+
+  func testDoneCountAndItsTick() {
+    let json: [String: Any] = [
+      "v": 1, "inbox_count": 0, "labels": [:], "day_done": 3, "day_total": 8,
+      "format": ["done_of": "{done} of {total} done"],
+      "blocks": [block("deep", 0, 120)],
+    ]
+    let data = try! JSONSerialization.data(withJSONObject: json)
+    XCTAssertEqual(try! JSONDecoder().decode(Snapshot.self, from: data).doneOf, "3 of 8 done")
+    // A widget Done moves the count at once (E-R2-17); the app recounts.
+    let patched = SnapshotPatch.apply(.markDone, occurrenceId: "deep", now: at(30), to: json)
+    XCTAssertEqual(patched["day_done"] as? Int, 4)
+    let again = SnapshotPatch.apply(.markDone, occurrenceId: "deep", now: at(31), to: patched)
+    XCTAssertEqual(again["day_done"] as? Int, 4, "a dot already done ticks once")
+  }
 }

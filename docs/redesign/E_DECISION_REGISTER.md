@@ -1385,3 +1385,4 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-25, ED-468:** the in-app strip on every platform, as E-R2-20 draws it (owner: "make it match"); iPhone and the Mac hold their banner back, Android's pop-down is quieted once posted. Decided.
 - **2026-11-25, ED-469:** M20.9 part 1: the in-app strip in Concept E (phone and wide), Android's ring-and-dot notification mark and App colour, the strip on every platform (ED-468). Approved.
 - **2026-11-25, ED-470:** M20.9 part 2: the E-R2-20 §3–4 check; the test alarm's steps as a card under its row (owner: "B, under the row"); the flat Android lists and the Wind Down row in Reminders withdrawn by ED-338 and ED-446; the test alarm in the in-app strip while open. Approved.
+- **2026-11-25, ED-471:** M20.9 part 3: the iPhone and iPad widgets, the Lock Screen widget and Controls in Concept E, following the App colour; the undrawn states drawn first. Approved.

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// The display snapshot the app writes after every change (docs/09 M5.4,
 /// lib/data/widgets/widget_display.dart): strings localised and formatted,
@@ -14,15 +15,21 @@ struct WidgetBlock: Codable, Identifiable {
   let done: Bool
   /// Today's one thing (docs/15 §8): ringed, with the "one_thing" label.
   var oneThing: Bool? = nil
+  /// Dark mode's step of the task colour (E-R2-17-Dark).
+  var colorDark: String? = nil
 
   enum CodingKeys: String, CodingKey {
     case id, title, time, until, color, done
+    case colorDark = "color_dark"
     case startMs = "start_ms"
     case endMs = "end_ms"
     case oneThing = "one_thing"
   }
 
   var isOneThing: Bool { oneThing ?? false }
+
+  /// The task colour, light and dark.
+  var tint: Color { Color(light: hexValue(color), dark: hexValue(colorDark ?? color)) }
 
   var start: Date { Date(timeIntervalSince1970: startMs / 1000) }
   var end: Date { Date(timeIntervalSince1970: endMs / 1000) }
@@ -39,9 +46,24 @@ struct Snapshot: Codable {
   var wakeMs: Double? = nil
   var bedMs: Double? = nil
   var nightStart: Double? = nil
+  /// The App colour (ED-221): its dot colour and its word colour.
+  var accent: Accent? = nil
+  var format: Format? = nil
+  /// Today's done and planned dots, Wake Up to Wind Down (past ones too).
+  var dayDone: Int? = nil
+  var dayTotal: Int? = nil
+
+  struct Tone: Codable { let dot: String; let text: String }
+  struct Accent: Codable { let light: Tone; let dark: Tone }
+  struct Format: Codable {
+    var doneOf: String? = nil
+    enum CodingKeys: String, CodingKey { case doneOf = "done_of" }
+  }
 
   enum CodingKeys: String, CodingKey {
-    case v, labels, blocks
+    case v, labels, blocks, accent, format
+    case dayDone = "day_done"
+    case dayTotal = "day_total"
     case inboxCount = "inbox_count"
     case wakeMs = "wake_ms"
     case bedMs = "bed_ms"
@@ -73,6 +95,22 @@ struct Snapshot: Codable {
   }
 
   func label(_ key: String) -> String { labels[key] ?? "" }
+
+  /// The App colour's dot and words; teal (the default) before the app
+  /// first writes it.
+  var accentDot: Color {
+    Color(light: hexValue(accent?.light.dot ?? "#11615C"), dark: hexValue(accent?.dark.dot ?? "#5BC4B8"))
+  }
+  var accentText: Color {
+    Color(light: hexValue(accent?.light.text ?? "#11615C"), dark: hexValue(accent?.dark.text ?? "#5BC4B8"))
+  }
+
+  /// Today's "3 of 10 done" (a widget Done moves it, SnapshotPatch).
+  var doneOf: String {
+    guard let pattern = format?.doneOf, let total = dayTotal, total > 0 else { return "" }
+    return pattern.replacingOccurrences(of: "{done}", with: "\(dayDone ?? 0)")
+      .replacingOccurrences(of: "{total}", with: "\(total)")
+  }
 
   func live(at now: Date) -> WidgetBlock? {
     blocks.first { !$0.done && $0.start <= now && now < $0.end }

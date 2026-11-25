@@ -37,6 +37,13 @@ enum SnapshotPatch {
     blocks[i] = block
     var patched = snapshot
     patched["blocks"] = blocks
+    // Today's "3 of 10 done" moves with the tick (E-R2-17); the app's
+    // rewrite recounts it.
+    if kind == .markDone, let done = (snapshot["day_done"] as? NSNumber)?.intValue,
+      let total = (snapshot["day_total"] as? NSNumber)?.intValue, done < total
+    {
+      patched["day_done"] = done + 1
+    }
     return patched
   }
 

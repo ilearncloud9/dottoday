@@ -10,7 +10,7 @@ struct AddTaskControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     StaticControlConfiguration(kind: "app.dottoday.planner.control.add") {
       ControlWidgetButton(action: OpenQuickAddIntent()) {
-        Label("intentAddTaskTitle", systemImage: "plus.circle")
+        Label("intentAddTaskTitle", systemImage: "plus")
       }
     }
     .displayName("intentAddTaskTitle")

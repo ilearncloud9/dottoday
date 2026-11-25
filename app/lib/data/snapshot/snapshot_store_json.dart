@@ -1,6 +1,8 @@
-import 'dart:ui' show Locale;
+import 'dart:ui' show Brightness, Color, Locale;
 
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/colour_math.dart';
+import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
@@ -30,6 +32,8 @@ Map<String, Object?> snapshotStoreJson(
       ..['time'] = time(dot.startUtc)
       ..['until'] = l10n.widgetUntil(time(dot.endUtc))
       ..['color'] = _hex(TaskColor.fromKey(dot.colorKey).color.toARGB32())
+      // Dark mode's lighter step of the same colour (E-R2-17-Dark).
+      ..['color_dark'] = _hex(TaskColor.fromKey(dot.colorKey).dark.toARGB32())
       // Today's one thing (docs/15 §8): a ring and the label below.
       ..['one_thing'] = dot.id == snapshot.oneThingId;
   }
@@ -44,7 +48,12 @@ Map<String, Object?> snapshotStoreJson(
       'done': l10n.notifActionDone,
       'plus': l10n.liveExtend,
       'one_thing': l10n.oneThingMeta,
+      // The Inbox widget's header (E-R2-17).
+      'inbox_title': l10n.navInbox,
     }
+    // The App colour (ED-221) in light and dark: the day dot and the now
+    // ring's "Now" on every widget (M20.9 part 3, owner: follow it).
+    ..['accent'] = _accent(profile)
     // How to write a time again after an optimistic +15 in Swift or Kotlin
     // (M9.2): the zone, the language, the clock and the "until" pattern.
     ..['format'] = {
@@ -52,7 +61,41 @@ Map<String, Object?> snapshotStoreJson(
       'locale': _locale(profile.locale).languageCode,
       'hour24': use24h,
       'until': l10n.widgetUntil(timePlaceholder),
+      // Today's "3 of 10 done" (E-R2-17), counted where the dots are, so
+      // a Done from the widget moves it at once.
+      'done_of': l10n
+          .monthDoneOf(_doneMark, _totalMark)
+          .replaceAll('$_doneMark', donePlaceholder)
+          .replaceAll('$_totalMark', totalPlaceholder),
     };
+}
+
+/// Where the counts go in `format.done_of` (`{done} of {total} done`).
+const donePlaceholder = '{done}';
+const totalPlaceholder = '{total}';
+const _doneMark = 918273645;
+const _totalMark = 546372819;
+
+/// The App colour's accent, and the colour its words take (the accent on
+/// teal, as E-R2-17 draws "Now"; the contrast-safe ink on any other).
+Map<String, Object?> _accent(Profile profile) {
+  final custom = profile.accentHex == null
+      ? null
+      : parseHex(profile.accentHex!);
+  final key = DotAccent.fromKey(profile.settings.accent);
+  DotColors colours(Brightness b) => custom != null
+      ? DotColors.custom(b, custom)
+      : b == Brightness.dark
+      ? DotColors.dark(key)
+      : DotColors.light(key);
+  Map<String, String> pair(Brightness b) {
+    final c = colours(b);
+    final teal = custom == null && key == DotAccent.teal;
+    final Color text = teal ? c.accent : c.accentInk;
+    return {'dot': _hex(c.accent.toARGB32()), 'text': _hex(text.toARGB32())};
+  }
+
+  return {'light': pair(Brightness.light), 'dark': pair(Brightness.dark)};
 }
 
 /// Where the time goes in `format.until` (`until {time}`).

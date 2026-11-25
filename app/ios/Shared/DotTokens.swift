@@ -12,6 +12,18 @@ enum Dot {
   static let secondary = Color(light: 0xE2E2DE, dark: 0x2C2C32)
 }
 
+/// Concept E's widget tokens (E-R2-17, E-R2-17-Dark; lib/core/theme/
+/// tokens.dart): the raised card, ink, secondary words and the thread.
+enum DotE {
+  static let card = Color(light: 0xFFFDF9, dark: 0x28232A)
+  static let ink = Color(light: 0x241F2B, dark: 0xF3ECE4)
+  static let muted = Color(light: 0x6A6273, dark: 0xC7BEC4)
+  static let thread = Color(light: 0xDDD7E0, dark: 0x4A4348)
+}
+
+/// "#RRGGBB" as a number (the snapshot's colours).
+func hexValue(_ hex: String) -> UInt32 { UInt32(hex.dropFirst(), radix: 16) ?? 0x11615C }
+
 extension Color {
   init(light: UInt32, dark: UInt32) {
     self.init(UIColor { traits in

@@ -51,7 +51,39 @@ void main() {
       'locale': 'en',
       'hour24': false,
       'until': 'until {time}',
+      'done_of': '{done} of {total} done',
     });
+  });
+
+  test('the E widgets: dark colours, the Inbox title, the App colour', () {
+    final json = snapshotStoreJson(
+      snapshot(),
+      profile: testProfile(),
+      use24h: false,
+    );
+    final blocks = (json['blocks']! as List).cast<Map<String, Object?>>();
+    final deep = blocks.firstWhere((b) => b['title'] == 'Deep work: roadmap');
+    // E-R2-17-Dark: the task colour's dark step.
+    expect(deep['color_dark'], '#7A7EDE');
+    expect(json['labels'], containsPair('inbox_title', 'Inbox'));
+    // Teal (the default): the board's #11615C / #5BC4B8, words the same.
+    expect(json['accent'], {
+      'light': {'dot': '#11615C', 'text': '#11615C'},
+      'dark': {'dot': '#5BC4B8', 'text': '#5BC4B8'},
+    });
+  });
+
+  test('another App colour: its dot, and words in its readable ink', () {
+    final profile = testProfile();
+    final json = snapshotStoreJson(
+      snapshot(),
+      profile: profile.copyWith(accentHex: '#E2725B'),
+      use24h: false,
+    );
+    final accent = json['accent']! as Map<String, Object?>;
+    final light = accent['light']! as Map<String, String>;
+    expect(light['dot'], '#E2725B');
+    expect(light['text'], isNot('#E2725B'), reason: 'contrast-safe ink');
   });
 
   test("today's one thing: its block is flagged, the label is set", () {

@@ -186,9 +186,10 @@ run_one() {
     return
   fi
   # flutter drive uninstalls the app when it stops it; calendar_revoked
-  # (and calendar_regranted after it) need what the run before left.
+  # (and calendar_regranted after it) need what the run before left, and
+  # widgets_day leaves its day for the widgets added by hand.
   local keep=""
-  [[ "$t" == calendar_write_back || "$t" == calendar_revoked ]] &&
+  [[ "$t" == calendar_write_back || "$t" == calendar_revoked || "$t" == widgets_day ]] &&
     keep="--keep-app-running"
   with_limit flutter drive --driver="$driver" \
     --target="integration_test/${t}_test.dart" \
