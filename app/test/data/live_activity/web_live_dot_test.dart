@@ -28,19 +28,31 @@ DaySnapshot _snapshot({int inbox = 3}) => DaySnapshot(
   ],
 );
 
+// Teal, the App colour's default (appColourTones).
+const _teal = {
+  'light': {'dot': '#11615C'},
+  'dark': {'dot': '#5BC4B8'},
+};
+
 String _decoded(String dataUrl) =>
     Uri.decodeComponent(dataUrl.substring('data:image/svg+xml,'.length));
 
 void main() {
-  test('live: title, favicon ring in the dot\'s colour, badge', () {
+  test('live: title, favicon ring in the App colour, badge', () {
     final tab = webLiveDot(
       _snapshot(),
       _start.add(const Duration(minutes: 82)),
       _en,
+      accent: _teal,
     );
     expect(tab.title, '● 38 min left · Deep work: roadmap');
     final svg = _decoded(tab.favicon!);
-    expect(svg, contains("stroke='#5b5fd6'"));
+    // Light tone, and the bright tone on a dark browser (ED-474).
+    expect(svg, contains('.c{stroke:#11615C}'));
+    expect(
+      svg,
+      contains('@media (prefers-color-scheme:dark){.c{stroke:#5BC4B8}'),
+    );
     // 82 of 120 min: 68 % of a 2πr = 75.40 ring.
     expect(svg, contains("stroke-dasharray='51.52 75.40'"));
     expect(tab.badge, 3);
@@ -52,6 +64,7 @@ void main() {
       _snapshot(),
       _start.add(const Duration(minutes: 82)),
       de,
+      accent: _teal,
     );
     expect(tab.title, startsWith('● noch 38'));
   });
@@ -61,6 +74,7 @@ void main() {
       _snapshot(),
       _start.add(const Duration(minutes: 130)),
       _en,
+      accent: _teal,
     );
     expect(tab.title, '● Deep work: roadmap');
     expect(_decoded(tab.favicon!), contains("stroke-dasharray='75.40 75.40'"));
@@ -71,11 +85,17 @@ void main() {
       _snapshot(inbox: 0),
       _start.subtract(const Duration(minutes: 10)),
       _en,
+      accent: _teal,
     );
     expect(soon, const WebLiveDot());
-    expect(webLiveDot(null, _start, _en), WebLiveDot.none);
+    expect(webLiveDot(null, _start, _en, accent: _teal), WebLiveDot.none);
     expect(
-      webLiveDot(_snapshot(), _start.add(const Duration(hours: 5)), _en).badge,
+      webLiveDot(
+        _snapshot(),
+        _start.add(const Duration(hours: 5)),
+        _en,
+        accent: _teal,
+      ).badge,
       3,
     );
   });

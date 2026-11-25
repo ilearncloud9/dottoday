@@ -33,6 +33,15 @@ final class DayDotImageTests: XCTestCase {
     XCTAssertTrue(DayDotImage.make(share: 0.3).isTemplate)
   }
 
+  /// The menu's ring and dots keep their colours (E-R2-17, ED-474): the
+  /// menu must not tint them like the status item.
+  func testMenuMarksKeepTheirColours() {
+    XCTAssertFalse(MenuMark.ring(.systemTeal, used: 0.5).isTemplate)
+    XCTAssertFalse(MenuMark.ring(.systemTeal, used: nil).isTemplate)
+    XCTAssertFalse(MenuMark.dot(.systemPink, filled: false).isTemplate)
+    XCTAssertEqual(MenuMark.dot(.systemPink, filled: true).size, NSSize(width: 14, height: 14))
+  }
+
   private func check(
     _ file: String, share: Double, bar: (name: String, background: NSColor, tint: NSColor)
   ) throws {

@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:dottoday/domain/live_activity/live_dot_plan.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 
@@ -32,16 +31,19 @@ final class WebLiveDot {
   int get hashCode => Object.hash(title, favicon, badge);
 }
 
-/// The tab for [snapshot] at [nowUtc] in [l10n]'s language.
+/// The tab for [snapshot] at [nowUtc] in [l10n]'s language; the favicon
+/// ring in the App colour's [accent] tones (`appColourTones`), as on the
+/// Live Activity (M20.9 part 6, ED-474).
 ///
 /// ```dart
-/// webLiveDot(snapshot, now, l10n).title; // '● 38 min left · Deep work'
+/// webLiveDot(snapshot, now, l10n, accent: tones).title; // '● 38 min left · Deep work'
 /// ```
 WebLiveDot webLiveDot(
   DaySnapshot? snapshot,
   DateTime nowUtc,
-  AppLocalizations l10n,
-) {
+  AppLocalizations l10n, {
+  required Map<String, Map<String, String>> accent,
+}) {
   if (snapshot == null) return WebLiveDot.none;
   final plan = liveDotPlan(snapshot, nowUtc);
   final badge = snapshot.inboxCount;
@@ -60,27 +62,35 @@ WebLiveDot webLiveDot(
     title: title,
     favicon: faviconRing(
       share,
-      TaskColor.fromKey(dot.colorKey).color.toARGB32(),
+      light: accent['light']!['dot']!,
+      dark: accent['dark']!['dot']!,
     ),
     badge: badge,
   );
 }
 
-/// A 32 px ring in [argb], [share] of it drawn from the top clockwise, a
-/// dot inside: the live dot as a favicon.
-String faviconRing(double share, int argb) {
-  final hex = '#${(argb & 0xFFFFFF).toRadixString(16).padLeft(6, '0')}';
+/// A 32 px ring, [share] of it drawn from the top clockwise, a dot inside:
+/// the live dot as a favicon. [light] ("#RRGGBB") on a light browser,
+/// [dark] on a dark one (the SVG's own `prefers-color-scheme`).
+String faviconRing(
+  double share, {
+  required String light,
+  required String dark,
+}) {
   const r = 12.0;
   final length = 2 * math.pi * r;
   final drawn = (length * share.clamp(0.0, 1.0)).toStringAsFixed(2);
   final svg =
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>"
-      "<circle cx='16' cy='16' r='$r' fill='none' stroke='$hex' "
+      '<style>.c{stroke:$light}.f{fill:$light}'
+      '@media (prefers-color-scheme:dark){.c{stroke:$dark}.f{fill:$dark}}'
+      '</style>'
+      "<circle class='c' cx='16' cy='16' r='$r' fill='none' "
       "stroke-opacity='0.25' stroke-width='5'/>"
-      "<circle cx='16' cy='16' r='$r' fill='none' stroke='$hex' "
+      "<circle class='c' cx='16' cy='16' r='$r' fill='none' "
       "stroke-width='5' stroke-linecap='round' "
       "stroke-dasharray='$drawn ${length.toStringAsFixed(2)}' "
       "transform='rotate(-90 16 16)'/>"
-      "<circle cx='16' cy='16' r='4.5' fill='$hex'/></svg>";
+      "<circle class='f' cx='16' cy='16' r='4.5'/></svg>";
   return 'data:image/svg+xml,${Uri.encodeComponent(svg)}';
 }

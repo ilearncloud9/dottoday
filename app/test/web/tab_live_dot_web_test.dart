@@ -23,7 +23,7 @@ extension type _Link._(JSObject _) implements JSObject {
 void main() {
   test('sets and restores the favicon', () {
     _insertHead('beforeend', '<link rel="icon" href="favicon.png">');
-    final ring = faviconRing(0.5, 0xFF3B6CF6);
+    final ring = faviconRing(0.5, light: '#11615C', dark: '#5BC4B8');
     applyTabLiveDot(WebLiveDot(title: '● x', favicon: ring, badge: 2));
     expect(_query('link[rel="icon"]')!.href, ring);
     applyTabLiveDot(WebLiveDot.none);

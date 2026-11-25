@@ -5,6 +5,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
+import 'package:dottoday/data/widgets/app_colour_tones.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -33,11 +34,12 @@ class LastDaySnapshot extends _$LastDaySnapshot {
 WebLiveDot webLiveDotState(Ref ref) {
   final now = ref.watch(minuteTickProvider).value;
   final snapshot = ref.watch(lastDaySnapshotProvider);
-  final code = ref.watch(currentProfileProvider).value?.locale ?? 'en';
-  if (now == null) return WebLiveDot.none;
+  final profile = ref.watch(currentProfileProvider).value;
+  if (now == null || profile == null) return WebLiveDot.none;
+  final code = profile.locale;
   final known = AppLocalizations.supportedLocales.any(
     (l) => l.languageCode == code,
   );
   final l10n = lookupAppLocalizations(Locale(known ? code : 'en'));
-  return webLiveDot(snapshot, now, l10n);
+  return webLiveDot(snapshot, now, l10n, accent: appColourTones(profile));
 }

@@ -5896,6 +5896,14 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** analyze clean; Dart data tests pass; on the Android 17 phone emulator: every widget light and dark, the notification light and dark, the minute refresh (dark mode picked up, next alarm set); `ongoing_dot` (✓, +15, a swipe) and `tool/ongoing_killed_check.sh` (✓ with the app killed) pass; the check now finds the ✓ by its "Done" label.
 - **Not run:** Android tablets, a real Android phone, Android 12–16 (the progress-centric style is not used).
 
+### ED-474 · M20.9 part 6: the Mac menu bar's menu and the browser tab in Concept E, in the App colour
+- **Date:** 2026-11-26. **Owner:** "Start part 6"; drawing https://claude.ai/artifact/L2oeKx8BpJtzLNrr5Wjc24; on Done and +15 in the menu: "A, native items". Review page: https://claude.ai/artifact/DoQj1XY7e9d6KhhscWfp17. **Approved 2026-11-26: "Approve part 6".**
+- **Built (E-R2-17, E-R2-17-Dark, ED-309):** the menu-bar day dot and its "Deep work: roadmap · until 11:00 AM" stay as built (a template image the system tints). Its menu now reads as the board: "Now" (or "Next up"); the task's ring in the App colour filling with time used (hollow before it starts), the title in bold and "· until 11:00 AM" in secondary text; Done and +15 min as plain menu items, keyboard and VoiceOver as in any Mac menu (option A; option B, round buttons in a custom menu view, was not chosen); then what is left as "Lunch · 12:30 PM" after a hollow dot in the task's colour, filled when done; Today. The ring and dots are coloured images (`MenuMark`), resolving the App colour's light or dark tone as the menu draws.
+- **Browser tab:** the title as built ("● 18 min left · Deep work: roadmap"); the favicon ring is now in the App colour instead of the task's, its light tone on a light browser and the bright tone on a dark one (the SVG's own `prefers-color-scheme`).
+- **Share:** no change; iOS, macOS and Android already use the system share sheets as drawn, and the web has no share target (owner choice on the board).
+- **Checks:** format and analyze clean; Dart data tests pass (the favicon's App colour, light and dark); macOS RunnerTests pass (new: the menu's marks keep their colours); the favicon test in Chromium passes. The menu opened on this Mac through a standalone harness using the same status-item code and a sample day, light and dark (the Mac app's own data was left alone); the favicon rendered in a light and a dark tab.
+- **Not run:** the menu from the running Mac app with a seeded day; Safari and Firefox tabs.
+
 ---
 
 ## Pending owner answers

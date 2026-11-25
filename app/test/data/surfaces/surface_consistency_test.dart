@@ -166,6 +166,10 @@ void main() {
       lastSnapshot,
       now,
       lookupAppLocalizations(const Locale('en')),
+      accent: const {
+        'light': {'dot': '#11615C'},
+        'dark': {'dot': '#5BC4B8'},
+      },
     );
     return {
       'snapshot': snap == null

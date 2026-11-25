@@ -2,8 +2,9 @@ import Cocoa
 
 /// The day dot in the menu bar (docs/02 F9, docs/11 A1, docs/09 M9.6): a
 /// ring that fills from Wake Up to Wind Down, then the task under way or the
-/// next one. Click: What's next — the dot with Done and +15 min (B6, run
-/// by the app in process), what is left of the day, Today. Text arrives
+/// next one. Click (E-R2-17, ED-474): Now — its ring in the App colour,
+/// Done and +15 min (B6, run by the app in process) — what is left of the
+/// day with hollow dots in each task's colour, Today. Text arrives
 /// formatted and localised in the day snapshot
 /// (lib/data/snapshot/snapshot_store_json.dart). ⌘-drag removes it.
 final class DayDotStatusItem: NSObject {
@@ -95,7 +96,7 @@ final class DayDotStatusItem: NSObject {
     header.isEnabled = false
     menu.addItem(header)
     if let shown {
-      menu.addItem(row(for: shown))
+      menu.addItem(focusRow(for: shown, live: live != nil, now: now))
       menu.addItem(action(label("done"), kind: "mark_done", block: shown))
       menu.addItem(action(label("plus"), kind: "add_fifteen", block: shown))
       menu.addItem(.separator())
@@ -115,23 +116,53 @@ final class DayDotStatusItem: NSObject {
     return menu
   }
 
-  private func row(for block: [String: Any]) -> NSMenuItem {
+  /// The App colour (ED-221) for the menu's light or dark look (M20.9 part 6).
+  private var accent: NSColor {
+    let tones = snapshot["accent"] as? [String: [String: String]]
+    let light = Self.color(tones?["light"]?["dot"] ?? "#11615C")
+    let dark = Self.color(tones?["dark"]?["dot"] ?? "#5BC4B8")
+    return NSColor(name: nil) { $0.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? dark : light }
+  }
+
+  /// Now (E-R2-17): the ring in the App colour filling with time used
+  /// (hollow before it starts), the title in bold, "· until 11:00 AM".
+  private func focusRow(for block: [String: Any], live: Bool, now: Double) -> NSMenuItem {
     let row = NSMenuItem(title: "", action: #selector(openTask(_:)), keyEquivalent: "")
     row.target = self
     row.representedObject = block["id"] as? String
+    let start = Self.ms(block, "start_ms")
+    let end = Self.ms(block, "end_ms")
+    let used = live && end > start ? min(1, max(0, (now - start) / (end - start))) : nil
+    row.image = MenuMark.ring(accent, used: used)
+    let font = NSFont.menuFont(ofSize: 0)
     let text = NSMutableAttributedString(
-      string: "● ",
-      attributes: [.foregroundColor: Self.done(block) ? NSColor.tertiaryLabelColor : Self.color(block["color"] as? String)])
-    text.append(NSAttributedString(string: "\(block["time"] as? String ?? "")   \(block["title"] as? String ?? "")"))
+      string: block["title"] as? String ?? "",
+      attributes: [.font: NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)])
+    let when = live ? (block["until"] as? String ?? "") : (block["time"] as? String ?? "")
+    text.append(
+      NSAttributedString(
+        string: " · \(when)", attributes: [.font: font, .foregroundColor: NSColor.secondaryLabelColor]))
     row.attributedTitle = text
     return row
   }
 
-  /// Done / +15 min on the dot: the app runs the B6 intent (DotIntents).
+  /// What is left (E-R2-17): "Lunch · 12:30 PM" after a hollow dot in the
+  /// task's colour; done, the dot is filled.
+  private func row(for block: [String: Any]) -> NSMenuItem {
+    let row = NSMenuItem(
+      title: "\(block["title"] as? String ?? "") · \(block["time"] as? String ?? "")",
+      action: #selector(openTask(_:)), keyEquivalent: "")
+    row.target = self
+    row.representedObject = block["id"] as? String
+    row.image = MenuMark.dot(Self.color(block["color"] as? String), filled: Self.done(block))
+    return row
+  }
+
+  /// Done / +15 min on the dot, plain menu items as on the board (owner,
+  /// ED-474): the app runs the B6 intent (DotIntents).
   private func action(_ title: String, kind: String, block: [String: Any]) -> NSMenuItem {
     let item = NSMenuItem(title: title, action: #selector(runAction(_:)), keyEquivalent: "")
     item.target = self
-    item.indentationLevel = 1
     item.representedObject = [
       "kind": kind, "id": block["id"] as? String ?? "", "planned_end_ms": Self.ms(block, "end_ms"),
     ]
@@ -168,6 +199,65 @@ final class DayDotStatusItem: NSObject {
     return NSColor(
       red: CGFloat((rgb >> 16) & 0xFF) / 255, green: CGFloat((rgb >> 8) & 0xFF) / 255,
       blue: CGFloat(rgb & 0xFF) / 255, alpha: 1)
+  }
+}
+
+/// The menu's marks (E-R2-17): Now's ring and the dots of what is left.
+/// Coloured, not template images; the colours resolve light or dark as the
+/// menu draws them.
+enum MenuMark {
+  static let size: CGFloat = 14
+
+  /// The ring: [used] of it in [color] over a faint track; nil, a plain
+  /// hollow ring (before the task starts).
+  static func ring(_ color: NSColor, used: Double?) -> NSImage {
+    image { rect in
+      let line: CGFloat = 2.2
+      let radius = size / 2 - line / 2 - 0.3
+      let center = NSPoint(x: rect.midX, y: rect.midY)
+      let track = NSBezierPath()
+      track.appendArc(withCenter: center, radius: radius, startAngle: 0, endAngle: 360)
+      track.lineWidth = used == nil ? line * 0.7 : line
+      (used == nil ? color : color.withAlphaComponent(0.22)).setStroke()
+      track.stroke()
+      guard let used else { return }
+      let fill = NSBezierPath()
+      fill.appendArc(
+        withCenter: center, radius: radius, startAngle: 90, endAngle: 90 - 360 * max(0.03, used),
+        clockwise: true)
+      fill.lineWidth = line
+      fill.lineCapStyle = .round
+      color.setStroke()
+      fill.stroke()
+    }
+  }
+
+  /// A dot of 9 pt in [color]: hollow ahead, filled when done.
+  static func dot(_ color: NSColor, filled: Bool) -> NSImage {
+    image { rect in
+      let line: CGFloat = 1.8
+      let side: CGFloat = 9
+      let box = NSRect(x: rect.midX - side / 2, y: rect.midY - side / 2, width: side, height: side)
+      if filled {
+        color.setFill()
+        NSBezierPath(ovalIn: box).fill()
+        return
+      }
+      let path = NSBezierPath(ovalIn: box.insetBy(dx: line / 2, dy: line / 2))
+      path.lineWidth = line
+      color.setStroke()
+      path.stroke()
+    }
+  }
+
+  private static func image(_ draw: @escaping (NSRect) -> Void) -> NSImage {
+    let image = NSImage(size: NSSize(width: size, height: size), flipped: false) { rect in
+      draw(rect)
+      return true
+    }
+    image.isTemplate = false
+    image.accessibilityDescription = nil
+    return image
   }
 }
 
