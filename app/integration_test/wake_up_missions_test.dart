@@ -1,14 +1,15 @@
 // Wake Up's missions on the dawn sky (docs/09 M20.8 part 3; E-R2-19-B,
-// ED-314; tablets E-R2-19-B-2, ED-336), with their motion captured a
-// few frames apart: Walk's walker and its finished pose, Stand up's tilt,
+// ED-314; tablets E-R2-19-B-2, ED-336), with their motion captured a few
+// frames apart: Walk's walker and its finished pose, Stand up's tilt,
 // Light's glow, Breathe's ring and fingertip (Walk falls back to it on a
-// tablet), Catch the dot's gliding dots and the ring from a catch. In-memory data and sensors:
-//   flutter test integration_test/wake_up_missions_test.dart -d macos
-//   flutter build web -t integration_test/wake_up_missions_test.dart \
-//     --dart-define=SWEEP_HOST_SHOTS=true, served, then
-//   SHOTS=wake_up_missions node tool/slice/web_journey.mjs <url> expanded <b>
+// tablet), Catch the dot's gliding dots and the ring from a catch. In-memory
+// data and sensors. Only where the alarm rings (a phone or tablet): the Mac
+// and the web never open a mission (the router sends one to the card).
+//   tool/device_tests.sh android [emulator-5554] wake_up_missions
+//   tool/device_tests.sh ios [<simulator udid>] wake_up_missions
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/wake_up/mission_progress.dart';
@@ -29,15 +30,13 @@ import 'support/device_shot.dart';
 
 const _date = '2026-10-21';
 
-Future<FakeMissionSensors> _pump(
-  WidgetTester tester,
-  MissionKind kind,
-  Size size,
-) async {
-  tester.view
-    ..physicalSize = size
-    ..devicePixelRatio = 1;
-  addTearDown(tester.view.reset);
+/// Whether this device is a tablet (its shortest side 600 or more, the
+/// missions' rule, ED-454). The device's own size: a set test size stops
+/// the app drawing on a real device or emulator.
+bool _tablet(WidgetTester tester) =>
+    tester.view.physicalSize.shortestSide / tester.view.devicePixelRatio >= 600;
+
+Future<FakeMissionSensors> _pump(WidgetTester tester, MissionKind kind) async {
   final sensors = FakeMissionSensors();
   final router = GoRouter(
     initialLocation: AppRoutes.mission(_date, kind.name),
@@ -85,6 +84,18 @@ Future<FakeMissionSensors> _pump(
   return sensors;
 }
 
+/// A test that runs only where the Wake Up alarm rings: a Mac or the web
+/// never opens a mission (docs/15 W1, ED-450). [tablet] runs it on a
+/// tablet only, otherwise on a phone only (the tablet set differs).
+void _onPhones(
+  String description,
+  WidgetTesterCallback body, {
+  bool tablet = false,
+}) => testWidgets(description, (tester) async {
+  if (_tablet(tester) != tablet) return;
+  await body(tester);
+}, skip: !currentHealthPlatform().isPhone);
+
 Future<void> _frames(WidgetTester tester, [int n = 3]) async {
   for (var i = 0; i < n; i++) {
     await tester.pump(const Duration(milliseconds: 50));
@@ -94,8 +105,6 @@ Future<void> _frames(WidgetTester tester, [int n = 3]) async {
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(tz_data.initializeTimeZones);
-  const phone = Size(390, 844);
-  const tablet = Size(1180, 820);
 
   Future<void> shots(WidgetTester tester, String name, List<int> ms) async {
     for (final (i, wait) in ms.indexed) {
@@ -104,10 +113,10 @@ void main() {
     }
   }
 
-  testWidgets('Walk on a phone: the walker walks, then stands with a check', (
+  _onPhones('Walk on a phone: the walker walks, then stands with a check', (
     tester,
   ) async {
-    final sensors = await _pump(tester, MissionKind.walk, phone);
+    final sensors = await _pump(tester, MissionKind.walk);
     sensors.push(const StepsReading(Duration(seconds: 4), 7));
     await _frames(tester);
     // Mid-stride, then further across (E-R2-19-B `wkCross`, `wkLegA`).
@@ -120,16 +129,14 @@ void main() {
     expect(find.text('card'), findsOneWidget); // l10n-ignore: test route
   });
 
-  testWidgets('Stand up: the phone tilts upright, over and over', (
-    tester,
-  ) async {
-    await _pump(tester, MissionKind.standUp, phone);
+  _onPhones('Stand up: the phone tilts upright, over and over', (tester) async {
+    await _pump(tester, MissionKind.standUp);
     await _frames(tester);
     await shots(tester, 'wake_up_missions_2_stand', [500, 600, 600]);
   });
 
-  testWidgets('Light: the bulb glows and the room brightens', (tester) async {
-    final sensors = await _pump(tester, MissionKind.light, phone);
+  _onPhones('Light: the bulb glows and the room brightens', (tester) async {
+    final sensors = await _pump(tester, MissionKind.light);
     sensors.push(const LuxReading(Duration.zero, 20));
     await _frames(tester);
     await deviceShot(binding, tester, 'wake_up_missions_3_light_0');
@@ -138,27 +145,27 @@ void main() {
     await shots(tester, 'wake_up_missions_3_light', [300, 900]);
   });
 
-  testWidgets('a tablet runs Breathe, and Walk falls back to it', (
-    tester,
-  ) async {
-    await _pump(tester, MissionKind.walk, tablet);
+  _onPhones('a tablet runs Breathe, and Walk falls back to it', (tester) async {
+    await _pump(tester, MissionKind.walk);
     await _frames(tester);
     expect(find.text('Breathe with the ring'), findsOneWidget); // l10n-ignore
     await deviceShot(binding, tester, 'wake_up_missions_4_breathe_0');
     // Hold: the ring grows, the fingertip rests; let go: it shrinks and the
     // fingertip lifts (E-R2-19-B `msBreath`, `msFinger`).
+    // Its own pointer: a real touch on a device can arrive as pointer 1.
     final hold = await tester.startGesture(
       tester.getCenter(find.byType(DawnRing)),
+      pointer: 7,
     );
     await shots(tester, 'wake_up_missions_4_breathe_in', [150, 1500, 2500]);
     await hold.up();
     await shots(tester, 'wake_up_missions_4_breathe_out', [600, 1500]);
-  });
+  }, tablet: true);
 
-  testWidgets('Catch the dot on a tablet: the dots glide; three catches', (
+  _onPhones('Catch the dot on a tablet: the dots glide; three catches', (
     tester,
   ) async {
-    await _pump(tester, MissionKind.catchDot, tablet);
+    await _pump(tester, MissionKind.catchDot);
     await _frames(tester);
     await shots(tester, 'wake_up_missions_5_catch', [100, 2000, 2000]);
     final blue = find.descendant(
@@ -177,5 +184,5 @@ void main() {
       await _frames(tester, 3);
     }
     handle.dispose();
-  });
+  }, tablet: true);
 }

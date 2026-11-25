@@ -109,9 +109,12 @@ final class RouteScreens {
 /// Today and calls [onAdd] to open Quick Add over it (M9.2c). A task link,
 /// `/task/<id>`, opens over its place as [taskPlace] finds it (rule T,
 /// ED-097), replacing the link, so it is no Back step; without
-/// [taskPlace] it opens Today.
+/// [taskPlace] it opens Today. [missions] is whether this device rings
+/// the Wake Up alarm (a phone or tablet, docs/15 W1): a Mac or the web
+/// never does, so a mission address there opens the Wake Up card instead.
 GoRouter buildRouter(
   RouteScreens screens, {
+  bool missions = true,
   void Function(Uri link)? onAuthCallback,
   void Function()? onAdd,
   Future<String> Function(String taskId)? taskPlace,
@@ -153,6 +156,9 @@ GoRouter buildRouter(
       ),
       GoRoute(
         path: AppRoutes.missionPattern,
+        // Missions only run where the alarm rings; the Mac and the web set
+        // them for that device in Settings (ED-450) and never show one.
+        redirect: missions ? null : (_, _) => AppRoutes.wakeUp,
         builder: (context, state) => screens.mission(
           context,
           state.pathParameters['date']!,

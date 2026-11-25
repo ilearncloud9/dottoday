@@ -18,6 +18,7 @@ import 'package:dottoday/core/theme/icon_licenses.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/auth/supabase_start.dart';
 import 'package:dottoday/data/links/task_place.dart';
+import 'package:dottoday/data/notifications/health_providers.dart';
 import 'package:dottoday/data/notifications/sound_licenses.dart';
 import 'package:dottoday/data/observability/sentry_reporting.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
@@ -83,6 +84,8 @@ Future<void> bootstrap({List<Override> overrides = const []}) async {
         late final ProviderContainer container;
         router = buildRouter(
           appScreens,
+          // Only a device that rings the Wake Up alarm opens a mission.
+          missions: currentHealthPlatform().isPhone,
           onAuthCallback: callbacks.deliver,
           // A task link opens over its own date (rule T, ED-097).
           taskPlace: (id) => taskLinkPlace(container, id),

@@ -5771,22 +5771,6 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; 8,059 pass, 31 skipped; the first run's 3 failures fixed and rerun (Minimal Now's card goldens, and a Now test that scrolls to Later now). New docking tests (opens beside Today, Later closes it, a notification's I'm up docks it); goldens for the card, the docked panel and the four states; the old expanded full-screen goldens removed. A test caught the docked panel lacking its own Material surface; fixed. `integration_test/wake_up_card_test.dart` passed on the Mac app, Chromium and WebKit. Not run: simulators, emulators, real devices.
 - **Approved:** 2026-11-24, owner: "Approve part 2".
 
----
-
-## Pending owner answers
-
-> **Round 2 close-out (2026-11-14, ED-335).** Rows answered by later decisions are marked. The decisions still waiting on the owner are listed in ED-335.
-
-| Thread | Question | Where it stands |
-|---|---|---|
-| 9acf09f2 | Scale direction: "keep large", "C confidence" (modest rows, one big hero, more space between groups) or "both"? | Asked twice on 2026-11-03 (22:43 and 22:47 UTC). No answer. The large scale is on the boards (ED-025, ED-026). **Presented 2026-11-05 as G3-1 on `E-G3-1` (ED-101); option C revised to the owner's sizes (ED-103). Resolved by ED-104 (G3-1, option C · Both, revised).** |
-| 9acf09f2 | The owner's comment ended with "what". Was more text cut off? | Asked on 2026-11-03. **Closed 2026-11-05 (ED-103): the owner says it is not a new design requirement.** |
-| 24c4bdf0 | A-Map still describes A-Wide. Should the map follow A-Focus as the Mac/web design? | Asked on 2026-11-04. No answer. The working E Map answers this for E, but the owner has not confirmed it (ED-056). **Close-out (ED-335): superseded; Concept E is the design, A-Map is history.** |
-| (canvas) | Is E-Focus the minimal or the full Mac/web presentation? The title says minimal; the content is full. | Never asked directly (ED-005). **Answered 2026-11-04:** E-Minimal replaced it as the wide minimal layout (ED-064), and E keeps no wide Focus presentation (ED-065). |
-| f55c7d26 | "the keyboard": restore the whole iPhone keyboard to its look from before the iOS-controls pass? | Offered on 2026-11-03. No answer (ED-032). **Settled by G3-7 (ED-135): the stock iPhone keyboard with a neutral return key.** |
-| 69ac6f26 | iOS switch on-state: teal or system green? | Offered on 2026-11-03. No answer (ED-041). **Answered 2026-11-05: teal (G3-4 option A, ED-112).** |
-| 69ac6f26 | iOS system greys and colours below 4.5:1 contrast (tab labels #8E8E93 at about 3.1:1): keep native, or darken? | Raised on 2026-11-03. The swipe colours were reverted, but the tab labels were never decided (ED-042). |
-| 323fc074 | Simplify the web orb to match C's plainer web orb? | Offered on 2026-11-03. No answer (ED-052). **Presented 2026-11-05 as option B of G3-2 (ED-105); not chosen: G3-2 resolved as A (ED-106).** |
 ### ED-458 · M20.8 part 3: the missions on the dawn sky, and the tablet set
 - **Date:** 2026-11-24. **Owner:** "Start part 3"; no open questions (the boards and ED-336 cover it). **Approved 2026-11-25: "Approve part 3".** Review page: https://claude.ai/artifact/MQ4QvoC4qfSWX8byCLPwPq.
 - **Built (E-R2-19-B "Mission at dawn" and "The other missions", ED-314; tablets E-R2-19-B-2, ED-336):** every mission on the dawn sky in the app's dark theme: the time large at the top, the mission, its line ("Walk 20 steps"), Can't right now at the foot. Walk: a larger ring filling step by step in the App colour's dark-surface shade (lightened to 3:1 against the sky at the ring), the count inside over "of 20 steps", and a walker crossing the ground line until the count ends. Stand up and Light: their icon and "0 of 3 s" in the ring, what to do under it. Breathe: the ring glows as it fills, Hold / Let go and a fingertip inside. Catch the dot: four dots (blue circle, violet triangle, amber square, green plus; no red, ED-336) gliding over the sky; "Tap the blue circle" and the count under the time; 3 catches (was 5); screen readers get one button that counts a catch. Pick today's one thing: its list on the sky. On a tablet in landscape: the mission on the left, the time and its line on the right, Can't right now centred under both (E-R2-19-B-2). Reduced motion: dots and walker hold still, as before for the dot.
@@ -5823,3 +5807,26 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 | (canvas) | "Plan from Inbox · 3" on the iPhone empty day: keep it or remove it? | Never asked (ED-039). **Answered 2026-11-15 (ED-336): keep in Full as "Pull from inbox · {count}", hidden in Minimal.** |
 | d06d1077 | Create task (ED-140): keep "Add another" (check beside it; Return keeps the screen open for the next task) or drop it? | Raised 2026-11-06 (ED-140). **Answered 2026-11-07: option A, no "Add another" (ED-152).** |
 | ef95bd66 | Brain dump and Routine tabs (ED-139): their frames on `E-Phones-2` still use the old compact Add sheet. Redraw them in the Create task chrome? | Raised 2026-11-06 (CR-125). Asked in the decision review (Q-A2). **Answered 2026-11-07: Brain dump (ED-147, ED-148) and Routine (ED-149) open full screen on iPhone and Android. Closed.** |
+### ED-462 · Missions open only where the alarm rings
+- **Date:** 2026-11-25. **Owner:** asked why missions render on the web when they don't run there, then "yes, do it" to the fix.
+- **Why:** the Mac and the web never ring the Wake Up alarm (only the chosen phone or tablet does, ED-083/084), and only that device's "I'm up" opens a mission; but the mission route had no guard, so its address opened a mission there, and part 3 checked the missions in Chromium, WebKit and the Mac app, which suggested they ran there.
+- **Changed:** `buildRouter(missions:)`, from `currentHealthPlatform().isPhone` in `bootstrap.dart`: on the Mac and the web a mission address opens the Wake Up card. Settings › Missions stays there to set them for the device that rings (ED-450). `integration_test/wake_up_missions_test.dart` runs only where the alarm rings, at the device's own size (a set test size stops a device drawing): the phone journeys on a phone, the tablet journeys on a tablet (`tool/device_tests.sh android|ios … wake_up_missions`). The mission screen's code stays shared.
+- **Checks:** router tests for both cases; the missions journey passed on the Android phone and tablet emulators. Not run: the iOS Simulator.
+- **Found while checking (not fixed here):** at 200 % text on the phone, the missions crowd: the time wraps, the walker crosses the title, and Stand up's title runs into Can't right now (part 3).
+
+---
+
+## Pending owner answers
+
+> **Round 2 close-out (2026-11-14, ED-335).** Rows answered by later decisions are marked. The decisions still waiting on the owner are listed in ED-335.
+
+| Thread | Question | Where it stands |
+|---|---|---|
+| 9acf09f2 | Scale direction: "keep large", "C confidence" (modest rows, one big hero, more space between groups) or "both"? | Asked twice on 2026-11-03 (22:43 and 22:47 UTC). No answer. The large scale is on the boards (ED-025, ED-026). **Presented 2026-11-05 as G3-1 on `E-G3-1` (ED-101); option C revised to the owner's sizes (ED-103). Resolved by ED-104 (G3-1, option C · Both, revised).** |
+| 9acf09f2 | The owner's comment ended with "what". Was more text cut off? | Asked on 2026-11-03. **Closed 2026-11-05 (ED-103): the owner says it is not a new design requirement.** |
+| 24c4bdf0 | A-Map still describes A-Wide. Should the map follow A-Focus as the Mac/web design? | Asked on 2026-11-04. No answer. The working E Map answers this for E, but the owner has not confirmed it (ED-056). **Close-out (ED-335): superseded; Concept E is the design, A-Map is history.** |
+| (canvas) | Is E-Focus the minimal or the full Mac/web presentation? The title says minimal; the content is full. | Never asked directly (ED-005). **Answered 2026-11-04:** E-Minimal replaced it as the wide minimal layout (ED-064), and E keeps no wide Focus presentation (ED-065). |
+| f55c7d26 | "the keyboard": restore the whole iPhone keyboard to its look from before the iOS-controls pass? | Offered on 2026-11-03. No answer (ED-032). **Settled by G3-7 (ED-135): the stock iPhone keyboard with a neutral return key.** |
+| 69ac6f26 | iOS switch on-state: teal or system green? | Offered on 2026-11-03. No answer (ED-041). **Answered 2026-11-05: teal (G3-4 option A, ED-112).** |
+| 69ac6f26 | iOS system greys and colours below 4.5:1 contrast (tab labels #8E8E93 at about 3.1:1): keep native, or darken? | Raised on 2026-11-03. The swipe colours were reverted, but the tab labels were never decided (ED-042). |
+| 323fc074 | Simplify the web orb to match C's plainer web orb? | Offered on 2026-11-03. No answer (ED-052). **Presented 2026-11-05 as option B of G3-2 (ED-105); not chosen: G3-2 resolved as A (ED-106).** |

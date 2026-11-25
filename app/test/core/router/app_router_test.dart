@@ -35,6 +35,28 @@ void main() {
   // bootstrap() loads it in the app; real screens (Search) need it.
   setUpAll(tz_data.initializeTimeZones);
 
+  // Missions run only where the Wake Up alarm rings (docs/15 W1); a Mac
+  // or the web sets them in Settings for that device (ED-450).
+  testWidgets('a mission address opens the Wake Up card on a Mac or the web', (
+    tester,
+  ) async {
+    final router = buildRouter(appScreens, missions: false);
+    addTearDown(router.dispose);
+    await tester.pumpWidget(testRouterApp(router));
+    router.go('/wake-up/mission/2026-10-21/breathe');
+    await tester.pump();
+    expect(router.state.uri.path, '/wake-up');
+  });
+
+  testWidgets('a phone opens the mission at its address', (tester) async {
+    final router = buildRouter(appScreens);
+    addTearDown(router.dispose);
+    await tester.pumpWidget(testRouterApp(router));
+    router.go('/wake-up/mission/2026-10-21/breathe');
+    await tester.pump();
+    expect(router.state.uri.path, '/wake-up/mission/2026-10-21/breathe');
+  });
+
   testWidgets('starts on /today', (tester) async {
     await _pump(tester);
     expect(find.byKey(const ValueKey('route:today')), findsOneWidget);
