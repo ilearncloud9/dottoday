@@ -175,7 +175,16 @@ object DotQueue {
             }
             DotActionKind.ADD_TASK -> return snapshot
         }
-        return snapshot.toMutableMap().apply { put("blocks", blocks.toMutableList().also { it[i] = block }) }
+        return snapshot.toMutableMap().apply {
+            put("blocks", blocks.toMutableList().also { it[i] = block })
+            // Today's "3 of 10 done" moves with the tick (E-R2-17); the
+            // app's rewrite recounts it.
+            val dayDone = (snapshot["day_done"] as? Number)?.toInt()
+            val dayTotal = (snapshot["day_total"] as? Number)?.toInt()
+            if (kind == DotActionKind.MARK_DONE && dayDone != null && dayTotal != null && dayDone < dayTotal) {
+                put("day_done", dayDone + 1)
+            }
+        }
     }
 
     /**

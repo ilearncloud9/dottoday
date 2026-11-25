@@ -21,6 +21,10 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.appwidget.cornerRadius
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import es.antonborri.home_widget.HomeWidgetGlanceState
 import es.antonborri.home_widget.HomeWidgetGlanceStateDefinition
@@ -40,43 +44,76 @@ class TodayWidget : GlanceAppWidget() {
 
 @Composable
 private fun Today(context: Context, snapshot: WidgetSnapshot, now: Long) {
-    // Rows of ~28 dp under a ~30 dp header: as many as the size holds.
-    val rows = ((LocalSize.current.height.value - 44) / 28).toInt().coerceIn(1, 8)
+    // E-R2-17: rows 24 dp in the medium, 30 + 6 in the large (by height).
+    val height = LocalSize.current.height.value
+    val large = height > 220
+    val pitch = if (large) 36 else 24
+    val rows = ((height - 52) / pitch).toInt().coerceIn(1, if (large) 6 else 4)
     val ahead = snapshot.ahead(now).take(rows)
     Column(
-        modifier = GlanceModifier.fillMaxSize().background(DotColors.surface)
+        modifier = GlanceModifier.fillMaxSize().background(DotColors.surface).cornerRadius(28.dp)
             .padding(14.dp).clickable(open(context, "dottoday://today")),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            DayDot(context, snapshot, now)
-            Spacer(GlanceModifier.width(6.dp))
-            Text(snapshot.label("today").uppercase(), style = DotText.caption)
-        }
+        WidgetHeader(context, snapshot, now, snapshot.label("today"), snapshot.doneOf())
         Spacer(GlanceModifier.height(8.dp))
         if (ahead.isEmpty()) {
-            Text(snapshot.label("nothing_next"), style = DotText.meta)
+            Text(snapshot.label("nothing_next"), style = DotText.empty)
             return@Column
         }
-        for (block in ahead) {
-            val live = block.startMs <= now && !block.done
-            Row(
-                // Today's one thing has its label under the title.
-                modifier = GlanceModifier.height(if (block.oneThing) 40.dp else 28.dp)
-                    .clickable(open(context, "dottoday://task/${block.id}")),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                TaskDot(block.color, block.done, oneThing = block.oneThing)
-                Spacer(GlanceModifier.width(if (block.oneThing) 6.dp else 10.dp))
-                Text(
-                    if (live) snapshot.label("now") else block.time,
-                    style = DotText.meta,
-                    modifier = GlanceModifier.width(64.dp),
-                )
-                Column {
-                    Text(block.title, style = if (block.done) DotText.done else DotText.title, maxLines = 1)
-                    if (block.oneThing) Text(snapshot.label("one_thing"), style = DotText.meta, maxLines = 1)
+        Box {
+            // The thread behind the dots, from the first to the last.
+            if (ahead.size > 1) {
+                val top = (if (large) 30 else 24) / 2
+                Box(
+                    modifier = GlanceModifier.width(MARK_COLUMN.dp).height((top + pitch * (ahead.size - 1)).dp)
+                        .padding(top = top.dp),
+                    contentAlignment = Alignment.TopCenter,
+                ) {
+                    Box(
+                        modifier = GlanceModifier.width(2.dp).height((pitch * (ahead.size - 1)).dp)
+                            .background(DotColors.thread),
+                    ) {}
                 }
             }
+            Column {
+                for ((i, block) in ahead.withIndex()) {
+                    if (large && i > 0) Spacer(GlanceModifier.height(6.dp))
+                    TodayRow(context, snapshot, block, now, if (large) 30 else 24)
+                }
+            }
+        }
+    }
+}
+
+/** The marks' column: wide enough for your one thing's outer ring (21 dp). */
+private const val MARK_COLUMN = 22
+
+/** One row: the mark, "Now" or the time, the title (your one thing labelled). */
+@Composable
+private fun TodayRow(context: Context, snapshot: WidgetSnapshot, block: WidgetBlock, now: Long, rowDp: Int) {
+    val live = !block.done && block.startMs <= now && now < block.endMs
+    Row(
+        modifier = GlanceModifier.height(rowDp.dp).fillMaxWidth()
+            .clickable(open(context, "dottoday://task/${block.id}")),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(modifier = GlanceModifier.width(MARK_COLUMN.dp), contentAlignment = Alignment.Center) {
+            TaskMark(context, snapshot, block, now)
+        }
+        Spacer(GlanceModifier.width(7.dp))
+        Text(
+            if (live) snapshot.label("now") else block.time,
+            style = if (live) DotText.meta.copy(color = accentText(snapshot), fontWeight = FontWeight.Bold) else DotText.meta,
+            modifier = GlanceModifier.width(62.dp),
+        )
+        Text(
+            block.title,
+            style = when { live -> DotText.rowNow; block.done -> DotText.rowDone; else -> DotText.row },
+            maxLines = 1,
+        )
+        if (block.oneThing) {
+            Spacer(GlanceModifier.width(6.dp))
+            Text(snapshot.label("one_thing"), style = DotText.meta, maxLines = 1)
         }
     }
 }

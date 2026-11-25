@@ -1,7 +1,6 @@
 package app.dottoday.planner.widgets
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -9,8 +8,7 @@ import android.graphics.RectF
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceModifier
-import androidx.glance.Image
-import androidx.glance.ImageProvider
+import androidx.glance.layout.Box
 import androidx.glance.layout.size
 
 /**
@@ -22,39 +20,44 @@ import androidx.glance.layout.size
 @Composable
 fun DayDot(context: Context, snapshot: WidgetSnapshot, now: Long) {
     val (day, filled) = snapshot.dayDot(now)
-    Image(
-        provider = ImageProvider(dayDotBitmap(context, day, filled)),
-        contentDescription = null,
-        modifier = GlanceModifier.size(14.dp),
-    )
+    val accent = dayNight(snapshot.accent.light.dot, snapshot.accent.dark.dot)
+    // White masks tinted per light / dark: the day in the App colour, the
+    // night in the thread's colour.
+    Box(modifier = GlanceModifier.size(14.dp)) {
+        if (day < 1) Mask(nightMask(context, day), DotColors.thread, 14f)
+        Mask(dayMask(context, day, filled), accent, 14f)
+    }
 }
 
-/** Concept A tokens, as DotWidgetUi's (docs/10 §2.1). */
-private fun dayDotBitmap(context: Context, day: Double, filled: Double): Bitmap {
-    val dark = context.resources.configuration.uiMode and
-        Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+private fun ringCanvas(context: Context): Triple<Bitmap, Canvas, Float> {
     val px = (14 * context.resources.displayMetrics.density).toInt().coerceAtLeast(14)
     val bitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-    val ring = px * 0.2f
+    return Triple(bitmap, Canvas(bitmap), px * 0.2f)
+}
+
+/** The waking day: a faint track, the part so far, the centre dot. */
+private fun dayMask(context: Context, day: Double, filled: Double): Bitmap {
+    val (bitmap, canvas, ring) = ringCanvas(context)
+    val px = bitmap.width
     val rect = RectF(ring / 2, ring / 2, px - ring / 2, px - ring / 2)
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = ring }
-    val accent = if (dark) 0xFF7FA0FF.toInt() else 0xFF3B6CF6.toInt()
-    paint.color = if (dark) 0xFF2C2C32.toInt() else 0xFFE2E2DE.toInt()
+    paint.color = 0x26FFFFFF
     canvas.drawArc(rect, -90f, (360 * day).toFloat(), false, paint)
-    if (day < 1) {
-        // Ink at 12 % (light) or 18 % (dark) over the surface: the night.
-        // Thinner, not just fainter: the night reads as night without colour.
-        paint.color = if (dark) 0xFF3A3A3D.toInt() else 0xFFE3E3E2.toInt()
-        paint.strokeWidth = ring * 0.45f
-        canvas.drawArc(rect, (-90 + 360 * day).toFloat(), (360 * (1 - day)).toFloat(), false, paint)
-        paint.strokeWidth = ring
-    }
-    if (filled > 0) {
-        paint.color = accent
-        canvas.drawArc(rect, -90f, (360 * filled).toFloat(), false, paint)
-    }
+    paint.color = DotMarks.MASK
+    if (filled > 0) canvas.drawArc(rect, -90f, (360 * filled).toFloat(), false, paint)
     paint.style = Paint.Style.FILL
-    canvas.drawCircle(px / 2f, px / 2f, px * 0.12f, paint)
+    canvas.drawCircle(px / 2f, px / 2f, px * 0.145f, paint)
+    return bitmap
+}
+
+/** The night round to the next Wake Up: thinner, so it reads as night. */
+private fun nightMask(context: Context, day: Double): Bitmap {
+    val (bitmap, canvas, ring) = ringCanvas(context)
+    val px = bitmap.width
+    val rect = RectF(ring / 2, ring / 2, px - ring / 2, px - ring / 2)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE; strokeWidth = ring * 0.45f; color = DotMarks.MASK
+    }
+    canvas.drawArc(rect, (-90 + 360 * day).toFloat(), (360 * (1 - day)).toFloat(), false, paint)
     return bitmap
 }

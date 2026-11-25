@@ -2,22 +2,18 @@ package app.dottoday.planner.widgets
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.ui.graphics.Color
 import androidx.glance.appwidget.action.actionSendBroadcast
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.layout.Box
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.size
-import androidx.glance.semantics.contentDescription
-import androidx.glance.semantics.semantics
-import androidx.glance.text.FontWeight
-import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider as FixedColor
 import app.dottoday.planner.intents.DotActionReceiver
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.semantics.contentDescription
+import androidx.glance.semantics.semantics
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -53,61 +49,56 @@ private fun NextUp(context: Context, snapshot: WidgetSnapshot, now: Long) {
     val live = snapshot.live(now)
     val block = live ?: snapshot.next(now)
     val link = block?.let { "dottoday://task/${it.id}" } ?: "dottoday://today"
+    // E-R2-17 and the approved states (ED-471): the day dot and the caption;
+    // the mark and the title; "until …" or the start, and Done while under way.
     Column(
-        modifier = GlanceModifier.fillMaxSize().background(DotColors.surface)
+        modifier = GlanceModifier.fillMaxSize().background(DotColors.surface).cornerRadius(28.dp)
             .padding(14.dp).clickable(open(context, link)),
         verticalAlignment = Alignment.Top,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            DayDot(context, snapshot, now)
-            Spacer(GlanceModifier.width(6.dp))
-            Text(
-                text = (if (live != null) snapshot.label("now") else snapshot.label("next_up")).uppercase(),
-                style = DotText.caption,
-            )
-        }
-        Spacer(GlanceModifier.height(10.dp))
+        WidgetHeader(context, snapshot, now, if (live != null) snapshot.label("now") else snapshot.label("next_up"))
+        Spacer(GlanceModifier.height(8.dp))
         if (block == null) {
-            Text(snapshot.label("nothing_next"), style = DotText.meta)
+            Text(snapshot.label("nothing_next"), style = DotText.empty)
             return@Column
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TaskDot(block.color, done = false, size = 14, oneThing = block.oneThing)
+        Row(verticalAlignment = Alignment.Top) {
+            Box(modifier = GlanceModifier.size(22.dp), contentAlignment = Alignment.Center) {
+                TaskMark(context, snapshot, block, now, size = if (live != null) 20f else 14f)
+            }
             Spacer(GlanceModifier.width(8.dp))
-            Text(block.title, style = DotText.title, maxLines = 2)
+            Column {
+                Text(block.title, style = DotText.title, maxLines = 3)
+                if (block.oneThing) Text(snapshot.label("one_thing"), style = DotText.meta)
+            }
         }
-        if (block.oneThing) Text(snapshot.label("one_thing"), style = DotText.meta)
-        Spacer(GlanceModifier.height(6.dp))
+        Spacer(GlanceModifier.defaultWeight())
         Row(modifier = GlanceModifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
             Text(
                 if (live != null) block.until else block.time,
                 style = DotText.meta,
                 modifier = GlanceModifier.defaultWeight(),
             )
-            DoneButton(context, block, snapshot.label("done"))
+            // Done only while it is under way (ED-471), in the App colour.
+            if (live != null) DoneButton(context, snapshot, block, snapshot.label("done"))
         }
     }
 }
 
 /**
  * Next up's Done (docs/09 M9.5): a broadcast to [DotActionReceiver], the
- * same path as the ongoing notification's Done — queued for the app,
+ * same path as the ongoing notification's tick — queued for the app,
  * shown on the snapshot at once, with or without the app running.
  */
 @Composable
-private fun DoneButton(context: Context, block: WidgetBlock, label: String) {
+private fun DoneButton(context: Context, snapshot: WidgetSnapshot, block: WidgetBlock, label: String) {
     val intent = Intent(context, DotActionReceiver::class.java)
         .setAction(DotActionReceiver.ACTION_MARK_DONE)
         .putExtra(DotActionReceiver.EXTRA_OCCURRENCE, block.id)
     Box(
-        modifier = GlanceModifier.size(44.dp).cornerRadius(22.dp)
-            .background(FixedColor(Color(block.color)))
-            .clickable(actionSendBroadcast(intent))
+        modifier = GlanceModifier.size(44.dp).clickable(actionSendBroadcast(intent))
             .semantics { contentDescription = label },
-        contentAlignment = Alignment.Center,
-    ) {
-        Text("✓", style = TextStyle(color = FixedColor(Color.White), fontWeight = FontWeight.Bold))
-    }
+    ) { TickButton(context, snapshot, 44f) }
 }
 
 /**

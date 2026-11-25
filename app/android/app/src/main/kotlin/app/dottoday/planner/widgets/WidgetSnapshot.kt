@@ -19,7 +19,36 @@ data class WidgetBlock(
     val done: Boolean,
     /** Today's one thing (docs/15 §8): ringed, with the "one_thing" label. */
     val oneThing: Boolean = false,
+    /** Dark mode's step of the task colour (E-R2-17-Dark). */
+    val colorDark: Int = color,
 )
+
+/** The App colour in one appearance (lib/data/widgets/app_colour_tones.dart). */
+data class AppTone(val dot: Int, val text: Int, val fill: Int, val on: Int)
+
+/** The App colour, light and dark; teal (the default) before the app writes it. */
+data class AppAccent(val light: AppTone, val dark: AppTone) {
+    fun tone(dark: Boolean) = if (dark) this.dark else light
+
+    companion object {
+        val TEAL = AppAccent(
+            AppTone(0xFF11615C.toInt(), 0xFF11615C.toInt(), 0xFF11615C.toInt(), 0xFFFFFFFF.toInt()),
+            AppTone(0xFF5BC4B8.toInt(), 0xFF5BC4B8.toInt(), 0xFF5BC4B8.toInt(), 0xFF0C2523.toInt()),
+        )
+
+        /** `{light: {dot, text, fill, on}, dark: …}`, or teal. */
+        fun parse(json: JSONObject?): AppAccent {
+            if (json == null) return TEAL
+            fun tone(o: JSONObject?, fallback: AppTone): AppTone {
+                if (o == null) return fallback
+                fun c(key: String, f: Int) = o.optString(key).takeIf { it.isNotEmpty() }
+                    ?.let { runCatching { android.graphics.Color.parseColor(it) }.getOrNull() } ?: f
+                return AppTone(c("dot", fallback.dot), c("text", fallback.text), c("fill", fallback.fill), c("on", fallback.on))
+            }
+            return AppAccent(tone(json.optJSONObject("light"), TEAL.light), tone(json.optJSONObject("dark"), TEAL.dark))
+        }
+    }
+}
 
 data class WidgetSnapshot(
     val blocks: List<WidgetBlock>,
@@ -30,7 +59,17 @@ data class WidgetSnapshot(
     val wakeMs: Long = 0,
     val bedMs: Long = 0,
     val nightStart: Double = 1.0,
+    val accent: AppAccent = AppAccent.TEAL,
+    /** Today's done and planned dots, Wake Up to Wind Down (past ones too). */
+    val dayDone: Int = 0,
+    val dayTotal: Int = 0,
+    /** "{done} of {total} done" in the app's language. */
+    val doneOfPattern: String = "",
 ) {
+    /** Today's "3 of 10 done" (E-R2-17); empty when nothing is planned. */
+    fun doneOf(): String = if (dayTotal <= 0 || doneOfPattern.isEmpty()) "" else
+        doneOfPattern.replace("{done}", "$dayDone").replace("{total}", "$dayTotal")
+
     /** Ring shares at [now]: the day ends at `first`, `second` of it filled. */
     fun dayDot(now: Long): Pair<Double, Double> {
         if (bedMs <= wakeMs) return nightStart to 0.0
@@ -74,6 +113,9 @@ data class WidgetSnapshot(
                             color = android.graphics.Color.parseColor(b.getString("color")),
                             done = b.getBoolean("done"),
                             oneThing = b.optBoolean("one_thing"),
+                            colorDark = b.optString("color_dark").takeIf { it.isNotEmpty() }
+                                ?.let { android.graphics.Color.parseColor(it) }
+                                ?: android.graphics.Color.parseColor(b.getString("color")),
                         )
                     },
                     inboxCount = json.getInt("inbox_count"),
@@ -81,6 +123,10 @@ data class WidgetSnapshot(
                     wakeMs = json.optLong("wake_ms"),
                     bedMs = json.optLong("bed_ms"),
                     nightStart = json.optDouble("night_start", 1.0).coerceIn(0.0, 1.0),
+                    accent = AppAccent.parse(json.optJSONObject("accent")),
+                    dayDone = json.optInt("day_done"),
+                    dayTotal = json.optInt("day_total"),
+                    doneOfPattern = json.optJSONObject("format")?.optString("done_of").orEmpty(),
                 )
             }
         } catch (e: Exception) {

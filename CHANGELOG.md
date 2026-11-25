@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - "Notifications are off" and "Reminders may come a few minutes after their time" are amber notices with a pill button, Notification health carries its check, and the test alarm's steps show as a card under its row with pill buttons (redesign branch).
 - The iPhone and iPad widgets and the Lock Screen widget are redrawn in the new look: the task under way as a ring that fills with time, the rest of the day as dots on a thread, today's done count, in your App colour (redesign branch).
 - The Live Activity and the Dynamic Island are redrawn in the new look, in your App colour, with Done as a tick and +15 beside the task; its title is readable again on a dark Lock Screen (redesign branch).
+- Android's widgets and the ongoing notification are redrawn in the new look and your App colour; the notification's ring moves every minute, with ✓ and +15 as round buttons (redesign branch).
 - On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).

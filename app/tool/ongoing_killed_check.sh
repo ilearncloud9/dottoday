@@ -9,7 +9,8 @@
 #    waits for its ongoing notification (flutter drive --keep-app-running).
 # 2. The app is killed as the OS kills it (`am kill` from the background,
 #    then SIGKILL), never force-stopped.
-# 3. The notification shade is opened and its Done button tapped
+# 3. The notification shade is opened and its Done button (the ✓,
+#    labelled "Done" since ED-473) tapped
 #    (uiautomator): DotActionReceiver queues the action with no Flutter
 #    engine; the notification must disappear.
 # 4. integration_test/ongoing_killed_verify_test.dart opens the app, which
@@ -61,7 +62,7 @@ if [[ -n "${DONE_TAP:-}" ]]; then
   a shell input tap $DONE_TAP
 else
   a shell uiautomator dump /sdcard/ongoing.xml >/dev/null || true
-  bounds=$(a shell cat /sdcard/ongoing.xml 2>/dev/null | grep -o 'text="Done"[^>]*bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' |
+  bounds=$(a shell cat /sdcard/ongoing.xml 2>/dev/null | grep -oE '(text|content-desc)="Done"[^>]*bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' |
     head -1 | grep -o '\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]' || true)
   [[ -n "$bounds" ]] || { echo "no Done button found: set DONE_TAP" >&2; exit 1; }
   read -r x1 y1 x2 y2 <<<"$(tr '[],' '   ' <<<"$bounds")"
