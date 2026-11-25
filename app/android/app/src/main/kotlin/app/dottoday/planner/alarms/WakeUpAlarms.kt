@@ -40,6 +40,8 @@ data class WakeUpAlarm(
     val missionAfterSnooze: Boolean = false,
     /** When "I'm up" first opened the mission: the 10-minute cap counts from here. */
     val missionSinceMs: Long = 0,
+    /** The day's dots round the ringing screen's day dot (E-R2-19-B); none = track and sun only. */
+    val arcs: List<WakeUpArc> = emptyList(),
 ) {
     /** Snooze is offered: on, and under its limit (0 = no limit). */
     val canSnooze: Boolean get() = snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit)
@@ -60,6 +62,7 @@ data class WakeUpAlarm(
         .put("checkStart", checkStart).put("checkTarget", checkTarget).put("checkLoud", checkLoud)
         .put("mission", mission).put("missionAfterSnooze", missionAfterSnooze)
         .put("missionSinceMs", missionSinceMs)
+        .put("arcs", JSONArray(arcs.map { it.toJson() }))
 
     companion object {
         const val ARMED = "armed"
@@ -95,6 +98,7 @@ data class WakeUpAlarm(
             checkLoud = m["checkLoud"] == true,
             mission = m["mission"] as? String ?: "",
             missionAfterSnooze = m["missionAfterSnooze"] == true,
+            arcs = (m["arcs"] as? List<*>).orEmpty().mapNotNull { (it as? Map<*, *>)?.let(WakeUpArc::fromMap) },
         )
 
         fun fromJson(o: JSONObject): WakeUpAlarm = WakeUpAlarm(
@@ -120,6 +124,7 @@ data class WakeUpAlarm(
             mission = o.optString("mission"),
             missionAfterSnooze = o.optBoolean("missionAfterSnooze"),
             missionSinceMs = o.optLong("missionSinceMs"),
+            arcs = o.optJSONArray("arcs")?.let { a -> (0 until a.length()).map { WakeUpArc.fromJson(a.getJSONObject(it)) } }.orEmpty(),
         )
     }
 }

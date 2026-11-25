@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The Wake Up ringing screen (docs/15 W1b, §10): Concept A tokens
-     (docs/10 §2.1, the same values as widgets/DotWidgetUi.kt). -->
+<!-- The Wake Up ringing screen at dawn (E-R2-19-B, ED-314): the sky from
+     night plum through rose to the first light, and I'm up's label on its
+     white pill. Night: E-R2-19-B-Dark's darker dawn (ED-459). -->
 <resources>
-    <color name="wake_up_surface">#FAFAF8</color>
-    <color name="wake_up_ink">#1A1A1C</color>
-    <color name="wake_up_muted">#6B6B70</color>
-    <color name="wake_up_accent">#3B6CF6</color>
-    <color name="wake_up_on_accent">#FFFFFF</color>
+    <color name="wake_up_sky_top">#2E3A6B</color>
+    <color name="wake_up_sky_middle">#B86B6B</color>
+    <color name="wake_up_sky_bottom">#F2B27A</color>
+    <color name="wake_up_on_white">#0B4642</color>
 </resources>

@@ -1,45 +1,78 @@
+import 'dart:ui' show Brightness;
+
 import 'package:dottoday/core/theme/contrast.dart';
 import 'package:flutter/animation.dart' show Cubic;
 import 'package:flutter/painting.dart';
 
-/// The dawn sky behind Wake Up's missions and Android's ringing screen
-/// (E-R2-19-B "The thread wakes up", ED-314): night plum at the top through
-/// rose to the first light at the bottom. The same in both themes: it is
-/// the morning, not a surface.
-abstract final class DotDawn {
-  static const top = Color(0xFF2E3A6B);
-  static const middle = Color(0xFFB86B6B);
-  static const bottom = Color(0xFFF2B27A);
+/// The dawn sky behind Wake Up's missions (E-R2-19-B "The thread wakes
+/// up", ED-314; dark mode E-R2-19-B-Dark, ED-459): night plum at the top
+/// through rose to the first light at the bottom, deeper in dark mode.
+/// [DawnSky.of] gives the one the app's theme calls for.
+final class DawnSky {
+  const DawnSky._(this.top, this.middle, this.bottom, {required this.night});
+
+  /// E-R2-19-B's dawn and E-R2-19-B-Dark's.
+  static const light = DawnSky._(
+    Color(0xFF2E3A6B),
+    Color(0xFFB86B6B),
+    Color(0xFFF2B27A),
+    night: false,
+  );
+  static const dark = DawnSky._(
+    Color(0xFF121833),
+    Color(0xFF5E3442),
+    Color(0xFF9A5A3A),
+    night: true,
+  );
+
+  final Color top;
+  final Color middle;
+  final Color bottom;
+
+  /// Whether this is dark mode's dawn.
+  final bool night;
 
   /// Where [middle] sits down the sky.
   static const middleStop = 0.55;
 
-  static const gradient = LinearGradient(
+  /// The sky for [brightness], the app's own theme.
+  static DawnSky of(Brightness brightness) =>
+      brightness == Brightness.dark ? dark : light;
+
+  LinearGradient get gradient => LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [top, middle, bottom],
-    stops: [0, middleStop, 1],
+    stops: const [0, middleStop, 1],
   );
 
   /// The sky's colour [t] of the way down (0 top, 1 bottom).
-  static Color skyAt(double t) => t <= middleStop
+  Color at(double t) => t <= middleStop
       ? Color.lerp(top, middle, t / middleStop)!
       : Color.lerp(middle, bottom, (t - middleStop) / (1 - middleStop))!;
 
-  /// A ring's colour on the sky (E-R2-19-B "The ring follows your App
+  /// A ring's colour on this sky (E-R2-19-B "The ring follows your App
   /// colour"): the App colour's dark-surface [accent], lightened toward
   /// white until it reaches 3:1 against the sky at [height].
   ///
   /// ```dart
-  /// DotDawn.ring(const Color(0xFF5BC4B8), 0.3); // teal stays as it is
+  /// DawnSky.light.ring(const Color(0xFF5BC4B8), 0.3); // teal as it is
   /// ```
-  static Color ring(Color accent, double height) => inkFor(
+  Color ring(Color accent, double height) => inkFor(
     accent,
-    backgrounds: [skyAt(height)],
+    backgrounds: [at(height)],
     toward: const Color(0xFFFFFFFF),
-    minRatio: graphicContrast,
+    minRatio: DotDawn.graphicContrast,
   );
 
+  /// The words and outline at the foot of the sky (Can't right now): dark
+  /// ink on the light dawn's first light, where white is 2.1:1; white on
+  /// the dark dawn, as drawn (5.3:1; dark ink would be 3.1:1).
+  Color get foot => night ? DotDawn.ink : DotDawn.inkDark;
+}
+
+/// The dawn's shared marks: the same on either sky.
+abstract final class DotDawn {
   /// WCAG's 3:1 for graphics (the ring).
   static const graphicContrast = 3.0;
 

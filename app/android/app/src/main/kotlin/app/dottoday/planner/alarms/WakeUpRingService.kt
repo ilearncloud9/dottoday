@@ -121,7 +121,11 @@ class WakeUpRingService : Service() {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true)
-            .setSilent(true)
+            // Not setSilent: Android doesn't open the full-screen intent of a
+            // silent notification, so the ringing screen never showed over
+            // a sleeping phone (found on the emulator, M20.8 part 4). The
+            // channel is already soundless; the service plays the alarm.
+            .setOnlyAlertOnce(true)
             .setContentIntent(screen)
             .setFullScreenIntent(screen, true)
         if (alarm.canSnooze) {

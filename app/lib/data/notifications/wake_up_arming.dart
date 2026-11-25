@@ -8,6 +8,7 @@ import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/planned_notification.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/notifications/wake_up_arc.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -73,7 +74,7 @@ final class WakeUpArming {
           minimal: _minimal?.call() ?? false,
           step: steps[w.occurrenceId],
           explainCheck: explain,
-        ),
+        ).withArcs(wakeUpArcs(w.fireAtUtc, tasks.values)),
     ];
     final armed = await _gateway.sync(
       await _withMissions(alarms, profile, tasks.values),

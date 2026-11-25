@@ -16,6 +16,8 @@ import 'package:dottoday/features/timeline/wake_up/mission/breathe_mission.dart'
 import 'package:dottoday/features/timeline/wake_up/mission/cant_right_now.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/catch_dot_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/dawn_parts.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_sky_scope.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_walker.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/one_thing_mission.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/sensor_mission.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
@@ -117,23 +119,29 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
     final settings = profile?.settings;
     final steps = settings?.missionSteps ?? 20;
     // The sky is dark in either mode: the mission reads in the app's dark
-    // theme, its App colour in its dark-surface shade (E-R2-19-B).
+    // theme, its App colour in its dark-surface shade (E-R2-19-B); dark
+    // mode only deepens the dawn (E-R2-19-B-Dark, ED-459), so the app's
+    // own brightness is read here, before that theme.
+    final sky = DawnSky.of(Theme.of(context).brightness);
     final dark = DotTheme.forApp(
       Brightness.dark,
       accentKey: settings?.accent,
       accentHex: profile?.accentHex,
       platform: Theme.of(context).platform,
     );
-    return Theme(
-      data: dark,
-      child: Builder(
-        builder: (context) => Scaffold(
-          body: !_ready || profile == null
-              ? const DecoratedBox(
-                  decoration: BoxDecoration(gradient: DotDawn.gradient),
-                  child: SizedBox.expand(),
-                )
-              : _dawn(context, profile, steps),
+    return DawnSkyScope(
+      sky: sky,
+      child: Theme(
+        data: dark,
+        child: Builder(
+          builder: (context) => Scaffold(
+            body: !_ready || profile == null
+                ? DecoratedBox(
+                    decoration: BoxDecoration(gradient: sky.gradient),
+                    child: const SizedBox.expand(),
+                  )
+                : _dawn(context, profile, steps),
+          ),
         ),
       ),
     );

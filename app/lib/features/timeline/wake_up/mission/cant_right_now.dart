@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_sky_scope.dart';
 import 'package:flutter/material.dart';
 
 /// "Can't right now" (docs/15 §8 rule 3): always on the mission screen;
@@ -44,6 +45,7 @@ class _CantRightNowState extends State<CantRightNow>
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final foot = DawnSkyScope.of(context).foot;
     return Semantics(
       button: true,
       label: l10n.missionCantNow,
@@ -57,18 +59,19 @@ class _CantRightNowState extends State<CantRightNow>
         onPointerUp: (_) => _stop(),
         onPointerCancel: (_) => _stop(),
         // The dawn sky's outlined pill (E-R2-19-B); the hold fills it from
-        // the start edge, and "Hold for 5 seconds" sits under it. Dark ink:
-        // white on the sky's first light is 2:1, under the 4.5:1 floor.
+        // the start edge, and "Hold for 5 seconds" sits under it, in the
+        // sky's foot ink (DawnSky.foot: dark on the light dawn, white on
+        // the dark one).
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: DotSpace.xs,
           children: [
             Container(
               constraints: const BoxConstraints(minHeight: DotTouch.min),
-              decoration: const ShapeDecoration(
+              decoration: ShapeDecoration(
                 shape: StadiumBorder(
                   side: BorderSide(
-                    color: DotDawn.inkDark,
+                    color: foot,
                     width: DotSpace.xxs - DotSpace.hairline / 2,
                   ),
                 ),
@@ -96,14 +99,14 @@ class _CantRightNowState extends State<CantRightNow>
                   ),
                   child: Text(
                     l10n.missionCantNow,
-                    style: t.styles.chip.copyWith(color: DotDawn.inkDark),
+                    style: t.styles.chip.copyWith(color: foot),
                   ),
                 ),
               ),
             ),
             Text(
               l10n.missionCantNowHint,
-              style: t.styles.gridMeta.copyWith(color: DotDawn.inkDark),
+              style: t.styles.gridMeta.copyWith(color: foot),
             ),
           ],
         ),

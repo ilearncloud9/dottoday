@@ -2,30 +2,24 @@ package app.dottoday.planner.alarms
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.GradientDrawable
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
+import android.view.WindowInsetsController
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextClock
-import android.widget.TextView
 import app.dottoday.planner.MainActivity
-import app.dottoday.planner.R
 import java.lang.ref.WeakReference
 
 /**
  * The Wake Up ringing screen over the lock screen (docs/15 W1b, §10),
- * opened by the ringing notification's full-screen intent: the time, what
- * the day starts with, Snooze (while it is offered) and "I'm up". Minimal
- * mode shows the time and one big "I'm up", with Snooze as a text link.
- * Native, so it shows at once with the app closed; its words come from the
- * app with the alarm. Text is in sp and every button is at least 56 dp
- * high, so it reads at 200 % font size and suits TalkBack.
+ * opened by the ringing notification's full-screen intent: the dawn round
+ * the day dot with the time inside, what the day starts with, I'm up and
+ * Snooze (while it is offered); Minimal mode keeps the time and one big
+ * I'm up, Snooze as a text link (E-R2-19-B, ED-314; [DawnRingLayout]).
+ * Native, so it shows at once with the app closed; its words and the day's
+ * dots come from the app with the alarm. It never animates (ED-312).
  */
 class WakeUpAlarmActivity : Activity() {
     private var id: String? = null
@@ -33,6 +27,7 @@ class WakeUpAlarmActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overLockScreen()
+        edgeToEdge()
         current = WeakReference(this)
         show(intent)
     }
@@ -53,23 +48,7 @@ class WakeUpAlarmActivity : Activity() {
             ?: return finish()
         id = alarm.id
         if (intent.getBooleanExtra(EXTRA_UP, false)) return stop()
-        setContentView(if (alarm.minimal) minimal(alarm) else full(alarm))
-    }
-
-    private fun full(alarm: WakeUpAlarm): View = column().apply {
-        addView(clock())
-        addView(text(alarm.title, 28f, R.color.wake_up_ink, heading = true))
-        addView(text(alarm.body, 18f, R.color.wake_up_muted))
-        addView(gap())
-        if (alarm.canSnooze) addView(button(alarm.snooze, filled = false) { snooze() })
-        addView(button(alarm.stop, filled = true) { stop() })
-    }
-
-    private fun minimal(alarm: WakeUpAlarm): View = column().apply {
-        addView(clock())
-        addView(gap())
-        addView(button(alarm.stop, filled = true, large = true) { stop() })
-        if (alarm.canSnooze) addView(link(alarm.snooze) { snooze() })
+        setContentView(DawnRingLayout(this, alarm, onUp = ::stop, onSnooze = ::snooze).build())
     }
 
     private fun snooze() {
@@ -106,62 +85,31 @@ class WakeUpAlarmActivity : Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun column() = LinearLayout(this).apply {
-        orientation = LinearLayout.VERTICAL
-        gravity = Gravity.CENTER
-        setBackgroundColor(getColor(R.color.wake_up_surface))
-        val pad = dp(24)
-        setPadding(pad, pad, pad, pad)
-    }
-
-    private fun clock() = TextClock(this).apply {
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, 64f)
-        setTextColor(getColor(R.color.wake_up_ink))
-        gravity = Gravity.CENTER
-    }
-
-    private fun text(value: String, sp: Float, color: Int, heading: Boolean = false) = TextView(this).apply {
-        text = value
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, sp)
-        setTextColor(getColor(color))
-        gravity = Gravity.CENTER
-        setPadding(0, dp(8), 0, 0)
-        if (heading && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) isAccessibilityHeading = true
-    }
-
-    private fun gap() = View(this).apply {
-        layoutParams = LinearLayout.LayoutParams(1, dp(48))
-    }
-
-    private fun button(label: String, filled: Boolean, large: Boolean = false, onTap: () -> Unit) =
-        Button(this).apply {
-            text = label
-            isAllCaps = false
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, if (large) 24f else 20f)
-            val accent = getColor(R.color.wake_up_accent)
-            setTextColor(if (filled) getColor(R.color.wake_up_on_accent) else accent)
-            background = GradientDrawable().apply {
-                cornerRadius = dp(28).toFloat()
-                if (filled) setColor(accent) else setStroke(dp(2), accent)
-            }
-            minHeight = dp(if (large) 96 else 56)
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .apply { topMargin = dp(12) }
-            setOnClickListener { onTap() }
+    /** The sky runs under the status and navigation bars, light icons on it. */
+    private fun edgeToEdge() {
+        // The insets controller lives on the decor view: make it first.
+        window.decorView
+        // NormalTheme is a pre-Material theme: without this the bars stay black.
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+            window.insetsController?.setSystemBarsAppearance(
+                0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS or WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
-
-    private fun link(label: String, onTap: () -> Unit) = Button(this, null, android.R.attr.borderlessButtonStyle).apply {
-        text = label
-        isAllCaps = false
-        setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-        setTextColor(getColor(R.color.wake_up_accent))
-        minHeight = dp(56)
-        setOnClickListener { onTap() }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes = window.attributes.apply {
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
     }
-
-    private fun dp(value: Int) = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics,
-    ).toInt()
 
     companion object {
         private var current: WeakReference<WakeUpAlarmActivity>? = null

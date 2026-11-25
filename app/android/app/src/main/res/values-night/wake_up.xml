@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- E-R2-19-B-Dark's dawn (ED-459); I'm up keeps its white pill. -->
 <resources>
-    <color name="wake_up_surface">#121214</color>
-    <color name="wake_up_ink">#F2F2F0</color>
-    <color name="wake_up_muted">#9A9AA0</color>
-    <color name="wake_up_accent">#7FA0FF</color>
-    <color name="wake_up_on_accent">#121214</color>
+    <color name="wake_up_sky_top">#121833</color>
+    <color name="wake_up_sky_middle">#5E3442</color>
+    <color name="wake_up_sky_bottom">#9A5A3A</color>
 </resources>

@@ -1,6 +1,7 @@
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
+import 'package:dottoday/domain/notifications/wake_up_arc.dart';
 import 'package:dottoday/domain/wake_up/mission.dart';
 
 /// Snooze lengths Settings › Wake Up alarm offers, in minutes (15 §9).
@@ -78,6 +79,7 @@ final class WakeUpAlarm {
     this.minimal = false,
     this.check,
     this.mission,
+    this.arcs = const [],
   });
 
   /// `wakeup:<yyyy-mm-dd>` (the civil day), or [testId].
@@ -113,8 +115,17 @@ final class WakeUpAlarm {
   /// ring and opens it, re-ringing each minute until an exit.
   final MissionPlan? mission;
 
+  /// The day's dots round the ringing screen's day dot (E-R2-19-B); none
+  /// leaves only the track and the sun at Wake Up (ED-459).
+  final List<WakeUpArc> arcs;
+
   /// This alarm with [plan] as its mission.
-  WakeUpAlarm withMission(MissionPlan? plan) => WakeUpAlarm(
+  WakeUpAlarm withMission(MissionPlan? plan) => _copy(plan, arcs);
+
+  /// This alarm with the day's dots as [dots].
+  WakeUpAlarm withArcs(List<WakeUpArc> dots) => _copy(mission, dots);
+
+  WakeUpAlarm _copy(MissionPlan? plan, List<WakeUpArc> dots) => WakeUpAlarm(
     id: id,
     fireAtUtc: fireAtUtc,
     sound: sound,
@@ -128,6 +139,7 @@ final class WakeUpAlarm {
     minimal: minimal,
     check: check,
     mission: plan,
+    arcs: dots,
   );
 
   /// The test alarm's id: `sync` never disarms it.
@@ -148,7 +160,16 @@ final class WakeUpAlarm {
       other.rampSeconds == rampSeconds &&
       other.minimal == minimal &&
       other.check == check &&
-      other.mission == mission;
+      other.mission == mission &&
+      _sameArcs(other.arcs);
+
+  bool _sameArcs(List<WakeUpArc> other) {
+    if (other.length != arcs.length) return false;
+    for (var i = 0; i < arcs.length; i++) {
+      if (other[i] != arcs[i]) return false;
+    }
+    return true;
+  }
 
   @override
   int get hashCode => Object.hash(
@@ -165,6 +186,7 @@ final class WakeUpAlarm {
     minimal,
     check,
     mission,
+    Object.hashAll(arcs),
   );
 
   @override

@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/sound_files.dart';
 import 'package:dottoday/domain/notifications/alarm_capabilities.dart';
 import 'package:dottoday/domain/notifications/exact_alarms.dart';
@@ -152,6 +153,16 @@ final class OsAlarmGateway implements AlarmGateway {
     // The mission (15 §8): '' = none; only after a snooze, or every ring.
     'mission': a.mission?.kind.name ?? '',
     'missionAfterSnooze': a.mission?.afterSnooze ?? false,
+    // The day's dots round the day dot (E-R2-19-B), in each theme's shade.
+    'arcs': [
+      for (final arc in a.arcs)
+        {
+          'from': arc.from,
+          'to': arc.to,
+          'light': TaskColor.fromKey(arc.colorKey).color.toARGB32(),
+          'dark': TaskColor.fromKey(arc.colorKey).dark.toARGB32(),
+        },
+    ],
   };
 
   @override

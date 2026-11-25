@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/os_alarm_gateway.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
@@ -6,6 +7,7 @@ import 'package:dottoday/domain/notifications/exact_alarms.dart';
 import 'package:dottoday/domain/notifications/notification_health.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/wake_up_alarm.dart';
+import 'package:dottoday/domain/notifications/wake_up_arc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -63,6 +65,7 @@ void main() {
       expect(sent['snoozeMin'], 9);
       expect(sent['snoozeLimit'], 3);
       expect(sent['stop'], "I'm up");
+      expect(sent['arcs'], isEmpty);
 
       calls.clear();
       await _gateway(HealthPlatform.android).sync([_alarm]);
@@ -71,6 +74,24 @@ void main() {
             as Map)['sound'],
         'start_bells',
       );
+    },
+  );
+
+  test(
+    'the day\'s dots go with their colour in each theme (E-R2-19-B)',
+    () async {
+      answer((call) => const <int>[]);
+      final dots = _alarm.withArcs(const [
+        WakeUpArc(from: 0.01, to: 0.04, colorKey: 'indigo'),
+      ]);
+      await _gateway(HealthPlatform.android).sync([dots]);
+      final sent =
+          ((calls.single.arguments as Map)['alarms'] as List).single as Map;
+      final arc = (sent['arcs'] as List).single as Map;
+      expect(arc['from'], 0.01);
+      expect(arc['to'], 0.04);
+      expect(arc['light'], TaskColor.indigo.color.toARGB32());
+      expect(arc['dark'], TaskColor.indigo.dark.toARGB32());
     },
   );
 
