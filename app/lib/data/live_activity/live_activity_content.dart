@@ -2,6 +2,7 @@ import 'dart:ui' show Locale;
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
+import 'package:dottoday/data/widgets/app_colour_tones.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:dottoday/domain/live_activity/live_dot_plan.dart';
@@ -56,6 +57,9 @@ Map<String, Object?> liveActivityContent(
     'plus_label': l10n.liveExtend,
     'plus_short': '+${AddFifteen.minutes}',
     'next': [for (final d in plan.next) _next(d, time(d.startUtc))],
+    // The ring, bar, countdown and tick follow the App colour (M20.9 part
+    // 4, owner); the island takes its dark tones, being always black.
+    'accent': appColourTones(profile),
   };
 }
 

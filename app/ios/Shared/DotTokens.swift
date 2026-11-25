@@ -21,6 +21,27 @@ enum DotE {
   static let thread = Color(light: 0xDDD7E0, dark: 0x4A4348)
 }
 
+/// The App colour in one appearance (lib/data/widgets/app_colour_tones.dart):
+/// rings and bars (`dot`), words (`text`), a filled button and its tick.
+struct AppTone: Codable, Hashable {
+  let dot: String
+  let text: String
+  var fill: String? = nil
+  var on: String? = nil
+}
+
+/// The App colour, light and dark; teal (the default) until the app writes it.
+struct AppAccent: Codable, Hashable {
+  let light: AppTone
+  let dark: AppTone
+
+  static let teal = AppAccent(
+    light: AppTone(dot: "#11615C", text: "#11615C", fill: "#11615C", on: "#FFFFFF"),
+    dark: AppTone(dot: "#5BC4B8", text: "#5BC4B8", fill: "#5BC4B8", on: "#0C2523"))
+
+  func tone(_ dark: Bool) -> AppTone { dark ? self.dark : light }
+}
+
 /// "#RRGGBB" as a number (the snapshot's colours).
 func hexValue(_ hex: String) -> UInt32 { UInt32(hex.dropFirst(), radix: 16) ?? 0x11615C }
 

@@ -68,8 +68,18 @@ void main() {
     expect(json['labels'], containsPair('inbox_title', 'Inbox'));
     // Teal (the default): the board's #11615C / #5BC4B8, words the same.
     expect(json['accent'], {
-      'light': {'dot': '#11615C', 'text': '#11615C'},
-      'dark': {'dot': '#5BC4B8', 'text': '#5BC4B8'},
+      'light': {
+        'dot': '#11615C',
+        'text': '#11615C',
+        'fill': '#11615C',
+        'on': '#FFFFFF',
+      },
+      'dark': {
+        'dot': '#5BC4B8',
+        'text': '#5BC4B8',
+        'fill': '#5BC4B8',
+        'on': '#0C2523',
+      },
     });
   });
 

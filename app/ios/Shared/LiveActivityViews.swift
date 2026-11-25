@@ -1,17 +1,52 @@
 import AppIntents
 import SwiftUI
 
-// The Live Activity's layouts (docs/09 M9.3, B-ios-live-activity.png):
-// lock screen card, Dynamic Island expanded, compact and minimal. Plain
-// SwiftUI on [LiveDotState], compiled into the app too so RunnerTests can
-// render them. `frozenAt` stops the clock for those renders; on a device
-// it is nil and the system counts down without updates.
+// The Live Activity in Concept E (E-R2-17, E-R2-17-Dark; ED-309, M20.9
+// part 4, the approved drawing ED-472): the Lock Screen card and the
+// Dynamic Island, expanded, compact and minimal. The ring, bar, countdown
+// and tick follow the App colour; the tick and +15 sit beside the title.
+// Plain SwiftUI on [LiveDotState], compiled into the app too so
+// RunnerTests can render them. `frozenAt` stops the clock for those
+// renders; on a device it is nil and the system counts down by itself.
 
-/// The dot's ring: elapsed share of its time, icon inside.
+/// The colours of one appearance, picked once from the colour scheme, so
+/// the card and its words never resolve light and dark apart (the old
+/// card's white-on-white title).
+struct LivePalette {
+  let card: Color
+  let ink: Color
+  let muted: Color
+  let plus: Color
+  let tone: AppTone
+
+  static func of(_ state: LiveDotState, dark: Bool) -> LivePalette {
+    LivePalette(
+      card: Color(UIColor(rgb: dark ? 0x2B262A : 0xFFFDF9)),
+      ink: Color(UIColor(rgb: dark ? 0xF3ECE4 : 0x241F2B)),
+      muted: Color(UIColor(rgb: dark ? 0xC7BEC4 : 0x6A6273)),
+      plus: Color(UIColor(rgb: dark ? 0x37313A : 0xECE5DC)),
+      tone: (state.accent ?? .teal).tone(dark))
+  }
+
+  /// The island is always black: the App colour's bright (dark) tones.
+  static func island(_ state: LiveDotState) -> AppTone { (state.accent ?? .teal).tone(true) }
+
+  /// The card without the board's see-through, for the Lock Screen.
+  var cardSolid: Color { card }
+
+  var dot: Color { Color(hex: tone.dot) }
+  var fill: Color { Color(hex: tone.fill ?? tone.dot) }
+  var on: Color { Color(hex: tone.on ?? "#FFFFFF") }
+}
+
+/// The ring: the time used of the task in [color]; before it starts, the
+/// task's hollow dot (ahead).
 struct LiveRing: View {
   let state: LiveDotState
+  let color: Color
   var size: CGFloat = 44
   var now = Date()
+  var track = 0.2
 
   private var share: Double {
     guard state.live, state.end > state.start else { return 0 }
@@ -19,118 +54,63 @@ struct LiveRing: View {
   }
 
   var body: some View {
-    let color = Color(hex: state.color)
-    ZStack {
-      Circle().stroke(color.opacity(0.25), lineWidth: size * 0.11)
-      Circle().trim(from: 0, to: share)
-        .stroke(color, style: StrokeStyle(lineWidth: size * 0.11, lineCap: .round))
-        .rotationEffect(.degrees(-90))
-      if let symbol = TaskSymbols.symbol(state.icon) {
-        Image(systemName: symbol).font(.system(size: size * 0.32, weight: .semibold))
-          .foregroundStyle(color)
+    let line = size * 0.11
+    Group {
+      if state.live {
+        ZStack {
+          Circle().stroke(color.opacity(track), lineWidth: line)
+          Circle().trim(from: 0, to: max(0.03, share))
+            .stroke(color, style: StrokeStyle(lineWidth: line, lineCap: .round))
+            .rotationEffect(.degrees(-90))
+        }
       } else {
-        Circle().fill(color).frame(width: size * 0.3, height: size * 0.3)
+        Circle().stroke(color, lineWidth: line * 0.6)
       }
     }
+    .padding(line / 2)
     .frame(width: size, height: size)
     .accessibilityHidden(true)
   }
 }
 
-/// "38:00 left" / "noch 38:00" / "starts in 12:00", counting down live.
-struct LiveCountdown: View {
-  let state: LiveDotState
-  var frozenAt: Date?
-
-  var body: some View {
+/// "18:00 left" / "noch 18:00" / "starts in 12:00", counting down live, as
+/// one Text: a timer on its own stretches and pushes "left" away.
+enum LiveCountdown {
+  static func text(_ state: LiveDotState, frozenAt: Date?) -> Text {
     let now = frozenAt ?? Date()
     let target = state.live ? state.end : state.start
-    let range = now...max(now, target)
-    HStack(spacing: 0) {
-      Text(state.live ? state.leftBefore : state.startsBefore)
-      LiveTimer(range: range, frozen: frozenAt != nil)
-      Text(state.live ? state.leftAfter : state.startsAfter)
-    }
+    return Text(state.live ? state.leftBefore : state.startsBefore)
+      + LiveTimer.text(range: now...max(now, target), frozen: frozenAt != nil)
+      + Text(state.live ? state.leftAfter : state.startsAfter)
   }
 }
 
 /// A countdown the system draws; frozen (tests, previews) it is plain text,
 /// because an offscreen render can't draw a live timer.
-struct LiveTimer: View {
-  let range: ClosedRange<Date>
-  var frozen = false
-
-  var body: some View {
+enum LiveTimer {
+  static func text(range: ClosedRange<Date>, frozen: Bool) -> Text {
     if frozen {
       let seconds = Int(range.upperBound.timeIntervalSince(range.lowerBound))
-      Text(String(format: "%d:%02d", seconds / 60, seconds % 60)).monospacedDigit()
-    } else {
-      Text(timerInterval: range, countsDown: true, showsHours: false).monospacedDigit()
+      return Text(String(format: "%d:%02d", seconds / 60, seconds % 60)).monospacedDigit()
     }
+    return Text(timerInterval: range, countsDown: true, showsHours: false).monospacedDigit()
   }
 }
 
-/// The mini thread: done part solid, the knob at now, the rest dotted
-/// (B-ios-live-activity.png). Drawn for a frozen moment; live, the system's
-/// own timer-driven progress bar moves on by itself.
+/// The bar: the task's time used, plain (E-R2-17). Drawn for a frozen
+/// moment; live, the system's timer-driven bar moves on by itself.
 struct ThreadBar: View {
   let share: Double
   let color: Color
 
   var body: some View {
     GeometryReader { geo in
-      let x = geo.size.width * share
       ZStack(alignment: .leading) {
-        Path { p in
-          p.move(to: CGPoint(x: x, y: geo.size.height / 2))
-          p.addLine(to: CGPoint(x: geo.size.width, y: geo.size.height / 2))
-        }
-        .stroke(color.opacity(0.5), style: StrokeStyle(lineWidth: 2, dash: [2, 3]))
-        Capsule().fill(color).frame(width: x, height: 4)
-        Circle().fill(color).frame(width: 14, height: 14)
-          .overlay(Circle().stroke(color.opacity(0.35), lineWidth: 5))
-          .offset(x: x - 7)
+        Capsule().fill(color.opacity(0.2))
+        Capsule().fill(color).frame(width: geo.size.width * share)
       }
-      .frame(height: geo.size.height)
     }
-    .frame(height: 16)
-  }
-}
-
-/// The small pie and "1 of 3" (today's dots done).
-struct LiveCount: View {
-  let state: LiveDotState
-
-  var body: some View {
-    if !state.count.isEmpty { pieAndCount }
-  }
-
-  private var pieAndCount: some View {
-    HStack(spacing: 6) {
-      ZStack {
-        Circle().fill(Dot.muted.opacity(0.3))
-        PieSlice(share: state.doneShare).fill(Color(hex: state.color))
-      }
-      .frame(width: 14, height: 14)
-      Text(state.count).foregroundStyle(Dot.muted)
-    }
-    .accessibilityElement(children: .ignore)
-    .accessibilityLabel(state.countLabel)
-  }
-}
-
-struct PieSlice: Shape {
-  let share: Double
-
-  func path(in rect: CGRect) -> Path {
-    var path = Path()
-    let center = CGPoint(x: rect.midX, y: rect.midY)
-    path.move(to: center)
-    path.addArc(
-      center: center, radius: rect.width / 2, startAngle: .degrees(-90),
-      endAngle: .degrees(-90 + 360 * share), clockwise: false)
-    path.closeSubpath()
-    return path
+    .frame(height: 6)
   }
 }
 
@@ -158,39 +138,55 @@ struct LiveButton<Label: View>: View {
   }
 }
 
-/// The lock-screen card: thread, dot, Done and +15.
+/// The round tick and +15 (44 pt), in [fill] and [plus].
+struct LiveRoundButtons: View {
+  let state: LiveDotState
+  let fill: Color
+  let on: Color
+  let plus: Color
+  let plusInk: Color
+
+  var body: some View {
+    HStack(spacing: 6) {
+      LiveButton(kind: .done, state: state) {
+        Image(systemName: "checkmark").font(.system(size: 17, weight: .bold)).foregroundStyle(on)
+          .frame(width: 44, height: 44).background(Circle().fill(fill))
+      }
+      .accessibilityLabel(state.doneLabel)
+      LiveButton(kind: .plus, state: state) {
+        Text(state.plusShort).font(Manrope.font(14, .heavy)).foregroundStyle(plusInk)
+          .frame(width: 44, height: 44).background(Circle().fill(plus))
+      }
+      .accessibilityLabel(state.plusLabel)
+    }
+  }
+}
+
+/// The Lock Screen card: the bar and the next task, then the ring, the
+/// title, its time and what is left, and the tick and +15.
 struct LiveLockScreenView: View {
   let state: LiveDotState
   var frozenAt: Date?
+  @Environment(\.colorScheme) private var scheme
+
+  private var palette: LivePalette { .of(state, dark: scheme == .dark) }
 
   var body: some View {
+    let p = palette
     VStack(alignment: .leading, spacing: 14) {
       thread
-      HStack(spacing: 12) {
-        LiveRing(state: state, size: 44, now: frozenAt ?? Date())
-        VStack(alignment: .leading, spacing: 2) {
-          Text(state.title).font(.headline).foregroundStyle(Dot.ink).lineLimit(1)
-          HStack(spacing: 0) {
-            Text(state.range + " · ").foregroundStyle(Dot.muted)
-            LiveCountdown(state: state, frozenAt: frozenAt).foregroundStyle(Dot.ink)
-          }
-          .font(.subheadline)
+      HStack(spacing: 10) {
+        LiveRing(state: state, color: p.dot, size: 44, now: frozenAt ?? Date())
+        VStack(alignment: .leading, spacing: 1) {
+          Text(state.title).font(Manrope.font(17, .heavy)).foregroundStyle(p.ink).lineLimit(1)
+          Text(state.range).font(Manrope.font(13, .semibold)).foregroundStyle(p.muted).lineLimit(1)
+          (LiveCountdown.text(state, frozenAt: frozenAt).font(Manrope.font(13, .heavy)).foregroundColor(p.ink)
+            + Text(state.count.isEmpty ? "" : " · " + state.count).font(Manrope.font(13, .semibold))
+            .foregroundColor(p.muted))
+            .lineLimit(1)
         }
-        Spacer(minLength: 4)
-        LiveCount(state: state).font(.subheadline)
-      }
-      HStack(spacing: 12) {
-        LiveButton(kind: .done, state: state) {
-          Label(state.doneLabel, systemImage: "checkmark")
-            .font(.headline).frame(maxWidth: .infinity, minHeight: 44)
-            .background(Capsule().fill(Color(hex: state.color))).foregroundStyle(.white)
-        }
-        .accessibilityLabel(state.doneLabel)
-        LiveButton(kind: .plus, state: state) {
-          Text(state.plusLabel).font(.headline).frame(maxWidth: .infinity, minHeight: 44)
-            .background(Capsule().fill(Dot.secondary)).foregroundStyle(Dot.ink)
-        }
-        .accessibilityLabel(state.plusLabel)
+        Spacer(minLength: 0)
+        LiveRoundButtons(state: state, fill: p.fill, on: p.on, plus: p.plus, plusInk: p.ink)
       }
     }
     .padding(16)
@@ -199,18 +195,19 @@ struct LiveLockScreenView: View {
   @ViewBuilder private var thread: some View {
     HStack(spacing: 8) {
       if let frozenAt {
-        ThreadBar(share: share(at: frozenAt), color: Color(hex: state.color))
+        ThreadBar(share: share(at: frozenAt), color: palette.dot)
       } else {
         ProgressView(timerInterval: state.start...max(state.start, state.end), countsDown: false) {
           EmptyView()
         } currentValueLabel: {
           EmptyView()
         }
-        .tint(Color(hex: state.color))
+        .tint(palette.dot)
       }
       if let next = state.next.first {
-        Circle().stroke(Dot.muted, lineWidth: 1.5).frame(width: 9, height: 9)
-        Text("\(next.title) · \(next.time)").font(.caption).foregroundStyle(Dot.muted).lineLimit(1)
+        Circle().stroke(palette.muted, lineWidth: 1.5).frame(width: 9, height: 9)
+        Text("\(next.title) · \(next.time)").font(Manrope.font(12, .semibold))
+          .foregroundStyle(palette.muted).lineLimit(1)
       }
     }
     .accessibilityHidden(true)
@@ -229,36 +226,33 @@ struct LiveIslandText: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 2) {
-      Text(state.title).font(.headline).foregroundStyle(.white).lineLimit(1)
-        .minimumScaleFactor(0.8)
-      HStack(spacing: 0) {
-        LiveCountdown(state: state, frozenAt: frozenAt)
-        if !state.count.isEmpty {
-          Text(" · " + state.count).accessibilityLabel(state.countLabel)
-        }
-      }
-      .font(.subheadline).foregroundStyle(Color(white: 0.65))
+      Text(state.title).font(.system(size: 16, weight: .bold)).foregroundStyle(.white).lineLimit(1)
+      (LiveCountdown.text(state, frozenAt: frozenAt) + Text(state.count.isEmpty ? "" : " · " + state.count))
+        .font(.system(size: 13, weight: .medium)).foregroundStyle(.white.opacity(0.75)).lineLimit(1)
     }
   }
 }
 
-/// Dynamic Island, expanded: the round Done and +15 buttons.
+/// Dynamic Island, expanded: the round tick and +15.
 struct LiveIslandButtons: View {
   let state: LiveDotState
 
   var body: some View {
-    HStack(spacing: 8) {
-      LiveButton(kind: .done, state: state) {
-        Image(systemName: "checkmark").font(.headline).foregroundStyle(.white)
-          .frame(width: 44, height: 44).background(Circle().fill(Color(hex: state.color)))
-      }
-      .accessibilityLabel(state.doneLabel)
-      LiveButton(kind: .plus, state: state) {
-        Text(state.plusShort).font(.subheadline.weight(.semibold)).foregroundStyle(.white)
-          .frame(width: 44, height: 44).background(Circle().fill(Color(white: 0.2)))
-      }
-      .accessibilityLabel(state.plusLabel)
-    }
+    let tone = LivePalette.island(state)
+    LiveRoundButtons(
+      state: state, fill: Color(hex: tone.fill ?? tone.dot), on: Color(hex: tone.on ?? "#FFFFFF"),
+      plus: .white.opacity(0.15), plusInk: .white)
+  }
+}
+
+/// The island's ring, in the App colour's bright tone.
+struct LiveIslandRing: View {
+  let state: LiveDotState
+  var size: CGFloat
+  var now = Date()
+
+  var body: some View {
+    LiveRing(state: state, color: Color(hex: LivePalette.island(state).dot), size: size, now: now)
   }
 }
 
@@ -270,33 +264,34 @@ struct LiveIslandExpandedPreview: View {
 
   var body: some View {
     HStack(spacing: 12) {
-      LiveRing(state: state, size: 44, now: frozenAt ?? Date())
+      LiveIslandRing(state: state, size: 40, now: frozenAt ?? Date())
       LiveIslandText(state: state, frozenAt: frozenAt)
       Spacer(minLength: 4)
       LiveIslandButtons(state: state)
     }
-    .padding(18)
+    .padding(.horizontal, 18).padding(.vertical, 16)
     .background(Capsule().fill(.black))
   }
 }
 
-/// Compact: ring on the left, countdown on the right; minimal: the ring.
+/// Compact: the ring on the left, the countdown on the right, both in the
+/// App colour; minimal: the ring.
 struct LiveIslandCompactPreview: View {
   let state: LiveDotState
   var frozenAt: Date?
 
   var body: some View {
     HStack {
-      LiveRing(state: state, size: 22, now: frozenAt ?? Date())
+      LiveIslandRing(state: state, size: 20, now: frozenAt ?? Date())
       Spacer(minLength: 40)
-      LiveTimer(
+      LiveTimer.text(
         range: (frozenAt ?? Date())...max(frozenAt ?? Date(), state.live ? state.end : state.start),
         frozen: frozenAt != nil
       )
-      .font(.caption.weight(.semibold)).foregroundStyle(Color(hex: state.color))
+      .font(.system(size: 14, weight: .bold)).foregroundStyle(Color(hex: LivePalette.island(state).dot))
       .frame(width: 48, alignment: .trailing)
     }
-    .padding(.horizontal, 14).padding(.vertical, 8)
+    .padding(.horizontal, 12).padding(.vertical, 8)
     .background(Capsule().fill(.black))
   }
 }

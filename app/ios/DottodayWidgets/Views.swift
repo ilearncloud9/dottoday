@@ -117,13 +117,15 @@ struct WidgetHeader: View {
 /// queues for the app and ticks the dot on the snapshot at once.
 struct DoneButton: View {
   let block: WidgetBlock
+  let snapshot: Snapshot
   let label: String
 
   var body: some View {
     if #available(iOS 17.0, *) {
+      // In the App colour, as every surface's action (owner, M20.9 part 4).
       Button(intent: MarkDoneIntent(occurrenceId: block.id)) {
-        Image(systemName: "checkmark").font(.system(size: 15, weight: .bold)).foregroundStyle(.white)
-          .frame(width: 38, height: 38).background(Circle().fill(block.tint))
+        Image(systemName: "checkmark").font(.system(size: 15, weight: .bold)).foregroundStyle(snapshot.onAccent)
+          .frame(width: 38, height: 38).background(Circle().fill(snapshot.accentFill))
       }
       .buttonStyle(.plain)
       .accessibilityLabel(label)
@@ -165,7 +167,7 @@ struct NextUpView: View {
                 .font(Manrope.font(12, .semibold)).foregroundStyle(DotE.muted)
               Spacer(minLength: 4)
               // Done only while it is under way (ED-471).
-              if live != nil { DoneButton(block: block, label: s.label("done")) }
+              if live != nil { DoneButton(block: block, snapshot: s, label: s.label("done")) }
             }
           } else {
             Text(s.label("nothing_next")).font(Manrope.font(15, .bold)).foregroundStyle(DotE.muted)

@@ -47,14 +47,12 @@ struct Snapshot: Codable {
   var bedMs: Double? = nil
   var nightStart: Double? = nil
   /// The App colour (ED-221): its dot colour and its word colour.
-  var accent: Accent? = nil
+  var accent: AppAccent? = nil
   var format: Format? = nil
   /// Today's done and planned dots, Wake Up to Wind Down (past ones too).
   var dayDone: Int? = nil
   var dayTotal: Int? = nil
 
-  struct Tone: Codable { let dot: String; let text: String }
-  struct Accent: Codable { let light: Tone; let dark: Tone }
   struct Format: Codable {
     var doneOf: String? = nil
     enum CodingKeys: String, CodingKey { case doneOf = "done_of" }
@@ -96,13 +94,15 @@ struct Snapshot: Codable {
 
   func label(_ key: String) -> String { labels[key] ?? "" }
 
-  /// The App colour's dot and words; teal (the default) before the app
-  /// first writes it.
-  var accentDot: Color {
-    Color(light: hexValue(accent?.light.dot ?? "#11615C"), dark: hexValue(accent?.dark.dot ?? "#5BC4B8"))
+  /// The App colour's dot, words and filled button, light and dark.
+  private var tones: AppAccent { accent ?? .teal }
+  var accentDot: Color { Color(light: hexValue(tones.light.dot), dark: hexValue(tones.dark.dot)) }
+  var accentText: Color { Color(light: hexValue(tones.light.text), dark: hexValue(tones.dark.text)) }
+  var accentFill: Color {
+    Color(light: hexValue(tones.light.fill ?? tones.light.dot), dark: hexValue(tones.dark.fill ?? tones.dark.dot))
   }
-  var accentText: Color {
-    Color(light: hexValue(accent?.light.text ?? "#11615C"), dark: hexValue(accent?.dark.text ?? "#5BC4B8"))
+  var onAccent: Color {
+    Color(light: hexValue(tones.light.on ?? "#FFFFFF"), dark: hexValue(tones.dark.on ?? "#FFFFFF"))
   }
 
   /// Today's "3 of 10 done" (a widget Done moves it, SnapshotPatch).

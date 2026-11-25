@@ -1,9 +1,8 @@
-import 'dart:ui' show Brightness, Color, Locale;
+import 'dart:ui' show Locale;
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/colour_math.dart';
-import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
+import 'package:dottoday/data/widgets/app_colour_tones.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot.dart';
 import 'package:dottoday/domain/snapshot/day_snapshot_codec.dart';
@@ -53,7 +52,7 @@ Map<String, Object?> snapshotStoreJson(
     }
     // The App colour (ED-221) in light and dark: the day dot and the now
     // ring's "Now" on every widget (M20.9 part 3, owner: follow it).
-    ..['accent'] = _accent(profile)
+    ..['accent'] = appColourTones(profile)
     // How to write a time again after an optimistic +15 in Swift or Kotlin
     // (M9.2): the zone, the language, the clock and the "until" pattern.
     ..['format'] = {
@@ -75,28 +74,6 @@ const donePlaceholder = '{done}';
 const totalPlaceholder = '{total}';
 const _doneMark = 918273645;
 const _totalMark = 546372819;
-
-/// The App colour's accent, and the colour its words take (the accent on
-/// teal, as E-R2-17 draws "Now"; the contrast-safe ink on any other).
-Map<String, Object?> _accent(Profile profile) {
-  final custom = profile.accentHex == null
-      ? null
-      : parseHex(profile.accentHex!);
-  final key = DotAccent.fromKey(profile.settings.accent);
-  DotColors colours(Brightness b) => custom != null
-      ? DotColors.custom(b, custom)
-      : b == Brightness.dark
-      ? DotColors.dark(key)
-      : DotColors.light(key);
-  Map<String, String> pair(Brightness b) {
-    final c = colours(b);
-    final teal = custom == null && key == DotAccent.teal;
-    final Color text = teal ? c.accent : c.accentInk;
-    return {'dot': _hex(c.accent.toARGB32()), 'text': _hex(text.toARGB32())};
-  }
-
-  return {'light': pair(Brightness.light), 'dark': pair(Brightness.dark)};
-}
 
 /// Where the time goes in `format.until` (`until {time}`).
 const timePlaceholder = '{time}';

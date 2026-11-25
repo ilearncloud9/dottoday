@@ -13,11 +13,13 @@ import XCTest
 final class LiveActivityViewsTests: XCTestCase {
   private let now = Date(timeIntervalSince1970: 1_792_570_920)  // 2026-10-21 08:22Z
 
-  private var state: LiveDotState {
+  private var state: LiveDotState { sample(live: true) }
+
+  private func sample(live: Bool) -> LiveDotState {
     let json = """
       {"id":"01928c3e-0000-7000-8000-0000000000b1","title":"Deep work: roadmap",
       "color":"#3B6CF6","icon":"code","start_ms":1792566000000,"end_ms":1792573200000,
-      "ends_ms":1792575000000,"live":true,"range":"9:00 – 11:00",
+      "ends_ms":1792575000000,"live":\(live),"range":"9:00 – 11:00",
       "range_pattern":"{start} – {end}","format":{"tz":"Europe/Berlin","locale":"en","hour24":true},
       "left_before":"","left_after":" left","starts_before":"starts in ","starts_after":"",
       "count":"1 of 3","count_label":"1 of 3 done today","done_share":0.3333,
@@ -36,7 +38,16 @@ final class LiveActivityViewsTests: XCTestCase {
 
   func testLockScreen() throws {
     try check("lock_screen", width: 360) {
-      LiveLockScreenView(state: state, frozenAt: now).background(Dot.surface)
+      LiveLockScreenSample(state: state, frozenAt: now)
+    }
+  }
+
+  /// Before its task starts (the approved drawing, ED-472): the hollow
+  /// dot, an empty bar, "starts in".
+  func testLockScreenBeforeStart() throws {
+    let before = sample(live: false)
+    try check("lock_screen_before", width: 360) {
+      LiveLockScreenSample(state: before, frozenAt: before.start.addingTimeInterval(-12 * 60))
     }
   }
 
@@ -54,7 +65,7 @@ final class LiveActivityViewsTests: XCTestCase {
 
   func testIslandMinimal() throws {
     try check("island_minimal", width: 40) {
-      LiveRing(state: state, size: 22, now: now).padding(9).background(Circle().fill(.black))
+      LiveIslandRing(state: state, size: 20, now: now).padding(9).background(Circle().fill(.black))
     }
   }
 
@@ -113,5 +124,17 @@ final class LiveActivityViewsTests: XCTestCase {
         space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
     context.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
     return (pixels, w, h)
+  }
+}
+
+/// The card on its own tint, as the Lock Screen draws it.
+private struct LiveLockScreenSample: View {
+  let state: LiveDotState
+  let frozenAt: Date
+  @Environment(\.colorScheme) private var scheme
+
+  var body: some View {
+    LiveLockScreenView(state: state, frozenAt: frozenAt)
+      .background(LivePalette.of(state, dark: scheme == .dark).card)
   }
 }

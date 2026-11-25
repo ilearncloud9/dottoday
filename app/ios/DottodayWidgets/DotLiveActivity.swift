@@ -9,34 +9,55 @@ import WidgetKit
 struct DotLiveActivity: Widget {
   var body: some WidgetConfiguration {
     ActivityConfiguration(for: DotActivityAttributes.self) { context in
-      LiveLockScreenView(state: context.state)
-        .activityBackgroundTint(Dot.surface)
+      LiveLockScreenCard(state: context.state)
         .widgetURL(URL(string: "dottoday://task/\(context.state.id)"))
     } dynamicIsland: { context in
       DynamicIsland {
-        DynamicIslandExpandedRegion(.leading) {
-          LiveRing(state: context.state, size: 44).padding(.leading, 4)
-        }
-        DynamicIslandExpandedRegion(.center) {
-          LiveIslandText(state: context.state)
-        }
-        DynamicIslandExpandedRegion(.trailing) {
-          LiveIslandButtons(state: context.state)
+        // One full-width row under the camera, as E-R2-17 draws it: the
+        // centre beside the camera is too narrow for the title.
+        DynamicIslandExpandedRegion(.bottom) {
+          HStack(spacing: 12) {
+            LiveIslandRing(state: context.state, size: 40)
+            LiveIslandText(state: context.state)
+            Spacer(minLength: 0)
+            LiveIslandButtons(state: context.state)
+          }
+          .padding(.horizontal, 6)
         }
       } compactLeading: {
-        LiveRing(state: context.state, size: 22)
+        LiveIslandRing(state: context.state, size: 20)
       } compactTrailing: {
         Text(
           timerInterval: Date()...max(Date(), context.state.live ? context.state.end : context.state.start),
           countsDown: true, showsHours: false
         )
-        .monospacedDigit().font(.caption.weight(.semibold))
-        .foregroundStyle(Color(hex: context.state.color)).frame(width: 44)
+        .monospacedDigit().font(.system(size: 14, weight: .bold))
+        .foregroundStyle(Color(hex: LivePalette.island(context.state).dot)).frame(width: 48)
       } minimal: {
-        LiveRing(state: context.state, size: 22)
+        LiveIslandRing(state: context.state, size: 20)
       }
       .widgetURL(URL(string: "dottoday://task/\(context.state.id)"))
-      .keylineTint(Color(hex: context.state.color))
+      .keylineTint(Color(hex: LivePalette.island(context.state).dot))
     }
   }
 }
+
+/// The Lock Screen card, with the card's own fill: the Lock Screen
+/// can keep its light material under a dark scheme, so the card paints its
+/// background in the colours its words were picked for (the old card's
+/// white-on-white title, M20.9 part 4).
+@available(iOS 16.2, *)
+struct LiveLockScreenCard: View {
+  let state: LiveDotState
+  var frozenAt: Date?
+  @Environment(\.colorScheme) private var scheme
+
+  var body: some View {
+    let p = LivePalette.of(state, dark: scheme == .dark)
+    LiveLockScreenView(state: state, frozenAt: frozenAt)
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .background(p.cardSolid)
+      .activityBackgroundTint(p.cardSolid)
+  }
+}
+

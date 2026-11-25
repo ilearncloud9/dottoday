@@ -43,9 +43,11 @@ struct LiveDotState: Codable, Hashable {
   var plusLabel: String
   var plusShort: String
   var next: [Next]
+  /// The App colour (M20.9 part 4); nil from an app before it.
+  var accent: AppAccent? = nil
 
   enum CodingKeys: String, CodingKey {
-    case id, title, color, icon, live, range, format, count, next
+    case id, title, color, icon, live, range, format, count, next, accent
     case startMs = "start_ms", endMs = "end_ms", endsMs = "ends_ms"
     case rangePattern = "range_pattern", leftBefore = "left_before", leftAfter = "left_after"
     case startsBefore = "starts_before", startsAfter = "starts_after"

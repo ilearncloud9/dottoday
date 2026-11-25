@@ -102,6 +102,28 @@ void main() {
       expect((c['count'], c['count_label']), ('', ''));
     });
 
+    test('the ring, bar, countdown and tick follow the App colour', () {
+      // M20.9 part 4 (owner): teal by default, the board's exact values;
+      // the island takes the dark tones.
+      final c = liveActivityContent(
+        liveDotPlan(_snapshot(), _now)!,
+        profile: testProfile(),
+        use24h: true,
+      );
+      final accent = c['accent']! as Map<String, Object?>;
+      expect(accent['light'], containsPair('dot', '#11615C'));
+      expect(accent['dark'], containsPair('dot', '#5BC4B8'));
+      final custom = liveActivityContent(
+        liveDotPlan(_snapshot(), _now)!,
+        profile: testProfile().copyWith(accentHex: '#E2725B'),
+        use24h: true,
+      );
+      final light =
+          (custom['accent']! as Map<String, Object?>)['light']!
+              as Map<String, String>;
+      expect(light['dot'], '#E2725B');
+    });
+
     test('German puts the countdown after its word', () {
       final c = liveActivityContent(
         liveDotPlan(_snapshot(), _now)!,
