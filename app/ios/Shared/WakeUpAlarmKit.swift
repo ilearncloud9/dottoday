@@ -8,11 +8,36 @@ import os
   import AlarmKit
   import SwiftUI
 
-  /// What a Wake Up alarm's countdown view shows (DottodayWidgets
-  /// `WakeUpAlarmActivity`, docs/15 W1b).
+  /// What a Wake Up alarm's Live Activity shows (DottodayWidgets
+  /// `WakeUpAlarmActivity`, docs/15 W1b; E-R2-19-B, ED-464): "Wake Up", the
+  /// Snooze label, what the day starts with and its dots. Optional, so an
+  /// alarm armed before them still decodes.
   @available(iOS 26.0, *)
   struct WakeUpMetadata: AlarmMetadata {
     var title: String
+    var body: String?
+    var snooze: String?
+    var arcs: [WakeUpArc]?
+  }
+
+  /// One of the day's dots round the day dot: shares of the 24 hours from
+  /// Wake Up, and its colour in each theme (lib/data/notifications/
+  /// os_alarm_gateway.dart `arcs`, as on Android).
+  struct WakeUpArc: Codable, Equatable, Hashable {
+    var from: Double
+    var to: Double
+    var light: UInt32
+    var dark: UInt32
+
+    init?(_ map: [String: Any]) {
+      guard let from = map["from"] as? NSNumber, let to = map["to"] as? NSNumber,
+        let light = map["light"] as? NSNumber, let dark = map["dark"] as? NSNumber
+      else { return nil }
+      self.from = from.doubleValue
+      self.to = to.doubleValue
+      self.light = UInt32(truncatingIfNeeded: light.int64Value)
+      self.dark = UInt32(truncatingIfNeeded: dark.int64Value)
+    }
   }
 
   /// One Wake Up alarm as the app hands it over (lib/data/notifications/
@@ -42,6 +67,8 @@ import os
     var missionAfterSnooze: Bool?
     /// When Stop first opened the mission: its 10 minutes count from here.
     var missionSinceMs: Int64?
+    /// The day's dots for the Live Activity (ED-464). Optional, as above.
+    var arcs: [WakeUpArc]?
 
     /// Snooze is offered: on, and under its limit (0 = no limit).
     var canSnooze: Bool { snoozeMin > 0 && (snoozeLimit == 0 || snoozes < snoozeLimit) }
@@ -74,6 +101,7 @@ import os
       checkLoud = map["checkLoud"] as? Bool ?? false
       mission = (map["mission"] as? String).flatMap { $0.isEmpty ? nil : $0 }
       missionAfterSnooze = map["missionAfterSnooze"] as? Bool
+      arcs = (map["arcs"] as? [[String: Any]])?.compactMap(WakeUpArc.init)
     }
   }
 
@@ -349,7 +377,8 @@ import os
       let id = uuid(spec.id)
       let attributes = AlarmAttributes(
         presentation: presentation(spec, countdown: countdown != nil),
-        metadata: WakeUpMetadata(title: spec.title),
+        metadata: WakeUpMetadata(
+          title: spec.title, body: spec.body, snooze: spec.snooze, arcs: spec.arcs),
         tintColor: Dot.accent)
       let config = AlarmManager.AlarmConfiguration(
         countdownDuration: countdown.map { .init(preAlert: $0, postAlert: nil) },

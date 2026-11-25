@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - On the Mac and the web, Settings pages are laid out as forms with labels, checkboxes and pop-up menus, and Missions can be set there for the phone that rings (redesign branch).
 - On the Mac and the web, Wake Up and Wind Down shows the night dial beside a week table you can edit day by day, and Appearance is a form like the other Settings pages (redesign branch).
 - The Wake Up card now shows your day as a thread from Wake Up, with where things would move if you're up late, and on tablets, the Mac and the web it opens beside Today (redesign branch).
+- On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).
 - On Android the Wake Up alarm rings on a dawn sky round your day dot, with the time inside and the day's dots around it, and it now opens over a sleeping phone; in dark mode the dawn and the missions are deeper (redesign branch).

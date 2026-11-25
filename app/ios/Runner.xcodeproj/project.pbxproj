@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D61030AD2FF6A40A8F86CCD1 /* Manrope-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA66FD842AC6FE41DCED982F /* Manrope-Variable.ttf */; };
 		0198158024A57009A75B0BEB /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0902871A5CE25538DAD36A02 /* start_lovingly.caf */; };
 		02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */; };
 		0277774B9AAC96638F8B085E /* DotIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF20C1EBD7428AB1D846DDA /* DotIntents.swift */; };
@@ -183,6 +184,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DA66FD842AC6FE41DCED982F /* Manrope-Variable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Manrope-Variable.ttf"; path = "../assets/fonts/Manrope-Variable.ttf"; sourceTree = SOURCE_ROOT; };
 		002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_dawn_chorus.caf; path = Runner/Sounds/start_dawn_chorus.caf; sourceTree = SOURCE_ROOT; };
 		022814BBCB43E2BEF7A63546 /* start_slow_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_slow_bell.caf; path = Runner/Sounds/start_slow_bell.caf; sourceTree = SOURCE_ROOT; };
 		0902871A5CE25538DAD36A02 /* start_lovingly.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_lovingly.caf; path = Runner/Sounds/start_lovingly.caf; sourceTree = SOURCE_ROOT; };
@@ -456,6 +458,7 @@
 		3AFC64CF5CC45F760CCDE295 /* DottodayWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				DA66FD842AC6FE41DCED982F /* Manrope-Variable.ttf */,
 				9012690487F74080E890CF7D /* DottodayWidgets.swift */,
 				5DFB8722B137929D22D2F8B7 /* Views.swift */,
 				60BC003467BBBF8B45D39B59 /* Info.plist */,
@@ -715,6 +718,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D61030AD2FF6A40A8F86CCD1 /* Manrope-Variable.ttf in Resources */,
 				9020C94BFD093BD439DB3F13 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
