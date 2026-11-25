@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 enum TestAlarmStep { idle, explain, waiting, ask, rang, notRang }
 
 /// "Check it works › Send me a test alarm" (docs/09 M6.5.9, 11 A0;
-/// E-R2-20, ED-317): [TestAlarmRow] in its own group.
+/// E-R2-20, ED-317): [TestAlarmRow] in its own group, each step a card
+/// under it (ED-470).
 class TestAlarmCard extends StatelessWidget {
   const TestAlarmCard({
     required this.onSend,
@@ -30,20 +31,16 @@ class TestAlarmCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return SettingsGroup(
+    return TestAlarmRow(
       caption: l10n.testAlarmCaption,
-      children: [
-        TestAlarmRow(
-          title: l10n.testAlarmRow,
-          subtitle: l10n.testAlarmRowDetail,
-          formLabel: l10n.testAlarmCaption,
-          onSend: onSend,
-          onCancel: onCancel,
-          now: now,
-          afterNo: afterNo,
-          initial: initial,
-        ),
-      ],
+      title: l10n.testAlarmRow,
+      subtitle: l10n.testAlarmRowDetail,
+      formLabel: l10n.testAlarmCaption,
+      onSend: onSend,
+      onCancel: onCancel,
+      now: now,
+      afterNo: afterNo,
+      initial: initial,
     );
   }
 }
@@ -63,8 +60,14 @@ class TestAlarmRow extends StatefulWidget {
     this.action = false,
     this.initial = TestAlarmStep.idle,
     this.formLabel,
+    this.caption,
     super.key,
   });
+
+  /// Set: the row is its own group with this caption, and each step is a
+  /// card under the group (E-R2-20 §4, ED-470). Null: a row in someone
+  /// else's group (Wake Up), the steps under its title.
+  final String? caption;
 
   /// Its label on a Mac/web form ("Check it works", ED-450).
   final String? formLabel;
@@ -144,8 +147,41 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
 
   @override
   Widget build(BuildContext context) {
+    final caption = widget.caption;
+    final form = settingsFormAt(context);
+    if (caption == null || form) {
+      final row = _row(
+        context,
+        below: _step == TestAlarmStep.idle ? null : _steps(context),
+      );
+      if (caption == null) return row;
+      return SettingsGroup(caption: caption, children: [row]);
+    }
     final t = DotTheme.of(context);
-    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: DotSpace.s + DotSpace.xxs,
+      children: [
+        SettingsGroup(caption: caption, children: [_row(context)]),
+        if (_step != TestAlarmStep.idle)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: t.colors.raised,
+              borderRadius: BorderRadius.circular(DotRadii.card),
+              border: Border.all(color: t.colors.outline),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(DotSpace.l),
+              child: _steps(context),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// The row; tappable only before a test starts.
+  Widget _row(BuildContext context, {Widget? below}) {
+    final t = DotTheme.of(context);
     return SettingsRow(
       glyph: DotGlyphs.bell,
       tint: t.colors.accentInk,
@@ -157,59 +193,91 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
       onTap: _step == TestAlarmStep.idle
           ? () => setState(() => _step = TestAlarmStep.explain)
           : null,
-      below: _step == TestAlarmStep.idle ? null : _below(t, l10n),
+      below: below == null
+          ? null
+          : Padding(
+              padding: const EdgeInsets.only(top: DotSpace.s),
+              child: below,
+            ),
     );
   }
 
-  Widget _below(DotTheme t, AppLocalizations l10n) {
+  /// The step's words and its pills (E-R2-20 §4): Send and Yes filled,
+  /// Cancel and No outlined.
+  Widget _steps(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
     final body = t.styles.body;
-    return Padding(
-      padding: const EdgeInsets.only(top: DotSpace.s),
-      child: switch (_step) {
-        TestAlarmStep.idle => const SizedBox.shrink(),
-        TestAlarmStep.explain =>
-          _withButtons(Text(l10n.testAlarmExplain, style: body), [
-            FilledButton(
-              onPressed: () => unawaited(_send()),
-              child: Text(l10n.testAlarmSend),
-            ),
-            TextButton(
-              onPressed: () => setState(() => _step = TestAlarmStep.idle),
-              child: Text(l10n.testAlarmCancel),
-            ),
-          ]),
-        TestAlarmStep.waiting => _withButtons(
-          Semantics(
-            liveRegion: true,
-            child: Text(l10n.testAlarmCountdown(_secondsLeft), style: body),
+    return switch (_step) {
+      TestAlarmStep.idle => const SizedBox.shrink(),
+      TestAlarmStep.explain =>
+        _withButtons(Text(l10n.testAlarmExplain, style: body), [
+          _pill(t, l10n.testAlarmSend, () => unawaited(_send()), filled: true),
+          _pill(
+            t,
+            l10n.testAlarmCancel,
+            () => setState(() => _step = TestAlarmStep.idle),
           ),
-          [
-            TextButton(
-              onPressed: () => unawaited(_cancel()),
-              child: Text(l10n.testAlarmCancel),
-            ),
-          ],
+        ]),
+      TestAlarmStep.waiting => _withButtons(
+        Semantics(
+          liveRegion: true,
+          child: Text(l10n.testAlarmCountdown(_secondsLeft), style: body),
         ),
-        TestAlarmStep.ask =>
-          _withButtons(Text(l10n.testAlarmAsk, style: body), [
-            FilledButton(
-              onPressed: () => setState(() => _step = TestAlarmStep.rang),
-              child: Text(l10n.testAlarmYes),
-            ),
-            OutlinedButton(
-              onPressed: () => setState(() => _step = TestAlarmStep.notRang),
-              child: Text(l10n.testAlarmNo),
-            ),
-          ]),
-        TestAlarmStep.rang => Text(l10n.testAlarmGood, style: body),
-        TestAlarmStep.notRang => Text(widget.afterNo, style: body),
-      },
+        [_pill(t, l10n.testAlarmCancel, () => unawaited(_cancel()))],
+      ),
+      TestAlarmStep.ask => _withButtons(Text(l10n.testAlarmAsk, style: body), [
+        _pill(
+          t,
+          l10n.testAlarmYes,
+          () => setState(() => _step = TestAlarmStep.rang),
+          filled: true,
+        ),
+        _pill(
+          t,
+          l10n.testAlarmNo,
+          () => setState(() => _step = TestAlarmStep.notRang),
+          ink: true,
+        ),
+      ]),
+      TestAlarmStep.rang => Text(l10n.testAlarmGood, style: body),
+      TestAlarmStep.notRang => Text(widget.afterNo, style: body),
+    };
+  }
+
+  /// A 44-high pill: filled in the accent, or outlined with the accent's
+  /// words ([ink]: the text colour, as the board's No).
+  Widget _pill(
+    DotTheme t,
+    String label,
+    VoidCallback onPressed, {
+    bool filled = false,
+    bool ink = false,
+  }) {
+    const shape = StadiumBorder();
+    const size = Size(0, DotTouch.min);
+    if (filled) {
+      return FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(shape: shape, minimumSize: size),
+        child: Text(label),
+      );
+    }
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        shape: shape,
+        minimumSize: size,
+        foregroundColor: ink ? t.colors.text : t.colors.accentInk,
+        side: BorderSide(color: t.colors.outline),
+      ),
+      child: Text(label),
     );
   }
 
   Widget _withButtons(Widget text, List<Widget> buttons) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
-    spacing: DotSpace.s,
+    spacing: DotSpace.m,
     children: [
       text,
       Wrap(spacing: DotSpace.s, runSpacing: DotSpace.s, children: buttons),

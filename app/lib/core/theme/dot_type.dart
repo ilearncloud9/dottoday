@@ -88,6 +88,9 @@ final class DotType {
     required this.alertTitle,
     required this.alertText,
     required this.alertAction,
+    required this.noticeTitle,
+    required this.noticeText,
+    required this.noticeAction,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -199,6 +202,11 @@ final class DotType {
     alertTitle: _manrope(15, 20, 700, text),
     alertText: _manrope(15, 20, 500, text),
     alertAction: _manrope(14, 18, 800, text),
+    // The amber notices on Settings › Reminders (E-R2-20 §3): the title
+    // 16/21/600, the text 14/19, the pill 15/600.
+    noticeTitle: _manrope(16, 21, 600, text),
+    noticeText: _manrope(14, 19, 400, text),
+    noticeAction: _manrope(15, 20, 600, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -416,6 +424,9 @@ final class DotType {
   final TextStyle alertTitle;
   final TextStyle alertText;
   final TextStyle alertAction;
+  final TextStyle noticeTitle;
+  final TextStyle noticeText;
+  final TextStyle noticeAction;
 
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
@@ -502,6 +513,9 @@ final class DotType {
       alertTitle: l(alertTitle, other.alertTitle),
       alertText: l(alertText, other.alertText),
       alertAction: l(alertAction, other.alertAction),
+      noticeTitle: l(noticeTitle, other.noticeTitle),
+      noticeText: l(noticeText, other.noticeText),
+      noticeAction: l(noticeAction, other.noticeAction),
     );
   }
 }

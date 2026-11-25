@@ -40,6 +40,7 @@ final class OsNotification {
     this.sound,
     this.soundOff = false,
     this.color,
+    this.testAlarm = false,
   });
 
   final int id;
@@ -83,10 +84,16 @@ final class OsNotification {
   /// no sound.
   final bool soundOff;
 
+  /// Settings' test alarm (M6.5.9): loud, yet the strip's while open.
+  final bool testAlarm;
+
   /// Shown by the app's own strip while Dottoday is open (E-R2-20 "every
   /// platform", ED-468): every reminder but a loud start, the Wake Up alarm
-  /// and quiet hours' silent ones.
-  bool get stripWhileOpen => !loud && !alarmClock && !silent;
+  /// and quiet hours' silent ones; and the test alarm, which E-R2-20 §4
+  /// draws as the strip with one OK inside the app (ED-470). It still
+  /// sounds: the OS delivers it with its sound and only the banner gives
+  /// way.
+  bool get stripWhileOpen => testAlarm || (!loud && !alarmClock && !silent);
 }
 
 /// A tap or action on a delivered notification.

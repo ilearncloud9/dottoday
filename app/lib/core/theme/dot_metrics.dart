@@ -39,6 +39,10 @@ abstract final class DotRadii {
   /// The in-app reminder strip's card (E-R2-20, ED-467).
   static const double alertStrip = 18;
 
+  /// A Settings notice (E-R2-20 §3): 18 on iPhone, 16 on Android.
+  static const double notice = 18;
+  static const double noticeMaterial = 16;
+
   /// Cards and grouped rows (E: 20–28).
   static const double card = 20;
 
@@ -743,6 +747,10 @@ abstract final class DotSize {
   /// the pill actions' height.
   static const double alertBell = 32;
   static const double alertAction = 36;
+
+  /// A Settings notice's pill (E-R2-20 §3): 36 on iPhone, 40 on Android.
+  static const double noticeAction = 36;
+  static const double noticeActionMaterial = 40;
   static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;

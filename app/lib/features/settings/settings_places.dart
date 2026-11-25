@@ -110,11 +110,12 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         colour: TaskColor.violet,
         parent: SettingsPage.wakeWindDown,
       ),
+      // The health row's all-good check, as E-R2-20 §4 draws the title.
       SettingsPage.notifications => (
         title: l10n.healthTitle,
         summary: null,
-        glyph: DotGlyphs.bell,
-        colour: TaskColor.violet,
+        glyph: DotGlyphs.check,
+        colour: TaskColor.mint,
         parent: SettingsPage.reminders,
       ),
       SettingsPage.sounds => (

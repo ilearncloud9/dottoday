@@ -15,6 +15,7 @@ OsNotification _n(
   bool loud = false,
   bool silent = false,
   bool alarm = false,
+  bool testAlarm = false,
 }) => OsNotification(
   id: id,
   title: 'Task $id',
@@ -25,6 +26,7 @@ OsNotification _n(
   loud: loud,
   silent: silent,
   alarmClock: alarm,
+  testAlarm: testAlarm,
 );
 
 void main() {
@@ -35,6 +37,8 @@ void main() {
     expect(_n(2, start, loud: true).stripWhileOpen, isFalse);
     expect(_n(3, start, alarm: true).stripWhileOpen, isFalse);
     expect(_n(4, start, silent: true).stripWhileOpen, isFalse);
+    // E-R2-20 §4: inside the app the test alarm is the strip with one OK.
+    expect(_n(5, start, loud: true, testAlarm: true).stripWhileOpen, isTrue);
   });
 
   testWidgets('shows each at its time while open; none past or loud', (

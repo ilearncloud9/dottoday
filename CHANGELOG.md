@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - On the Mac and the web, Wake Up and Wind Down shows the night dial beside a week table you can edit day by day, and Appearance is a form like the other Settings pages (redesign branch).
 - The Wake Up card now shows your day as a thread from Wake Up, with where things would move if you're up late, and on tablets, the Mac and the web it opens beside Today (redesign branch).
 - A reminder that comes due while Dottoday is open shows in a Concept E strip inside the app on every platform (it stays in Notification Center or the shade), and Android notifications carry Dottoday's ring-and-dot mark in your App colour (redesign branch).
+- "Notifications are off" and "Reminders may come a few minutes after their time" are amber notices with a pill button, Notification health carries its check, and the test alarm's steps show as a card under its row with pill buttons (redesign branch).
 - On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).

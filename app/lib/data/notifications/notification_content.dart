@@ -82,6 +82,7 @@ OsNotification? composeNotification(
     timeSensitive: planned.timeSensitive,
     loud: planned.loud,
     alarmClock: planned.purpose == NotificationPurpose.wakeUp,
+    testAlarm: planned.purpose == NotificationPurpose.testAlarm,
     withActions: planned.purpose == NotificationPurpose.task,
     startAction:
         planned.purpose == NotificationPurpose.smallestStep ||
@@ -112,6 +113,7 @@ OsNotification pendingAsShown(
   silent: p.silent,
   loud: p.loud,
   alarmClock: p.purpose == NotificationPurpose.wakeUp,
+  testAlarm: p.purpose == NotificationPurpose.testAlarm,
   withActions: p.purpose == NotificationPurpose.task,
 );
 

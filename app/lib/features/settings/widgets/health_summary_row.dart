@@ -29,7 +29,8 @@ class HealthSummaryRow extends ConsumerWidget {
       },
       tint: switch (problems) {
         null => t.colors.muted,
-        0 => t.colors.success,
+        // One colour for the setting, as its page title (ED-338).
+        0 => t.tasks[TaskColor.mint].ink,
         _ => t.colors.accentInk,
       },
       title: l10n.healthTitle,
