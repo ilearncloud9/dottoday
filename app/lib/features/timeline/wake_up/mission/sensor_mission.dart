@@ -147,7 +147,10 @@ class _SensorMissionState extends State<SensorMission>
     // In the ring (E-R2-19-B): Walk's count over "of 20 steps"; Stand up
     // the phone tilting upright, Light the bulb glowing, each over
     // "0 of 3 s". Under it, what to do.
+    // The counts in the ring keep their display size, like the time (ED-459
+    // option A): the ring doesn't grow, and the words under it do.
     final hold = Text(
+      textScaler: TextScaler.noScaling,
       l10n.missionHoldProgress(
         p?.value ?? 0,
         p?.target ?? missionHold.inSeconds,
@@ -162,6 +165,7 @@ class _SensorMissionState extends State<SensorMission>
                 NumberFormat.decimalPattern(
                   Localizations.localeOf(context).toLanguageTag(),
                 ).format(p?.value ?? 0),
+                textScaler: TextScaler.noScaling,
                 style: t.styles.dawnTime,
               ),
               Text(

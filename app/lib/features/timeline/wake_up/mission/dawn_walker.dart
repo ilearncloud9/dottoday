@@ -14,6 +14,9 @@ class DawnWalker extends StatefulWidget {
 
   final bool done;
 
+  /// The ground line's height, as a share of the screen (E-R2-19-B).
+  static const groundAt = 0.74;
+
   @override
   State<DawnWalker> createState() => _DawnWalkerState();
 }
@@ -61,7 +64,7 @@ class _DawnWalkerState extends State<DawnWalker> with TickerProviderStateMixin {
     final t = DotTheme.of(context);
     final check = DawnSkyScope.of(
       context,
-    ).ring(t.colors.accent, _WalkerPainter.groundAt);
+    ).ring(t.colors.accent, DawnWalker.groundAt);
     final moving = _moving;
     return ExcludeSemantics(
       child: AnimatedBuilder(
@@ -95,9 +98,6 @@ class _WalkerPainter extends CustomPainter {
   final bool done;
   final Color check;
 
-  /// The ground line's height, as a share of the screen.
-  static const groundAt = 0.74;
-
   /// The board's figure: drawn in a 24 × 48 box, 44 × 88 on the phone.
   static const _box = 48.0;
   static const _width = 24.0;
@@ -114,7 +114,7 @@ class _WalkerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final ground = size.height * groundAt;
+    final ground = size.height * DawnWalker.groundAt;
     canvas.drawLine(
       Offset(0, ground),
       Offset(size.width, ground),

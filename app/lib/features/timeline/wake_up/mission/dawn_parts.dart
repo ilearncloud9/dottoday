@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 /// mission sits on the left and the time and its line on the right, Can't
 /// right now centred under both. [ground] lies on the sky behind
 /// everything (Walk's walker, Light's room light); [over] floats above it
-/// (Catch the dot's dots).
+/// (Catch the dot's dots). With [groundLine] (Walk), the words keep above
+/// the walker standing on that share of the height, so large text scrolls
+/// instead of running under it. The time keeps its display size, as on the
+/// ringing screen (ED-459 option A); everything else follows the text size.
 class DawnScaffold extends StatelessWidget {
   const DawnScaffold({
     required this.time,
@@ -20,6 +23,7 @@ class DawnScaffold extends StatelessWidget {
     required this.cantRightNow,
     this.over,
     this.ground,
+    this.groundLine,
     super.key,
   });
 
@@ -34,6 +38,9 @@ class DawnScaffold extends StatelessWidget {
   final Widget? over;
   final Widget? ground;
 
+  /// Where a figure stands on [ground], as a share of the height (Walk).
+  final double? groundLine;
+
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
@@ -43,6 +50,7 @@ class DawnScaffold extends StatelessWidget {
         size.width > size.height;
     final timeText = Text(
       time,
+      textScaler: TextScaler.noScaling,
       style: t.styles.dawnTime,
       textAlign: wide ? TextAlign.start : TextAlign.center,
     );
@@ -89,13 +97,20 @@ class DawnScaffold extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: Align(
-                    alignment: wide
-                        ? Alignment.center
-                        : const Alignment(0, -0.6),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(DotSpace.l),
-                      child: body,
+                  child: _aboveGround(
+                    context,
+                    Align(
+                      alignment: switch ((wide, groundLine)) {
+                        (true, _) => Alignment.center,
+                        // Walk: where the full height's -0.6 put it, in
+                        // the room above the walker.
+                        (_, _?) => const Alignment(0, 0.25),
+                        _ => const Alignment(0, -0.6),
+                      },
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(DotSpace.l),
+                        child: body,
+                      ),
                     ),
                   ),
                 ),
@@ -108,6 +123,25 @@ class DawnScaffold extends StatelessWidget {
           ),
           if (over case final o?) Positioned.fill(child: o),
         ],
+      ),
+    );
+  }
+
+  /// [content] kept above the figure on the ground line, if there is one:
+  /// its top is the safe area's, its foot a gap above the figure's head.
+  Widget _aboveGround(BuildContext context, Widget content) {
+    final line = groundLine;
+    if (line == null) return content;
+    final screen = MediaQuery.sizeOf(context).height;
+    final top = MediaQuery.paddingOf(context).top;
+    final room = screen * line - DotSize.dawnWalker - DotSpace.m - top;
+    return LayoutBuilder(
+      builder: (context, box) => Align(
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          height: math.max(0, math.min(box.maxHeight, room)),
+          child: content,
+        ),
       ),
     );
   }

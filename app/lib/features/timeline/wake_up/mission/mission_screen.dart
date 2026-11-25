@@ -162,6 +162,7 @@ class _MissionScreenState extends ConsumerState<MissionScreen> {
           ? CatchDotHint(caught: _caught, onDone: done)
           : _mission(steps),
       over: catching ? CatchDotField(caught: _caught, onDone: done) : null,
+      groundLine: _kind == MissionKind.walk ? DawnWalker.groundAt : null,
       ground: switch (_kind) {
         MissionKind.walk => DawnWalker(done: _walked),
         MissionKind.light => DawnRoomLight(level: _lit ? 1 : 0),

@@ -83,6 +83,7 @@ void main() {
   goldenMatrix(
     'mission_light',
     height: 800,
+    a11yVariants: true,
     widths: const {'compact'},
     overrides: _overrides(light),
     act: _show(light, const LuxReading(Duration.zero, 40)),
@@ -92,6 +93,7 @@ void main() {
   goldenMatrix(
     'mission_stand_up',
     height: 800,
+    a11yVariants: true,
     widths: const {'compact'},
     overrides: _overrides(up),
     build: (_) =>
@@ -100,6 +102,7 @@ void main() {
   goldenMatrix(
     'mission_breathe',
     height: 800,
+    a11yVariants: true,
     // Tablets run it, in landscape (E-R2-19-B-2, ED-336).
     widths: const {'compact', 'expanded'},
     overrides: _overrides(FakeMissionSensors()),
@@ -108,6 +111,7 @@ void main() {
   goldenMatrix(
     'mission_catch_dot',
     height: 800,
+    a11yVariants: true,
     // Tablets run it, in landscape (E-R2-19-B-2, ED-336).
     widths: const {'compact', 'expanded'},
     overrides: _overrides(FakeMissionSensors()),

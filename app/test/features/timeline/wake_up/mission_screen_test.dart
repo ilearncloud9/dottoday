@@ -9,11 +9,13 @@ import 'package:dottoday/domain/wake_up/mission_progress.dart';
 import 'package:dottoday/domain/wake_up/mission_sensors.dart';
 import 'package:dottoday/domain/wake_up/one_thing.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/dawn_parts.dart';
+import 'package:dottoday/features/timeline/wake_up/mission/dawn_walker.dart';
 import 'package:dottoday/features/timeline/wake_up/mission/mission_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../../support/test_l10n.dart';
@@ -103,6 +105,47 @@ Future<void> _settle(WidgetTester tester) async {
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
+
+  // The largest text on a phone (390 × 844): the time keeps its size (ED-459
+  // option A) and nothing runs into the walker or Can't right now (found on
+  // the emulator, ED-463).
+  group('at 200 % text', () {
+    // Real glyphs: Ahem's square letters are wider than any font the app has.
+    setUpAll(loadAppFonts);
+
+    Future<void> big(WidgetTester tester, MissionKind kind) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await _pump(tester, kind);
+      tester.view.physicalSize = const Size(390, 844);
+      await _tick(tester);
+    }
+
+    testWidgets('Walk: one line of time; the words stay above the walker', (
+      tester,
+    ) async {
+      await big(tester, MissionKind.walk);
+      expect(tester.getSize(find.text('9:22 AM')).height, lessThan(70));
+      final head = 844 * DawnWalker.groundAt - DotSize.dawnWalker;
+      expect(tester.getRect(find.text('Walk 20 steps')).bottom, lessThan(head));
+    });
+
+    for (final (kind, title) in [
+      (MissionKind.standUp, 'Stand up and move'),
+      (MissionKind.light, 'Turn on a light'),
+      (MissionKind.breathe, 'Breathe with the ring'),
+    ]) {
+      testWidgets("${kind.name}: the words end above Can't right now", (
+        tester,
+      ) async {
+        await big(tester, kind);
+        expect(
+          tester.getRect(find.text(title)).bottom,
+          lessThan(tester.getRect(find.text("Can't right now")).top),
+        );
+      });
+    }
+  });
 
   testWidgets('Walk: 20 steps stop the alarm and open the card', (
     tester,
