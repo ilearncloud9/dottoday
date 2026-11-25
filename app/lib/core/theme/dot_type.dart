@@ -85,6 +85,9 @@ final class DotType {
     required this.dawnTitle,
     required this.dawnCount,
     required this.dawnStatus,
+    required this.alertTitle,
+    required this.alertText,
+    required this.alertAction,
   });
 
   /// Roles in [text], with [muted] for captions and meta.
@@ -193,6 +196,9 @@ final class DotType {
     dawnTitle: _manrope(24, 30, 800, text),
     dawnCount: _manrope(34, 38, 800, text),
     dawnStatus: _manrope(15, 20, 600, text),
+    alertTitle: _manrope(15, 20, 700, text),
+    alertText: _manrope(15, 20, 500, text),
+    alertAction: _manrope(14, 18, 800, text),
   );
 
   static const fontFamily = 'Manrope';
@@ -405,6 +411,12 @@ final class DotType {
   final TextStyle dawnCount;
   final TextStyle dawnStatus;
 
+  /// The in-app reminder strip (E-R2-20, ED-467): its title, the rest of
+  /// its line, and its pill actions.
+  final TextStyle alertTitle;
+  final TextStyle alertText;
+  final TextStyle alertAction;
+
   /// Android's 12 px tab labels (§2.2).
   TextStyle androidTab(TextStyle tab) => tab.copyWith(fontSize: 12);
 
@@ -487,6 +499,9 @@ final class DotType {
       dawnTitle: l(dawnTitle, other.dawnTitle),
       dawnCount: l(dawnCount, other.dawnCount),
       dawnStatus: l(dawnStatus, other.dawnStatus),
+      alertTitle: l(alertTitle, other.alertTitle),
+      alertText: l(alertText, other.alertText),
+      alertAction: l(alertAction, other.alertAction),
     );
   }
 }

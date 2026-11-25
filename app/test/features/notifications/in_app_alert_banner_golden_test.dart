@@ -11,30 +11,52 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 
 import '../../support/dot_golden.dart';
 
-// The in-app reminder on the web without notification permission
-// (derived, docs/09 M5.3; docs/10 §5.4 banner).
+// The in-app reminder strip (E-R2-20 §1, ED-317; at phone width ED-467):
+// a task's with Done and Snooze 10 min, Wind Down's with Open and Later.
 
 final class _Seeded extends InAppAlerts {
+  _Seeded(this.alert);
+
+  final OsNotification alert;
+
   @override
-  List<OsNotification> build() => [
-    OsNotification(
-      id: 11,
-      title: 'Gym',
-      body: 'Starts in 10 minutes',
-      fireAtUtc: DateTime.utc(2026, 10, 21, 15, 20),
-      payload: '{}',
-      channel: NotificationChannelKind.alerts,
-    ),
-  ];
+  List<OsNotification> build() => [alert];
 }
+
+final _task = OsNotification(
+  id: 11,
+  title: 'Team standup',
+  body: 'Starts in 10 minutes',
+  fireAtUtc: DateTime.utc(2026, 10, 21, 15, 20),
+  payload: '{}',
+  channel: NotificationChannelKind.alerts,
+);
+
+final _windDown = OsNotification(
+  id: 12,
+  title: 'Wind Down',
+  body: 'Tomorrow starts with Morning run at 6:45 AM.',
+  fireAtUtc: DateTime.utc(2026, 10, 21, 21),
+  payload: '{}',
+  channel: NotificationChannelKind.summary,
+  withActions: false,
+);
 
 void main() {
   setUpAll(loadAppFonts);
   goldenMatrix(
     'in_app_alert_banner',
-    height: 160,
+    height: 240,
     widths: const {'compact', 'expanded'},
-    overrides: [inAppAlertsProvider.overrideWith(_Seeded.new)],
+    a11yVariants: true,
+    overrides: [inAppAlertsProvider.overrideWith(() => _Seeded(_task))],
+    build: (_) => const Column(children: [InAppAlertBanner()]),
+  );
+  goldenMatrix(
+    'in_app_alert_banner_wind_down',
+    height: 240,
+    widths: const {'compact', 'expanded'},
+    overrides: [inAppAlertsProvider.overrideWith(() => _Seeded(_windDown))],
     build: (_) => const Column(children: [InAppAlertBanner()]),
   );
 }

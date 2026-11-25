@@ -36,6 +36,9 @@ abstract final class DotSpace {
 
 /// Corner radii (Concept E, E_DESIGN_RULES.md §6.3; M18.1).
 abstract final class DotRadii {
+  /// The in-app reminder strip's card (E-R2-20, ED-467).
+  static const double alertStrip = 18;
+
   /// Cards and grouped rows (E: 20–28).
   static const double card = 20;
 
@@ -735,6 +738,11 @@ abstract final class DotSize {
   /// Catch the dot's dots: 72 on phones, 96 on tablets (E-R2-19-B-2).
   static const double catchDot = 72;
   static const double catchDotTablet = 96;
+
+  /// The in-app reminder strip (E-R2-20, ED-467): the bell's circle and
+  /// the pill actions' height.
+  static const double alertBell = 32;
+  static const double alertAction = 36;
   static const double focusGlyph = 48;
   static const double dayDotWatch = 18;
   static const double macRowDot = 26;

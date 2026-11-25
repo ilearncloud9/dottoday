@@ -5,6 +5,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/frosted_chrome.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/shell/native_tab_bar.dart';
 import 'package:dottoday/data/shell/window_material.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
@@ -106,26 +107,14 @@ class AppShell extends ConsumerWidget {
           // A reminder the OS couldn't show (web, M5.3), then offline /
           // conflicts (M3f.8), above every screen.
           const InAppAlertBanner(),
-          const SyncBanner(),
-          // Edits that didn't reach their calendar (M7.3).
-          const WriteBackBanner(),
-          // The device moved zone: keep times or shift (M5.9).
-          const ZoneBanner(),
-          // The web's install offer, from the 2nd visit (M5.7).
-          if (watchOnScreen(ref, FeatureId.installBanner))
-            const InstallBanner(),
-          // Once after an update with release notes (M8.2, R-19).
-          if (watchOnScreen(ref, FeatureId.infoPages)) const WhatsNewBanner(),
           Expanded(
-            child: Focus(
-              focusNode: content,
-              // Proposals (M10.2): a sheet on phones, the panel when wide.
-              child: ProposalHost(
-                // A routine dropped from Add (M11.4).
-                child: RoutineDropHost(
-                  // Several lines from minimal Add (docs/14 §3 B4).
-                  child: BrainDumpHost(child: EditorPanelFrame(child: shell)),
-                ),
+            // The strip clears the status bar; under it nothing does again.
+            // Its own context: the insets as the navigation shell left them.
+            child: Builder(
+              builder: (inner) => MediaQuery.removePadding(
+                context: inner,
+                removeTop: ref.watch(inAppAlertsProvider).isNotEmpty,
+                child: _belowAlert(ref, content, shell),
               ),
             ),
           ),
@@ -133,6 +122,33 @@ class AppShell extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _belowAlert(WidgetRef ref, FocusNode content, Widget shell) => Column(
+    children: [
+      const SyncBanner(),
+      // Edits that didn't reach their calendar (M7.3).
+      const WriteBackBanner(),
+      // The device moved zone: keep times or shift (M5.9).
+      const ZoneBanner(),
+      // The web's install offer, from the 2nd visit (M5.7).
+      if (watchOnScreen(ref, FeatureId.installBanner)) const InstallBanner(),
+      // Once after an update with release notes (M8.2, R-19).
+      if (watchOnScreen(ref, FeatureId.infoPages)) const WhatsNewBanner(),
+      Expanded(
+        child: Focus(
+          focusNode: content,
+          // Proposals (M10.2): a sheet on phones, the panel when wide.
+          child: ProposalHost(
+            // A routine dropped from Add (M11.4).
+            child: RoutineDropHost(
+              // Several lines from minimal Add (docs/14 §3 B4).
+              child: BrainDumpHost(child: EditorPanelFrame(child: shell)),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 
   /// Re-selecting the current tab returns it to its root (go_router idiom).
   void _goTab(ShellTab tab) => shell.goBranch(

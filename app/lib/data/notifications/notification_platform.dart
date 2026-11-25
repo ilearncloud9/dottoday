@@ -39,9 +39,14 @@ final class OsNotification {
     this.startAction = false,
     this.sound,
     this.soundOff = false,
+    this.color,
   });
 
   final int id;
+
+  /// The App colour (ARGB) Android tints the alert's mark and actions with
+  /// (E-R2-20, ED-467); null leaves the system's.
+  final int? color;
   final String title;
   final String body;
   final DateTime fireAtUtc;
@@ -77,6 +82,11 @@ final class OsNotification {
   /// The task's sound is "None" (docs/12 §3): it shows and vibrates, with
   /// no sound.
   final bool soundOff;
+
+  /// Shown by the app's own strip while Dottoday is open (E-R2-20 "every
+  /// platform", ED-468): every reminder but a loud start, the Wake Up alarm
+  /// and quiet hours' silent ones.
+  bool get stripWhileOpen => !loud && !alarmClock && !silent;
 }
 
 /// A tap or action on a delivered notification.

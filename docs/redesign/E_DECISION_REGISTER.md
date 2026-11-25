@@ -1380,3 +1380,7 @@ Each is recorded in full in `E_DESIGN_DECISIONS.md`; listed here so the register
 - **2026-11-25, ED-463:** the missions at 200 % text: the time and the in-ring counts keep their display size (ED-459 option A), and Walk's words stay above the walker. Approved.
 - **2026-11-25, ED-464:** M20.8 part 5 drawings: the snooze Live Activity's Dynamic Island expanded and minimal, ringing again, StandBy and Apple Watch, in the dawn style. Approved.
 - **2026-11-25, ED-465:** M20.8 part 5: the snoozed Wake Up as a dawn Live Activity (Lock Screen card, Dynamic Island compact, expanded and minimal, ringing again, StandBy, Apple Watch), the day's dots carried to AlarmKit, Manrope in the widgets. Approved; M20.8 done.
+- **2026-11-25, ED-466:** M20.9 split into seven parts (owner). Done.
+- **2026-11-25, ED-467:** M20.9 part 1 drawing: the in-app reminder strip at phone width; Android's alerts with the Concept E mark and the App colour now (owner: "Both now"). Approved.
+- **2026-11-25, ED-468:** the in-app strip on every platform, as E-R2-20 draws it (owner: "make it match"); iPhone and the Mac hold their banner back, Android's pop-down is quieted once posted. Decided.
+- **2026-11-25, ED-469:** M20.9 part 1: the in-app strip in Concept E (phone and wide), Android's ring-and-dot notification mark and App colour, the strip on every platform (ED-468). Approved.

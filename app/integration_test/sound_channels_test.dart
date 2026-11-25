@@ -13,6 +13,7 @@
 import 'package:dottoday/bootstrap.dart';
 import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
+import 'package:dottoday/data/notifications/foreground_strip.dart';
 import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
@@ -113,7 +114,11 @@ void main() {
         none.id: 'dottoday.alert.none',
       });
     } else {
-      final fln = platform as FlnNotificationPlatform;
+      // iPhone and the Mac wrap it to time the in-app strip (ED-468).
+      final fln = switch (platform) {
+        StripTimedPlatform(:final inner) => inner as FlnNotificationPlatform,
+        _ => platform as FlnNotificationPlatform,
+      };
       String? soundOf(Occurrence t) {
         final n = composeNotification(
           planned[t.id]!,

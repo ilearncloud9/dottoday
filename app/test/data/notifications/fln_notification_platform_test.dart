@@ -128,6 +128,32 @@ void main() {
     },
   );
 
+  // While Dottoday is open the strip shows it (E-R2-20, ED-468): iOS and
+  // the Mac hold their banner back but keep it in Notification Center with
+  // its sound; a loud start still shows the system's banner.
+  test('Apple: the strip takes the banner while open; loud keeps it', () async {
+    final task = await posted(_n());
+    expect((task.presentBanner, task.presentList), (false, true));
+    expect(task.presentSound, isTrue);
+    final loud = await posted(_n(ts: true, loud: true));
+    expect(loud.presentBanner, isTrue);
+  });
+
+  test('Android: the ring-and-dot mark in the App colour (ED-467)', () async {
+    final tinted = OsNotification(
+      id: 1,
+      title: 't',
+      body: 'b',
+      fireAtUtc: _now.add(const Duration(hours: 1)),
+      payload: '{}',
+      channel: NotificationChannelKind.alerts,
+      color: 0xFF11615C,
+    );
+    final a = (await details(tinted)).android!;
+    expect(a.icon, 'ic_stat_dottoday');
+    expect(a.color?.toARGB32(), 0xFF11615C);
+  });
+
   test('Android: other alerts stay on the reminder channel', () async {
     final a = (await details(_n(ts: true))).android!;
     expect(a.channelId, 'alerts');
@@ -200,7 +226,9 @@ void main() {
 
     test('"None" shows and vibrates, with no sound', () async {
       final d = await posted(_n(ts: true, soundOff: true));
-      expect((d.sound, d.presentSound, d.presentBanner), (null, false, true));
+      // Shown with no sound; while open, in the strip (ED-468).
+      expect((d.sound, d.presentSound, d.presentList), (null, false, true));
+      expect(d.presentBanner, isFalse);
       final a = (await details(_n(ts: true, soundOff: true))).android!;
       expect(a.channelId, 'dottoday.alert.none');
       expect(a.channelName, 'Task alerts · No sound');

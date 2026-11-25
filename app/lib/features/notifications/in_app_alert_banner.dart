@@ -49,14 +49,16 @@ class InAppAlertBanner extends ConsumerWidget {
     if (testAlarm) {
       return BannerStrip(
         glyph: DotGlyphs.bell,
-        emphasis: true,
+        card: true,
+        lead: n.title,
         text: l10n.inAppAlertText(n.title, n.body),
         actions: [(l10n.inAppAlertOk, () => act(null))],
       );
     }
     return BannerStrip(
       glyph: DotGlyphs.bell,
-      emphasis: true,
+      card: true,
+      lead: n.title,
       text: l10n.inAppAlertText(n.title, n.body),
       actions: n.withActions
           ? [

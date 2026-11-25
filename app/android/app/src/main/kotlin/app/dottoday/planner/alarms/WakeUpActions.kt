@@ -116,7 +116,7 @@ object WakeUpActions {
 
     private fun snoozedNote(context: Context, alarm: WakeUpAlarm) =
         NotificationCompat.Builder(context, WakeUpRingService.CHANNEL)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_dottoday)
             .setContentTitle(alarm.title)
             .setContentText(
                 context.getString(

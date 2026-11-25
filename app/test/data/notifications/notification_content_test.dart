@@ -1,3 +1,4 @@
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/enums.dart';
@@ -31,6 +32,29 @@ void main() {
     task: task,
     profile: profileFixture(),
   )!;
+
+  // Android tints the alert's mark and actions with it (E-R2-20, ED-467).
+  test('every alert carries the App colour, a custom one when set', () {
+    final planned = PlannedNotification(
+      id: 1,
+      occurrenceId: task.id,
+      alertIndex: 0,
+      fireAtUtc: task.startUtc!,
+      kind: AlertKind.atStart,
+    );
+    final teal = composeNotification(
+      planned,
+      task: task,
+      profile: profileFixture(),
+    )!;
+    expect(teal.color, DotAccent.fromKey('teal').light.toARGB32());
+    final custom = composeNotification(
+      planned,
+      task: task,
+      profile: profileFixture().copyWith(accentHex: '#D9668F'),
+    )!;
+    expect(custom.color, 0xFFD9668F);
+  });
 
   test('loud → alarm channel, loud flag, time-sensitive', () {
     final n = compose(loud: true);

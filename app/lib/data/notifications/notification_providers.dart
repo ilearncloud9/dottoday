@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
@@ -6,6 +8,7 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/alarm_sound.dart';
 import 'package:dottoday/data/notifications/fln_notification_platform.dart';
+import 'package:dottoday/data/notifications/foreground_strip.dart';
 import 'package:dottoday/data/notifications/in_app_alerts.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/notification_responder.dart';
@@ -85,12 +88,26 @@ Future<NotificationPlatform> notificationPlatform(Ref ref) async {
   // tool/xcode_add_sounds.rb).
   final ios = defaultTargetPlatform == TargetPlatform.iOS;
   final logger = ref.watch(loggerProvider);
-  return FlnNotificationPlatform(
+  final platform = FlnNotificationPlatform(
     ref.watch(localNotificationsPluginProvider),
     l10n,
     ref.watch(clockProvider),
     prepare: ios ? () => installAlarmSound(logger: logger) : null,
   );
+  // The strip shows reminders while the app is open, every platform
+  // (E-R2-20, ED-468); Android's alert is quieted once it has posted.
+  final android = defaultTargetPlatform == TargetPlatform.android;
+  final strip = ForegroundStrip(
+    pending: platform.pendingForStrip,
+    // Read when it shows: the list is rebuilt at a change of owner.
+    show: (n) {
+      ref.read(inAppAlertsProvider.notifier).add(n);
+      if (android) unawaited(platform.quietWhileOpen(n));
+    },
+    clock: ref.watch(clockProvider),
+  )..attach();
+  ref.onDispose(strip.dispose);
+  return StripTimedPlatform(platform, strip);
 }
 
 /// The newest stored profile (settings and locale as changed since launch).

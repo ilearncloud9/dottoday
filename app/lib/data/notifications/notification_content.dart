@@ -3,6 +3,7 @@ import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:crypto/crypto.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
@@ -76,13 +77,7 @@ OsNotification? composeNotification(
       planned,
       contentHash: notificationContentHash(title, body),
     ),
-    channel: planned.loud
-        ? NotificationChannelKind.alarms
-        : planned.purpose == NotificationPurpose.task ||
-              planned.purpose == NotificationPurpose.smallestStep ||
-              planned.purpose == NotificationPurpose.startNudge
-        ? NotificationChannelKind.alerts
-        : NotificationChannelKind.summary,
+    channel: _channelOf(planned),
     silent: planned.silent,
     timeSensitive: planned.timeSensitive,
     loud: planned.loud,
@@ -96,7 +91,37 @@ OsNotification? composeNotification(
         planned.purpose == NotificationPurpose.task &&
         !planned.loud &&
         planned.sound == soundNoneKey,
+    color: _appColour(profile),
   );
+}
+
+/// A pending reminder as it was posted, from its [title], [body] and the
+/// plan [p] its [payload] carries: what the in-app strip needs (ED-468).
+OsNotification pendingAsShown(
+  PlannedNotification p,
+  String? title,
+  String? body,
+  String? payload,
+) => OsNotification(
+  id: p.id,
+  title: title ?? '',
+  body: body ?? '',
+  fireAtUtc: p.fireAtUtc,
+  payload: payload ?? '',
+  channel: _channelOf(p),
+  silent: p.silent,
+  loud: p.loud,
+  alarmClock: p.purpose == NotificationPurpose.wakeUp,
+  withActions: p.purpose == NotificationPurpose.task,
+);
+
+/// [profile]'s App colour: its custom colour (ED-220), else the named one.
+int _appColour(Profile profile) {
+  final custom = profile.accentHex == null
+      ? null
+      : parseHex(profile.accentHex!);
+  return (custom ?? DotAccent.fromKey(profile.settings.accent).light)
+      .toARGB32();
 }
 
 /// The Wind Down reminder's line. With a sleep target it names what the
@@ -248,3 +273,11 @@ String _time(DateTime utc, Profile profile) {
       PlatformDispatcher.instance.alwaysUse24HourFormat;
   return DateFormat(use24h ? 'HH:mm' : 'h:mm a', profile.locale).format(local);
 }
+
+NotificationChannelKind _channelOf(PlannedNotification p) => p.loud
+    ? NotificationChannelKind.alarms
+    : p.purpose == NotificationPurpose.task ||
+          p.purpose == NotificationPurpose.smallestStep ||
+          p.purpose == NotificationPurpose.startNudge
+    ? NotificationChannelKind.alerts
+    : NotificationChannelKind.summary;

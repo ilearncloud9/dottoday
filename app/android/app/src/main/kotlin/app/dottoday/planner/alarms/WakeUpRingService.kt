@@ -102,7 +102,7 @@ class WakeUpRingService : Service() {
     }
 
     private fun bare(): Notification = NotificationCompat.Builder(this, CHANNEL)
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setSmallIcon(R.drawable.ic_stat_dottoday)
         .setSilent(true)
         .build()
 
@@ -115,7 +115,7 @@ class WakeUpRingService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val builder = NotificationCompat.Builder(this, CHANNEL)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_dottoday)
             .setContentTitle(alarm.title)
             .setContentText(alarm.body)
             .setCategory(NotificationCompat.CATEGORY_ALARM)

@@ -110,7 +110,7 @@ object WakeUpChecks {
         )
         ensureChannel(context)
         val note = NotificationCompat.Builder(context, CHANNEL)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_dottoday)
             .setContentTitle(intent.getStringExtra(EXTRA_TITLE))
             .setContentText(intent.getStringExtra(EXTRA_BODY))
             .setCategory(NotificationCompat.CATEGORY_REMINDER)

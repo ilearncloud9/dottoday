@@ -1,5 +1,6 @@
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/data/notifications/notification_content.dart';
 import 'package:dottoday/data/notifications/notification_platform.dart';
 import 'package:dottoday/data/notifications/sound_files.dart';
 import 'package:dottoday/data/notifications/sound_names.gen.dart';
@@ -7,6 +8,7 @@ import 'package:dottoday/domain/notifications/notification_payload.dart';
 import 'package:dottoday/domain/notifications/sound_catalogue.dart';
 import 'package:dottoday/domain/notifications/sound_resolution.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/painting.dart' show Color;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -91,7 +93,8 @@ final class FlnNotificationPlatform implements NotificationPlatform {
     );
     await _plugin.initialize(
       InitializationSettings(
-        android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+        // The ring and its dot (E-R2-20, ED-467), one colour.
+        android: const AndroidInitializationSettings('ic_stat_dottoday'),
         iOS: darwin,
         macOS: darwin,
       ),
@@ -129,6 +132,46 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         (r.id, r.payload),
     ];
   }
+
+  /// The pending reminders the strip shows while the app is open (ED-468),
+  /// rebuilt from what the OS holds: its text, and the plan its payload
+  /// carries.
+  Future<List<OsNotification>> pendingForStrip() async => [
+    for (final r in await _plugin.pendingNotificationRequests())
+      if (decodeNotificationPayload(r.id, r.payload) case final p?)
+        if (pendingAsShown(p, r.title, r.body, r.payload) case final n
+            when n.stripWhileOpen)
+          n,
+  ];
+
+  /// Android, while the strip shows [n] (ED-468): once its alert has
+  /// posted, it is taken down and posted again at once, silently, so the
+  /// pop-down gives way to the strip and the reminder stays in the shade.
+  /// (An update in place keeps the pop-down up.) Between the two only the
+  /// strip, already on screen, holds it (R-10).
+  Future<void> quietWhileOpen(OsNotification n) async {
+    final android = _android;
+    if (android == null) return;
+    for (var i = 0; i < _quietTries; i++) {
+      final active = await android.getActiveNotifications();
+      if (active.any((a) => a.id == n.id)) {
+        await _plugin.cancel(n.id);
+        await _plugin.show(
+          n.id,
+          n.title,
+          n.body,
+          _details(n, quiet: true),
+          payload: n.payload,
+        );
+        return;
+      }
+      await Future<void>.delayed(_quietPoll);
+    }
+  }
+
+  /// How long [quietWhileOpen] waits for the alert to post: 5 s.
+  static const _quietTries = 50;
+  static const _quietPoll = Duration(milliseconds: 100);
 
   @override
   Future<void> cancel(int id) => _plugin.cancel(id);
@@ -179,7 +222,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
   @visibleForTesting
   NotificationDetails detailsFor(OsNotification n) => _details(n);
 
-  NotificationDetails _details(OsNotification n) {
+  NotificationDetails _details(OsNotification n, {bool quiet = false}) {
     final channel = _channelFor(n);
     final darwin = DarwinNotificationDetails(
       categoryIdentifier: n.startAction
@@ -187,7 +230,11 @@ final class FlnNotificationPlatform implements NotificationPlatform {
           : n.withActions
           ? _category
           : null,
-      presentBanner: !n.silent,
+      // While Dottoday is open the strip shows it instead (ED-468); it still
+      // goes to Notification Center and plays its sound. These flags only
+      // apply while the app is in front.
+      presentBanner: !n.silent && !n.stripWhileOpen,
+      presentList: true,
       presentSound: !n.silent && !n.soundOff,
       sound: switch (n) {
         // A loud dot only ever plays a Start sound (D2).
@@ -209,6 +256,12 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         channel.id,
         channel.name,
         channelDescription: channel.description,
+        icon: 'ic_stat_dottoday',
+        // The App colour on the mark and the actions (E-R2-20, ED-467).
+        color: switch (n.color) {
+          final argb? => Color(argb),
+          null => null,
+        },
         importance: channel.importance,
         priority: switch (n.channel) {
           NotificationChannelKind.alarms => Priority.max,
@@ -225,7 +278,7 @@ final class FlnNotificationPlatform implements NotificationPlatform {
         audioAttributesUsage: n.loud
             ? AudioAttributesUsage.alarm
             : AudioAttributesUsage.notification,
-        silent: n.silent,
+        silent: n.silent || quiet,
         actions: [
           for (final a in [
             if (n.withActions) ...NotificationAction.osActions,

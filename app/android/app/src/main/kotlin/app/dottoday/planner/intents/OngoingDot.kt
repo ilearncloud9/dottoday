@@ -118,7 +118,7 @@ object OngoingDot {
         val words = if (live) "" else "${c["starts_before"]}${c["starts_after"]}"
         val count = (c["count"] as? String).orEmpty()
         return NotificationCompat.Builder(context, CHANNEL)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_dottoday)
             .setColor(runCatching { Color.parseColor(c["color"] as String) }.getOrDefault(Color.BLUE))
             .setContentTitle(c["title"] as String)
             .setContentText(if (count.isEmpty()) "${c["range"]}" else "${c["range"]} · $count")

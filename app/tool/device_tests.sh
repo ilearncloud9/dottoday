@@ -116,7 +116,8 @@ bring_to_front() {
 
 # A test asks for a screenshot with `DEVICE_SHOT <name>` (saved as
 # build/device_shots/<platform>_<name>.png) and for calendar access back
-# with `DEVICE_GRANT calendar`; `DEVICE_FRONT app` brings the app back; `DEVICE_AWAY <name>` (before a
+# with `DEVICE_GRANT calendar`; `DEVICE_SHADE open|close` pulls Android's
+# notification shade down and back; `DEVICE_FRONT app` brings the app back; `DEVICE_AWAY <name>` (before a
 # tap that leaves the app) waits, shoots and brings it back; `DEVICE_BACK
 # <name>` (before a tap that opens a system sheet) waits, shoots and presses
 # Back on Android; `DEVICE_HOLD front` keeps the app in front until
@@ -202,13 +203,16 @@ run_one() {
       held=$((held + 1))
       ((held % 6 == 0)) && bring_to_front >>"$log" 2>&1
     fi
-    for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY|BACK) [a-z0-9_]+' "$log" | tr ' ' ':'); do
+    for mark in $(grep -oE 'DEVICE_(SHOT|GRANT|FRONT|AWAY|BACK|SHADE) [a-z0-9_]+' "$log" | tr ' ' ':'); do
       case " $done_marks " in *" $mark "*) continue ;; esac
       done_marks="$done_marks $mark"
       case "$mark" in
         DEVICE_SHOT:*) shoot "${mark#DEVICE_SHOT:}" ;;
         DEVICE_GRANT:calendar) calendar_access grant >>"$log" 2>&1 ;;
         DEVICE_FRONT:*) bring_to_front >>"$log" 2>&1 ;;
+        # Android's notification shade, pulled down for a shot and put back.
+        DEVICE_SHADE:open) [[ "$platform" == android ]] && { a shell cmd statusbar expand-notifications >>"$log" 2>&1; sleep 2; } ;;
+        DEVICE_SHADE:close) [[ "$platform" == android ]] && a shell cmd statusbar collapse >>"$log" 2>&1 ;;
         DEVICE_BACK:*)
           # A system sheet over the app (Android's share chooser, the mail
           # app): shoot it, then Back — `am start` would re-create the
