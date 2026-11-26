@@ -5935,6 +5935,12 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; 4390 tests pass (new: `trashAge` today, yesterday, earlier, the zone, a clock change, the last day; the Trash goldens on iPhone, Android and Mac, light and dark, and the iPhone at 200 % text with nothing cut).
 - **Not run:** Trash on a device with deleted tasks (the device test's in-memory day has none), VoiceOver.
 
+### ED-479 · M20.10 part 3: the database recovery screen as E-R2-21 §6 draws it
+- **Date:** 2026-11-26. **Owner:** "Start part 3". Review page: https://claude.ai/artifact/Ps8ysd7AfBRMU9GPYS43Za. **Approved 2026-11-26: "Approve part 3".** E-R2-32 has nothing for this screen; E-R2-21 §6 (ED-319) draws every state, so nothing was asked.
+- **Built to the board:** the locked dot on a broken thread (`LockedDot`: a lock in an accent ring, a short dashed thread either side, in the muted colour; it was design-only); the title bold (Manrope 800 24, was the large regular page title); the body, then the secondary words in the 13 pt meta style; the content in the upper part of the screen, left-aligned, scrolling at large text (was centred); after Start fresh, "Your old file is kept at …" with the place in bold; on the web, "The other tab didn't answer" under the text, above Use it here (was under the button). States, words and behaviour unchanged: the key missing, Start fresh asked once more inline, where the old file is kept, Continue; open in another tab, the tab that handed over, no answer in 5 s.
+- **Checks:** format and analyze clean; recovery goldens for all six board frames (new: asked once more, the kept file, no answer), light and dark, phone and wide; all tests pass but the Supabase ones (Docker off; this part doesn't touch sync); the string-literal policy test caught the split marker, now marked as never shown.
+- **Not run:** on a device (the screen needs a database that can't be opened), VoiceOver.
+
 ---
 
 ## Pending owner answers

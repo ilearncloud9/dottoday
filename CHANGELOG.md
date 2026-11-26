@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - On the Mac, Window › Show Now (⌥⌘0) opens a small floating Now window with the task under way, Need More Time +5, +15 and +30, and Done; it stays over other apps without taking focus (redesign branch).
 - When a backup is saved as several files, its sheets now show Check my files…, each download and Add files… as rows, with what the check found under them (redesign branch).
 - Trash shows when each task was deleted and how many days it has left, with Delete now and Restore on each row and Empty Trash under the list; on the Mac and the web it opens as a dialog with buttons (redesign branch).
+- The screen shown when Dottoday can't open your tasks is redrawn in the new look, with a locked dot on a broken thread (redesign branch).
 - On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).
