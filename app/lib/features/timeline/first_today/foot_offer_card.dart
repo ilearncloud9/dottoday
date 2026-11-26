@@ -1,39 +1,54 @@
-import 'dart:async';
-
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/onboarding/first_today_store.dart';
 import 'package:dottoday/features/timeline/first_today/first_today_rise.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-/// "Sign in to sync" at the foot of the first Today (the prototype's
-/// `.sync`, ED-490): the cloud, "Use Dottoday on all your devices with a
-/// copy kept safe.", Sign in (Settings › Account) and ✕. It rises in at
-/// 1.6 s; ✕ or Sign in lets it go for good (10 down, 300 ms).
-class FirstSyncCard extends ConsumerStatefulWidget {
-  const FirstSyncCard({super.key});
+/// A one-time card at the foot of Today (the onboarding prototype's
+/// `.sync`; ED-490, ED-491): [glyph], [title], [body], one [action] and ✕
+/// at Today's page margin. It rises in after [delay]; [onAction] or ✕
+/// sends it 10 down over 300 ms, then [onGone] (where it is marked done).
+/// At large text the action takes its own line, so nothing breaks.
+class FootOfferCard extends StatefulWidget {
+  const FootOfferCard({
+    required this.glyph,
+    required this.title,
+    required this.body,
+    required this.action,
+    required this.onAction,
+    required this.onGone,
+    this.delay = Duration.zero,
+    this.dismissLabel,
+    super.key,
+  });
+
+  final DotGlyph glyph;
+  final String title;
+  final String body;
+  final String action;
+
+  /// The action's own effect (open Settings › Account, switch to Less…).
+  final VoidCallback onAction;
+
+  /// After it leaves, whichever way.
+  final VoidCallback onGone;
+  final Duration delay;
+
+  /// ✕'s screen reader label; "Not now" by default.
+  final String? dismissLabel;
 
   @override
-  ConsumerState<FirstSyncCard> createState() => _FirstSyncCardState();
+  State<FootOfferCard> createState() => _FootOfferCardState();
 }
 
 /// A leaf: only whether it is leaving.
-class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
+class _FootOfferCardState extends State<FootOfferCard> {
   var _gone = false;
 
-  void _leave({bool signIn = false}) {
+  void _leave({bool act = false}) {
     if (_gone) return;
-    final router = GoRouter.of(context);
     setState(() => _gone = true);
-    Future<void>.delayed(OnbMotion.syncLeave, () {
-      unawaited(ref.read(firstTodayProvider.notifier).syncDone());
-    }).ignore();
-    if (signIn) {
-      unawaited(router.push(AppRoutes.settingsPage(SettingsPage.account)));
-    }
+    if (act) widget.onAction();
+    Future<void>.delayed(OnbMotion.syncLeave, widget.onGone).ignore();
   }
 
   @override
@@ -56,7 +71,7 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
           offset: _gone ? const Offset(0, 0.1) : Offset.zero,
           duration: OnbMotion.syncLeave,
           child: FirstTodayRise(
-            delay: OnbMotion.syncStart,
+            delay: widget.delay,
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(
                 OnbSize.syncPadStart,
@@ -79,11 +94,9 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
     );
   }
 
-  /// The cloud, the words, Sign in and ✕ in one row; at large text Sign
-  /// in goes on its own line under the words, so nothing breaks.
   Widget _body(BuildContext context, DotTheme t) {
     final c = t.colors;
-    final l10n = context.l10n;
+    final w = widget;
     final large =
         MediaQuery.textScalerOf(context).scale(1) > OnbSize.syncLargeText;
     final words = Expanded(
@@ -91,18 +104,14 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.firstSyncTitle, style: t.styles.onbSyncTitle),
-          Text(l10n.firstSyncBody, style: t.styles.onbSyncBody),
+          Text(w.title, style: t.styles.onbSyncTitle),
+          Text(w.body, style: t.styles.onbSyncBody),
         ],
       ),
     );
-    final cloud = DotIcon(
-      DotGlyphs.onbCloud,
-      color: c.accentInk,
-      size: OnbSize.syncIcon,
-    );
-    final signIn = FilledButton.tonal(
-      onPressed: () => _leave(signIn: true),
+    final icon = DotIcon(w.glyph, color: c.accentInk, size: OnbSize.syncIcon);
+    final act = FilledButton.tonal(
+      onPressed: () => _leave(act: true),
       style: FilledButton.styleFrom(
         backgroundColor: c.accentTint,
         foregroundColor: c.accentInk,
@@ -111,11 +120,11 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
         padding: const EdgeInsets.symmetric(horizontal: OnbSize.syncButtonPad),
         shape: const StadiumBorder(),
       ),
-      child: Text(l10n.firstSyncSignIn),
+      child: Text(w.action),
     );
     final close = IconButton(
       onPressed: _leave,
-      tooltip: l10n.firstSyncDismiss,
+      tooltip: w.dismissLabel ?? context.l10n.promptNotNow,
       constraints: const BoxConstraints.tightFor(
         width: OnbSize.syncClose,
         height: OnbSize.syncClose,
@@ -127,10 +136,7 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
       ),
     );
     if (!large) {
-      return Row(
-        spacing: OnbSize.syncGap,
-        children: [cloud, words, signIn, close],
-      );
+      return Row(spacing: OnbSize.syncGap, children: [icon, words, act, close]);
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -140,9 +146,9 @@ class _FirstSyncCardState extends ConsumerState<FirstSyncCard> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: OnbSize.syncGap,
-          children: [cloud, words, close],
+          children: [icon, words, close],
         ),
-        signIn,
+        act,
       ],
     );
   }

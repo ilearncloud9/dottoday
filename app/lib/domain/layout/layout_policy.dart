@@ -176,5 +176,7 @@ final class LayoutPolicy {
     FeatureId.searchOrRun: FeatureVisibility.simplified,
     // M20.11 part 5 (ED-490): minimal keeps its one reveal hint a day.
     FeatureId.firstToday: FeatureVisibility.hidden,
+    // M20.11 part 6 (ED-491): Less already is simpler; its one hint a day.
+    FeatureId.laterCards: FeatureVisibility.hidden,
   };
 }

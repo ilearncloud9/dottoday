@@ -3,8 +3,10 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/onboarding/first_today_store.dart';
+import 'package:dottoday/data/onboarding/later_cards_store.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
+import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/features/timeline/today_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +43,9 @@ Future<void> pumpToday(
   Set<String> readOnlyCalendarIds = const {},
   LearningMetaState learningMeta = const LearningMetaState(),
   FirstTodayState firstToday = const FirstTodayState(),
+  LaterCardsState laterCards = const LaterCardsState(),
+  List<Series> series = const [],
+  DateTime? now,
   bool settle = true,
 }) async {
   tester.view
@@ -102,7 +107,7 @@ Future<void> pumpToday(
     ProviderScope(
       overrides: timelineOverrides(
         readOnlyCalendarIds: readOnlyCalendarIds,
-        now: todayTestNow,
+        now: now ?? todayTestNow,
         occurrences:
             repo ??
             FakeOccurrenceRepository(rows ?? demoDayRows(todayTestDate)),
@@ -110,6 +115,8 @@ Future<void> pumpToday(
         minuteTicks: ticks,
         learningMeta: learningMeta,
         firstToday: firstToday,
+        laterCards: laterCards,
+        series: series,
       ),
       child: MaterialApp.router(
         theme: DotTheme.light(),

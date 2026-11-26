@@ -144,6 +144,7 @@ const reach = <FeatureId, Reach>{
   ),
   // The first Today's hint and sync card: on Today once Full is back.
   FeatureId.firstToday: (from: More.showEverything, taps: 0, route: '/today'),
+  FeatureId.laterCards: (from: More.showEverything, taps: 0, route: '/today'),
 };
 
 void main() {

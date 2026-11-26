@@ -25,6 +25,7 @@ import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/first_today_store.dart';
+import 'package:dottoday/data/onboarding/later_cards_store.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -501,6 +502,7 @@ List<Override> timelineOverrides({
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
   WriteFault? writeFault,
   FirstTodayState firstToday = const FirstTodayState(),
+  LaterCardsState laterCards = const LaterCardsState(),
   List<Routine> routines = const [],
   FakeRevealHintRepository? revealHints,
   DateTime? alarmTierGainedAt,
@@ -619,6 +621,8 @@ List<Override> timelineOverrides({
     dayColumnHiddenProvider.overrideWith(MemoryDayColumnHidden.new),
     // The first Today after onboarding (M20.11 part 5): none by default.
     firstTodayProvider.overrideWith(() => MemoryFirstToday(firstToday)),
+    // Later, when it helps (M20.11 part 6): none by default.
+    laterCardsProvider.overrideWith(() => MemoryLaterCards(laterCards)),
   ];
 }
 
@@ -1037,3 +1041,7 @@ final class FakeDeviceRepository implements DeviceRepository {
     _changes.add(null);
   }
 }
+
+/// The fake undo service of [c], to read what was written.
+FakeUndoService writesOf(ProviderContainer c) =>
+    c.read(undoServiceProvider) as FakeUndoService;

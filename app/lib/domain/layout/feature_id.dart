@@ -137,6 +137,9 @@ enum FeatureId {
   searchOrRun('Search or run (⌘K / Ctrl K, `k` on web; Mac and web)'),
   firstToday(
     'First Today after onboarding: rows rise in, the done-circle hint, Sign in to sync card',
+  ),
+  laterCards(
+    'Later, when it helps: Want it simpler?, Make it a habit, Close the day, Sign in to sync again',
   );
 
   const FeatureId(this.docRow);

@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/onboarding/later_cards_store.dart';
 import 'package:dottoday/data/onboarding/onboarding_actions.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -154,6 +155,9 @@ class _FillsStepState extends ConsumerState<FillsStep>
       return;
     }
     ref.read(fillsDraftProvider.notifier).saved(picked.map((f) => f.id));
+    unawaited(
+      ref.read(laterCardsProvider.notifier).addHabits(picked.map((f) => f.id)),
+    );
     widget.onNext();
   }
 

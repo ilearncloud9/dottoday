@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/onboarding/first_today_store.dart';
+import 'package:dottoday/data/onboarding/later_cards_store.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/flow/onb_nav.dart';
@@ -63,6 +65,10 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
     final router = ref.read(routerProvider);
     // You're in (part 5, ED-490): the first Today's rise, hint and card.
     await ref.read(firstTodayProvider.notifier).begin();
+    // Later, when it helps (part 6, ED-491) counts from here.
+    await ref
+        .read(laterCardsProvider.notifier)
+        .begin(ref.read(clockProvider).nowUtc());
     await _store.finish();
     router.go(AppRoutes.today);
   }

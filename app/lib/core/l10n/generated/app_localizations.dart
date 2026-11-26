@@ -5670,6 +5670,72 @@ abstract class AppLocalizations {
   /// **'Dismiss sign in to sync'**
   String get firstSyncDismiss;
 
+  /// Later card, day 2 on open (ED-491).
+  ///
+  /// In en, this message translates to:
+  /// **'Want it simpler?'**
+  String get laterSimplerTitle;
+
+  /// Under "Want it simpler?".
+  ///
+  /// In en, this message translates to:
+  /// **'Try Less: just the next dot. One tap to switch back.'**
+  String get laterSimplerBody;
+
+  /// Switches to the Less (Minimal) layout.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Less'**
+  String get laterSimplerAction;
+
+  /// Later card after three of a pick's days are done (ED-491).
+  ///
+  /// In en, this message translates to:
+  /// **'Make it a habit'**
+  String get laterHabitTitle;
+
+  /// Opens the proposal sheet for the new days.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get laterHabitAction;
+
+  /// Subtitle of the Make it a habit proposal sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'It suggests; you decide.'**
+  String get laterHabitDecide;
+
+  /// Later card at the first Wind Down (ED-491).
+  ///
+  /// In en, this message translates to:
+  /// **'Close the day'**
+  String get laterCloseTitle;
+
+  /// Under "Close the day".
+  ///
+  /// In en, this message translates to:
+  /// **'Move what’s left to tomorrow, kindly.'**
+  String get laterCloseBody;
+
+  /// Make it a habit: the days it was done on, e.g. "Mon, Wed, Fri".
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat {title} every {days}?'**
+  String laterHabitBody(String title, String days);
+
+  /// The proposal's change line.
+  ///
+  /// In en, this message translates to:
+  /// **'Most days → every {days}'**
+  String laterHabitChange(String days);
+
+  /// Snackbar after accepting, with Undo.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} repeats every {days}'**
+  String laterHabitDone(String title, String days);
+
   /// Onboarding O3: shown when five are picked.
   ///
   /// In en, this message translates to:

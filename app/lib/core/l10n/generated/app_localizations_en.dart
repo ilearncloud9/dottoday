@@ -3772,6 +3772,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firstSyncDismiss => 'Dismiss sign in to sync';
 
   @override
+  String get laterSimplerTitle => 'Want it simpler?';
+
+  @override
+  String get laterSimplerBody =>
+      'Try Less: just the next dot. One tap to switch back.';
+
+  @override
+  String get laterSimplerAction => 'Try Less';
+
+  @override
+  String get laterHabitTitle => 'Make it a habit';
+
+  @override
+  String get laterHabitAction => 'Repeat';
+
+  @override
+  String get laterHabitDecide => 'It suggests; you decide.';
+
+  @override
+  String get laterCloseTitle => 'Close the day';
+
+  @override
+  String get laterCloseBody => 'Move what’s left to tomorrow, kindly.';
+
+  @override
+  String laterHabitBody(String title, String days) {
+    return 'Repeat $title every $days?';
+  }
+
+  @override
+  String laterHabitChange(String days) {
+    return 'Most days → every $days';
+  }
+
+  @override
+  String laterHabitDone(String title, String days) {
+    return '$title repeats every $days';
+  }
+
+  @override
   String get onboardingHabitsMax => 'Five is plenty to start with.';
 
   @override

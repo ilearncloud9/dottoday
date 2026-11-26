@@ -140,6 +140,9 @@ abstract final class DotGlyphs {
   /// shows until its words name an icon.
   static final onbDot = DotGlyph(_c(12, 12, 4));
 
+  /// "Want it simpler?": just the next dot, in its ring (ED-491).
+  static final onbLess = DotGlyph('${_c(12, 12, 4)}${_c(12, 12, 9)}');
+
   /// The first Today's "Sign in to sync" cloud (prototype `cloud`, ED-490).
   static const onbCloud = DotGlyph(
     'M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.2 4.5 4.5 0 0 0 7 18z',

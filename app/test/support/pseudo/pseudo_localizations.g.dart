@@ -2980,6 +2980,41 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get firstSyncDismiss => pseudo(super.firstSyncDismiss);
 
   @override
+  String get laterSimplerTitle => pseudo(super.laterSimplerTitle);
+
+  @override
+  String get laterSimplerBody => pseudo(super.laterSimplerBody);
+
+  @override
+  String get laterSimplerAction => pseudo(super.laterSimplerAction);
+
+  @override
+  String get laterHabitTitle => pseudo(super.laterHabitTitle);
+
+  @override
+  String get laterHabitAction => pseudo(super.laterHabitAction);
+
+  @override
+  String get laterHabitDecide => pseudo(super.laterHabitDecide);
+
+  @override
+  String get laterCloseTitle => pseudo(super.laterCloseTitle);
+
+  @override
+  String get laterCloseBody => pseudo(super.laterCloseBody);
+
+  @override
+  String laterHabitBody(String title, String days) =>
+      pseudo(super.laterHabitBody(title, days));
+
+  @override
+  String laterHabitChange(String days) => pseudo(super.laterHabitChange(days));
+
+  @override
+  String laterHabitDone(String title, String days) =>
+      pseudo(super.laterHabitDone(title, days));
+
+  @override
   String get onboardingHabitsMax => pseudo(super.onboardingHabitsMax);
 
   @override

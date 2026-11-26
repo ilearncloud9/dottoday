@@ -1,4 +1,5 @@
 import 'package:dottoday/data/onboarding/first_today_store.dart';
+import 'package:dottoday/data/onboarding/later_cards_store.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,4 +53,40 @@ final class MemoryFirstToday extends FirstToday {
 
   @override
   Future<void> syncDone() async => state = AsyncData(_now.copy(sync: false));
+}
+
+/// The later cards' state in memory (M20.11 part 6), starting at
+/// [initial].
+final class MemoryLaterCards extends LaterCards {
+  MemoryLaterCards([this.initial = const LaterCardsState()]);
+
+  final LaterCardsState initial;
+
+  @override
+  Future<LaterCardsState> build() async => initial;
+
+  LaterCardsState get _now => state.value ?? initial;
+
+  @override
+  Future<void> begin(DateTime nowUtc) async => state = AsyncData(
+    LaterCardsState(onboardedUtc: nowUtc, habits: _now.habits),
+  );
+
+  @override
+  Future<void> addHabits(Iterable<String> ids) async =>
+      state = AsyncData(_now.copy(habits: {..._now.habits, ...ids}.toList()));
+
+  @override
+  Future<void> habitDone(String id) async =>
+      state = AsyncData(_now.copy(habitsOffered: {..._now.habitsOffered, id}));
+
+  @override
+  Future<void> simplerDone() async =>
+      state = AsyncData(_now.copy(simpler: true));
+
+  @override
+  Future<void> closeDone() async => state = AsyncData(_now.copy(close: true));
+
+  @override
+  Future<void> syncDone() async => state = AsyncData(_now.copy(sync: true));
 }
