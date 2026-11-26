@@ -63,6 +63,13 @@ abstract final class DotGlyphs {
     '6.5 17zM12 10.5v4.5M9.8 12.8l2.2 2.2 2.2-2.2',
   );
 
+  /// Offline (E-G4-7 B2): the cloud with a stroke through it, in the sync
+  /// button and the offline banner.
+  static const cloudOff = DotGlyph(
+    'M6.5 17h10.4a3.8 3.8 0 0 0 .4-7.6A5.5 5.5 0 0 0 6.9 8.3 4.4 4.4 0 0 0 '
+    '6.5 17zM4 4l16 16',
+  );
+
   /// Sync in Today's top row (E-Phones): two arrows round a circle.
   static const sync = DotGlyph(
     'M20 11a8 8 0 0 0-14.3-4.9L4 8M4 3.5V8h4.5'

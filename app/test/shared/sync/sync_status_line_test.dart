@@ -1,6 +1,10 @@
 import 'package:dottoday/core/l10n/generated/app_localizations_en.dart';
+import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // The status line's words (docs/09 M6.3, R-08).
@@ -46,5 +50,35 @@ void main() {
       line(const SyncStatus(state: SyncState.synced, conflicts: [c])),
       '1 change needs you',
     );
+  });
+
+  // The Mac and web line opens Sync pointing at itself (E-G4-7 B5, ED-481).
+  testWidgets('a tap asks for Sync anchored to the line', (tester) async {
+    ShowSyncIntent? asked;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: DotTheme.light(),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: Actions(
+            actions: {
+              ShowSyncIntent: CallbackAction<ShowSyncIntent>(
+                onInvoke: (i) => asked = i,
+              ),
+            },
+            child: Center(
+              child: SyncStatusLine(
+                status: const SyncStatus(state: SyncState.offline),
+                now: DateTime.utc(2026, 10, 23, 12),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byType(SyncStatusLine));
+    expect(asked?.anchor, isNotNull);
+    expect(asked!.anchor!.size, tester.getSize(find.byType(SyncStatusLine)));
   });
 }

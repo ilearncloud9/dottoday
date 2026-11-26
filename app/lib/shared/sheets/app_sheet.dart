@@ -42,6 +42,7 @@ Future<T?> showAppSheet<T>({
   String? title,
   bool fullHeight = false,
   bool scrolls = true,
+  bool done = false,
   double maxWidth = appSheetMaxWidth,
 }) {
   final size = MediaQuery.sizeOf(context);
@@ -63,6 +64,7 @@ Future<T?> showAppSheet<T>({
     (false, _) => AppSheet(
       title: title,
       scrolls: scrolls,
+      done: done,
       child: Builder(builder: builder),
     ),
     (true, false) => FractionallySizedBox(
@@ -120,10 +122,14 @@ class AppSheet extends StatelessWidget {
     required this.child,
     this.title,
     this.scrolls = true,
+    this.done = false,
     super.key,
   });
 
   final String? title;
+
+  /// "Done" instead of the cross in the title row ([SheetHeader.done]).
+  final bool done;
   final Widget child;
 
   /// False for a body that scrolls itself and pins a foot under it
@@ -161,6 +167,7 @@ class AppSheet extends StatelessWidget {
                 padding: const EdgeInsetsDirectional.only(bottom: DotSpace.m),
                 child: SheetHeader(
                   title: title,
+                  done: done,
                   onClose: () => Navigator.of(context).maybePop(),
                 ),
               ),

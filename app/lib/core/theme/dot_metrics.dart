@@ -378,6 +378,9 @@ abstract final class DotSize {
   /// 7 out, the title's ring 34, a pointer's duration pill 26 tall.
   static const double addPopover = 404;
 
+  /// The Sync popover over the sidebar line (E-G4-7 B5): 360.
+  static const double syncPopover = 360;
+
   /// Go to date's popover (E-R2-36, ED-342): the month under the date
   /// button, as wide as its board frame.
   static const double goToDate = 360;

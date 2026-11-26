@@ -188,7 +188,7 @@ Map<Type, Action<Intent>> _intents(GoRouter router) => {
     onInvoke: (i) => _schedule(router, i.occurrenceId),
   ),
   ShowSyncIntent: CallbackAction<ShowSyncIntent>(
-    onInvoke: (_) => _sync(router),
+    onInvoke: (i) => _sync(router, i.anchor),
   ),
   BreakDownIntent: CallbackAction<BreakDownIntent>(
     onInvoke: (i) => unawaited(_breakDown(router, i.occurrenceId)),
@@ -273,10 +273,13 @@ void _schedule(GoRouter router, String id) {
   unawaited(scheduleFromAnywhere(context, id));
 }
 
-/// Settings › Sync: the Sync sheet on the root overlay (M3f.8).
-void _sync(GoRouter router) {
+/// Settings › Sync: the Sync sheet on the root overlay (M3f.8); from the
+/// sidebar line, a popover pointing at it (E-G4-7 B5).
+void _sync(GoRouter router, Rect? anchor) {
   final context =
       router.routerDelegate.navigatorKey.currentState?.overlay?.context;
   if (context == null) return;
-  unawaited(showSyncSheet(context));
+  unawaited(
+    anchor == null ? showSyncSheet(context) : showSyncPopover(context, anchor),
+  );
 }

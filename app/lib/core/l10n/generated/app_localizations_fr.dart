@@ -8275,6 +8275,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get syncNowNote =>
+      'Synchroniser renvoie les mêmes modifications enregistrées. Cela ne peut pas créer une deuxième copie d’une tâche.';
+
+  @override
+  String get syncLineBrowser => 'Enregistré dans ce navigateur';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override

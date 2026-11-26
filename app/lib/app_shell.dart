@@ -17,7 +17,6 @@ import 'package:dottoday/features/onboarding/install_banner.dart';
 import 'package:dottoday/features/proposals/proposal_host.dart';
 import 'package:dottoday/features/routines/routine_drop_host.dart';
 import 'package:dottoday/features/settings/whats_new_banner.dart';
-import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/timeline/brain_dump/brain_dump_host.dart';
 import 'package:dottoday/features/timeline/editor/editor_panel.dart';
 import 'package:dottoday/features/timeline/widgets/shell_drops.dart';
@@ -25,6 +24,7 @@ import 'package:dottoday/features/timeline/widgets/zone_banner.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_sidebar.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/skip_link.dart';
+import 'package:dottoday/shared/sync/sync_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -125,7 +125,8 @@ class AppShell extends ConsumerWidget {
 
   Widget _belowAlert(WidgetRef ref, FocusNode content, Widget shell) => Column(
     children: [
-      const SyncBanner(),
+      // Today shows it under its week strip (E-G4-7 B2).
+      if (this.shell.currentIndex != ShellTab.today.index) const SyncBanner(),
       // Edits that didn't reach their calendar (M7.3).
       const WriteBackBanner(),
       // The device moved zone: keep times or shift (M5.9).

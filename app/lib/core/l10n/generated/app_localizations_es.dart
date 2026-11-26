@@ -8258,6 +8258,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get syncNowNote =>
+      'Sincronizar ahora vuelve a enviar los mismos cambios guardados. No puede crear una segunda copia de una tarea.';
+
+  @override
+  String get syncLineBrowser => 'Guardado en este navegador';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

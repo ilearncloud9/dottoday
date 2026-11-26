@@ -5,6 +5,7 @@ import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
+import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -275,7 +276,7 @@ class _Section extends StatelessWidget {
   }
 }
 
-/// "Synced · 10:42" at the sidebar's foot (R-08).
+/// The sync line at the sidebar's foot (R-08; E-G4-7 B5, B6).
 class _SyncFoot extends ConsumerWidget {
   const _SyncFoot({required this.now});
 
@@ -289,7 +290,11 @@ class _SyncFoot extends ConsumerWidget {
         horizontal: DotSpace.s,
         vertical: DotSpace.s,
       ),
-      child: SyncStatusLine(status: status, now: now),
+      child: SyncStatusLine(
+        status: status,
+        now: now,
+        browser: ref.watch(inBrowserProvider),
+      ),
     );
   }
 }

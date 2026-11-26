@@ -5941,6 +5941,22 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; recovery goldens for all six board frames (new: asked once more, the kept file, no answer), light and dark, phone and wide; all tests pass but the Supabase ones (Docker off; this part doesn't touch sync); the string-literal policy test caught the split marker, now marked as never shown.
 - **Not run:** on a device (the screen needs a database that can't be opened), VoiceOver.
 
+### ED-480 · M20.10 part 4 split in two: the look, then the behaviour
+- **Date:** 2026-11-26. **Owner:** offered 4a phones / 4b Mac, web and tablets / 4c loading and error states; "Change the split", then "Two: looks, then behaviour".
+- **4a · the look (E-G4-7 B, E-R2-8):** the header sync button (a ring while syncing, the crossed cloud offline, the badge for changes waiting), the offline banner as drawn, the Sync sheet (B4: Done, the warning icon, a filled Sync now, the no-duplicate note), the Mac sidebar line and its Sync popover (B5), the web's "Saved in this browser" (B6), tablets (E-R2-8).
+- **4b · the behaviour (E-G4-7 A):** the 300 ms before the loading dots (A1), the first sync over the timeline with "Tasks appear as they arrive" (A2), the assertive save error while the editor is open (A7), a Session ended state with its banner and Sign in… (A10, CR-158), and Sync paused only for a fast clock.
+- **Already as drawn:** A6 (This didn't load · Try again), A9 (the web's offline page). The web's "open in another tab" follows E-R2-21 §6 (part 3), approved after E-G4-7.
+
+### ED-481 · M20.10 part 4a: the look of sync status as E-G4-7 B and E-R2-8 draw it
+- **Date:** 2026-11-26. **Owner:** "Start part 4", the split ED-480. Review page: https://claude.ai/artifact/XzArYLtWMjkaHe7Z7MiF7N. **Approved 2026-11-26: "Approve part 4a".** E-R2-32 has nothing on sync; every state is drawn, so nothing was asked.
+- **Header sync button (B2, B3, A3):** the crossed cloud while offline (new glyph `cloudOff`); a still accent ring while syncing (no spinner, so nothing for Reduce Motion); at its top the changes waiting to sync ("3") or "!" when sync failed (B legend); the conflict count stays below it, as E-Phones draws.
+- **Offline banner (B2):** a rounded strip in the sunk fill with the crossed cloud and "Offline · everything still works here", or the warning and "1 change needs you" with Review; under the week strip on Today, at the top of the other screens; none on expanded windows, where the sidebar line is always in view (E-R2-8). It moved to `shared/sync` (Today shows it; features never import each other) and opens Sync by the app's intent.
+- **Sync sheet (B4):** Done in place of the cross (a `done` option on the shared sheet), the state line with its icon (check, sync, crossed cloud, warning), a filled Sync now (off while syncing or offline, B5), and the new note "Sync now sends the same saved changes again. It can't create a second copy of a task." (en, de, es, fr).
+- **Mac and web (B5, B6):** the sidebar line with its icon instead of a coloured dot; a tap opens Sync as a popover pointing at it (`ShowSyncIntent(anchor:)`, 360 wide); the web's offline line reads "Saved in this browser · 2 changes waiting to sync" (new string, from `inBrowserProvider`).
+- **Tablets (E-R2-8):** expanded: the same sidebar line, a popover on iPad, a side sheet on Android tablets. E-R2-8 draws a standard (non-modal) side sheet; the app has the modal one, used here. Medium: the phone banner and button.
+- **Checks:** format and analyze clean; all tests pass but the Supabase ones (Docker off); only the sync goldens changed (the banner, the sheet, the line); the line's golden now shows the button's six states and the web line, with the app's fonts; new test: a tap on the line asks for Sync anchored to it.
+- **Not run:** a device, the popover on screen (only its request is tested), VoiceOver.
+
 ---
 
 ## Pending owner answers

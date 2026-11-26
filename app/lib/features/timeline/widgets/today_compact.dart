@@ -17,6 +17,7 @@ import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
+import 'package:dottoday/shared/sync/sync_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -129,6 +130,8 @@ class TodayCompact extends ConsumerWidget {
                   onSelect: onSelect,
                 ),
         ),
+        // Offline or changes that need you, under the strip (E-G4-7 B2).
+        const SyncBanner(),
         AllDayChips(date: shown),
         TodayPrompt(
           date: shown,

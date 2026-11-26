@@ -6594,6 +6594,12 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.trashRowDetail(deleted, left));
 
   @override
+  String get syncNowNote => pseudo(super.syncNowNote);
+
+  @override
+  String get syncLineBrowser => pseudo(super.syncLineBrowser);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

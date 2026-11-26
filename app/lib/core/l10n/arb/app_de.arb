@@ -2066,6 +2066,8 @@
   "trashDeletedOn": "Gelöscht am {date}",
   "trashDaysLeft": "{count, plural, =1{noch 1 Tag} other{noch {count} Tage}}",
   "trashRowDetail": "{deleted} · {left}",
+  "syncNowNote": "„Jetzt synchronisieren“ sendet dieselben gespeicherten Änderungen erneut. Dabei entsteht nie eine zweite Kopie einer Aufgabe.",
+  "syncLineBrowser": "In diesem Browser gespeichert",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

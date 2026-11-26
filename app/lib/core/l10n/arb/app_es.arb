@@ -2066,6 +2066,8 @@
   "trashDeletedOn": "Eliminada el {date}",
   "trashDaysLeft": "{count, plural, =1{queda 1 día} other{quedan {count} días}}",
   "trashRowDetail": "{deleted} · {left}",
+  "syncNowNote": "Sincronizar ahora vuelve a enviar los mismos cambios guardados. No puede crear una segunda copia de una tarea.",
+  "syncLineBrowser": "Guardado en este navegador",
   "taskIconCategoryPlanning": "Planificación y ritmo",
   "taskIconCategoryHealth": "Salud y cuerpo",
   "taskIconCategoryFitness": "Fitness y deporte",

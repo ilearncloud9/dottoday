@@ -12498,6 +12498,18 @@ abstract class AppLocalizations {
   /// **'{deleted} · {left}'**
   String trashRowDetail(String deleted, String left);
 
+  /// Sync sheet, under Sync now (E-G4-7 B4): why resending is safe (same ids, per-field clocks).
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now sends the same saved changes again. It can\'t create a second copy of a task.'**
+  String get syncNowNote;
+
+  /// Web sidebar line while offline (E-G4-7 B6): the web says browser, not device.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in this browser'**
+  String get syncLineBrowser;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
+import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
-import 'package:dottoday/features/sync_status/sync_banner.dart';
 import 'package:dottoday/features/sync_status/sync_sheet.dart';
+import 'package:dottoday/shared/sync/sync_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,18 +42,31 @@ Future<FakeSyncService> _pump(WidgetTester tester, SyncStatus status) async {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: Column(
-            children: [
-              const SyncBanner(),
-              Expanded(
-                child: Builder(
-                  builder: (context) => TextButton(
-                    onPressed: () => unawaited(showSyncSheet(context)),
-                    child: const Text('open'), // l10n-ignore: test fixture
-                  ),
+          // As the app root does: Review asks for the sheet by intent.
+          body: Builder(
+            builder: (context) => Actions(
+              actions: {
+                ShowSyncIntent: CallbackAction<ShowSyncIntent>(
+                  onInvoke: (_) {
+                    unawaited(showSyncSheet(context));
+                    return null;
+                  },
                 ),
+              },
+              child: Column(
+                children: [
+                  const SyncBanner(),
+                  Expanded(
+                    child: Builder(
+                      builder: (context) => TextButton(
+                        onPressed: () => unawaited(showSyncSheet(context)),
+                        child: const Text('open'), // l10n-ignore: test fixture
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

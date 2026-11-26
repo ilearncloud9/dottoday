@@ -3,7 +3,8 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A sheet's title row (E-Phones-2): the title, an optional [tag] beside
-/// it, an optional [subtitle] under it, and Close.
+/// it, an optional [subtitle] under it, and Close; with [done], "Done" in
+/// the accent instead, as E-G4-7 B4 draws the Sync sheet (ED-481).
 ///
 /// iPhone: 800 24 Manrope and a 32 pt grey circle with the cross, in a
 /// 44 pt hit area. Android: 400 22 in the system face and a plain cross in
@@ -14,8 +15,12 @@ class SheetHeader extends StatelessWidget {
     required this.onClose,
     this.subtitle,
     this.tag,
+    this.done = false,
     super.key,
   });
+
+  /// "Done" in place of the cross.
+  final bool done;
 
   final String title;
   final String? subtitle;
@@ -58,7 +63,16 @@ class SheetHeader extends StatelessWidget {
             ],
           ),
         ),
-        SheetCloseButton(onPressed: onClose),
+        if (done)
+          TextButton(
+            onPressed: onClose,
+            style: TextButton.styleFrom(
+              minimumSize: const Size(DotTouch.min, DotTouch.min),
+            ),
+            child: Text(context.l10n.sheetDone),
+          )
+        else
+          SheetCloseButton(onPressed: onClose),
       ],
     );
   }

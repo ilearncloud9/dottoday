@@ -137,9 +137,14 @@ final class TrashTaskIntent extends Intent {
 }
 
 /// Open the Sync sheet (Settings › DATA › Sync, docs/09 M3f.8), handled at
-/// the app root so Settings needn't import the sync feature.
+/// the app root so Settings needn't import the sync feature. With
+/// [anchor] (the Mac and web sidebar line, E-G4-7 B5, ED-481) it opens as
+/// a popover pointing at it.
 final class ShowSyncIntent extends Intent {
-  const ShowSyncIntent();
+  const ShowSyncIntent({this.anchor});
+
+  /// The line's rectangle in global coordinates.
+  final Rect? anchor;
 }
 
 /// The single table of keyboard bindings (docs/07 macOS menu, 02 F2).

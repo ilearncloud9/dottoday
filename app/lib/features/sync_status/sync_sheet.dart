@@ -10,7 +10,9 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/sync_status/conflict_card.dart';
+import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
+import 'package:dottoday/shared/sheets/side_sheet.dart';
 import 'package:dottoday/shared/sync/clock_skew_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,14 +20,47 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-/// The Sync sheet (docs/09 M3f.8, R-08): where sync stands, when it last
-/// ran, what is waiting, Sync now, and each conflict with "Keep mine /
-/// Keep theirs". With no account, it says so and offers Sign in.
+/// The Sync sheet (docs/09 M3f.8, R-08; E-G4-7 B4, M20.10 part 4a,
+/// ED-481): where sync stands with its icon, when it last ran and what is
+/// waiting, a filled Sync now with why resending is safe, and each
+/// conflict with "Keep mine / Keep theirs"; Done closes it. With no
+/// account, it says so and offers Sign in.
 Future<void> showSyncSheet(BuildContext context) => showAppSheet<void>(
   context: context,
   title: context.l10n.syncTitle,
+  done: true,
   builder: (_) => const _SyncBody(),
 );
+
+/// The same content from the sidebar line at [anchor] (ED-481): a popover
+/// pointing at it on the Mac, the web and iPad (E-G4-7 B5, E-R2-8); a side
+/// sheet on Android tablets (E-R2-8 draws a standard one; this is the
+/// modal side sheet the app has).
+Future<void> showSyncPopover(BuildContext context, Rect anchor) {
+  // The Android app's container (docs/10 §4: containers may differ by
+  // platform, layout never does), as Add decides it.
+  if (!webChrome(context) &&
+      Theme.of(context).platform == TargetPlatform.android) {
+    return showModalSideSheet<void>(
+      context: context,
+      builder: (_) => AppSheet(
+        title: context.l10n.syncTitle,
+        done: true,
+        child: const _SyncBody(),
+      ),
+    );
+  }
+  return showAnchoredPopover<void>(
+    context: context,
+    anchor: anchor,
+    width: DotSize.syncPopover,
+    builder: (_) => AppSheet(
+      title: context.l10n.syncTitle,
+      done: true,
+      child: const _SyncBody(),
+    ),
+  );
+}
 
 class _SyncBody extends ConsumerWidget {
   const _SyncBody();
@@ -41,7 +76,23 @@ class _SyncBody extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Text(_stateLine(l10n, status.state), style: t.styles.body),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: DotSpace.s,
+          children: [
+            DotIcon(
+              _stateGlyph(status.state),
+              color: t.colors.text,
+              size: DotSize.rowIcon,
+            ),
+            Expanded(
+              child: Text(
+                _stateLine(l10n, status.state),
+                style: t.styles.rowTitle,
+              ),
+            ),
+          ],
+        ),
         Text(
           l10n.syncSummary(
             _lastSynced(context, ref, status.lastSyncedUtc),
@@ -54,6 +105,7 @@ class _SyncBody extends ConsumerWidget {
           if (skew.fast) Text(l10n.syncClockWaiting, style: t.styles.rowMeta),
         ],
         _syncNowButton(context, ref, status.state),
+        Text(l10n.syncNowNote, style: t.styles.rowMeta),
         if (status.conflicts.isNotEmpty) ...[
           const SizedBox(height: DotSpace.s),
           Text(l10n.syncConflicts.toUpperCase(), style: t.styles.caption),
@@ -67,13 +119,24 @@ class _SyncBody extends ConsumerWidget {
   Widget _syncNowButton(BuildContext context, WidgetRef ref, SyncState state) =>
       Align(
         alignment: AlignmentDirectional.centerStart,
-        child: OutlinedButton(
-          onPressed: state == SyncState.syncing
+        // Filled, as B4 draws it; off while it runs or there is no
+        // connection (B5: dimmed, and screen readers hear it is off).
+        child: FilledButton(
+          onPressed: state == SyncState.syncing || state == SyncState.offline
               ? null
               : () => unawaited(_syncNow(context, ref)),
           child: Text(context.l10n.syncNow),
         ),
       );
+
+  /// The state line's icon (E-G4-7 B legend): icon and words, never colour
+  /// alone.
+  static DotGlyph _stateGlyph(SyncState state) => switch (state) {
+    SyncState.synced || SyncState.localOnly => DotGlyphs.check,
+    SyncState.syncing => DotGlyphs.sync,
+    SyncState.offline => DotGlyphs.cloudOff,
+    SyncState.error => DotGlyphs.warning,
+  };
 
   static String _stateLine(AppLocalizations l10n, SyncState state) =>
       switch (state) {

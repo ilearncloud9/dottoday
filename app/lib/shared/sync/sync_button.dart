@@ -6,10 +6,13 @@ import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// Sync in Today's top row (E-Phones; rules §4 "Sync status"): the glyph,
-/// a teal dot while synced, and a badge counting the changes that need
-/// you. Its label says the state in words, never the colour alone
-/// (R-08, rules §12.4); a tap opens the Sync sheet. A 48 target.
+/// Sync in Today's top row (E-Phones; rules §4 "Sync status"; E-G4-7 B,
+/// M20.10 part 4a, ED-481): the glyph, the crossed cloud while offline
+/// (B2), a ring while syncing (A3), a teal dot while synced; at the top
+/// the changes waiting to sync or "!" when sync failed (B3), and below
+/// the changes that need you (E-Phones). Its label says the state in
+/// words, never the colour alone (R-08, rules §12.4); a tap opens the
+/// Sync sheet. A 48 target.
 class SyncButton extends StatelessWidget {
   const SyncButton({required this.status, required this.now, super.key});
 
@@ -27,6 +30,17 @@ class SyncButton extends StatelessWidget {
     final glyph = material ? DotSize.headerGlyphAndroid : DotSize.headerGlyph;
     final conflicts = status.conflicts.length;
     final synced = status.state == SyncState.synced && status.conflicts.isEmpty;
+    final offline = status.state == SyncState.offline;
+    // The top badge (E-G4-7 B legend): "!" when sync failed, else the
+    // changes still waiting for the server.
+    final String? top = switch (status.state) {
+      SyncState.error => '!', // l10n-ignore: a symbol, not words
+      SyncState.localOnly => null,
+      _ when status.pending > 0 => NumberFormat.decimalPattern(
+        Localizations.localeOf(context).toLanguageTag(),
+      ).format(status.pending),
+      _ => null,
+    };
     return Semantics(
       button: true,
       label: l10n.syncTitle,
@@ -43,11 +57,31 @@ class SyncButton extends StatelessWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
+              if (status.state == SyncState.syncing)
+                // A still ring, not a spinner: calm, and nothing to stop
+                // for Reduce Motion (E-G4-7 A3).
+                Container(
+                  width: glyph + 2 * DotSpace.s,
+                  height: glyph + 2 * DotSpace.s,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: c.accent,
+                      width: DotSize.syncDotRing,
+                    ),
+                  ),
+                ),
               DotIcon(
-                DotGlyphs.sync,
+                offline ? DotGlyphs.cloudOff : DotGlyphs.sync,
                 color: material ? c.ink2 : c.secondary,
                 size: glyph,
               ),
+              if (top != null)
+                PositionedDirectional(
+                  bottom: DotTouch.android / 2 + DotSpace.xs,
+                  start: DotTouch.android / 2 + DotSpace.xs,
+                  child: _Badge(text: top),
+                ),
               if (synced)
                 PositionedDirectional(
                   top: DotTouch.android / 2,
@@ -59,7 +93,11 @@ class SyncButton extends StatelessWidget {
                 PositionedDirectional(
                   top: DotTouch.android / 2 + DotSpace.nowCard,
                   start: DotTouch.android / 2 + DotSpace.nowCard,
-                  child: _Badge(count: conflicts),
+                  child: _Badge(
+                    text: NumberFormat.decimalPattern(
+                      Localizations.localeOf(context).toLanguageTag(),
+                    ).format(conflicts),
+                  ),
                 ),
             ],
           ),
@@ -91,9 +129,9 @@ class _Dot extends StatelessWidget {
 }
 
 class _Badge extends StatelessWidget {
-  const _Badge({required this.count});
+  const _Badge({required this.text});
 
-  final int count;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -110,9 +148,7 @@ class _Badge extends StatelessWidget {
         borderRadius: BorderRadius.circular(DotSize.badge / 2),
       ),
       child: Text(
-        NumberFormat.decimalPattern(
-          Localizations.localeOf(context).toLanguageTag(),
-        ).format(count),
+        text,
         style: t.styles.badge.copyWith(color: t.colors.surface),
       ),
     );

@@ -8714,6 +8714,14 @@
       }
     }
   },
+  "syncNowNote": "Sync now sends the same saved changes again. It can't create a second copy of a task.",
+  "@syncNowNote": {
+    "description": "Sync sheet, under Sync now (E-G4-7 B4): why resending is safe (same ids, per-field clocks)."
+  },
+  "syncLineBrowser": "Saved in this browser",
+  "@syncLineBrowser": {
+    "description": "Web sidebar line while offline (E-G4-7 B6): the web says browser, not device."
+  },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

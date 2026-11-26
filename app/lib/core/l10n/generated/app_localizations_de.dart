@@ -8264,6 +8264,13 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get syncNowNote =>
+      '„Jetzt synchronisieren“ sendet dieselben gespeicherten Änderungen erneut. Dabei entsteht nie eine zweite Kopie einer Aufgabe.';
+
+  @override
+  String get syncLineBrowser => 'In diesem Browser gespeichert';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

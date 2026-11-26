@@ -8216,6 +8216,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get syncNowNote =>
+      'Sync now sends the same saved changes again. It can\'t create a second copy of a task.';
+
+  @override
+  String get syncLineBrowser => 'Saved in this browser';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override
