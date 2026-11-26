@@ -215,6 +215,10 @@ abstract final class DotGlyphs {
   /// The Android rail's menu: opens the drawer (E-R2-1).
   static const menu = DotGlyph('M4 7h16M4 12h16M4 17h16');
 
+  /// A file with its folded corner: each file of a multi-file backup
+  /// (ED-477).
+  static const file = DotGlyph('M7 3h7l5 5v13H7zM14 3v5h5');
+
   /// A bulleted list: Minimal Add's "Several lines?" hint (E-PhonesMinimal
   /// frame 3).
   static const list = DotGlyph(

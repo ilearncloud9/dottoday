@@ -4,6 +4,8 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/picked_import.dart';
+import 'package:dottoday/features/settings/widgets/set_file_rows.dart';
+import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,21 +60,16 @@ class _ImportSetSheetState extends ConsumerState<ImportSetSheet> {
           ),
         ),
         const SizedBox(height: DotSpace.s),
-        ListTile(
-          minTileHeight: DotTouch.android,
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.importAddFiles, style: t.styles.rowTitle),
-          enabled: !_picking,
-          onTap: () => unawaited(_add()),
+        // E-R2-21's sheet row, the tinted icon and a chevron (ED-477).
+        SettingsRow(
+          flush: true,
+          glyph: DotGlyphs.add,
+          tint: t.colors.accentInk,
+          title: l10n.importAddFiles,
+          onTap: _picking ? null : () => unawaited(_add()),
         ),
         if (_refused case final r?)
-          Semantics(
-            liveRegion: true,
-            child: Text(
-              pickRefusalText(l10n, r),
-              style: t.styles.body.copyWith(color: t.colors.muted),
-            ),
-          ),
+          SetNote(kind: SetNoteKind.plain, text: pickRefusalText(l10n, r)),
       ],
     );
   }

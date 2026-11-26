@@ -53,8 +53,8 @@ class ExportPage extends StatelessWidget {
               ExportFormat.json,
             ),
             format(
-              DotGlyphs.week,
-              TaskColor.sky,
+              DotGlyphs.menu,
+              TaskColor.indigo,
               l10n.exportCsv,
               l10n.exportCsvDetail,
               ExportFormat.csv,
@@ -135,8 +135,8 @@ class _ExportForm extends StatelessWidget {
                     ExportFormat.json,
                   ),
                   format(
-                    DotGlyphs.week,
-                    TaskColor.sky,
+                    DotGlyphs.menu,
+                    TaskColor.indigo,
                     l10n.exportCsv,
                     l10n.exportCsvDetail,
                     ExportFormat.csv,

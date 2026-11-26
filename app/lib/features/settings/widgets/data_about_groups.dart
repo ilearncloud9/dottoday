@@ -34,7 +34,7 @@ class DataGroup extends ConsumerWidget {
       list: true,
       children: [
         SettingsRow(
-          glyph: DotGlyphs.repeat,
+          glyph: DotGlyphs.sync,
           tint: t.colors.accentInk,
           title: l10n.settingsSync,
           value: _syncValue(l10n, sync),
@@ -43,7 +43,7 @@ class DataGroup extends ConsumerWidget {
         ),
         SettingsRow(
           glyph: DotGlyphs.calendar,
-          tint: t.tasks[TaskColor.sky].ink,
+          tint: t.tasks[TaskColor.indigo].ink,
           title: l10n.settingsCalendars,
           subtitle: l10n.settingsCalendarsDetail,
           onTap: () => _open(context, SettingsPage.calendars),

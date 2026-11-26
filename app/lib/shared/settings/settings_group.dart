@@ -179,8 +179,14 @@ class SettingsRow extends StatelessWidget {
     this.formButton,
     this.formReady,
     this.choiceHeaders,
+    this.flush = false,
     super.key,
   });
+
+  /// No side inset: the row sits flush with a sheet's title and text, as
+  /// E-R2-21's sheet rows do (the multi-file rows, ED-477), not inside a
+  /// group's card.
+  final bool flush;
 
   final DotGlyph glyph;
 
@@ -237,6 +243,10 @@ class SettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (settingsFormAt(context)) return _form(context);
+    // Only a value can stack under the title; without one the row needs no
+    // width, so it also lays out where its size is measured first (the
+    // multi-file rows inside Delete account's frame, ED-477).
+    if (value == null) return _build(context, double.infinity);
     return LayoutBuilder(
       builder: (context, box) => _build(context, box.maxWidth),
     );
@@ -354,8 +364,8 @@ class SettingsRow extends StatelessWidget {
     final row = ConstrainedBox(
       constraints: BoxConstraints(minHeight: settingsRowHeight(context)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: DotSpace.l,
+        padding: EdgeInsets.symmetric(
+          horizontal: flush ? 0 : DotSpace.l,
           vertical: DotSpace.s,
         ),
         child: Row(

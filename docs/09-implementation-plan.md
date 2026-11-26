@@ -845,6 +845,8 @@ Rules for every task in M18 to M22:
   - Data and privacy, Export and backups, import and restore, Trash with Delete now and Empty Trash (R2-21, ED-319, ED-336);
   - sync states and conflicts (R2-8, ED-283) with Undo after a resolved conflict (ED-194) and Keep both for notes (ED-195);
   - web persistent storage and its truthful states (ED-188 to ED-192).
+  Split by the owner (2026-11-26, ED-476) into six parts, each with its own review page and commit: 1 Export, backups, import and restore (E-R2-21 §1–4); 2 Trash (E-R2-21 §5, E-R2-32, E-R2-30); 3 the database recovery screen (E-R2-21 §6); 4 sync status (E-G4-7 A–B, E-R2-8); 5 sync conflicts with Undo and Keep both (E-G4-7 C, E-G4-7-Q4-KeepBoth); 6 web storage (E-G4-7 Q2). Every part checks E-R2-32 (ED-337) first.
+  - [x] Part 1 done 2026-11-26 (ED-477): Data and privacy, Export, the backups on this device, import and restore checked against E-R2-21 §1–4 and E-R2-32 (already as drawn, words included); Sync and Tasks (CSV) icons fixed to the board; the multi-file backup sheets drawn and built in E-R2-21's sheet look; new device test `data_safety`. Open: picking real files, tablets, a real phone.
 - [ ] M20.11 Onboarding from the approved interactive prototype (ED-305, ED-350, ED-351). It replaces the current flow:
   - five steps, with no Layout step;
   - the 13+ note on Hello, "Dottoday is for people aged 13+.";

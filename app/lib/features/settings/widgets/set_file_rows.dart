@@ -6,11 +6,14 @@ import 'package:dottoday/data/export/export_providers.dart';
 import 'package:dottoday/data/export/file_gateway.dart';
 import 'package:dottoday/data/export/picked_set_check.dart';
 import 'package:dottoday/data/export/prepared_file.dart';
+import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The rows Settings › Export and Delete account share for a set
-/// (CR-160 B7a/B7c, docs/cr-160-multipart-export.md §10).
+/// (CR-160 B7a/B7c, docs/cr-160-multipart-export.md §10), drawn as
+/// E-R2-21's sheet rows: the tinted icon, then a chevron or an action
+/// (M20.10 part 1, ED-477).
 
 /// Web: one Download per file (the browser may block a burst), each marked
 /// "Downloaded" once asked; [asked] collects the names asked for, so the
@@ -35,20 +38,33 @@ class _DownloadListState extends ConsumerState<DownloadList> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         for (final f in widget.files)
-          ListTile(
-            minTileHeight: DotTouch.android,
-            contentPadding: EdgeInsets.zero,
-            title: Text(f.name, style: t.styles.rowTitle),
+          SettingsRow(
+            flush: true,
+            glyph: DotGlyphs.file,
+            tint: t.tasks[TaskColor.violet].ink,
+            title: f.name,
             trailing: widget.asked.contains(f.name)
-                ? Text(
-                    l10n.exportDownloaded,
-                    style: t.styles.body.copyWith(color: t.colors.muted),
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: DotSpace.xs,
+                    children: [
+                      DotIcon(
+                        DotGlyphs.check,
+                        color: t.colors.muted,
+                        size: DotSize.rowIcon,
+                      ),
+                      Text(
+                        l10n.exportDownloaded,
+                        style: t.styles.body.copyWith(color: t.colors.muted),
+                      ),
+                    ],
                   )
                 : TextButton(
                     onPressed: () => unawaited(_download(f)),
                     child: Text(l10n.exportDownload),
                   ),
           ),
+        const SizedBox(height: DotSpace.xs),
         Text(
           l10n.exportDownloadNote,
           style: t.styles.body.copyWith(color: t.colors.muted),
@@ -95,18 +111,22 @@ class _CheckFilesRowState extends ConsumerState<CheckFilesRow> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ListTile(
-          minTileHeight: DotTouch.android,
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.exportCheckFiles, style: t.styles.rowTitle),
-          subtitle: Text(l10n.exportCheckFilesDetail),
-          enabled: !_checking,
-          onTap: () => unawaited(_pick()),
+        SettingsRow(
+          flush: true,
+          glyph: DotGlyphs.check,
+          tint: t.colors.accentInk,
+          title: l10n.exportCheckFiles,
+          subtitle: l10n.exportCheckFilesDetail,
+          onTap: _checking ? null : () => unawaited(_pick()),
         ),
         if (_answer case final a?)
-          Semantics(
-            liveRegion: true,
-            child: Text(_text(l10n, a), style: t.styles.body),
+          SetNote(
+            kind: switch (a) {
+              PickedSetComplete() => SetNoteKind.done,
+              PickedSetMissing() => SetNoteKind.heedful,
+              PickedSetWrong() => SetNoteKind.plain,
+            },
+            text: _text(l10n, a),
           ),
       ],
     );
@@ -131,5 +151,64 @@ class _CheckFilesRowState extends ConsumerState<CheckFilesRow> {
       _answer = answer ?? _answer;
     });
     if (answer != null) widget.onChecked?.call(answer);
+  }
+}
+
+/// What a set check or a refused pick says, under its row: done with the
+/// mint check (as Notification health), a heads-up with an amber ring
+/// (never red), or plain muted words (ED-477).
+enum SetNoteKind { done, heedful, plain }
+
+class SetNote extends StatelessWidget {
+  const SetNote({required this.kind, required this.text, super.key});
+
+  final SetNoteKind kind;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final Widget? mark = switch (kind) {
+      SetNoteKind.done => DotIcon(
+        DotGlyphs.check,
+        color: t.tasks[TaskColor.mint].ink,
+        size: DotSize.rowIcon,
+      ),
+      SetNoteKind.heedful => Container(
+        // The routine thread's small hollow ring (E-R2-22).
+        width: DotSize.miniRing,
+        height: DotSize.miniRing,
+        margin: const EdgeInsets.all(DotSpace.xs),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: t.tasks[TaskColor.amber].ink,
+            width: DotSize.miniRingStroke,
+          ),
+        ),
+      ),
+      SetNoteKind.plain => null,
+    };
+    return Semantics(
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: DotSpace.s),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: DotSpace.s,
+          children: [
+            ?mark,
+            Expanded(
+              child: Text(
+                text,
+                style: t.styles.body.copyWith(
+                  color: kind == SetNoteKind.plain ? t.colors.muted : null,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
