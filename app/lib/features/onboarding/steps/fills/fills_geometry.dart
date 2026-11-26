@@ -11,7 +11,9 @@ import 'package:flutter/widgets.dart';
   required bool compact,
 }) {
   final s = t.styles;
-  if (compact) return (s.onbRowTitleSmall, s.onbRowSubPick);
+  if (compact && k != FillRowKind.task) {
+    return (s.onbRowTitleSmall, s.onbRowSubPick);
+  }
   return k == FillRowKind.pick
       ? (s.onbRowTitlePick, s.onbRowSubPick)
       : (s.onbRowTitle, s.onbRowSub);
@@ -75,7 +77,7 @@ final class FillsGeometry {
   /// How far a row's words sit above its line.
   double wordsTop(FillRowKind kind, {required bool compact}) =>
       scale *
-      (compact
+      (compact && kind != FillRowKind.task
           ? OnbSize.wordsTopSmall
           : kind == FillRowKind.pick
           ? OnbSize.wordsTopPick
@@ -128,7 +130,12 @@ final class FillsGeometry {
   }) {
     final box = words(context, text, kind, 0, compact: false, width: width);
     final dot =
-        (kind == FillRowKind.pick ? OnbSize.pickDot : OnbSize.anchorDot) / 2;
+        (kind == FillRowKind.pick
+            ? OnbSize.pickDot
+            : kind == FillRowKind.task
+            ? OnbSize.taskDot
+            : OnbSize.anchorDot) /
+        2;
     return (
       above: math.max(math.max(-box.top, dot), OnbSize.rowTimeTop * scale),
       below: math.max(box.bottom, dot),

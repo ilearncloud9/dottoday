@@ -135,6 +135,23 @@ List<Series> fillsSeries(
     ),
 ];
 
+/// What the nudge is about (`setSubject`): of [picked], the first after
+/// [now] on a day from [wake] to [wind], else the first; null when none
+/// was picked (the nudge is about Wind Down then).
+///
+/// ```dart
+/// nudgeSubject([run, read], 420, 1380, 581)?.title; // Read
+/// ```
+DayFill? nudgeSubject(List<DayFill> picked, int wake, int wind, int now) {
+  if (picked.isEmpty) return null;
+  final sorted = [...picked]
+    ..sort((a, b) => a.minuteOn(wake, wind).compareTo(b.minuteOn(wake, wind)));
+  for (final f in sorted) {
+    if (f.minuteOn(wake, wind) > now) return f;
+  }
+  return sorted.first;
+}
+
 int _quarter(num minutes) => (minutes / 15).round() * 15;
 
 /// `2026-10-21T07:15`; a minute past midnight starts the next day.

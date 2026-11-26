@@ -158,19 +158,8 @@ class _FillsStepState extends ConsumerState<FillsStep>
   }
 
   /// The four, then what was typed.
-  List<DayFill> _chips(BuildContext context) {
-    final l10n = context.l10n;
-    final draft = ref.read(fillsDraftProvider);
-    return [
-      for (final p in FillPreset.values)
-        DayFill.preset(
-          id: draft.presetIds[p]!,
-          title: presetTitle(l10n, p),
-          preset: p,
-        ),
-      ...draft.typed,
-    ];
-  }
+  List<DayFill> _chips(BuildContext context) =>
+      draftChips(context.l10n, ref.read(fillsDraftProvider));
 
   @override
   Widget build(BuildContext context) {

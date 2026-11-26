@@ -3,7 +3,14 @@ import 'dart:math' as math;
 import 'package:dottoday/core/theme/dot_theme.dart';
 
 /// What a row on What fills your days' thread is.
-enum FillRowKind { wake, pick, wind }
+enum FillRowKind {
+  wake,
+  pick,
+
+  /// The nudge's subject (`.trow.task`): a filled 44 dot, never shrunk.
+  task,
+  wind,
+}
 
 /// A row to place: its kind and its minute.
 typedef FillRowSpec = ({FillRowKind kind, int minute});

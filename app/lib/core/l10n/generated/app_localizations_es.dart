@@ -3074,10 +3074,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calendarsConnect => 'Conectar un calendario';
 
   @override
-  String get calendarsOnlineInSettings =>
-      'Conecta Google o Microsoft en Ajustes › Calendarios.';
-
-  @override
   String get calendarsOnline => 'Google y Microsoft';
 
   @override
@@ -3139,10 +3135,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarsReadOnly => 'Solo lectura';
-
-  @override
-  String get calendarsPickInSettings =>
-      'Conectado · elige los calendarios en Ajustes';
 
   @override
   String get calendarDeniedTitle => 'El acceso al calendario está desactivado';
@@ -3724,6 +3716,56 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get onboardingNudgePreview => 'VISTA PREVIA';
+
+  @override
+  String get onboardingNudgePreviewLabel => 'Vista previa del recordatorio';
+
+  @override
+  String get onboardingNudgeBody =>
+      'Un aviso discreto 10 minutos antes de cada tarea. Cámbialo cuando quieras.';
+
+  @override
+  String get onboardingAllowNudges => 'Permitir avisos';
+
+  @override
+  String get onboardingTwoMore => 'Dos más, si quieres';
+
+  @override
+  String get onboardingTwoMoreBody =>
+      'Ambos siguen desactivados hasta que los actives. Cámbialos cuando quieras en Ajustes.';
+
+  @override
+  String onboardingNudgeIn(String title) {
+    return '$title en 10 minutos';
+  }
+
+  @override
+  String onboardingNudgeAsk(String title) {
+    return '¿Quieres esto antes de $title?';
+  }
+
+  @override
+  String onboardingNudgeSpan(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String onboardingTaskMeta(String time, String length) {
+    return '$time · $length';
+  }
+
+  @override
+  String onboardingRingsAt(String time) {
+    return 'Suena a las $time';
+  }
+
+  @override
+  String onboardingNudgeAt(String time) {
+    return 'Un aviso a las $time';
+  }
+
+  @override
   String get onboardingHabitsMax => 'Cinco es más que suficiente para empezar.';
 
   @override
@@ -3737,30 +3779,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get starterRead => 'Leer';
-
-  @override
-  String get onboardingRemindersTitle => '¿Quieres un recordatorio?';
-
-  @override
-  String get onboardingRemindersBody =>
-      'Dottoday te avisa cuando empieza una tarea y antes de desconectar. Puedes cambiarlo cuando quieras en Ajustes.';
-
-  @override
-  String get onboardingTaskStarts => 'Antes de cada tarea';
-
-  @override
-  String get onboardingTaskStartsDetail =>
-      'Cuánto antes lo decides tú, en Ajustes';
-
-  @override
-  String get onboardingWindDown => 'Al desconectar';
-
-  @override
-  String get onboardingWindDownDetail =>
-      'La primera tarea de mañana, para que la mañana no traiga sorpresas';
-
-  @override
-  String get onboardingAllow => 'Permitir notificaciones';
 
   @override
   String get onboardingNotNow => 'Ahora no';

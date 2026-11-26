@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/features/onboarding/flow/css_saturate.dart';
 import 'package:dottoday/features/onboarding/flow/onb_keys.dart';
 import 'package:dottoday/features/onboarding/onboarding_flow.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _Card extends StatelessWidget {
                       sigmaY: OnbSize.blur / 2,
                     ),
                     inner: ColorFilter.matrix(
-                      _saturation(OnbSize.blurSaturation),
+                      cssSaturate(OnbSize.blurSaturation),
                     ),
                   ),
                   child: app,
@@ -127,16 +128,5 @@ class _Card extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  /// CSS `saturate(s)` as a colour matrix.
-  static List<double> _saturation(double s) {
-    const r = 0.213, g = 0.715, b = 0.072;
-    return [
-      r + (1 - r) * s, g - g * s, b - b * s, 0, 0, //
-      r - r * s, g + (1 - g) * s, b - b * s, 0, 0, //
-      r - r * s, g - g * s, b + (1 - b) * s, 0, 0, //
-      0, 0, 0, 1, 0, //
-    ];
   }
 }

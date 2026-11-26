@@ -139,7 +139,7 @@ ticked in 08 §6.1) before a tag.
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |
 |---|---|---|---|---|---|---|
-| F10.1 | At most 3 input screens | ✓ device<br>onboarding · iPhone 17 Pro sim, M8.4 | ✓ device<br>onboarding · API 37 emulator, M8.4; CI API 34 | ✓ device<br>onboarding · macOS, M8.4 | ✓ CI | `test/features/onboarding/flow_rules_test.dart`<br>`test/features/onboarding/reminders_step_test.dart`<br>`integration_test/onboarding_test.dart` |
+| F10.1 | At most 3 input screens | ✓ device<br>onboarding · iPhone 17 Pro sim, M8.4 | ✓ device<br>onboarding · API 37 emulator, M8.4; CI API 34 | ✓ device<br>onboarding · macOS, M8.4 | ✓ CI | `test/features/onboarding/flow_rules_test.dart`<br>`test/features/onboarding/nudge_step_test.dart`<br>`integration_test/onboarding_test.dart` |
 ## F11. Feedback & changelog
 
 | ID | Feature | iPhone | Android | macOS | Web | Automated evidence |

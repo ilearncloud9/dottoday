@@ -4558,10 +4558,6 @@
   "@calendarsConnect": {
     "description": "Calendars page button."
   },
-  "calendarsOnlineInSettings": "Connect Google or Microsoft in Settings › Calendars.",
-  "@calendarsOnlineInSettings": {
-    "description": "Onboarding O4 where the device has no calendars of its own (web): where online calendars are connected (M7.4)."
-  },
   "calendarsOnline": "Google and Microsoft",
   "@calendarsOnline": {
     "description": "Calendars page group caption for connected online accounts (M7.4)."
@@ -4638,10 +4634,6 @@
   "calendarsReadOnly": "Read-only",
   "@calendarsReadOnly": {
     "description": "Calendars page: subtitle part for a calendar Dottoday can't write to."
-  },
-  "calendarsPickInSettings": "Connected · choose calendars in Settings",
-  "@calendarsPickInSettings": {
-    "description": "Onboarding O4: the Connect a calendar row once access is allowed."
   },
   "calendarDeniedTitle": "Calendar access is off",
   "@calendarDeniedTitle": {
@@ -5269,6 +5261,30 @@
   "@onboardingWindSub": {"description": "Under Wind Down on the onboarding thread."},
   "onboardingFillsCount": "{count} of {max}",
   "@onboardingFillsCount": {"description": "What fills your days: how many are picked, of five.", "placeholders": {"count": {"type": "int"}, "max": {"type": "int"}}},
+  "onboardingNudgePreview": "PREVIEW",
+  "@onboardingNudgePreview": {"description": "The tag on the nudge's reminder preview."},
+  "onboardingNudgePreviewLabel": "Reminder preview",
+  "@onboardingNudgePreviewLabel": {"description": "Screen reader label of the reminder preview."},
+  "onboardingNudgeBody": "A quiet nudge 10 minutes before each task. Change it any time.",
+  "@onboardingNudgeBody": {"description": "The nudge's ask, under its question."},
+  "onboardingAllowNudges": "Allow nudges",
+  "@onboardingAllowNudges": {"description": "The nudge: asks for notifications."},
+  "onboardingTwoMore": "Two more, if you like",
+  "@onboardingTwoMore": {"description": "After notifications are allowed: the Wake Up alarm and Wind Down reminder (ED-489)."},
+  "onboardingTwoMoreBody": "Both stay off unless you turn them on. Change them any time in Settings.",
+  "@onboardingTwoMoreBody": {"description": "Under \"Two more, if you like\"."},
+  "onboardingNudgeIn": "{title} in 10 minutes",
+  "@onboardingNudgeIn": {"description": "The preview's title.", "placeholders": {"title": {"type": "String"}}},
+  "onboardingNudgeAsk": "Want this before {title}?",
+  "@onboardingNudgeAsk": {"description": "The nudge's question.", "placeholders": {"title": {"type": "String"}}},
+  "onboardingNudgeSpan": "{start} – {end}",
+  "@onboardingNudgeSpan": {"description": "The preview's times: start to end.", "placeholders": {"start": {"type": "String"}, "end": {"type": "String"}}},
+  "onboardingTaskMeta": "{time} · {length}",
+  "@onboardingTaskMeta": {"description": "Under the nudge's task: its time and length.", "placeholders": {"time": {"type": "String"}, "length": {"type": "String"}}},
+  "onboardingRingsAt": "Rings at {time}",
+  "@onboardingRingsAt": {"description": "Under Wake Up alarm on \"Two more\".", "placeholders": {"time": {"type": "String"}}},
+  "onboardingNudgeAt": "A nudge at {time}",
+  "@onboardingNudgeAt": {"description": "Under Wind Down reminder on \"Two more\".", "placeholders": {"time": {"type": "String"}}},
   "onboardingHabitsMax": "Five is plenty to start with.",
   "@onboardingHabitsMax": {
     "description": "Onboarding O3: shown when five are picked."
@@ -5288,34 +5304,6 @@
   "starterRead": "Read",
   "@starterRead": {
     "description": "Onboarding starter habit."
-  },
-  "onboardingRemindersTitle": "Want a nudge?",
-  "@onboardingRemindersTitle": {
-    "description": "Onboarding O4 question."
-  },
-  "onboardingRemindersBody": "Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.",
-  "@onboardingRemindersBody": {
-    "description": "Onboarding O4 explanation."
-  },
-  "onboardingTaskStarts": "Before each task",
-  "@onboardingTaskStarts": {
-    "description": "Onboarding O4: the task-start reminder."
-  },
-  "onboardingTaskStartsDetail": "How early is up to you, in Settings",
-  "@onboardingTaskStartsDetail": {
-    "description": "Onboarding O4: under the task-start reminder."
-  },
-  "onboardingWindDown": "At Wind Down",
-  "@onboardingWindDown": {
-    "description": "Onboarding O4: the Wind Down reminder switch."
-  },
-  "onboardingWindDownDetail": "Tomorrow's first task, so the morning has no surprises",
-  "@onboardingWindDownDetail": {
-    "description": "Onboarding O4: under the Wind Down switch."
-  },
-  "onboardingAllow": "Allow notifications",
-  "@onboardingAllow": {
-    "description": "Onboarding O4: asks the system for permission."
   },
   "onboardingNotNow": "Not now",
   "@onboardingNotNow": {

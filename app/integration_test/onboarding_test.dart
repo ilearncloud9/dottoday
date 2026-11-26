@@ -75,8 +75,8 @@ void main() {
 
     await _tap(tester, 'Gym');
     await _tap(tester, 'That’s my day');
-    await _pumpUntil(tester, find.text('Want a nudge?'));
-    await leaveRemindersStep(tester, (label) => _tap(tester, label));
+    await _pumpUntil(tester, find.text('Allow nudges'));
+    await leaveNudgeStep(tester, (label) => _tap(tester, label));
     await _pumpUntil(tester, find.byType(TodayScreen));
     clock.stop();
     expect(clock.elapsed, lessThan(const Duration(seconds: 90)));

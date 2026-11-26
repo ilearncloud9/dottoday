@@ -64,6 +64,12 @@ final class DotType {
     required this.onbFieldHint,
     required this.onbCount,
     required this.onbNowPill,
+    required this.onbBannerTitle,
+    required this.onbBannerLine,
+    required this.onbBannerWhen,
+    required this.onbPreviewTag,
+    required this.onbMoreTitle,
+    required this.onbMoreLine,
     required this.sidebarItem,
     required this.sidebarHint,
     required this.sidebarSection,
@@ -183,6 +189,12 @@ final class DotType {
     onbFieldHint: _manrope(15, 19, 500, muted),
     onbCount: _manrope(12, 15, 700, muted),
     onbNowPill: _manrope(11, 22, 800, text, tracking: 0.04),
+    onbBannerTitle: _manrope(15, 20, 800, text),
+    onbBannerLine: _manrope(14, 18, 500, muted),
+    onbBannerWhen: _manrope(12, 16, 600, muted),
+    onbPreviewTag: _manrope(10, 18, 800, text, tracking: 0.1),
+    onbMoreTitle: _manrope(16, 20, 800, text),
+    onbMoreLine: _manrope(14, 18, 500, muted),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
     // hints and counts 11, the "Calendar views" heading 11/600.
     sidebarItem: _system(13, 16, 400, text),
@@ -450,6 +462,24 @@ final class DotType {
   /// NOW on its pill (.nowm span): 11/800, tracked .04em; coloured at use.
   final TextStyle onbNowPill;
 
+  /// The reminder preview's title (.banner .bt b): 15/800.
+  final TextStyle onbBannerTitle;
+
+  /// Its times (.banner .bt span): 14/500, muted.
+  final TextStyle onbBannerLine;
+
+  /// When it would arrive (.banner .when): 12/600, muted.
+  final TextStyle onbBannerWhen;
+
+  /// "PREVIEW" (.pv): 10/800, tracked .1em; coloured at use.
+  final TextStyle onbPreviewTag;
+
+  /// A switch row's title on "Two more, if you like": 16/800.
+  final TextStyle onbMoreTitle;
+
+  /// Its line, "Rings at 7:00 AM": 14/500, muted.
+  final TextStyle onbMoreLine;
+
   /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
   /// or count, and a section heading.
   final TextStyle sidebarItem;
@@ -606,6 +636,12 @@ final class DotType {
       onbFieldHint: l(onbFieldHint, other.onbFieldHint),
       onbCount: l(onbCount, other.onbCount),
       onbNowPill: l(onbNowPill, other.onbNowPill),
+      onbBannerTitle: l(onbBannerTitle, other.onbBannerTitle),
+      onbBannerLine: l(onbBannerLine, other.onbBannerLine),
+      onbBannerWhen: l(onbBannerWhen, other.onbBannerWhen),
+      onbPreviewTag: l(onbPreviewTag, other.onbPreviewTag),
+      onbMoreTitle: l(onbMoreTitle, other.onbMoreTitle),
+      onbMoreLine: l(onbMoreLine, other.onbMoreLine),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),
       sidebarSection: l(sidebarSection, other.sidebarSection),

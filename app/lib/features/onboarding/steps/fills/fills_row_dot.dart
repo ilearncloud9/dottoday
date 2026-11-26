@@ -9,6 +9,7 @@ class FillsRowDot extends StatelessWidget {
     required this.glyph,
     required this.iconSize,
     this.pop,
+    this.filled = false,
     super.key,
   });
 
@@ -16,6 +17,9 @@ class FillsRowDot extends StatelessWidget {
   final DotGlyph? glyph;
   final double iconSize;
   final Animation<double>? pop;
+
+  /// The nudge's subject: filled in [color], its icon in the card colour.
+  final bool filled;
 
   /// The keyframes .6 → 1.15 → 1 with the spring over the whole of
   /// them, as the browser runs it: past the end it carries on below 1.
@@ -34,13 +38,20 @@ class FillsRowDot extends StatelessWidget {
     final dot = DecoratedBox(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: c.raised,
-        border: Border.all(color: color, width: OnbSize.rowRing),
+        color: filled ? color : c.raised,
+        border: filled
+            ? null
+            : Border.all(color: color, width: OnbSize.rowRing),
       ),
       child: glyph == null
           ? null
           : Center(
-              child: DotIcon(glyph, color: color, size: iconSize),
+              child: DotIcon(
+                glyph,
+                color: filled ? c.raised : color,
+                size: iconSize,
+                bold: filled,
+              ),
             ),
     );
     final pop = this.pop;

@@ -4,15 +4,17 @@ library;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
-import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
+import 'package:dottoday/domain/onboarding/day_fills.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
+import 'package:dottoday/features/onboarding/steps/fills/fills_draft.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -26,9 +28,8 @@ import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 // The approved onboarding (the "Dottoday Onboarding Prototype", ED-305;
-// M20.11, ED-485). The nudge is the built step until part 4 replaces it.
-// Your day and What fills your days use the prototype's 12-hour clock and
-// its 7:00 to 23:00 day.
+// M20.11, ED-485). Past Hello the steps use the prototype's 12-hour clock
+// and its 7:00 to 23:00 day.
 
 /// A first run: nobody has been asked about notifications yet.
 final class _NotAsked implements NotificationPermission {
@@ -66,9 +67,7 @@ List<Override> _at(
     calendarGateway: FakeDeviceCalendarGateway(),
     occurrences: FakeOccurrenceRepository(firstThreadRows()),
     profile: testProfile(
-      settings: step == OnboardingStep.day || step == OnboardingStep.fills
-          ? _prototypeDay
-          : null,
+      settings: step == OnboardingStep.hello ? null : _prototypeDay,
     ),
   ),
   onboardingProvider.overrideWith(
@@ -91,7 +90,7 @@ void main() {
       'onboarding_${step.name}',
       height: 844,
       widths: widths,
-      a11yVariants: step != OnboardingStep.nudge,
+      a11yVariants: true,
       overrides: _at(step),
       build: (_) => const OnboardingGate(child: _App()),
     );
@@ -157,20 +156,49 @@ void main() {
     overrides: _at(OnboardingStep.hello, account: true),
     build: (_) => const OnboardingGate(child: _App()),
   );
-  // O4 once notifications are allowed: the test alarm (M6.5.9).
+  // The nudge about Read, with the run and Read picked (prototype
+  // `vNudge`), and once allowed, "Two more, if you like" (ED-489).
+  Future<void> picks(WidgetTester tester) async {
+    final c = ProviderScope.containerOf(
+      tester.element(find.byType(OnboardingGate)),
+    );
+    final ids = c.read(fillsDraftProvider).presetIds;
+    for (final p in [FillPreset.morningRun, FillPreset.read]) {
+      c.read(fillsDraftProvider.notifier).toggle(ids[p]!);
+    }
+    await tester.pumpAndSettle();
+  }
+
   goldenMatrix(
-    'onboarding_reminders_allowed',
+    'onboarding_nudge_picked',
     height: 844,
     widths: widths,
-    overrides: _at(
-      OnboardingStep.nudge,
-      permission: const UnwiredNotificationPermission(),
-    ),
+    a11yVariants: true,
+    overrides: _at(OnboardingStep.nudge),
+    act: picks,
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  goldenMatrix(
+    'onboarding_nudge_more',
+    height: 844,
+    widths: widths,
+    a11yVariants: true,
+    overrides: _at(OnboardingStep.nudge),
     act: (tester) async {
-      await tester.ensureVisible(find.text('Send me a test alarm'));
+      await picks(tester);
+      await tester.tap(find.text('Allow nudges'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Send me a test alarm'));
+      await tester.tap(find.text('Wind Down reminder'));
     },
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  goldenMatrix(
+    'onboarding_nudge_android',
+    height: 844,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    overrides: _at(OnboardingStep.nudge),
+    act: picks,
     build: (_) => const OnboardingGate(child: _App()),
   );
   // M4.7 states, with accounts on.

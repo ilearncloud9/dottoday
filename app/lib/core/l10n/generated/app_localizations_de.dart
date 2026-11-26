@@ -3083,10 +3083,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calendarsConnect => 'Kalender verbinden';
 
   @override
-  String get calendarsOnlineInSettings =>
-      'Verbinde Google oder Microsoft unter Einstellungen › Kalender.';
-
-  @override
   String get calendarsOnline => 'Google und Microsoft';
 
   @override
@@ -3147,10 +3143,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calendarsReadOnly => 'Nur lesen';
-
-  @override
-  String get calendarsPickInSettings =>
-      'Verbunden · Kalender in den Einstellungen wählen';
 
   @override
   String get calendarDeniedTitle => 'Kalenderzugriff ist aus';
@@ -3733,6 +3725,56 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get onboardingNudgePreview => 'VORSCHAU';
+
+  @override
+  String get onboardingNudgePreviewLabel => 'Vorschau der Erinnerung';
+
+  @override
+  String get onboardingNudgeBody =>
+      'Ein leiser Hinweis 10 Minuten vor jeder Aufgabe. Jederzeit änderbar.';
+
+  @override
+  String get onboardingAllowNudges => 'Hinweise erlauben';
+
+  @override
+  String get onboardingTwoMore => 'Noch zwei, wenn du magst';
+
+  @override
+  String get onboardingTwoMoreBody =>
+      'Beide bleiben aus, bis du sie einschaltest. Jederzeit in den Einstellungen änderbar.';
+
+  @override
+  String onboardingNudgeIn(String title) {
+    return '$title in 10 Minuten';
+  }
+
+  @override
+  String onboardingNudgeAsk(String title) {
+    return 'Möchtest du das vor $title?';
+  }
+
+  @override
+  String onboardingNudgeSpan(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String onboardingTaskMeta(String time, String length) {
+    return '$time · $length';
+  }
+
+  @override
+  String onboardingRingsAt(String time) {
+    return 'Klingelt um $time';
+  }
+
+  @override
+  String onboardingNudgeAt(String time) {
+    return 'Ein Hinweis um $time';
+  }
+
+  @override
   String get onboardingHabitsMax => 'Fünf sind für den Anfang genug.';
 
   @override
@@ -3746,30 +3788,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get starterRead => 'Lesen';
-
-  @override
-  String get onboardingRemindersTitle => 'Lust auf einen Anstoß?';
-
-  @override
-  String get onboardingRemindersBody =>
-      'Dottoday erinnert dich, wenn eine Aufgabe beginnt, und vor der Abendruhe. Du kannst das jederzeit in den Einstellungen ändern.';
-
-  @override
-  String get onboardingTaskStarts => 'Vor jeder Aufgabe';
-
-  @override
-  String get onboardingTaskStartsDetail =>
-      'Wie früh, entscheidest du in den Einstellungen';
-
-  @override
-  String get onboardingWindDown => 'Zur Abendruhe';
-
-  @override
-  String get onboardingWindDownDetail =>
-      'Die erste Aufgabe von morgen, damit der Morgen keine Überraschungen bringt';
-
-  @override
-  String get onboardingAllow => 'Mitteilungen erlauben';
 
   @override
   String get onboardingNotNow => 'Nicht jetzt';

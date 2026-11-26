@@ -4,10 +4,18 @@ import 'package:flutter/material.dart';
 /// The step's main pill (prototype `.pbtn`): 56 high, the accent, 17/800;
 /// it presses in to .97 and is at .38 while off.
 class OnbPrimary extends StatelessWidget {
-  const OnbPrimary({required this.label, required this.onPressed, super.key});
+  const OnbPrimary({
+    required this.label,
+    required this.onPressed,
+    this.focusNode,
+    super.key,
+  });
 
   final String label;
   final VoidCallback? onPressed;
+
+  /// For a step that moves focus to it (the nudge's Allow nudges).
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +25,7 @@ class OnbPrimary extends StatelessWidget {
       enabled: onPressed != null,
       child: FilledButton(
         onPressed: onPressed,
+        focusNode: focusNode,
         style: FilledButton.styleFrom(
           backgroundColor: c.accent,
           foregroundColor: c.onAccent,

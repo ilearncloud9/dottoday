@@ -55,13 +55,9 @@ void main() {
     for (final label in ['Get started', 'Continue', 'Skip for now']) {
       await tapOn(tester, find.text(label));
     }
-    // O4: "Not now" on a first install; once notifications are allowed (the
-    // harness grants them) it offers the test alarm and Continue (M6.5.9).
-    await until(tester, find.text('Want a nudge?'));
-    await leaveRemindersStep(
-      tester,
-      (label) => tapOn(tester, find.text(label)),
-    );
+    // The nudge: Not now, straight to Today (M20.11 part 4).
+    await until(tester, find.text('Allow nudges'));
+    await leaveNudgeStep(tester, (label) => tapOn(tester, find.text(label)));
     await until(tester, find.byType(TodayScreen));
 
     // The demo day, for a thread with a repeating task and a pin.

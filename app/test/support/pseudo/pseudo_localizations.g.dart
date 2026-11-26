@@ -2395,10 +2395,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get calendarsConnect => pseudo(super.calendarsConnect);
 
   @override
-  String get calendarsOnlineInSettings =>
-      pseudo(super.calendarsOnlineInSettings);
-
-  @override
   String get calendarsOnline => pseudo(super.calendarsOnline);
 
   @override
@@ -2454,9 +2450,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get calendarsReadOnly => pseudo(super.calendarsReadOnly);
-
-  @override
-  String get calendarsPickInSettings => pseudo(super.calendarsPickInSettings);
 
   @override
   String get calendarDeniedTitle => pseudo(super.calendarDeniedTitle);
@@ -2929,6 +2922,49 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.onboardingFillsCount(count, max));
 
   @override
+  String get onboardingNudgePreview => pseudo(super.onboardingNudgePreview);
+
+  @override
+  String get onboardingNudgePreviewLabel =>
+      pseudo(super.onboardingNudgePreviewLabel);
+
+  @override
+  String get onboardingNudgeBody => pseudo(super.onboardingNudgeBody);
+
+  @override
+  String get onboardingAllowNudges => pseudo(super.onboardingAllowNudges);
+
+  @override
+  String get onboardingTwoMore => pseudo(super.onboardingTwoMore);
+
+  @override
+  String get onboardingTwoMoreBody => pseudo(super.onboardingTwoMoreBody);
+
+  @override
+  String onboardingNudgeIn(String title) =>
+      pseudo(super.onboardingNudgeIn(title));
+
+  @override
+  String onboardingNudgeAsk(String title) =>
+      pseudo(super.onboardingNudgeAsk(title));
+
+  @override
+  String onboardingNudgeSpan(String start, String end) =>
+      pseudo(super.onboardingNudgeSpan(start, end));
+
+  @override
+  String onboardingTaskMeta(String time, String length) =>
+      pseudo(super.onboardingTaskMeta(time, length));
+
+  @override
+  String onboardingRingsAt(String time) =>
+      pseudo(super.onboardingRingsAt(time));
+
+  @override
+  String onboardingNudgeAt(String time) =>
+      pseudo(super.onboardingNudgeAt(time));
+
+  @override
   String get onboardingHabitsMax => pseudo(super.onboardingHabitsMax);
 
   @override
@@ -2942,28 +2978,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get starterRead => pseudo(super.starterRead);
-
-  @override
-  String get onboardingRemindersTitle => pseudo(super.onboardingRemindersTitle);
-
-  @override
-  String get onboardingRemindersBody => pseudo(super.onboardingRemindersBody);
-
-  @override
-  String get onboardingTaskStarts => pseudo(super.onboardingTaskStarts);
-
-  @override
-  String get onboardingTaskStartsDetail =>
-      pseudo(super.onboardingTaskStartsDetail);
-
-  @override
-  String get onboardingWindDown => pseudo(super.onboardingWindDown);
-
-  @override
-  String get onboardingWindDownDetail => pseudo(super.onboardingWindDownDetail);
-
-  @override
-  String get onboardingAllow => pseudo(super.onboardingAllow);
 
   @override
   String get onboardingNotNow => pseudo(super.onboardingNotNow);

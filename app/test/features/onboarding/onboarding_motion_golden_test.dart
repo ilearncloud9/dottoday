@@ -5,10 +5,11 @@ library;
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
+import 'package:dottoday/domain/onboarding/day_fills.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
-
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/onboarding/steps/day_dial_parts.dart';
+import 'package:dottoday/features/onboarding/steps/fills/fills_draft.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,7 @@ import '../../support/timeline_fakes.dart';
 // The onboarding's motion, frame by frame (prototype motion table;
 // M20.11 parts 1 and 2): Hello's day dot drawing itself, a step change,
 // the sun held and dragged onto an hour, and a pick flying onto the
-// thread.
+// thread, and the nudge arriving.
 
 Future<void> _shot(WidgetTester tester, String name) async {
   final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -37,23 +38,29 @@ Future<void> _pump(
   WidgetTester tester,
   OnboardingStep step, {
   Settings? settings,
+  void Function(ProviderContainer c)? before,
 }) async {
   tester.view
     ..physicalSize = const Size(390, 844) * 2
     ..devicePixelRatio = 2;
   addTearDown(tester.view.reset);
   debugDisableShadows = false;
+  final container = ProviderContainer(
+    overrides: [
+      ...timelineOverrides(
+        now: DateTime.utc(2026, 10, 21, 9),
+        profile: testProfile(settings: settings),
+      ),
+      onboardingProvider.overrideWith(
+        () => FakeOnboarding(OnboardingProgress(step: step)),
+      ),
+    ],
+  );
+  addTearDown(container.dispose);
+  before?.call(container);
   await tester.pumpWidget(
-    ProviderScope(
-      overrides: [
-        ...timelineOverrides(
-          now: DateTime.utc(2026, 10, 21, 9),
-          profile: testProfile(settings: settings),
-        ),
-        onboardingProvider.overrideWith(
-          () => FakeOnboarding(OnboardingProgress(step: step)),
-        ),
-      ],
+    UncontrolledProviderScope(
+      container: container,
       child: goldenApp(const OnboardingGate(child: SizedBox.shrink())),
     ),
   );
@@ -155,6 +162,40 @@ void main() {
         await tester.pump(Duration(milliseconds: ms) - at);
         at = Duration(milliseconds: ms);
         await _shot(tester, 'onboarding_motion_fills_${ms}ms');
+      }
+      await tester.pumpAndSettle();
+    } finally {
+      debugDisableShadows = true;
+    }
+  });
+
+  testWidgets('The nudge: Read drops, the preview slides down, the ask rises', (
+    tester,
+  ) async {
+    try {
+      await _pump(
+        tester,
+        OnboardingStep.nudge,
+        settings: Settings(
+          use24h: false,
+          dayBoundaries: {
+            for (final d in Weekday.values)
+              d: const TimeWindow(start: '07:00', end: '23:00'),
+          },
+        ),
+        before: (c) {
+          final ids = c.read(fillsDraftProvider).presetIds;
+          for (final p in [FillPreset.morningRun, FillPreset.read]) {
+            c.read(fillsDraftProvider.notifier).toggle(ids[p]!);
+          }
+        },
+      );
+      await tester.pump();
+      var at = Duration.zero;
+      for (final ms in [120, 340, 450, 560, 700, 900, 1100, 1300]) {
+        await tester.pump(Duration(milliseconds: ms) - at);
+        at = Duration(milliseconds: ms);
+        await _shot(tester, 'onboarding_motion_nudge_${ms}ms');
       }
       await tester.pumpAndSettle();
     } finally {

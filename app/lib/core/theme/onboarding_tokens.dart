@@ -153,6 +153,14 @@ abstract final class OnbSize {
   /// when shrunk, icon 14); a 3 ring; icons 20. The words sit 21 above the
   /// row's line (17 for a pick, 11 when shrunk).
   static const double anchorDot = 40;
+
+  /// The nudge's subject (`.trow.task .dt`): 44, filled.
+  static const double taskDot = 44;
+
+  /// Its drop (`@keyframes drop`): from 160 above, a 12 bounce, then 3.
+  static const double dropFrom = 160;
+  static const double dropBounce = 12;
+  static const double dropBounceSmall = 3;
   static const double anchorDotSmall = 32;
   static const double pickDot = 32;
   static const double pickDotSmall = 24;
@@ -227,6 +235,70 @@ abstract final class OnbSize {
 
   /// At 200 % text the step scrolls; the thread keeps this height.
   static const double threadMinHeight = 300;
+
+  /// The nudge (`vNudge`): the thread from 64 under the top row to 318
+  /// above the bottom, under the sheet.
+  static const double nudgeThreadTop = 64;
+  static const double nudgeThreadBottom = 318;
+
+  /// The reminder preview (`.banner`): 12 from the screen's sides (14 in
+  /// the card), 4 over
+  /// the top row on a phone or 4 under it in the card; padding 12 × 14, 12
+  /// apart; corner 24 (20 on Android); the glass at .82 (.86 dark), blur
+  /// 20 at 1.6 saturation.
+  static const double bannerSide = 12;
+  static const double bannerSideCard = 14;
+  static const double bannerOverlap = 4;
+  static const double bannerPadV = 12;
+  static const double bannerPadH = 14;
+  static const double bannerGap = 12;
+  static const double bannerRadius = 24;
+  static const double bannerRadiusAndroid = 20;
+  static const double glassAlphaLight = 0.82;
+  static const double glassAlphaDark = 0.86;
+  static const double bannerBlur = 20;
+  static const double bannerSaturation = 1.6;
+
+  /// The app's mark in it (`.appic`): 40, corner 11; the dot 16 with a 4
+  /// ring of the accent and a 6 ring round that.
+  static const double appIcon = 40;
+  static const double appIconRadius = 11;
+  static const double appIconDot = 16;
+  static const double appIconGap = 4;
+  static const double appIconRing = 6;
+
+  /// "PREVIEW" (`.pv`): 9 above the banner, 16 in; 18 high, padding 7.
+  static const double previewTop = 9;
+  static const double previewStart = 16;
+  static const double previewHeight = 18;
+  static const double previewPad = 7;
+
+  /// The ask (`.sheet`): 8 from the screen's edges (10 in the card), corner
+  /// 40 (28 Android, 30 in the card), padding 26 22 24, shadow 0 −10 40 −10
+  /// at .3; the buttons 20 under the words.
+  static const double sheetInset = 8;
+  static const double sheetInsetCard = 10;
+  static const double sheetRadius = 40;
+  static const double sheetRadiusAndroid = 28;
+  static const double sheetRadiusCard = 30;
+  static const double sheetPadTop = 26;
+  static const double sheetPadSide = 22;
+  static const double sheetPadBottom = 24;
+  static const double sheetShadowY = -10;
+  static const double sheetShadowBlur = 40;
+  static const double sheetShadowSpread = -10;
+  static const double sheetShadowAlpha = 0.3;
+  static const double sheetCtaTop = 20;
+
+  /// "Two more, if you like" (ED-489, the owner's option C): the rows in a
+  /// group 18 under the words, corner 22, on the ground colour; rows at
+  /// least 64, padding 12 × 14, 12 apart, the dot 40 with its 3 ring.
+  static const double moreTop = 18;
+  static const double moreRadius = 22;
+  static const double moreRow = 64;
+  static const double moreRowPadV = 12;
+  static const double moreRowPadH = 14;
+  static const double moreGap = 12;
 }
 
 /// The dial's fade at its top and bottom (`.dial` `mask-image`): an
@@ -371,4 +443,20 @@ abstract final class OnbMotion {
 
   /// A chip's dot filling when picked (`.rd` transition .2 s).
   static const chipFill = Duration(milliseconds: 200);
+
+  /// The nudge: the subject drops (620 ms; the light tap lands at 55 %),
+  /// the preview slides down at 450 ms (420 ms) from 130 % above, the ask
+  /// rises at 800 ms (500 ms) from 110 % below, both emphasized
+  /// decelerate; focus moves to Allow nudges at 900 ms. Reduce Motion:
+  /// all three fade in (200 ms) at once.
+  static const nudge = Duration(milliseconds: 1300);
+  static const drop = Duration(milliseconds: 620);
+  static const double dropLand = 0.55;
+  static const bannerStart = Duration(milliseconds: 450);
+  static const bannerIn = Duration(milliseconds: 420);
+  static const double bannerFrom = 1.3;
+  static const sheetStart = Duration(milliseconds: 800);
+  static const sheetIn = Duration(milliseconds: 500);
+  static const double sheetFrom = 1.1;
+  static const askFocus = Duration(milliseconds: 900);
 }

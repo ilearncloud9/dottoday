@@ -3069,10 +3069,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calendarsConnect => 'Connect a calendar';
 
   @override
-  String get calendarsOnlineInSettings =>
-      'Connect Google or Microsoft in Settings › Calendars.';
-
-  @override
   String get calendarsOnline => 'Google and Microsoft';
 
   @override
@@ -3132,10 +3128,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarsReadOnly => 'Read-only';
-
-  @override
-  String get calendarsPickInSettings =>
-      'Connected · choose calendars in Settings';
 
   @override
   String get calendarDeniedTitle => 'Calendar access is off';
@@ -3714,6 +3706,56 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get onboardingNudgePreview => 'PREVIEW';
+
+  @override
+  String get onboardingNudgePreviewLabel => 'Reminder preview';
+
+  @override
+  String get onboardingNudgeBody =>
+      'A quiet nudge 10 minutes before each task. Change it any time.';
+
+  @override
+  String get onboardingAllowNudges => 'Allow nudges';
+
+  @override
+  String get onboardingTwoMore => 'Two more, if you like';
+
+  @override
+  String get onboardingTwoMoreBody =>
+      'Both stay off unless you turn them on. Change them any time in Settings.';
+
+  @override
+  String onboardingNudgeIn(String title) {
+    return '$title in 10 minutes';
+  }
+
+  @override
+  String onboardingNudgeAsk(String title) {
+    return 'Want this before $title?';
+  }
+
+  @override
+  String onboardingNudgeSpan(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String onboardingTaskMeta(String time, String length) {
+    return '$time · $length';
+  }
+
+  @override
+  String onboardingRingsAt(String time) {
+    return 'Rings at $time';
+  }
+
+  @override
+  String onboardingNudgeAt(String time) {
+    return 'A nudge at $time';
+  }
+
+  @override
   String get onboardingHabitsMax => 'Five is plenty to start with.';
 
   @override
@@ -3727,30 +3769,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get starterRead => 'Read';
-
-  @override
-  String get onboardingRemindersTitle => 'Want a nudge?';
-
-  @override
-  String get onboardingRemindersBody =>
-      'Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.';
-
-  @override
-  String get onboardingTaskStarts => 'Before each task';
-
-  @override
-  String get onboardingTaskStartsDetail =>
-      'How early is up to you, in Settings';
-
-  @override
-  String get onboardingWindDown => 'At Wind Down';
-
-  @override
-  String get onboardingWindDownDetail =>
-      'Tomorrow\'s first task, so the morning has no surprises';
-
-  @override
-  String get onboardingAllow => 'Allow notifications';
 
   @override
   String get onboardingNotNow => 'Not now';

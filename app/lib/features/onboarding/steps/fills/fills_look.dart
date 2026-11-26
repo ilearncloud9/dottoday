@@ -9,8 +9,26 @@ import 'package:dottoday/domain/onboarding/day_fills.dart';
 import 'package:dottoday/domain/quick_add/quick_add_draft.dart';
 import 'package:dottoday/domain/quick_add/quick_add_lexicon.dart';
 import 'package:dottoday/domain/quick_add/quick_add_parser.dart';
+import 'package:dottoday/features/onboarding/steps/fills/fills_draft.dart';
 import 'package:flutter/widgets.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+/// Every chip on What fills your days: the four, then what was typed.
+List<DayFill> draftChips(AppLocalizations l10n, FillsDraftState draft) => [
+  for (final p in FillPreset.values)
+    DayFill.preset(
+      id: draft.presetIds[p]!,
+      title: presetTitle(l10n, p),
+      preset: p,
+    ),
+  ...draft.typed,
+];
+
+/// The picked chips, in chip order.
+List<DayFill> draftPicked(AppLocalizations l10n, FillsDraftState draft) => [
+  for (final f in draftChips(l10n, draft))
+    if (draft.picked.contains(f.id)) f,
+];
 
 /// A preset's title in the user's language.
 String presetTitle(AppLocalizations l10n, FillPreset p) => switch (p) {

@@ -183,7 +183,7 @@ const _f8Rows = <String, ParityRow>{
   'F10.1': ParityRow(
     tests: [
       'test/features/onboarding/flow_rules_test.dart',
-      'test/features/onboarding/reminders_step_test.dart',
+      'test/features/onboarding/nudge_step_test.dart',
       'integration_test/onboarding_test.dart',
     ],
     all: ci,

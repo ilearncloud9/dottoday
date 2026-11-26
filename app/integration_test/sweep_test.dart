@@ -465,9 +465,9 @@ Future<void> _onboarding(
   await step('onboarding_day_shape', 'Continue');
   await step('onboarding_habits', 'Skip for now', pick: 'Gym');
   // Already allowed on this device → the test alarm and Continue (M6.5.9).
-  await sweepUntil(tester, find.text('Want a nudge?'));
+  await sweepUntil(tester, find.text('Allow nudges'));
   await sweepRest(tester);
-  await leaveRemindersStep(tester, (label) async {
+  await leaveNudgeStep(tester, (label) async {
     await tester.ensureVisible(find.text(label).first);
     await sweepRest(tester);
     await tester.tap(find.text(label).first);

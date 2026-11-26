@@ -15,7 +15,7 @@ class OnbNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final android = _android(context);
+    final android = onbAndroid(context);
     final at = this.at;
     return SizedBox(
       height: OnbSize.nav,
@@ -34,7 +34,9 @@ class OnbNav extends StatelessWidget {
   }
 }
 
-bool _android(BuildContext context) =>
+/// Whether the onboarding draws Android's chrome (← alone, Android's
+/// corners): Android, not the web.
+bool onbAndroid(BuildContext context) =>
     !webChrome(context) && Theme.of(context).platform == TargetPlatform.android;
 
 class _Back extends StatelessWidget {

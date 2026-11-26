@@ -4548,12 +4548,6 @@ abstract class AppLocalizations {
   /// **'Connect a calendar'**
   String get calendarsConnect;
 
-  /// Onboarding O4 where the device has no calendars of its own (web): where online calendars are connected (M7.4).
-  ///
-  /// In en, this message translates to:
-  /// **'Connect Google or Microsoft in Settings › Calendars.'**
-  String get calendarsOnlineInSettings;
-
   /// Calendars page group caption for connected online accounts (M7.4).
   ///
   /// In en, this message translates to:
@@ -4661,12 +4655,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read-only'**
   String get calendarsReadOnly;
-
-  /// Onboarding O4: the Connect a calendar row once access is allowed.
-  ///
-  /// In en, this message translates to:
-  /// **'Connected · choose calendars in Settings'**
-  String get calendarsPickInSettings;
 
   /// Permission-denied notice title for calendars.
   ///
@@ -5580,6 +5568,78 @@ abstract class AppLocalizations {
   /// **'{count} of {max}'**
   String onboardingFillsCount(int count, int max);
 
+  /// The tag on the nudge's reminder preview.
+  ///
+  /// In en, this message translates to:
+  /// **'PREVIEW'**
+  String get onboardingNudgePreview;
+
+  /// Screen reader label of the reminder preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder preview'**
+  String get onboardingNudgePreviewLabel;
+
+  /// The nudge's ask, under its question.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet nudge 10 minutes before each task. Change it any time.'**
+  String get onboardingNudgeBody;
+
+  /// The nudge: asks for notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow nudges'**
+  String get onboardingAllowNudges;
+
+  /// After notifications are allowed: the Wake Up alarm and Wind Down reminder (ED-489).
+  ///
+  /// In en, this message translates to:
+  /// **'Two more, if you like'**
+  String get onboardingTwoMore;
+
+  /// Under "Two more, if you like".
+  ///
+  /// In en, this message translates to:
+  /// **'Both stay off unless you turn them on. Change them any time in Settings.'**
+  String get onboardingTwoMoreBody;
+
+  /// The preview's title.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} in 10 minutes'**
+  String onboardingNudgeIn(String title);
+
+  /// The nudge's question.
+  ///
+  /// In en, this message translates to:
+  /// **'Want this before {title}?'**
+  String onboardingNudgeAsk(String title);
+
+  /// The preview's times: start to end.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String onboardingNudgeSpan(String start, String end);
+
+  /// Under the nudge's task: its time and length.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · {length}'**
+  String onboardingTaskMeta(String time, String length);
+
+  /// Under Wake Up alarm on "Two more".
+  ///
+  /// In en, this message translates to:
+  /// **'Rings at {time}'**
+  String onboardingRingsAt(String time);
+
+  /// Under Wind Down reminder on "Two more".
+  ///
+  /// In en, this message translates to:
+  /// **'A nudge at {time}'**
+  String onboardingNudgeAt(String time);
+
   /// Onboarding O3: shown when five are picked.
   ///
   /// In en, this message translates to:
@@ -5609,48 +5669,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read'**
   String get starterRead;
-
-  /// Onboarding O4 question.
-  ///
-  /// In en, this message translates to:
-  /// **'Want a nudge?'**
-  String get onboardingRemindersTitle;
-
-  /// Onboarding O4 explanation.
-  ///
-  /// In en, this message translates to:
-  /// **'Dottoday reminds you when a task starts and before Wind Down. You can change this any time in Settings.'**
-  String get onboardingRemindersBody;
-
-  /// Onboarding O4: the task-start reminder.
-  ///
-  /// In en, this message translates to:
-  /// **'Before each task'**
-  String get onboardingTaskStarts;
-
-  /// Onboarding O4: under the task-start reminder.
-  ///
-  /// In en, this message translates to:
-  /// **'How early is up to you, in Settings'**
-  String get onboardingTaskStartsDetail;
-
-  /// Onboarding O4: the Wind Down reminder switch.
-  ///
-  /// In en, this message translates to:
-  /// **'At Wind Down'**
-  String get onboardingWindDown;
-
-  /// Onboarding O4: under the Wind Down switch.
-  ///
-  /// In en, this message translates to:
-  /// **'Tomorrow\'s first task, so the morning has no surprises'**
-  String get onboardingWindDownDetail;
-
-  /// Onboarding O4: asks the system for permission.
-  ///
-  /// In en, this message translates to:
-  /// **'Allow notifications'**
-  String get onboardingAllow;
 
   /// Onboarding O4: go on without asking.
   ///

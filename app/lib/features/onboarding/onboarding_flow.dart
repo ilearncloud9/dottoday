@@ -11,7 +11,7 @@ import 'package:dottoday/features/onboarding/flow/onb_switcher.dart';
 import 'package:dottoday/features/onboarding/steps/account_step.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_step.dart';
 import 'package:dottoday/features/onboarding/steps/hello_step.dart';
-import 'package:dottoday/features/onboarding/steps/reminders_step.dart';
+import 'package:dottoday/features/onboarding/steps/nudge/nudge_step.dart';
 import 'package:dottoday/features/onboarding/steps/your_day_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,8 +126,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       ),
       OnboardingStep.day => YourDayStep(onNext: next),
       OnboardingStep.fills => FillsStep(onNext: next),
-      // Part 4 (ED-485) replaces this with the prototype's nudge.
-      OnboardingStep.nudge => RemindersStep(onNext: next),
+      OnboardingStep.nudge => NudgeStep(onNext: next),
       // Reaching it finishes (`_go`); part 5 shows the real Today here.
       OnboardingStep.today => const SizedBox.shrink(),
     };

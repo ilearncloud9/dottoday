@@ -3,6 +3,7 @@ import 'package:dottoday/features/onboarding/steps/fills/fills_geometry.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_layout.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_row_dot.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_thread_paint.dart';
+import 'package:dottoday/features/onboarding/steps/nudge/nudge_drop.dart';
 import 'package:flutter/material.dart';
 
 /// One row on the thread: Wake Up, a pick, or Wind Down.
@@ -34,6 +35,7 @@ class FillsThread extends StatelessWidget {
     required this.land,
     this.flying,
     this.landing,
+    this.drop,
     super.key,
   });
 
@@ -49,6 +51,9 @@ class FillsThread extends StatelessWidget {
   final Animation<double> land;
   final String? flying;
   final String? landing;
+
+  /// The nudge: the subject's row drops onto its time on this (0–1).
+  final Animation<double>? drop;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +119,7 @@ class FillsThread extends StatelessWidget {
                 g,
                 r,
                 at.ys[i],
-                compact: at.compact,
+                shrunk: at.compact,
                 width: box.maxWidth,
               ),
             // NOW over the dots (`.nowm` z-index 2), under its pill.
@@ -153,16 +158,26 @@ class FillsThread extends StatelessWidget {
     FillsGeometry g,
     FillRow r,
     double y, {
-    required bool compact,
+    required bool shrunk,
     required double width,
   }) {
+    // The subject is never shrunk (`kf<1&&it.k!=='task'`).
+    final compact = shrunk && r.kind != FillRowKind.task;
+
     final (title, sub) = fillRowStyles(t, r.kind, compact: compact);
+    final task = r.kind == FillRowKind.task;
     final pick = r.kind == FillRowKind.pick;
-    final size = pick
+    final size = task
+        ? OnbSize.taskDot
+        : pick
         ? (compact ? OnbSize.pickDotSmall : OnbSize.pickDot)
         : (compact ? OnbSize.anchorDotSmall : OnbSize.anchorDot);
     final id = r.id;
+    final drop = this.drop;
     Widget hide(Widget child) {
+      if (task && drop != null) {
+        return NudgeDrop(progress: drop, child: child);
+      }
       if (id == null) return child;
       if (id == flying) return Opacity(opacity: 0, child: child);
       if (id == landing && t.motion.isReduced) {
@@ -192,6 +207,7 @@ class FillsThread extends StatelessWidget {
             color: r.color,
             glyph: r.glyph,
             iconSize: pick && compact ? OnbSize.rowIconSmall : OnbSize.rowIcon,
+            filled: task,
             pop: id != null && id == landing && !t.motion.isReduced
                 ? land
                 : null,
