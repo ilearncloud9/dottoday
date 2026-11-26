@@ -3,6 +3,7 @@ import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../support/a11y.dart';
 import '../../support/timeline_fakes.dart';
@@ -93,6 +94,8 @@ void _expectTarget(WidgetTester tester, Finder f) {
 }
 
 void main() {
+  setUpAll(tz_data.initializeTimeZones);
+
   group('Delete now', () {
     testWidgets('asks once; Cancel keeps the task', (tester) async {
       final h = await _openTrash(tester);

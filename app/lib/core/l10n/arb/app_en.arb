@@ -8676,6 +8676,44 @@
       }
     }
   },
+  "trashDeletedToday": "Deleted today",
+  "@trashDeletedToday": {
+    "description": "Trash row, under the title (E-R2-30, E-R2-32): deleted on today's date."
+  },
+  "trashDeletedYesterday": "Deleted yesterday",
+  "@trashDeletedYesterday": {
+    "description": "Trash row: deleted yesterday."
+  },
+  "trashDeletedOn": "Deleted {date}",
+  "@trashDeletedOn": {
+    "description": "Trash row: deleted on an earlier date (\"Deleted 12 Oct\").",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "trashDaysLeft": "{count, plural, =1{1 day left} other{{count} days left}}",
+  "@trashDaysLeft": {
+    "description": "Trash row: days before Trash removes the task for good.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trashRowDetail": "{deleted} · {left}",
+  "@trashRowDetail": {
+    "description": "Trash row line: \"Deleted today · 30 days left\".",
+    "placeholders": {
+      "deleted": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

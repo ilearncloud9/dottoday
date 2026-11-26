@@ -8231,6 +8231,33 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get trashDeletedToday => 'Eliminada hoy';
+
+  @override
+  String get trashDeletedYesterday => 'Eliminada ayer';
+
+  @override
+  String trashDeletedOn(String date) {
+    return 'Eliminada el $date';
+  }
+
+  @override
+  String trashDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'quedan $count días',
+      one: 'queda 1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String trashRowDetail(String deleted, String left) {
+    return '$deleted · $left';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

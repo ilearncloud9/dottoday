@@ -5928,6 +5928,13 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; settings, shared and core tests pass (3214); goldens updated for the sheets, Export, Data and privacy and the Mac and web forms only. New device test `data_safety` passes on the iPhone 17 Pro simulator and the Android 17 emulator, light and dark. Android keeps cards where E-R2-21 draws a plain list (the owner's rule: Android mirrors the iPhone's groups and cards).
 - **Not run:** picking real files, the iPad and Android tablet panes, a real phone.
 
+### ED-478 · M20.10 part 2: Trash as E-R2-32 draws it; push buttons on Mac and web
+- **Date:** 2026-11-26. **Owner:** "Start part 2"; drawing https://claude.ai/artifact/V7n6xoGTJ4sV4KKTLBy3tG; on the Mac and web rows: "A, push buttons". Review page: https://claude.ai/artifact/Czk14oRyDmFbiiqX1GTnuA. **Approved 2026-11-26: "Approve part 2".**
+- **Built (E-R2-21 §5, ED-319; E-R2-32, ED-337; E-R2-30, ED-333):** the deleted tasks in one list (the group card), each with its skipped dot, the title and "Deleted today · 30 days left" (drawn on E-R2-30 and E-R2-32, not built before: today, yesterday, or the date, and Trash's 30 days, counted in the profile's zone, `trashAge`); phones: Delete now in ink then Restore in the accent, in bold 13 (Manrope), beside the title while its longest word fits and under it otherwise (200 % text); Empty Trash an outlined pill centred under the list, then "Deleted tasks stay 30 days". Mac and web (option A): the centred dialog with Delete now and Restore as push buttons on each row and Empty Trash a push button. Confirms, "Trash emptied" without Undo and "Trash is empty" unchanged (already as drawn).
+- **New strings (en, de, es, fr):** Deleted today, Deleted yesterday, Deleted {date}, {count} days left, "{deleted} · {left}".
+- **Checks:** format and analyze clean; 4390 tests pass (new: `trashAge` today, yesterday, earlier, the zone, a clock change, the last day; the Trash goldens on iPhone, Android and Mac, light and dark, and the iPhone at 200 % text with nothing cut).
+- **Not run:** Trash on a device with deleted tasks (the device test's in-memory day has none), VoiceOver.
+
 ---
 
 ## Pending owner answers

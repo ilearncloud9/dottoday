@@ -6578,6 +6578,22 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String nowWindowNext(String title) => pseudo(super.nowWindowNext(title));
 
   @override
+  String get trashDeletedToday => pseudo(super.trashDeletedToday);
+
+  @override
+  String get trashDeletedYesterday => pseudo(super.trashDeletedYesterday);
+
+  @override
+  String trashDeletedOn(String date) => pseudo(super.trashDeletedOn(date));
+
+  @override
+  String trashDaysLeft(int count) => pseudo(super.trashDaysLeft(count));
+
+  @override
+  String trashRowDetail(String deleted, String left) =>
+      pseudo(super.trashRowDetail(deleted, left));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

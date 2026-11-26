@@ -847,6 +847,7 @@ Rules for every task in M18 to M22:
   - web persistent storage and its truthful states (ED-188 to ED-192).
   Split by the owner (2026-11-26, ED-476) into six parts, each with its own review page and commit: 1 Export, backups, import and restore (E-R2-21 §1–4); 2 Trash (E-R2-21 §5, E-R2-32, E-R2-30); 3 the database recovery screen (E-R2-21 §6); 4 sync status (E-G4-7 A–B, E-R2-8); 5 sync conflicts with Undo and Keep both (E-G4-7 C, E-G4-7-Q4-KeepBoth); 6 web storage (E-G4-7 Q2). Every part checks E-R2-32 (ED-337) first.
   - [x] Part 1 done 2026-11-26 (ED-477): Data and privacy, Export, the backups on this device, import and restore checked against E-R2-21 §1–4 and E-R2-32 (already as drawn, words included); Sync and Tasks (CSV) icons fixed to the board; the multi-file backup sheets drawn and built in E-R2-21's sheet look; new device test `data_safety`. Open: picking real files, tablets, a real phone.
+  - [x] Part 2 done 2026-11-26 (ED-478): Trash from E-R2-32, E-R2-21 §5 and E-R2-30: one list with "Deleted today · 30 days left" (new, four languages), Delete now in ink then Restore, Empty Trash centred with "Deleted tasks stay 30 days"; Mac and web a centred dialog with push buttons (owner: option A); goldens on iPhone, Android and Mac and at 200 % text. Open: a device with deleted tasks, VoiceOver.
 - [ ] M20.11 Onboarding from the approved interactive prototype (ED-305, ED-350, ED-351). It replaces the current flow:
   - five steps, with no Layout step;
   - the 13+ note on Hello, "Dottoday is for people aged 13+.";

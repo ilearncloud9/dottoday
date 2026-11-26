@@ -12468,6 +12468,36 @@ abstract class AppLocalizations {
   /// **'next {title}'**
   String nowWindowNext(String title);
 
+  /// Trash row, under the title (E-R2-30, E-R2-32): deleted on today's date.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted today'**
+  String get trashDeletedToday;
+
+  /// Trash row: deleted yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted yesterday'**
+  String get trashDeletedYesterday;
+
+  /// Trash row: deleted on an earlier date ("Deleted 12 Oct").
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted {date}'**
+  String trashDeletedOn(String date);
+
+  /// Trash row: days before Trash removes the task for good.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day left} other{{count} days left}}'**
+  String trashDaysLeft(int count);
+
+  /// Trash row line: "Deleted today · 30 days left".
+  ///
+  /// In en, this message translates to:
+  /// **'{deleted} · {left}'**
+  String trashRowDetail(String deleted, String left);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:
