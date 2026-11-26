@@ -390,6 +390,9 @@ abstract final class DotSize {
   /// The Sync popover over the sidebar line (E-G4-7 B5): 360.
   static const double syncPopover = 360;
 
+  /// The web caution note's amber rule on its leading edge (E-G4-7 Q2b).
+  static const double cautionRule = 3;
+
   /// Go to date's popover (E-R2-36, ED-342): the month under the date
   /// button, as wide as its board frame.
   static const double goToDate = 360;
@@ -943,6 +946,9 @@ enum WidthClass {
 /// button or radio, ED-450): drawn at this opacity, its reason beside it.
 abstract final class DotOpacity {
   static const double disabled = 0.45;
+
+  /// The web caution note's amber wash over the panel (E-G4-7 Q2b).
+  static const double cautionWash = 0.1;
 }
 
 /// How much of the frosted Android chrome is its fill (ED-125): the

@@ -12600,6 +12600,144 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 character} other{{count} characters}}'**
   String conflictCharacters(int count);
 
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Sync details'**
+  String get syncDetailsTitle;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'All changes synced'**
+  String get webAllSynced;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'{last}. Your tasks are on your account.'**
+  String webOnAccount(String last);
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in this browser. {last}.'**
+  String webSavedWaiting(String last);
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'These changes are saved in this browser, but haven\'t synced to your account yet.'**
+  String get webCautionSaved;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'If you clear this site\'s data before they sync, you could lose them. Changes already synced to your account will remain there.'**
+  String get webCautionClear;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'In this browser'**
+  String get webInBrowser;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Dottoday also saves your tasks in this browser, so it works offline. Changes wait here until they sync.'**
+  String get webInBrowserBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Browser storage is kept'**
+  String get webStorageKept;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser agreed to keep Dottoday\'s data. That makes automatic removal less likely, but clearing this site\'s data still removes it. Synced tasks stay on your account.'**
+  String get webStorageKeptBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic removal is less likely. Clearing this site\'s data still removes it.'**
+  String get webStorageKeptShort;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Browser storage isn\'t kept'**
+  String get webStorageNotKept;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser hasn\'t agreed to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.'**
+  String get webStorageNotKeptBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Browser storage can\'t be asked'**
+  String get webStorageUnsupported;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser can\'t be asked to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.'**
+  String get webStorageUnsupportedBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in'**
+  String get webGuestTitle;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Saved in this browser.'**
+  String get webGuestSaved;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Not signed in · saved in this browser'**
+  String get webGuestLine;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Only saved in this browser'**
+  String get webGuestCard;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Your tasks are only stored in this browser. If you clear this site\'s data, you could lose them.'**
+  String get webGuestCardBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'Asked after your first saved change. Automatic removal is less likely. Clearing this site\'s data still removes it.'**
+  String get webGuestKeptBody;
+
+  /// Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser hasn\'t agreed to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low.'**
+  String get webGuestNotKeptBody;
+
+  /// Web Sync details, guest, the browser cannot be asked (E-G4-7 Q2; ED-484).
+  ///
+  /// In en, this message translates to:
+  /// **'This browser can\'t be asked to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low.'**
+  String get webGuestUnsupportedBody;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

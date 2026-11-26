@@ -6,6 +6,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/data/pwa/browser_storage.dart';
 import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
@@ -294,6 +295,7 @@ class _SyncFoot extends ConsumerWidget {
         status: status,
         now: now,
         browser: ref.watch(inBrowserProvider),
+        savedHere: ref.watch(savedInBrowserProvider),
       ),
     );
   }

@@ -8346,6 +8346,91 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get syncDetailsTitle => 'Sync-Details';
+
+  @override
+  String get webAllSynced => 'Alle Änderungen synchronisiert';
+
+  @override
+  String webOnAccount(String last) {
+    return '$last. Deine Aufgaben sind in deinem Konto.';
+  }
+
+  @override
+  String webSavedWaiting(String last) {
+    return 'In diesem Browser gespeichert. $last.';
+  }
+
+  @override
+  String get webCautionSaved =>
+      'Diese Änderungen sind in diesem Browser gespeichert, aber noch nicht mit deinem Konto synchronisiert.';
+
+  @override
+  String get webCautionClear =>
+      'Wenn du die Daten dieser Website löschst, bevor sie synchronisiert sind, könnten sie verloren gehen. Bereits mit deinem Konto synchronisierte Änderungen bleiben dort.';
+
+  @override
+  String get webInBrowser => 'In diesem Browser';
+
+  @override
+  String get webInBrowserBody =>
+      'Dottoday speichert deine Aufgaben auch in diesem Browser, damit es offline funktioniert. Änderungen warten hier, bis sie synchronisiert sind.';
+
+  @override
+  String get webStorageKept => 'Browser-Speicher wird behalten';
+
+  @override
+  String get webStorageKeptBody =>
+      'Dieser Browser hat zugestimmt, die Daten von Dottoday zu behalten. Das macht ein automatisches Entfernen unwahrscheinlicher, aber das Löschen der Website-Daten entfernt sie trotzdem. Synchronisierte Aufgaben bleiben in deinem Konto.';
+
+  @override
+  String get webStorageKeptShort =>
+      'Automatisches Entfernen ist unwahrscheinlicher. Das Löschen der Website-Daten entfernt sie trotzdem.';
+
+  @override
+  String get webStorageNotKept => 'Browser-Speicher wird nicht behalten';
+
+  @override
+  String get webStorageNotKeptBody =>
+      'Dieser Browser hat nicht zugestimmt, die Daten von Dottoday zu behalten, und kann sie selbst entfernen, zum Beispiel bei wenig Speicherplatz. Synchronisierte Aufgaben bleiben in deinem Konto; noch nicht synchronisierte Änderungen könnten entfernt werden.';
+
+  @override
+  String get webStorageUnsupported =>
+      'Browser-Speicher kann nicht angefragt werden';
+
+  @override
+  String get webStorageUnsupportedBody =>
+      'Dieser Browser kann nicht gebeten werden, die Daten von Dottoday zu behalten, und kann sie selbst entfernen, zum Beispiel bei wenig Speicherplatz. Synchronisierte Aufgaben bleiben in deinem Konto; noch nicht synchronisierte Änderungen könnten entfernt werden.';
+
+  @override
+  String get webGuestTitle => 'Nicht angemeldet';
+
+  @override
+  String get webGuestSaved => 'In diesem Browser gespeichert.';
+
+  @override
+  String get webGuestLine => 'Nicht angemeldet · in diesem Browser gespeichert';
+
+  @override
+  String get webGuestCard => 'Nur in diesem Browser gespeichert';
+
+  @override
+  String get webGuestCardBody =>
+      'Deine Aufgaben sind nur in diesem Browser gespeichert. Wenn du die Daten dieser Website löschst, könnten sie verloren gehen.';
+
+  @override
+  String get webGuestKeptBody =>
+      'Nach deiner ersten gespeicherten Änderung angefragt. Automatisches Entfernen ist unwahrscheinlicher. Das Löschen der Website-Daten entfernt sie trotzdem.';
+
+  @override
+  String get webGuestNotKeptBody =>
+      'Dieser Browser hat nicht zugestimmt, die Daten von Dottoday zu behalten, und kann sie selbst entfernen, zum Beispiel bei wenig Speicherplatz.';
+
+  @override
+  String get webGuestUnsupportedBody =>
+      'Dieser Browser kann nicht gebeten werden, die Daten von Dottoday zu behalten, und kann sie selbst entfernen, zum Beispiel bei wenig Speicherplatz.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

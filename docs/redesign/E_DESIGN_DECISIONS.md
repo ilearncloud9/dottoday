@@ -5977,6 +5977,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; engine tests for Undo (unchanged, and changed elsewhere → a new conflict), Keep both and its limit; the flow test (Review, Keep mine, the toast, Undo); goldens for the time and notes conflicts (with 200 % text and RTL), over the limit, the phone toast and the Mac popover; all tests pass but the Supabase ones (Docker off).
 - **Not run:** a device, two real devices against Supabase, VoiceOver.
 
+### ED-484 · M20.10 part 6: what this browser keeps, as E-G4-7 Q2 draws it
+- **Date:** 2026-11-26. **Owner:** "Start part 6". Review page: https://claude.ai/artifact/5K5DbNx7yTamnr7FvJFoF3. **Approved 2026-11-26: "Approve part 6".** E-G4-7 Q2a–Q2f and the Q2 rules (ED-188 to ED-192) draw every state; E-R2-32 has nothing on web storage, so nothing was asked.
+- **Sync details (Q2a–Q2d):** on the web the Sync panel is "Sync details" and closes with ✕. Signed in: "All changes synced" with "Last synced … Your tasks are on your account."; while changes wait, "2 changes waiting to sync" with "Saved in this browser. Last synced …" and the caution note (info icon, amber rule, heading first for screen readers), only while something waits. Then "In this browser": what Dottoday saves here, and the storage line: kept (long body when all synced, short while waiting), isn't kept, or can't be asked. Sync now is filled while changes wait and tonal otherwise, pinned under the scrolling body so it stays reachable at 200 % text (Q2d).
+- **Not signed in (Q2e, Q2f; ED-192):** once something is saved in this browser, "Not signed in / Saved in this browser.", the "Only saved in this browser" note, the storage line ("Asked after your first saved change…"), Sign in pinned; the sidebar line reads "Not signed in · saved in this browser". Before the first save the panel and line stay as they were.
+- **The ask (ED-188 to ED-191):** `navigator.storage.persisted()` is checked silently; `persist()` is asked once per browser profile and owner, after sign-in or a guest's first saved change, never blocking and never again; a missing API or no answer in 5 s reads "can't be asked". Off the web nothing is asked or shown. No "guaranteed", no red, no re-ask button.
+- **Data:** `BrowserStorageGateway` (domain) with the web and stub implementations; `browserStorageProvider`, `savedInBrowserProvider`; no schema change. `AppSheet` gains a pinned `foot`. New glyphs cloudDone, cloudUp, browser, device; strings in en, de, es, fr.
+- **Checks:** format and analyze clean; provider tests with a fake gateway (kept, unsupported, asked once, a no never re-asked, the guest only after a save); the sidebar line test; goldens for synced, waiting, not kept, can't be asked and the guest, light and dark, and 200 % text with RTL; all tests but the Supabase ones (Docker off).
+- **Not run:** a real browser (Chrome, Safari, Firefox) answering `persist()`, a screen reader on the web. Q2 marks guest sign-in for existing accounts and shared devices as CR-160, unchanged here.
+
 ---
 
 ## Pending owner answers

@@ -14,8 +14,13 @@ class SyncStatusLine extends StatelessWidget {
     required this.status,
     required this.now,
     this.browser = false,
+    this.savedHere = false,
     super.key,
   });
+
+  /// Without an account, something is saved in this browser (Q2e,
+  /// ED-192): "Not signed in · saved in this browser".
+  final bool savedHere;
 
   final SyncStatus status;
 
@@ -29,11 +34,17 @@ class SyncStatusLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final text = syncLineText(l10n, status, now, browser: browser);
+    final text = syncLineText(
+      l10n,
+      status,
+      now,
+      browser: browser,
+      savedHere: savedHere,
+    );
     if (text == null) return const SizedBox.shrink();
     return Semantics(
       button: true,
-      label: l10n.syncTitle,
+      label: browser ? l10n.syncDetailsTitle : l10n.syncTitle,
       value: text,
       excludeSemantics: true,
       child: InkWell(
@@ -45,7 +56,9 @@ class SyncStatusLine extends StatelessWidget {
             spacing: DotSpace.s,
             children: [
               DotIcon(
-                syncLineGlyph(status),
+                status.state == SyncState.localOnly
+                    ? DotGlyphs.device
+                    : syncLineGlyph(status),
                 color: t.colors.muted,
                 size: DotSize.rowIcon,
               ),
@@ -86,19 +99,21 @@ String syncAgo(AppLocalizations l10n, DateTime? at, DateTime now) {
   return l10n.syncAgoHours(minutes ~/ 60);
 }
 
-/// The line for [status]; null without an account. In a [browser],
+/// The line for [status]; null without an account, unless a guest has
+/// saved something in this [browser] (Q2e, ED-484). In a [browser],
 /// offline reads "Saved in this browser", with what is waiting (B6).
 String? syncLineText(
   AppLocalizations l10n,
   SyncStatus status,
   DateTime now, {
   bool browser = false,
+  bool savedHere = false,
 }) {
   if (status.conflicts.isNotEmpty) {
     return l10n.bannerConflicts(status.conflicts.length);
   }
   return switch (status.state) {
-    SyncState.localOnly => null,
+    SyncState.localOnly => browser && savedHere ? l10n.webGuestLine : null,
     SyncState.synced => l10n.syncLineSynced(
       syncAgo(l10n, status.lastSyncedUtc, now),
     ),

@@ -63,6 +63,25 @@ abstract final class DotGlyphs {
     '6.5 17zM12 10.5v4.5M9.8 12.8l2.2 2.2 2.2-2.2',
   );
 
+  /// Web Sync details, all synced (E-G4-7 Q2a): the cloud with a tick.
+  static const cloudDone = DotGlyph(
+    'M6.5 17h10.4a3.8 3.8 0 0 0 .4-7.6A5.5 5.5 0 0 0 6.9 8.3 4.4 4.4 0 0 0 '
+    '6.5 17zM9.6 12.6l1.7 1.7 3.2-3.2',
+  );
+
+  /// Web Sync details, changes waiting (E-G4-7 Q2b): the cloud with an
+  /// arrow going up.
+  static const cloudUp = DotGlyph(
+    'M6.5 17h10.4a3.8 3.8 0 0 0 .4-7.6A5.5 5.5 0 0 0 6.9 8.3 4.4 4.4 0 0 0 '
+    '6.5 17zM12 15v-4.5M9.8 12.7l2.2-2.2 2.2 2.2',
+  );
+
+  /// "In this browser" (E-G4-7 Q2): a window with its top bar.
+  static final browser = DotGlyph('${_r(3, 4, 18, 16, 2.5)}M3 9h18');
+
+  /// Not signed in, saved here (E-G4-7 Q2e): a device.
+  static final device = DotGlyph('${_r(7, 3, 10, 18, 2.5)}M11 17.5h2');
+
   /// Offline (E-G4-7 B2): the cloud with a stroke through it, in the sync
   /// button and the offline banner.
   static const cloudOff = DotGlyph(

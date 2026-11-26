@@ -6648,6 +6648,76 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.conflictCharacters(count));
 
   @override
+  String get syncDetailsTitle => pseudo(super.syncDetailsTitle);
+
+  @override
+  String get webAllSynced => pseudo(super.webAllSynced);
+
+  @override
+  String webOnAccount(String last) => pseudo(super.webOnAccount(last));
+
+  @override
+  String webSavedWaiting(String last) => pseudo(super.webSavedWaiting(last));
+
+  @override
+  String get webCautionSaved => pseudo(super.webCautionSaved);
+
+  @override
+  String get webCautionClear => pseudo(super.webCautionClear);
+
+  @override
+  String get webInBrowser => pseudo(super.webInBrowser);
+
+  @override
+  String get webInBrowserBody => pseudo(super.webInBrowserBody);
+
+  @override
+  String get webStorageKept => pseudo(super.webStorageKept);
+
+  @override
+  String get webStorageKeptBody => pseudo(super.webStorageKeptBody);
+
+  @override
+  String get webStorageKeptShort => pseudo(super.webStorageKeptShort);
+
+  @override
+  String get webStorageNotKept => pseudo(super.webStorageNotKept);
+
+  @override
+  String get webStorageNotKeptBody => pseudo(super.webStorageNotKeptBody);
+
+  @override
+  String get webStorageUnsupported => pseudo(super.webStorageUnsupported);
+
+  @override
+  String get webStorageUnsupportedBody =>
+      pseudo(super.webStorageUnsupportedBody);
+
+  @override
+  String get webGuestTitle => pseudo(super.webGuestTitle);
+
+  @override
+  String get webGuestSaved => pseudo(super.webGuestSaved);
+
+  @override
+  String get webGuestLine => pseudo(super.webGuestLine);
+
+  @override
+  String get webGuestCard => pseudo(super.webGuestCard);
+
+  @override
+  String get webGuestCardBody => pseudo(super.webGuestCardBody);
+
+  @override
+  String get webGuestKeptBody => pseudo(super.webGuestKeptBody);
+
+  @override
+  String get webGuestNotKeptBody => pseudo(super.webGuestNotKeptBody);
+
+  @override
+  String get webGuestUnsupportedBody => pseudo(super.webGuestUnsupportedBody);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

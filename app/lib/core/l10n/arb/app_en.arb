@@ -8790,6 +8790,106 @@
     },
     "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
   },
+  "syncDetailsTitle": "Sync details",
+  "@syncDetailsTitle": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webAllSynced": "All changes synced",
+  "@webAllSynced": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webOnAccount": "{last}. Your tasks are on your account.",
+  "@webOnAccount": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).",
+    "placeholders": {
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "webSavedWaiting": "Saved in this browser. {last}.",
+  "@webSavedWaiting": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484).",
+    "placeholders": {
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "webCautionSaved": "These changes are saved in this browser, but haven't synced to your account yet.",
+  "@webCautionSaved": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webCautionClear": "If you clear this site's data before they sync, you could lose them. Changes already synced to your account will remain there.",
+  "@webCautionClear": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webInBrowser": "In this browser",
+  "@webInBrowser": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webInBrowserBody": "Dottoday also saves your tasks in this browser, so it works offline. Changes wait here until they sync.",
+  "@webInBrowserBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageKept": "Browser storage is kept",
+  "@webStorageKept": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageKeptBody": "This browser agreed to keep Dottoday's data. That makes automatic removal less likely, but clearing this site's data still removes it. Synced tasks stay on your account.",
+  "@webStorageKeptBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageKeptShort": "Automatic removal is less likely. Clearing this site's data still removes it.",
+  "@webStorageKeptShort": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageNotKept": "Browser storage isn't kept",
+  "@webStorageNotKept": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageNotKeptBody": "This browser hasn't agreed to keep Dottoday's data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.",
+  "@webStorageNotKeptBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageUnsupported": "Browser storage can't be asked",
+  "@webStorageUnsupported": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webStorageUnsupportedBody": "This browser can't be asked to keep Dottoday's data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.",
+  "@webStorageUnsupportedBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestTitle": "Not signed in",
+  "@webGuestTitle": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestSaved": "Saved in this browser.",
+  "@webGuestSaved": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestLine": "Not signed in · saved in this browser",
+  "@webGuestLine": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestCard": "Only saved in this browser",
+  "@webGuestCard": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestCardBody": "Your tasks are only stored in this browser. If you clear this site's data, you could lose them.",
+  "@webGuestCardBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestKeptBody": "Asked after your first saved change. Automatic removal is less likely. Clearing this site's data still removes it.",
+  "@webGuestKeptBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestNotKeptBody": "This browser hasn't agreed to keep Dottoday's data, so it may remove it on its own, for example when space runs low.",
+  "@webGuestNotKeptBody": {
+    "description": "Web Sync details, what this browser keeps (E-G4-7 Q2, ED-188 to ED-192; ED-484)."
+  },
+  "webGuestUnsupportedBody": "This browser can't be asked to keep Dottoday's data, so it may remove it on its own, for example when space runs low.",
+  "@webGuestUnsupportedBody": {"description": "Web Sync details, guest, the browser cannot be asked (E-G4-7 Q2; ED-484)."},
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

@@ -8298,6 +8298,90 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get syncDetailsTitle => 'Sync details';
+
+  @override
+  String get webAllSynced => 'All changes synced';
+
+  @override
+  String webOnAccount(String last) {
+    return '$last. Your tasks are on your account.';
+  }
+
+  @override
+  String webSavedWaiting(String last) {
+    return 'Saved in this browser. $last.';
+  }
+
+  @override
+  String get webCautionSaved =>
+      'These changes are saved in this browser, but haven\'t synced to your account yet.';
+
+  @override
+  String get webCautionClear =>
+      'If you clear this site\'s data before they sync, you could lose them. Changes already synced to your account will remain there.';
+
+  @override
+  String get webInBrowser => 'In this browser';
+
+  @override
+  String get webInBrowserBody =>
+      'Dottoday also saves your tasks in this browser, so it works offline. Changes wait here until they sync.';
+
+  @override
+  String get webStorageKept => 'Browser storage is kept';
+
+  @override
+  String get webStorageKeptBody =>
+      'This browser agreed to keep Dottoday\'s data. That makes automatic removal less likely, but clearing this site\'s data still removes it. Synced tasks stay on your account.';
+
+  @override
+  String get webStorageKeptShort =>
+      'Automatic removal is less likely. Clearing this site\'s data still removes it.';
+
+  @override
+  String get webStorageNotKept => 'Browser storage isn\'t kept';
+
+  @override
+  String get webStorageNotKeptBody =>
+      'This browser hasn\'t agreed to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.';
+
+  @override
+  String get webStorageUnsupported => 'Browser storage can\'t be asked';
+
+  @override
+  String get webStorageUnsupportedBody =>
+      'This browser can\'t be asked to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low. Synced tasks stay on your account; changes waiting to sync could be removed.';
+
+  @override
+  String get webGuestTitle => 'Not signed in';
+
+  @override
+  String get webGuestSaved => 'Saved in this browser.';
+
+  @override
+  String get webGuestLine => 'Not signed in · saved in this browser';
+
+  @override
+  String get webGuestCard => 'Only saved in this browser';
+
+  @override
+  String get webGuestCardBody =>
+      'Your tasks are only stored in this browser. If you clear this site\'s data, you could lose them.';
+
+  @override
+  String get webGuestKeptBody =>
+      'Asked after your first saved change. Automatic removal is less likely. Clearing this site\'s data still removes it.';
+
+  @override
+  String get webGuestNotKeptBody =>
+      'This browser hasn\'t agreed to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low.';
+
+  @override
+  String get webGuestUnsupportedBody =>
+      'This browser can\'t be asked to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

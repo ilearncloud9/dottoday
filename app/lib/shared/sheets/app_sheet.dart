@@ -43,6 +43,7 @@ Future<T?> showAppSheet<T>({
   bool fullHeight = false,
   bool scrolls = true,
   bool done = false,
+  Widget? foot,
   double maxWidth = appSheetMaxWidth,
 }) {
   final size = MediaQuery.sizeOf(context);
@@ -65,6 +66,7 @@ Future<T?> showAppSheet<T>({
       title: title,
       scrolls: scrolls,
       done: done,
+      foot: foot,
       child: Builder(builder: builder),
     ),
     (true, false) => FractionallySizedBox(
@@ -123,10 +125,15 @@ class AppSheet extends StatelessWidget {
     this.title,
     this.scrolls = true,
     this.done = false,
+    this.foot,
     super.key,
   });
 
   final String? title;
+
+  /// The main action, pinned under the scrolling body so it stays
+  /// reachable at 200 % text (E-G4-7 Q2d, Q2f).
+  final Widget? foot;
 
   /// "Done" instead of the cross in the title row ([SheetHeader.done]).
   final bool done;
@@ -140,11 +147,12 @@ class AppSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final insets = MediaQuery.viewInsetsOf(context).bottom;
     final title = this.title;
+    final foot = this.foot;
     final pad = EdgeInsetsDirectional.fromSTEB(
       DotSpace.l,
       title == null ? DotSpace.s : 0,
       DotSpace.l,
-      DotSpace.xl,
+      foot == null ? DotSpace.xl : DotSpace.m,
     );
     // The title row stays put and only the body scrolls: scrolled with it,
     // the close button slid under the drag handle, cut to 48×22 (CR-160
@@ -177,6 +185,16 @@ class AppSheet extends StatelessWidget {
                 ? SingleChildScrollView(padding: pad, child: child)
                 : Padding(padding: pad, child: child),
           ),
+          if (foot != null)
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                DotSpace.l,
+                0,
+                DotSpace.l,
+                DotSpace.xl,
+              ),
+              child: foot,
+            ),
         ],
       ),
     );

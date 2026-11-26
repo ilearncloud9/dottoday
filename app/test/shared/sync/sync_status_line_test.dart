@@ -84,4 +84,22 @@ void main() {
     expect(asked?.anchor, isNotNull);
     expect(asked!.anchor!.size, tester.getSize(find.byType(SyncStatusLine)));
   });
+
+  // A web guest who has saved something (E-G4-7 Q2e, ED-484); nothing
+  // before the first save, and nothing off the web.
+  test('web guest: not signed in, saved in this browser', () {
+    String? guest({required bool browser, required bool saved}) => syncLineText(
+      l10n,
+      SyncStatus.localOnly,
+      now,
+      browser: browser,
+      savedHere: saved,
+    );
+    expect(
+      guest(browser: true, saved: true),
+      'Not signed in · saved in this browser',
+    );
+    expect(guest(browser: true, saved: false), isNull);
+    expect(guest(browser: false, saved: true), isNull);
+  });
 }

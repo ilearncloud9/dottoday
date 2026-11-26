@@ -8357,6 +8357,92 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get syncDetailsTitle => 'Détails de synchro';
+
+  @override
+  String get webAllSynced => 'Toutes les modifications synchronisées';
+
+  @override
+  String webOnAccount(String last) {
+    return '$last. Vos tâches sont sur votre compte.';
+  }
+
+  @override
+  String webSavedWaiting(String last) {
+    return 'Enregistré dans ce navigateur. $last.';
+  }
+
+  @override
+  String get webCautionSaved =>
+      'Ces modifications sont enregistrées dans ce navigateur, mais ne sont pas encore synchronisées avec votre compte.';
+
+  @override
+  String get webCautionClear =>
+      'Si vous effacez les données de ce site avant leur synchronisation, vous pourriez les perdre. Les modifications déjà synchronisées avec votre compte y resteront.';
+
+  @override
+  String get webInBrowser => 'Dans ce navigateur';
+
+  @override
+  String get webInBrowserBody =>
+      'Dottoday enregistre aussi vos tâches dans ce navigateur pour fonctionner hors ligne. Les modifications attendent ici jusqu’à leur synchronisation.';
+
+  @override
+  String get webStorageKept => 'Le stockage du navigateur est conservé';
+
+  @override
+  String get webStorageKeptBody =>
+      'Ce navigateur a accepté de conserver les données de Dottoday. Leur suppression automatique devient moins probable, mais effacer les données de ce site les supprime quand même. Les tâches synchronisées restent sur votre compte.';
+
+  @override
+  String get webStorageKeptShort =>
+      'Une suppression automatique est moins probable. Effacer les données de ce site les supprime quand même.';
+
+  @override
+  String get webStorageNotKept =>
+      'Le stockage du navigateur n’est pas conservé';
+
+  @override
+  String get webStorageNotKeptBody =>
+      'Ce navigateur n’a pas accepté de conserver les données de Dottoday ; il peut donc les supprimer de lui-même, par exemple quand l’espace manque. Les tâches synchronisées restent sur votre compte ; les modifications en attente pourraient être supprimées.';
+
+  @override
+  String get webStorageUnsupported =>
+      'Impossible de demander au navigateur de conserver les données';
+
+  @override
+  String get webStorageUnsupportedBody =>
+      'On ne peut pas demander à ce navigateur de conserver les données de Dottoday ; il peut donc les supprimer de lui-même, par exemple quand l’espace manque. Les tâches synchronisées restent sur votre compte ; les modifications en attente pourraient être supprimées.';
+
+  @override
+  String get webGuestTitle => 'Non connecté';
+
+  @override
+  String get webGuestSaved => 'Enregistré dans ce navigateur.';
+
+  @override
+  String get webGuestLine => 'Non connecté · enregistré dans ce navigateur';
+
+  @override
+  String get webGuestCard => 'Enregistré uniquement dans ce navigateur';
+
+  @override
+  String get webGuestCardBody =>
+      'Vos tâches sont stockées uniquement dans ce navigateur. Si vous effacez les données de ce site, vous pourriez les perdre.';
+
+  @override
+  String get webGuestKeptBody =>
+      'Demandé après votre première modification enregistrée. Une suppression automatique est moins probable. Effacer les données de ce site les supprime quand même.';
+
+  @override
+  String get webGuestNotKeptBody =>
+      'Ce navigateur n’a pas accepté de conserver les données de Dottoday ; il peut donc les supprimer de lui-même, par exemple quand l’espace manque.';
+
+  @override
+  String get webGuestUnsupportedBody =>
+      'On ne peut pas demander à ce navigateur de conserver les données de Dottoday ; il peut donc les supprimer de lui-même, par exemple quand l’espace manque.';
+
+  @override
   String get taskIconCategoryPlanning => 'Planification et rythme';
 
   @override
