@@ -25,6 +25,12 @@ final class FakeSyncServer {
   /// What the next call throws, if anything.
   SyncTrouble? failNext;
 
+  /// What every call throws while set (an ended session stays ended).
+  SyncTrouble? failAlways;
+
+  /// Calls that reached the server, refused or not.
+  var calls = 0;
+
   /// The account's revision (migration 0015): every committed change to a
   /// synced row moves it, whatever the route.
   var revision = 0;
@@ -68,6 +74,10 @@ final class FakeSyncServer {
   }
 
   void _maybeFail() {
+    calls++;
+    if (failAlways case final always?) {
+      throw SyncGatewayException(always, StateError('fake ${always.name}'));
+    }
     final f = failNext;
     if (f == null) return;
     failNext = null;

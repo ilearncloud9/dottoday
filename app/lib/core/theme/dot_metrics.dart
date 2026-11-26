@@ -378,6 +378,9 @@ abstract final class DotSize {
   /// 7 out, the title's ring 34, a pointer's duration pill 26 tall.
   static const double addPopover = 404;
 
+  /// The first sync's progress line (E-G4-7 A2): 6 tall, rounded.
+  static const double progressBar = 6;
+
   /// The Sync popover over the sidebar line (E-G4-7 B5): 360.
   static const double syncPopover = 360;
 
@@ -839,6 +842,10 @@ abstract final class DotTouch {
   /// none. A tooltip's overlay re-parents the routes' semantics, and on the
   /// web that drops the focused field's keys (CI a11y-web, 2026-11-01).
   static const tooltipWait = Duration(milliseconds: 500);
+
+  /// Reading this device's tasks shows the loading dots only once it has
+  /// taken longer than this (E-G4-7 A1, ED-482): a quick open shows none.
+  static const loadingWait = Duration(milliseconds: 300);
 
   /// A dial drag pauses this long before its times are written: one
   /// write per move, not one per frame (Wake Up and Wind Down, ED-452).

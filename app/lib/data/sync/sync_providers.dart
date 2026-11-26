@@ -139,3 +139,24 @@ Stream<String?> accountIdChanges(SupabaseClient client) async* {
 @Riverpod(keepAlive: true)
 Stream<SyncStatus> syncStatus(Ref ref) =>
     ref.watch(syncServiceProvider).watch();
+
+/// The server's rows arriving, live (done of total).
+@Riverpod(keepAlive: true)
+Stream<RestoreProgress> restoreProgress(Ref ref) =>
+    ref.watch(syncServiceProvider).watchRestore();
+
+/// The first sync on a new device while it runs, else null (E-G4-7 A2,
+/// ED-482): this device has never synced and the server's rows are still
+/// arriving. Today says "Bringing your tasks to this device…" with the
+/// count, and the tasks appear as they come.
+@riverpod
+RestoreProgress? firstSync(Ref ref) {
+  final status = ref.watch(syncStatusProvider).value;
+  final progress = ref.watch(restoreProgressProvider).value;
+  if (status == null || progress == null) return null;
+  if (status.lastSyncedUtc != null || status.state != SyncState.syncing) {
+    return null;
+  }
+  if (progress.total == 0 || progress.finished) return null;
+  return progress;
+}

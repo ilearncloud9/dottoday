@@ -6474,12 +6474,6 @@ abstract class AppLocalizations {
   /// **'Ringing in {seconds} s…'**
   String testAlarmCountdown(int seconds);
 
-  /// Status line after a server error (details in the Sync sheet).
-  ///
-  /// In en, this message translates to:
-  /// **'Sync paused · tap Sync for why'**
-  String get syncLinePaused;
-
   /// Settings header when signed in and synced (A-ios-settings: Kody · synced just now).
   ///
   /// In en, this message translates to:
@@ -12509,6 +12503,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved in this browser'**
   String get syncLineBrowser;
+
+  /// Sync line and button (E-G4-7 B, A10): the server no longer accepts this sign-in.
+  ///
+  /// In en, this message translates to:
+  /// **'Session ended'**
+  String get syncLineSessionEnded;
+
+  /// Sync line (E-G4-7 B legend): a round trip failed; it tries again.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sync'**
+  String get syncLineError;
+
+  /// Sync sheet state while this device's clock is fast (E-G4-7 B legend): its changes wait until the clock is right.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync paused'**
+  String get syncStatePaused;
+
+  /// Today during the first sync on a new device (E-G4-7 A2), beside the count: the day fills in as rows arrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks appear as they arrive'**
+  String get syncArriving;
 
   /// Section title in the task icon picker.
   ///

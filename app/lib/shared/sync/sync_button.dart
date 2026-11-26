@@ -34,7 +34,8 @@ class SyncButton extends StatelessWidget {
     // The top badge (E-G4-7 B legend): "!" when sync failed, else the
     // changes still waiting for the server.
     final String? top = switch (status.state) {
-      SyncState.error => '!', // l10n-ignore: a symbol, not words
+      SyncState.error ||
+      SyncState.sessionEnded => '!', // l10n-ignore: a symbol, not words
       SyncState.localOnly => null,
       _ when status.pending > 0 => NumberFormat.decimalPattern(
         Localizations.localeOf(context).toLanguageTag(),
@@ -58,17 +59,16 @@ class SyncButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               if (status.state == SyncState.syncing)
-                // A still ring, not a spinner: calm, and nothing to stop
-                // for Reduce Motion (E-G4-7 A3).
-                Container(
-                  width: glyph + 2 * DotSpace.s,
-                  height: glyph + 2 * DotSpace.s,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: c.accent,
-                      width: DotSize.syncDotRing,
-                    ),
+                // A thin arc on a faint track round the glyph, still, not a
+                // spinner: calm, and nothing to stop for Reduce Motion
+                // (E-G4-7 A2, A3).
+                SizedBox.square(
+                  dimension: glyph + 2 * DotSpace.xs,
+                  child: CircularProgressIndicator(
+                    value: _syncingArc,
+                    strokeWidth: DotSize.syncDotRing,
+                    color: c.accent,
+                    backgroundColor: c.outline,
                   ),
                 ),
               DotIcon(
@@ -105,6 +105,9 @@ class SyncButton extends StatelessWidget {
       ),
     );
   }
+
+  /// How much of the ring the still arc covers (E-G4-7 A2, A3).
+  static const _syncingArc = 0.3;
 
   void _open(BuildContext context) =>
       Actions.maybeInvoke(context, const ShowSyncIntent());

@@ -1,6 +1,7 @@
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_view.dart';
@@ -17,6 +18,7 @@ import 'package:dottoday/features/timeline/widgets/today_prompt.dart';
 import 'package:dottoday/features/timeline/widgets/today_week_strip.dart';
 import 'package:dottoday/shared/dot/day_pager.dart';
 import 'package:dottoday/shared/dot/week_strip.dart';
+import 'package:dottoday/shared/sync/first_sync_row.dart';
 import 'package:dottoday/shared/sync/sync_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -130,8 +132,11 @@ class TodayCompact extends ConsumerWidget {
                   onSelect: onSelect,
                 ),
         ),
-        // Offline or changes that need you, under the strip (E-G4-7 B2).
+        // Offline or changes that need you, under the strip (E-G4-7 B2);
+        // the first sync's progress while the day fills in (A2).
         const SyncBanner(),
+        if (ref.watch(firstSyncProvider) case final p?)
+          FirstSyncRow(progress: p),
         AllDayChips(date: shown),
         TodayPrompt(
           date: shown,

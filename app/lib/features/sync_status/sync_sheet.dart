@@ -71,6 +71,10 @@ class _SyncBody extends ConsumerWidget {
     final l10n = context.l10n;
     final status = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
     if (status.state == SyncState.localOnly) return const _LocalOnly();
+    // A fast clock pauses this device's changes (E-G4-7 B legend, ED-482).
+    final paused =
+        status.state == SyncState.synced && (status.clockSkew?.fast ?? false);
+    final ended = status.state == SyncState.sessionEnded;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,13 +85,13 @@ class _SyncBody extends ConsumerWidget {
           spacing: DotSpace.s,
           children: [
             DotIcon(
-              _stateGlyph(status.state),
+              paused ? DotGlyphs.clock : _stateGlyph(status.state),
               color: t.colors.text,
               size: DotSize.rowIcon,
             ),
             Expanded(
               child: Text(
-                _stateLine(l10n, status.state),
+                paused ? l10n.syncStatePaused : _stateLine(l10n, status.state),
                 style: t.styles.rowTitle,
               ),
             ),
@@ -104,8 +108,13 @@ class _SyncBody extends ConsumerWidget {
           Text(clockSkewText(l10n, skew), style: t.styles.body),
           if (skew.fast) Text(l10n.syncClockWaiting, style: t.styles.rowMeta),
         ],
-        _syncNowButton(context, ref, status.state),
-        Text(l10n.syncNowNote, style: t.styles.rowMeta),
+        // Session ended: only signing in again helps (A10).
+        if (ended)
+          const _SignInButton()
+        else ...[
+          _syncNowButton(context, ref, status.state),
+          Text(l10n.syncNowNote, style: t.styles.rowMeta),
+        ],
         if (status.conflicts.isNotEmpty) ...[
           const SizedBox(height: DotSpace.s),
           Text(l10n.syncConflicts.toUpperCase(), style: t.styles.caption),
@@ -136,6 +145,7 @@ class _SyncBody extends ConsumerWidget {
     SyncState.syncing => DotGlyphs.sync,
     SyncState.offline => DotGlyphs.cloudOff,
     SyncState.error => DotGlyphs.warning,
+    SyncState.sessionEnded => DotGlyphs.lock,
   };
 
   static String _stateLine(AppLocalizations l10n, SyncState state) =>
@@ -144,6 +154,7 @@ class _SyncBody extends ConsumerWidget {
         SyncState.syncing => l10n.syncStateSyncing,
         SyncState.offline => l10n.syncStateOffline,
         SyncState.error => l10n.syncStateError,
+        SyncState.sessionEnded => l10n.failureAuth,
       };
 
   /// "Last synced just now / 4 min ago / Tue, Oct 20, 9:41 PM".
@@ -189,20 +200,27 @@ class _LocalOnly extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         Text(l10n.syncLocalOnlyBody, style: t.styles.body),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: FilledButton(
-            onPressed: () {
-              final router = GoRouter.of(context);
-              Navigator.of(context).pop();
-              unawaited(
-                router.push(AppRoutes.settingsPage(SettingsPage.account)),
-              );
-            },
-            child: Text(l10n.syncSignIn),
-          ),
-        ),
+        const _SignInButton(),
       ],
     );
   }
+}
+
+/// Sign in…, opening Settings › Account (no account here, or the session
+/// ended; E-G4-7 A10).
+class _SignInButton extends StatelessWidget {
+  const _SignInButton();
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: AlignmentDirectional.centerStart,
+    child: FilledButton(
+      onPressed: () {
+        final router = GoRouter.of(context);
+        Navigator.of(context).pop();
+        unawaited(router.push(AppRoutes.settingsPage(SettingsPage.account)));
+      },
+      child: Text(context.l10n.syncSignIn),
+    ),
+  );
 }

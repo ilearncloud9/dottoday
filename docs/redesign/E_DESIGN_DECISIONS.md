@@ -5957,6 +5957,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; all tests pass but the Supabase ones (Docker off); only the sync goldens changed (the banner, the sheet, the line); the line's golden now shows the button's six states and the web line, with the app's fonts; new test: a tap on the line asks for Sync anchored to it.
 - **Not run:** a device, the popover on screen (only its request is tested), VoiceOver.
 
+### ED-482 · M20.10 part 4b: the behaviour of sync and loading as E-G4-7 A draws it
+- **Date:** 2026-11-26. **Owner:** "Start part 4b" (split ED-480). Review page: https://claude.ai/artifact/67QDAaGE4yTeTWa64Ar9dF. **Approved 2026-11-26: "Approve part 4b".** Every state is drawn on E-G4-7 A and the B legend, so nothing was asked.
+- **A1 · loading:** the loading dots show only once reading has taken over 300 ms (`DotTouch.loadingWait`); before that nothing to see, and a screen reader hears "Loading" at once.
+- **A2 · first sync on a new device:** while this device has never synced and the server's rows are arriving (`firstSyncProvider`, from the engine's progress), Today's numbers line reads "Bringing your tasks to this device…" and a line under the week strip fills with "12 of 40" and "Tasks appear as they arrive" (new string, en, de, es, fr), the day filling in below. The header button's syncing ring is now a thin still arc on a faint track, as A2 and A3 draw it (4a had built a full circle). Onboarding's own restoring step is unchanged; M20.11 replaces onboarding.
+- **A7 · a save that failed with the editor open:** "Couldn't save on this device. Try again." is now said assertively when the strip appears, once (the toast after the editor closes already was).
+- **A10 · session ended (CR-158):** a sign-in the server no longer accepts (an auth error, or PostgREST's JWT refusals PGRST301–303) is its own trouble and state, `SyncState.sessionEnded`, not a generic error; nothing retries it on a timer, since only signing in again helps. The banner says "Your session has ended. Sign in again to keep syncing." with Sign in… at every width, the Mac's too; the line says "Session ended" with the lock; the sheet offers Sign in… in place of Sync now; the button shows "!".
+- **Couldn't sync and Sync paused:** a failed round trip's line now says "Couldn't sync" (was "Sync paused · tap Sync for why", retired); "Sync paused" with the clock is the sheet's state line only while this device's clock is fast.
+- **Checks:** format and analyze clean; all tests pass but the Supabase ones (Docker off); new tests: an ended session is not retried, when the first-sync line shows, the 300 ms wait; goldens for Session ended (banner, sheet, wide), Couldn't sync, Sync paused, the first-sync line and the new ring.
+- **Not run:** a device, a real expired session against Supabase, VoiceOver.
+
 ---
 
 ## Pending owner answers

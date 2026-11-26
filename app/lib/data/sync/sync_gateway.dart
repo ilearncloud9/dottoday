@@ -27,9 +27,10 @@ final class PushChange {
 }
 
 /// Why a server round trip failed: the device is offline (try again
-/// later), or the server said no (logged, shown as an error). Local data
-/// is untouched either way (R-08).
-enum SyncTrouble { offline, server }
+/// later), the server no longer accepts this sign-in (sign in again; E-G4-7
+/// A10, CR-158), or the server said no (logged, shown as an error). Local
+/// data is untouched either way (R-08).
+enum SyncTrouble { offline, session, server }
 
 /// A failed round trip.
 final class SyncGatewayException implements Exception {

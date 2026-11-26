@@ -74,6 +74,7 @@ DotGlyph syncLineGlyph(SyncStatus status) {
     SyncState.syncing => DotGlyphs.sync,
     SyncState.offline => DotGlyphs.cloudOff,
     SyncState.error => DotGlyphs.warning,
+    SyncState.sessionEnded => DotGlyphs.lock,
   };
 }
 
@@ -110,6 +111,9 @@ String? syncLineText(
               l10n.syncPending(status.pending),
             ),
     SyncState.offline => l10n.syncLineOffline,
-    SyncState.error => l10n.syncLinePaused,
+    // "Couldn't sync" (E-G4-7 B legend); "Sync paused" is the fast
+    // clock's, in the sheet (ED-482).
+    SyncState.error => l10n.syncLineError,
+    SyncState.sessionEnded => l10n.syncLineSessionEnded,
   };
 }

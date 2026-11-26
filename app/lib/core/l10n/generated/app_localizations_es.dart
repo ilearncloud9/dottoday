@@ -4304,10 +4304,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get syncLinePaused =>
-      'Sincronización en pausa · toca Sincronización para ver por qué';
-
-  @override
   String settingsSynced(String name, String ago) {
     return '$name · sincronizado $ago';
   }
@@ -8263,6 +8259,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get syncLineBrowser => 'Guardado en este navegador';
+
+  @override
+  String get syncLineSessionEnded => 'Sesión terminada';
+
+  @override
+  String get syncLineError => 'No se pudo sincronizar';
+
+  @override
+  String get syncStatePaused => 'Sincronización en pausa';
+
+  @override
+  String get syncArriving => 'Las tareas aparecen a medida que llegan';
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

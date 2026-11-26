@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - Trash shows when each task was deleted and how many days it has left, with Delete now and Restore on each row and Empty Trash under the list; on the Mac and the web it opens as a dialog with buttons (redesign branch).
 - The screen shown when Dottoday can't open your tasks is redrawn in the new look, with a locked dot on a broken thread (redesign branch).
 - Sync status is redrawn: the sync button shows a crossed cloud offline, a ring while syncing and how many changes are waiting; the offline note sits under Today's week; the Sync sheet explains that Sync now never makes a second copy; on the Mac and the web the sidebar line opens Sync beside it, and the web says "Saved in this browser" (redesign branch).
+- When your sign-in expires, Dottoday now says "Session ended" with Sign in… instead of a sync error; a new device shows its tasks arriving on Today; a failed sync says "Couldn't sync"; the loading dots no longer flash on a quick open (redesign branch).
 - On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).

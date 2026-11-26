@@ -3387,9 +3387,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.testAlarmCountdown(seconds));
 
   @override
-  String get syncLinePaused => pseudo(super.syncLinePaused);
-
-  @override
   String settingsSynced(String name, String ago) =>
       pseudo(super.settingsSynced(name, ago));
 
@@ -6598,6 +6595,18 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get syncLineBrowser => pseudo(super.syncLineBrowser);
+
+  @override
+  String get syncLineSessionEnded => pseudo(super.syncLineSessionEnded);
+
+  @override
+  String get syncLineError => pseudo(super.syncLineError);
+
+  @override
+  String get syncStatePaused => pseudo(super.syncStatePaused);
+
+  @override
+  String get syncArriving => pseudo(super.syncArriving);
 
   @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);

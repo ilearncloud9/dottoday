@@ -1,18 +1,23 @@
+import 'dart:async';
+
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
+import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Offline, or changes that need you (R-08; E-G4-7 B2, B3; M20.10 part
 /// 4a, ED-481): a rounded strip with the crossed cloud and "Offline ·
 /// everything still works here", or the warning and "1 change needs you"
 /// with Review. On Today it sits under the week strip (B2); on the other
 /// screens at their top. Phones and medium windows only: expanded windows
-/// carry the state in the sidebar line, always in view (E-R2-8).
+/// carry the state in the sidebar line, always in view (E-R2-8). An ended
+/// session is said at every width, with Sign in… (A10, ED-482).
 class SyncBanner extends ConsumerWidget {
   const SyncBanner({super.key});
 
@@ -20,7 +25,24 @@ class SyncBanner extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final status = ref.watch(syncStatusProvider).value;
-    if (status == null || AppLayout.classOf(context) == WidthClass.expanded) {
+    if (status == null) return const SizedBox.shrink();
+    // The session ended: at every width, the Mac's too (E-G4-7 A10,
+    // ED-482), with Sign in….
+    if (status.state == SyncState.sessionEnded) {
+      return _Strip(
+        glyph: DotGlyphs.lock,
+        text: l10n.failureAuth,
+        action: (
+          l10n.syncSignIn,
+          () => unawaited(
+            GoRouter.of(
+              context,
+            ).push(AppRoutes.settingsPage(SettingsPage.account)),
+          ),
+        ),
+      );
+    }
+    if (AppLayout.classOf(context) == WidthClass.expanded) {
       return const SizedBox.shrink();
     }
     if (status.conflicts.isNotEmpty) {

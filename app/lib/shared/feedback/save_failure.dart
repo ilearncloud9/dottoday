@@ -13,8 +13,10 @@ import 'package:flutter/semantics.dart';
 
 /// A write that didn't land, shown on the sheet that still holds what was
 /// typed, with Try again (M8.5b, R-08 "never silent data loss"). A
-/// snackbar would sit under a full-height sheet, out of sight.
-class SaveFailureBanner extends StatelessWidget {
+/// snackbar would sit under a full-height sheet, out of sight. Said
+/// assertively when it appears, as a failed save must be heard (E-G4-7
+/// A7, D3; ED-482): the editor stays open under it.
+class SaveFailureBanner extends StatefulWidget {
   const SaveFailureBanner({
     required this.failure,
     required this.onRetry,
@@ -25,12 +27,44 @@ class SaveFailureBanner extends StatelessWidget {
   final VoidCallback onRetry;
 
   @override
+  State<SaveFailureBanner> createState() => _SaveFailureBannerState();
+}
+
+/// A leaf: says each new failure once.
+class _SaveFailureBannerState extends State<SaveFailureBanner> {
+  var _said = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Once on arrival; a theme or locale change rebuilds, not repeats.
+    if (_said) return;
+    _said = true;
+    _announce();
+  }
+
+  @override
+  void didUpdateWidget(SaveFailureBanner old) {
+    super.didUpdateWidget(old);
+    if (old.failure != widget.failure) _announce();
+  }
+
+  void _announce() => unawaited(
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      failureMessage(context.l10n, widget.failure),
+      Directionality.of(context),
+      assertiveness: Assertiveness.assertive,
+    ),
+  );
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return BannerStrip(
       glyph: DotGlyphs.warning,
-      text: failureMessage(l10n, failure),
-      actions: [(l10n.stateRetry, onRetry)],
+      text: failureMessage(l10n, widget.failure),
+      actions: [(l10n.stateRetry, widget.onRetry)],
     );
   }
 }

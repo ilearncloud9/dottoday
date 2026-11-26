@@ -270,4 +270,45 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 50));
     expect(server.pushes, pushes, reason: 'no retry after a success');
   });
+
+  // A sign-in the server no longer accepts (E-G4-7 A10, CR-158, ED-482):
+  // "Session ended", not a generic error, and no timer behind it: only
+  // signing in again helps.
+  test('a refused sign-in ends the session and is not retried', () async {
+    await service.dispose();
+    await accounts.close();
+    accounts = StreamController<String?>();
+    final waiting = EngineSyncService(
+      engine: device.engine,
+      accounts: accounts.stream,
+      adopt: (_) async => true,
+      conflicts: DriftConflictStore(
+        db: device.h.db,
+        writes: device.h.writes,
+        clock: device.h.clock,
+      ),
+      remoteChanges: const Stream.empty(),
+      clock: device.h.clock,
+      logger: Logger(MemoryLogSink(), device.h.clock),
+      settle: Duration.zero,
+      retryFirst: const Duration(milliseconds: 1),
+    );
+    service = waiting;
+    await device.write([occurrenceFixture().copyWith(userId: _account)]);
+    server.failAlways = SyncTrouble.session;
+    accounts.add(_account);
+    final seen = <SyncState>[];
+    final sub = waiting.watch().listen((s) => seen.add(s.state));
+    for (var i = 0; i < 200 && !seen.contains(SyncState.sessionEnded); i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+    // Let any queued trigger finish, then nothing more may come.
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    final calls = server.calls;
+    await Future<void>.delayed(const Duration(milliseconds: 80));
+    await sub.cancel();
+    expect(seen.last, SyncState.sessionEnded);
+    expect(seen, isNot(contains(SyncState.error)));
+    expect(server.calls, calls, reason: 'no timer retries an ended session');
+  });
 }

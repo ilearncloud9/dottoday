@@ -46,9 +46,11 @@ final class FakeSyncService implements SyncService {
     return const Ok(null);
   }
 
+  /// What the server's rows have done so far (the first sync, A2).
+  RestoreProgress restore = const RestoreProgress(done: 0, total: 0);
+
   @override
-  Stream<RestoreProgress> watchRestore() =>
-      Stream.value(const RestoreProgress(done: 0, total: 0));
+  Stream<RestoreProgress> watchRestore() => Stream.value(restore);
 
   @override
   Future<DeletionCheck> verifyForDeletion(String owner) {

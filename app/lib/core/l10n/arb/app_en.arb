@@ -5855,8 +5855,6 @@
   "@testAlarmLookLater": {"description": "After No, during onboarding."},
   "testAlarmCountdown": "Ringing in {seconds} s…",
   "@testAlarmCountdown": {"description": "Countdown while waiting for the test alarm.", "placeholders": {"seconds": {"type": "int"}}},
-  "syncLinePaused": "Sync paused · tap Sync for why",
-  "@syncLinePaused": {"description": "Status line after a server error (details in the Sync sheet)."},
   "settingsSynced": "{name} · synced {ago}",
   "@settingsSynced": {"description": "Settings header when signed in and synced (A-ios-settings: Kody · synced just now).", "placeholders": {"name": {"type": "String"}, "ago": {"type": "String"}}},
   "settingsSyncedNoName": "Synced {ago}",
@@ -8721,6 +8719,22 @@
   "syncLineBrowser": "Saved in this browser",
   "@syncLineBrowser": {
     "description": "Web sidebar line while offline (E-G4-7 B6): the web says browser, not device."
+  },
+  "syncLineSessionEnded": "Session ended",
+  "@syncLineSessionEnded": {
+    "description": "Sync line and button (E-G4-7 B, A10): the server no longer accepts this sign-in."
+  },
+  "syncLineError": "Couldn't sync",
+  "@syncLineError": {
+    "description": "Sync line (E-G4-7 B legend): a round trip failed; it tries again."
+  },
+  "syncStatePaused": "Sync paused",
+  "@syncStatePaused": {
+    "description": "Sync sheet state while this device's clock is fast (E-G4-7 B legend): its changes wait until the clock is right."
+  },
+  "syncArriving": "Tasks appear as they arrive",
+  "@syncArriving": {
+    "description": "Today during the first sync on a new device (E-G4-7 A2), beside the count: the day fills in as rows arrive."
   },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},

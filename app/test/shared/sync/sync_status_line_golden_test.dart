@@ -3,7 +3,9 @@
 library;
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/shared/sync/first_sync_row.dart';
 import 'package:dottoday/shared/sync/sync_button.dart';
 import 'package:dottoday/shared/sync/sync_status_line.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,7 @@ void main() {
   );
   goldenMatrix(
     'sync_status_line',
-    height: 320,
+    height: 520,
     widths: const {'compact'},
     build: (_) => Scaffold(
       body: Padding(
@@ -42,6 +44,7 @@ void main() {
               const SyncStatus(state: SyncState.syncing),
               const SyncStatus(state: SyncState.offline),
               const SyncStatus(state: SyncState.error),
+              const SyncStatus(state: SyncState.sessionEnded),
             ])
               SyncStatusLine(status: s, now: now),
             SyncStatusLine(
@@ -65,6 +68,8 @@ void main() {
                   SyncButton(status: s, now: now),
               ],
             ),
+            // The first sync on a new device (E-G4-7 A2).
+            const FirstSyncRow(progress: RestoreProgress(done: 12, total: 40)),
           ],
         ),
       ),

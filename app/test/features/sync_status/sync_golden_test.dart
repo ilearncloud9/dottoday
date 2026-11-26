@@ -98,6 +98,37 @@ void main() {
     overrides: _with(SyncStatus.localOnly),
     build: _page,
   );
+  // A sign-in the server no longer accepts (E-G4-7 A10, ED-482): the
+  // banner at every width, and the sheet's Sign in….
+  goldenMatrix(
+    'sync_session_ended',
+    height: 500,
+    widths: widths,
+    act: _open,
+    overrides: _with(
+      SyncStatus(
+        state: SyncState.sessionEnded,
+        lastSyncedUtc: _now.subtract(const Duration(minutes: 12)),
+        pending: 2,
+      ),
+    ),
+    build: _page,
+  );
+  // A round trip that failed: "Couldn't sync", Sync now (B4).
+  goldenMatrix(
+    'sync_sheet_error',
+    height: 560,
+    widths: const {'compact'},
+    act: _open,
+    overrides: _with(
+      SyncStatus(
+        state: SyncState.error,
+        lastSyncedUtc: _now.subtract(const Duration(minutes: 12)),
+        pending: 3,
+      ),
+    ),
+    build: _page,
+  );
   goldenMatrix(
     'sync_banner_offline',
     height: 200,

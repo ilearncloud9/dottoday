@@ -148,3 +148,107 @@ final class SyncStatusProvider
 }
 
 String _$syncStatusHash() => r'87d27c3e882aaea1032a622f6a20b8f5aafcd275';
+
+/// The server's rows arriving, live (done of total).
+
+@ProviderFor(restoreProgress)
+final restoreProgressProvider = RestoreProgressProvider._();
+
+/// The server's rows arriving, live (done of total).
+
+final class RestoreProgressProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<RestoreProgress>,
+          RestoreProgress,
+          Stream<RestoreProgress>
+        >
+    with $FutureModifier<RestoreProgress>, $StreamProvider<RestoreProgress> {
+  /// The server's rows arriving, live (done of total).
+  RestoreProgressProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'restoreProgressProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$restoreProgressHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<RestoreProgress> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<RestoreProgress> create(Ref ref) {
+    return restoreProgress(ref);
+  }
+}
+
+String _$restoreProgressHash() => r'6ee9d9f93e38752a819160f56ab12f05c6e033a7';
+
+/// The first sync on a new device while it runs, else null (E-G4-7 A2,
+/// ED-482): this device has never synced and the server's rows are still
+/// arriving. Today says "Bringing your tasks to this device…" with the
+/// count, and the tasks appear as they come.
+
+@ProviderFor(firstSync)
+final firstSyncProvider = FirstSyncProvider._();
+
+/// The first sync on a new device while it runs, else null (E-G4-7 A2,
+/// ED-482): this device has never synced and the server's rows are still
+/// arriving. Today says "Bringing your tasks to this device…" with the
+/// count, and the tasks appear as they come.
+
+final class FirstSyncProvider
+    extends
+        $FunctionalProvider<
+          RestoreProgress?,
+          RestoreProgress?,
+          RestoreProgress?
+        >
+    with $Provider<RestoreProgress?> {
+  /// The first sync on a new device while it runs, else null (E-G4-7 A2,
+  /// ED-482): this device has never synced and the server's rows are still
+  /// arriving. Today says "Bringing your tasks to this device…" with the
+  /// count, and the tasks appear as they come.
+  FirstSyncProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'firstSyncProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$firstSyncHash();
+
+  @$internal
+  @override
+  $ProviderElement<RestoreProgress?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  RestoreProgress? create(Ref ref) {
+    return firstSync(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RestoreProgress? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RestoreProgress?>(value),
+    );
+  }
+}
+
+String _$firstSyncHash() => r'175c1ec3ad34f629714420d780414ca304186c56';

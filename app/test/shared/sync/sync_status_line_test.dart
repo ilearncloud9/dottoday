@@ -32,9 +32,12 @@ void main() {
       line(const SyncStatus(state: SyncState.offline)),
       'Offline · changes saved here',
     );
+    // "Couldn't sync" (E-G4-7 B legend); "Sync paused" is the fast
+    // clock's, in the sheet (ED-482).
+    expect(line(const SyncStatus(state: SyncState.error)), "Couldn't sync");
     expect(
-      line(const SyncStatus(state: SyncState.error)),
-      'Sync paused · tap Sync for why',
+      line(const SyncStatus(state: SyncState.sessionEnded)),
+      'Session ended',
     );
   });
 

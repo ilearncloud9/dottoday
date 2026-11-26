@@ -139,18 +139,26 @@ final class SupabaseSyncGateway implements SyncGateway {
     return m == null ? null : (entity: m[2]!, id: m[1]!);
   }
 
+  /// PostgREST's "JWT expired", "invalid JWT" and "JWT secret" refusals.
+  static const _sessionCodes = {'PGRST301', 'PGRST302', 'PGRST303'};
+
   static final _notAccessible = RegExp(
     r'sync_push: row ([0-9a-f-]{36}) of ([a-z_]+) not accessible',
   );
 
-  /// Network trouble is "offline"; anything the server refused is "server".
+  /// Network trouble is "offline"; a sign-in the server no longer accepts
+  /// (an auth error, or PostgREST's JWT codes PGRST301–303) is "session";
+  /// anything else the server refused is "server".
   static Future<T> _guard<T>(Future<T> Function() run) async {
     try {
       return await run();
     } on PostgrestException catch (e) {
+      if (_sessionCodes.contains(e.code)) {
+        throw SyncGatewayException(SyncTrouble.session, e);
+      }
       throw SyncGatewayException(SyncTrouble.server, e, foreign: _foreign(e));
     } on AuthException catch (e) {
-      throw SyncGatewayException(SyncTrouble.server, e);
+      throw SyncGatewayException(SyncTrouble.session, e);
     } on Exception catch (e) {
       // SocketException, ClientException, TimeoutException …
       throw SyncGatewayException(SyncTrouble.offline, e);

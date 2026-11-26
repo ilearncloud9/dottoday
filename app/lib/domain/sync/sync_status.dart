@@ -4,14 +4,17 @@ import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/clock_skew.dart';
 
 /// Where sync stands (docs/02 F7, R-08): the pill, the banner and the Sync
-/// sheet read this.
-enum SyncState { localOnly, synced, syncing, offline, error }
+/// sheet read this. [sessionEnded]: the server no longer accepts this
+/// sign-in (E-G4-7 A10, CR-158; ED-482); only signing in again fixes it,
+/// and the tasks stay on this device.
+enum SyncState { localOnly, synced, syncing, offline, error, sessionEnded }
 
 /// What "Sync now" reports once a run has ended in [state]: offline or a
 /// refusing server are failures; anything else is fine.
 Result<void, AppFailure> syncOutcome(SyncState state) => switch (state) {
   SyncState.offline => const Err(NetworkFailure(NetworkFailureKind.offline)),
   SyncState.error => const Err(NetworkFailure(NetworkFailureKind.server)),
+  SyncState.sessionEnded => const Err(AuthFailure()),
   _ => const Ok(null),
 };
 

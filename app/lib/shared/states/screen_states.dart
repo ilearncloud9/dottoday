@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
@@ -56,10 +58,46 @@ class StateScaffold extends StatelessWidget {
 
 /// Skeleton dots on a dotted thread (E-G4-7-States A1; §5.4: "never a
 /// spinner for > 300 ms"): grey 34 pt dots in the thread's 54 pt rows,
-/// each with a short and a long bar, on the dotted line. Still, so it
+/// each with a short and a long bar, on the dotted line, shown only once
+/// reading has taken over [DotTouch.loadingWait] (ED-482). Still, so it
 /// needs nothing for reduced motion; a screen reader hears "Loading".
-class LoadingThread extends StatelessWidget {
+class LoadingThread extends StatefulWidget {
   const LoadingThread({super.key});
+
+  @override
+  State<LoadingThread> createState() => _LoadingThreadState();
+}
+
+/// A leaf: whether the wait is over.
+class _LoadingThreadState extends State<LoadingThread> {
+  Timer? _wait;
+  var _shown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _wait = Timer(DotTouch.loadingWait, () => setState(() => _shown = true));
+  }
+
+  @override
+  void dispose() {
+    _wait?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => _shown
+      ? const _Skeleton()
+      // Nothing to see yet, but a screen reader still hears "Loading".
+      : Semantics(
+          label: context.l10n.stateLoading,
+          container: true,
+          child: const SizedBox.expand(),
+        );
+}
+
+class _Skeleton extends StatelessWidget {
+  const _Skeleton();
 
   /// Each row's long bar, as a share of [DotSize.skeletonTitle]'s width.
   static const _widths = [1.0, 0.8, 0.93, 0.73, 0.87, 0.8];

@@ -233,6 +233,12 @@ final class EngineSyncService implements SyncService {
       if (e.trouble == SyncTrouble.server) {
         _logger.warn('sync.server_refused', error: e.cause, stackTrace: s);
       }
+      if (e.trouble == SyncTrouble.session) {
+        // No timer: only signing in again helps, and that starts a run.
+        _logger.info('sync.session_ended');
+        _emit(_with(state: SyncState.sessionEnded));
+        return;
+      }
       _failed(
         e.trouble == SyncTrouble.offline ? SyncState.offline : SyncState.error,
       );

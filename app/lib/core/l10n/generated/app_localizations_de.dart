@@ -4313,9 +4313,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get syncLinePaused => 'Sync pausiert · tippe auf Sync für den Grund';
-
-  @override
   String settingsSynced(String name, String ago) {
     return '$name · synchronisiert $ago';
   }
@@ -8269,6 +8266,18 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncLineBrowser => 'In diesem Browser gespeichert';
+
+  @override
+  String get syncLineSessionEnded => 'Sitzung abgelaufen';
+
+  @override
+  String get syncLineError => 'Konnte nicht synchronisieren';
+
+  @override
+  String get syncStatePaused => 'Sync pausiert';
+
+  @override
+  String get syncArriving => 'Aufgaben erscheinen, sobald sie ankommen';
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

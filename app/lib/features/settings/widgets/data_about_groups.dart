@@ -102,6 +102,7 @@ String _syncValue(AppLocalizations l10n, SyncStatus s) {
     SyncState.syncing => l10n.syncSyncing,
     SyncState.offline => l10n.syncOffline,
     SyncState.error => l10n.syncError,
+    SyncState.sessionEnded => l10n.syncLineSessionEnded,
   };
 }
 
