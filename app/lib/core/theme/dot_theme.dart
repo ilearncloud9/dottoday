@@ -21,6 +21,7 @@ export 'dot_metrics.dart';
 export 'dot_motion.dart';
 export 'dot_type.dart';
 export 'look_metrics.dart';
+export 'onboarding_tokens.dart';
 export 'task_icons.dart';
 export 'task_palette.dart';
 

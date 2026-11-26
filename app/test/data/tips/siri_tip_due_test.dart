@@ -36,7 +36,7 @@ void main() {
         siriAvailableProvider.overrideWithValue(siri),
         onboardingProvider.overrideWith(
           () => FakeOnboarding(
-            OnboardingProgress(step: OnboardingStep.done, finished: finished),
+            OnboardingProgress(step: OnboardingStep.today, finished: finished),
           ),
         ),
       ],

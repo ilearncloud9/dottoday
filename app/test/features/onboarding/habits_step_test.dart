@@ -9,7 +9,7 @@ import '../../support/timeline_fakes.dart';
 
 // O3 Habits (docs/09 M4.3): picks land on tomorrow, not today.
 
-const _step = OnboardingProgress(step: OnboardingStep.habits);
+const _step = OnboardingProgress(step: OnboardingStep.fills);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -25,7 +25,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Add 3 to tomorrow'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.reminders);
+    expect(stepOf(c), OnboardingStep.nudge);
     expect(repo.rows, hasLength(3));
     // Wed 21 Oct in Berlin (the harness's clock) → Thu 22.
     for (final o in repo.rows) {
@@ -55,7 +55,7 @@ void main() {
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.reminders);
+    expect(stepOf(c), OnboardingStep.nudge);
     expect(repo.rows, isEmpty);
   });
 

@@ -11,9 +11,10 @@ import '../../support/a11y.dart';
 import '../../support/account_fakes.dart';
 import '../../support/onboarding_harness.dart';
 
-// O5 Account and its states (docs/09 M4.5, M4.7).
+// "I have an account" and its states (docs/09 M4.5, M4.7; M20.11: the
+// account path over Hello, signing in finishes onboarding).
 
-const _step = OnboardingProgress(step: OnboardingStep.account);
+const _step = OnboardingProgress(step: OnboardingStep.hello, account: true);
 
 Future<FakeAccountService> _pump(
   WidgetTester tester, {
@@ -34,29 +35,8 @@ Future<FakeAccountService> _pump(
 void main() {
   setUpAll(tz_data.initializeTimeZones);
 
-  testWidgets('without an account: on, sign-in shown off for now', (
-    tester,
-  ) async {
-    final c = await pumpOnboarding(tester, progress: _step);
-    final apple = tester.widget<OutlinedButton>(
-      find.widgetWithText(OutlinedButton, 'Continue with Apple'),
-    );
-    expect(apple.onPressed, isNull);
-    expect(find.textContaining('arrives with sync'), findsOneWidget);
-    await tester.ensureVisible(find.text('Continue without an account'));
-    await tester.tap(find.text('Continue without an account'));
-    await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.done);
-  });
-
   testWidgets('returning: "Welcome back"', (tester) async {
-    await _pump(
-      tester,
-      progress: const OnboardingProgress(
-        step: OnboardingStep.account,
-        returning: true,
-      ),
-    );
+    await _pump(tester, progress: _step);
     expect(find.text('Welcome back'), findsOneWidget);
   });
 
@@ -100,7 +80,7 @@ void main() {
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
     accounts.restore.add(const RestoreProgress(done: 300, total: 300));
     await tester.pumpAndSettle();
-    expect(find.text('Your first thread'), findsOneWidget);
+    expect(find.text('the app'), findsOneWidget);
   });
 
   testWidgets('email: a bad address, then the link, then check mail', (

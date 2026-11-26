@@ -1,203 +1,161 @@
 import 'dart:async';
+import 'dart:math' as math;
 
-import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
-import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
+import 'package:dottoday/features/onboarding/flow/onb_nav.dart';
+import 'package:dottoday/features/onboarding/flow/onb_switcher.dart';
 import 'package:dottoday/features/onboarding/steps/account_step.dart';
 import 'package:dottoday/features/onboarding/steps/day_shape_step.dart';
-import 'package:dottoday/features/onboarding/steps/done_step.dart';
-import 'package:dottoday/features/onboarding/steps/first_task_step.dart';
 import 'package:dottoday/features/onboarding/steps/habits_step.dart';
-import 'package:dottoday/features/onboarding/steps/layout_step.dart';
+import 'package:dottoday/features/onboarding/steps/hello_step.dart';
 import 'package:dottoday/features/onboarding/steps/reminders_step.dart';
-import 'package:dottoday/features/onboarding/steps/welcome_step.dart';
-import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// The onboarding steps O1–O6 (docs/10 §5.1) in one frame: Back, where
-/// you are, Skip; the step below. Every step can be skipped (PRD F10).
-/// Step 0 picks the layout (docs/14 §4); minimal then runs three steps and
-/// ends on Today with Add open.
-class OnboardingFlow extends ConsumerWidget {
+/// Whether onboarding shows as a card over the app (tablets, Mac and web;
+/// prototype `.wide`) rather than full screen, for a window of [size]:
+/// from the medium width class, when the window is tall enough for it.
+bool onboardingInCard(Size size) =>
+    size.width >= WidthClass.mediumFrom && size.height >= OnbSize.cardMinHeight;
+
+/// The card's height in a window of [height]: 760, less in a short one.
+double onboardingCardHeight(double height) =>
+    math.min(OnbSize.cardHeight, height - 2 * DotSpace.l);
+
+/// The approved onboarding (the "Dottoday Onboarding Prototype", ED-305;
+/// M20.11, ED-485): Hello → Your day → What fills your days? → A nudge,
+/// in context → You're in, each step changing with the prototype's motion.
+/// Back and Esc go back on the three counted steps; Return continues.
+class OnboardingFlow extends ConsumerStatefulWidget {
   const OnboardingFlow({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OnboardingFlow> createState() => _OnboardingFlowState();
+}
+
+class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
+  /// Whether the last change went back, for the step motion.
+  var _back = false;
+
+  Onboarding get _store => ref.read(onboardingProvider.notifier);
+
+  void _go(OnboardingStep step, {bool account = false}) {
+    final at = ref.read(onboardingProvider).value;
+    // Leaving the account path goes back to Hello (`acct-back`).
+    final leaving = at?.account ?? false;
+    setState(() => _back = leaving || step.index < (at?.step.index ?? 0));
+    if (step == OnboardingStep.today) {
+      unawaited(_finish());
+      return;
+    }
+    unawaited(_store.go(step, account: account));
+  }
+
+  /// You're in: done, and Today it is, wherever a link sent the app
+  /// meanwhile (a sign-in callback shows Account, M6.1).
+  Future<void> _finish() async {
+    final router = ref.read(routerProvider);
+    await _store.finish();
+    router.go(AppRoutes.today);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final progress = ref.watch(onboardingProvider).value;
-    final step = progress?.step ?? OnboardingStep.welcome;
-    final returning = progress?.returning ?? false;
-    final store = ref.read(onboardingProvider.notifier);
-    final minimal = watchSimplified(ref, FeatureId.onboarding);
-    void go(OnboardingStep s, {bool? returning}) =>
-        unawaited(store.go(s, returning: returning));
-    void next() => step.isLastIn(minimal: minimal)
-        ? unawaited(_finish(ref, add: true))
-        : go(step.nextIn(minimal: minimal));
+    final step = progress?.step ?? OnboardingStep.hello;
+    final account = progress?.account ?? false;
+    final card = onboardingInCard(MediaQuery.sizeOf(context));
+    final view = account
+        ? _View(
+            key: const ValueKey('account'),
+            onBack: () => _go(OnboardingStep.hello),
+            child: AccountStep(returning: true, onNext: _finish),
+          )
+        : _View(
+            key: ValueKey(step),
+            at: step.dot,
+            onBack: step.canGoBack ? () => _go(step.previous) : null,
+            child: _body(step),
+          );
     return Scaffold(
-      body: SafeArea(
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: DotSize.readableColumn),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _TopBar(
-                  step: step,
-                  steps: OnboardingStep.flow(minimal: minimal),
-                  onBack: () => go(step.previousIn(minimal: minimal)),
-                  onSkip: next,
-                ),
-                Expanded(
-                  child: _body(
-                    context,
-                    step,
-                    go,
-                    next,
-                    () => _finish(ref),
-                    returning,
-                    minimal: minimal,
+      backgroundColor: DotTheme.of(context).colors.surface,
+      body: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.escape): () {
+            if (account) return _go(OnboardingStep.hello);
+            if (step.canGoBack) _go(step.previous);
+          },
+          const SingleActivator(LogicalKeyboardKey.enter): () {
+            if (!account && !_typing()) _go(step.next);
+          },
+        },
+        child: Focus(
+          autofocus: true,
+          child: SafeArea(
+            minimum: card
+                ? const EdgeInsets.fromLTRB(
+                    OnbSize.cardSide,
+                    OnbSize.cardTop,
+                    OnbSize.cardSide,
+                    OnbSize.cardBottom,
+                  )
+                : const EdgeInsets.fromLTRB(
+                    OnbSize.side,
+                    DotSpace.xs,
+                    OnbSize.side,
+                    OnbSize.bottom,
                   ),
-                ),
-              ],
-            ),
+            child: OnbSwitcher(back: _back, child: view),
           ),
         ),
       ),
     );
   }
 
-  /// "Open today": done, and Today it is, wherever a link sent the app
-  /// meanwhile (a sign-in callback shows Account, M6.1). With [add]
-  /// (minimal's first task), Today opens with Add up (`/add`, M9.2c).
-  Future<void> _finish(WidgetRef ref, {bool add = false}) async {
-    final router = ref.read(routerProvider);
-    await ref.read(onboardingProvider.notifier).finish();
-    router.go(AppRoutes.today);
-    if (!add) return;
-    // The app's navigator mounts once the gate has swapped onboarding out;
-    // Add opens on it, so wait for that frame (found by the M16 sweep).
-    for (var i = 0; i < 2; i++) {
-      await WidgetsBinding.instance.endOfFrame;
-    }
-    router.go(AppRoutes.add);
+  Widget _body(OnboardingStep step) {
+    void next() => _go(step.next);
+    return switch (step) {
+      OnboardingStep.hello => HelloStep(
+        onStart: next,
+        onAccount: () => _go(OnboardingStep.hello, account: true),
+      ),
+      // Parts 2 to 4 (ED-485) replace these with the prototype's steps.
+      OnboardingStep.day => DayShapeStep(onNext: next),
+      OnboardingStep.fills => HabitsStep(onNext: next),
+      OnboardingStep.nudge => RemindersStep(onNext: next),
+      // Reaching it finishes (`_go`); part 5 shows the real Today here.
+      OnboardingStep.today => const SizedBox.shrink(),
+    };
   }
 
-  Widget _body(
-    BuildContext context,
-    OnboardingStep step,
-    void Function(OnboardingStep, {bool? returning}) go,
-    VoidCallback next,
-    Future<void> Function() finish,
-    bool returning, {
-    required bool minimal,
-  }) => switch (step) {
-    OnboardingStep.welcome => WelcomeStep(
-      // A new install starts with minimal preselected (docs/14 §7, owner
-      // 2026-10-30); step 0 shows it chosen and can change it.
-      onStart: () {
-        setLayout(context, minimal: true);
-        go(OnboardingStep.layout, returning: false);
-      },
-      // "Welcome back" on O5 (M4.7; the flag was never set, found M6.1).
-      onSignIn: () => go(OnboardingStep.account, returning: true),
-    ),
-    OnboardingStep.layout => LayoutStep(
-      onNext: next,
-      steps: OnboardingStep.flow(minimal: minimal).length - 1,
-    ),
-    OnboardingStep.dayShape => DayShapeStep(onNext: next),
-    OnboardingStep.habits => HabitsStep(onNext: next),
-    OnboardingStep.reminders => RemindersStep(onNext: next),
-    OnboardingStep.account => AccountStep(returning: returning, onNext: next),
-    OnboardingStep.firstTask => FirstTaskStep(onAdd: next),
-    OnboardingStep.done => DoneStep(onFinish: finish),
-  };
+  /// Return in a text field is the field's (part 3's add field).
+  static bool _typing() =>
+      FocusManager.instance.primaryFocus?.context?.widget is EditableText;
 }
 
-/// ‹, "Step 2 of 6" as dots, Skip. Nothing on the welcome.
-class _TopBar extends StatelessWidget {
-  const _TopBar({
-    required this.step,
-    required this.steps,
-    required this.onBack,
-    required this.onSkip,
-  });
+/// One step: its top row (Back with the dots, when it has them), then the
+/// step.
+class _View extends StatelessWidget {
+  const _View({required this.child, this.onBack, this.at, super.key});
 
-  final OnboardingStep step;
-
-  /// This flow's steps, for the dots.
-  final List<OnboardingStep> steps;
-  final VoidCallback onBack;
-  final VoidCallback onSkip;
+  final Widget child;
+  final VoidCallback? onBack;
+  final int? at;
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    // The welcome and step 0 (the owner's render, 2026-10-31) have no bar:
-    // step 0 shows where you are under its Continue.
-    if (step == OnboardingStep.welcome || step == OnboardingStep.layout) {
-      return const SizedBox(height: DotTouch.android);
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
-      child: Row(
-        children: [
-          IconButton(
-            tooltip: l10n.onboardingBack,
-            onPressed: onBack,
-            icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
-          ),
-          Expanded(
-            child: _Dots(step: step, steps: steps),
-          ),
-          if (step != OnboardingStep.done)
-            TextButton(onPressed: onSkip, child: Text(l10n.onboardingSkip))
-          else
-            const SizedBox(width: DotTouch.android),
-        ],
-      ),
-    );
-  }
-}
-
-/// "Step 2 of 6" as dots, the ones done in accent.
-class _Dots extends StatelessWidget {
-  const _Dots({required this.step, required this.steps});
-
-  final OnboardingStep step;
-  final List<OnboardingStep> steps;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final total = steps.length;
-    final at = steps.indexOf(step);
-    return Semantics(
-      label: context.l10n.onboardingStepOf(at + 1, total),
-      excludeSemantics: true,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: DotSpace.xs,
-        children: [
-          for (var i = 0; i < total; i++)
-            Container(
-              width: DotSize.weekDot,
-              height: DotSize.weekDot,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: i <= at ? t.colors.accent : t.colors.outline,
-              ),
-            ),
-        ],
-      ),
+    final onBack = this.onBack;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (onBack != null) OnbNav(onBack: onBack, at: at),
+        Expanded(child: child),
+      ],
     );
   }
 }

@@ -445,9 +445,7 @@ Future<void> _onboarding(
   // Let the saved progress load first, or it overwrites the reset
   // (a race on devices with stored data, M6.5.12).
   await container.read(onboardingProvider.future);
-  await container
-      .read(onboardingProvider.notifier)
-      .go(OnboardingStep.welcome, returning: false);
+  await container.read(onboardingProvider.notifier).go(OnboardingStep.hello);
   Future<void> step(String shot, String button, {String? pick}) async {
     await sweepUntil(tester, find.text(button));
     await sweepRest(tester);
@@ -464,15 +462,6 @@ Future<void> _onboarding(
   }
 
   await step('onboarding_welcome', 'Get started');
-  // Step 0 (docs/14 §4), shot as a new install sees it (minimal
-  // preselected); the sweep then walks the full planner.
-  await sweepUntil(tester, find.text('The full planner'));
-  await sweepRest(tester);
-  await sweepShot(binding, tester, '${_tag}_onboarding_layout');
-  await tester.tap(find.text('The full planner'));
-  await sweepRest(tester);
-  await tester.tap(find.text('Continue'));
-  await sweepRest(tester);
   await step('onboarding_day_shape', 'Continue');
   await step('onboarding_habits', 'Continue', pick: 'Lunch');
   // Already allowed on this device → the test alarm and Continue (M6.5.9).
@@ -484,6 +473,4 @@ Future<void> _onboarding(
     await tester.tap(find.text(label).first);
     await sweepRest(tester);
   }, before: () => sweepShot(binding, tester, '${_tag}_onboarding_reminders'));
-  await step('onboarding_account', 'Continue without an account');
-  await step('onboarding_done', 'Open today');
 }

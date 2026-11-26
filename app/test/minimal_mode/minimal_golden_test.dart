@@ -5,14 +5,11 @@ library;
 import 'package:dottoday/core/env/env.dart';
 import 'package:dottoday/core/env/env_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
-import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/data/reveal/hint_providers.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/reveal_hint.dart';
 import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/domain/onboarding/onboarding.dart';
-import 'package:dottoday/features/onboarding/onboarding_gate.dart';
 import 'package:dottoday/features/settings/settings_screen.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/add/state/add_flow.dart';
@@ -26,7 +23,6 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../support/dot_golden.dart';
-import '../support/onboarding_fakes.dart';
 import '../support/reveal_hint_fakes.dart';
 import '../support/task_screen.dart';
 import '../support/timeline_fakes.dart';
@@ -150,21 +146,5 @@ void main() {
     a11yVariants: true,
     build: (_) =>
         ProviderScope(overrides: _overrides(hints: true), child: _today()),
-  );
-  goldenMatrix(
-    'minimal_onboarding_layout',
-    height: 844,
-    widths: compact,
-    a11yVariants: true,
-    // As the onboarding goldens: the onboarding store is app-wide.
-    overrides: [
-      ..._overrides(),
-      onboardingProvider.overrideWith(
-        () => FakeOnboarding(
-          const OnboardingProgress(step: OnboardingStep.layout),
-        ),
-      ),
-    ],
-    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
   );
 }

@@ -18,7 +18,7 @@ void main() {
   testWidgets('moving Wake Up saves it; Continue moves on', (tester) async {
     final c = await pumpOnboarding(
       tester,
-      progress: const OnboardingProgress(step: OnboardingStep.dayShape),
+      progress: const OnboardingProgress(step: OnboardingStep.day),
     );
     expect(find.text('When does your day start and end?'), findsOneWidget);
     final slider = tester.widget<DayShapeSlider>(find.byType(DayShapeSlider));
@@ -29,23 +29,13 @@ void main() {
     expect(windowMinutes(mon.start), 6 * 60 + 30);
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.habits);
-  });
-
-  testWidgets('Skip keeps the defaults and moves on', (tester) async {
-    final c = await pumpOnboarding(
-      tester,
-      progress: const OnboardingProgress(step: OnboardingStep.dayShape),
-    );
-    await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.habits);
+    expect(stepOf(c), OnboardingStep.fills);
   });
 
   testWidgets('meets a11y guidelines (R-12)', (tester) async {
     await pumpOnboarding(
       tester,
-      progress: const OnboardingProgress(step: OnboardingStep.dayShape),
+      progress: const OnboardingProgress(step: OnboardingStep.day),
     );
     await expectA11yGuidelines(tester);
   });

@@ -80,7 +80,7 @@ final class LayoutPolicy {
     FeatureId.calendarImport: FeatureVisibility.simplified,
     FeatureId.export: FeatureVisibility.hidden,
     FeatureId.lightDarkLanguage: FeatureVisibility.shown,
-    FeatureId.onboarding: FeatureVisibility.simplified,
+    FeatureId.onboarding: FeatureVisibility.shown,
     FeatureId.alarmsHealth: FeatureVisibility.shown,
     FeatureId.wakeUpAlarm: FeatureVisibility.simplified,
     FeatureId.alarmDevice: FeatureVisibility.shown,

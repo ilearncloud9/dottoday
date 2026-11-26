@@ -7,8 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'onboarding_store.g.dart';
 
-/// This device's onboarding (docs/09 M4): in `local_meta`, never synced —
-/// a new device asks again (O5's sign-in then brings the data).
+/// This device's onboarding (docs/09 M4, M20.11): in `local_meta`, never
+/// synced; a new device asks again (signing in then brings the data).
 @Riverpod(keepAlive: true)
 class Onboarding extends _$Onboarding {
   static const _key = 'onboarding';
@@ -24,19 +24,13 @@ class Onboarding extends _$Onboarding {
     return OnboardingProgress.fromJson(jsonDecode(row.value));
   }
 
-  /// Moves to [step] and remembers it (resume after a kill); [returning]
-  /// marks the "I already have an account" path, kept until changed.
-  Future<void> go(OnboardingStep step, {bool? returning}) => _save(
-    OnboardingProgress(
-      step: step,
-      returning: returning ?? state.value?.returning ?? false,
-    ),
-  );
+  /// Moves to [step] and remembers it (resume after a kill); [account]
+  /// opens or closes the "I have an account" path over Hello.
+  Future<void> go(OnboardingStep step, {bool account = false}) =>
+      _save(OnboardingProgress(step: step, account: account));
 
-  /// "Open today": onboarding never shows again on this device.
-  Future<void> finish() => _save(
-    const OnboardingProgress(step: OnboardingStep.done, finished: true),
-  );
+  /// You're in: onboarding never shows again on this device.
+  Future<void> finish() => _save(OnboardingProgress.done);
 
   Future<void> _save(OnboardingProgress progress) async {
     state = AsyncData(progress);

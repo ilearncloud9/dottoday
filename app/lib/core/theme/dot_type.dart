@@ -41,6 +41,15 @@ final class DotType {
     required this.badge,
     required this.monthMore,
     required this.emptyTitle,
+    required this.onbHero,
+    required this.onbTitle,
+    required this.onbSub,
+    required this.onbPrimary,
+    required this.onbSecondary,
+    required this.onbFine,
+    required this.onbBack,
+    required this.onbClock,
+    required this.onbNow,
     required this.sidebarItem,
     required this.sidebarHint,
     required this.sidebarSection,
@@ -137,6 +146,15 @@ final class DotType {
     monthMore: _system(9, 11, 600, muted),
     // An empty day's free time, "16 h free" (E-Phones): 28/800.
     emptyTitle: _manrope(28, 34, 800, text),
+    onbHero: _manrope(34, 40, 800, text, tracking: -0.01),
+    onbTitle: _manrope(28, 34, 800, text, tracking: -0.01),
+    onbSub: _manrope(17, 25, 500, muted),
+    onbPrimary: _manrope(17, 22, 800, text),
+    onbSecondary: _manrope(17, 22, 700, text),
+    onbFine: _manrope(13, 18, 500, muted),
+    onbBack: _manrope(17, 22, 600, text),
+    onbClock: _manrope(22, 26, 800, text),
+    onbNow: _manrope(11, 14, 700, muted, tracking: 0.08),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
     // hints and counts 11, the "Calendar views" heading 11/600.
     sidebarItem: _system(13, 16, 400, text),
@@ -333,6 +351,33 @@ final class DotType {
   /// An empty day's "16 h free" in the thread (E-Phones): 28/800.
   final TextStyle emptyTitle;
 
+  /// Onboarding Hello's line (prototype .h1): 34/40/800.
+  final TextStyle onbHero;
+
+  /// An onboarding step's question (prototype .h2): 28/34/800.
+  final TextStyle onbTitle;
+
+  /// The line under it (prototype .sub): 17/25/500, muted.
+  final TextStyle onbSub;
+
+  /// The step's main pill (prototype .pbtn): 17/800; coloured at use.
+  final TextStyle onbPrimary;
+
+  /// Its text button (prototype .tbtn): 17/700; coloured at use.
+  final TextStyle onbSecondary;
+
+  /// Fine print, the age note (prototype .fine): 13/500, muted.
+  final TextStyle onbFine;
+
+  /// ‹ Back on Apple platforms (prototype .back): 17/600; coloured at use.
+  final TextStyle onbBack;
+
+  /// The time in Hello's day dot (prototype .clockt): 22/800.
+  final TextStyle onbClock;
+
+  /// "NOW" under it (prototype .clocks): 11/700, tracked .08em.
+  final TextStyle onbNow;
+
   /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
   /// or count, and a section heading.
   final TextStyle sidebarItem;
@@ -466,6 +511,15 @@ final class DotType {
       badge: l(badge, other.badge),
       monthMore: l(monthMore, other.monthMore),
       emptyTitle: l(emptyTitle, other.emptyTitle),
+      onbHero: l(onbHero, other.onbHero),
+      onbTitle: l(onbTitle, other.onbTitle),
+      onbSub: l(onbSub, other.onbSub),
+      onbPrimary: l(onbPrimary, other.onbPrimary),
+      onbSecondary: l(onbSecondary, other.onbSecondary),
+      onbFine: l(onbFine, other.onbFine),
+      onbBack: l(onbBack, other.onbBack),
+      onbClock: l(onbClock, other.onbClock),
+      onbNow: l(onbNow, other.onbNow),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),
       sidebarSection: l(sidebarSection, other.sidebarSection),

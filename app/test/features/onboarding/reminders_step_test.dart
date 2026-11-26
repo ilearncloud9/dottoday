@@ -30,7 +30,7 @@ final class _Answers implements NotificationPermission {
   Future<bool> openSettings() async => false;
 }
 
-const _step = OnboardingProgress(step: OnboardingStep.reminders);
+const _step = OnboardingProgress(step: OnboardingStep.nudge);
 
 void main() {
   setUpAll(tz_data.initializeTimeZones);
@@ -45,12 +45,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(os.asked, 1);
     // M6.5.9: stays to offer the test alarm (skippable).
-    expect(stepOf(c), OnboardingStep.reminders);
+    expect(stepOf(c), OnboardingStep.nudge);
     expect(find.text('Send me a test alarm'), findsOneWidget);
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.account);
+    expect(stepOf(c), OnboardingStep.today);
   });
 
   testWidgets('allowed on a phone: the Wake Up alarm is offered on', (
@@ -92,14 +92,14 @@ void main() {
     await tester.ensureVisible(find.text('Allow notifications'));
     await tester.tap(find.text('Allow notifications'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.reminders);
+    expect(stepOf(c), OnboardingStep.nudge);
     expect(find.text('Notifications are off'), findsOneWidget);
     // Nothing can ring, so the Wake Up alarm isn't offered (docs/15 W1a).
     expect(find.text('Wake Up alarm'), findsNothing);
     await tester.ensureVisible(find.widgetWithText(FilledButton, 'Continue'));
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();
-    expect(stepOf(c), OnboardingStep.account);
+    expect(stepOf(c), OnboardingStep.today);
   });
 
   testWidgets('Not now asks nothing; the Wind Down switch saves', (
@@ -116,7 +116,7 @@ void main() {
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
     expect(os.asked, 0);
-    expect(stepOf(c), OnboardingStep.account);
+    expect(stepOf(c), OnboardingStep.today);
   });
 
   testWidgets('Connect a calendar: allowed → connected, choose in Settings', (
@@ -135,7 +135,7 @@ void main() {
     expect(find.text('Connected · choose calendars in Settings'), findsOne);
     await expectA11yGuidelines(tester);
     // Optional: the step stays until Continue.
-    expect(stepOf(c), OnboardingStep.reminders);
+    expect(stepOf(c), OnboardingStep.nudge);
   });
 
   testWidgets('Connect a calendar: denied → the calendar notice', (

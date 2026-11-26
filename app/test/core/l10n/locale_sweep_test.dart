@@ -144,7 +144,10 @@ final _screens = <String, _Screen>{
       (t, s) =>
           pumpSettings(t, size: s, location: AppRoutes.settingsPage(page)),
     ),
-  for (final step in OnboardingStep.values)
+  // You're in draws nothing of its own until M20.11 part 5 (ED-486).
+  for (final step in OnboardingStep.values.where(
+    (s) => s != OnboardingStep.today,
+  ))
     'Onboarding › ${step.name}': _screen(
       (t, s) => pumpOnboarding(
         t,

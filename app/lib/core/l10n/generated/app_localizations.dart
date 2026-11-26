@@ -5445,13 +5445,13 @@ abstract class AppLocalizations {
   /// Onboarding O1: the one-line value proposition.
   ///
   /// In en, this message translates to:
-  /// **'Plan your day as dots on a line, see where the time goes, and move it all when the day moves.'**
+  /// **'See where the time goes. Move it all when the day moves.'**
   String get onboardingWelcomeBody;
 
   /// Welcome step, under the buttons: the age gate (docs/06 §6). Wording under owner/legal review (docs/store/age-rating.md).
   ///
   /// In en, this message translates to:
-  /// **'Dottoday is for people aged 13 and over.'**
+  /// **'Dottoday is for people aged 13+.'**
   String get onboardingAgeNote;
 
   /// Onboarding O1 primary button.
@@ -5463,7 +5463,7 @@ abstract class AppLocalizations {
   /// Onboarding O1: go to sign-in (O5).
   ///
   /// In en, this message translates to:
-  /// **'I already have an account'**
+  /// **'I have an account'**
   String get onboardingSignIn;
 
   /// Onboarding: skip this step.
@@ -5493,7 +5493,7 @@ abstract class AppLocalizations {
   /// Onboarding O1: label of the animated day dot.
   ///
   /// In en, this message translates to:
-  /// **'The day dot, drawing itself'**
+  /// **'The day dot: a ring of five coloured parts of a day, with a thread running down from it'**
   String get onboardingDotLabel;
 
   /// Onboarding O2 question.
@@ -12737,6 +12737,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This browser can\'t be asked to keep Dottoday\'s data, so it may remove it on its own, for example when space runs low.'**
   String get webGuestUnsupportedBody;
+
+  /// Under the time in Hello's day dot (onboarding prototype, ED-305; M20.11 part 1).
+  ///
+  /// In en, this message translates to:
+  /// **'NOW'**
+  String get onboardingHelloNow;
 
   /// Section title in the task icon picker.
   ///

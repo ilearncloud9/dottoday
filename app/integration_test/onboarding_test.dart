@@ -60,16 +60,13 @@ void main() {
     // Let the saved progress load first, or it overwrites the reset
     // (a race on devices with stored data, M6.5.12).
     await _container(tester).read(onboardingProvider.future);
-    await _container(tester)
-        .read(onboardingProvider.notifier)
-        .go(OnboardingStep.welcome, returning: false);
+    await _container(
+      tester,
+    ).read(onboardingProvider.notifier).go(OnboardingStep.hello);
     final clock = Stopwatch()..start();
 
     await _tap(tester, 'Get started');
-    // Step 0 (docs/14 §4): this flow is the full planner's.
-    await _tap(tester, 'The full planner');
-    await _tap(tester, 'Continue');
-    await _tap(tester, 'Continue'); // O2: the default day shape
+    await _tap(tester, 'Continue'); // Your day: the default day shape
     await _pumpUntil(tester, find.text('What fills your days?'));
 
     // Killed here: the app comes back on the same step.
@@ -79,9 +76,7 @@ void main() {
     await _tap(tester, 'Lunch');
     await _tap(tester, 'Add 1 to tomorrow');
     await _pumpUntil(tester, find.text('Want a nudge?'));
-    await leaveRemindersStep(tester, (label) => _tap(tester, label)); // O4
-    await _tap(tester, 'Continue without an account'); // O5
-    await _tap(tester, 'Open today'); // O6
+    await leaveRemindersStep(tester, (label) => _tap(tester, label));
     await _pumpUntil(tester, find.byType(TodayScreen));
     clock.stop();
     expect(clock.elapsed, lessThan(const Duration(seconds: 90)));

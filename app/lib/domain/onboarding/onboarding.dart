@@ -1,101 +1,79 @@
-/// The first-run steps (docs/10 §5.1, PRD F10; docs/14 §4). Only
-/// [dayShape], [habits], [account] and [firstTask] ask for anything; every
-/// one can be skipped. [layout] is step 0: a choice with a preselected
-/// answer, so, like the permission prompt, it isn't counted as one.
+/// The approved onboarding (the "Dottoday Onboarding Prototype", ED-305,
+/// ED-350; M20.11, ED-485): Hello → Your day → What fills your days? →
+/// A nudge, in context → You're in. No Layout step: Less is offered later
+/// (ED-350). Three required taps to your own Today.
 enum OnboardingStep {
-  welcome,
-  layout,
-  dayShape,
-  habits,
-  reminders,
-  account,
-  firstTask,
-  done;
+  hello,
+  day,
+  fills,
+  nudge,
+  today;
 
   /// Whether this step asks the user for something (PRD F10 allows at
-  /// most three such screens per flow; the permission prompt doesn't
-  /// count).
-  bool get asksForInput =>
-      const {dayShape, habits, account, firstTask}.contains(this);
+  /// most three such screens; the notification ask doesn't count).
+  bool get asksForInput => this == day || this == fills;
 
-  /// The full planner's flow: step 0, then the O1–O4 flow as before.
-  static const fullFlow = [
-    welcome,
-    layout,
-    dayShape,
-    habits,
-    reminders,
-    account,
-    done,
-  ];
+  /// The steps with the progress dots, 1 to 3 (`navHTML(i)`).
+  static const counted = [day, fills, nudge];
 
-  /// Minimal's flow (docs/14 §4): step 0, then three steps — Wake Up and
-  /// Wind Down, reminders with the test alarm, the first task.
-  static const minimalFlow = [welcome, layout, dayShape, reminders, firstTask];
-
-  /// The steps in order for the chosen layout.
-  static List<OnboardingStep> flow({required bool minimal}) =>
-      minimal ? minimalFlow : fullFlow;
-
-  /// The step after this one in [flow]; the last stays. A step from the
-  /// other flow (the layout changed) goes on from step 0's successor.
-  ///
-  /// ```dart
-  /// OnboardingStep.dayShape.nextIn(minimal: true); // reminders
-  /// ```
-  OnboardingStep nextIn({required bool minimal}) {
-    final steps = flow(minimal: minimal);
-    final i = steps.indexOf(this);
-    if (i < 0) return steps[steps.indexOf(layout) + 1];
-    return steps[(i + 1).clamp(0, steps.length - 1)];
+  /// Where this step sits in the dots (1–3), or null without them.
+  int? get dot {
+    final i = counted.indexOf(this);
+    return i < 0 ? null : i + 1;
   }
 
-  /// The step before this one in [flow]; [welcome] stays.
-  OnboardingStep previousIn({required bool minimal}) {
-    final steps = flow(minimal: minimal);
-    final i = steps.indexOf(this);
-    return i <= 0 ? welcome : steps[i - 1];
-  }
+  /// The step after this one; the last stays.
+  OnboardingStep get next => values[(index + 1).clamp(0, values.length - 1)];
 
-  /// Whether this is the flow's last step (its primary action finishes).
-  bool isLastIn({required bool minimal}) => flow(minimal: minimal).last == this;
+  /// The step before this one; [hello] stays.
+  OnboardingStep get previous => values[(index - 1).clamp(0, values.length)];
+
+  /// Whether Back (and Esc) work here: the steps with the dots.
+  bool get canGoBack => dot != null;
 }
 
-/// Where this device is in onboarding: [finished] once "Open today" (or
-/// the last skip) is tapped; otherwise [step] is where it resumes, so a
-/// flow killed half-way picks up there (docs/09 M4.8).
+/// Where this device is in onboarding: [finished] once You're in is
+/// reached; otherwise [step] is where it resumes, so a flow killed
+/// half-way picks up there (docs/09 M4.8). [account] is the "I have an
+/// account" path, shown over Hello.
 final class OnboardingProgress {
   const OnboardingProgress({
     required this.step,
     this.finished = false,
-    this.returning = false,
+    this.account = false,
   });
 
-  static const start = OnboardingProgress(step: OnboardingStep.welcome);
+  static const start = OnboardingProgress(step: OnboardingStep.hello);
 
   final OnboardingStep step;
   final bool finished;
-
-  /// Came in through "I already have an account" (O1): O5 says "Welcome
-  /// back" and leads with signing in.
-  final bool returning;
+  final bool account;
 
   Map<String, Object> toJson() => {
     'step': step.name,
     'finished': finished,
-    'returning': returning,
+    'account': account,
   };
 
-  /// Reads what [toJson] wrote; anything unexpected starts over.
+  /// Reads what [toJson] wrote; anything unexpected (a step of the
+  /// replaced flow, ED-485) starts over, unless it was finished.
   static OnboardingProgress fromJson(Object? json) {
     if (json is! Map) return start;
+    final finished = json['finished'] == true;
     final step = OnboardingStep.values
         .where((s) => s.name == json['step'])
         .firstOrNull;
+    if (step == null) return finished ? done : start;
     return OnboardingProgress(
-      step: step ?? OnboardingStep.welcome,
-      finished: json['finished'] == true,
-      returning: json['returning'] == true,
+      step: step,
+      finished: finished,
+      account: json['account'] == true,
     );
   }
+
+  /// Finished: onboarding never shows again on this device.
+  static const done = OnboardingProgress(
+    step: OnboardingStep.today,
+    finished: true,
+  );
 }

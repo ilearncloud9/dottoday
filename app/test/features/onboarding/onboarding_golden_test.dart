@@ -2,6 +2,7 @@
 @Tags(['golden'])
 library;
 
+import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
@@ -22,7 +23,9 @@ import '../../support/first_thread_rows.dart';
 import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
-// Onboarding O1–O6 (derived, docs/10 §5.1, docs/09 M4).
+// The approved onboarding (the "Dottoday Onboarding Prototype", ED-305;
+// M20.11, ED-485). Your day, What fills your days and the nudge are the
+// built steps until parts 2 to 4 replace them.
 
 /// A first run: nobody has been asked about notifications yet.
 final class _NotAsked implements NotificationPermission {
@@ -41,19 +44,18 @@ final class _NotAsked implements NotificationPermission {
 List<Override> _at(
   OnboardingStep step, {
   NotificationPermission permission = const _NotAsked(),
+  bool account = false,
 }) => [
   ...timelineOverrides(
     now: DateTime.utc(2026, 10, 21, 9),
     notificationPermission: permission,
     // A phone with device calendars, not asked yet (O4's row, M7.1).
     calendarGateway: FakeDeviceCalendarGateway(),
-    occurrences: FakeOccurrenceRepository(
-      step == OnboardingStep.done ? firstThreadRows() : const [],
-    ),
+    occurrences: FakeOccurrenceRepository(firstThreadRows()),
     profile: testProfile(),
   ),
   onboardingProvider.overrideWith(
-    () => FakeOnboarding(OnboardingProgress(step: step)),
+    () => FakeOnboarding(OnboardingProgress(step: step, account: account)),
   ),
 ];
 
@@ -63,28 +65,44 @@ void main() {
   setUpAll(loadAppFonts);
   const widths = {'compact', 'expanded'};
   for (final step in [
-    OnboardingStep.welcome,
-    OnboardingStep.dayShape,
-    OnboardingStep.habits,
-    OnboardingStep.reminders,
-    OnboardingStep.account,
-    OnboardingStep.done,
+    OnboardingStep.hello,
+    OnboardingStep.day,
+    OnboardingStep.fills,
+    OnboardingStep.nudge,
   ]) {
     goldenMatrix(
       'onboarding_${step.name}',
       height: 844,
       widths: widths,
+      a11yVariants: step == OnboardingStep.hello,
       overrides: _at(step),
-      build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+      build: (_) => const OnboardingGate(child: _App()),
     );
   }
+  // Android: ← alone, the dots balanced by 48 (prototype `.android .back`).
+  goldenMatrix(
+    'onboarding_day_android',
+    height: 844,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    overrides: _at(OnboardingStep.day),
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  // I have an account: sign-in over Hello, Back only.
+  goldenMatrix(
+    'onboarding_account',
+    height: 844,
+    widths: widths,
+    overrides: _at(OnboardingStep.hello, account: true),
+    build: (_) => const OnboardingGate(child: _App()),
+  );
   // O4 once notifications are allowed: the test alarm (M6.5.9).
   goldenMatrix(
     'onboarding_reminders_allowed',
     height: 844,
     widths: widths,
     overrides: _at(
-      OnboardingStep.reminders,
+      OnboardingStep.nudge,
       permission: const UnwiredNotificationPermission(),
     ),
     act: (tester) async {
@@ -92,7 +110,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Send me a test alarm'));
     },
-    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+    build: (_) => const OnboardingGate(child: _App()),
   );
   // M4.7 states, with accounts on.
   final accounts = FakeAccountService();
@@ -101,7 +119,7 @@ void main() {
     height: 844,
     widths: widths,
     overrides: [
-      ..._at(OnboardingStep.account),
+      ..._at(OnboardingStep.hello, account: true),
       accountServiceProvider.overrideWithValue(accounts),
     ],
     act: (tester) async {
@@ -110,14 +128,14 @@ void main() {
       await tester.enterText(find.byType(TextField), 'kody@example.com');
       await tester.tap(find.text('Send me a link'));
     },
-    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+    build: (_) => const OnboardingGate(child: _App()),
   );
   goldenMatrix(
     'onboarding_restoring',
     height: 844,
     widths: widths,
     overrides: [
-      ..._at(OnboardingStep.account),
+      ..._at(OnboardingStep.hello, account: true),
       accountServiceProvider.overrideWithValue(accounts),
     ],
     act: (tester) async {
@@ -131,6 +149,44 @@ void main() {
       accounts.restore.add(const RestoreProgress(done: 120, total: 300));
       await tester.pump();
     },
-    build: (_) => const OnboardingGate(child: SizedBox.shrink()),
+    build: (_) => const OnboardingGate(child: _App()),
   );
+}
+
+/// A stand-in for the app behind the card on wide screens: the Today
+/// title over the thread's rows, so the blur has something to blur.
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    return ColoredBox(
+      color: t.colors.surface,
+      child: Padding(
+        padding: const EdgeInsets.all(DotSpace.xxl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: DotSpace.l,
+          children: [
+            Text('Today', style: t.styles.onbHero), // l10n-ignore: fixture
+            for (final c in [TaskColor.amber, TaskColor.coral, TaskColor.sky])
+              Row(
+                spacing: DotSpace.m,
+                children: [
+                  CircleAvatar(
+                    radius: DotSpace.l,
+                    backgroundColor: t.tasks[c].ring,
+                  ),
+                  Text(
+                    'Morning run',
+                    style: t.styles.rowTitle,
+                  ), // l10n-ignore: fixture
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }

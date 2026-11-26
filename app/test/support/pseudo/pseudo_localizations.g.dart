@@ -6718,6 +6718,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get webGuestUnsupportedBody => pseudo(super.webGuestUnsupportedBody);
 
   @override
+  String get onboardingHelloNow => pseudo(super.onboardingHelloNow);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

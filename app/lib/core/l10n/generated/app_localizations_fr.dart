@@ -3651,17 +3651,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingWelcomeBody =>
-      'Planifiez votre journée en points sur une ligne, voyez où passe le temps, et déplacez tout quand la journée bouge.';
+      'Voyez où passe le temps. Déplacez tout quand la journée bouge.';
 
   @override
-  String get onboardingAgeNote =>
-      'Dottoday s\'adresse aux personnes de 13 ans et plus.';
+  String get onboardingAgeNote => 'Dottoday s\'adresse aux personnes de 13+.';
 
   @override
   String get onboardingGetStarted => 'Commencer';
 
   @override
-  String get onboardingSignIn => 'J\'ai déjà un compte';
+  String get onboardingSignIn => 'J\'ai un compte';
 
   @override
   String get onboardingSkip => 'Passer';
@@ -3678,7 +3677,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get onboardingDotLabel => 'Le point du jour, qui se dessine';
+  String get onboardingDotLabel =>
+      'Le point du jour : un anneau de cinq parties colorées d\'une journée, avec un fil qui en descend';
 
   @override
   String get onboardingDayShapeTitle =>
@@ -8441,6 +8441,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get webGuestUnsupportedBody =>
       'On ne peut pas demander à ce navigateur de conserver les données de Dottoday ; il peut donc les supprimer de lui-même, par exemple quand l’espace manque.';
+
+  @override
+  String get onboardingHelloNow => 'MAINTENANT';
 
   @override
   String get taskIconCategoryPlanning => 'Planification et rythme';

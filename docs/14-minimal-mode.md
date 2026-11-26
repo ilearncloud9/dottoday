@@ -47,7 +47,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Calendar import | built | Simplified | Connected calendars draw as dots; calendar management under More. A repeating event is one series: the This one / All scope question shows as for any repeating task (F5.7) |
 | Export | built | Hidden | Settings › More |
 | Light/dark, language | built | Shown | Follow the device; no setting shown |
-| Onboarding | built | Simplified | Mode choice, then three steps: Wake Up/Wind Down, reminders + test alarm, first task |
+| Onboarding | built | Shown | The approved five steps in either layout, with no Layout step; new installs start in Full and Less is offered by the day-2 card (ED-350, ED-485) |
 | A0 alarms + Notification health | M6.5 | Shown | A0 defaults as specified; health panel shows as a banner only when something is off |
 | W1 Wake Up alarm | M17 | Simplified | Settings › Wake Up alarm shows the switch and the alarm sound; vary, ramp and snooze under More options. The ringing screen is the time, one big "I'm up" and Snooze as a link (docs/15 §10) |
 | W1 Alarm sounds on | ED-084 | Shown | Identical: one row under the Wake Up alarm switch, the chosen device and its state; the picker lists every device, Mac and web as "Can't ring" (docs/15 §9a) |
@@ -215,7 +215,7 @@ The mode is chosen in onboarding step 0, changed in two places, and overruled by
 
 Minimal mode is one presentation flag read in the View layer through a single visibility policy. No repository, DAO, sync or notification code branches on it.
 
-**The flag.** `settings.uiLayout` with values `minimal | full`, stored with the other user settings, synced per account (one layout on every device; a per-device override is an open question below). Default for existing users on upgrade: `full`, so nobody's app changes under them. Default for new installs: decided in onboarding step 0 (see open questions).
+**The flag.** `settings.uiLayout` with values `minimal | full`, stored with the other user settings, synced per account (one layout on every device; a per-device override is an open question below). Default for existing users on upgrade: `full`, so nobody's app changes under them. Default for new installs: `full` (owner, 2026-11-26, ED-485: the approved onboarding has no Layout step; Less is offered by the day-2 card "Want it simpler?", ED-350). This replaces the 2026-10-30 answer below.
 
 **One policy object, not scattered ifs.** As built (ADR-0016; CLAUDE.md §3 forbids feature-to-feature imports): `domain/layout/` holds `FeatureId` and `LayoutPolicy`, `data/layout/` the providers and `watchFeature`, `shared/layout/` the switch. `LayoutPolicy` with `visibility(FeatureId) → Visibility {shown, simplified, hidden, off}` backed by one table that mirrors §3 exactly, plus `uiLayoutProvider` exposed through Riverpod and read with `ref.watch(select)` so a flip rebuilds only what changes. Views ask the policy; they never read the raw flag. A new `FeatureId` without a row in the table fails a policy test, so the matrix cannot drift from the code.
 

@@ -13,23 +13,15 @@ final class FakeOnboarding extends Onboarding {
   Future<OnboardingProgress> build() async => progress;
 
   @override
-  Future<void> go(OnboardingStep step, {bool? returning}) async =>
-      state = AsyncData(
-        OnboardingProgress(
-          step: step,
-          returning: returning ?? state.value?.returning ?? false,
-        ),
-      );
+  Future<void> go(OnboardingStep step, {bool account = false}) async =>
+      state = AsyncData(OnboardingProgress(step: step, account: account));
 
   @override
-  Future<void> finish() async => state = const AsyncData(
-    OnboardingProgress(step: OnboardingStep.done, finished: true),
-  );
+  Future<void> finish() async =>
+      state = const AsyncData(OnboardingProgress.done);
 }
 
 /// For app-level tests that start on Today: onboarding already done.
 final Override onboarded = onboardingProvider.overrideWith(
-  () => FakeOnboarding(
-    const OnboardingProgress(step: OnboardingStep.done, finished: true),
-  ),
+  () => FakeOnboarding(OnboardingProgress.done),
 );

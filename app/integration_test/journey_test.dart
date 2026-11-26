@@ -49,19 +49,10 @@ void main() {
     // Let the saved progress load first, or it overwrites the reset
     // (a race on devices with stored data, M6.5.12).
     await container.read(onboardingProvider.future);
-    await container
-        .read(onboardingProvider.notifier)
-        .go(OnboardingStep.welcome, returning: false);
+    await container.read(onboardingProvider.notifier).go(OnboardingStep.hello);
 
-    // Onboarding, the short way: defaults, no habits, no account.
-    // Step 0: the full planner, the layout this journey walks (docs/14).
-    for (final label in [
-      'Get started',
-      'The full planner',
-      'Continue',
-      'Continue',
-      'Continue',
-    ]) {
+    // Onboarding, the short way: defaults, no habits (M20.11).
+    for (final label in ['Get started', 'Continue', 'Continue']) {
       await tapOn(tester, find.text(label));
     }
     // O4: "Not now" on a first install; once notifications are allowed (the
@@ -71,9 +62,6 @@ void main() {
       tester,
       (label) => tapOn(tester, find.text(label)),
     );
-    for (final label in ['Continue without an account', 'Open today']) {
-      await tapOn(tester, find.text(label));
-    }
     await until(tester, find.byType(TodayScreen));
 
     // The demo day, for a thread with a repeating task and a pin.
