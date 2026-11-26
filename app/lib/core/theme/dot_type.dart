@@ -70,6 +70,10 @@ final class DotType {
     required this.onbPreviewTag,
     required this.onbMoreTitle,
     required this.onbMoreLine,
+    required this.onbHint,
+    required this.onbSyncTitle,
+    required this.onbSyncBody,
+    required this.onbSyncButton,
     required this.sidebarItem,
     required this.sidebarHint,
     required this.sidebarSection,
@@ -195,6 +199,10 @@ final class DotType {
     onbPreviewTag: _manrope(10, 18, 800, text, tracking: 0.1),
     onbMoreTitle: _manrope(16, 20, 800, text),
     onbMoreLine: _manrope(14, 18, 500, muted),
+    onbHint: _manrope(14, 18, 700, text),
+    onbSyncTitle: _manrope(15, 20, 800, text),
+    onbSyncBody: _manrope(13, 17, 500, muted),
+    onbSyncButton: _manrope(14, 18, 800, text),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
     // hints and counts 11, the "Calendar views" heading 11/600.
     sidebarItem: _system(13, 16, 400, text),
@@ -480,6 +488,18 @@ final class DotType {
   /// Its line, "Rings at 7:00 AM": 14/500, muted.
   final TextStyle onbMoreLine;
 
+  /// The first Today's hint (.hint): 14/700; coloured at use.
+  final TextStyle onbHint;
+
+  /// "Sign in to sync" (.sync .st b): 15/800.
+  final TextStyle onbSyncTitle;
+
+  /// Its line (.sync .st span): 13/500, muted.
+  final TextStyle onbSyncBody;
+
+  /// Its Sign in (.sbtn): 14/800; coloured at use.
+  final TextStyle onbSyncButton;
+
   /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
   /// or count, and a section heading.
   final TextStyle sidebarItem;
@@ -642,6 +662,10 @@ final class DotType {
       onbPreviewTag: l(onbPreviewTag, other.onbPreviewTag),
       onbMoreTitle: l(onbMoreTitle, other.onbMoreTitle),
       onbMoreLine: l(onbMoreLine, other.onbMoreLine),
+      onbHint: l(onbHint, other.onbHint),
+      onbSyncTitle: l(onbSyncTitle, other.onbSyncTitle),
+      onbSyncBody: l(onbSyncBody, other.onbSyncBody),
+      onbSyncButton: l(onbSyncButton, other.onbSyncButton),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),
       sidebarSection: l(sidebarSection, other.sidebarSection),

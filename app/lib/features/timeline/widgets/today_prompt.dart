@@ -4,13 +4,17 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/data/calendar/calendar_moves.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/onboarding/first_today_store.dart';
+import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/domain/scheduling/calendar_move_prompt.dart';
 import 'package:dottoday/domain/scheduling/day_review.dart';
 import 'package:dottoday/domain/scheduling/running_late.dart';
+import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/first_today/first_sync_card.dart';
 import 'package:dottoday/features/timeline/low_energy/low_energy_state.dart';
 import 'package:dottoday/features/timeline/review/review_presenter.dart';
 import 'package:dottoday/features/timeline/review/review_state.dart';
@@ -105,9 +109,21 @@ class TodayFloatPrompt extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     final at = _promptState(ref, today);
-    if (at == null) return const SizedBox.shrink();
+    final sync = _firstSync(ref);
+    if (at == null) return sync;
     if (!at.now.isBefore(at.shape.bedUtc)) return _night(context, ref, at);
-    return _pressing(context, ref, today, at) ?? const SizedBox.shrink();
+    return _pressing(context, ref, today, at) ?? sync;
+  }
+
+  /// The first Today's "Sign in to sync", when nothing more pressing is
+  /// at the foot (M20.11 part 5, ED-490): a device with no account, until
+  /// dismissed; not in Minimal.
+  Widget _firstSync(WidgetRef ref) {
+    final offer =
+        watchOnScreen(ref, FeatureId.firstToday) &&
+        (ref.watch(firstTodayProvider).value?.sync ?? false) &&
+        ref.watch(syncStatusProvider).value?.state == SyncState.localOnly;
+    return offer ? const FirstSyncCard() : const SizedBox.shrink();
   }
 }
 

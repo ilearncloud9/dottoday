@@ -39,6 +39,12 @@ final class DotMotion {
   static DotMotion resolve({required bool reduceMotion}) =>
       reduceMotion ? reduced : standard;
 
+  /// Marking done: the ring fades outward over 500 ms, ease-out (the
+  /// onboarding prototype's `.burst`, ED-490). Not drawn under reduced
+  /// motion.
+  static const doneBurst = Duration(milliseconds: 500);
+  static const doneBurstCurve = Curves.easeOut;
+
   /// Whether every duration is zero (reduced motion is on).
   bool get isReduced => base == Duration.zero;
 

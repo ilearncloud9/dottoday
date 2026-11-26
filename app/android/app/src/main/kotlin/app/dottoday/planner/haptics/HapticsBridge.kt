@@ -14,8 +14,8 @@ import io.flutter.plugin.common.MethodChannel
  * Haptics in app decides whether they play, not the system's Touch
  * feedback switch (that one governs `View.performHapticFeedback`). A
  * phone with vibration turned off altogether still stays silent.
- * `play` takes "selection", "light" or "medium" and answers whether a tap
- * was sent.
+ * `play` takes "selection", "light", "medium" or "success" (a double tap,
+ * close to CONFIRM) and answers whether a tap was sent.
  */
 object HapticsBridge {
     fun attach(context: Context, messenger: BinaryMessenger) {
@@ -39,11 +39,15 @@ object HapticsBridge {
                 when (tick) {
                     "selection" -> VibrationEffect.EFFECT_TICK
                     "medium" -> VibrationEffect.EFFECT_HEAVY_CLICK
+                    "success" -> VibrationEffect.EFFECT_DOUBLE_CLICK
                     else -> VibrationEffect.EFFECT_CLICK
                 },
             )
         }
         // API 26–28 have no predefined effects: a short pulse of the same weight.
+        if (tick == "success") {
+            return VibrationEffect.createWaveform(longArrayOf(0, 12, 70, 16), intArrayOf(0, 140, 0, 200), -1)
+        }
         val (ms, amplitude) = when (tick) {
             "selection" -> 8L to 80
             "medium" -> 20L to 200

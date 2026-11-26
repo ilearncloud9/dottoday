@@ -387,8 +387,9 @@ final class SoundBridge {
 /// Haptics in app decides, not iOS's System Haptics switch (that one only
 /// governs UIKit's feedback generators, which Flutter's HapticFeedback
 /// uses). Accessibility › Touch › Vibration off still silences them.
-/// `play` takes "selection", "light" or "medium" and answers whether a tap
-/// was sent. Main thread.
+/// `play` takes "selection", "light", "medium" or "success" (two taps,
+/// like UIKit's success notification) and answers whether a tap was sent.
+/// Main thread.
 final class HapticsBridge {
   static let shared = HapticsBridge()
   private var engine: CHHapticEngine?
@@ -413,15 +414,22 @@ final class HapticsBridge {
       case "medium": (0.8, 0.55)
       default: (0.6, 0.7)
       }
-    let event = CHHapticEvent(
-      eventType: .hapticTransient,
-      parameters: [
-        CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity),
-        CHHapticEventParameter(parameterID: .hapticSharpness, value: sharpness),
-      ],
-      relativeTime: 0)
+    func tap(_ intensity: Float, _ sharpness: Float, at time: TimeInterval) -> CHHapticEvent {
+      CHHapticEvent(
+        eventType: .hapticTransient,
+        parameters: [
+          CHHapticEventParameter(parameterID: .hapticIntensity, value: intensity),
+          CHHapticEventParameter(parameterID: .hapticSharpness, value: sharpness),
+        ],
+        relativeTime: time)
+    }
+    // Success: a softer tap, then a firmer one 0.1 s later.
+    let events =
+      tick == "success"
+      ? [tap(0.5, 0.6, at: 0), tap(0.85, 0.7, at: 0.1)]
+      : [tap(intensity, sharpness, at: 0)]
     do {
-      let player = try running().makePlayer(with: CHHapticPattern(events: [event], parameters: []))
+      let player = try running().makePlayer(with: CHHapticPattern(events: events, parameters: []))
       try player.start(atTime: CHHapticTimeImmediate)
       return true
     } catch {

@@ -3775,6 +3775,22 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get firstTodayHint => 'Tippe auf den Kreis, wenn es erledigt ist';
+
+  @override
+  String get firstSyncTitle => 'Anmelden zum Synchronisieren';
+
+  @override
+  String get firstSyncBody =>
+      'Nutze Dottoday auf all deinen Geräten, mit einer sicheren Kopie.';
+
+  @override
+  String get firstSyncSignIn => 'Anmelden';
+
+  @override
+  String get firstSyncDismiss => 'Anmelden zum Synchronisieren ausblenden';
+
+  @override
   String get onboardingHabitsMax => 'Fünf sind für den Anfang genug.';
 
   @override

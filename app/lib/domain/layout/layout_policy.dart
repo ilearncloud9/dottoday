@@ -174,5 +174,7 @@ final class LayoutPolicy {
     FeatureId.earlierFold: FeatureVisibility.shown,
     FeatureId.threadOutside: FeatureVisibility.simplified,
     FeatureId.searchOrRun: FeatureVisibility.simplified,
+    // M20.11 part 5 (ED-490): minimal keeps its one reveal hint a day.
+    FeatureId.firstToday: FeatureVisibility.hidden,
   };
 }

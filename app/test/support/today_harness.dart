@@ -2,6 +2,7 @@ import 'package:dottoday/app_task_links.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/onboarding/first_today_store.dart';
 import 'package:dottoday/data/scheduling/learning_meta.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/entities/settings.dart';
@@ -39,6 +40,8 @@ Future<void> pumpToday(
   Widget Function(Widget today)? wrap,
   Set<String> readOnlyCalendarIds = const {},
   LearningMetaState learningMeta = const LearningMetaState(),
+  FirstTodayState firstToday = const FirstTodayState(),
+  bool settle = true,
 }) async {
   tester.view
     ..physicalSize = size
@@ -106,6 +109,7 @@ Future<void> pumpToday(
         profile: profile,
         minuteTicks: ticks,
         learningMeta: learningMeta,
+        firstToday: firstToday,
       ),
       child: MaterialApp.router(
         theme: DotTheme.light(),
@@ -128,5 +132,5 @@ Future<void> pumpToday(
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  if (settle) await tester.pumpAndSettle();
 }

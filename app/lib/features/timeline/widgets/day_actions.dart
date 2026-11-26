@@ -38,6 +38,8 @@ ThreadActions dayThreadActions(
   ValueChanged<String>? onRunningLate,
   Widget Function(int freeMinutes)? emptyDay,
   String? pickedId,
+  Widget Function(int index, Widget child)? arrive,
+  ({String id, LayerLink link})? doneLink,
 }) {
   final messenger = ScaffoldMessenger.of(context);
   final l10n = context.l10n;
@@ -62,6 +64,8 @@ ThreadActions dayThreadActions(
   return ThreadActions(
     emptyDay: emptyDay,
     pickedId: pickedId,
+    arrive: arrive,
+    doneLink: doneLink,
     drag: drag,
     selectedIds: selectedIds,
     onSelect: onSelect,
@@ -99,7 +103,7 @@ ThreadActions dayThreadActions(
       final o = find(id);
       if (o == null) return;
       final wasDone = o.status == OccurrenceStatus.done;
-      AppHaptics.playFor(ref, HapticTick.light);
+      AppHaptics.playFor(ref, wasDone ? HapticTick.light : HapticTick.success);
       report(
         await toggleDone(ref, o),
         (_) => wasDone ? l10n.snackNotDone(o.title) : l10n.snackDone(o.title),

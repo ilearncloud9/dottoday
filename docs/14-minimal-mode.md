@@ -140,6 +140,7 @@ Every feature keeps one of four states in minimal mode. **Shown** = unchanged. *
 | Earlier fold (done tasks before now) | Concept E, ED-164 | Shown | Minimal's own presentation: done tasks before now fold into one "Earlier" row with no count; Show opens it, a reopened task returns to its time. Full phones keep their rows; the Full Mac/web Day column folds the same way |
 | Before Wake Up / After Wind Down rows (`ThreadOutside`) | built; Concept E, ED-246, ED-345 | Simplified | "Before Wake Up" / "After Wind Down" with no count (full shows the count); each unfolds into ordinary rows and a zone holding the live task starts open |
 | Search or run (⌘K / Ctrl K, `k` on web; Mac and web) | Concept E, ED-333, M20.2 | Simplified | Minimal's ⌘K is the Everything else finder: places, Plan the day, Reflect and settings, and it also finds tasks; full's palette runs every command |
+| First Today after onboarding: rows rise in, the done-circle hint, Sign in to sync card | M20.11 part 5, ED-490 | Hidden | New installs start in Full, where Today's rows rise in once, "Tap the circle when it's done" points at the next task's done circle until the first tap, and "Sign in to sync" sits at the foot until dismissed or signed in; Minimal shows none of it (its one reveal hint a day stands) |
 
 **Matrix notes from the M16 inventory (30 Oct 2026).** Where a row above was written before the code it describes:
 

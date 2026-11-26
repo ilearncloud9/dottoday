@@ -12,10 +12,10 @@ import 'package:dottoday/features/onboarding/flow/onb_buttons.dart';
 import 'package:dottoday/features/onboarding/onboarding_flow.dart';
 import 'package:dottoday/features/onboarding/steps/day_dial.dart';
 import 'package:dottoday/features/onboarding/steps/intrinsic_floor.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/text/balanced_text.dart';
 import 'package:dottoday/shared/time_input/time_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Your day (prototype `vDay`, `mountDay`; ED-305, ED-487): "Your day runs
@@ -67,7 +67,7 @@ class _YourDayStepState extends ConsumerState<YourDayStep> {
       }
     });
     // A selection tick at each hour (prototype motion table).
-    if (hour) unawaited(HapticFeedback.selectionClick());
+    if (hour) AppHaptics.play(context, HapticTick.selection);
     _save();
   }
 

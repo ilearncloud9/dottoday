@@ -5640,6 +5640,36 @@ abstract class AppLocalizations {
   /// **'A nudge at {time}'**
   String onboardingNudgeAt(String time);
 
+  /// The first Today's one-time hint beside the next task's done circle (ED-490).
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the circle when it’s done'**
+  String get firstTodayHint;
+
+  /// The first Today's sync card, for a device without an account (ED-490).
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync'**
+  String get firstSyncTitle;
+
+  /// Under "Sign in to sync".
+  ///
+  /// In en, this message translates to:
+  /// **'Use Dottoday on all your devices with a copy kept safe.'**
+  String get firstSyncBody;
+
+  /// The sync card's button: opens Settings › Account.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get firstSyncSignIn;
+
+  /// Screen reader label of the sync card's ✕.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss sign in to sync'**
+  String get firstSyncDismiss;
+
   /// Onboarding O3: shown when five are picked.
   ///
   /// In en, this message translates to:

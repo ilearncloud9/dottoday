@@ -1,3 +1,4 @@
+import 'package:dottoday/data/onboarding/first_today_store.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,3 +26,30 @@ final class FakeOnboarding extends Onboarding {
 final Override onboarded = onboardingProvider.overrideWith(
   () => FakeOnboarding(OnboardingProgress.done),
 );
+
+/// The first Today's state in memory (M20.11 part 5), starting at
+/// [initial].
+final class MemoryFirstToday extends FirstToday {
+  MemoryFirstToday([this.initial = const FirstTodayState()]);
+
+  final FirstTodayState initial;
+
+  @override
+  Future<FirstTodayState> build() async => initial;
+
+  FirstTodayState get _now => state.value ?? initial;
+
+  @override
+  Future<void> begin() async => state = const AsyncData(
+    FirstTodayState(rise: true, hint: true, sync: true),
+  );
+
+  @override
+  Future<void> risen() async => state = AsyncData(_now.copy(rise: false));
+
+  @override
+  Future<void> hintDone() async => state = AsyncData(_now.copy(hint: false));
+
+  @override
+  Future<void> syncDone() async => state = AsyncData(_now.copy(sync: false));
+}

@@ -14,6 +14,7 @@ import 'package:dottoday/data/wake_up/wake_up_providers.dart';
 import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/time/day_shape.dart';
+import 'package:dottoday/features/timeline/first_today/first_today_look.dart';
 import 'package:dottoday/features/timeline/state/day_cues.dart';
 import 'package:dottoday/features/timeline/state/day_ends.dart';
 import 'package:dottoday/features/timeline/state/day_hours.dart';
@@ -174,11 +175,19 @@ class DayPage extends ConsumerWidget {
     final emptyActions = !watchSimplified(ref, FeatureId.emptyDayActions);
     final emptyBody =
         page && summary.total == 0 && !date.isBefore(today) && emptyActions;
+    // The first Today after onboarding (M20.11 part 5, ED-490).
+    final first = watchFirstToday(
+      ref,
+      today: date == today && reality == null,
+      blocks: blocks,
+      now: now,
+    );
     final actions = _actions(
       context,
       ref,
       data,
       format.time,
+      first: first,
       drag: reality == null,
       // Today's free time left after now; another day's whole day.
       emptyDay: emptyBody
@@ -200,7 +209,7 @@ class DayPage extends ConsumerWidget {
       emptyActions: emptyActions,
       later: page && watchSimplified(ref, FeatureId.inbox),
     );
-    final card = page
+    final built = page
         ? DayCard.page(
             entries: entries,
             actions: actions,
@@ -236,6 +245,9 @@ class DayPage extends ConsumerWidget {
             note: note,
             openAtNow: date == today,
           );
+    final card = first == null
+        ? built
+        : FirstTodayLayer(look: first, rows: entries.length, child: built);
     if (hours) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -305,6 +317,7 @@ class DayPage extends ConsumerWidget {
     TimelineData data,
     String Function(DateTime utc) time, {
     required bool drag,
+    FirstTodayLook? first,
     Widget Function(int freeMinutes)? emptyDay,
   }) {
     final picked = ref.watch(taskSelectionProvider);
@@ -315,6 +328,8 @@ class DayPage extends ConsumerWidget {
       blocks: data.blocks,
       timeText: time,
       emptyDay: emptyDay,
+      arrive: first?.arrive,
+      doneLink: first?.doneLink,
       drag: !drag
           ? null
           : dayThreadDrag(

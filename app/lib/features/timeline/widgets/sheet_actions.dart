@@ -175,7 +175,7 @@ Future<void> markDone(BuildContext context, WidgetRef ref, Occurrence o) async {
   final messenger = ScaffoldMessenger.of(context);
   final undo = ref.read(undoServiceProvider);
   final done = o.status == OccurrenceStatus.done;
-  AppHaptics.play(context, HapticTick.light);
+  AppHaptics.play(context, done ? HapticTick.light : HapticTick.success);
   reportUndoable(
     messenger,
     l10n,

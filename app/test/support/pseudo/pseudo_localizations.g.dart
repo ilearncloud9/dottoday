@@ -2965,6 +2965,21 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.onboardingNudgeAt(time));
 
   @override
+  String get firstTodayHint => pseudo(super.firstTodayHint);
+
+  @override
+  String get firstSyncTitle => pseudo(super.firstSyncTitle);
+
+  @override
+  String get firstSyncBody => pseudo(super.firstSyncBody);
+
+  @override
+  String get firstSyncSignIn => pseudo(super.firstSyncSignIn);
+
+  @override
+  String get firstSyncDismiss => pseudo(super.firstSyncDismiss);
+
+  @override
   String get onboardingHabitsMax => pseudo(super.onboardingHabitsMax);
 
   @override

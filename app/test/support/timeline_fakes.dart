@@ -24,6 +24,7 @@ import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/notification_providers.dart';
 import 'package:dottoday/data/notifications/pending_notification_gateways.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
+import 'package:dottoday/data/onboarding/first_today_store.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/repositories/repository_providers.dart';
@@ -77,6 +78,7 @@ import 'calendar_series_fakes.dart';
 import 'export_fakes.dart';
 import 'fake_clock.dart';
 import 'fake_notification_platform.dart';
+import 'onboarding_fakes.dart';
 import 'reveal_hint_fakes.dart';
 import 'routine_fakes.dart';
 import 'search_fakes.dart';
@@ -498,6 +500,7 @@ List<Override> timelineOverrides({
   String whatsNewSeen = '0.1.0',
   DiagnosticsReader diagnostics = const FakeDiagnosticsReader(),
   WriteFault? writeFault,
+  FirstTodayState firstToday = const FirstTodayState(),
   List<Routine> routines = const [],
   FakeRevealHintRepository? revealHints,
   DateTime? alarmTierGainedAt,
@@ -614,6 +617,8 @@ List<Override> timelineOverrides({
     planPanelProvider.overrideWith(MemoryPlanPanel.new),
     // Minimal's Day column memory (M19.6 part 6c), likewise.
     dayColumnHiddenProvider.overrideWith(MemoryDayColumnHidden.new),
+    // The first Today after onboarding (M20.11 part 5): none by default.
+    firstTodayProvider.overrideWith(() => MemoryFirstToday(firstToday)),
   ];
 }
 

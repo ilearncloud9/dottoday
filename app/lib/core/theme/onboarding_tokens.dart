@@ -49,6 +49,9 @@ abstract final class OnbSize {
   static const double cardRadius = 36;
   static const double cardDrop = 8;
 
+  /// You're in: the card shrinks to .94 as it leaves (`.card.gone`).
+  static const double cardExitScale = 0.94;
+
   /// Below this window height the card would be cramped; the flow is full
   /// screen there instead (a phone on its side).
   static const double cardMinHeight = 600;
@@ -299,6 +302,38 @@ abstract final class OnbSize {
   static const double moreRowPadV = 12;
   static const double moreRowPadH = 14;
   static const double moreGap = 12;
+
+  /// You're in (`vToday`, ED-490): the hint (`.hint`) 40 high, padding 14,
+  /// its 6 arrow pointing at the done circle, 6 from it.
+  static const double hint = 40;
+  static const double hintPad = 14;
+  static const double hintArrow = 6;
+  static const double hintGap = 6;
+
+  /// The sync card (`.sync`): 8 above, 10 below, padding 12 8 12 14,
+  /// corner 22, 12 apart, its 1 line; Sign in 40 high, padding 14; ✕ 44.
+  static const double syncTop = 8;
+  static const double syncBottom = 10;
+  static const double syncPadV = 12;
+  static const double syncPadStart = 14;
+  static const double syncPadEnd = 8;
+  static const double syncRadius = 22;
+  static const double syncGap = 12;
+  static const double syncButton = 40;
+  static const double syncButtonPad = 14;
+  static const double syncIcon = 24;
+  static const double syncClose = 44;
+  static const double syncCloseIcon = 18;
+
+  /// From this text size Sign in takes its own line (the duration chips'
+  /// threshold, §5.4).
+  static const double syncLargeText = 1.3;
+
+  /// Things rising in (`rise`): from 14 below. The hint leaves 6 up, the
+  /// card 10 down.
+  static const double arriveRise = 14;
+  static const double hintLeave = 6;
+  static const double syncLeave = 10;
 }
 
 /// The dial's fade at its top and bottom (`.dial` `mask-image`): an
@@ -384,6 +419,10 @@ abstract final class OnbMotion {
   static const pop = Cubic(0.34, 1.56, 0.64, 1);
   static const standard = Cubic(0.2, 0, 0, 1);
 
+  /// CSS `ease` (a transition with no curve named: the card's fade and
+  /// the scrim as the card leaves).
+  static const ease = Cubic(0.25, 0.1, 0.25, 1);
+
   /// The progress dots (`.prog i`, all .4 s) and bars (`.prog b::after`,
   /// .5 s standard).
   static const dots = Duration(milliseconds: 400);
@@ -459,4 +498,15 @@ abstract final class OnbMotion {
   static const sheetIn = Duration(milliseconds: 500);
   static const double sheetFrom = 1.1;
   static const askFocus = Duration(milliseconds: 900);
+
+  /// You're in (`.stg`): rows rise in turn, 500 ms each (emphasized
+  /// decelerate) from 150 ms, 120 ms apart; the hint at 1.1 s, the sync
+  /// card at 1.6 s. The hint leaves over 400 ms, the card over 300 ms.
+  static const arrive = Duration(milliseconds: 500);
+  static const arriveFirst = Duration(milliseconds: 150);
+  static const arriveGap = Duration(milliseconds: 120);
+  static const hintStart = Duration(milliseconds: 1100);
+  static const syncStart = Duration(milliseconds: 1600);
+  static const hintLeave = Duration(milliseconds: 400);
+  static const syncLeave = Duration(milliseconds: 300);
 }

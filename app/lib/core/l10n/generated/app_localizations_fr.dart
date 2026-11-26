@@ -3772,6 +3772,22 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get firstTodayHint => 'Touchez le cercle quand c’est fait';
+
+  @override
+  String get firstSyncTitle => 'Connectez-vous pour synchroniser';
+
+  @override
+  String get firstSyncBody =>
+      'Utilisez Dottoday sur tous vos appareils, avec une copie en sécurité.';
+
+  @override
+  String get firstSyncSignIn => 'Se connecter';
+
+  @override
+  String get firstSyncDismiss => 'Masquer la connexion pour synchroniser';
+
+  @override
   String get onboardingHabitsMax => 'Cinq, c\'est bien assez pour commencer.';
 
   @override

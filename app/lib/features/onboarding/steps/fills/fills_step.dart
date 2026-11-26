@@ -16,9 +16,9 @@ import 'package:dottoday/features/onboarding/steps/fills/fills_day_thread.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_draft.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_flight.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_look.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/text/balanced_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// What fills your days? (prototype `vRhythm`, `mountRhythm`; ED-305,
@@ -95,7 +95,7 @@ class _FillsStepState extends ConsumerState<FillsStep>
   }
 
   void _tap(DayFill fill, Color color) {
-    unawaited(HapticFeedback.selectionClick());
+    AppHaptics.play(context, HapticTick.selection);
     final draft = ref.read(fillsDraftProvider);
     final on = draft.picked.contains(fill.id);
     ref.read(fillsDraftProvider.notifier).toggle(fill.id);

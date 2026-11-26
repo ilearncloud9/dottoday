@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/onboarding/first_today_store.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/flow/onb_nav.dart';
@@ -60,6 +61,8 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
   /// meanwhile (a sign-in callback shows Account, M6.1).
   Future<void> _finish() async {
     final router = ref.read(routerProvider);
+    // You're in (part 5, ED-490): the first Today's rise, hint and card.
+    await ref.read(firstTodayProvider.notifier).begin();
     await _store.finish();
     router.go(AppRoutes.today);
   }

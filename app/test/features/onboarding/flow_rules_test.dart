@@ -2,6 +2,7 @@ import 'package:dottoday/data/layout/layout_providers.dart';
 import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/flow/onb_keys.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -121,5 +122,27 @@ void main() {
     expect(find.byKey(OnbKeys.card), findsOneWidget);
     // The app is there behind it, out of reach.
     expect(find.text('the app', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets("You're in on a wide window: the card leaves, the app stays", (
+    tester,
+  ) async {
+    final c = await pumpOnboarding(
+      tester,
+      size: const Size(1280, 830),
+      progress: const OnboardingProgress(step: OnboardingStep.nudge),
+    );
+    final app = tester.state(find.byType(MaterialApp));
+    await tester.tap(find.text('Not now'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    // Mid-exit: the card is still there, on its way out.
+    expect(find.byKey(OnbKeys.card), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.byKey(OnbKeys.card), findsNothing);
+    expect(find.text('the app'), findsOneWidget);
+    expect(stepOf(c), OnboardingStep.today);
+    // The same app, not a new one (its state was kept).
+    expect(tester.state(find.byType(MaterialApp)), same(app));
   });
 }

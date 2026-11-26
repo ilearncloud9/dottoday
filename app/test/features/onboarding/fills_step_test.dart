@@ -2,8 +2,8 @@ import 'package:dottoday/data/trash/trash_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/steps/fills/fills_draft.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -57,12 +57,10 @@ void main() {
   testWidgets('a pick lands at a time that fits, "Most days"', (tester) async {
     final calls = <String?>[];
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
+      AppHaptics.channel,
       (call) async {
-        if (call.method == 'HapticFeedback.vibrate') {
-          calls.add(call.arguments as String?);
-        }
-        return null;
+        if (call.method == 'play') calls.add(call.arguments as String?);
+        return true;
       },
     );
     await _pump(tester);

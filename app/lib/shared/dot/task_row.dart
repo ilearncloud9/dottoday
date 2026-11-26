@@ -26,6 +26,7 @@ class TaskRow extends StatelessWidget {
   const TaskRow({
     required this.task,
     this.onToggleDone,
+    this.doneLink,
     this.onOpen,
     this.onStart,
     this.onUnstick,
@@ -47,6 +48,9 @@ class TaskRow extends StatelessWidget {
 
   /// Tap on the done circle (ADR-0015: the circle, not the dot, marks done).
   final VoidCallback? onToggleDone;
+
+  /// Ties the first Today's hint to this row's done circle (ED-490).
+  final LayerLink? doneLink;
 
   /// Tap on the row or the dot: the task sheet (§6, ADR-0015).
   final VoidCallback? onOpen;
@@ -88,6 +92,7 @@ class TaskRow extends StatelessWidget {
               done: task.state == DotState.done,
               title: task.title,
               onTap: onToggleDone,
+              link: doneLink,
             ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

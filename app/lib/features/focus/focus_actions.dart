@@ -43,8 +43,8 @@ final class FocusActions {
     );
     if (!written) return;
     playDoneSound(ref);
-    // As the Done tiles on Today and the task sheet tap.
-    AppHaptics.playFor(ref, HapticTick.light);
+    // As the Done tiles on Today and the task sheet tap (ED-490).
+    AppHaptics.playFor(ref, HapticTick.success);
   }
 
   /// +15 min on the planned length, with Undo.

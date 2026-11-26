@@ -3756,6 +3756,22 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get firstTodayHint => 'Tap the circle when it’s done';
+
+  @override
+  String get firstSyncTitle => 'Sign in to sync';
+
+  @override
+  String get firstSyncBody =>
+      'Use Dottoday on all your devices with a copy kept safe.';
+
+  @override
+  String get firstSyncSignIn => 'Sign in';
+
+  @override
+  String get firstSyncDismiss => 'Dismiss sign in to sync';
+
+  @override
   String get onboardingHabitsMax => 'Five is plenty to start with.';
 
   @override

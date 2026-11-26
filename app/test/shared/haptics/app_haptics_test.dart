@@ -73,7 +73,7 @@ void main() {
     await tester.pump();
     // The names the native bridges switch on (AppDelegate.swift's
     // HapticsBridge, HapticsBridge.kt): renaming a tick breaks this.
-    expect(taps, ['selection', 'light', 'medium']);
+    expect(taps, ['selection', 'light', 'medium', 'success']);
   });
 
   testWidgets('off: no tick plays', (tester) async {

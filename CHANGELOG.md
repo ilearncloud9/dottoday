@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- After onboarding, your first Today eases in with a one-time hint at the circle that marks a task done and a "Sign in to sync" card you can dismiss; marking a task done now sends a ring out from the circle with a success tap; on tablets, the Mac and the web the onboarding card fades away over your Today (redesign branch).
 - Onboarding now asks for notifications in context: your next task drops onto your thread and a preview of its reminder appears before the ask; once allowed, you can turn on the Wake Up alarm and the Wind Down reminder, which stay off unless you do (redesign branch).
 - Onboarding's What fills your days shows your day as a thread: tap Morning run, Deep work, Gym or Read, or type your own, and each flies onto the thread at a time that fits; That's my day makes them tasks that repeat every day (redesign branch).
 - Onboarding's Your day is now a sky you shape by dragging the sun and the moon, with your awake hours and night shown as you go and a light tick at each hour (redesign branch).

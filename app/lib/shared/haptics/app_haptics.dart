@@ -13,6 +13,10 @@ enum HapticTick {
 
   /// A landing: a drop on the thread, a day, the Inbox tab or the Trash.
   medium,
+
+  /// Success: a task marked done (the onboarding prototype's "Tap the
+  /// dot": iOS success, Android CONFIRM; ED-490).
+  success,
 }
 
 /// Whether the app's haptics play (Settings › Sounds › Haptics in app,

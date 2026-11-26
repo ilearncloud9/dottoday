@@ -4,6 +4,7 @@ import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
 import 'package:dottoday/features/onboarding/steps/day_dial_parts.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -127,12 +128,10 @@ void main() {
   testWidgets('a selection tick when the time reaches an hour', (tester) async {
     final calls = <String?>[];
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
+      AppHaptics.channel,
       (call) async {
-        if (call.method == 'HapticFeedback.vibrate') {
-          calls.add(call.arguments as String?);
-        }
-        return null;
+        if (call.method == 'play') calls.add(call.arguments as String?);
+        return true;
       },
     );
     await pumpOnboarding(tester, progress: _day, settings: _h12);
@@ -143,7 +142,7 @@ void main() {
       LogicalKeyboardKey.arrowDown,
       LogicalKeyboardKey.arrowDown,
     ]);
-    expect(calls, ['HapticFeedbackType.selectionClick']);
+    expect(calls, ['selection']);
   });
 
   testWidgets('screen readers: sliders read "Wake Up, 7:00 AM" and step', (

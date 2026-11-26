@@ -12,8 +12,8 @@ import 'package:dottoday/features/onboarding/onboarding_flow.dart';
 import 'package:dottoday/features/onboarding/steps/nudge/nudge_banner.dart';
 import 'package:dottoday/features/onboarding/steps/nudge/nudge_scene.dart';
 import 'package:dottoday/features/onboarding/steps/nudge/nudge_sheet.dart';
+import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A nudge, in context (prototype `vNudge`; ED-305, ED-489): the next
@@ -77,7 +77,7 @@ class _NudgeStepState extends ConsumerState<NudgeStep>
     final at = OnbMotion.drop.inMilliseconds * OnbMotion.dropLand;
     if (_in.value * OnbMotion.nudge.inMilliseconds < at) return;
     _landed = true;
-    unawaited(HapticFeedback.lightImpact());
+    AppHaptics.play(context, HapticTick.light);
   }
 
   Future<void> _ask() async {

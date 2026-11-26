@@ -556,6 +556,11 @@ abstract final class DotSize {
   static const double doneCircle = 28;
   static const double doneRing = 2.5;
 
+  /// Marking done (the onboarding prototype's `.burst`, ED-490): a 3 ring
+  /// in the task's colour grows from the circle to 2.1 and fades.
+  static const double doneBurstRing = 3;
+  static const double doneBurstScale = 2.1;
+
   /// Concept E's fixed phone row heights (§5.2): rows no longer stretch
   /// with their task's length.
   static const double threadRowDone = 48;

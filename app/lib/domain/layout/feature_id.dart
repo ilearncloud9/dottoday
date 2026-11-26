@@ -134,7 +134,10 @@ enum FeatureId {
   installBanner('Web install banner'),
   earlierFold('Earlier fold (done tasks before now)'),
   threadOutside('Before Wake Up / After Wind Down rows (`ThreadOutside`)'),
-  searchOrRun('Search or run (⌘K / Ctrl K, `k` on web; Mac and web)');
+  searchOrRun('Search or run (⌘K / Ctrl K, `k` on web; Mac and web)'),
+  firstToday(
+    'First Today after onboarding: rows rise in, the done-circle hint, Sign in to sync card',
+  );
 
   const FeatureId(this.docRow);
 

@@ -5285,6 +5285,16 @@
   "@onboardingRingsAt": {"description": "Under Wake Up alarm on \"Two more\".", "placeholders": {"time": {"type": "String"}}},
   "onboardingNudgeAt": "A nudge at {time}",
   "@onboardingNudgeAt": {"description": "Under Wind Down reminder on \"Two more\".", "placeholders": {"time": {"type": "String"}}},
+  "firstTodayHint": "Tap the circle when it’s done",
+  "@firstTodayHint": {"description": "The first Today's one-time hint beside the next task's done circle (ED-490)."},
+  "firstSyncTitle": "Sign in to sync",
+  "@firstSyncTitle": {"description": "The first Today's sync card, for a device without an account (ED-490)."},
+  "firstSyncBody": "Use Dottoday on all your devices with a copy kept safe.",
+  "@firstSyncBody": {"description": "Under \"Sign in to sync\"."},
+  "firstSyncSignIn": "Sign in",
+  "@firstSyncSignIn": {"description": "The sync card's button: opens Settings › Account."},
+  "firstSyncDismiss": "Dismiss sign in to sync",
+  "@firstSyncDismiss": {"description": "Screen reader label of the sync card's ✕."},
   "onboardingHabitsMax": "Five is plenty to start with.",
   "@onboardingHabitsMax": {
     "description": "Onboarding O3: shown when five are picked."

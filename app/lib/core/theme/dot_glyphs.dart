@@ -139,6 +139,11 @@ abstract final class DotGlyphs {
   /// The onboarding's plain dot (prototype `dot`): what a typed thing
   /// shows until its words name an icon.
   static final onbDot = DotGlyph(_c(12, 12, 4));
+
+  /// The first Today's "Sign in to sync" cloud (prototype `cloud`, ED-490).
+  static const onbCloud = DotGlyph(
+    'M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 9.2 4.5 4.5 0 0 0 7 18z',
+  );
   static const onbMoon = DotGlyph(
     'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
   );

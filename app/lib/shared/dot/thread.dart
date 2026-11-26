@@ -40,6 +40,8 @@ final class ThreadActions {
     this.onSelect,
     this.emptyDay,
     this.pickedId,
+    this.arrive,
+    this.doneLink,
   });
 
   final ValueChanged<String>? onToggleDone;
@@ -86,6 +88,13 @@ final class ThreadActions {
   /// The task the Workspace inspector shows (ED-391); its row gets the
   /// grid's 2 px ink edge (owner, M19.2 part 3b).
   final String? pickedId;
+
+  /// The first Today after onboarding (ED-490): wraps entry [index] so the
+  /// rows rise in turn; null otherwise.
+  final Widget Function(int index, Widget child)? arrive;
+
+  /// The task whose done circle the first Today's hint points at.
+  final ({String id, LayerLink link})? doneLink;
 }
 
 /// The day as a vertical thread (docs/10 §1, §3 `Thread`): sun cap, task
@@ -212,7 +221,9 @@ class _ThreadState extends State<Thread> {
       }
       final i = closing != null && n > closing ? n - 1 : n;
       final entry = _entry(entries[i], solid[i], empty: i == empty);
-      return _keyed(i, _onHours(i, entry));
+      final arrive = widget.actions.arrive;
+      final built = _onHours(i, entry);
+      return _keyed(i, arrive == null ? built : arrive(i, built));
     }
 
     final count = entries.length + (closing == null ? 0 : 1);
@@ -338,6 +349,7 @@ class _ThreadState extends State<Thread> {
         ? LiveRow(
             task: task,
             onToggleDone: _bind(onDone, task),
+            doneLink: _link(task),
             onOpen: _open(task),
             onFocus: _bind(a.onFocus, task),
             onUnstick: _answer(a.onUnstick, task),
@@ -349,6 +361,7 @@ class _ThreadState extends State<Thread> {
             solid: solid,
             dotSize: _scale.dot,
             onToggleDone: _bind(onDone, task),
+            doneLink: _link(task),
             onOpen: _open(task),
             // Smallest step's Start opens Focus, which records the start.
             onStart: _bind(a.onFocus, task),
@@ -386,6 +399,12 @@ class _ThreadState extends State<Thread> {
       onHold: onSelect == null ? null : () => onSelect(task.id),
       child: row,
     );
+  }
+
+  /// The hint's anchor, on [task]'s row only.
+  LayerLink? _link(ThreadTask task) {
+    final l = widget.actions.doneLink;
+    return l != null && l.id == task.id ? l.link : null;
   }
 
   /// This thread's sizes for its width (ED-419); the hour scale sizes

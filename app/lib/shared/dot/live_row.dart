@@ -18,6 +18,7 @@ class LiveRow extends StatelessWidget {
   const LiveRow({
     required this.task,
     this.onToggleDone,
+    this.doneLink,
     this.onOpen,
     this.onFocus,
     this.onUnstick,
@@ -28,6 +29,9 @@ class LiveRow extends StatelessWidget {
 
   final ThreadTask task;
   final VoidCallback? onToggleDone;
+
+  /// Ties the first Today's hint to this row's done circle (ED-490).
+  final LayerLink? doneLink;
   final VoidCallback? onOpen;
 
   /// One tap on the live dot (11 A3, docs/09 M10.5); null: the dot opens
@@ -68,6 +72,7 @@ class LiveRow extends StatelessWidget {
               live: true,
               title: task.title,
               onTap: onToggleDone,
+              link: doneLink,
             ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: DotSpace.s),

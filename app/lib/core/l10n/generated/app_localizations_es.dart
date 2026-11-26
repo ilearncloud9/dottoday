@@ -3766,6 +3766,22 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get firstTodayHint => 'Toca el círculo cuando esté hecho';
+
+  @override
+  String get firstSyncTitle => 'Inicia sesión para sincronizar';
+
+  @override
+  String get firstSyncBody =>
+      'Usa Dottoday en todos tus dispositivos con una copia a salvo.';
+
+  @override
+  String get firstSyncSignIn => 'Iniciar sesión';
+
+  @override
+  String get firstSyncDismiss => 'Descartar iniciar sesión para sincronizar';
+
+  @override
   String get onboardingHabitsMax => 'Cinco es más que suficiente para empezar.';
 
   @override
