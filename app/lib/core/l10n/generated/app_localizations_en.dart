@@ -8176,6 +8176,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get menuShowNow => 'Show Now';
+
+  @override
+  String nowWindowEnded(int minutes) {
+    return 'ended $minutes min ago';
+  }
+
+  @override
+  String nowWindowNext(String title) {
+    return 'next $title';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

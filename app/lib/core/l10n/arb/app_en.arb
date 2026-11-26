@@ -8654,6 +8654,28 @@
   "@wakeUpCardMovedTo": {"description": "Wake Up card on a late start: where Shift the rest? would move a dot, e.g. '→ 7:10 AM' (E-R2-19-B).", "placeholders": {"time": {"type": "String"}}},
   "missionStepsOf": "of {total} steps",
   "@missionStepsOf": {"description": "Walk mission: under the step count inside the ring, e.g. '6' over 'of 20 steps' (E-R2-19-B).", "placeholders": {"total": {"type": "int"}}},
+  "menuShowNow": "Show Now",
+  "@menuShowNow": {
+    "description": "Mac Window menu: shows or hides the floating Now mini window, ⌥⌘0 (E-Minimal, ED-066, M20.9 part 7)."
+  },
+  "nowWindowEnded": "ended {minutes} min ago",
+  "@nowWindowEnded": {
+    "description": "Now mini window (Mac): a task past its planned end and not done; never shaming (no \"late\").",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "nowWindowNext": "next {title}",
+  "@nowWindowNext": {
+    "description": "Now mini window (Mac): the task after this one, after \"18 min left · \" (E-Minimal: \"next Call with Sam\").",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},
   "taskIconCategoryHealth": "Health & body",

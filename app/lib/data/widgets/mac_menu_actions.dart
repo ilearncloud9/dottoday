@@ -3,10 +3,11 @@ import 'package:dottoday/domain/intents/dot_action.dart';
 import 'package:dottoday/domain/intents/dot_intents.dart';
 import 'package:flutter/services.dart';
 
-/// Done and +15 min from the Mac menu bar's What's next (docs/09 M9.6):
-/// `macos/Runner/DayDotStatusItem.swift` sends `action` on
-/// `dottoday/status_item`; the app runs the B6 intent in process (the Mac
-/// has no queue: the menu bar lives and dies with the app).
+/// Done and more time from the Mac's native surfaces (docs/09 M9.6): the
+/// menu bar's +15 min (`macos/Runner/DayDotStatusItem.swift`) and the Now
+/// mini window's +5 / +15 / +30 (`NowMiniWindow.swift`, M20.9 part 7) send
+/// `action` on `dottoday/status_item`; the app runs the B6 intent in
+/// process (the Mac has no queue: both live and die with the app).
 void listenForMenuBarActions(
   DotIntents intents, {
   MethodChannel channel = MacStatusItemSink.statusItemChannel,
@@ -26,14 +27,17 @@ DotAction? menuBarAction(Object? arguments) {
   if (id is! String || id.isEmpty) return null;
   return switch (arguments['kind']) {
     'mark_done' => MarkDone(id),
-    'add_fifteen' => switch (arguments['planned_end_ms']) {
-      final num end => AddFifteen(
-        id,
-        plannedEndUtc: DateTime.fromMillisecondsSinceEpoch(
-          end.toInt(),
-          isUtc: true,
+    'add_time' => switch ((arguments['planned_end_ms'], arguments['minutes'])) {
+      (final num end, final int minutes)
+          when AddTime.choices.contains(minutes) =>
+        AddTime(
+          id,
+          plannedEndUtc: DateTime.fromMillisecondsSinceEpoch(
+            end.toInt(),
+            isUtc: true,
+          ),
+          minutes: minutes,
         ),
-      ),
       _ => null,
     },
     _ => null,

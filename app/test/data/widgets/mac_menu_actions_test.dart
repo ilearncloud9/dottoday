@@ -12,8 +12,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../domain/fixtures.dart';
 import '../writes/write_harness.dart';
 
-// Done / +15 from the Mac menu bar (docs/09 M9.6): the menu's arguments
-// become B6 intents and run through the write path in process.
+// Done and more time from the Mac menu bar (docs/09 M9.6) and the Now mini
+// window (M20.9 part 7): the arguments become B6 intents and run through
+// the write path in process.
 
 final _now = DateTime.utc(2026, 10, 21, 14);
 const _channel = MethodChannel('test/status_item');
@@ -22,24 +23,29 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('menuBarAction', () {
-    test('reads Done and +15', () {
+    test('reads Done and +5 / +15 / +30', () {
       expect(
         menuBarAction({'kind': 'mark_done', 'id': 'x'}),
         isA<MarkDone>().having((a) => a.occurrenceId, 'id', 'x'),
       );
-      final plus = menuBarAction({
-        'kind': 'add_fifteen',
-        'id': 'x',
-        'planned_end_ms': 1792584000000.0,
-      });
-      expect(
-        plus,
-        isA<AddFifteen>().having(
-          (a) => a.plannedEndUtc,
-          'end',
-          DateTime.utc(2026, 10, 21, 12),
-        ),
-      );
+      for (final minutes in AddTime.choices) {
+        final plus = menuBarAction({
+          'kind': 'add_time',
+          'id': 'x',
+          'planned_end_ms': 1792584000000.0,
+          'minutes': minutes,
+        });
+        expect(
+          plus,
+          isA<AddTime>()
+              .having(
+                (a) => a.plannedEndUtc,
+                'end',
+                DateTime.utc(2026, 10, 21, 12),
+              )
+              .having((a) => a.minutes, 'minutes', minutes),
+        );
+      }
     });
 
     test('refuses anything else', () {
@@ -48,14 +54,17 @@ void main() {
         'x',
         {'kind': 'mark_done'},
         {'kind': 'delete', 'id': 'x'},
-        {'kind': 'add_fifteen', 'id': 'x'},
+        {'kind': 'add_time', 'id': 'x', 'minutes': 15},
+        {'kind': 'add_time', 'id': 'x', 'planned_end_ms': 1.0},
+        {'kind': 'add_time', 'id': 'x', 'planned_end_ms': 1.0, 'minutes': 20},
+        {'kind': 'add_fifteen', 'id': 'x', 'planned_end_ms': 1.0},
       ]) {
         expect(menuBarAction(junk), isNull, reason: '$junk');
       }
     });
   });
 
-  test('the menu\'s Done and +15 reach the database', () async {
+  test('Done and +30 reach the database', () async {
     final h = WriteHarness(_now);
     addTearDown(h.dispose);
     final occurrences = DriftOccurrenceRepository(h.db);
@@ -97,14 +106,15 @@ void main() {
 
     expect(
       await send({
-        'kind': 'add_fifteen',
+        'kind': 'add_time',
         'id': task.id,
         'planned_end_ms': task.endUtc!.millisecondsSinceEpoch.toDouble(),
+        'minutes': 30,
       }),
       'applied',
     );
     expect(await send({'kind': 'mark_done', 'id': task.id}), 'applied');
     final stored = (await occurrences.findById(userId, task.id))!;
-    expect((stored.durationMin, stored.status), (45, OccurrenceStatus.done));
+    expect((stored.durationMin, stored.status), (60, OccurrenceStatus.done));
   });
 }

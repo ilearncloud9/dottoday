@@ -126,26 +126,24 @@ final class DotIntents {
         final started = progress.markStarted(o, _clock.nowUtc());
         return identical(started, o) ? null : started;
       }),
-      final AddFifteen a => _addFifteen(profile.id, a),
+      final AddTime a => _addTime(profile.id, a),
     };
   }
 
-  Future<ActionOutcome> _addFifteen(String userId, AddFifteen a) async {
+  Future<ActionOutcome> _addTime(String userId, AddTime a) async {
     final task = await _live(userId, a.occurrenceId);
     if (task == null) return _missing(userId, a.occurrenceId);
     // Compared in whole milliseconds: what every surface carries (a stored
     // time has no microseconds; one made in the app may).
     final end = task.endUtc!.millisecondsSinceEpoch;
     final planned = a.plannedEndUtc.millisecondsSinceEpoch;
-    const extra = AddFifteen.minutes * 60000;
+    final extra = a.minutes * 60000;
     if (end == planned + extra) return ActionOutcome.alreadyApplied;
     if (end != planned) return ActionOutcome.droppedStale;
     return _write(
       WriteBatch(
         userId: userId,
-        occurrences: [
-          task.copyWith(durationMin: task.durationMin + AddFifteen.minutes),
-        ],
+        occurrences: [task.copyWith(durationMin: task.durationMin + a.minutes)],
       ),
     );
   }

@@ -160,7 +160,7 @@ final class ActionQueueDrainer {
   static LogId? _occurrenceOf(DotAction a) => switch (a) {
     AddTask() => null,
     MarkDone(:final occurrenceId) => LogId(occurrenceId),
-    AddFifteen(:final occurrenceId) => LogId(occurrenceId),
+    AddTime(:final occurrenceId) => LogId(occurrenceId),
     StartFocus(:final occurrenceId) => LogId(occurrenceId),
   };
 }

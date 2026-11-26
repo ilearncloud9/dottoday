@@ -95,7 +95,7 @@ void main() {
   test('applies in order and empties the queue', () async {
     // +15 first, then Done: in order the task ends 15 min later, done.
     store
-      ..append(entry(_a1, AddFifteen(base.id, plannedEndUtc: base.endUtc!)))
+      ..append(entry(_a1, AddTime(base.id, plannedEndUtc: base.endUtc!)))
       ..append(entry(_a2, MarkDone(base.id)));
     expect(await drainer.drain(), 2);
     final task = (await occurrences.findById(userId, base.id))!;
@@ -106,8 +106,8 @@ void main() {
 
   test('+15, the same +15 again, then Done (the activity\'s path)', () async {
     store
-      ..append(entry(_a1, AddFifteen(base.id, plannedEndUtc: base.endUtc!)))
-      ..append(entry(_a2, AddFifteen(base.id, plannedEndUtc: base.endUtc!)));
+      ..append(entry(_a1, AddTime(base.id, plannedEndUtc: base.endUtc!)))
+      ..append(entry(_a2, AddTime(base.id, plannedEndUtc: base.endUtc!)));
     await drainer.drain();
     store.append(entry(_late, MarkDone(base.id)));
     await drainer.drain();
@@ -116,7 +116,7 @@ void main() {
   });
 
   test('replaying the same entries changes nothing (idempotent)', () async {
-    final plus = entry(_a1, AddFifteen(base.id, plannedEndUtc: base.endUtc!));
+    final plus = entry(_a1, AddTime(base.id, plannedEndUtc: base.endUtc!));
     store.append(plus);
     await drainer.drain();
     // The app died before the queue was emptied: the entry comes back.

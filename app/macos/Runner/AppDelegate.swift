@@ -20,6 +20,13 @@ class AppDelegate: FlutterAppDelegate {
       self?.deliver(link)
     },
     act: { [weak self] action in self?.statusChannel?.invokeMethod("action", arguments: action) })
+  /// Window › Show Now ⌥⌘0 (M20.9 part 7): the same snapshot and actions.
+  private lazy var nowWindow = NowMiniWindow(
+    open: { [weak self] link in
+      NSApp.activate(ignoringOtherApps: true)
+      self?.deliver(link)
+    },
+    act: { [weak self] action in self?.statusChannel?.invokeMethod("action", arguments: action) })
 
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     return true
@@ -47,17 +54,24 @@ class AppDelegate: FlutterAppDelegate {
     linkChannel = channel
 
     // The day dot in the menu bar (docs/02 F9, M5.5, M9.6): the app sends
-    // the day snapshot after every change; Done / +15 come back as
-    // `action` (lib/data/widgets/mac_menu_actions.dart).
+    // the day snapshot after every change, which the Now mini window
+    // reads too; Done / +5 / +15 / +30 come back as `action`
+    // (lib/data/widgets/mac_menu_actions.dart); `toggleNow` is Window ›
+    // Show Now.
     let status = FlutterMethodChannel(
       name: "dottoday/status_item", binaryMessenger: controller.engine.binaryMessenger)
     status.setMethodCallHandler { [weak self] call, result in
-      guard call.method == "update", let json = call.arguments as? String else {
+      switch (call.method, call.arguments) {
+      case ("update", let json as String):
+        self?.nextUp.update(json: json)
+        self?.nowWindow.update(json: json)
+        result(nil)
+      case ("toggleNow", _):
+        self?.nowWindow.toggle()
+        result(nil)
+      default:
         result(FlutterMethodNotImplemented)
-        return
       }
-      self?.nextUp.update(json: json)
-      result(nil)
     }
     statusChannel = status
 

@@ -8218,6 +8218,19 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get menuShowNow => 'Mostrar Ahora';
+
+  @override
+  String nowWindowEnded(int minutes) {
+    return 'terminó hace $minutes min';
+  }
+
+  @override
+  String nowWindowNext(String title) {
+    return 'después $title';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

@@ -29,16 +29,32 @@ final class MarkDone extends DotAction {
   final String occurrenceId;
 }
 
-/// Gives a dot 15 more minutes. [plannedEndUtc] is the end the surface
-/// showed when the user tapped: applied only while the task still ends
-/// there, so a replay (or a change made since) never adds twice.
-final class AddFifteen extends DotAction {
-  const AddFifteen(this.occurrenceId, {required this.plannedEndUtc});
+/// Gives a dot more time: Need More Time's +5, +15 or +30 (ED-163; one
+/// parameterised intent, ED-260). The widgets, Live Activity and
+/// notifications offer [fifteen]; the Mac Now mini window all three.
+/// [plannedEndUtc] is the end the surface showed when the user tapped:
+/// applied only while the task still ends there, so a replay (or a change
+/// made since) never adds twice.
+///
+/// ```dart
+/// AddTime('occ-1', minutes: 30, plannedEndUtc: end);
+/// ```
+final class AddTime extends DotAction {
+  const AddTime(
+    this.occurrenceId, {
+    required this.plannedEndUtc,
+    this.minutes = fifteen,
+  }) : assert(minutes == 5 || minutes == 15 || minutes == 30);
 
-  static const minutes = 15;
+  /// What every surface but the mini window adds.
+  static const fifteen = 15;
+
+  /// The choices Need More Time offers, smallest first.
+  static const choices = [5, 15, 30];
 
   final String occurrenceId;
   final DateTime plannedEndUtc;
+  final int minutes;
 }
 
 /// Starts a dot (B1 `actualStart`; Focus itself is M10.5). Only the first
@@ -79,7 +95,7 @@ final class QueuedAction {
 
 /// JSON of one queue entry, as Swift, Kotlin and the service worker write
 /// it: `{"id", "at_ms", "kind": "add_task"|"mark_done"|"add_fifteen"|
-/// "start_focus", "occurrence_id", "planned_end_ms", "text", "note",
+/// "start_focus", "occurrence_id", "planned_end_ms", "minutes", "text", "note",
 /// "inbox", "owner", "guest_session"}`. A share extension or share intent writes `"shared": true`
 /// with the raw `"text"` and an optional `"subject"` instead; the app makes
 /// the title and note from them ([sharedCapture], M12.4).
@@ -99,10 +115,13 @@ Map<String, Object?> encodeQueuedAction(QueuedAction a) => {
       'kind': 'mark_done',
       'occurrence_id': occurrenceId,
     },
-    AddFifteen(:final occurrenceId, :final plannedEndUtc) => {
+    // The kind's name predates +5 / +30 (the native writers only add 15);
+    // other amounts carry `minutes`.
+    AddTime(:final occurrenceId, :final plannedEndUtc, :final minutes) => {
       'kind': 'add_fifteen',
       'occurrence_id': occurrenceId,
       'planned_end_ms': plannedEndUtc.millisecondsSinceEpoch,
+      if (minutes != AddTime.fifteen) 'minutes': minutes,
     },
     StartFocus(:final occurrenceId) => {
       'kind': 'start_focus',
@@ -156,10 +175,13 @@ DotAction? _action(Map<String, Object?> json) {
       return StartFocus(occurrence);
     case 'add_fifteen' when occurrence != null:
       final end = json['planned_end_ms'];
+      final minutes = json['minutes'] ?? AddTime.fifteen;
       if (end is! int || end < 0) return null;
-      return AddFifteen(
+      if (!AddTime.choices.contains(minutes)) return null;
+      return AddTime(
         occurrence,
         plannedEndUtc: DateTime.fromMillisecondsSinceEpoch(end, isUtc: true),
+        minutes: minutes as int,
       );
   }
   return null;

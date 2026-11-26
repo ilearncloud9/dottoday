@@ -147,7 +147,7 @@ final class NotificationResponder {
       NotificationAction.done => progress.markDone(task, now),
       // The web's +15 (M9.7): 15 more minutes, as the live row's +15.
       NotificationAction.plus15 => task.copyWith(
-        durationMin: task.durationMin + AddFifteen.minutes,
+        durationMin: task.durationMin + AddTime.fifteen,
       ),
       _ => task.copyWith(
         snoozedUntilUtc: now.add(

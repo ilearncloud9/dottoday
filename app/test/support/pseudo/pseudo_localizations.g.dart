@@ -6569,6 +6569,15 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String missionStepsOf(int total) => pseudo(super.missionStepsOf(total));
 
   @override
+  String get menuShowNow => pseudo(super.menuShowNow);
+
+  @override
+  String nowWindowEnded(int minutes) => pseudo(super.nowWindowEnded(minutes));
+
+  @override
+  String nowWindowNext(String title) => pseudo(super.nowWindowNext(title));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

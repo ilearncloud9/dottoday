@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 - The Live Activity and the Dynamic Island are redrawn in the new look, in your App colour, with Done as a tick and +15 beside the task; its title is readable again on a dark Lock Screen (redesign branch).
 - Android's widgets and the ongoing notification are redrawn in the new look and your App colour; the notification's ring moves every minute, with ✓ and +15 as round buttons (redesign branch).
 - On the Mac, the menu bar's menu is redrawn in the new look, with the task under way as a ring in your App colour and the rest of the day as coloured dots; on the web, the tab's ring follows your App colour (redesign branch).
+- On the Mac, Window › Show Now (⌥⌘0) opens a small floating Now window with the task under way, Need More Time +5, +15 and +30, and Done; it stays over other apps without taking focus (redesign branch).
 - On iPhone, a snoozed Wake Up counts down on a dawn card on the Lock Screen and in the Dynamic Island, with your day's dots round the time left (redesign branch).
 - Wake Up missions stay readable at the largest text size: the time keeps its size and nothing runs into the walker or Can't right now (redesign branch).
 - On the Mac and the web, a mission link opens the Wake Up card: missions run only on the phone or tablet that rings (redesign branch).

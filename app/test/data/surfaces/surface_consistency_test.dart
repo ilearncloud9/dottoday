@@ -227,7 +227,7 @@ void main() {
 
   test('+15: every surface shows the new end', () async {
     final shown = await change(
-      () => intents.run(AddFifteen(task.id, plannedEndUtc: task.endUtc!)),
+      () => intents.run(AddTime(task.id, plannedEndUtc: task.endUtc!)),
     );
     allShow(shown, (id: task.id, title: task.title, endMs: end + 15 * 60000));
   });

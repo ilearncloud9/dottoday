@@ -55,7 +55,7 @@ Map<String, Object?> liveActivityContent(
     'done_share': plan.dayTotal == 0 ? 0.0 : plan.dayDone / plan.dayTotal,
     'done_label': l10n.notifActionDone,
     'plus_label': l10n.liveExtend,
-    'plus_short': '+${AddFifteen.minutes}',
+    'plus_short': '+${AddTime.fifteen}',
     'next': [for (final d in plan.next) _next(d, time(d.startUtc))],
     // The ring, bar, countdown and tick follow the App colour (M20.9 part
     // 4, owner); the island takes its dark tones, being always black.

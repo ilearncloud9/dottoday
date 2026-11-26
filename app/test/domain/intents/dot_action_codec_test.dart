@@ -26,8 +26,13 @@ void main() {
           a is AddTask && a.note == 'https://ex.com' && a.inbox,
       const MarkDone(_o): (a) => a is MarkDone && a.occurrenceId == _o,
       const StartFocus(_o): (a) => a is StartFocus && a.occurrenceId == _o,
-      AddFifteen(_o, plannedEndUtc: end): (a) =>
-          a is AddFifteen && a.occurrenceId == _o && a.plannedEndUtc == end,
+      AddTime(_o, plannedEndUtc: end): (a) =>
+          a is AddTime &&
+          a.occurrenceId == _o &&
+          a.plannedEndUtc == end &&
+          a.minutes == 15,
+      AddTime(_o, plannedEndUtc: end, minutes: 30): (a) =>
+          a is AddTime && a.minutes == 30,
     };
     for (final MapEntry(key: action, value: same) in cases.entries) {
       final decoded = decodeQueuedAction(_wire(action))!;
@@ -41,7 +46,10 @@ void main() {
     expect(_wire(const MarkDone(_o))['kind'], 'mark_done');
     expect(_wire(const StartFocus(_o))['kind'], 'start_focus');
     expect(_wire(const AddTask('x'))['kind'], 'add_task');
-    expect(_wire(AddFifteen(_o, plannedEndUtc: _at))['kind'], 'add_fifteen');
+    final fifteen = _wire(AddTime(_o, plannedEndUtc: _at));
+    expect(fifteen['kind'], 'add_fifteen');
+    // What the native writers send: no minutes, so 15.
+    expect(fifteen.containsKey('minutes'), isFalse);
   });
 
   test('ids come back lowercase', () {
@@ -68,7 +76,11 @@ void main() {
       'add text too long': () =>
           _wire(const AddTask('x'))..['text'] = 'x' * 10001,
       '+15 without its end': () =>
-          _wire(AddFifteen(_o, plannedEndUtc: _at))..remove('planned_end_ms'),
+          _wire(AddTime(_o, plannedEndUtc: _at))..remove('planned_end_ms'),
+      'more time not one of +5 / +15 / +30': () =>
+          _wire(AddTime(_o, plannedEndUtc: _at))..['minutes'] = 20,
+      'more time as text': () =>
+          _wire(AddTime(_o, plannedEndUtc: _at))..['minutes'] = '15',
     };
     for (final MapEntry(key: name, value: json) in cases.entries) {
       test(name, () => expect(decodeQueuedAction(json()), isNull));

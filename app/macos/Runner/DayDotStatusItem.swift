@@ -98,7 +98,7 @@ final class DayDotStatusItem: NSObject {
     if let shown {
       menu.addItem(focusRow(for: shown, live: live != nil, now: now))
       menu.addItem(action(label("done"), kind: "mark_done", block: shown))
-      menu.addItem(action(label("plus"), kind: "add_fifteen", block: shown))
+      menu.addItem(action(label("plus"), kind: "add_time", block: shown))
       menu.addItem(.separator())
     }
     let ahead = blocks.filter { Self.ms($0, "end_ms") > now && $0["id"] as? String != shown?["id"] as? String }
@@ -165,6 +165,7 @@ final class DayDotStatusItem: NSObject {
     item.target = self
     item.representedObject = [
       "kind": kind, "id": block["id"] as? String ?? "", "planned_end_ms": Self.ms(block, "end_ms"),
+      "minutes": 15,
     ]
     return item
   }

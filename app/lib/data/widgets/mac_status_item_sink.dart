@@ -25,6 +25,12 @@ final class MacStatusItemSink implements DaySnapshotSink {
   static bool get supported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
 
+  /// Window › Show Now ⌥⌘0 (E-Minimal, M20.9 part 7): shows the floating
+  /// Now mini window, or hides it (`macos/Runner/NowMiniWindow.swift`).
+  static Future<void> toggleNowWindow({
+    MethodChannel channel = statusItemChannel,
+  }) => channel.invokeMethod<void>('toggleNow');
+
   @override
   Future<void> write(DaySnapshot snapshot) async {
     final profile = await _profile();

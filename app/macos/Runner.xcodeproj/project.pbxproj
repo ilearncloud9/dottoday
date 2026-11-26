@@ -30,6 +30,8 @@
 		0DC93EC5D74B6D9A654EF4FC /* start_insistent.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7F4D189CED693BCD93C95E5B /* start_insistent.caf */; };
 		1070A1FC865F8B6B90D645EC /* play_chick.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0428686613BE33AFBECCA17F /* play_chick.caf */; };
 		110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */; };
+		693120773D17E15FE2293842 /* NowMiniView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13ECC10752ED4A915A40D055 /* NowMiniView.swift */; };
+		B29F8C4FA53CC28A24CB2B83 /* NowMiniWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5427C84AB64FDE92492A5B8B /* NowMiniWindow.swift */; };
 		112F61121DEB34C0FD77C586 /* clear_appear.caf in Resources */ = {isa = PBXBuildFile; fileRef = CF8B704D01AC1980CA02E7A7 /* clear_appear.caf */; };
 		1939DCE3E5CE55464FC09C02 /* quiet_slip.caf in Resources */ = {isa = PBXBuildFile; fileRef = C2EE55A7C1B4CC879048E84E /* quiet_slip.caf */; };
 		1B776BC7A13CFEA1B21178A9 /* reminder_ripple.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D991EE80A7FB2385F8E8814 /* reminder_ripple.wav */; };
@@ -46,6 +48,7 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		34E28D09A2217B1B1E9C6B8B /* clear_dutiful.caf in Resources */ = {isa = PBXBuildFile; fileRef = 432684923027D0A102AC8C4A /* clear_dutiful.caf */; };
 		363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */; };
+		7C11EA8015DFAE8839A4A8EE /* NowMiniModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43895956926CBEECEF3669AF /* NowMiniModelTests.swift */; };
 		368472458D71E1D1391C9938 /* clear_settled.caf in Resources */ = {isa = PBXBuildFile; fileRef = 561DC09F364E16F8A2954960 /* clear_settled.caf */; };
 		392D28DFEA5DD8442F4643C1 /* done_finished.caf in Resources */ = {isa = PBXBuildFile; fileRef = 1821739EB1239CE690A83C09 /* done_finished.caf */; };
 		3C471531455953FF93B2CBDB /* play_frog.caf in Resources */ = {isa = PBXBuildFile; fileRef = D0ABF79B5C8EDB4465EF5746 /* play_frog.caf */; };
@@ -242,6 +245,8 @@
 		A26FF939B8D094FBDAAA5B74 /* start_solemn.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_solemn.caf; path = ../ios/Runner/Sounds/start_solemn.caf; sourceTree = SOURCE_ROOT; };
 		A2FC5BA3A2E7B7455CFB32E7 /* play_knock.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_knock.caf; path = ../ios/Runner/Sounds/play_knock.caf; sourceTree = SOURCE_ROOT; };
 		A48F3673E981EC1FA3A39D90 /* clear_involved.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_involved.caf; path = ../ios/Runner/Sounds/clear_involved.caf; sourceTree = SOURCE_ROOT; };
+		5427C84AB64FDE92492A5B8B /* NowMiniWindow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowMiniWindow.swift; sourceTree = "<group>"; };
+		13ECC10752ED4A915A40D055 /* NowMiniView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowMiniView.swift; sourceTree = "<group>"; };
 		A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotStatusItem.swift; sourceTree = "<group>"; };
 		A68E47B0C2DB38F5AAB52FBE /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ABAC177963DA461E7E059CB9 /* reminder_dot.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_dot.caf; path = ../ios/Runner/Sounds/reminder_dot.caf; sourceTree = SOURCE_ROOT; };
@@ -266,6 +271,7 @@
 		EA239FDEC478DDF4AD1FE316 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFA382DA7DDFE87FA2D7137 /* clear_quick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_quick.caf; path = ../ios/Runner/Sounds/clear_quick.caf; sourceTree = SOURCE_ROOT; };
 		ED4611A732A87659D6435421 /* reminder_chime.wav */ = {isa = PBXFileReference; includeInIndex = 1; name = reminder_chime.wav; path = ../assets/sounds/reminder_chime.wav; sourceTree = SOURCE_ROOT; };
+		43895956926CBEECEF3669AF /* NowMiniModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NowMiniModelTests.swift; sourceTree = "<group>"; };
 		EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DayDotImageTests.swift; sourceTree = "<group>"; };
 		EE87AF667EAB48922F2C250E /* clear_lift.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = clear_lift.caf; path = ../ios/Runner/Sounds/clear_lift.caf; sourceTree = SOURCE_ROOT; };
 		FD451A8BE2D7D08996B3C88E /* DotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DotStore.swift; path = ../../ios/Shared/DotStore.swift; sourceTree = "<group>"; };
@@ -315,6 +321,7 @@
 			children = (
 				331C80D7294CF71000263BE5 /* RunnerTests.swift */,
 				EE5FC895D2C19BB4E7D48BE6 /* DayDotImageTests.swift */,
+				43895956926CBEECEF3669AF /* NowMiniModelTests.swift */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -389,6 +396,8 @@
 				9E4000C80151F405B50FE812 /* InfoPlist.strings */,
 				6B585971458A3DA5EDEF1F67 /* Sounds */,
 				A4C8C4A884C19DCEE1DA1932 /* DayDotStatusItem.swift */,
+				13ECC10752ED4A915A40D055 /* NowMiniView.swift */,
+				5427C84AB64FDE92492A5B8B /* NowMiniWindow.swift */,
 				E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */,
 				A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */,
@@ -817,6 +826,7 @@
 			files = (
 				331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */,
 				363F237EE592EEA9E0BDD04B /* DayDotImageTests.swift in Sources */,
+				7C11EA8015DFAE8839A4A8EE /* NowMiniModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -829,6 +839,8 @@
 				4D7A1B2C2E8F000100C0FFEE /* CalendarBridge.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				110C4778699B875E748E943B /* DayDotStatusItem.swift in Sources */,
+				693120773D17E15FE2293842 /* NowMiniView.swift in Sources */,
+				B29F8C4FA53CC28A24CB2B83 /* NowMiniWindow.swift in Sources */,
 				5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4C03 /* CalendarSeriesBridge.swift in Sources */,

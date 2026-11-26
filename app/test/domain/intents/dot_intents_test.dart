@@ -92,9 +92,9 @@ void main() {
     });
   });
 
-  group('AddFifteen', () {
+  group('AddTime', () {
     test('adds 15 minutes once, even when replayed', () async {
-      final action = queued(AddFifteen(live.id, plannedEndUtc: live.endUtc!));
+      final action = queued(AddTime(live.id, plannedEndUtc: live.endUtc!));
       expect(await intents.apply(action), ActionOutcome.applied);
       expect((await stored(live.id)).durationMin, 45);
       expect(await intents.apply(action), ActionOutcome.alreadyApplied);
@@ -102,10 +102,25 @@ void main() {
     });
 
     test(
+      'adds +5 and +30 once each (Need More Time, the mini window)',
+      () async {
+        for (final (minutes, total) in [(5, 35), (30, 65)]) {
+          final task = await stored(live.id);
+          final action = queued(
+            AddTime(live.id, plannedEndUtc: task.endUtc!, minutes: minutes),
+          );
+          expect(await intents.apply(action), ActionOutcome.applied);
+          expect((await stored(live.id)).durationMin, total);
+          expect(await intents.apply(action), ActionOutcome.alreadyApplied);
+        }
+      },
+    );
+
+    test(
       'an end with microseconds still matches its stored millisecond',
       () async {
         final action = queued(
-          AddFifteen(
+          AddTime(
             live.id,
             plannedEndUtc: live.endUtc!.add(const Duration(microseconds: 600)),
           ),
@@ -116,7 +131,7 @@ void main() {
 
     test('an end the task no longer has is stale', () async {
       final action = queued(
-        AddFifteen(
+        AddTime(
           live.id,
           plannedEndUtc: live.endUtc!.add(const Duration(hours: 1)),
         ),

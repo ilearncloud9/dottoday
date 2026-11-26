@@ -53,6 +53,9 @@ Map<String, Object?> snapshotStoreJson(
     // The App colour (ED-221) in light and dark: the day dot and the now
     // ring's "Now" on every widget (M20.9 part 3, owner: follow it).
     ..['accent'] = appColourTones(profile)
+    // The Mac Now mini window's words (E-Minimal, M20.9 part 7, ED-475):
+    // `{n}` is a number of minutes, `{title}` the next task's.
+    ..['now_window'] = _nowWindow(l10n, time(snapshot.bedUtc))
     // How to write a time again after an optimistic +15 in Swift or Kotlin
     // (M9.2): the zone, the language, the clock and the "until" pattern.
     ..['format'] = {
@@ -67,6 +70,27 @@ Map<String, Object?> snapshotStoreJson(
           .replaceAll('$_doneMark', donePlaceholder)
           .replaceAll('$_totalMark', totalPlaceholder),
     };
+}
+
+/// Where a number of minutes goes in `now_window` patterns.
+const minutesPlaceholder = '{n}';
+const titlePlaceholder = '{title}';
+const _minutesMark = 735192846;
+
+Map<String, String> _nowWindow(AppLocalizations l10n, String windDown) {
+  String n(String s) => s.replaceAll('$_minutesMark', minutesPlaceholder);
+  final minutes = l10n.durationMinutes(_minutesMark);
+  return {
+    'left': n(l10n.liveActivityLeft(minutes)),
+    'starts_in': n(l10n.liveActivityStartsIn(minutes)),
+    'ended': n(l10n.nowWindowEnded(_minutesMark)),
+    'next': l10n.nowWindowNext(titlePlaceholder),
+    'hours': n(l10n.durationChipHours('$_minutesMark')),
+    'wind_down': l10n.nowWindDown(windDown),
+    'need_more': l10n.lateNudgeTitle,
+    'plus': n(l10n.inspectorExtendChip(_minutesMark)),
+    'plus_label': n(l10n.inspectorExtendLabel(_minutesMark)),
+  };
 }
 
 /// Where the counts go in `format.done_of` (`{done} of {total} done`).

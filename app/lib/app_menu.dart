@@ -5,6 +5,7 @@ import 'package:dottoday/app_native_menus.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/widgets/mac_status_item_sink.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -52,14 +53,15 @@ class AppMenuBar extends ConsumerWidget {
       return NativeKeyMenus(menus: menus, child: child);
     }
     return PlatformMenuBar(
-      menus: [for (final m in menus) _mac(m)],
+      menus: [for (final m in menus) _mac(m, context.l10n)],
       child: child,
     );
   }
 
   /// [menu] with the Mac's own items: About, Services, Hide and Quit
-  /// around the app menu, Full Screen in View, the Window menu's items.
-  static PlatformMenu _mac(AppMenu menu) {
+  /// around the app menu, Full Screen in View, the Window menu's items with
+  /// Show Now ⌥⌘0 (the floating Now mini window, M20.9 part 7).
+  static PlatformMenu _mac(AppMenu menu, AppLocalizations l10n) {
     final groups = [
       for (final g in menu.groups)
         PlatformMenuItemGroup(members: [for (final c in g) _item(c)]),
@@ -102,12 +104,31 @@ class AppMenuBar extends ConsumerWidget {
           type: PlatformProvidedMenuItemType.toggleFullScreen,
         ),
       ],
-      AppMenuKind.window => const <PlatformMenuItem>[
-        PlatformProvidedMenuItem(
-          type: PlatformProvidedMenuItemType.minimizeWindow,
+      AppMenuKind.window => <PlatformMenuItem>[
+        const PlatformMenuItemGroup(
+          members: [
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.minimizeWindow,
+            ),
+            PlatformProvidedMenuItem(
+              type: PlatformProvidedMenuItemType.zoomWindow,
+            ),
+          ],
         ),
-        PlatformProvidedMenuItem(type: PlatformProvidedMenuItemType.zoomWindow),
-        PlatformProvidedMenuItem(
+        PlatformMenuItemGroup(
+          members: [
+            PlatformMenuItem(
+              label: l10n.menuShowNow,
+              shortcut: AppShortcuts.activator(
+                TargetPlatform.macOS,
+                LogicalKeyboardKey.digit0,
+                alt: true,
+              ),
+              onSelected: () => unawaited(MacStatusItemSink.toggleNowWindow()),
+            ),
+          ],
+        ),
+        const PlatformProvidedMenuItem(
           type: PlatformProvidedMenuItemType.arrangeWindowsInFront,
         ),
       ],

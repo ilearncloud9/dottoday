@@ -115,7 +115,7 @@ void main() {
       endMs: end,
     ), 'rename');
 
-    await intents.run(AddFifteen(task.id, plannedEndUtc: task.endUtc!));
+    await intents.run(AddTime(task.id, plannedEndUtc: task.endUtc!));
     await expectAll((
       id: task.id,
       title: 'Renamed check',

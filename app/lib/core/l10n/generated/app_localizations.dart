@@ -12450,6 +12450,24 @@ abstract class AppLocalizations {
   /// **'of {total} steps'**
   String missionStepsOf(int total);
 
+  /// Mac Window menu: shows or hides the floating Now mini window, ⌥⌘0 (E-Minimal, ED-066, M20.9 part 7).
+  ///
+  /// In en, this message translates to:
+  /// **'Show Now'**
+  String get menuShowNow;
+
+  /// Now mini window (Mac): a task past its planned end and not done; never shaming (no "late").
+  ///
+  /// In en, this message translates to:
+  /// **'ended {minutes} min ago'**
+  String nowWindowEnded(int minutes);
+
+  /// Now mini window (Mac): the task after this one, after "18 min left · " (E-Minimal: "next Call with Sam").
+  ///
+  /// In en, this message translates to:
+  /// **'next {title}'**
+  String nowWindowNext(String title);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:
