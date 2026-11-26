@@ -35,6 +35,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
   required String message,
   required VoidCallback onUndo,
   double? paneWidth,
+  Duration window = UndoService.window,
 }) {
   messenger.hideCurrentSnackBar();
   final shown = messenger.showSnackBar(
@@ -46,7 +47,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showUndoSnackbarOn(
         action: l10n.undoAction,
         onAction: onUndo,
         onClose: messenger.hideCurrentSnackBar,
-        window: UndoService.window,
+        window: window,
         expired: l10n.failureUndoExpired,
       ),
     ),

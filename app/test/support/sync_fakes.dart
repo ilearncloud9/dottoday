@@ -7,7 +7,8 @@ import 'package:dottoday/domain/sync/sync_status.dart';
 
 /// A sync engine that reports [status] and records what it is asked.
 final class FakeSyncService implements SyncService {
-  FakeSyncService(SyncStatus status) : _status = StreamController.broadcast() {
+  FakeSyncService(SyncStatus status, {this.keepConflicts = false})
+    : _status = StreamController.broadcast() {
     _last = status;
   }
 
@@ -35,14 +36,45 @@ final class FakeSyncService implements SyncService {
     return const Ok(null);
   }
 
+  /// Resolving leaves the status as it was (goldens that share this fake
+  /// across variants).
+  final bool keepConflicts;
+
+  /// The Undos asked for, in order.
+  final undone = <ConflictUndo>[];
+
   @override
-  Future<Result<void, AppFailure>> resolve(
+  Future<Result<ConflictUndo, AppFailure>> resolve(
     String id,
-    ConflictChoice choice,
-  ) async {
+    ConflictChoice choice, {
+    String? combined,
+  }) async {
     resolved.add((id, choice));
-    _last = SyncStatus(state: _last.state, lastSyncedUtc: _last.lastSyncedUtc);
-    _status.add(_last);
+    final c = _last.conflicts.firstWhere((c) => c.id == id);
+    if (!keepConflicts) {
+      _last = SyncStatus(
+        state: _last.state,
+        lastSyncedUtc: _last.lastSyncedUtc,
+      );
+      _status.add(_last);
+    }
+    return Ok(
+      ConflictUndo(
+        entity: 'occurrences',
+        entityId: id,
+        column: 'start_utc',
+        restore: null,
+        expect: null,
+        kept: choice,
+        field: c.field,
+        title: c.title,
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void, AppFailure>> undoResolve(ConflictUndo undo) async {
+    undone.add(undo);
     return const Ok(null);
   }
 

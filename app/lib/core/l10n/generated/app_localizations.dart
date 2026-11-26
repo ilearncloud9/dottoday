@@ -5244,18 +5244,6 @@ abstract class AppLocalizations {
   /// **'{field, select, title{Title} start{Time} duration{Length} notes{Notes} colour{Colour} status{Done or not} other{A detail}}'**
   String syncConflictField(String field);
 
-  /// Sync sheet: this device's value.
-  ///
-  /// In en, this message translates to:
-  /// **'This device: {value}'**
-  String syncMine(String value);
-
-  /// Sync sheet: the other device's value.
-  ///
-  /// In en, this message translates to:
-  /// **'Other device: {value}'**
-  String syncTheirs(String value);
-
   /// Sync sheet conflict button.
   ///
   /// In en, this message translates to:
@@ -12527,6 +12515,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tasks appear as they arrive'**
   String get syncArriving;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get conflictThisDevice;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Other device'**
+  String get conflictOtherDevice;
+
+  /// Beside the other device's value: the value the app uses until you choose.
+  ///
+  /// In en, this message translates to:
+  /// **'in use now'**
+  String get conflictInUse;
+
+  /// Notes conflicts only (ED-195).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep both'**
+  String get syncKeepBoth;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep both adds the other device\'s notes below yours.'**
+  String get conflictKeepBothHint;
+
+  /// Saved inside the combined note between the two versions (ED-195); plain text the person can edit.
+  ///
+  /// In en, this message translates to:
+  /// **'— From your other device —'**
+  String get conflictFromOther;
+
+  /// Toast after Keep mine (ED-194); field is the conflict field key.
+  ///
+  /// In en, this message translates to:
+  /// **'{field, select, title{Kept this device\'s title} start{Kept this device\'s time} duration{Kept this device\'s length} notes{Kept this device\'s notes} colour{Kept this device\'s colour} other{Kept this device\'s change}}'**
+  String conflictKeptMine(String field);
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'{field, select, title{Kept the other device\'s title} start{Kept the other device\'s time} duration{Kept the other device\'s length} notes{Kept the other device\'s notes} colour{Kept the other device\'s colour} other{Kept the other device\'s change}}'**
+  String conflictKeptTheirs(String field);
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Kept both versions of the notes'**
+  String get conflictKeptBoth;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Keep both isn\'t available'**
+  String get conflictBothUnavailable;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Together, these notes exceed the 10,000-character limit. You can copy either version before choosing which one to keep.'**
+  String get conflictBothTooLong;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get conflictCopy;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get conflictCopied;
+
+  /// Sync conflict review (E-G4-7 C, Q4; ED-483).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 character} other{{count} characters}}'**
+  String conflictCharacters(int count);
 
   /// Section title in the task icon picker.
   ///

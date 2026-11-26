@@ -9,7 +9,7 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
-import 'package:dottoday/features/sync_status/conflict_card.dart';
+import 'package:dottoday/features/sync_status/conflict_review.dart';
 import 'package:dottoday/shared/sheets/anchored_popover.dart';
 import 'package:dottoday/shared/sheets/app_sheet.dart';
 import 'package:dottoday/shared/sheets/side_sheet.dart';
@@ -27,7 +27,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// account, it says so and offers Sign in.
 Future<void> showSyncSheet(BuildContext context) => showAppSheet<void>(
   context: context,
-  title: context.l10n.syncTitle,
+  title: _title(context),
   done: true,
   builder: (_) => const _SyncBody(),
 );
@@ -44,7 +44,7 @@ Future<void> showSyncPopover(BuildContext context, Rect anchor) {
     return showModalSideSheet<void>(
       context: context,
       builder: (_) => AppSheet(
-        title: context.l10n.syncTitle,
+        title: _title(context),
         done: true,
         child: const _SyncBody(),
       ),
@@ -54,11 +54,8 @@ Future<void> showSyncPopover(BuildContext context, Rect anchor) {
     context: context,
     anchor: anchor,
     width: DotSize.syncPopover,
-    builder: (_) => AppSheet(
-      title: context.l10n.syncTitle,
-      done: true,
-      child: const _SyncBody(),
-    ),
+    builder: (_) =>
+        AppSheet(title: _title(context), done: true, child: const _SyncBody()),
   );
 }
 
@@ -71,6 +68,14 @@ class _SyncBody extends ConsumerWidget {
     final l10n = context.l10n;
     final status = ref.watch(syncStatusProvider).value ?? SyncStatus.localOnly;
     if (status.state == SyncState.localOnly) return const _LocalOnly();
+    // What was just kept, with Undo, on the Mac and web (C5); then the
+    // conflicts waiting for a choice (C2, C4); then where sync stands.
+    if (ref.watch(lastConflictChoiceProvider) case final undo?) {
+      return ConflictResolved(undo: undo);
+    }
+    if (status.conflicts.isNotEmpty) {
+      return ConflictReview(conflicts: status.conflicts);
+    }
     // A fast clock pauses this device's changes (E-G4-7 B legend, ED-482).
     final paused =
         status.state == SyncState.synced && (status.clockSkew?.fast ?? false);
@@ -114,12 +119,6 @@ class _SyncBody extends ConsumerWidget {
         else ...[
           _syncNowButton(context, ref, status.state),
           Text(l10n.syncNowNote, style: t.styles.rowMeta),
-        ],
-        if (status.conflicts.isNotEmpty) ...[
-          const SizedBox(height: DotSpace.s),
-          Text(l10n.syncConflicts.toUpperCase(), style: t.styles.caption),
-          Text(l10n.syncConflictHint, style: t.styles.rowMeta),
-          for (final c in status.conflicts) ConflictCard(conflict: c),
         ],
       ],
     );
@@ -223,4 +222,17 @@ class _SignInButton extends StatelessWidget {
       child: Text(context.l10n.syncSignIn),
     ),
   );
+}
+
+/// "Changed on two devices" while conflicts wait for a choice (C2, C4),
+/// else "Sync"; fixed when the sheet opens.
+String _title(BuildContext context) {
+  final status = ProviderScope.containerOf(
+    context,
+    listen: false,
+  ).read(syncStatusProvider).value;
+  final l10n = context.l10n;
+  return (status?.conflicts.isNotEmpty ?? false)
+      ? l10n.syncConflicts
+      : l10n.syncTitle;
 }

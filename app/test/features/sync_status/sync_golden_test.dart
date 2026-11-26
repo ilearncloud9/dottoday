@@ -23,8 +23,10 @@ import '../../support/sync_fakes.dart';
 
 final _now = DateTime.utc(2026, 10, 21, 9);
 
-List<Override> _with(SyncStatus status) => [
-  syncServiceProvider.overrideWithValue(FakeSyncService(status)),
+List<Override> _with(SyncStatus status, {bool keep = false}) => [
+  syncServiceProvider.overrideWithValue(
+    FakeSyncService(status, keepConflicts: keep),
+  ),
   clockProvider.overrideWithValue(FakeClock(_now)),
 ];
 
@@ -64,6 +66,22 @@ Widget _page(GoldenCell _) => Scaffold(
 
 Future<void> _open(WidgetTester tester) => tester.tap(find.text('open'));
 
+SyncStatus _notes(String mine, String theirs) => SyncStatus(
+  state: SyncState.synced,
+  lastSyncedUtc: _now,
+  conflicts: [
+    SyncConflict(
+      id: 'c2',
+      title: 'Deep work: roadmap',
+      field: ConflictField.notes,
+      mine: mine,
+      theirs: theirs,
+      mineNotes: mine,
+      theirsNotes: theirs,
+    ),
+  ],
+);
+
 void main() {
   setUpAll(loadAppFonts);
   const widths = {'compact', 'expanded'};
@@ -73,6 +91,58 @@ void main() {
     widths: widths,
     act: _open,
     overrides: _with(_conflicted),
+    build: _page,
+  );
+  // Notes get three choices (E-G4-7 Q4a, ED-195); with 200 % text they
+  // stack and stay reachable (Q4h).
+  goldenMatrix(
+    'conflict_notes',
+    height: 860,
+    widths: widths,
+    a11yVariants: true,
+    act: _open,
+    overrides: _with(
+      _notes(
+        'Pull last quarter’s notes first.\nThree themes, no more.',
+        'Ask Sam for the Q3 numbers.\nKeep it to three themes.',
+      ),
+    ),
+    build: _page,
+  );
+  // Together over the limit: Keep both is off and says why; Copy (Q4i).
+  goldenMatrix(
+    'conflict_notes_too_long',
+    height: 980,
+    widths: const {'compact'},
+    act: _open,
+    overrides: _with(_notes('a' * 8214, 'b' * 3902)),
+    build: _page,
+  );
+  // After Keep mine: on a phone the toast with Undo (C3) ...
+  goldenMatrix(
+    'conflict_kept_phone',
+    height: 760,
+    widths: const {'compact'},
+    act: (tester) async {
+      await _open(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Keep mine'));
+    },
+    overrides: _with(_conflicted, keep: true),
+    build: _page,
+  );
+  // ... on the Mac, the popover says what was kept, with Undo ⌘Z (C5).
+  goldenMatrix(
+    'conflict_kept_mac',
+    height: 560,
+    widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
+    act: (tester) async {
+      await _open(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Keep mine'));
+    },
+    overrides: _with(_conflicted, keep: true),
     build: _page,
   );
   goldenMatrix(

@@ -3522,16 +3522,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String syncMine(String value) {
-    return 'Este dispositivo: $value';
-  }
-
-  @override
-  String syncTheirs(String value) {
-    return 'Otro dispositivo: $value';
-  }
-
-  @override
   String get syncKeepMine => 'Conservar el mío';
 
   @override
@@ -8271,6 +8261,82 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get syncArriving => 'Las tareas aparecen a medida que llegan';
+
+  @override
+  String get conflictThisDevice => 'Este dispositivo';
+
+  @override
+  String get conflictOtherDevice => 'Otro dispositivo';
+
+  @override
+  String get conflictInUse => 'en uso ahora';
+
+  @override
+  String get syncKeepBoth => 'Conservar ambas';
+
+  @override
+  String get conflictKeepBothHint =>
+      'Conservar ambas añade las notas del otro dispositivo debajo de las tuyas.';
+
+  @override
+  String get conflictFromOther => '— De tu otro dispositivo —';
+
+  @override
+  String conflictKeptMine(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Se conservó el título de este dispositivo',
+      'start': 'Se conservó la hora de este dispositivo',
+      'duration': 'Se conservó la duración de este dispositivo',
+      'notes': 'Se conservó las notas de este dispositivo',
+      'colour': 'Se conservó el color de este dispositivo',
+      'other': 'Se conservó el cambio de este dispositivo',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String conflictKeptTheirs(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Se conservó el título del otro dispositivo',
+      'start': 'Se conservó la hora del otro dispositivo',
+      'duration': 'Se conservó la duración del otro dispositivo',
+      'notes': 'Se conservó las notas del otro dispositivo',
+      'colour': 'Se conservó el color del otro dispositivo',
+      'other': 'Se conservó el cambio del otro dispositivo',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get conflictKeptBoth => 'Se conservaron ambas versiones de las notas';
+
+  @override
+  String get conflictBothUnavailable => 'Conservar ambas no está disponible';
+
+  @override
+  String get conflictBothTooLong =>
+      'Juntas, estas notas superan el límite de 10.000 caracteres. Puedes copiar cualquiera de las versiones antes de elegir cuál conservar.';
+
+  @override
+  String get conflictCopy => 'Copiar';
+
+  @override
+  String get conflictCopied => 'Copiado';
+
+  @override
+  String conflictCharacters(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString caracteres',
+      one: '1 carácter',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';

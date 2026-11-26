@@ -36,10 +36,15 @@ final class LocalOnlySyncService implements SyncService {
   Future<Result<void, AppFailure>> syncNow() async => const Ok(null);
 
   @override
-  Future<Result<void, AppFailure>> resolve(
+  Future<Result<ConflictUndo, AppFailure>> resolve(
     String id,
-    ConflictChoice choice,
-  ) async => const Err(AuthFailure());
+    ConflictChoice choice, {
+    String? combined,
+  }) async => const Err(AuthFailure());
+
+  @override
+  Future<Result<void, AppFailure>> undoResolve(ConflictUndo undo) async =>
+      const Err(AuthFailure());
 
   @override
   Stream<RestoreProgress> watchRestore() =>

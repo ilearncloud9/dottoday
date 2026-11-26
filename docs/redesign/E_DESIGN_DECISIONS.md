@@ -5967,6 +5967,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format and analyze clean; all tests pass but the Supabase ones (Docker off); new tests: an ended session is not retried, when the first-sync line shows, the 300 ms wait; goldens for Session ended (banner, sheet, wide), Couldn't sync, Sync paused, the first-sync line and the new ring.
 - **Not run:** a device, a real expired session against Supabase, VoiceOver.
 
+### ED-483 · M20.10 part 5: sync conflicts with Undo and Keep both, as E-G4-7 C and Q4 draw them
+- **Date:** 2026-11-26. **Owner:** "Start part 5". Review page: https://claude.ai/artifact/JZPXQBSZ1sQRDVuiw1HMPY. **Approved 2026-11-26: "Approve part 5".** E-R2-32 has nothing on conflicts; E-G4-7 C (ED-187, ED-194), E-G4-7-Q4-KeepBoth (ED-195, ED-196) and E-R2-8 draw every state, so nothing was asked.
+- **Review (C2, C4, Q4a–d, Q4g):** with conflicts open the Sync sheet or popover is "Changed on two devices" with "The other device's change is in use until you choose."; a card per conflict: "Deep work: roadmap · Time", This device and Other device with their values, the other "in use now" (read as one by a screen reader), Keep mine and Keep theirs as equal pills. Notes show both versions in boxes and get Keep both with "Keep both adds the other device's notes below yours."; stacked on phones and at large text, in a row on the Mac and web. Titles and every other field keep two choices.
+- **Keep both (ED-195, Q4e):** saves this device's notes, a blank line, "— From your other device —", the other device's notes, as one ordinary edit through the write path; refused if over the notes limit. **Over the limit (Q4-L1, Q4i):** Keep both is off with "Keep both isn't available" and why; each version shows its character count and Copy; nothing trimmed.
+- **Resolved and Undo (C3, C5, Q4f; ED-194):** on phones and tablets the last choice closes the sheet and the toast says what was kept ("Kept this device's time", "Kept the other device's time", "Kept both versions of the notes") with Undo for 10 s; on the Mac and web the popover says it, with the task and detail, Undo and ⌘Z / Ctrl+Z, for 10 s. Undo puts the replaced value back as a new edit while the field still holds what was kept; if it changed since, nothing is overwritten and a new conflict opens.
+- **Data:** `ConflictChoice.both`; `SyncService.resolve` returns a `ConflictUndo`, `undoResolve` takes it back; the store resolves all three choices and undoes (no schema change). `syncMine` / `syncTheirs` retired; new strings in en, de, es, fr.
+- **Differences:** after a choice on the Mac and web the popover keeps its title "Changed on two devices" (C5 draws "Sync"): the title is set when it opens. Android tablets use the modal side sheet (E-R2-8 draws a modal one for review, so this matches).
+- **Checks:** format and analyze clean; engine tests for Undo (unchanged, and changed elsewhere → a new conflict), Keep both and its limit; the flow test (Review, Keep mine, the toast, Undo); goldens for the time and notes conflicts (with 200 % text and RTL), over the limit, the phone toast and the Mac popover; all tests pass but the Supabase ones (Docker off).
+- **Not run:** a device, two real devices against Supabase, VoiceOver.
+
 ---
 
 ## Pending owner answers

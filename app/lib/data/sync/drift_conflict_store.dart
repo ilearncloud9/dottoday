@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dottoday/core/clock/clock.dart';
 import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
+import 'package:dottoday/core/ids/id_generator.dart';
 import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/server_columns.dart';
@@ -14,6 +15,7 @@ import 'package:dottoday/domain/entities/series.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/entities/subtask.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/domain/writes/write_batch.dart';
 import 'package:dottoday/domain/writes/write_use_case.dart';
 import 'package:drift/drift.dart';
@@ -33,6 +35,8 @@ final class DriftConflictStore implements ConflictStore {
        _clock = clock,
        _rows = SyncedRows(db);
 
+  static const _ids = UuidV7Generator();
+
   final AppDatabase _db;
   final WriteUseCase _writes;
   final Clock _clock;
@@ -50,20 +54,86 @@ final class DriftConflictStore implements ConflictStore {
           });
 
   @override
-  Future<Result<void, AppFailure>> keepMine(String userId, String id) async {
+  Future<Result<ConflictUndo, AppFailure>> resolve(
+    String userId,
+    String id,
+    ConflictChoice choice, {
+    String? combined,
+  }) async {
     final c = await (_db.select(
       _db.conflicts,
     )..where((r) => r.id.equals(id))).getSingleOrNull();
     if (c == null) return const Err(NotFoundFailure(EntityKind.occurrence));
     final row = await _rows.find(c.entity, userId, c.entityId);
     if (row == null) return const Err(NotFoundFailure(EntityKind.occurrence));
-    row[c.field] = c.mine == null ? null : jsonDecode(c.mine!);
-    final written = await _writes.apply(_batch(userId, c.entity, row));
-    if (written is Ok) await close(id);
-    return written;
+    // What the field holds after the choice, and what Undo puts back.
+    final (String? kept, String? replaced) = switch (choice) {
+      ConflictChoice.mine => (c.mine, c.theirs),
+      ConflictChoice.theirs => (c.theirs, c.mine),
+      ConflictChoice.both => (jsonEncode(combined), c.mine),
+    };
+    if (choice == ConflictChoice.both &&
+        (c.field != 'notes' ||
+            combined == null ||
+            combined.length > maxNotesLength)) {
+      return const Err(
+        ValidationFailure(ValidationField.notes, ValidationRule.tooLong),
+      );
+    }
+    // "Keep theirs": the server's value is already the row's.
+    if (choice != ConflictChoice.theirs) {
+      row[c.field] = kept == null ? null : jsonDecode(kept);
+      final written = await _writes.apply(_batch(userId, c.entity, row));
+      if (written case Err(:final failure)) return Err(failure);
+    }
+    await close(id);
+    return Ok(
+      ConflictUndo(
+        entity: c.entity,
+        entityId: c.entityId,
+        column: c.field,
+        restore: replaced,
+        expect: kept,
+        kept: choice,
+        field: _fieldOf(c.field),
+        title: (row['title'] ?? row['display_name'] ?? '') as String,
+      ),
+    );
   }
 
   @override
+  Future<Result<void, AppFailure>> undo(String userId, ConflictUndo u) async {
+    final row = await _rows.find(u.entity, userId, u.entityId);
+    if (row == null) return const Err(NotFoundFailure(EntityKind.occurrence));
+    final now = jsonEncode(row[u.column]);
+    if (now != (u.expect ?? 'null')) {
+      // Changed since, here or elsewhere: nothing is overwritten; the two
+      // values meet again as a new conflict (ED-194).
+      await _db
+          .into(_db.conflicts)
+          .insert(
+            ConflictsCompanion.insert(
+              id: _ids.newId(),
+              userId: userId,
+              entity: u.entity,
+              entityId: u.entityId,
+              field: u.column,
+              mine: Value(u.restore),
+              theirs: Value(now),
+              createdAt: _clock.nowUtc().millisecondsSinceEpoch,
+            ),
+          );
+      return const Ok(null);
+    }
+    row[u.column] = u.restore == null ? null : jsonDecode(u.restore!);
+    final written = await _writes.apply(_batch(userId, u.entity, row));
+    return switch (written) {
+      Ok() => const Ok(null),
+      Err(:final failure) => Err(failure),
+    };
+  }
+
+  /// Closes conflict [id] as resolved.
   Future<void> close(String id) =>
       (_db.update(_db.conflicts)..where((c) => c.id.equals(id))).write(
         ConflictsCompanion(
@@ -101,8 +171,17 @@ final class DriftConflictStore implements ConflictStore {
       field: _fieldOf(r.field),
       mine: show(r.mine),
       theirs: show(r.theirs),
+      mineNotes: r.field == 'notes' ? _text(r.mine) : null,
+      theirsNotes: r.field == 'notes' ? _text(r.theirs) : null,
     );
   }
+
+  /// A stored notes value as text (null when empty).
+  static String? _text(String? json) =>
+      switch (json == null ? null : jsonDecode(json)) {
+        final String text => text,
+        _ => null,
+      };
 
   Future<tz.Location> _zone(String userId) async {
     final p = await _rows.find('profiles', userId, userId);

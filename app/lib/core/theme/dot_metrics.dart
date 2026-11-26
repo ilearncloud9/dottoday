@@ -378,6 +378,12 @@ abstract final class DotSize {
   /// 7 out, the title's ring 34, a pointer's duration pill 26 tall.
   static const double addPopover = 404;
 
+  /// A conflict card's "This device" / "Other device" column (E-G4-7 C2).
+  static const double conflictLabel = 96;
+
+  /// A notes conflict's version box before it scrolls (Q4i).
+  static const double conflictNotesMax = 160;
+
   /// The first sync's progress line (E-G4-7 A2): 6 tall, rounded.
   static const double progressBar = 6;
 

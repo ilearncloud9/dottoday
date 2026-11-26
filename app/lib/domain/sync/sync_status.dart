@@ -28,20 +28,68 @@ final class SyncConflict {
     required this.field,
     required this.mine,
     required this.theirs,
+    this.mineNotes,
+    this.theirsNotes,
   });
 
   final String id;
   final String title;
   final ConflictField field;
+
+  /// Each side as the card shows it ("9:00–11:00 AM", "—").
   final String mine;
   final String theirs;
+
+  /// A notes conflict's two texts as stored, for Keep both and Copy (null
+  /// for other fields, or empty notes).
+  final String? mineNotes;
+  final String? theirsNotes;
 }
 
 /// The fields a conflict can be about, for its label.
 enum ConflictField { title, time, duration, notes, colour, status, other }
 
-/// What the user picked for a conflict.
-enum ConflictChoice { mine, theirs }
+/// What the user picked for a conflict: [both] only for notes (ED-195).
+enum ConflictChoice { mine, theirs, both }
+
+/// How to take back a resolved conflict (Undo after resolving, ED-194;
+/// M20.10 part 5, ED-483): put [restore] back in [entity] [entityId]'s
+/// [column] as a new edit, but only while it still holds [expect]; if
+/// another change came since, a new conflict opens instead. Values are
+/// JSON, as the conflict stored them. [kept] and [field] word the toast.
+final class ConflictUndo {
+  const ConflictUndo({
+    required this.entity,
+    required this.entityId,
+    required this.column,
+    required this.restore,
+    required this.expect,
+    required this.kept,
+    required this.field,
+    required this.title,
+  });
+
+  final String entity;
+  final String entityId;
+  final String column;
+  final String? restore;
+  final String? expect;
+  final ConflictChoice kept;
+  final ConflictField field;
+
+  /// The task's title, for the Mac and web popover's second line.
+  final String title;
+}
+
+/// The note Keep both saves (ED-195): this device's notes, a blank line,
+/// [label] ("— From your other device —"), the other device's notes.
+///
+/// ```dart
+/// combinedNotes('Pull last quarter.', 'Ask Sam.', '— From your other device —');
+/// // 'Pull last quarter.\n\n— From your other device —\nAsk Sam.'
+/// ```
+String combinedNotes(String? mine, String? theirs, String label) =>
+    '${mine ?? ''}\n\n$label\n${theirs ?? ''}';
 
 /// A snapshot of sync for the UI.
 final class SyncStatus {
@@ -76,8 +124,18 @@ abstract interface class SyncService {
   /// Pull and push now ("Sync now").
   Future<Result<void, AppFailure>> syncNow();
 
-  /// Keeps [choice] for conflict [id]; the other value is dropped.
-  Future<Result<void, AppFailure>> resolve(String id, ConflictChoice choice);
+  /// Keeps [choice] for conflict [id]; the other value is dropped. Keep
+  /// both saves [combined] (notes only, within the notes limit). Returns
+  /// how to take it back (Undo, ED-194).
+  Future<Result<ConflictUndo, AppFailure>> resolve(
+    String id,
+    ConflictChoice choice, {
+    String? combined,
+  });
+
+  /// Takes back a resolve ([undo]): the replaced value is saved as a new
+  /// edit, or a new conflict opens if the value changed since.
+  Future<Result<void, AppFailure>> undoResolve(ConflictUndo undo);
 
   /// An account's first sync bringing its rows down ("Bringing your
   /// tasks… 120 of 300", docs/09 M6.4); finished after every run, so the

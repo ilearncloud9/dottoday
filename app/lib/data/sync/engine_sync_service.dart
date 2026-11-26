@@ -117,19 +117,31 @@ final class EngineSyncService implements SyncService {
   }
 
   @override
-  Future<Result<void, AppFailure>> resolve(
+  Future<Result<ConflictUndo, AppFailure>> resolve(
     String id,
-    ConflictChoice choice,
-  ) async {
+    ConflictChoice choice, {
+    String? combined,
+  }) async {
     final account = _account;
     if (account == null) return const Err(AuthFailure());
-    if (choice == ConflictChoice.theirs) {
-      await _conflicts.close(id);
-      return const Ok(null);
-    }
-    final kept = await _conflicts.keepMine(account, id);
-    if (kept is Ok) _later();
+    final kept = await _conflicts.resolve(
+      account,
+      id,
+      choice,
+      combined: combined,
+    );
+    // A written value goes up with the next run.
+    if (kept is Ok && choice != ConflictChoice.theirs) _later();
     return kept;
+  }
+
+  @override
+  Future<Result<void, AppFailure>> undoResolve(ConflictUndo undo) async {
+    final account = _account;
+    if (account == null) return const Err(AuthFailure());
+    final undone = await _conflicts.undo(account, undo);
+    if (undone is Ok) _later();
+    return undone;
   }
 
   /// Stops timers and subscriptions (the provider's dispose).

@@ -7,7 +7,9 @@ import 'package:dottoday/data/db/app_database.dart';
 import 'package:dottoday/data/sync/drift_conflict_store.dart';
 import 'package:dottoday/data/sync/engine_sync_service.dart';
 import 'package:dottoday/data/sync/sync_gateway.dart';
+import 'package:dottoday/domain/entities/occurrence.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -235,6 +237,114 @@ void main() {
 
   // Nothing runs on a clock (docs/04 §4 "Triggers"): a failed run must come back on
   // its own, or an outage would wait for the next edit (R-08).
+  ConflictUndo undoOf(Result<ConflictUndo, AppFailure> r) =>
+      (r as Ok<ConflictUndo, AppFailure>).value;
+
+  /// A conflict on [field] of the fixture task, the row holding [row].
+  Future<void> conflictOn(
+    String field,
+    String? mine,
+    String? theirs,
+    Occurrence row,
+  ) async {
+    accounts.add(_account);
+    await settled();
+    await device.h.db
+        .into(device.h.db.conflicts)
+        .insert(
+          ConflictsCompanion.insert(
+            id: 'c1',
+            userId: _account,
+            entity: 'occurrences',
+            entityId: occurrenceFixture().id,
+            field: field,
+            mine: Value(mine),
+            theirs: Value(theirs),
+            createdAt: _t.millisecondsSinceEpoch,
+          ),
+        );
+    await device.write([row]);
+    await settled();
+  }
+
+  // Undo after resolving (E-G4-7 C3, C5; ED-194, ED-483).
+  test('Undo after "keep theirs" puts mine back as a new edit', () async {
+    await conflictOn(
+      'title',
+      '"Mine"',
+      '"Theirs"',
+      occurrenceFixture().copyWith(userId: _account, title: 'Theirs'),
+    );
+    final undo = undoOf(await service.resolve('c1', ConflictChoice.theirs));
+    expect((await device.occurrence(occurrenceFixture().id))!.title, 'Theirs');
+    expect(await service.undoResolve(undo), isA<Ok<void, AppFailure>>());
+    expect((await device.occurrence(occurrenceFixture().id))!.title, 'Mine');
+    expect((await settled()).conflicts, isEmpty);
+  });
+
+  test('Undo after a change elsewhere opens a new conflict instead', () async {
+    await conflictOn(
+      'title',
+      '"Mine"',
+      '"Theirs"',
+      occurrenceFixture().copyWith(userId: _account, title: 'Theirs'),
+    );
+    final undo = undoOf(await service.resolve('c1', ConflictChoice.theirs));
+    await device.write([
+      occurrenceFixture().copyWith(userId: _account, title: 'Newer'),
+    ]);
+    expect(await service.undoResolve(undo), isA<Ok<void, AppFailure>>());
+    // Nothing overwritten: the newer value stays, and the two meet again.
+    expect((await device.occurrence(occurrenceFixture().id))!.title, 'Newer');
+    final open = (await settled()).conflicts.single;
+    expect((open.mine, open.theirs), ('Mine', 'Newer'));
+  });
+
+  // Keep both for notes (ED-195): this device's, the label, the other's.
+  test('"keep both" saves the two notes; Undo restores mine', () async {
+    await conflictOn(
+      'notes',
+      '"Pull last quarter."',
+      '"Ask Sam."',
+      occurrenceFixture().copyWith(userId: _account, notes: 'Ask Sam.'),
+    );
+    final c = (await settled()).conflicts.single;
+    expect((c.mineNotes, c.theirsNotes), ('Pull last quarter.', 'Ask Sam.'));
+    final both = combinedNotes(c.mineNotes, c.theirsNotes, '— Other —');
+    final undo = undoOf(
+      await service.resolve('c1', ConflictChoice.both, combined: both),
+    );
+    expect(
+      (await device.occurrence(occurrenceFixture().id))!.notes,
+      'Pull last quarter.\n\n— Other —\nAsk Sam.',
+    );
+    await service.undoResolve(undo);
+    expect(
+      (await device.occurrence(occurrenceFixture().id))!.notes,
+      'Pull last quarter.',
+    );
+  });
+
+  test(
+    '"keep both" over the notes limit is refused, nothing changes',
+    () async {
+      await conflictOn(
+        'notes',
+        '"a"',
+        '"b"',
+        occurrenceFixture().copyWith(userId: _account, notes: 'b'),
+      );
+      final r = await service.resolve(
+        'c1',
+        ConflictChoice.both,
+        combined: 'x' * (maxNotesLength + 1),
+      );
+      expect(r, isA<Err<ConflictUndo, AppFailure>>());
+      expect((await device.occurrence(occurrenceFixture().id))!.notes, 'b');
+      expect((await settled()).conflicts, hasLength(1));
+    },
+  );
+
   test('a failed run is retried until one succeeds, then stops', () async {
     await service.dispose();
     await accounts.close();

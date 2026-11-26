@@ -2755,12 +2755,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.syncConflictField(field));
 
   @override
-  String syncMine(String value) => pseudo(super.syncMine(value));
-
-  @override
-  String syncTheirs(String value) => pseudo(super.syncTheirs(value));
-
-  @override
   String get syncKeepMine => pseudo(super.syncKeepMine);
 
   @override
@@ -6607,6 +6601,51 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
 
   @override
   String get syncArriving => pseudo(super.syncArriving);
+
+  @override
+  String get conflictThisDevice => pseudo(super.conflictThisDevice);
+
+  @override
+  String get conflictOtherDevice => pseudo(super.conflictOtherDevice);
+
+  @override
+  String get conflictInUse => pseudo(super.conflictInUse);
+
+  @override
+  String get syncKeepBoth => pseudo(super.syncKeepBoth);
+
+  @override
+  String get conflictKeepBothHint => pseudo(super.conflictKeepBothHint);
+
+  @override
+  String get conflictFromOther => pseudo(super.conflictFromOther);
+
+  @override
+  String conflictKeptMine(String field) =>
+      pseudo(super.conflictKeptMine(field));
+
+  @override
+  String conflictKeptTheirs(String field) =>
+      pseudo(super.conflictKeptTheirs(field));
+
+  @override
+  String get conflictKeptBoth => pseudo(super.conflictKeptBoth);
+
+  @override
+  String get conflictBothUnavailable => pseudo(super.conflictBothUnavailable);
+
+  @override
+  String get conflictBothTooLong => pseudo(super.conflictBothTooLong);
+
+  @override
+  String get conflictCopy => pseudo(super.conflictCopy);
+
+  @override
+  String get conflictCopied => pseudo(super.conflictCopied);
+
+  @override
+  String conflictCharacters(int count) =>
+      pseudo(super.conflictCharacters(count));
 
   @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);

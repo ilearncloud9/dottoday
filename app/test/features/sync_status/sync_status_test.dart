@@ -167,13 +167,25 @@ void main() {
     expect(find.text('1 change needs you'), findsOneWidget);
     await tester.tap(find.text('Review'));
     await tester.pumpAndSettle();
+    // E-G4-7 C2: the sheet's own title, This device / Other device, the
+    // other marked in use (ED-483).
+    expect(find.text('Changed on two devices'), findsOneWidget);
     expect(find.text('Deep work: roadmap · Time'), findsOneWidget);
-    expect(find.text('This device: 9:00 AM'), findsOneWidget);
-    expect(find.text('Other device: 10:00 AM'), findsOneWidget);
+    expect(find.bySemanticsLabel('This device, 9:00 AM'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Other device, 10:00 AM, in use now'),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Keep mine'));
     await tester.pumpAndSettle();
     expect(sync.resolved, [('c1', ConflictChoice.mine)]);
     expect(find.text('1 change needs you'), findsNothing);
+    // C3: the sheet closed; the toast says what was kept, with Undo.
+    expect(find.text('Changed on two devices'), findsNothing);
+    expect(find.text("Kept this device's time"), findsOneWidget);
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(sync.undone.single.kept, ConflictChoice.mine);
   });
 
   testWidgets('offline: the banner says everything still works', (

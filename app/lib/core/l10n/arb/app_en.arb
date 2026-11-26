@@ -5026,24 +5026,6 @@
       }
     }
   },
-  "syncMine": "This device: {value}",
-  "@syncMine": {
-    "description": "Sync sheet: this device's value.",
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
-  "syncTheirs": "Other device: {value}",
-  "@syncTheirs": {
-    "description": "Sync sheet: the other device's value.",
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
   "syncKeepMine": "Keep mine",
   "@syncKeepMine": {
     "description": "Sync sheet conflict button."
@@ -8735,6 +8717,78 @@
   "syncArriving": "Tasks appear as they arrive",
   "@syncArriving": {
     "description": "Today during the first sync on a new device (E-G4-7 A2), beside the count: the day fills in as rows arrive."
+  },
+  "conflictThisDevice": "This device",
+  "@conflictThisDevice": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictOtherDevice": "Other device",
+  "@conflictOtherDevice": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictInUse": "in use now",
+  "@conflictInUse": {
+    "description": "Beside the other device's value: the value the app uses until you choose."
+  },
+  "syncKeepBoth": "Keep both",
+  "@syncKeepBoth": {
+    "description": "Notes conflicts only (ED-195)."
+  },
+  "conflictKeepBothHint": "Keep both adds the other device's notes below yours.",
+  "@conflictKeepBothHint": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictFromOther": "— From your other device —",
+  "@conflictFromOther": {
+    "description": "Saved inside the combined note between the two versions (ED-195); plain text the person can edit."
+  },
+  "conflictKeptMine": "{field, select, title{Kept this device's title} start{Kept this device's time} duration{Kept this device's length} notes{Kept this device's notes} colour{Kept this device's colour} other{Kept this device's change}}",
+  "@conflictKeptMine": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    },
+    "description": "Toast after Keep mine (ED-194); field is the conflict field key."
+  },
+  "conflictKeptTheirs": "{field, select, title{Kept the other device's title} start{Kept the other device's time} duration{Kept the other device's length} notes{Kept the other device's notes} colour{Kept the other device's colour} other{Kept the other device's change}}",
+  "@conflictKeptTheirs": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    },
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictKeptBoth": "Kept both versions of the notes",
+  "@conflictKeptBoth": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictBothUnavailable": "Keep both isn't available",
+  "@conflictBothUnavailable": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictBothTooLong": "Together, these notes exceed the 10,000-character limit. You can copy either version before choosing which one to keep.",
+  "@conflictBothTooLong": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictCopy": "Copy",
+  "@conflictCopy": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictCopied": "Copied",
+  "@conflictCopied": {
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
+  },
+  "conflictCharacters": "{count, plural, =1{1 character} other{{count} characters}}",
+  "@conflictCharacters": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    },
+    "description": "Sync conflict review (E-G4-7 C, Q4; ED-483)."
   },
   "taskIconCategoryPlanning": "Planning & rhythm",
   "@taskIconCategoryPlanning": {"description": "Section title in the task icon picker."},

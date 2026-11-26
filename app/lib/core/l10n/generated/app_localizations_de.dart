@@ -3530,16 +3530,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String syncMine(String value) {
-    return 'Dieses Gerät: $value';
-  }
-
-  @override
-  String syncTheirs(String value) {
-    return 'Anderes Gerät: $value';
-  }
-
-  @override
   String get syncKeepMine => 'Meine behalten';
 
   @override
@@ -8278,6 +8268,82 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get syncArriving => 'Aufgaben erscheinen, sobald sie ankommen';
+
+  @override
+  String get conflictThisDevice => 'Dieses Gerät';
+
+  @override
+  String get conflictOtherDevice => 'Anderes Gerät';
+
+  @override
+  String get conflictInUse => 'jetzt in Verwendung';
+
+  @override
+  String get syncKeepBoth => 'Beide behalten';
+
+  @override
+  String get conflictKeepBothHint =>
+      '„Beide behalten“ fügt die Notizen des anderen Geräts unter deinen an.';
+
+  @override
+  String get conflictFromOther => '— Von deinem anderen Gerät —';
+
+  @override
+  String conflictKeptMine(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Behalten: Titel dieses Geräts',
+      'start': 'Behalten: Zeit dieses Geräts',
+      'duration': 'Behalten: Dauer dieses Geräts',
+      'notes': 'Behalten: Notizen dieses Geräts',
+      'colour': 'Behalten: Farbe dieses Geräts',
+      'other': 'Behalten: Änderung dieses Geräts',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String conflictKeptTheirs(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Behalten: Titel des anderen Geräts',
+      'start': 'Behalten: Zeit des anderen Geräts',
+      'duration': 'Behalten: Dauer des anderen Geräts',
+      'notes': 'Behalten: Notizen des anderen Geräts',
+      'colour': 'Behalten: Farbe des anderen Geräts',
+      'other': 'Behalten: Änderung des anderen Geräts',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get conflictKeptBoth => 'Beide Fassungen der Notizen behalten';
+
+  @override
+  String get conflictBothUnavailable => '„Beide behalten“ ist nicht verfügbar';
+
+  @override
+  String get conflictBothTooLong =>
+      'Zusammen überschreiten diese Notizen die Grenze von 10.000 Zeichen. Du kannst jede Fassung kopieren, bevor du wählst, welche du behältst.';
+
+  @override
+  String get conflictCopy => 'Kopieren';
+
+  @override
+  String get conflictCopied => 'Kopiert';
+
+  @override
+  String conflictCharacters(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString Zeichen',
+      one: '1 Zeichen',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';

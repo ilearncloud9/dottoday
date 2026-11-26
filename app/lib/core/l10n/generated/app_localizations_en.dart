@@ -3513,16 +3513,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String syncMine(String value) {
-    return 'This device: $value';
-  }
-
-  @override
-  String syncTheirs(String value) {
-    return 'Other device: $value';
-  }
-
-  @override
   String get syncKeepMine => 'Keep mine';
 
   @override
@@ -8230,6 +8220,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get syncArriving => 'Tasks appear as they arrive';
+
+  @override
+  String get conflictThisDevice => 'This device';
+
+  @override
+  String get conflictOtherDevice => 'Other device';
+
+  @override
+  String get conflictInUse => 'in use now';
+
+  @override
+  String get syncKeepBoth => 'Keep both';
+
+  @override
+  String get conflictKeepBothHint =>
+      'Keep both adds the other device\'s notes below yours.';
+
+  @override
+  String get conflictFromOther => '— From your other device —';
+
+  @override
+  String conflictKeptMine(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Kept this device\'s title',
+      'start': 'Kept this device\'s time',
+      'duration': 'Kept this device\'s length',
+      'notes': 'Kept this device\'s notes',
+      'colour': 'Kept this device\'s colour',
+      'other': 'Kept this device\'s change',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String conflictKeptTheirs(String field) {
+    String _temp0 = intl.Intl.selectLogic(field, {
+      'title': 'Kept the other device\'s title',
+      'start': 'Kept the other device\'s time',
+      'duration': 'Kept the other device\'s length',
+      'notes': 'Kept the other device\'s notes',
+      'colour': 'Kept the other device\'s colour',
+      'other': 'Kept the other device\'s change',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get conflictKeptBoth => 'Kept both versions of the notes';
+
+  @override
+  String get conflictBothUnavailable => 'Keep both isn\'t available';
+
+  @override
+  String get conflictBothTooLong =>
+      'Together, these notes exceed the 10,000-character limit. You can copy either version before choosing which one to keep.';
+
+  @override
+  String get conflictCopy => 'Copy';
+
+  @override
+  String get conflictCopied => 'Copied';
+
+  @override
+  String conflictCharacters(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString characters',
+      one: '1 character',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
