@@ -7,6 +7,7 @@ import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
@@ -24,8 +25,9 @@ import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 // The approved onboarding (the "Dottoday Onboarding Prototype", ED-305;
-// M20.11, ED-485). Your day, What fills your days and the nudge are the
-// built steps until parts 2 to 4 replace them.
+// M20.11, ED-485). What fills your days and the nudge are the built steps
+// until parts 3 and 4 replace them. Your day uses the prototype's 12-hour
+// clock.
 
 /// A first run: nobody has been asked about notifications yet.
 final class _NotAsked implements NotificationPermission {
@@ -52,7 +54,11 @@ List<Override> _at(
     // A phone with device calendars, not asked yet (O4's row, M7.1).
     calendarGateway: FakeDeviceCalendarGateway(),
     occurrences: FakeOccurrenceRepository(firstThreadRows()),
-    profile: testProfile(),
+    profile: testProfile(
+      settings: step == OnboardingStep.day
+          ? const Settings(use24h: false)
+          : null,
+    ),
   ),
   onboardingProvider.overrideWith(
     () => FakeOnboarding(OnboardingProgress(step: step, account: account)),
@@ -74,7 +80,7 @@ void main() {
       'onboarding_${step.name}',
       height: 844,
       widths: widths,
-      a11yVariants: step == OnboardingStep.hello,
+      a11yVariants: step == OnboardingStep.hello || step == OnboardingStep.day,
       overrides: _at(step),
       build: (_) => const OnboardingGate(child: _App()),
     );

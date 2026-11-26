@@ -5294,9 +5294,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get reviewSleepOfferLater => pseudo(super.reviewSleepOfferLater);
 
   @override
-  String get onboardingSleepTarget => pseudo(super.onboardingSleepTarget);
-
-  @override
   String nightLabel(String length) => pseudo(super.nightLabel(length));
 
   @override
@@ -5370,8 +5367,8 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.todayWindDownFooter(start, windDown));
 
   @override
-  String onboardingWindDownLive(String time, String length) =>
-      pseudo(super.onboardingWindDownLive(time, length));
+  String onboardingDayAsleep(String length) =>
+      pseudo(super.onboardingDayAsleep(length));
 
   @override
   String get sleepLess => pseudo(super.sleepLess);

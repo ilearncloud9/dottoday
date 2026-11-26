@@ -50,6 +50,10 @@ final class DotType {
     required this.onbBack,
     required this.onbClock,
     required this.onbNow,
+    required this.onbTick,
+    required this.onbBubbleCap,
+    required this.onbBubbleTime,
+    required this.onbSum,
     required this.sidebarItem,
     required this.sidebarHint,
     required this.sidebarSection,
@@ -155,6 +159,10 @@ final class DotType {
     onbBack: _manrope(17, 22, 600, text),
     onbClock: _manrope(22, 26, 800, text),
     onbNow: _manrope(11, 14, 700, muted, tracking: 0.08),
+    onbTick: _manrope(12, 16, 700, muted),
+    onbBubbleCap: _manrope(12, 16, 700, muted, tracking: 0.06),
+    onbBubbleTime: _manrope(20, 26, 800, text),
+    onbSum: _manrope(15, 20, 700, muted),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
     // hints and counts 11, the "Calendar views" heading 11/600.
     sidebarItem: _system(13, 16, 400, text),
@@ -378,6 +386,20 @@ final class DotType {
   /// "NOW" under it (prototype .clocks): 11/700, tracked .08em.
   final TextStyle onbNow;
 
+  /// Your day's hour marks (prototype .ticks span): 12/700, muted.
+  final TextStyle onbTick;
+
+  /// "WAKE UP" in the sun's and moon's labels (.bub small): 12/700,
+  /// muted, tracked .06em; set in capitals at use.
+  final TextStyle onbBubbleCap;
+
+  /// Their time (.bub b): 20/800.
+  final TextStyle onbBubbleTime;
+
+  /// "16 h awake · 8 h of sleep" (.sum): 15/700, muted; the awake part in
+  /// the text colour.
+  final TextStyle onbSum;
+
   /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
   /// or count, and a section heading.
   final TextStyle sidebarItem;
@@ -520,6 +542,10 @@ final class DotType {
       onbBack: l(onbBack, other.onbBack),
       onbClock: l(onbClock, other.onbClock),
       onbNow: l(onbNow, other.onbNow),
+      onbTick: l(onbTick, other.onbTick),
+      onbBubbleCap: l(onbBubbleCap, other.onbBubbleCap),
+      onbBubbleTime: l(onbBubbleTime, other.onbBubbleTime),
+      onbSum: l(onbSum, other.onbSum),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),
       sidebarSection: l(sidebarSection, other.sidebarSection),

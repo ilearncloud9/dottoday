@@ -5233,11 +5233,11 @@
   "@onboardingDotLabel": {
     "description": "Onboarding O1: label of the animated day dot."
   },
-  "onboardingDayShapeTitle": "When does your day start and end?",
+  "onboardingDayShapeTitle": "Your day runs from…",
   "@onboardingDayShapeTitle": {
     "description": "Onboarding O2 question."
   },
-  "onboardingDayShapeBody": "Your tasks live between these two. You can change them, or give each weekday its own, in Settings.",
+  "onboardingDayShapeBody": "Drag the sun and the moon. You can fine-tune each weekday later.",
   "@onboardingDayShapeBody": {
     "description": "Onboarding O2 explanation."
   },
@@ -7443,8 +7443,6 @@
   "@reviewSleepOfferSet": {"description": "Sleep offer: save the sleep target."},
   "reviewSleepOfferLater": "No thanks",
   "@reviewSleepOfferLater": {"description": "Sleep offer: declined for good (unlike the review's Not now, which is for today)."},
-  "onboardingSleepTarget": "How much sleep do you want?",
-  "@onboardingSleepTarget": {"description": "Onboarding day shape: the sleep slider's label (docs/15 W6)."},
   "nightLabel": "Night · {length}",
   "@nightLabel": {"description": "The night on the day dot, read out and on a long-press.", "placeholders": {"length": {"type": "String"}}},
   "reviewNightUntil": "{length} until Wake Up at {time}",
@@ -7489,8 +7487,8 @@
   "@settingsWindDownFrom": {"description": "Wind Down row value when a sleep target moved it.", "placeholders": {"time": {"type": "String"}, "wake": {"type": "String"}}},
   "todayWindDownFooter": "Tomorrow starts {start} → wind down {windDown}",
   "@todayWindDownFooter": {"description": "Today's day card footer when tomorrow's early start moved Wind Down.", "placeholders": {"start": {"type": "String"}, "windDown": {"type": "String"}}},
-  "onboardingWindDownLive": "Wind Down {time} · {length} of sleep",
-  "@onboardingWindDownLive": {"description": "Onboarding day shape: Wind Down from the slider, live.", "placeholders": {"time": {"type": "String"}, "length": {"type": "String"}}},
+  "onboardingDayAsleep": "{length} of sleep",
+  "@onboardingDayAsleep": {"description": "Your day (onboarding prototype .sum): the night the sun and moon leave, after \"16 h awake ·\".", "placeholders": {"length": {"type": "String"}}},
   "sleepLess": "Less sleep",
   "@sleepLess": {"description": "Sleep target stepper: the minus button."},
   "sleepMore": "More sleep",

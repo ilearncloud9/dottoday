@@ -5499,13 +5499,13 @@ abstract class AppLocalizations {
   /// Onboarding O2 question.
   ///
   /// In en, this message translates to:
-  /// **'When does your day start and end?'**
+  /// **'Your day runs from…'**
   String get onboardingDayShapeTitle;
 
   /// Onboarding O2 explanation.
   ///
   /// In en, this message translates to:
-  /// **'Your tasks live between these two. You can change them, or give each weekday its own, in Settings.'**
+  /// **'Drag the sun and the moon. You can fine-tune each weekday later.'**
   String get onboardingDayShapeBody;
 
   /// Onboarding O3 question.
@@ -10056,12 +10056,6 @@ abstract class AppLocalizations {
   /// **'No thanks'**
   String get reviewSleepOfferLater;
 
-  /// Onboarding day shape: the sleep slider's label (docs/15 W6).
-  ///
-  /// In en, this message translates to:
-  /// **'How much sleep do you want?'**
-  String get onboardingSleepTarget;
-
   /// The night on the day dot, read out and on a long-press.
   ///
   /// In en, this message translates to:
@@ -10194,11 +10188,11 @@ abstract class AppLocalizations {
   /// **'Tomorrow starts {start} → wind down {windDown}'**
   String todayWindDownFooter(String start, String windDown);
 
-  /// Onboarding day shape: Wind Down from the slider, live.
+  /// Your day (onboarding prototype .sum): the night the sun and moon leave, after "16 h awake ·".
   ///
   /// In en, this message translates to:
-  /// **'Wind Down {time} · {length} of sleep'**
-  String onboardingWindDownLive(String time, String length);
+  /// **'{length} of sleep'**
+  String onboardingDayAsleep(String length);
 
   /// Sleep target stepper: the minus button.
   ///

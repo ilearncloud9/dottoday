@@ -3,8 +3,11 @@
 library;
 
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
+
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
+import 'package:dottoday/features/onboarding/steps/day_dial_parts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +20,8 @@ import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 // The onboarding's motion, frame by frame (prototype motion table;
-// M20.11 part 1): Hello's day dot drawing itself, and a step change.
+// M20.11 parts 1 and 2): Hello's day dot drawing itself, a step change,
+// and the sun held and dragged onto an hour.
 
 Future<void> _shot(WidgetTester tester, String name) async {
   final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -27,7 +31,11 @@ Future<void> _shot(WidgetTester tester, String name) async {
   await expectLater(image, matchesGoldenFile('goldens/$name.png'));
 }
 
-Future<void> _pump(WidgetTester tester, OnboardingStep step) async {
+Future<void> _pump(
+  WidgetTester tester,
+  OnboardingStep step, {
+  Settings? settings,
+}) async {
   tester.view
     ..physicalSize = const Size(390, 844) * 2
     ..devicePixelRatio = 2;
@@ -38,7 +46,7 @@ Future<void> _pump(WidgetTester tester, OnboardingStep step) async {
       overrides: [
         ...timelineOverrides(
           now: DateTime.utc(2026, 10, 21, 9),
-          profile: testProfile(),
+          profile: testProfile(settings: settings),
         ),
         onboardingProvider.overrideWith(
           () => FakeOnboarding(OnboardingProgress(step: step)),
@@ -82,6 +90,41 @@ void main() {
         await _shot(tester, 'onboarding_motion_step_${ms}ms');
       }
       await tester.pumpAndSettle();
+    } finally {
+      debugDisableShadows = true;
+    }
+  });
+
+  testWidgets('Your day: the sun held, then its label pops at 8:00', (
+    tester,
+  ) async {
+    try {
+      await _pump(
+        tester,
+        OnboardingStep.day,
+        settings: const Settings(use24h: false),
+      );
+      await tester.pumpAndSettle();
+      final sun = tester.getCenter(find.byType(DayDialHandle).first);
+      final finger = await tester.startGesture(sun);
+      await tester.pump(const Duration(milliseconds: 75));
+      await _shot(tester, 'onboarding_motion_day_held_75ms');
+      await tester.pump(const Duration(milliseconds: 75));
+      await _shot(tester, 'onboarding_motion_day_held_150ms');
+      // Down to 8:00: past the slop, then onto the hour.
+      final step =
+          (tester.getCenter(find.byType(DayDialHandle).last).dy - sun.dy) /
+          (1380 - 420);
+      await finger.moveBy(const Offset(0, 20));
+      await finger.moveTo(Offset(sun.dx, sun.dy + 60 * step));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 110));
+      await _shot(tester, 'onboarding_motion_day_pop_110ms');
+      await tester.pump(const Duration(milliseconds: 110));
+      await _shot(tester, 'onboarding_motion_day_pop_220ms');
+      await finger.up();
+      await tester.pumpAndSettle();
+      await _shot(tester, 'onboarding_motion_day_let_go');
     } finally {
       debugDisableShadows = true;
     }

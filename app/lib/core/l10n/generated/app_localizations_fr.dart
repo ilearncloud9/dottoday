@@ -3681,12 +3681,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le point du jour : un anneau de cinq parties colorées d\'une journée, avec un fil qui en descend';
 
   @override
-  String get onboardingDayShapeTitle =>
-      'Quand commence et finit votre journée ?';
+  String get onboardingDayShapeTitle => 'Votre journée va de…';
 
   @override
   String get onboardingDayShapeBody =>
-      'Vos tâches se placent entre ces deux heures. Vous pouvez les changer, ou en définir pour chaque jour, dans les réglages.';
+      'Faites glisser le soleil et la lune. Vous pourrez ajuster chaque jour de la semaine plus tard.';
 
   @override
   String get onboardingHabitsTitle => 'Qu\'est-ce qui remplit vos journées ?';
@@ -6673,9 +6672,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get reviewSleepOfferLater => 'Non merci';
 
   @override
-  String get onboardingSleepTarget => 'Combien de sommeil voulez-vous ?';
-
-  @override
   String nightLabel(String length) {
     return 'Nuit · $length';
   }
@@ -6762,8 +6758,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String onboardingWindDownLive(String time, String length) {
-    return 'Détente à $time · $length de sommeil';
+  String onboardingDayAsleep(String length) {
+    return '$length de sommeil';
   }
 
   @override

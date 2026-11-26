@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Text whose lines are as even as they can be (CSS `text-wrap:
 /// balance`, which the approved boards and prototypes use on titles):
 /// the narrowest width within [maxWidth] that keeps the same number of
-/// lines, centred. It takes the width it may use rather than measuring
+/// lines, centred (or at the start, for start-aligned text). It takes the width it may use rather than measuring
 /// it, so it can sit in intrinsic layouts (a scrolling column).
 ///
 /// ```dart
@@ -35,7 +35,10 @@ class BalancedText extends StatelessWidget {
     );
     final width = _balanced(painter, maxWidth);
     painter.dispose();
-    return Center(
+    return Align(
+      alignment: textAlign == TextAlign.center
+          ? Alignment.center
+          : AlignmentDirectional.centerStart,
       child: SizedBox(
         width: width,
         child: Text(text, style: style, textAlign: textAlign),

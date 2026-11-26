@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/animation.dart';
+import 'package:flutter/painting.dart';
 
 /// Sizes of the approved onboarding (the "Dottoday Onboarding Prototype",
 /// ED-305, version `1794780049-65a7`), named after its CSS.
@@ -62,6 +65,123 @@ abstract final class OnbSize {
   static const double cardShadowBlur = 90;
   static const double cardShadowSpread = -30;
   static const double cardShadowAlpha = 0.5;
+
+  /// Your day's dial (`.dial`, `mountDay`): the times run 4:00 to 2:00
+  /// the next morning down its height, 34 in from each end. The hour marks
+  /// end 94 from its left edge, each with a line from 134 (260 long, the
+  /// line colour fading out after 60 %, at .55); the thread runs down 120
+  /// (dashed 4 wide, 5 on and 5 off), its awake part 6 wide in the accent.
+  static const double dialPad = 34;
+  static const double tickEnd = 94;
+  static const double tickLine = 134;
+  static const double tickLineLength = 260;
+  static const double tickLineOpacity = 0.55;
+  static const double rail = 120;
+  static const double railWidth = 4;
+  static const double railDash = 5;
+  static const double awakeWidth = 6;
+
+  /// The sun and moon (`.hdl`): 52 round on the card colour, a 3 ring in
+  /// their colour inside, a 9 halo at 16 % (14 at 20 % while held), grown
+  /// to 1.12 while held; the sun's glyph 26, the moon's 24.
+  static const double handle = 52;
+  static const double handleRing = 3;
+  static const double handleHalo = 9;
+  static const double handleHaloHeld = 14;
+  static const double handleHaloAlpha = 0.16;
+  static const double handleHaloHeldAlpha = 0.2;
+  static const double handleHeldScale = 1.12;
+  static const double sunGlyph = 26;
+  static const double moonGlyph = 24;
+
+  /// Their labels (`.bub`): 158 from the dial's left, corner 16, padding
+  /// 8 × 14.
+  static const double bubble = 158;
+  static const double bubbleRadius = 16;
+  static const double bubblePadV = 8;
+  static const double bubblePadH = 14;
+
+  /// The soft shadow (`--sh`): 0 10 30 -12, at .28 of the ink in light and
+  /// .7 black in dark.
+  static const double shadowY = 10;
+  static const double shadowBlur = 30;
+  static const double shadowSpread = -12;
+  static const double shadowAlphaLight = 0.28;
+  static const double shadowAlphaDark = 0.7;
+
+  /// The dial's top and bottom fade (`mask-image`: in over 9 %, out from
+  /// 91 %); the stars stop 20 short of the sun and the moon, and fade out
+  /// from 40 % above and in to 60 % below. The stars are two grids (46 × 34
+  /// from 8, 6; 29 × 41 from 21, 19) of dots 1 and .8 round, at .55.
+  static const double dialFade = 0.09;
+  static const double starGap = 20;
+  static const double starsTopSolid = 0.4;
+  static const double starsBottomSolid = 0.6;
+  static const double starOpacity = 0.55;
+
+  /// The sky's stops round the sun (`.dial` background): night until 14 %
+  /// above it, dawn at it, day 16 % below; the same round the moon.
+  static const double skyNight = 0.14;
+  static const double skyDay = 0.16;
+
+  /// "16 h awake · 8 h of sleep" (`.sum`): 10 above, 12 below; the dial
+  /// starts 14 under the line. At large text the step scrolls, and the
+  /// dial keeps this height at least.
+  static const double sumTop = 10;
+  static const double sumBottom = 12;
+  static const double dialMinHeight = 360;
+}
+
+/// The dial's fade at its top and bottom (`.dial` `mask-image`): an
+/// alpha mask, clear at the ends and solid between 9 % and 91 %.
+const onbDialFade = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color(0x00000000),
+    Color(0xFF000000),
+    Color(0xFF000000),
+    Color(0x00000000),
+  ],
+  stops: [0, OnbSize.dialFade, 1 - OnbSize.dialFade, 1],
+);
+
+/// Your day's sky (prototype `--night`, `--dawn`, `--dusk`, `--star` and
+/// the line `--ln`), light and dark.
+final class OnbSky {
+  const OnbSky._({
+    required this.night,
+    required this.dawn,
+    required this.dusk,
+    required this.star,
+    required this.line,
+  });
+
+  final Color night;
+  final Color dawn;
+  final Color dusk;
+  final Color star;
+  final Color line;
+
+  static const light = OnbSky._(
+    night: Color(0xFFE6E2F4),
+    dawn: Color(0xFFFBE3CC),
+    dusk: Color(0xFFE9E2F7),
+    star: Color(0xFFA9A2CF),
+    line: Color(0xFFDDD7E0),
+  );
+
+  static const dark = OnbSky._(
+    night: Color(0xFF16142A),
+    dawn: Color(0xFF3A2A1F),
+    dusk: Color(0xFF28233F),
+    star: Color(0xFF8C88BE),
+    line: Color(0xFF4A4348),
+  );
+
+  /// The one [brightness] calls for.
+  static OnbSky of(Brightness brightness) =>
+      brightness == Brightness.dark ? dark : light;
 }
 
 /// Motion of the approved onboarding (prototype "Motion, haptics and
@@ -129,4 +249,12 @@ abstract final class OnbMotion {
 
   /// Tablets, Mac and web: the blur over Today (.7 s standard).
   static const blur = Duration(milliseconds: 700);
+
+  /// The sun and moon grow while held (`.hdl` transform .15 s); their
+  /// label pops to 1.06 and back over 220 ms when it reaches an hour
+  /// (`.bub.tick`, ease).
+  static const handle = Duration(milliseconds: 150);
+  static const tick = Duration(milliseconds: 220);
+  static const double tickScale = 1.06;
+  static const tickCurve = Cubic(0.25, 0.1, 0.25, 1);
 }

@@ -4,6 +4,7 @@ import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/calendar/device_calendar.dart';
+import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/onboarding_gate.dart';
@@ -27,6 +28,7 @@ Future<ProviderContainer> pumpOnboarding(
   Size size = const Size(390, 844),
   NotificationPermission? permission,
   DeviceCalendarGateway calendarGateway = const NoDeviceCalendarGateway(),
+  Settings? settings,
 }) async {
   tester.view
     ..physicalSize = size
@@ -37,7 +39,7 @@ Future<ProviderContainer> pumpOnboarding(
       ...timelineOverrides(
         now: DateTime.utc(2026, 10, 21, 9),
         occurrences: repo,
-        profile: testProfile(),
+        profile: testProfile(settings: settings),
         notificationPermission:
             permission ?? const UnwiredNotificationPermission(),
         calendarGateway: calendarGateway,

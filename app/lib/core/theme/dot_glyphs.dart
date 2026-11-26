@@ -128,6 +128,16 @@ abstract final class DotGlyphs {
     'M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41',
   );
   static const moon = DotGlyph('M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z');
+
+  /// The onboarding's sun and moon (prototype `sun`, `moon`; ED-305): drawn
+  /// a little differently from [sun] and [moon], and kept as drawn there.
+  static final onbSun = DotGlyph(
+    '${_c(12, 12, 4)}M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5'
+    'M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5',
+  );
+  static const onbMoon = DotGlyph(
+    'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
+  );
   static const sunrise = DotGlyph(
     'M12 2v6M4.93 10.93l1.41 1.41M2 18h2M20 18h2M19.07 10.93l-1.41 1.41'
     'M22 22H2M8 6l4-4 4 4M16 18a4 4 0 0 0-8 0',

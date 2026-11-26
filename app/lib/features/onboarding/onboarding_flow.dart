@@ -9,10 +9,10 @@ import 'package:dottoday/domain/onboarding/onboarding.dart';
 import 'package:dottoday/features/onboarding/flow/onb_nav.dart';
 import 'package:dottoday/features/onboarding/flow/onb_switcher.dart';
 import 'package:dottoday/features/onboarding/steps/account_step.dart';
-import 'package:dottoday/features/onboarding/steps/day_shape_step.dart';
 import 'package:dottoday/features/onboarding/steps/habits_step.dart';
 import 'package:dottoday/features/onboarding/steps/hello_step.dart';
 import 'package:dottoday/features/onboarding/steps/reminders_step.dart';
+import 'package:dottoday/features/onboarding/steps/your_day_step.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -124,8 +124,8 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
         onStart: next,
         onAccount: () => _go(OnboardingStep.hello, account: true),
       ),
-      // Parts 2 to 4 (ED-485) replace these with the prototype's steps.
-      OnboardingStep.day => DayShapeStep(onNext: next),
+      OnboardingStep.day => YourDayStep(onNext: next),
+      // Parts 3 and 4 (ED-485) replace these with the prototype's steps.
       OnboardingStep.fills => HabitsStep(onNext: next),
       OnboardingStep.nudge => RemindersStep(onNext: next),
       // Reaching it finishes (`_go`); part 5 shows the real Today here.
