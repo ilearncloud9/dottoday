@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Onboarding's What fills your days shows your day as a thread: tap Morning run, Deep work, Gym or Read, or type your own, and each flies onto the thread at a time that fits; That's my day makes them tasks that repeat every day (redesign branch).
 - Onboarding's Your day is now a sky you shape by dragging the sun and the moon, with your awake hours and night shown as you go and a light tick at each hour (redesign branch).
 - Onboarding starts with a new Hello: the day dot draws itself, "Your day, as a thread.", and the note that Dottoday is for people aged 13+; the Layout, first-task and Done steps are gone, steps rise in with ‹ Back and three progress dots, and on tablets, the Mac and the web they sit in a card over your blurred Today (redesign branch).
 - On wide iPads, Android tablets, the Mac and the web, Settings shows its list beside the page you open (redesign branch).

@@ -3,6 +3,7 @@
 library;
 
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
 
@@ -21,7 +22,8 @@ import '../../support/timeline_fakes.dart';
 
 // The onboarding's motion, frame by frame (prototype motion table;
 // M20.11 parts 1 and 2): Hello's day dot drawing itself, a step change,
-// and the sun held and dragged onto an hour.
+// the sun held and dragged onto an hour, and a pick flying onto the
+// thread.
 
 Future<void> _shot(WidgetTester tester, String name) async {
   final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -125,6 +127,36 @@ void main() {
       await finger.up();
       await tester.pumpAndSettle();
       await _shot(tester, 'onboarding_motion_day_let_go');
+    } finally {
+      debugDisableShadows = true;
+    }
+  });
+
+  testWidgets('What fills your days: Read flies onto the thread', (
+    tester,
+  ) async {
+    try {
+      await _pump(
+        tester,
+        OnboardingStep.fills,
+        settings: Settings(
+          use24h: false,
+          dayBoundaries: {
+            for (final d in Weekday.values)
+              d: const TimeWindow(start: '07:00', end: '23:00'),
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Read'));
+      await tester.pump();
+      var at = Duration.zero;
+      for (final ms in [1, 140, 280, 420, 560, 640, 720, 880]) {
+        await tester.pump(Duration(milliseconds: ms) - at);
+        at = Duration(milliseconds: ms);
+        await _shot(tester, 'onboarding_motion_fills_${ms}ms');
+      }
+      await tester.pumpAndSettle();
     } finally {
       debugDisableShadows = true;
     }

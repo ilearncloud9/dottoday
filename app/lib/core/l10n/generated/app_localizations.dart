@@ -5517,14 +5517,68 @@ abstract class AppLocalizations {
   /// Onboarding O3 explanation.
   ///
   /// In en, this message translates to:
-  /// **'Pick up to five. They go on tomorrow\'s thread at times that fit your day; change them any time.'**
+  /// **'Tap any. They land on the thread at a time that fits.'**
   String get onboardingHabitsBody;
 
-  /// Onboarding O3 primary button with habits picked.
+  /// What fills your days: the button once something is picked.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{Add 1 to tomorrow} other{Add {count} to tomorrow}}'**
-  String onboardingHabitsAdd(int count);
+  /// **'That’s my day'**
+  String get onboardingFillsDone;
+
+  /// What fills your days: the button while nothing is picked (approved copy).
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get onboardingSkipForNow;
+
+  /// What fills your days: the add field's placeholder; the example is parsed like Quick Add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your own, like walk the dog 7am'**
+  String get onboardingFillsHint;
+
+  /// Screen reader label of the add field.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something you do most days, then press Return'**
+  String get onboardingFillsFieldLabel;
+
+  /// Screen reader label of the add field's + button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to my thread'**
+  String get onboardingFillsAdd;
+
+  /// Screen reader label of the chip group.
+  ///
+  /// In en, this message translates to:
+  /// **'Things you do most days'**
+  String get onboardingFillsGroup;
+
+  /// Under a picked item on the thread: it repeats every day (ED-485).
+  ///
+  /// In en, this message translates to:
+  /// **'Most days'**
+  String get onboardingMostDays;
+
+  /// Under Wake Up on the onboarding thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of your day'**
+  String get onboardingWakeSub;
+
+  /// Under Wind Down on the onboarding thread.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to slow down'**
+  String get onboardingWindSub;
+
+  /// What fills your days: how many are picked, of five.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {max}'**
+  String onboardingFillsCount(int count, int max);
 
   /// Onboarding O3: shown when five are picked.
   ///
@@ -5547,18 +5601,6 @@ abstract class AppLocalizations {
   /// Onboarding starter habit.
   ///
   /// In en, this message translates to:
-  /// **'Lunch'**
-  String get starterLunch;
-
-  /// Onboarding starter habit.
-  ///
-  /// In en, this message translates to:
-  /// **'Walk'**
-  String get starterWalk;
-
-  /// Onboarding starter habit.
-  ///
-  /// In en, this message translates to:
   /// **'Gym'**
   String get starterGym;
 
@@ -5567,18 +5609,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read'**
   String get starterRead;
-
-  /// Onboarding starter habit.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan tomorrow'**
-  String get starterPlanTomorrow;
-
-  /// Onboarding O3 row: '7:30 AM · 30 min'.
-  ///
-  /// In en, this message translates to:
-  /// **'{time} · {length}'**
-  String onboardingHabitMeta(String time, String length);
 
   /// Onboarding O4 question.
   ///

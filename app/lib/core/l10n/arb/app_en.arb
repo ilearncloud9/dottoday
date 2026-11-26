@@ -5245,19 +5245,30 @@
   "@onboardingHabitsTitle": {
     "description": "Onboarding O3 question."
   },
-  "onboardingHabitsBody": "Pick up to five. They go on tomorrow's thread at times that fit your day; change them any time.",
+  "onboardingHabitsBody": "Tap any. They land on the thread at a time that fits.",
   "@onboardingHabitsBody": {
     "description": "Onboarding O3 explanation."
   },
-  "onboardingHabitsAdd": "{count, plural, =1{Add 1 to tomorrow} other{Add {count} to tomorrow}}",
-  "@onboardingHabitsAdd": {
-    "description": "Onboarding O3 primary button with habits picked.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
+  "onboardingFillsDone": "That’s my day",
+  "@onboardingFillsDone": {"description": "What fills your days: the button once something is picked."},
+  "onboardingSkipForNow": "Skip for now",
+  "@onboardingSkipForNow": {"description": "What fills your days: the button while nothing is picked (approved copy)."},
+  "onboardingFillsHint": "Add your own, like walk the dog 7am",
+  "@onboardingFillsHint": {"description": "What fills your days: the add field's placeholder; the example is parsed like Quick Add."},
+  "onboardingFillsFieldLabel": "Add something you do most days, then press Return",
+  "@onboardingFillsFieldLabel": {"description": "Screen reader label of the add field."},
+  "onboardingFillsAdd": "Add to my thread",
+  "@onboardingFillsAdd": {"description": "Screen reader label of the add field's + button."},
+  "onboardingFillsGroup": "Things you do most days",
+  "@onboardingFillsGroup": {"description": "Screen reader label of the chip group."},
+  "onboardingMostDays": "Most days",
+  "@onboardingMostDays": {"description": "Under a picked item on the thread: it repeats every day (ED-485)."},
+  "onboardingWakeSub": "Start of your day",
+  "@onboardingWakeSub": {"description": "Under Wake Up on the onboarding thread."},
+  "onboardingWindSub": "Time to slow down",
+  "@onboardingWindSub": {"description": "Under Wind Down on the onboarding thread."},
+  "onboardingFillsCount": "{count} of {max}",
+  "@onboardingFillsCount": {"description": "What fills your days: how many are picked, of five.", "placeholders": {"count": {"type": "int"}, "max": {"type": "int"}}},
   "onboardingHabitsMax": "Five is plenty to start with.",
   "@onboardingHabitsMax": {
     "description": "Onboarding O3: shown when five are picked."
@@ -5270,14 +5281,6 @@
   "@starterDeepWork": {
     "description": "Onboarding starter habit."
   },
-  "starterLunch": "Lunch",
-  "@starterLunch": {
-    "description": "Onboarding starter habit."
-  },
-  "starterWalk": "Walk",
-  "@starterWalk": {
-    "description": "Onboarding starter habit."
-  },
   "starterGym": "Gym",
   "@starterGym": {
     "description": "Onboarding starter habit."
@@ -5285,22 +5288,6 @@
   "starterRead": "Read",
   "@starterRead": {
     "description": "Onboarding starter habit."
-  },
-  "starterPlanTomorrow": "Plan tomorrow",
-  "@starterPlanTomorrow": {
-    "description": "Onboarding starter habit."
-  },
-  "onboardingHabitMeta": "{time} · {length}",
-  "@onboardingHabitMeta": {
-    "description": "Onboarding O3 row: '7:30 AM · 30 min'.",
-    "placeholders": {
-      "time": {
-        "type": "String"
-      },
-      "length": {
-        "type": "String"
-      }
-    }
   },
   "onboardingRemindersTitle": "Want a nudge?",
   "@onboardingRemindersTitle": {

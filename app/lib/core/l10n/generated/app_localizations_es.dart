@@ -3687,17 +3687,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingHabitsBody =>
-      'Elige hasta cinco. Irán al hilo de mañana en horas que encajen con tu día; cámbialas cuando quieras.';
+      'Toca los que quieras. Caen en el hilo a una hora que encaja.';
 
   @override
-  String onboardingHabitsAdd(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'Añadir $count a mañana',
-      one: 'Añadir 1 a mañana',
-    );
-    return '$_temp0';
+  String get onboardingFillsDone => 'Así es mi día';
+
+  @override
+  String get onboardingSkipForNow => 'Omitir por ahora';
+
+  @override
+  String get onboardingFillsHint =>
+      'Añade lo tuyo, como pasear al perro a las 7';
+
+  @override
+  String get onboardingFillsFieldLabel =>
+      'Añade algo que haces casi todos los días y pulsa Intro';
+
+  @override
+  String get onboardingFillsAdd => 'Añadir a mi hilo';
+
+  @override
+  String get onboardingFillsGroup => 'Cosas que haces casi todos los días';
+
+  @override
+  String get onboardingMostDays => 'Casi todos los días';
+
+  @override
+  String get onboardingWakeSub => 'El comienzo de tu día';
+
+  @override
+  String get onboardingWindSub => 'Hora de bajar el ritmo';
+
+  @override
+  String onboardingFillsCount(int count, int max) {
+    return '$count de $max';
   }
 
   @override
@@ -3710,24 +3733,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get starterDeepWork => 'Trabajo concentrado';
 
   @override
-  String get starterLunch => 'Comida';
-
-  @override
-  String get starterWalk => 'Paseo';
-
-  @override
   String get starterGym => 'Gimnasio';
 
   @override
   String get starterRead => 'Leer';
-
-  @override
-  String get starterPlanTomorrow => 'Planificar mañana';
-
-  @override
-  String onboardingHabitMeta(String time, String length) {
-    return '$time · $length';
-  }
 
   @override
   String get onboardingRemindersTitle => '¿Quieres un recordatorio?';

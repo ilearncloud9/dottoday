@@ -54,6 +54,16 @@ final class DotType {
     required this.onbBubbleCap,
     required this.onbBubbleTime,
     required this.onbSum,
+    required this.onbRowTime,
+    required this.onbRowTitle,
+    required this.onbRowTitlePick,
+    required this.onbRowTitleSmall,
+    required this.onbRowSub,
+    required this.onbRowSubPick,
+    required this.onbChip,
+    required this.onbFieldHint,
+    required this.onbCount,
+    required this.onbNowPill,
     required this.sidebarItem,
     required this.sidebarHint,
     required this.sidebarSection,
@@ -163,6 +173,16 @@ final class DotType {
     onbBubbleCap: _manrope(12, 16, 700, muted, tracking: 0.06),
     onbBubbleTime: _manrope(20, 26, 800, text),
     onbSum: _manrope(15, 20, 700, muted),
+    onbRowTime: _manrope(13, 16, 700, muted),
+    onbRowTitle: _manrope(17, 21, 800, text),
+    onbRowTitlePick: _manrope(15, 19, 800, text),
+    onbRowTitleSmall: _manrope(14, 18, 800, text),
+    onbRowSub: _manrope(13, 16, 600, muted),
+    onbRowSubPick: _manrope(12, 15, 600, muted),
+    onbChip: _manrope(15, 19, 700, text),
+    onbFieldHint: _manrope(15, 19, 500, muted),
+    onbCount: _manrope(12, 15, 700, muted),
+    onbNowPill: _manrope(11, 22, 800, text, tracking: 0.04),
     // The Workspace sidebar with a pointer (E-FullA-v2): rows 13, key
     // hints and counts 11, the "Calendar views" heading 11/600.
     sidebarItem: _system(13, 16, 400, text),
@@ -400,6 +420,36 @@ final class DotType {
   /// the text colour.
   final TextStyle onbSum;
 
+  /// A row's time on What fills your days' thread (.trow .tt): 13/700, muted.
+  final TextStyle onbRowTime;
+
+  /// Wake Up and Wind Down there (.trow .lb b): 17/800.
+  final TextStyle onbRowTitle;
+
+  /// A pick's title (.trow.routine .lb b): 15/800.
+  final TextStyle onbRowTitlePick;
+
+  /// A row's title when the thread is full (.trow.cmp .lb b): 14/800.
+  final TextStyle onbRowTitleSmall;
+
+  /// "Start of your day" (.trow .lb small): 13/600, muted.
+  final TextStyle onbRowSub;
+
+  /// "Most days" (.trow.routine .lb small): 12/600, muted.
+  final TextStyle onbRowSubPick;
+
+  /// A chip's words and typed words (.rchip, .addown input): 15/700.
+  final TextStyle onbChip;
+
+  /// "Add your own, like walk the dog 7am" (::placeholder): 15/500.
+  final TextStyle onbFieldHint;
+
+  /// "2 of 5" (.ao-n): 12/700, muted.
+  final TextStyle onbCount;
+
+  /// NOW on its pill (.nowm span): 11/800, tracked .04em; coloured at use.
+  final TextStyle onbNowPill;
+
   /// The Workspace sidebar with a pointer (E-FullA-v2): a row, a key hint
   /// or count, and a section heading.
   final TextStyle sidebarItem;
@@ -546,6 +596,16 @@ final class DotType {
       onbBubbleCap: l(onbBubbleCap, other.onbBubbleCap),
       onbBubbleTime: l(onbBubbleTime, other.onbBubbleTime),
       onbSum: l(onbSum, other.onbSum),
+      onbRowTime: l(onbRowTime, other.onbRowTime),
+      onbRowTitle: l(onbRowTitle, other.onbRowTitle),
+      onbRowTitlePick: l(onbRowTitlePick, other.onbRowTitlePick),
+      onbRowTitleSmall: l(onbRowTitleSmall, other.onbRowTitleSmall),
+      onbRowSub: l(onbRowSub, other.onbRowSub),
+      onbRowSubPick: l(onbRowSubPick, other.onbRowSubPick),
+      onbChip: l(onbChip, other.onbChip),
+      onbFieldHint: l(onbFieldHint, other.onbFieldHint),
+      onbCount: l(onbCount, other.onbCount),
+      onbNowPill: l(onbNowPill, other.onbNowPill),
       sidebarItem: l(sidebarItem, other.sidebarItem),
       sidebarHint: l(sidebarHint, other.sidebarHint),
       sidebarSection: l(sidebarSection, other.sidebarSection),

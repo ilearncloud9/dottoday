@@ -61,7 +61,7 @@ void main() {
     await tap('Continue');
     expect(stepOf(c), OnboardingStep.fills);
     expect(find.bySemanticsLabel('Step 2 of 3'), findsWidgets);
-    await tap('Continue');
+    await tap('Skip for now');
     expect(stepOf(c), OnboardingStep.nudge);
     // The layout stays Full: no Layout step (ED-350, ED-485).
     expect(c.read(uiLayoutProvider), UiLayout.full);

@@ -130,6 +130,103 @@ abstract final class OnbSize {
   static const double sumTop = 10;
   static const double sumBottom = 12;
   static const double dialMinHeight = 360;
+
+  /// What fills your days' thread (`threadHTML`, `.tl2`, `.trow`): 6 under
+  /// the line, inset 12 above and 8 below, rows 28 in from each end and at
+  /// least 52 apart (46 next to a pick, 40 between picks), shrunk
+  /// together when they don't fit. The time ends at 72; the thread is 4
+  /// wide at 98; the words start at 132.
+  static const double fillsTop = 6;
+  static const double threadInsetTop = 12;
+  static const double threadInsetBottom = 8;
+  static const double threadPad = 28;
+  static const double gapAnchors = 52;
+  static const double gapOne = 46;
+  static const double gapPicks = 40;
+  static const double rowTimeEnd = 72;
+  static const double rowTimeTop = 10;
+  static const double threadX = 98;
+  static const double threadWidth = 4;
+  static const double rowWords = 132;
+
+  /// Row dots: Wake Up and Wind Down 40 (32 when shrunk), picks 32 (24
+  /// when shrunk, icon 14); a 3 ring; icons 20. The words sit 21 above the
+  /// row's line (17 for a pick, 11 when shrunk).
+  static const double anchorDot = 40;
+  static const double anchorDotSmall = 32;
+  static const double pickDot = 32;
+  static const double pickDotSmall = 24;
+  static const double rowRing = 3;
+  static const double rowIcon = 20;
+  static const double rowIconSmall = 14;
+  static const double wordsTop = 21;
+  static const double wordsTopPick = 17;
+  static const double wordsTopSmall = 11;
+
+  /// NOW (`.nowm`): its line from 86, 2 high at .55 of coral, stopping 4
+  /// either side of a row's words; the pill 22 high, padding 7.
+  static const double nowLine = 86;
+  static const double nowLineHeight = 2;
+  static const double nowLineAlpha = 0.55;
+  static const double nowGap = 4;
+  static const double nowPill = 22;
+  static const double nowPillPad = 7;
+
+  /// The chips (`.rchips`, `.rchip`): 10 above, 14 below, 8 apart; 46
+  /// high, padding 6 then 16, the dot 34 with a 3 ring, 8 to the words; a
+  /// picked chip's 2 ring; its shadow 0 4 12 -6 at .18; off at .4,
+  /// pressed to .95.
+  static const double chipsTop = 10;
+  static const double chipsBottom = 14;
+  static const double chipGap = 8;
+  static const double chip = 46;
+  static const double chipStart = 6;
+  static const double chipEnd = 16;
+  static const double chipDot = 34;
+  static const double chipRing = 3;
+  static const double chipPickedRing = 2;
+  static const double chipIcon = 18;
+
+  /// Above and below a chip's words, so they stand as tall as its dot
+  /// (Material's chip needs that): (34 − 19) / 2.
+  static const double chipWordsPad = 7.5;
+  static const double chipShadowY = 4;
+  static const double chipShadowBlur = 12;
+  static const double chipShadowSpread = -6;
+  static const double chipShadowAlpha = 0.18;
+  static const double chipOff = 0.4;
+  static const double chipPressScale = 0.95;
+
+  /// "Add your own" (`.addown`): 52 high, padding 8 then 4, 8 apart, 12
+  /// below; its 1 line (2 in the accent while typing); the + 44, icon 20.
+  static const double addField = 52;
+  static const double addStart = 8;
+  static const double addEnd = 4;
+  static const double addBottom = 12;
+  static const double addButton = 44;
+  static const double addIcon = 20;
+
+  /// Above and below the typed words, so the field is a 48 target
+  /// inside the 52 pill: (48 − 19) / 2.
+  static const double addWordsPad = 14.5;
+
+  /// The flying dot (`.fly`): shadow 0 6 14 -4 at .35; it rises 50 at the
+  /// middle of its arc and grows to 1.25, landing at .94; the row's dot
+  /// then pops from .6 through 1.15.
+  static const double flyShadowY = 6;
+  static const double flyShadowBlur = 14;
+  static const double flyShadowSpread = -4;
+  static const double flyShadowAlpha = 0.35;
+  static const double flyRise = 50;
+  static const double flyMidX = 0.45;
+  static const double flyMidY = 0.55;
+  static const double flyMidScale = 1.25;
+  static const double flyEndScale = 0.94;
+  static const double landFrom = 0.6;
+  static const double landPeak = 1.15;
+
+  /// At 200 % text the step scrolls; the thread keeps this height.
+  static const double threadMinHeight = 300;
 }
 
 /// The dial's fade at its top and bottom (`.dial` `mask-image`): an
@@ -162,6 +259,13 @@ final class OnbSky {
   final Color dusk;
   final Color star;
   final Color line;
+
+  /// NOW on its coral pill: white in both themes (`.nowm span`).
+  static const nowInk = Color(0xFFFFFFFF);
+
+  /// The chips' and the flying dot's shadows: black in both themes
+  /// (`rgba(0,0,0,…)`).
+  static const black = Color(0xFF000000);
 
   static const light = OnbSky._(
     night: Color(0xFFE6E2F4),
@@ -257,4 +361,14 @@ abstract final class OnbMotion {
   static const tick = Duration(milliseconds: 220);
   static const double tickScale = 1.06;
   static const tickCurve = Cubic(0.25, 0.1, 0.25, 1);
+
+  /// What fills your days: a chip's dot flies onto its row (560 ms, the
+  /// draw curve), the row's dot pops (320 ms, the spring); a chip presses
+  /// in over 150 ms. Reduce Motion: the row fades in (200 ms).
+  static const fly = Duration(milliseconds: 560);
+  static const land = Duration(milliseconds: 320);
+  static const chipPress = Duration(milliseconds: 150);
+
+  /// A chip's dot filling when picked (`.rd` transition .2 s).
+  static const chipFill = Duration(milliseconds: 200);
 }

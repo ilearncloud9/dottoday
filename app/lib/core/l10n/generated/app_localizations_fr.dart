@@ -3692,17 +3692,41 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingHabitsBody =>
-      'Choisissez-en jusqu\'à cinq. Elles iront sur le fil de demain, à des heures adaptées ; modifiables à tout moment.';
+      'Touchez ceux qui vous ressemblent. Ils se posent sur le fil à une heure qui convient.';
 
   @override
-  String onboardingHabitsAdd(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'Ajouter $count à demain',
-      one: 'Ajouter 1 à demain',
-    );
-    return '$_temp0';
+  String get onboardingFillsDone => 'C’est ma journée';
+
+  @override
+  String get onboardingSkipForNow => 'Passer pour l’instant';
+
+  @override
+  String get onboardingFillsHint =>
+      'Ajoutez le vôtre, comme promener le chien à 19h';
+
+  @override
+  String get onboardingFillsFieldLabel =>
+      'Ajoutez une chose que vous faites presque tous les jours, puis appuyez sur Entrée';
+
+  @override
+  String get onboardingFillsAdd => 'Ajouter à mon fil';
+
+  @override
+  String get onboardingFillsGroup =>
+      'Ce que vous faites presque tous les jours';
+
+  @override
+  String get onboardingMostDays => 'Presque tous les jours';
+
+  @override
+  String get onboardingWakeSub => 'Le début de votre journée';
+
+  @override
+  String get onboardingWindSub => 'L’heure de ralentir';
+
+  @override
+  String onboardingFillsCount(int count, int max) {
+    return '$count sur $max';
   }
 
   @override
@@ -3715,24 +3739,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get starterDeepWork => 'Travail concentré';
 
   @override
-  String get starterLunch => 'Déjeuner';
-
-  @override
-  String get starterWalk => 'Marche';
-
-  @override
   String get starterGym => 'Sport';
 
   @override
   String get starterRead => 'Lecture';
-
-  @override
-  String get starterPlanTomorrow => 'Planifier demain';
-
-  @override
-  String onboardingHabitMeta(String time, String length) {
-    return '$time · $length';
-  }
 
   @override
   String get onboardingRemindersTitle => 'Envie d\'un rappel ?';

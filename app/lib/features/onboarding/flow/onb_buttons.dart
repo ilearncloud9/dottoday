@@ -13,7 +13,7 @@ class OnbPrimary extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    return _Press(
+    return OnbPress(
       enabled: onPressed != null,
       child: FilledButton(
         onPressed: onPressed,
@@ -59,20 +59,29 @@ class OnbSecondary extends StatelessWidget {
   }
 }
 
-/// `.pbtn:active{transform:scale(.97)}` over .12 s; the prototype keeps
-/// it under Reduce Motion too.
-class _Press extends StatefulWidget {
-  const _Press({required this.enabled, required this.child});
+/// Pressed in while held: `.pbtn:active{transform:scale(.97)}` over .12 s
+/// by default (a chip: .95 over .15 s); the prototype keeps it under
+/// Reduce Motion too.
+class OnbPress extends StatefulWidget {
+  const OnbPress({
+    required this.enabled,
+    required this.child,
+    this.scale = OnbMotion.pressScale,
+    this.duration = OnbMotion.press,
+    super.key,
+  });
 
   final bool enabled;
   final Widget child;
+  final double scale;
+  final Duration duration;
 
   @override
-  State<_Press> createState() => _PressState();
+  State<OnbPress> createState() => _OnbPressState();
 }
 
 /// A leaf: only whether it is held.
-class _PressState extends State<_Press> {
+class _OnbPressState extends State<OnbPress> {
   var _down = false;
 
   void _set(bool down) {
@@ -86,8 +95,8 @@ class _PressState extends State<_Press> {
       onPointerUp: (_) => _set(false),
       onPointerCancel: (_) => _set(false),
       child: AnimatedScale(
-        scale: _down ? OnbMotion.pressScale : 1,
-        duration: OnbMotion.press,
+        scale: _down ? widget.scale : 1,
+        duration: widget.duration,
         child: widget.child,
       ),
     );

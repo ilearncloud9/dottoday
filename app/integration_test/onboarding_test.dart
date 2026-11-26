@@ -73,8 +73,8 @@ void main() {
     AppRestart.of(tester.element(find.byType(MaterialApp).first));
     await _pumpUntil(tester, find.text('What fills your days?'));
 
-    await _tap(tester, 'Lunch');
-    await _tap(tester, 'Add 1 to tomorrow');
+    await _tap(tester, 'Gym');
+    await _tap(tester, 'That’s my day');
     await _pumpUntil(tester, find.text('Want a nudge?'));
     await leaveRemindersStep(tester, (label) => _tap(tester, label));
     await _pumpUntil(tester, find.byType(TodayScreen));

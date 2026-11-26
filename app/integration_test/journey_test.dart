@@ -52,7 +52,7 @@ void main() {
     await container.read(onboardingProvider.notifier).go(OnboardingStep.hello);
 
     // Onboarding, the short way: defaults, no habits (M20.11).
-    for (final label in ['Get started', 'Continue', 'Continue']) {
+    for (final label in ['Get started', 'Continue', 'Skip for now']) {
       await tapOn(tester, find.text(label));
     }
     // O4: "Not now" on a first install; once notifications are allowed (the

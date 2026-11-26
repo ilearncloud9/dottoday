@@ -3696,17 +3696,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboardingHabitsBody =>
-      'Wähl bis zu fünf. Sie kommen zu passenden Zeiten auf den Faden von morgen; du kannst sie jederzeit ändern.';
+      'Tippe an, was passt. Es landet zu einer passenden Zeit auf dem Faden.';
 
   @override
-  String onboardingHabitsAdd(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count zu morgen hinzufügen',
-      one: '1 zu morgen hinzufügen',
-    );
-    return '$_temp0';
+  String get onboardingFillsDone => 'So sieht mein Tag aus';
+
+  @override
+  String get onboardingSkipForNow => 'Jetzt überspringen';
+
+  @override
+  String get onboardingFillsHint =>
+      'Eigenes hinzufügen, z. B. Gassi gehen 19 Uhr';
+
+  @override
+  String get onboardingFillsFieldLabel =>
+      'Füge etwas hinzu, das du an den meisten Tagen tust, und drücke Return';
+
+  @override
+  String get onboardingFillsAdd => 'Zu meinem Faden hinzufügen';
+
+  @override
+  String get onboardingFillsGroup => 'Was du an den meisten Tagen tust';
+
+  @override
+  String get onboardingMostDays => 'An den meisten Tagen';
+
+  @override
+  String get onboardingWakeSub => 'Beginn deines Tages';
+
+  @override
+  String get onboardingWindSub => 'Zeit, runterzufahren';
+
+  @override
+  String onboardingFillsCount(int count, int max) {
+    return '$count von $max';
   }
 
   @override
@@ -3719,24 +3742,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get starterDeepWork => 'Konzentriertes Arbeiten';
 
   @override
-  String get starterLunch => 'Mittagessen';
-
-  @override
-  String get starterWalk => 'Spaziergang';
-
-  @override
   String get starterGym => 'Fitnessstudio';
 
   @override
   String get starterRead => 'Lesen';
-
-  @override
-  String get starterPlanTomorrow => 'Morgen planen';
-
-  @override
-  String onboardingHabitMeta(String time, String length) {
-    return '$time · $length';
-  }
 
   @override
   String get onboardingRemindersTitle => 'Lust auf einen Anstoß?';

@@ -135,6 +135,10 @@ abstract final class DotGlyphs {
     '${_c(12, 12, 4)}M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5'
     'M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5',
   );
+
+  /// The onboarding's plain dot (prototype `dot`): what a typed thing
+  /// shows until its words name an icon.
+  static final onbDot = DotGlyph(_c(12, 12, 4));
   static const onbMoon = DotGlyph(
     'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
   );

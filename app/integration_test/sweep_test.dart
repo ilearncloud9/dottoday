@@ -454,7 +454,7 @@ Future<void> _onboarding(
       await sweepRest(tester);
     }
     await sweepShot(binding, tester, '${_tag}_$shot');
-    final target = find.text(pick == null ? button : 'Add 1 to tomorrow');
+    final target = find.text(pick == null ? button : 'That’s my day');
     await tester.ensureVisible(target.first);
     await sweepRest(tester);
     await tester.tap(target.first);
@@ -463,7 +463,7 @@ Future<void> _onboarding(
 
   await step('onboarding_welcome', 'Get started');
   await step('onboarding_day_shape', 'Continue');
-  await step('onboarding_habits', 'Continue', pick: 'Lunch');
+  await step('onboarding_habits', 'Skip for now', pick: 'Gym');
   // Already allowed on this device → the test alarm and Continue (M6.5.9).
   await sweepUntil(tester, find.text('Want a nudge?'));
   await sweepRest(tester);

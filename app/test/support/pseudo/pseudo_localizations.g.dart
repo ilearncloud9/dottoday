@@ -2897,8 +2897,36 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get onboardingHabitsBody => pseudo(super.onboardingHabitsBody);
 
   @override
-  String onboardingHabitsAdd(int count) =>
-      pseudo(super.onboardingHabitsAdd(count));
+  String get onboardingFillsDone => pseudo(super.onboardingFillsDone);
+
+  @override
+  String get onboardingSkipForNow => pseudo(super.onboardingSkipForNow);
+
+  @override
+  String get onboardingFillsHint => pseudo(super.onboardingFillsHint);
+
+  @override
+  String get onboardingFillsFieldLabel =>
+      pseudo(super.onboardingFillsFieldLabel);
+
+  @override
+  String get onboardingFillsAdd => pseudo(super.onboardingFillsAdd);
+
+  @override
+  String get onboardingFillsGroup => pseudo(super.onboardingFillsGroup);
+
+  @override
+  String get onboardingMostDays => pseudo(super.onboardingMostDays);
+
+  @override
+  String get onboardingWakeSub => pseudo(super.onboardingWakeSub);
+
+  @override
+  String get onboardingWindSub => pseudo(super.onboardingWindSub);
+
+  @override
+  String onboardingFillsCount(int count, int max) =>
+      pseudo(super.onboardingFillsCount(count, max));
 
   @override
   String get onboardingHabitsMax => pseudo(super.onboardingHabitsMax);
@@ -2910,23 +2938,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get starterDeepWork => pseudo(super.starterDeepWork);
 
   @override
-  String get starterLunch => pseudo(super.starterLunch);
-
-  @override
-  String get starterWalk => pseudo(super.starterWalk);
-
-  @override
   String get starterGym => pseudo(super.starterGym);
 
   @override
   String get starterRead => pseudo(super.starterRead);
-
-  @override
-  String get starterPlanTomorrow => pseudo(super.starterPlanTomorrow);
-
-  @override
-  String onboardingHabitMeta(String time, String length) =>
-      pseudo(super.onboardingHabitMeta(time, length));
 
   @override
   String get onboardingRemindersTitle => pseudo(super.onboardingRemindersTitle);

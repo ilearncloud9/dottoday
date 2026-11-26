@@ -7,6 +7,7 @@ import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/onboarding/onboarding_store.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/onboarding/onboarding.dart';
@@ -25,9 +26,9 @@ import '../../support/onboarding_fakes.dart';
 import '../../support/timeline_fakes.dart';
 
 // The approved onboarding (the "Dottoday Onboarding Prototype", ED-305;
-// M20.11, ED-485). What fills your days and the nudge are the built steps
-// until parts 3 and 4 replace them. Your day uses the prototype's 12-hour
-// clock.
+// M20.11, ED-485). The nudge is the built step until part 4 replaces it.
+// Your day and What fills your days use the prototype's 12-hour clock and
+// its 7:00 to 23:00 day.
 
 /// A first run: nobody has been asked about notifications yet.
 final class _NotAsked implements NotificationPermission {
@@ -43,20 +44,30 @@ final class _NotAsked implements NotificationPermission {
   Future<bool> openSettings() async => false;
 }
 
+/// The prototype's clock and day: 12-hour, 7:00 to 23:00.
+final _prototypeDay = Settings(
+  use24h: false,
+  dayBoundaries: {
+    for (final d in Weekday.values)
+      d: const TimeWindow(start: '07:00', end: '23:00'),
+  },
+);
+
 List<Override> _at(
   OnboardingStep step, {
   NotificationPermission permission = const _NotAsked(),
   bool account = false,
+  DateTime? now,
 }) => [
   ...timelineOverrides(
-    now: DateTime.utc(2026, 10, 21, 9),
+    now: now ?? DateTime.utc(2026, 10, 21, 9),
     notificationPermission: permission,
     // A phone with device calendars, not asked yet (O4's row, M7.1).
     calendarGateway: FakeDeviceCalendarGateway(),
     occurrences: FakeOccurrenceRepository(firstThreadRows()),
     profile: testProfile(
-      settings: step == OnboardingStep.day
-          ? const Settings(use24h: false)
+      settings: step == OnboardingStep.day || step == OnboardingStep.fills
+          ? _prototypeDay
           : null,
     ),
   ),
@@ -80,7 +91,7 @@ void main() {
       'onboarding_${step.name}',
       height: 844,
       widths: widths,
-      a11yVariants: step == OnboardingStep.hello || step == OnboardingStep.day,
+      a11yVariants: step != OnboardingStep.nudge,
       overrides: _at(step),
       build: (_) => const OnboardingGate(child: _App()),
     );
@@ -92,6 +103,50 @@ void main() {
     widths: const {'compact'},
     platform: TargetPlatform.android,
     overrides: _at(OnboardingStep.day),
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  // What fills your days with picks: two chips and one typed, as the
+  // prototype's render (run, read, "walk the dog 7pm").
+  goldenMatrix(
+    'onboarding_fills_picked',
+    height: 844,
+    widths: widths,
+    overrides: _at(OnboardingStep.fills),
+    act: (tester) async {
+      for (final c in ['Morning run', 'Read']) {
+        await tester.tap(find.widgetWithText(FilterChip, c));
+        await tester.pumpAndSettle();
+      }
+      await tester.enterText(find.byType(TextField), 'walk the dog 7pm');
+      await tester.pump();
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus?.unfocus();
+    },
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  // NOW at 7:20, across the run's words: the line stops short of them
+  // (ED-488).
+  goldenMatrix(
+    'onboarding_fills_now_words',
+    height: 844,
+    widths: const {'compact'},
+    overrides: _at(
+      OnboardingStep.fills,
+      now: DateTime.utc(2026, 10, 21, 5, 20),
+    ),
+    act: (tester) async {
+      await tester.tap(find.widgetWithText(FilterChip, 'Morning run'));
+      await tester.pumpAndSettle();
+    },
+    build: (_) => const OnboardingGate(child: _App()),
+  );
+  goldenMatrix(
+    'onboarding_fills_android',
+    height: 844,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    overrides: _at(OnboardingStep.fills),
     build: (_) => const OnboardingGate(child: _App()),
   );
   // I have an account: sign-in over Hello, Back only.
