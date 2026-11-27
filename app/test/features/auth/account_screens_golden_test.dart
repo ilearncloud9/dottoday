@@ -2,6 +2,7 @@
 library;
 
 import 'package:dottoday/data/owners/account_gate.dart';
+import 'package:dottoday/domain/entities/enums.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/profile/settings_difference.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
@@ -106,24 +107,49 @@ void main() {
       const TimeWindow(start: '07:00', end: '23:00'),
     ),
   );
+  // As the boards draw: all four rows differ, Layout Full against Minimal.
   final device = account.copyWith(
     tzId: 'Asia/Tokyo',
     locale: 'en',
     settings: withCommonWindow(
-      const Settings(),
+      const Settings(uiLayout: UiLayout.minimal),
       const TimeWindow(start: '06:30', end: '22:30'),
     ),
   );
-  screen(
-    'account_settings_choice',
-    () => SettingsChoiceScreen(
-      gate: SettingsChoiceGate(
-        account: account,
-        device: device,
-        fields: settingsDifferences(account, device),
-      ),
+  Widget b1() => SettingsChoiceScreen(
+    gate: SettingsChoiceGate(
+      account: account,
+      device: device,
+      fields: settingsDifferences(account, device),
     ),
-    height: 1000,
+  );
+  // B1 on each board (ED-494): `SettingsChoice` (with 200 % and right to
+  // left), `AndroidB1`, `TabletB1`, `AndroidTabletB1`, `DesktopB1`.
+  screen('account_settings_choice', b1, a11yVariants: true);
+  screen(
+    'account_settings_choice_android',
+    b1,
+    platform: TargetPlatform.android,
+  );
+  screen(
+    'account_settings_choice_ipad',
+    b1,
+    height: 820,
+    widths: const {'expanded'},
+  );
+  screen(
+    'account_settings_choice_android_tablet',
+    b1,
+    height: 800,
+    widths: const {'expanded'},
+    platform: TargetPlatform.android,
+  );
+  screen(
+    'account_settings_choice_wide',
+    b1,
+    height: 800,
+    widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
   );
   screen('account_removal_retry', () => const RemovalRetryScreen());
 }

@@ -3,29 +3,25 @@ import 'dart:async';
 import 'package:dottoday/core/failures/failure_messages.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/l10n/language_names.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
-import 'package:dottoday/domain/entities/enums.dart';
-import 'package:dottoday/domain/entities/settings.dart';
-import 'package:dottoday/domain/layout/layout_policy.dart';
-import 'package:dottoday/domain/profile/settings_difference.dart';
-import 'package:dottoday/domain/time/clock_time.dart';
-import 'package:dottoday/domain/time/day_boundaries.dart';
-import 'package:dottoday/domain/time/time_zones.dart';
+import 'package:dottoday/features/auth/settings_choice_parts.dart';
 import 'package:dottoday/shared/account/account_buttons.dart';
-import 'package:dottoday/shared/account/choice_card.dart';
-import 'package:dottoday/shared/account/decision_frame.dart';
-import 'package:dottoday/shared/time_input/time_input.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
+import 'package:dottoday/shared/account/account_page_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// B1 (CR-160 criterion 7, board `SettingsChoice`): the account already
-/// had settings and this device had different ones when it signed in.
-/// Shows only the rows that differ; the account's stay unless the person
-/// picks the device's. "Decide later" keeps the device's for Settings ›
-/// Account.
+/// B1 (CR-160 criterion 7; ED-494): the account already had settings and
+/// this device had different ones when it signed in. Shows only the rows
+/// that differ; the account's stay unless the person picks the device's.
+/// "Decide later" keeps the choice for Settings › Account.
+///
+/// As the boards draw it: on phones (`SettingsChoice`, `AndroidB1`) the
+/// cards stack and the buttons sit at the foot; tablets (`TabletB1`,
+/// `AndroidTabletB1`, 680) and the Mac and web (`DesktopB1`, 580) centre
+/// one column with the cards side by side and the buttons at the end.
 class SettingsChoiceScreen extends ConsumerStatefulWidget {
   const SettingsChoiceScreen({required this.gate, super.key});
 
@@ -64,136 +60,177 @@ class _SettingsChoiceScreenState extends ConsumerState<SettingsChoiceScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final gate = widget.gate;
-    return DecisionFrame(
-      title: l10n.settingsChoiceTitle,
-      body: l10n.settingsChoiceBody,
-      content: [
-        Semantics(
-          label: l10n.settingsChoiceLegend,
-          explicitChildNodes: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.m,
-            children: [
-              ChoiceCard(
-                title: l10n.settingsChoiceAccount,
-                selected: !_device,
-                onTap: () => setState(() => _device = false),
-                children: [_Rows(profile: gate.account, fields: gate.fields)],
-              ),
-              ChoiceCard(
-                title: l10n.settingsChoiceDevice,
-                selected: _device,
-                onTap: () => setState(() => _device = true),
-                children: [_Rows(profile: gate.device, fields: gate.fields)],
-              ),
-            ],
-          ),
-        ),
-        DecisionNote(l10n.settingsChoiceOnlyDiffer),
-        if (_error case final error?) StatusLine(error),
-      ],
-      actions: [
-        FilledButton(
-          onPressed: _busy ? null : () => unawaited(_go(_continue)),
-          child: Text(l10n.accountContinue),
-        ),
-        TextButton(
-          onPressed: _busy
-              ? null
-              : () => unawaited(
-                  _go(
-                    (a) => a.decideSettingsLater(gate.account.id, later: true),
-                  ),
-                ),
-          child: Text(l10n.settingsChoiceLater),
-        ),
-        DecisionNote(l10n.settingsChoiceLaterHint, centred: true),
-      ],
-    );
-  }
-}
-
-/// The differing [fields] of [profile]: a label column and the values.
-class _Rows extends StatelessWidget {
-  const _Rows({required this.profile, required this.fields});
-
-  final Profile profile;
-  final List<SettingsField> fields;
+  void _later() => unawaited(
+    _go((a) => a.decideSettingsLater(widget.gate.account.id, later: true)),
+  );
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final label = t.styles.body.copyWith(color: t.colors.muted);
-    return Padding(
-      padding: const EdgeInsets.only(top: DotSpace.s),
-      child: Table(
-        columnWidths: const {0: IntrinsicColumnWidth()},
-        defaultVerticalAlignment: TableCellVerticalAlignment.top,
-        children: [
-          for (final f in fields)
-            TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                    end: DotSpace.l,
-                    bottom: DotSpace.s,
-                  ),
-                  child: Text(_label(context, f), style: label),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: DotSpace.s),
-                  child: Text(_value(context, f), style: t.styles.body),
-                ),
-              ],
+    final l10n = context.l10n;
+    final look = accountDialogLook(context);
+    final phone =
+        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.compact;
+    final desktop = look == AccountDialogLook.desktop;
+    final android = look == AccountDialogLook.android;
+    final note = AccountDialogType.note(t.styles, look);
+    // The words sit 8 further in than the cards on an Android phone.
+    Widget words(Widget child) => phone && android
+        ? Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: SettingsChoiceSize.wordsInsetAndroid,
             ),
-        ],
+            child: child,
+          )
+        : child;
+    final head = <Widget>[
+      words(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: SettingsChoiceSize.headGap,
+          children: [
+            Semantics(
+              header: true,
+              child: Text(
+                l10n.settingsChoiceTitle,
+                style: SettingsChoiceType.title(t.styles, look),
+              ),
+            ),
+            Text(
+              l10n.settingsChoiceBody,
+              style: SettingsChoiceType.body(t.styles, t.colors, look),
+            ),
+          ],
+        ),
       ),
+      Semantics(
+        label: l10n.settingsChoiceLegend,
+        explicitChildNodes: true,
+        child: SettingsChoicePair(
+          min: phone
+              ? null
+              : desktop
+              ? SettingsChoiceSize.cardMinDesktop
+              : SettingsChoiceSize.cardMinTablet,
+          children: [
+            for (final device in [false, true])
+              SettingsChoiceCard(
+                look: look,
+                phone: phone,
+                title: device
+                    ? l10n.settingsChoiceDevice
+                    : l10n.settingsChoiceAccount,
+                profile: device ? widget.gate.device : widget.gate.account,
+                fields: widget.gate.fields,
+                selected: _device == device,
+                onTap: () => setState(() => _device = device),
+              ),
+          ],
+        ),
+      ),
+      words(Text(l10n.settingsChoiceOnlyDiffer, style: note)),
+      if (_error case final error?) words(StatusLine(error)),
+    ];
+    final cont = _busy ? null : () => unawaited(_go(_continue));
+    final later = _busy ? null : _later;
+    final hint = l10n.settingsChoiceLaterHint;
+    final Widget body;
+    if (phone) {
+      body = AccountPhoneFrame(
+        padding: android
+            ? SettingsChoiceSize.padAndroid
+            : SettingsChoiceSize.padIphone,
+        gap: android ? SettingsChoiceSize.gapCompact : SettingsChoiceSize.gap,
+        head: head,
+        foot: AccountButtonStack(
+          look: look,
+          children: [
+            AccountButton.filled(
+              look: look,
+              label: l10n.accountContinue,
+              onPressed: cont,
+            ),
+            AccountButton.text(
+              look: look,
+              label: l10n.settingsChoiceLater,
+              onPressed: later,
+            ),
+            Text(hint, textAlign: TextAlign.center, style: note),
+          ],
+        ),
+      );
+    } else {
+      body = AccountCentredColumn(
+        width: desktop
+            ? SettingsChoiceSize.desktopColumn
+            : SettingsChoiceSize.tabletColumn,
+        gap: desktop || android
+            ? SettingsChoiceSize.gapCompact
+            : SettingsChoiceSize.gap,
+        children: [
+          ...head,
+          Padding(
+            padding: const EdgeInsets.only(top: SettingsChoiceSize.actionsTop),
+            child: _EndButtons(look: look, onLater: later, onContinue: cont),
+          ),
+          Text(hint, textAlign: TextAlign.end, style: note),
+        ],
+      );
+    }
+    return Material(
+      color: t.colors.surface,
+      child: SafeArea(child: body),
     );
   }
+}
 
-  String _label(BuildContext context, SettingsField f) {
+/// Decide later, then Continue, at the end (tablets, Mac/web).
+class _EndButtons extends StatelessWidget {
+  const _EndButtons({
+    required this.look,
+    required this.onLater,
+    required this.onContinue,
+  });
+
+  final AccountDialogLook look;
+  final VoidCallback? onLater;
+  final VoidCallback? onContinue;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return switch (f) {
-      SettingsField.timeZone => l10n.settingsChoiceTimeZone,
-      SettingsField.language => l10n.settingsLanguage,
-      SettingsField.yourDay => l10n.settingsChoiceYourDay,
-      SettingsField.layout => l10n.layoutRow,
-      SettingsField.theme => l10n.settingsTheme,
+    final (later, cont) = switch (look) {
+      AccountDialogLook.iphone => (
+        SettingsChoiceSize.laterPadIpad,
+        SettingsChoiceSize.continuePadIpad,
+      ),
+      AccountDialogLook.android => (
+        SettingsChoiceSize.laterPadAndroid,
+        SettingsChoiceSize.continuePadAndroid,
+      ),
+      AccountDialogLook.desktop => (null, null),
     };
-  }
-
-  String _value(BuildContext context, SettingsField f) {
-    final l10n = context.l10n;
-    final s = profile.settings;
-    return switch (f) {
-      SettingsField.timeZone => zoneCity(profile.tzId),
-      SettingsField.language => languageName(profile.locale),
-      SettingsField.yourDay => _window(context, s),
-      SettingsField.layout =>
-        LayoutPolicy.forSettings(s).isMinimal
-            ? l10n.layoutMinimal
-            : l10n.layoutFull,
-      SettingsField.theme => switch (s.theme) {
-        ThemePreference.system => l10n.settingsThemeSystem,
-        ThemePreference.light => l10n.settingsThemeLight,
-        ThemePreference.dark => l10n.settingsThemeDark,
-      },
-    };
-  }
-
-  /// "7:00 AM – 11:00 PM": the everyday Wake Up to Wind Down.
-  String _window(BuildContext context, Settings s) {
-    final w = commonWindow(s);
-    String at(String hhmm) => formatClockTime(
-      context,
-      ClockTime.fromMinutes(windowMinutes(hhmm)),
-      use24h: s.use24h,
+    final gap = look == AccountDialogLook.android
+        ? AccountDialogSize.buttonGapAndroid
+        : AccountDialogSize.buttonGap;
+    return Wrap(
+      alignment: WrapAlignment.end,
+      spacing: gap,
+      runSpacing: gap,
+      children: [
+        AccountButton.text(
+          look: look,
+          label: l10n.settingsChoiceLater,
+          onPressed: onLater,
+          pad: later,
+        ),
+        AccountButton.filled(
+          look: look,
+          label: l10n.accountContinue,
+          onPressed: onContinue,
+          pad: cont,
+        ),
+      ],
     );
-    return context.l10n.settingsChoiceRange(at(w.start), at(w.end));
   }
 }

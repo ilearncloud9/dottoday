@@ -58,6 +58,8 @@ void main() {
     SettingsPage page,
     ThemeMode mode, {
     Size size = wide,
+    bool later = false,
+    int pending = 0,
   }) async {
     final router = await pumpCalendar(
       tester,
@@ -78,7 +80,11 @@ void main() {
             ),
           ),
         ),
-        ...accountScreenOverrides(FakeAccountActions()),
+        ...accountScreenOverrides(
+          FakeAccountActions(),
+          later: later,
+          pending: pending,
+        ),
       ],
     );
     // A sub-page is pushed from its parent, as in the app.
@@ -105,6 +111,20 @@ void main() {
         );
       }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
     }
+  }
+
+  // `DesktopAccountChoose` (ED-494): B1 waiting after Decide later, with
+  // changes waiting to sync.
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('mac account choose ${mode.name}', (tester) async {
+      await open(tester, SettingsPage.account, mode, later: true, pending: 3);
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile(
+          'goldens/settings_form_mac_account_choose_${mode.name}.png',
+        ),
+      );
+    }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
   }
 
   // From a 920 pane the dial sits beside the table (ED-452).

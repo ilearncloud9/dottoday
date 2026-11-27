@@ -6,6 +6,7 @@ import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/features/auth/sign_in_panel.dart';
 import 'package:dottoday/features/auth/signed_out_art.dart';
 import 'package:dottoday/shared/account/account_dialog.dart';
+import 'package:dottoday/shared/account/account_page_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -87,7 +88,7 @@ class _SignedOutScreenState extends ConsumerState<SignedOutScreen> {
     );
     final Widget body;
     if (desktop) {
-      body = _Column(
+      body = AccountCentredColumn(
         width: SignedOutSize.desktopColumn,
         gap: SignedOutSize.gapDesktop,
         children: [
@@ -104,10 +105,21 @@ class _SignedOutScreenState extends ConsumerState<SignedOutScreen> {
         ],
       );
     } else {
-      final actions = _Stack(look: look, children: [...buttons, note]);
+      final actions = AccountButtonStack(
+        look: look,
+        children: [...buttons, note],
+      );
       body = compact
-          ? _Phone(look: look, head: head, actions: actions)
-          : _Column(
+          ? AccountPhoneFrame(
+              padding: look == AccountDialogLook.android
+                  ? SignedOutSize.padAndroid
+                  : SignedOutSize.padIphone,
+              gap: SignedOutSize.gap,
+              centred: true,
+              head: head,
+              foot: actions,
+            )
+          : AccountCentredColumn(
               width: SignedOutSize.tabletColumn,
               gap: SignedOutSize.gap,
               children: [
@@ -124,105 +136,4 @@ class _SignedOutScreenState extends ConsumerState<SignedOutScreen> {
       child: SafeArea(child: body),
     );
   }
-}
-
-/// The buttons and the note, stacked: 10 apart on iPhone, 8 on Android.
-class _Stack extends StatelessWidget {
-  const _Stack({required this.look, required this.children});
-
-  final AccountDialogLook look;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    spacing: look == AccountDialogLook.android
-        ? AccountDialogSize.buttonGapAndroid
-        : AccountDialogSize.buttonGap,
-    children: children,
-  );
-}
-
-/// Phones: [head] in the middle of the free space, [actions] at the foot;
-/// all of it scrolls when it doesn't fit (200 % text, small phones).
-class _Phone extends StatelessWidget {
-  const _Phone({required this.look, required this.head, required this.actions});
-
-  final AccountDialogLook look;
-  final List<Widget> head;
-  final Widget actions;
-
-  @override
-  Widget build(BuildContext context) => CustomScrollView(
-    slivers: [
-      // The padding sits inside the fill, so the foot's 44 / 40 is kept
-      // rather than scrolled past.
-      SliverFillRemaining(
-        hasScrollBody: false,
-        child: Padding(
-          padding: look == AccountDialogLook.android
-              ? SignedOutSize.padAndroid
-              : SignedOutSize.padIphone,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Padding(
-                  // Keeps the words clear of the buttons when it scrolls,
-                  // without moving their centre.
-                  padding: const EdgeInsets.symmetric(
-                    vertical: SignedOutSize.gap,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: SignedOutSize.gap,
-                    children: head,
-                  ),
-                ),
-              ),
-              actions,
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-/// Tablets, the Mac and the web: one [width] column, [children] [gap]
-/// apart, in the middle of the window; it scrolls when it doesn't fit.
-class _Column extends StatelessWidget {
-  const _Column({
-    required this.width,
-    required this.gap,
-    required this.children,
-  });
-
-  final double width;
-  final double gap;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, box) => SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: DotSpace.xl),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: (box.maxHeight - 2 * DotSpace.xl).clamp(0, 1e9),
-        ),
-        child: Center(
-          child: SizedBox(
-            width: width.clamp(0, box.maxWidth - 2 * DotSpace.page),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: gap,
-              children: children,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
 }

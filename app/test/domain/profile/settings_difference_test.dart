@@ -15,6 +15,13 @@ void main() {
     expect(settingsDifferences(base, other), isEmpty);
   });
 
+  test('the theme alone: nothing to ask (ED-494)', () {
+    final other = base.copyWith(
+      settings: const Settings(theme: ThemePreference.dark),
+    );
+    expect(settingsDifferences(base, other), isEmpty);
+  });
+
   test('every shown setting, in display order', () {
     final device = base.copyWith(
       tzId: 'Asia/Tokyo',

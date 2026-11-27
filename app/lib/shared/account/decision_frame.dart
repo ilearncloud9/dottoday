@@ -1,7 +1,8 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
-/// A full-screen decision (CR-160 boards A3, B1, G1, G1b, D1 on phones):
+/// A full-screen decision (CR-160 boards G1, G1b, D1 on phones; A3 and B1
+/// have their own per-board layouts, ED-493, ED-494):
 /// [title] and [body] at the top, then [content], then [actions] pinned
 /// to the bottom while they fit and scrolled into view when they don't
 /// (200 % text, small phones). Wider windows keep one readable column,
@@ -11,17 +12,12 @@ class DecisionFrame extends StatelessWidget {
     required this.title,
     required this.actions,
     this.body,
-    this.leading,
     this.content = const [],
-    this.centred = false,
     super.key,
   });
 
   final String title;
   final String? body;
-
-  /// Above the title: an illustration (A3).
-  final Widget? leading;
 
   /// Between the body and the actions: options, cards, notes.
   final List<Widget> content;
@@ -29,21 +25,11 @@ class DecisionFrame extends StatelessWidget {
   /// Buttons and their notes, at the bottom.
   final List<Widget> actions;
 
-  /// Title and body in the middle of the free space (A3), not at the top.
-  final bool centred;
-
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final head = [
-      ?leading,
-      Semantics(
-        header: true,
-        child: Text(
-          title,
-          style: centred ? t.styles.dayTitle : t.styles.promptTitle,
-        ),
-      ),
+      Semantics(header: true, child: Text(title, style: t.styles.promptTitle)),
       if (body case final text?)
         Text(text, style: t.styles.body.copyWith(color: t.colors.muted)),
     ];
@@ -67,7 +53,6 @@ class DecisionFrame extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        if (centred) const Spacer(),
                         _Gap(children: [...head, ...content]),
                         const Spacer(),
                         const SizedBox(height: DotSpace.xl),

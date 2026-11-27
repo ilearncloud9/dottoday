@@ -87,6 +87,7 @@ class AccountButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.autofocus = false,
+    this.pad,
     super.key,
   }) : _kind = _Kind.filled;
 
@@ -95,6 +96,7 @@ class AccountButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.autofocus = false,
+    this.pad,
     super.key,
   }) : _kind = _Kind.outlined;
 
@@ -104,6 +106,7 @@ class AccountButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.autofocus = false,
+    this.pad,
     super.key,
   }) : _kind = _Kind.tonal;
 
@@ -113,6 +116,7 @@ class AccountButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.autofocus = false,
+    this.pad,
     super.key,
   }) : _kind = _Kind.text;
 
@@ -120,6 +124,9 @@ class AccountButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool autofocus;
+
+  /// Side padding when a board sets its own (B1's tablet buttons).
+  final double? pad;
   final _Kind _kind;
 
   @override
@@ -147,10 +154,12 @@ class AccountButton extends StatelessWidget {
       AccountDialogLook.android => AccountDialogSize.buttonAndroid,
       AccountDialogLook.desktop => AccountDialogSize.buttonDesktop,
     };
-    final pad = switch (look) {
-      AccountDialogLook.desktop => AccountDialogSize.buttonPadDesktop,
-      _ => AccountDialogSize.buttonPadAndroid,
-    };
+    final pad =
+        this.pad ??
+        switch (look) {
+          AccountDialogLook.desktop => AccountDialogSize.buttonPadDesktop,
+          _ => AccountDialogSize.buttonPadAndroid,
+        };
     final style = ButtonStyle(
       shape: const WidgetStatePropertyAll(StadiumBorder()),
       minimumSize: WidgetStatePropertyAll(Size(height, height)),

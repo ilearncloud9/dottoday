@@ -156,10 +156,11 @@ List<Override> accountScreenOverrides(
   int pending = 0,
   int held = 0,
   bool browser = false,
+  bool later = false,
 }) => [
   accountActionsProvider.overrideWithValue(actions),
   ownerPendingProvider.overrideWith((ref, owner) => Stream.value(pending)),
   heldTasksProvider.overrideWith((ref) => Stream.value(held)),
-  settingsChoiceLaterProvider.overrideWith((ref) => Stream.value(false)),
+  settingsChoiceLaterProvider.overrideWith((ref) => Stream.value(later)),
   inBrowserProvider.overrideWithValue(browser),
 ];

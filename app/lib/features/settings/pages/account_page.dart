@@ -7,17 +7,12 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
-import 'package:dottoday/data/owners/account_actions.dart';
-import 'package:dottoday/data/owners/account_gate.dart';
-import 'package:dottoday/data/owners/held_tasks.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
-import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/validation/field_rules.dart';
 import 'package:dottoday/features/settings/pages/account_dialogs.dart';
-import 'package:dottoday/features/settings/pages/delete_account.dart';
+import 'package:dottoday/features/settings/pages/account_signed_in.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
-import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:dottoday/shared/account/sign_in_parts.dart';
 import 'package:dottoday/shared/settings/settings_form.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
@@ -77,7 +72,7 @@ class AccountPage extends ConsumerWidget {
             child: const _SignedOut(),
           ),
           LocalOnly() => const _SignedOut(),
-          SignedIn(:final email) => _SignedIn(email: email),
+          SignedIn(:final email) => AccountSignedIn(email: email),
           null => const SizedBox.shrink(),
         },
       ],
@@ -196,147 +191,6 @@ class _SignedOutState extends ConsumerState<_SignedOut> {
         if (_error case final error?)
           AccountError(message: error, onRetry: _busy ? null : _retry),
         if (!service.available) PageText(l10n.accountComingSoon),
-      ],
-    );
-  }
-}
-
-/// "Signed in as …", Sign out, Sign out everywhere (06 §2), Delete
-/// account; and "Choose settings" while B1 waits ("Decide later", CR-160).
-/// Signing out asks first (A1 / A2) and leaves A3; deleting is D1.
-class _SignedIn extends ConsumerWidget {
-  const _SignedIn({required this.email});
-
-  final String email;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    final owner = ref.watch(currentProfileProvider).value?.id;
-    final later = ref.watch(settingsChoiceLaterProvider).value ?? false;
-    final status = ref.watch(syncStatusProvider).value;
-    final pending = owner == null
-        ? null
-        : ref.watch(ownerPendingProvider(owner)).value;
-    void signOut({bool everywhere = false}) {
-      if (owner == null) return;
-      unawaited(
-        signOutWithCheck(
-          context,
-          email: email,
-          status: status,
-          pending: pending,
-          everywhere: everywhere,
-        ),
-      );
-    }
-
-    if (settingsFormAt(context)) {
-      return _signedInForm(context, ref, signOut, owner: owner, later: later);
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: DotSpace.s,
-      children: [
-        Text(l10n.accountSync, style: DotTheme.of(context).styles.caption),
-        Text(l10n.accountSignedInAs(email), style: t.styles.body),
-        // Held from an old build's switch of accounts (CR-160 blocker 8).
-        if ((ref.watch(heldTasksProvider).value ?? 0) > 0)
-          Text(l10n.accountHeldTasks, style: t.styles.rowMeta),
-        if (later && owner != null)
-          SettingsGroup(
-            caption: '',
-            children: [
-              SettingsRow(
-                glyph: DotGlyphs.settings,
-                tint: t.colors.accentInk,
-                title: l10n.accountChooseSettings,
-                subtitle: l10n.accountChooseSettingsBody,
-                onTap: () => unawaited(
-                  ref
-                      .read(accountActionsProvider)
-                      .decideSettingsLater(owner, later: false),
-                ),
-              ),
-            ],
-          ),
-        OutlinedButton(onPressed: signOut, child: Text(l10n.accountSignOut)),
-        TextButton(
-          onPressed: () => signOut(everywhere: true),
-          child: Text(l10n.accountSignOutEverywhere),
-        ),
-        TextButton(
-          onPressed: owner == null
-              ? null
-              : () => unawaited(deleteAccountFlow(context, owner)),
-          child: Text(l10n.accountDelete),
-        ),
-      ],
-    );
-  }
-}
-
-extension on _SignedIn {
-  /// Signed in on a Mac/web form (ED-450): Sync: who, then Sign out and
-  /// Sign out everywhere side by side; Delete account… alone below a rule.
-  Widget _signedInForm(
-    BuildContext context,
-    WidgetRef ref,
-    void Function({bool everywhere}) signOut, {
-    required String? owner,
-    required bool later,
-  }) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: DotSpace.m,
-      children: [
-        FormLine(
-          label: l10n.accountSync,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: DotSpace.s,
-            children: [
-              Text(
-                l10n.accountSignedInAs(email),
-                style: t.styles.inspectorValue,
-              ),
-              if ((ref.watch(heldTasksProvider).value ?? 0) > 0)
-                FormHelp(l10n.accountHeldTasks),
-              if (later && owner != null)
-                FormButton(
-                  label: l10n.settingsFormOpen(l10n.accountChooseSettings),
-                  onPressed: () => unawaited(
-                    ref
-                        .read(accountActionsProvider)
-                        .decideSettingsLater(owner, later: false),
-                  ),
-                ),
-              Wrap(
-                spacing: DotSpace.s,
-                runSpacing: DotSpace.xs,
-                children: [
-                  FormButton(label: l10n.accountSignOut, onPressed: signOut),
-                  FormButton(
-                    label: l10n.accountSignOutEverywhere,
-                    onPressed: () => signOut(everywhere: true),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const FormBreak(),
-        FormLine(
-          child: FormButton(
-            label: l10n.accountDeleteFormButton,
-            onPressed: owner == null
-                ? null
-                : () => unawaited(deleteAccountFlow(context, owner)),
-          ),
-        ),
       ],
     );
   }

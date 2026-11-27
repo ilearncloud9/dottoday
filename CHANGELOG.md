@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- "Which settings should Dottoday use?" now looks as the account boards draw on every device (the two choices side by side on tablets, the Mac and the web) and compares time zone, language, your day and layout only; Settings › Account shows whether everything has synced or how many changes are waiting, and Choose settings as its own row (redesign branch).
 - After signing out, "You're signed out" now looks as the account boards draw on every device: the buttons at the foot on phones, a centred column with the buttons under the words on tablets, and on the Mac and web Sign in and Use without an account side by side (redesign branch).
 - Signing out now looks as the account boards draw on every device: Dottoday's own dialog on iPhone, iPad and the Mac (Cancel focused on the Mac and web), Android's dialog with text buttons, and when changes are still waiting to sync, Stay signed in first with a short hint, centred at 440 on tablets (redesign branch).
 - After onboarding, Today offers a few things once each when they help: trying the simpler Less layout on day 2, repeating a routine on the days you actually do it, closing your first day kindly at Wind Down, and syncing a week on if you still have no account (redesign branch).

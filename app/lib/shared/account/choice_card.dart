@@ -71,16 +71,26 @@ class ChoiceCard extends StatelessWidget {
 
 /// The radio circle: a ring, filled with a dot when [selected].
 class RadioMark extends StatelessWidget {
-  const RadioMark({required this.selected, super.key});
+  const RadioMark({
+    required this.selected,
+    this.size = DotSize.pickerDot,
+    super.key,
+  });
 
   final bool selected;
+
+  /// Across (B1 draws 22, 20 or 18 by platform).
+  final double size;
+
+  /// The filled dot, in proportion to [size].
+  double get _dot => (DotSize.tabDot - DotSpace.xs) * size / DotSize.pickerDot;
 
   @override
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     return Container(
-      width: DotSize.pickerDot,
-      height: DotSize.pickerDot,
+      width: size,
+      height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -91,8 +101,8 @@ class RadioMark extends StatelessWidget {
       ),
       child: selected
           ? Container(
-              width: DotSize.tabDot - DotSpace.xs,
-              height: DotSize.tabDot - DotSpace.xs,
+              width: _dot,
+              height: _dot,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: c.accent,

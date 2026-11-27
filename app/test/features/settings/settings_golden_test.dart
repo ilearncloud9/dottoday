@@ -403,6 +403,37 @@ void main() {
     ),
     build: (_) => const AccountPage(),
   );
+  // ED-494 (`AccountChoose` and kin): B1 waiting after Decide later, with
+  // changes waiting to sync; iPhone and iPad, then Android.
+  for (final (name, platform) in [
+    ('settings_page_account_choose', TargetPlatform.iOS),
+    ('settings_page_account_choose_android', TargetPlatform.android),
+  ]) {
+    goldenMatrix(
+      name,
+      height: 700,
+      widths: const {'compact', 'expanded'},
+      platform: platform,
+      overrides: _overridesWith(
+        extra: [
+          accountServiceProvider.overrideWithValue(
+            FakeAccountService(
+              account: const SignedIn(
+                email: 'kody@example.com',
+                method: SignInMethod.email,
+              ),
+            ),
+          ),
+          ...accountScreenOverrides(
+            FakeAccountActions(),
+            pending: 3,
+            later: true,
+          ),
+        ],
+      ),
+      build: (_) => const AccountPage(),
+    );
+  }
   // M3f.8: notifications denied, on Reminders.
   goldenMatrix(
     'settings_notifications_off',

@@ -4,9 +4,10 @@ import 'package:dottoday/domain/time/day_boundaries.dart';
 
 /// The settings B1 ("Which settings should Dottoday use?", CR-160
 /// criterion 7) compares, in the order it lists them. Each is one the
-/// person sees and recognises at once; the rest of `Settings` follows
-/// whichever side is chosen.
-enum SettingsField { timeZone, language, yourDay, layout, theme }
+/// person sees and recognises at once; the rest of `Settings` (the theme
+/// among them: the boards draw these four only, ED-494) follows whichever
+/// side is chosen.
+enum SettingsField { timeZone, language, yourDay, layout }
 
 /// The [SettingsField]s where [account] and [device] differ, in display
 /// order; empty when B1 has nothing to ask (it is then never shown).
@@ -24,6 +25,5 @@ List<SettingsField> settingsDifferences(Profile account, Profile device) {
     if (LayoutPolicy.forSettings(a).isMinimal !=
         LayoutPolicy.forSettings(d).isMinimal)
       SettingsField.layout,
-    if (a.theme != d.theme) SettingsField.theme,
   ];
 }
