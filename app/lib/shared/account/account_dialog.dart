@@ -118,7 +118,7 @@ class AccountButton extends StatelessWidget {
 
   final AccountDialogLook look;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool autofocus;
   final _Kind _kind;
 
@@ -126,16 +126,20 @@ class AccountButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
+    final android = look == AccountDialogLook.android;
     final (fill, ink) = switch (_kind) {
       _Kind.filled => (c.accentFill, c.onAccent),
-      _Kind.outlined => (Colors.transparent, c.text),
+      // Android's outlined button reads in the accent (`AndroidA3`).
+      _Kind.outlined => (Colors.transparent, android ? c.accentInk : c.text),
       _Kind.tonal => (c.tonalAndroid, c.onTonalAndroid),
       _Kind.text => (Colors.transparent, c.accentInk),
     };
     final rest = _kind == _Kind.outlined
         ? BorderSide(
             color: AccountDialogColors.outline(c),
-            width: AccountDialogSize.outline,
+            width: android
+                ? AccountDialogSize.outlineAndroid
+                : AccountDialogSize.outline,
           )
         : BorderSide.none;
     final height = switch (look) {

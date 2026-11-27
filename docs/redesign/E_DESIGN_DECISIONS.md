@@ -6063,6 +6063,18 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze, policies clean; sign-out tests (16, including each board's layout); 52 goldens (iPhone, Android, Mac, iPad, Android tablet, light and dark, unconfirmed); all tests but the Supabase ones (Docker off) and one locale-sweep test that passes alone.
 - **Not run:** a device, VoiceOver and TalkBack.
 
+### ED-493 · M20.12 part 2: A3 "You're signed out" as the boards draw
+- **Date:** 2026-11-27. **Owner:** "Yes, build A3" after the comparison with the boards. Review page: https://claude.ai/artifact/TB1BL57ULS8yW3hku7hg8T. **Approved 2026-11-27: "Approve part 2".** Source: E-CR160 `1795736627-05d7` (`SignedOut`, `AndroidA3`, `TabletA3`, `AndroidTabletA3`, `DesktopA3`).
+- **Before:** one phone layout everywhere through the shared `DecisionFrame` (system-font title, a filled second button, a 640 column with the buttons at the foot on wide windows).
+- **iPhone:** 28 from the sides, 44 below; the art, title and body 20 apart in the middle of the free space; title Manrope 800 28/34 −0.5, body 15/22 secondary; 52 pills 10 apart (Sign in filled, Use without an account outlined 1.5, no fill); the note 13/18 centred.
+- **Android:** 24 and 40; title 28/36, body 14/20; 48 Roboto 14/500 buttons 8 apart; the outlined one 1 px with its label in the accent's ink (`accentInk`, as part 1's text buttons; the board's `#11615C` is a shade brighter).
+- **Tablets:** the phone's sizes in a centred 440 column, the buttons straight under the words (8 above).
+- **Mac and web:** a centred 400 column, gap 16; art 80, title 24/30 −0.4, body 14/21; Sign in and Use without an account side by side, 40 tall, 10 apart (wrapping at large text); the note 12.5/18 under them, start-aligned.
+- **The art:** drawn as the board: a ring 90 across at a 10 stroke (`chip` light, `raised` dark), a gap, the 60 inner disc (`sunk`), the lock at the board's 2.5 stroke (new glyph `signedOutLock`); decorative (ED-223).
+- **Built as:** `SignedOutScreen` with its own phone and centred-column layouts on part 1's `AccountButton` (now with Android's outline and a disabled state) and `accountDialogLook`; `SignedOutSize`/`Type`/`Colors` in `account_tokens.dart`. `DecisionFrame` is unchanged (G1, B1, Delete account keep it until parts 3 and 4).
+- **Checks:** format, analyze clean; A3 layout tests per board and at 200 %; A3 goldens for iPhone (with 200 % and right to left), Android, iPad, Android tablet and Mac, light and dark; auth, settings, policy and onboarding suites.
+- **Not run:** a device, VoiceOver and TalkBack.
+
 ---
 
 ## Pending owner answers

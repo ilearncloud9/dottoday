@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- After signing out, "You're signed out" now looks as the account boards draw on every device: the buttons at the foot on phones, a centred column with the buttons under the words on tablets, and on the Mac and web Sign in and Use without an account side by side (redesign branch).
 - Signing out now looks as the account boards draw on every device: Dottoday's own dialog on iPhone, iPad and the Mac (Cancel focused on the Mac and web), Android's dialog with text buttons, and when changes are still waiting to sync, Stay signed in first with a short hint, centred at 440 on tablets (redesign branch).
 - After onboarding, Today offers a few things once each when they help: trying the simpler Less layout on day 2, repeating a routine on the days you actually do it, closing your first day kindly at Wind Down, and syncing a week on if you still have no account (redesign branch).
 - After onboarding, your first Today eases in with a one-time hint at the circle that marks a task done and a "Sign in to sync" card you can dismiss; marking a task done now sends a ring out from the circle with a success tap; on tablets, the Mac and the web the onboarding card fades away over your Today (redesign branch).

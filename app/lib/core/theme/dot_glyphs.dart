@@ -109,6 +109,12 @@ abstract final class DotGlyphs {
     '${_r(5, 11, 14, 10, 2)}M8 11V7a4 4 0 0 1 8 0v4',
   );
 
+  /// A3's lock (E-CR160 `SignedOut`): drawn at 30 inside its 96 art, so
+  /// the stroke is the board's 2.5.
+  static final signedOutLock = DotGlyph(
+    '${_r(2.4, 10.4, 19.2, 13.6, 4)}M5.6 10.4V7.2a6.4 6.4 0 0 1 12.8 0v3.2',
+  );
+
   /// Lines shortening down: Settings › Learning's step lengths
   /// (E-R2-23 §4).
   static const stepLines = DotGlyph('M5 7h14M5 12h10M5 17h6');

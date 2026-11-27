@@ -54,6 +54,7 @@ abstract final class AccountDialogSize {
 
   /// The outlined button's ring: 1.5 (Android's A3 outline is 1).
   static const double outline = 1.5;
+  static const double outlineAndroid = 1;
 
   /// Android A2's cloud: 24.
   static const double androidIcon = 24;
@@ -119,4 +120,79 @@ abstract final class AccountDialogColors {
   /// dark.
   static Color outline(DotColors c) =>
       c.brightness == Brightness.dark ? c.ring : c.controlOutline;
+}
+
+/// A3 "You're signed out" (E-CR160 `SignedOut`, `AndroidA3`, `TabletA3`,
+/// `AndroidTabletA3`, `DesktopA3`): sizes, type and colours.
+abstract final class SignedOutSize {
+  /// Phone sides and foot: iPhone 28 and 44, Android 24 and 40.
+  static const EdgeInsets padIphone = EdgeInsets.fromLTRB(28, 0, 28, 44);
+  static const EdgeInsets padAndroid = EdgeInsets.fromLTRB(24, 0, 24, 40);
+
+  /// The centred column: 440 on tablets, 400 on the Mac and web.
+  static const double tabletColumn = 440;
+  static const double desktopColumn = 400;
+
+  /// Between the art, title and body: 20; Mac/web 16.
+  static const double gap = 20;
+  static const double gapDesktop = 16;
+
+  /// Above the buttons when they follow the body (tablets, Mac/web).
+  static const double actionsTop = 8;
+
+  /// The art: 96, 80 on the Mac and web. At 96: a ring 90 across drawn
+  /// 10 wide, a 60 inner disc, the lock 30 (its 2.5 stroke).
+  static const double art = 96;
+  static const double artDesktop = 80;
+  static const double artRing = 90 / 96;
+  static const double artRingStroke = 10 / 96;
+  static const double artInner = 60 / 96;
+  static const double artLock = 30 / 96;
+}
+
+/// A3's type (Manrope 800 titles; body and note in secondary).
+abstract final class SignedOutType {
+  /// 28/34 800 −0.5 on iPhone and iPad, 28/36 on Android, 24/30 −0.4 on
+  /// the Mac and web.
+  static TextStyle title(DotType t, AccountDialogLook look) {
+    final base = t.promptTitle.copyWith(
+      fontWeight: FontWeight.w800,
+      fontVariations: const [FontVariation.weight(800)],
+    );
+    return switch (look) {
+      AccountDialogLook.iphone => base.copyWith(
+        fontSize: 28,
+        height: 34 / 28,
+        letterSpacing: -0.5,
+      ),
+      AccountDialogLook.android => base.copyWith(
+        fontSize: 28,
+        height: 36 / 28,
+        letterSpacing: -0.5,
+      ),
+      AccountDialogLook.desktop => base.copyWith(
+        fontSize: 24,
+        height: 30 / 24,
+        letterSpacing: -0.4,
+      ),
+    };
+  }
+
+  /// 15/22 on iPhone and iPad, 14/20 on Android, 14/21 Mac/web.
+  static TextStyle body(DotType t, DotColors c, AccountDialogLook look) {
+    final base = t.body.copyWith(color: c.muted);
+    return switch (look) {
+      AccountDialogLook.iphone => base,
+      AccountDialogLook.android => base.copyWith(fontSize: 14, height: 20 / 14),
+      AccountDialogLook.desktop => base.copyWith(fontSize: 14, height: 21 / 14),
+    };
+  }
+}
+
+/// A3's art: the ring (`#EDE7DF` / `#28232A`) and the inner disc
+/// (`#F6F1EA` / `#1F1B1E`).
+abstract final class SignedOutColors {
+  static Color ring(DotColors c) =>
+      c.brightness == Brightness.dark ? c.raised : c.chip;
+  static Color inner(DotColors c) => c.sunk;
 }

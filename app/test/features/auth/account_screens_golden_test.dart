@@ -10,6 +10,7 @@ import 'package:dottoday/features/auth/removal_retry_screen.dart';
 import 'package:dottoday/features/auth/settings_choice_screen.dart';
 import 'package:dottoday/features/auth/signed_out_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
@@ -22,19 +23,64 @@ import '../../support/dot_golden.dart';
 // compact, light and dark, 1× and 2×.
 
 void main() {
-  setUpAll(loadAppFonts);
+  setUpAll(() async {
+    await loadAppFonts();
+    // Android's buttons are in the system's Roboto (`AndroidA3`); the test
+    // has none, so the bundled copy stands in under that name.
+    final roboto = rootBundle.load('assets/fonts/Roboto-Variable.ttf');
+    await (FontLoader('Roboto')..addFont(roboto)).load();
+  });
   final overrides = accountScreenOverrides(FakeAccountActions());
 
-  void screen(String name, Widget Function() build, {double height = 844}) =>
-      goldenMatrix(
-        name,
-        height: height,
-        widths: const {'compact'},
-        overrides: overrides,
-        build: (_) => build(),
-      );
+  void screen(
+    String name,
+    Widget Function() build, {
+    double height = 844,
+    Set<String> widths = const {'compact'},
+    TargetPlatform platform = TargetPlatform.iOS,
+    bool a11yVariants = false,
+  }) => goldenMatrix(
+    name,
+    height: height,
+    widths: widths,
+    platform: platform,
+    a11yVariants: a11yVariants,
+    overrides: overrides,
+    build: (_) => build(),
+  );
 
-  screen('account_signed_out', () => const SignedOutScreen());
+  // A3 on each board (ED-493): `SignedOut` (with 200 % and right to left),
+  // `AndroidA3`, `TabletA3`, `AndroidTabletA3`, `DesktopA3`.
+  screen(
+    'account_signed_out',
+    () => const SignedOutScreen(),
+    a11yVariants: true,
+  );
+  screen(
+    'account_signed_out_android',
+    () => const SignedOutScreen(),
+    platform: TargetPlatform.android,
+  );
+  screen(
+    'account_signed_out_ipad',
+    () => const SignedOutScreen(),
+    height: 820,
+    widths: const {'expanded'},
+  );
+  screen(
+    'account_signed_out_android_tablet',
+    () => const SignedOutScreen(),
+    height: 800,
+    widths: const {'expanded'},
+    platform: TargetPlatform.android,
+  );
+  screen(
+    'account_signed_out_wide',
+    () => const SignedOutScreen(),
+    height: 800,
+    widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
+  );
   screen(
     'account_guest_work',
     () => const GuestWorkScreen(
