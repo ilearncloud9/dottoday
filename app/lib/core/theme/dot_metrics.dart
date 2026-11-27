@@ -1013,6 +1013,9 @@ abstract final class CalendarsSize {
 /// and the app-switcher cover: 96 across, the ring 9, the centre 34.
 abstract final class BrandMarkSize {
   static const double lock = 96;
+
+  /// Beside "Dottoday" at the top of the web's sidebars (E-R2-30).
+  static const double sidebar = 16;
   static const double ring = 9 / 96;
   static const double centre = 34 / 96;
 }

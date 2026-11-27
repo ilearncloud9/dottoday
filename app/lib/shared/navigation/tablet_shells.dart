@@ -17,8 +17,12 @@ class SidebarShell extends StatefulWidget {
     this.vibrant = false,
     this.sidebar,
     this.width = DotSize.sidebar,
+    this.extras,
     super.key,
   });
+
+  /// The web's minimal sidebar additions (E-R2-30, ED-500).
+  final SidebarExtras? extras;
 
   final ShellBar bar;
   final Widget body;
@@ -68,6 +72,7 @@ class _SidebarShellState extends State<SidebarShell> {
                 DotSidebar(
                   bar: widget.bar,
                   vibrant: vibrant,
+                  extras: widget.extras,
                   onToggle: () => setState(() => _folded = true),
                 ),
           ),

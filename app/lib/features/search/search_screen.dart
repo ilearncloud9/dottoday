@@ -15,6 +15,7 @@ import 'package:dottoday/features/search/widgets/search_field.dart';
 import 'package:dottoday/features/search/widgets/search_filters.dart';
 import 'package:dottoday/features/search/widgets/search_results.dart';
 import 'package:dottoday/features/search/widgets/search_row.dart';
+import 'package:dottoday/shared/chips/count_pill.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -186,28 +187,7 @@ class _Header extends StatelessWidget {
         ),
         // "4 results" on the Mac and the web (E-R2-30); touch draws none.
         if (n != null && searchCards(context))
-          Semantics(
-            liveRegion: true,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: t.colors.accentTint,
-                borderRadius: BorderRadius.circular(DotRadii.pill),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: DotSpace.s + DotSpace.xxs,
-                  vertical: DotSpace.xxs,
-                ),
-                child: Text(
-                  l10n.searchRingLabel(n),
-                  style: t.styles.rowMeta.copyWith(
-                    color: t.colors.accentInk,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          CountPill(l10n.searchRingLabel(n)),
       ],
     );
   }

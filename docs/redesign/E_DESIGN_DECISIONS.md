@@ -6136,6 +6136,17 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze clean; every changed golden regenerated (Android, the Mac and web Help summary, the account dialogs' Roboto anti-aliasing) and compared by eye; no iPhone golden changed; the full suite but the Supabase tests (Docker off).
 - **Not run:** a device, TalkBack.
 
+### ED-500 · M20.13 part 4: Mac and web against E-R2-30
+- **Date:** 2026-11-27. **Owner:** "Push and start 4", then the parity page (https://claude.ai/artifact/6xhaA6ZYZgpC33gWcqzLbi): "Yes, as recommended". Review page: https://claude.ai/artifact/VH3KfbSe8DnkENyVBLsn3R. **Approved 2026-11-27: "Approve part 4".** Source: E-R2-30 (Mac and web).
+- **Already as drawn or changed by later approved decisions (not rebuilt):** Search (ED-422), the palette (ED-423), Focus as the whole window (ED-438), 3 days and its toolbar (ED-387), Month, the two panes and the forms (ED-451), the Mac menus, web calendars.
+- **G1 · Routines on its own (Mac and web, Full):** from the sidebar (and Planning's Open Routines), Routines fills the content area without the Settings list; the sidebar's Routines row is picked; one readable column, one card per row, its count in a pill beside the subtitle. Phones, tablets and Minimal keep Settings › Planning › Routines (`watchRoutinesAlone`). The count pill is now one shared `CountPill` with Search's results pill.
+- **G2 · Web sidebar, Full:** "● Dottoday" (`BrandRow`) at the top; while single-key shortcuts are on, Today ends in a `t` key cap (where the Mac shows the done count) and Search in `/`. Search or run stays in the toolbar (ED-387). One shared `KeyCap` with the web Add button.
+- **G3 · Web sidebar, Minimal:** "● Dottoday" with the +; Inbox's count at the row's end; `/` on Search; a "Search or run  k" row; the keyboard hint card above Settings (only while single keys are on; new strings `webKeys…` in en, es, fr, de); the sync line under Settings when there is an account.
+- **G4 · Minimal Calendar toolbar, web:** Week | Month at the start and the ‹ Today › pill at the end, above the title and stats; the keys stay in the tooltips and the ? list.
+- **Departures, as drawn:** the web minimal sidebar has no fold button (with it, "Dottoday" broke mid-word in the 200 sidebar); web Full's Today shows `t` instead of its count while single keys are on; the day-dot ring is gone from minimal Calendar's toolbar.
+- **Checks:** format, analyze clean; changed goldens regenerated (Month, web Settings forms, the web task column, Now wide) and compared by eye; the pseudo locale and icon-names block regenerated; the full suite but the Supabase tests (Docker off).
+- **Not checked:** Focus and the Copy dialog were not re-captured; a browser, a Mac build, VoiceOver.
+
 ---
 
 ## Pending owner answers

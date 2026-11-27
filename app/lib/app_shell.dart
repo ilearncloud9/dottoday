@@ -1,6 +1,8 @@
+import 'package:dottoday/app_sidebar_extras.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_router.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
+import 'package:dottoday/core/shortcuts/single_keys.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/inbox/inbox_providers.dart';
 import 'package:dottoday/data/layout/frosted_chrome.dart';
@@ -63,12 +65,17 @@ class AppShell extends ConsumerWidget {
     // tab bar"): Now · Today · Inbox on phones, Now · Inbox · Calendar ·
     // Search wider (ED-266).
     final minimalNav = watchSimplified(ref, FeatureId.navigation);
+    // The web's minimal sidebar as E-R2-30 draws it (ED-500).
+    final minimalWeb = minimalNav && webChrome(context);
     return DotShell(
       destinations: minimalNav
           ? minimalDestinations(
               l10n,
               inbox: inbox,
               onDropOnInbox: drops.toInbox,
+              searchKey: minimalWeb && SingleKeysOn.of(context)
+                  ? '/' // l10n-ignore: the web's Search key
+                  : null,
             )
           : shellDestinations(
               l10n,
@@ -88,6 +95,7 @@ class AppShell extends ConsumerWidget {
       vibrantSidebar: ref.watch(sidebarVibrancyProvider).value ?? false,
       // Full's wide sidebar is the Workspace's (E-FullA-v2, M19.2);
       // Minimal keeps its list of places (M19.6).
+      sidebarExtras: minimalWeb ? minimalWebSidebarExtras(context) : null,
       workspaceSidebar: minimalNav
           ? null
           : WorkspaceSidebar(
@@ -181,6 +189,7 @@ List<ShellDestination> minimalDestinations(
   AppLocalizations l10n, {
   int inbox = 0,
   ValueChanged<String>? onDropOnInbox,
+  String? searchKey,
 }) => [
   for (final tab in ShellTab.values)
     switch (tab) {
@@ -214,6 +223,7 @@ List<ShellDestination> minimalDestinations(
         glyph: DotGlyphs.search,
         label: l10n.navSearch,
         wideOnly: true,
+        keyCap: searchKey,
       ),
       ShellTab.settings => ShellDestination(
         glyph: DotGlyphs.settings,

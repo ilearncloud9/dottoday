@@ -8524,6 +8524,27 @@ class AppLocalizationsDe extends AppLocalizations {
   String get onboardingHelloNow => 'JETZT';
 
   @override
+  String get webKeysTitle => 'Tastatur:';
+
+  @override
+  String get webKeyAdd => 'hinzufügen';
+
+  @override
+  String get webKeySearch => 'suchen';
+
+  @override
+  String get webKeyToday => 'heute';
+
+  @override
+  String get webKeyDays => 'Tage';
+
+  @override
+  String get webKeyEverything => 'alles andere';
+
+  @override
+  String get webKeyHelp => 'Hilfe';
+
+  @override
   String get taskIconCategoryPlanning => 'Planung & Rhythmus';
 
   @override

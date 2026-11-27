@@ -6804,6 +6804,27 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get onboardingHelloNow => pseudo(super.onboardingHelloNow);
 
   @override
+  String get webKeysTitle => pseudo(super.webKeysTitle);
+
+  @override
+  String get webKeyAdd => pseudo(super.webKeyAdd);
+
+  @override
+  String get webKeySearch => pseudo(super.webKeySearch);
+
+  @override
+  String get webKeyToday => pseudo(super.webKeyToday);
+
+  @override
+  String get webKeyDays => pseudo(super.webKeyDays);
+
+  @override
+  String get webKeyEverything => pseudo(super.webKeyEverything);
+
+  @override
+  String get webKeyHelp => pseudo(super.webKeyHelp);
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

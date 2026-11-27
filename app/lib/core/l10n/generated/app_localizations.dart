@@ -12894,6 +12894,48 @@ abstract class AppLocalizations {
   /// **'NOW'**
   String get onboardingHelloNow;
 
+  /// Web minimal sidebar (E-R2-30): the keyboard hint's lead, before the keys.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard:'**
+  String get webKeysTitle;
+
+  /// Web keyboard hint: what n does.
+  ///
+  /// In en, this message translates to:
+  /// **'add'**
+  String get webKeyAdd;
+
+  /// Web keyboard hint: what / does.
+  ///
+  /// In en, this message translates to:
+  /// **'search'**
+  String get webKeySearch;
+
+  /// Web keyboard hint: what t does.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get webKeyToday;
+
+  /// Web keyboard hint: what [ and ] do (previous and next day).
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get webKeyDays;
+
+  /// Web keyboard hint: what k does in Minimal (the palette titled Everything else).
+  ///
+  /// In en, this message translates to:
+  /// **'everything else'**
+  String get webKeyEverything;
+
+  /// Web keyboard hint: what ? does (the shortcut list).
+  ///
+  /// In en, this message translates to:
+  /// **'help'**
+  String get webKeyHelp;
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

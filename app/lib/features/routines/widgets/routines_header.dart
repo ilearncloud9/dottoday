@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/chips/count_pill.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,10 +10,19 @@ import 'package:go_router/go_router.dart';
 /// tablets, the Mac and the web (a sidebar destination) no back, and the
 /// subtitle carries the number of routines.
 class RoutinesHeader extends StatelessWidget {
-  const RoutinesHeader({required this.count, required this.wide, super.key});
+  const RoutinesHeader({
+    required this.count,
+    required this.wide,
+    this.pill = false,
+    super.key,
+  });
 
   final int count;
   final bool wide;
+
+  /// The count in a pill beside the title (E-R2-30, ED-500), not in the
+  /// subtitle: Routines as its own place on the Mac and the web.
+  final bool pill;
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +56,28 @@ class RoutinesHeader extends StatelessWidget {
             Flexible(child: title),
           ],
         ),
-        Text(
-          wide
-              ? l10n.routinesSubtitleCount(
+        if (pill)
+          Row(
+            children: [
+              Expanded(
+                child: Text(
                   l10n.routinesSubtitle,
-                  l10n.routinesCount(count),
-                )
-              : l10n.routinesSubtitle,
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-        ),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                ),
+              ),
+              CountPill(l10n.routinesCount(count)),
+            ],
+          )
+        else
+          Text(
+            wide
+                ? l10n.routinesSubtitleCount(
+                    l10n.routinesSubtitle,
+                    l10n.routinesCount(count),
+                  )
+                : l10n.routinesSubtitle,
+            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          ),
       ],
     );
   }

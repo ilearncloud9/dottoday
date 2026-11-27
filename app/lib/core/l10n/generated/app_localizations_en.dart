@@ -8473,6 +8473,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingHelloNow => 'NOW';
 
   @override
+  String get webKeysTitle => 'Keyboard:';
+
+  @override
+  String get webKeyAdd => 'add';
+
+  @override
+  String get webKeySearch => 'search';
+
+  @override
+  String get webKeyToday => 'today';
+
+  @override
+  String get webKeyDays => 'days';
+
+  @override
+  String get webKeyEverything => 'everything else';
+
+  @override
+  String get webKeyHelp => 'help';
+
+  @override
   String get taskIconCategoryPlanning => 'Planning & rhythm';
 
   @override

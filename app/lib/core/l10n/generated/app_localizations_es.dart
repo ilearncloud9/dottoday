@@ -8517,6 +8517,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onboardingHelloNow => 'AHORA';
 
   @override
+  String get webKeysTitle => 'Teclado:';
+
+  @override
+  String get webKeyAdd => 'añadir';
+
+  @override
+  String get webKeySearch => 'buscar';
+
+  @override
+  String get webKeyToday => 'hoy';
+
+  @override
+  String get webKeyDays => 'días';
+
+  @override
+  String get webKeyEverything => 'todo lo demás';
+
+  @override
+  String get webKeyHelp => 'ayuda';
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

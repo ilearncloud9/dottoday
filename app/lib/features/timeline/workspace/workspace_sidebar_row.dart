@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/chips/key_cap.dart';
 import 'package:flutter/material.dart';
 
 /// How a Workspace sidebar row stands out (E-FullA-v2): the current
@@ -17,6 +18,7 @@ class WorkspaceSidebarRow extends StatelessWidget {
     this.glyph,
     this.trailing,
     this.badge = false,
+    this.keyCap = false,
     this.mark = SidebarMark.none,
     this.indent = false,
     this.semanticLabel,
@@ -35,6 +37,9 @@ class WorkspaceSidebarRow extends StatelessWidget {
 
   /// Draw [trailing] as a tinted count badge (the Inbox's open tasks).
   final bool badge;
+
+  /// Draw [trailing] as a key cap: the web's single keys (E-R2-30).
+  final bool keyCap;
   final SidebarMark mark;
 
   /// A sub-row of Plan, lined up under its label.
@@ -134,6 +139,7 @@ class WorkspaceSidebarRow extends StatelessWidget {
 
   Widget _trailing(DotTheme t, String text) {
     final c = t.colors;
+    if (keyCap) return KeyCap(text);
     if (!badge) return Text(text, style: t.styles.sidebarHint);
     return Container(
       padding: const EdgeInsets.symmetric(

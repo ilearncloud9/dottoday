@@ -3,6 +3,7 @@ import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/layout/routines_place.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/features/settings/pages/everything_page.dart';
 import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
@@ -71,6 +72,11 @@ class _SettingsPanesState extends ConsumerState<SettingsPanes> {
   @override
   Widget build(BuildContext context) {
     final minimal = watchSimplified(ref, FeatureId.notifications);
+    // Routines is the sidebar's own place on the Mac and the web in Full
+    // (E-R2-30, ED-451, ED-500): the page alone, no Settings list.
+    if (_page == SettingsPage.routines && watchRoutinesAlone(context, ref)) {
+      return widget.navigator;
+    }
     final listWidth = _listWidth(context);
     return LayoutBuilder(
       builder: (context, box) {

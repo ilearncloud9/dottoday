@@ -2,6 +2,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/shared/navigation/dot_rail.dart';
+import 'package:dottoday/shared/navigation/dot_sidebar.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:dottoday/shared/navigation/material_nav_bar.dart';
 import 'package:dottoday/shared/navigation/native_bar.dart';
@@ -22,6 +23,7 @@ final class ShellDestination {
     this.visible = true,
     this.badge,
     this.badgeLabel,
+    this.keyCap,
     this.onDropTask,
     this.foot = false,
   });
@@ -61,6 +63,11 @@ final class ShellDestination {
   /// ("Inbox, 3 tasks"); null reads [label].
   final String? badgeLabel;
 
+  /// The web's single key for this place ("/" for Search), drawn at the
+  /// row's end in the web's minimal sidebar (E-R2-30, ED-500); null draws
+  /// none.
+  final String? keyCap;
+
   /// The screen-reader name: [badgeLabel] while a badge shows.
   String get semanticLabel => (badge ?? 0) > 0 ? badgeLabel ?? label : label;
 }
@@ -87,8 +94,13 @@ class DotShell extends StatelessWidget {
     this.sidebarWidth = DotSize.sidebar,
     this.order,
     this.workspaceSidebar,
+    this.sidebarExtras,
     super.key,
   });
+
+  /// The web's minimal sidebar additions (E-R2-30, ED-500); null draws
+  /// the plain list of places.
+  final SidebarExtras? sidebarExtras;
 
   /// Android's floating chrome may be frosted (Android 12+, ED-125).
   final bool frosted;
@@ -220,6 +232,7 @@ class DotShell extends StatelessWidget {
             vibrant: vibrantSidebar,
             width: sidebarWidth,
             sidebar: workspaceSidebar,
+            extras: sidebarExtras,
           ),
         };
         final onTrash = onTrashTask;
@@ -295,6 +308,7 @@ class ShellIcon extends StatelessWidget {
     required this.destination,
     required this.active,
     required this.color,
+    this.badge = true,
     super.key,
   });
 
@@ -302,12 +316,15 @@ class ShellIcon extends StatelessWidget {
   final bool active;
   final Color color;
 
+  /// The count on the icon; false where the row shows it at its end.
+  final bool badge;
+
   /// More than this reads "99+": a count, not an inventory.
   static const _maxBadge = 99;
 
   @override
   Widget build(BuildContext context) {
-    final count = destination.badge ?? 0;
+    final count = badge ? destination.badge ?? 0 : 0;
     var icon = _icon();
     if (destination.onDropTask case final onDrop?) {
       icon = TaskDropTab(onDropTask: onDrop, child: icon);

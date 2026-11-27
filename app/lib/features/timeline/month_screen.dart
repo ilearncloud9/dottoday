@@ -97,7 +97,6 @@ class MonthScreen extends ConsumerWidget {
                 onPrevious: () => step(-1),
                 onToday: () => showMonth(thisMonth),
                 onNext: () => step(1),
-                today: month == thisMonth ? today : null,
               ),
             ),
           ),
@@ -209,15 +208,14 @@ class _Page extends StatelessWidget {
     );
   }
 
-  /// "October 2026", its numbers, and the controls.
+  /// The controls over "October 2026" and its numbers (E-R2-30, ED-500).
   Widget _header(BuildContext context, String locale) {
     final t = DotTheme.of(context);
-    return Wrap(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.m,
-      runSpacing: DotSpace.m,
-      alignment: WrapAlignment.spaceBetween,
-      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
+        controls,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -235,7 +233,6 @@ class _Page extends StatelessWidget {
             ),
           ],
         ),
-        controls,
       ],
     );
   }

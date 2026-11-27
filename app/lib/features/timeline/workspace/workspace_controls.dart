@@ -4,6 +4,7 @@ import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/touch_content.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_view.dart';
+import 'package:dottoday/shared/chips/key_cap.dart';
 import 'package:dottoday/shared/navigation/add_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -320,7 +321,7 @@ class ToolbarAdd extends ConsumerWidget {
                                 color: c.onAccent,
                               ),
                             ),
-                            _KeyCap(
+                            KeyCap(
                               'n', // l10n-ignore: the web's Add key cap
                               color: c.onAccent,
                             ),
@@ -332,29 +333,6 @@ class ToolbarAdd extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// A key on the Add button, drawn as the board's light key cap.
-class _KeyCap extends StatelessWidget {
-  const _KeyCap(this.cap, {required this.color});
-
-  final String cap;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DotRadii.field),
-        border: Border.all(color: color),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DotSpace.xs),
-        child: Text(cap, style: t.styles.rowMeta.copyWith(color: color)),
       ),
     );
   }

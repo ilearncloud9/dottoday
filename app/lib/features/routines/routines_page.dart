@@ -4,6 +4,7 @@ import 'package:dottoday/core/clock/clock_provider.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/layout/routines_place.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/data/routines/routine_providers.dart';
 import 'package:dottoday/domain/entities/routine.dart';
@@ -34,13 +35,17 @@ class RoutinesPage extends ConsumerWidget {
     final routines = ref.watch(routinesProvider);
     final list = routines.value;
     final wide = AppLayout.classOf(context) != WidthClass.compact;
+    // Its own place: one readable column, as E-R2-30 draws it (ED-500).
+    final alone = watchRoutinesAlone(context, ref);
     return Scaffold(
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: wide ? DotSize.routinesWide : DotSize.readableColumn,
+              maxWidth: wide && !alone
+                  ? DotSize.routinesWide
+                  : DotSize.readableColumn,
             ),
             child: list == null
                 ? screenState([
@@ -80,7 +85,10 @@ class _ListState extends ConsumerState<_List> {
         ? null
         : _localDate(ref.watch(clockProvider).nowUtc(), profile.tzId);
     final day = _day ?? today;
-    final wide = AppLayout.classOf(context) != WidthClass.compact;
+    final alone = watchRoutinesAlone(context, ref);
+    // Two to a row from medium width (E-R2-22); one column where Routines
+    // is its own place (E-R2-30, ED-500).
+    final wide = AppLayout.classOf(context) != WidthClass.compact && !alone;
     final cards = [
       for (final r in routines)
         RoutineCard(
@@ -111,7 +119,11 @@ class _ListState extends ConsumerState<_List> {
         DotSpace.fabClearance,
       ),
       children: [
-        RoutinesHeader(count: routines.length, wide: wide),
+        RoutinesHeader(
+          count: routines.length,
+          wide: wide || alone,
+          pill: alone,
+        ),
         const SizedBox(height: DotSpace.m),
         if (today != null && routines.isNotEmpty) ...[
           Text(
@@ -136,7 +148,6 @@ class _ListState extends ConsumerState<_List> {
           _EmptyCard(text: l10n.routinesEmpty),
           const SizedBox(height: DotSpace.s),
         ],
-        // Two to a row from medium width (E-R2-22 iPad, Mac and web).
         if (wide)
           LayoutBuilder(
             builder: (context, box) {
