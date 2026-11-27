@@ -43,7 +43,7 @@ class LayoutRow extends ConsumerWidget {
       builder: (context, box) {
         final beside = box.maxWidth >= DotSize.layoutSegmentsBeside;
         return SettingsRow(
-          glyph: DotGlyphs.dottedRow,
+          glyph: DotGlyphs.layout,
           tint: t.colors.accentInk,
           title: l10n.layoutRow,
           subtitle: l10n.layoutRowDetail,

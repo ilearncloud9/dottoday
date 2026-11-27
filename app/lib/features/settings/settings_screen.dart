@@ -61,6 +61,7 @@ class SettingsScreen extends ConsumerWidget {
             touchApp(context) &&
             DotIdiom.of(context) == DotIdiom.material);
     void back() => context.go(ref.read(settingsReturnProvider.notifier).take());
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     final page = Scaffold(
       key: _key,
       body: SafeArea(
@@ -76,10 +77,11 @@ class SettingsScreen extends ConsumerWidget {
                     ? 'settings:minimal' // l10n-ignore: storage key
                     : 'settings', // l10n-ignore: storage key
               ),
-              padding: const EdgeInsets.fromLTRB(
-                DotSpace.page,
+              // iPhone and iPad: cards 16 from the edge (E-R2-24, ED-498).
+              padding: EdgeInsets.fromLTRB(
+                iphone ? SettingsFrameSize.side : DotSpace.page,
                 DotSpace.l,
-                DotSpace.page,
+                iphone ? SettingsFrameSize.side : DotSpace.page,
                 DotSpace.fabClearance,
               ),
               children: [
@@ -144,9 +146,24 @@ class _RootTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final title = Semantics(
-      header: true,
-      child: Text(context.l10n.navSettings, style: t.styles.pageTitle),
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
+    // iPhone: 34/41, 4 in from the cards (E-Phones, ED-498).
+    final title = Padding(
+      padding: EdgeInsetsDirectional.only(
+        start: iphone ? SettingsFrameSize.wordsInset : 0,
+      ),
+      child: Semantics(
+        header: true,
+        child: Text(
+          context.l10n.navSettings,
+          style: iphone
+              ? t.styles.pageTitle.copyWith(
+                  fontSize: SettingsFrameSize.title,
+                  height: SettingsFrameSize.titleLine / SettingsFrameSize.title,
+                )
+              : t.styles.pageTitle,
+        ),
+      ),
     );
     final back = onBack;
     if (back == null) return title;

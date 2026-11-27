@@ -42,7 +42,7 @@ List<Widget> wakeUpSoundRows(
     ),
     if (full && currentHealthPlatform() != HealthPlatform.iphone)
       SettingsRow(
-        glyph: DotGlyphs.sunrise,
+        glyph: DotGlyphs.horizon,
         tint: t.tasks[TaskColor.amber].ink,
         title: l10n.wakeUpRamp,
         value: _ramp(l10n, settings.wakeUpRampSec),

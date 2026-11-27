@@ -79,6 +79,9 @@ final class _GlyphPainter extends CustomPainter {
     canvas
       ..save()
       ..scale(scale);
+    if (glyph.fillPath case final fill?) {
+      canvas.drawPath(fill, Paint()..color = color);
+    }
     if (filled) {
       canvas.drawPath(
         Path.from(glyph.path)..fillType = PathFillType.evenOdd,

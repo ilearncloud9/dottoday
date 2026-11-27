@@ -7,14 +7,26 @@ import 'package:dottoday/core/theme/svg_path.dart';
 /// round caps and joins, drawn by `DotIcon`. A zero-length segment
 /// (`h.01`) draws a round dot.
 final class DotGlyph {
-  const DotGlyph(this._data);
+  const DotGlyph(this._data, {String? fill}) : _fill = fill;
 
   final String _data;
 
+  /// A part painted solid under the stroke (Appearance's half circle,
+  /// Layout's centre, E-Phones; ED-498).
+  final String? _fill;
+
   static final _cache = Expando<Path>();
+  static final _fillCache = Expando<Path>();
 
   /// The parsed path in grid units (0–24).
   Path get path => _cache[this] ??= parseSvgPath(_data);
+
+  /// The solid part, if any, in grid units.
+  Path? get fillPath {
+    final fill = _fill;
+    if (fill == null) return null;
+    return _fillCache[this] ??= parseSvgPath(fill);
+  }
 }
 
 String _c(double cx, double cy, double r) => svgCircle(cx, cy, r);
@@ -217,6 +229,45 @@ abstract final class DotGlyphs {
   );
   // Settings sub-pages (M3f.7): account, export, help, about.
   static final person = DotGlyph('${_c(12, 8, 4)}M4 21a8 8 0 0 1 16 0');
+
+  // Settings rows as the boards draw them (ED-332, ED-498).
+
+  /// The Wake Up alarm: an alarm clock with its two bells.
+  static final alarmClock = DotGlyph(
+    '${_c(12, 13, 7)}M12 10v3l2 2M5 4L2 7M19 4l3 3',
+  );
+
+  /// Quiet hours: the moon with a small "z".
+  static const moonZ = DotGlyph(
+    'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5zM15 4h4l-4 4h4',
+  );
+
+  /// Layout: the ring with its centre filled.
+  static final layout = DotGlyph(
+    '${_c(12, 12, 8.5)}${_c(12, 12, 3)}',
+    fill: _c(12, 12, 3),
+  );
+
+  /// Appearance: a circle, its left half filled.
+  static final appearance = DotGlyph(
+    _c(12, 12, 9),
+    fill: 'M12 3a9 9 0 0 0 0 18z',
+  );
+
+  /// Wake Up, the Wake Up card, Volume ramp, Day-start summary: the sun
+  /// rising over the horizon.
+  static const horizon = DotGlyph(
+    'M3 18h18M6 14a6 6 0 0 1 12 0M12 4v3M5 8l1.5 1.5M19 8l-1.5 1.5',
+  );
+
+  /// Send feedback: an envelope.
+  static final envelope = DotGlyph('${_r(3, 5, 18, 14, 2.5)}M3 7l9 6 9-6');
+
+  /// Open-source licences: a page with its corner folded and two lines.
+  static const document = DotGlyph('M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6');
+
+  /// Lock after, Week starts, Task lengths: the boards' clock.
+  static final clockFace = DotGlyph('${_c(12, 12, 8.5)}M12 7.5V12l3 2');
 
   /// Install on the web (E-R2-24 §4, ED-497): an arrow down onto a line.
   static const download = DotGlyph('M12 4v11M7 10l5 5 5-5M5 20h14');

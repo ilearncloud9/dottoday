@@ -27,7 +27,7 @@ class TravelTimeGroup extends StatelessWidget {
       children: [
         SettingsRow(
           glyph: TaskIcon.car.glyph ?? DotGlyphs.clock,
-          tint: t.tasks[TaskColor.sky].ink,
+          tint: t.tasks[TaskColor.indigo].ink,
           title: l10n.calendarsTravelSuggest,
           subtitle: l10n.calendarsTravelSuggestDetail,
           toggle: settings.suggestTravelTime,

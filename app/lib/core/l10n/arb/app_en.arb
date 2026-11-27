@@ -7969,6 +7969,8 @@
     "description": "Appearance page group caption: Week starts and Time format (M20.7)."
   },
   "settingsBackTo": "Back to {page}",
+  "settingsBackLink": "‹ {page}",
+  "@settingsBackLink": {"description": "iPhone Settings back link, plain text (E-R2-24, ED-498): the parent page's name after a chevron; RTL locales flip it.", "placeholders": {"page": {"type": "String"}}},
   "@settingsBackTo": {
     "description": "Back button label on a Settings page: returns to its parent page (M20.7).",
     "placeholders": {

@@ -32,8 +32,8 @@ class LearningGroup extends ConsumerWidget {
       children: [
         _reality(context, t, th, p),
         SettingsRow(
-          glyph: DotGlyphs.clock,
-          tint: t.colors.accentInk,
+          glyph: DotGlyphs.clockFace,
+          tint: t.tasks[TaskColor.indigo].ink,
           title: l10n.settingsLearningDurations,
           formReady: (p?.tasksReady ?? 0) > 0,
           subtitle:

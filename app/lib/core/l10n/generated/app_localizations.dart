@@ -11748,6 +11748,12 @@ abstract class AppLocalizations {
   /// **'Back to {page}'**
   String settingsBackTo(String page);
 
+  /// iPhone Settings back link, plain text (E-R2-24, ED-498): the parent page's name after a chevron; RTL locales flip it.
+  ///
+  /// In en, this message translates to:
+  /// **'‹ {page}'**
+  String settingsBackLink(String page);
+
   /// A Siri phrase as said, in this language's quotation marks (Settings › Siri & Shortcuts, E-R2-33).
   ///
   /// In en, this message translates to:

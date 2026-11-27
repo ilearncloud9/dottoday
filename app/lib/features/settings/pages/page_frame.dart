@@ -50,7 +50,11 @@ class SettingsPageFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const side = EdgeInsets.symmetric(horizontal: DotSpace.page);
+    // iPhone and iPad: cards 16 from the edge (E-R2-24, ED-498).
+    final edge = DotIdiom.of(context) == DotIdiom.cupertino
+        ? SettingsFrameSize.side
+        : DotSpace.page;
+    final side = EdgeInsets.symmetric(horizontal: edge);
     final asForm = form && settingsFormFits(context);
     final head = [
       _TitleRow(title: title, page: page, form: asForm),
@@ -78,10 +82,10 @@ class SettingsPageFrame extends StatelessWidget {
               builder: (context, box) {
                 if (pinned == null || box.maxHeight < _pinFrom) {
                   return ListView(
-                    padding: const EdgeInsets.fromLTRB(
-                      DotSpace.page,
+                    padding: EdgeInsets.fromLTRB(
+                      edge,
                       DotSpace.l,
-                      DotSpace.page,
+                      edge,
                       DotSpace.fabClearance,
                     ),
                     children: [...head, ...groups],
@@ -135,9 +139,19 @@ class _TitleRow extends StatelessWidget {
       final p? => settingsPlace(context.l10n, p),
       null => null,
     };
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     final heading = Semantics(
       header: true,
-      child: Text(title, style: t.styles.pageTitle),
+      // iPhone: 34/41, as E-R2-24 draws it (ED-498).
+      child: Text(
+        title,
+        style: iphone
+            ? t.styles.pageTitle.copyWith(
+                fontSize: SettingsFrameSize.title,
+                height: SettingsFrameSize.titleLine / SettingsFrameSize.title,
+              )
+            : t.styles.pageTitle,
+      ),
     );
     final icon = place == null
         ? null
@@ -156,12 +170,18 @@ class _TitleRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ParentBack(label: _parentTitle(context, place), onTap: _onBack),
-          Row(
-            spacing: DotSpace.m,
-            children: [
-              ?icon,
-              Expanded(child: heading),
-            ],
+          Padding(
+            // The title sits 4 in from the back link, as drawn.
+            padding: EdgeInsetsDirectional.only(
+              start: iphone ? SettingsFrameSize.wordsInset : 0,
+            ),
+            child: Row(
+              spacing: DotSpace.m,
+              children: [
+                ?icon,
+                Expanded(child: heading),
+              ],
+            ),
           ),
         ],
       );
@@ -223,7 +243,8 @@ class _TitleRow extends StatelessWidget {
   }
 }
 
-/// "‹ Settings": the iPhone back button, in the accent.
+/// "‹ Settings": the iPhone back button, plain text in the accent at 17
+/// (E-R2-24, ED-498); the arrow is part of the words, as UIKit draws it.
 class _ParentBack extends StatelessWidget {
   const _ParentBack({required this.label, required this.onTap});
 
@@ -241,18 +262,19 @@ class _ParentBack extends StatelessWidget {
         borderRadius: BorderRadius.circular(DotRadii.card),
         onTap: () => onTap(context),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.android),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentInk),
-              Flexible(
-                child: Text(
-                  label,
-                  style: t.styles.body.copyWith(color: t.colors.accentInk),
-                ),
+          constraints: const BoxConstraints(minHeight: DotTouch.min),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            widthFactor: 1,
+            child: Text(
+              context.l10n.settingsBackLink(label),
+              style: t.styles.body.copyWith(
+                fontSize: SettingsFrameSize.back,
+                height: 22 / SettingsFrameSize.back,
+                fontWeight: FontWeight.w400,
+                color: t.colors.accent,
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -260,7 +282,8 @@ class _ParentBack extends StatelessWidget {
   }
 }
 
-/// A paragraph in the page's muted body style.
+/// A paragraph in the page's body style: ink 2, the words 4 in from the
+/// cards on iPhone and iPad (E-R2-24, ED-498).
 class PageText extends StatelessWidget {
   const PageText(this.text, {super.key});
 
@@ -269,6 +292,12 @@ class PageText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    return Text(text, style: t.styles.body.copyWith(color: t.colors.muted));
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: iphone ? SettingsFrameSize.wordsInset : 0,
+      ),
+      child: Text(text, style: t.styles.body.copyWith(color: t.colors.ink2)),
+    );
   }
 }

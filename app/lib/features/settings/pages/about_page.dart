@@ -28,8 +28,8 @@ class AboutPage extends ConsumerWidget {
           caption: l10n.settingsAbout,
           children: [
             SettingsRow(
-              glyph: DotGlyphs.today,
-              tint: t.colors.accentInk,
+              glyph: DotGlyphs.info,
+              tint: t.colors.muted,
               title: l10n.settingsVersion,
               value: version,
             ),
@@ -42,7 +42,7 @@ class AboutPage extends ConsumerWidget {
               ),
             ),
             SettingsRow(
-              glyph: DotGlyphs.info,
+              glyph: DotGlyphs.document,
               tint: t.colors.muted,
               title: l10n.aboutLicences,
               onTap: () => showLicensePage(

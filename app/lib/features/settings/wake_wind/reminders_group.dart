@@ -73,7 +73,7 @@ class WakeWindRemindersGroup extends StatelessWidget {
       children: [
         WindDownReminderRow(settings: settings),
         SettingsRow(
-          glyph: DotGlyphs.sunrise,
+          glyph: DotGlyphs.horizon,
           tint: t.tasks[TaskColor.amber].ink,
           title: l10n.wwdWakeUpCard,
           value: wakeUpCardOn(settings) ? l10n.wwdOn : l10n.wwdOff,

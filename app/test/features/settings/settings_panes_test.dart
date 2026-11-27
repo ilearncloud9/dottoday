@@ -155,9 +155,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(_inPane(SettingsPane.list, find.text('Planning')), findsOneWidget);
     expect(_selected(tester, 'Planning'), isTrue);
-    // ‹ Settings goes back to the short list.
-    // The first "Settings" in the pane is ‹ Settings, over the title.
-    await tester.tap(_inPane(SettingsPane.list, find.text('Settings')).first);
+    // ‹ Settings goes back to the short list (one plain-text link, ED-498).
+    await tester.tap(_inPane(SettingsPane.list, find.text('‹ Settings')));
     await tester.pumpAndSettle();
     expect(
       router.routerDelegate.currentConfiguration.uri.path,

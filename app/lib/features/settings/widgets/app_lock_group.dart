@@ -26,7 +26,7 @@ class AppLockGroup extends ConsumerWidget {
       caption: l10n.lockCaption,
       children: [
         SettingsRow(
-          glyph: DotGlyphs.check,
+          glyph: DotGlyphs.lock,
           tint: t.colors.accentInk,
           title: l10n.lockToggle,
           subtitle: l10n.lockToggleDetail,
@@ -36,7 +36,7 @@ class AppLockGroup extends ConsumerWidget {
         ),
         if (settings.enabled)
           SettingsRow(
-            glyph: DotGlyphs.repeat,
+            glyph: DotGlyphs.clockFace,
             tint: t.colors.accentInk,
             title: l10n.lockAfter,
             value: _label(l10n, settings.after),

@@ -60,7 +60,7 @@ class FormatGroup extends StatelessWidget {
     };
     return SettingsRow(
       glyph: DotGlyphs.globe,
-      tint: t.tasks[TaskColor.sky].ink,
+      tint: t.tasks[TaskColor.indigo].ink,
       title: l10n.settingsLanguage,
       value: names[locale] ?? names.values.first,
       choices: formChoices(
@@ -92,8 +92,8 @@ class FormatGroup extends StatelessWidget {
     String name(int iso) =>
         DateFormat.EEEE(locale).format(DateTime(2024, 1, iso));
     return SettingsRow(
-      glyph: DotGlyphs.calendar,
-      tint: t.tasks[TaskColor.sky].ink,
+      glyph: DotGlyphs.clockFace,
+      tint: t.colors.muted,
       title: l10n.settingsWeekStarts,
       value: name(settings.firstDayOfWeek),
       choices: formChoices(

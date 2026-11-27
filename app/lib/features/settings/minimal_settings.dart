@@ -67,7 +67,7 @@ class MinimalSettings extends ConsumerWidget {
             ),
             SettingsRow(
               glyph: DotGlyphs.calendar,
-              tint: t.colors.accentInk,
+              tint: t.tasks[TaskColor.violet].ink,
               title: l10n.settingsCalendars,
               selected: picked(SettingsPage.calendars),
               onTap: () => open(SettingsPage.calendars),

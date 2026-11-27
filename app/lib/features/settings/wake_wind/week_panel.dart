@@ -274,10 +274,7 @@ class _AlarmLine extends ConsumerWidget {
       child: Row(
         spacing: DotSpace.m,
         children: [
-          SettingsIcon(
-            glyph: TaskIcon.flipphone.glyph!,
-            tint: t.tasks[TaskColor.amber].ink,
-          ),
+          SettingsIcon(glyph: TaskIcon.flipphone.glyph!, tint: t.colors.muted),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

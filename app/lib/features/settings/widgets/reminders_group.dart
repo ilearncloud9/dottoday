@@ -98,7 +98,7 @@ class RemindersGroup extends ConsumerWidget {
           ),
         SettingsRow(
           glyph: DotGlyphs.sound,
-          tint: t.tasks[TaskColor.sky].ink,
+          tint: t.colors.muted,
           title: l10n.settingsSound,
           // Unset is the Dot tone; "system" the OS sound (docs/12 §3).
           value: reminderSoundName(l10n, settings.reminderSound),
@@ -113,7 +113,7 @@ class RemindersGroup extends ConsumerWidget {
         ),
         QuietHoursRow(settings: settings),
         SettingsRow(
-          glyph: DotGlyphs.sunrise,
+          glyph: DotGlyphs.horizon,
           tint: t.tasks[TaskColor.amber].ink,
           title: l10n.settingsDaySummary,
           value: daySummaryText(context, settings.daySummaryDays),

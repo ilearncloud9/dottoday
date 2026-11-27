@@ -1066,3 +1066,19 @@ abstract final class ChangelogSize {
   static const double dotTop = 7;
   static const double gap = 10;
 }
+
+/// The Settings page frame on iPhone and iPad (E-R2-24, ED-498): cards 16
+/// from the screen's edge with the words 4 further in; 18 corners and 0.5
+/// hairlines; rows 14 by 6 in with a 14 chevron; the title 34/41.
+abstract final class SettingsFrameSize {
+  static const double side = 16;
+  static const double wordsInset = 4;
+  static const double cardRadius = 18;
+  static const double hairline = 0.5;
+  static const double rowPadH = 14;
+  static const double rowPadV = 6;
+  static const double chevron = 14;
+  static const double title = 34;
+  static const double titleLine = 41;
+  static const double back = 17;
+}

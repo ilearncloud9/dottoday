@@ -7757,6 +7757,11 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String settingsBackLink(String page) {
+    return '‹ $page';
+  }
+
+  @override
   String siriPhraseQuoted(String phrase) {
     return '«$phrase»';
   }

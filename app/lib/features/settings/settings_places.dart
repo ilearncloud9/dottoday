@@ -50,7 +50,7 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
       SettingsPage.appearance => (
         title: l10n.settingsAppearance,
         summary: l10n.settingsAppearanceSummary,
-        glyph: DotGlyphs.palette,
+        glyph: DotGlyphs.appearance,
         colour: TaskColor.rose,
         parent: null,
       ),
@@ -122,21 +122,21 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         title: l10n.soundsTitle,
         summary: null,
         glyph: DotGlyphs.sound,
-        colour: TaskColor.violet,
+        colour: TaskColor.slate,
         parent: SettingsPage.reminders,
       ),
       SettingsPage.calendars => (
         title: l10n.settingsCalendars,
         summary: null,
         glyph: DotGlyphs.calendar,
-        colour: TaskColor.sky,
+        colour: TaskColor.violet,
         parent: SettingsPage.dataPrivacy,
       ),
       SettingsPage.export => (
         title: l10n.settingsExport,
         summary: null,
         glyph: DotGlyphs.share,
-        colour: TaskColor.mint,
+        colour: TaskColor.teal,
         parent: SettingsPage.dataPrivacy,
       ),
       SettingsPage.privacy => (
@@ -157,7 +157,7 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         title: l10n.settingsHelp,
         summary: null,
         glyph: DotGlyphs.help,
-        colour: TaskColor.slate,
+        colour: TaskColor.teal,
         parent: SettingsPage.helpAbout,
       ),
       SettingsPage.about => (
@@ -171,7 +171,7 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         title: l10n.settingsWhatsNew,
         summary: null,
         glyph: DotGlyphs.bolt,
-        colour: TaskColor.slate,
+        colour: TaskColor.amber,
         // Opened from About Dottoday, so Back says so (E-R2-24 §4, ED-497).
         parent: SettingsPage.about,
       ),
@@ -179,7 +179,7 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         title: l10n.settingsSiri,
         summary: null,
         glyph: DotGlyphs.mic,
-        colour: TaskColor.slate,
+        colour: TaskColor.violet,
         parent: SettingsPage.helpAbout,
       ),
       SettingsPage.account => (

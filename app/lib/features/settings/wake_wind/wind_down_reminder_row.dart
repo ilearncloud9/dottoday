@@ -18,7 +18,8 @@ class WindDownReminderRow extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     return SettingsRow(
-      glyph: DotGlyphs.moon,
+      // The bell everywhere (ED-332).
+      glyph: DotGlyphs.bell,
       tint: t.tasks[TaskColor.violet].ink,
       title: l10n.settingsWindDownReminder,
       subtitle: l10n.settingsWindDownReminderDetail,

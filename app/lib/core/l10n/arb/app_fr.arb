@@ -1941,6 +1941,7 @@
   "settingsLearnMyDaySummary": "Fil de la réalité, durées, énergie",
   "settingsFormat": "Format",
   "settingsBackTo": "Retour à {page}",
+  "settingsBackLink": "‹ {page}",
   "siriPhraseQuoted": "« {phrase} »",
   "layoutEverything": "Tout",
   "layoutLess": "Moins",

@@ -47,7 +47,7 @@ class WakeUpCardGroup extends StatelessWidget {
       caption: l10n.wakeUpCardCaption,
       children: [
         SettingsRow(
-          glyph: DotGlyphs.sunrise,
+          glyph: DotGlyphs.horizon,
           tint: t.tasks[TaskColor.amber].ink,
           title: l10n.wakeUpCardRow,
           subtitle: l10n.wakeUpCardRowDetail,

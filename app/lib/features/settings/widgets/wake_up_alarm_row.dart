@@ -39,8 +39,8 @@ class WakeUpAlarmRow extends ConsumerWidget {
     final short = ring ? _boardLine(ref, l10n, capabilities) : null;
     final fix = on && capabilities != null ? wakeUpFix(capabilities) : null;
     return SettingsRow(
-      // E-Phones draws an alarm clock on the Ring like an alarm row.
-      glyph: ring ? TaskIcon.alarm.glyph! : DotGlyphs.bell,
+      // One alarm clock for both forms of the row (ED-332, ED-498).
+      glyph: DotGlyphs.alarmClock,
       tint: t.tasks[TaskColor.amber].ink,
       title: ring ? l10n.wwdRingLikeAlarm : l10n.settingsWakeUpAlarm,
       subtitle: short ?? detail,

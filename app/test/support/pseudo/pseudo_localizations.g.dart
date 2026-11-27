@@ -6199,6 +6199,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String settingsBackTo(String page) => pseudo(super.settingsBackTo(page));
 
   @override
+  String settingsBackLink(String page) => pseudo(super.settingsBackLink(page));
+
+  @override
   String siriPhraseQuoted(String phrase) =>
       pseudo(super.siriPhraseQuoted(phrase));
 

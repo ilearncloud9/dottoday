@@ -43,14 +43,14 @@ class DataGroup extends ConsumerWidget {
         ),
         SettingsRow(
           glyph: DotGlyphs.calendar,
-          tint: t.tasks[TaskColor.indigo].ink,
+          tint: t.tasks[TaskColor.violet].ink,
           title: l10n.settingsCalendars,
           subtitle: l10n.settingsCalendarsDetail,
           onTap: () => _open(context, SettingsPage.calendars),
         ),
         SettingsRow(
           glyph: DotGlyphs.share,
-          tint: t.tasks[TaskColor.mint].ink,
+          tint: t.colors.accentInk,
           title: l10n.settingsExport,
           subtitle: l10n.settingsExportDetail,
           onTap: () => _open(context, SettingsPage.export),
@@ -83,7 +83,7 @@ class PrivacyGroup extends StatelessWidget {
       children: [
         SettingsRow(
           glyph: DotGlyphs.shield,
-          tint: t.tasks[TaskColor.violet].ink,
+          tint: t.tasks[TaskColor.mint].ink,
           title: l10n.settingsPrivacy,
           subtitle: l10n.privacyThinkingTitle,
           onTap: () => _open(context, SettingsPage.privacy),
@@ -135,15 +135,15 @@ class AboutGroup extends ConsumerWidget {
             onTap: () => _open(context, SettingsPage.siri),
           ),
         SettingsRow(
-          glyph: DotGlyphs.today,
-          tint: t.tasks[TaskColor.amber].ink,
+          glyph: DotGlyphs.info,
+          tint: t.colors.muted,
           title: l10n.settingsAboutApp,
           value: version,
           onTap: () => _open(context, SettingsPage.about),
         ),
         SettingsRow(
-          glyph: DotGlyphs.edit,
-          tint: t.tasks[TaskColor.mint].ink,
+          glyph: DotGlyphs.envelope,
+          tint: t.colors.accentInk,
           title: l10n.settingsFeedback,
           onTap: () => unawaited(showFeedbackSheet(context)),
         ),

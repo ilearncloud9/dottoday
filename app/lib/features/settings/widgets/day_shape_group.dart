@@ -32,7 +32,7 @@ List<Widget> dayTimeRows(BuildContext context, Settings settings) {
       changeSettings(context, (s) => withCommonWindow(s, dayWindow(w, b)));
   return [
     SettingsRow(
-      glyph: DotGlyphs.sunrise,
+      glyph: DotGlyphs.horizon,
       tint: t.tasks[TaskColor.amber].ink,
       title: l10n.settingsWakeUp,
       value: at(wake),

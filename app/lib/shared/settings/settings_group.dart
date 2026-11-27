@@ -60,6 +60,8 @@ class SettingsGroup extends StatelessWidget {
   }
 
   Widget _card(BuildContext context, DotTheme t) {
+    // iPhone and iPad: E-R2-24's cards (ED-498); Android's are part 3b.
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -75,8 +77,12 @@ class SettingsGroup extends StatelessWidget {
               // Material list subheader is in the accent (E-Phones).
               child: Text(
                 caption,
+                // iPhone: regular weight, as E-R2-24 draws it (ED-498).
                 style: DotIdiom.of(context) == DotIdiom.cupertino
-                    ? t.styles.caption
+                    ? t.styles.caption.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontVariations: const [],
+                      )
                     : t.styles.caption.copyWith(color: t.colors.accentInk),
               ),
             ),
@@ -84,14 +90,21 @@ class SettingsGroup extends StatelessWidget {
         Material(
           color: t.colors.raised,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(DotRadii.cardLarge),
+            borderRadius: BorderRadius.circular(
+              iphone ? SettingsFrameSize.cardRadius : DotRadii.cardLarge,
+            ),
             side: BorderSide(color: t.colors.outline),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               for (final (i, child) in children.indexed) ...[
-                if (i > 0) Divider(height: 1, color: t.colors.outline),
+                if (i > 0)
+                  Divider(
+                    height: iphone ? SettingsFrameSize.hairline : 1,
+                    thickness: iphone ? SettingsFrameSize.hairline : null,
+                    color: t.colors.outline,
+                  ),
                 child,
               ],
             ],
@@ -377,12 +390,17 @@ class SettingsRow extends StatelessWidget {
     final t = DotTheme.of(context);
     final on = toggle;
     final stacked = _stacked(context, t, width);
+    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     final row = ConstrainedBox(
       constraints: BoxConstraints(minHeight: settingsRowHeight(context)),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: flush ? 0 : DotSpace.l,
-          vertical: DotSpace.s,
+          horizontal: flush
+              ? 0
+              : iphone
+              ? SettingsFrameSize.rowPadH
+              : DotSpace.l,
+          vertical: iphone ? SettingsFrameSize.rowPadV : DotSpace.s,
         ),
         child: Row(
           spacing: DotSpace.m,
@@ -401,7 +419,9 @@ class SettingsRow extends StatelessWidget {
               )
             else if (!bare)
               SettingsIcon(glyph: glyph, tint: tint),
-            Expanded(child: _texts(t, stacked: stacked)),
+            Expanded(
+              child: _texts(t, stacked: stacked, iphone: iphone),
+            ),
             if (value case final v? when !stacked)
               // As wide as it needs, up to 45 % of the row: short values
               // leave the title room, long ones wrap instead of overflow.
@@ -424,7 +444,7 @@ class SettingsRow extends StatelessWidget {
               DotIcon(
                 DotGlyphs.chevronRight,
                 color: t.colors.muted,
-                size: DotSize.rowIcon,
+                size: iphone ? SettingsFrameSize.chevron : DotSize.rowIcon,
               ),
           ],
         ),
@@ -479,56 +499,60 @@ class SettingsRow extends StatelessWidget {
     );
   }
 
-  Widget _texts(DotTheme t, {required bool stacked}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Regular weight, as E draws Settings rows (E-R2-33).
-      Text(
-        title,
-        style: action
-            ? t.styles.body.copyWith(color: t.colors.accentInk)
-            : quiet
-            ? t.styles.body.copyWith(color: t.colors.muted)
-            : t.styles.body,
-      ),
-      if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
-      if (value case final v? when stacked)
-        Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),
-      ?below,
-    ],
-  );
+  Widget _texts(DotTheme t, {required bool stacked, bool iphone = false}) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Regular weight, as E draws Settings rows (E-R2-33).
+          Text(
+            title,
+            // iPhone rows 16 (E-R2-24, ED-498).
+            style:
+                (action
+                        ? t.styles.body.copyWith(color: t.colors.accentInk)
+                        : quiet
+                        ? t.styles.body.copyWith(color: t.colors.muted)
+                        : t.styles.body)
+                    .copyWith(fontSize: iphone ? 16 : null),
+          ),
+          if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
+          if (value case final v? when stacked)
+            Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),
+          ?below,
+        ],
+      );
 }
 
-/// A Settings row's icon: [glyph] in [tint] on its tint — a rounded tile
-/// on iPhone, a circle on Material (E-Phones Settings); the mission
-/// picker's rows wear it too (E-R2-28).
+/// A Settings row's icon: [glyph] on its solid tile in the boards' pair
+/// for [tint]'s colour (ED-332, ED-498): a rounded tile on iPhone and iPad,
+/// a circle on Material. 36 across, the owner's size (ED-498; the boards
+/// draw 30). The mission picker's rows wear it too (E-R2-28).
 class SettingsIcon extends StatelessWidget {
   const SettingsIcon({required this.glyph, required this.tint, super.key});
 
   final DotGlyph glyph;
+
+  /// The setting's colour; [SettingsTiles.of] turns it into the drawn pair.
   final Color tint;
 
   @override
-  Widget build(BuildContext context) => Container(
-    width: DotSize.rowDot,
-    height: DotSize.rowDot,
-    decoration: BoxDecoration(
-      shape: DotIdiom.of(context) == DotIdiom.cupertino
-          ? BoxShape.rectangle
-          : BoxShape.circle,
-      borderRadius: DotIdiom.of(context) == DotIdiom.cupertino
-          ? BorderRadius.circular(DotRadii.iconTile)
-          : null,
-      color: tint.withValues(
-        alpha: DotTheme.of(context).colors.isDark
-            ? TaskAlpha.tintDark
-            : TaskAlpha.tintLight,
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final pair = SettingsTiles.of(t.colors, t.tasks, tint);
+    final tile = DotIdiom.of(context) == DotIdiom.cupertino;
+    return Container(
+      width: DotSize.rowDot,
+      height: DotSize.rowDot,
+      decoration: BoxDecoration(
+        shape: tile ? BoxShape.rectangle : BoxShape.circle,
+        borderRadius: tile ? BorderRadius.circular(DotRadii.iconTile) : null,
+        color: pair.tile,
       ),
-    ),
-    child: Center(
-      child: DotIcon(glyph, color: tint, size: DotSize.rowIcon),
-    ),
-  );
+      child: Center(
+        child: DotIcon(glyph, color: pair.glyph, size: DotSize.rowIcon),
+      ),
+    );
+  }
 }
 
 /// The switch idiom (§4): Cupertino on iPhone, Material elsewhere — by

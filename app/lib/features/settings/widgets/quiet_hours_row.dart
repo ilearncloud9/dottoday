@@ -29,7 +29,7 @@ class QuietHoursRow extends StatelessWidget {
     String at(String hhmm) =>
         clockText(context, windowMinutes(hhmm), settings.use24h);
     final toggle = SettingsRow(
-      glyph: DotGlyphs.bellOff,
+      glyph: DotGlyphs.moonZ,
       tint: t.tasks[TaskColor.violet].ink,
       title: l10n.settingsQuietHours,
       subtitle: quiet == null

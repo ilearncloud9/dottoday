@@ -25,6 +25,7 @@ export 'dot_motion.dart';
 export 'dot_type.dart';
 export 'look_metrics.dart';
 export 'onboarding_tokens.dart';
+export 'settings_tiles.dart';
 export 'task_icons.dart';
 export 'task_palette.dart';
 export 'week_review_tokens.dart';

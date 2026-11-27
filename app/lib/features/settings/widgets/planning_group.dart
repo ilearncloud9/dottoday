@@ -218,7 +218,7 @@ class _RoutinesRow extends ConsumerWidget {
     final path = AppRoutes.settingsPage(SettingsPage.routines);
     return SettingsRow(
       glyph: DotGlyphs.repeat,
-      tint: t.tasks[TaskColor.mint].ink,
+      tint: t.colors.accentInk,
       title: context.l10n.routinesTitle,
       formButton: context.l10n.settingsOpenRoutines,
       // The form's button names the page instead (ED-450).
