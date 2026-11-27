@@ -99,8 +99,8 @@ void main() {
     await _pump(tester);
     expect(find.text('October 18 – October 24'), findsOneWidget);
     expect(find.text('29 of 34 done'), findsOneWidget);
-    expect(find.text('Busiest · Thu'), findsOneWidget);
-    expect(find.text('Lightest · Sat'), findsOneWidget);
+    expect(find.text('Busiest · Thursday'), findsOneWidget);
+    expect(find.text('Lightest · Saturday'), findsOneWidget);
     expect(find.text('5/7'), findsOneWidget);
     expect(
       find.text(

@@ -129,7 +129,7 @@ void main() {
       'Rebalance…',
       'Drop a Routine…',
       'Pick Today\'s One Thing…',
-      'Week in Review',
+      'This Week',
       'Plan / Reality',
     ]) {
       expect(items, contains(label), reason: label);

@@ -1,14 +1,14 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/domain/review/week_review.dart';
-import 'package:dottoday/features/timeline/review/week_day_dot.dart';
+import 'package:dottoday/features/timeline/review/week_ring.dart';
 import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The seven dots with their weekday letter and date (`B-ios-week-review`).
-/// Each column is one tap target that opens the day's thread; [selected]
-/// is the open one.
+/// The seven days of This week (E-R2-24 §1, ED-496): each column the
+/// weekday's letter, its ring and "done/total", one tap target that opens
+/// the day's tasks; [selected] sits on the accent's tint.
 class WeekDotsRow extends StatelessWidget {
   const WeekDotsRow({
     required this.review,
@@ -24,40 +24,20 @@ class WeekDotsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).toLanguageTag();
-    // At large text the count no longer fits inside a dot: it moves under
-    // the date instead of being clipped or shrunk (Dynamic Type, R-12).
-    final countInside =
-        MediaQuery.textScalerOf(context).scale(DotSize.rowIcon) <=
-        DotSize.rowIcon * 1.3;
-    return LayoutBuilder(
-      builder: (context, box) {
-        final column = box.maxWidth / review.days.length;
-        final max = column < DotSize.weekReviewDotMax
-            ? column
-            : DotSize.weekReviewDotMax;
-        final min = max * DotSize.weekReviewDotMin / DotSize.weekReviewDotMax;
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            for (final d in review.days)
-              Expanded(
-                child: _DayColumn(
-                  day: d,
-                  diameter: weekDotDiameter(
-                    d.plannedMinutes,
-                    review.maxPlannedMinutes,
-                    min: min,
-                    maxSize: max,
-                  ),
-                  selected: d.date == selected,
-                  countInside: countInside,
-                  locale: locale,
-                  onTap: () => onSelect(d.date),
-                ),
-              ),
-          ],
-        );
-      },
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: WeekSize.columnGap,
+      children: [
+        for (final d in review.days)
+          Expanded(
+            child: _DayColumn(
+              day: d,
+              selected: d.date == selected,
+              locale: locale,
+              onTap: () => onSelect(d.date),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -65,29 +45,22 @@ class WeekDotsRow extends StatelessWidget {
 class _DayColumn extends StatelessWidget {
   const _DayColumn({
     required this.day,
-    required this.diameter,
     required this.selected,
-    required this.countInside,
     required this.locale,
     required this.onTap,
   });
 
   final WeekReviewDay day;
-  final double diameter;
   final bool selected;
-  final bool countInside;
   final String locale;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final c = t.colors;
     final l10n = context.l10n;
-    final count = l10n.weekReviewDotCount(day.done, day.total);
-    final dateStyle = t.styles.rowMeta.copyWith(
-      color: selected ? t.colors.text : t.colors.muted,
-      fontWeight: selected ? FontWeight.w700 : null,
-    );
+    final radius = BorderRadius.circular(WeekSize.columnRadius);
     return Semantics(
       button: true,
       selected: selected,
@@ -98,29 +71,33 @@ class _DayColumn extends StatelessWidget {
         formatDurationShort(l10n, day.plannedMinutes),
       ),
       excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.min),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: DotSpace.xs,
-            children: [
-              WeekDayDot(
-                dots: day.snapshot.dots,
-                dayEnd: day.snapshot.geometry.dayEnd,
-                diameter: diameter,
-                centre: countInside ? count : null,
-                selected: selected,
+      child: Material(
+        color: selected ? c.accentTint : Colors.transparent,
+        borderRadius: radius,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: radius,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: DotTouch.min),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: WeekSize.columnPad),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: WeekSize.columnLines,
+                children: [
+                  Text(
+                    DateFormat.EEEEE(locale).format(day.date),
+                    style: WeekType.letter(t.styles, c),
+                  ),
+                  WeekRing(done: day.done, total: day.total),
+                  Text(
+                    l10n.weekReviewDotCount(day.done, day.total),
+                    textAlign: TextAlign.center,
+                    style: WeekType.count(t.styles, c),
+                  ),
+                ],
               ),
-              Text(
-                DateFormat.EEEEE(locale).format(day.date),
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
-              ),
-              Text(DateFormat.d(locale).format(day.date), style: dateStyle),
-              if (!countInside) Text(count, style: t.styles.rowMeta),
-            ],
+            ),
           ),
         ),
       ),

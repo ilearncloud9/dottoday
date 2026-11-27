@@ -8814,10 +8814,10 @@ abstract class AppLocalizations {
   /// **'already here · overlaps'**
   String get proposalOverlaps;
 
-  /// Weekly review (11 D1): sheet title, Today ⋯ menu item and Wind Down prompt caption.
+  /// This week, the weekly review (11 D1, E-R2-24, ED-496): sheet title, Today ⋯ menu item and Wind Down prompt caption.
   ///
   /// In en, this message translates to:
-  /// **'Week in review'**
+  /// **'This week'**
   String get weekReviewTitle;
 
   /// Weekly review: the week's first and last day.
@@ -11583,7 +11583,7 @@ abstract class AppLocalizations {
   /// Mac Day menu (title case): the weekly reflection (ED-099).
   ///
   /// In en, this message translates to:
-  /// **'Week in Review'**
+  /// **'This Week'**
   String get menuDayWeekReview;
 
   /// Mac Day menu (title case); ticked while on.

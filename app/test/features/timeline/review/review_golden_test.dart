@@ -111,7 +111,7 @@ Future<void> _open(WidgetTester tester) async {
 
 Future<void> _openWeek(WidgetTester tester) async {
   await _open(tester);
-  await tester.tap(find.text('Week in review'));
+  await tester.tap(find.text('This week'));
   await tester.pumpAndSettle();
 }
 

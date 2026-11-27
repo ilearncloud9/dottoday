@@ -46,12 +46,12 @@ void main() {
     await _open(tester);
     expect(find.byType(BottomSheet), findsOneWidget);
     expect(find.text('Day review'), findsWidgets);
-    await tester.tap(find.text('Week in review'));
+    await tester.tap(find.text('This week'));
     await tester.pumpAndSettle();
     expect(find.text('No streaks here — just what happened.'), findsOneWidget);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
-    expect(find.text('Week in review'), findsOneWidget);
+    expect(find.text('This week'), findsOneWidget);
     expect(find.textContaining('done so far'), findsOneWidget);
   });
 
@@ -88,7 +88,7 @@ void main() {
     expect(_path(router), AppRoutes.review);
     expect(find.byType(ReviewPlace), findsOneWidget);
     expect(find.text('Day review'), findsOneWidget);
-    expect(find.text('Week in review'), findsOneWidget);
+    expect(find.text('This week'), findsOneWidget);
     // The review's own day is the latest: › waits, ‹ steps back.
     final next = find.ancestor(
       of: find.byTooltip('Next day'),
@@ -118,7 +118,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.text('Week in review'), findsOneWidget);
+    expect(find.text('This week'), findsOneWidget);
     await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
     expect(find.byType(ReviewPanel), findsNothing);

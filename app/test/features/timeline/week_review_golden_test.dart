@@ -68,25 +68,48 @@ void main() {
     tz_data.initializeTimeZones();
     await loadAppFonts();
   });
+  // This week (E-R2-24 §1, ED-496): the iPhone board at every width, with
+  // 200 % and right to left on the phone; Android in its own sheet.
+  Widget body(_) => Scaffold(
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: WeekReviewBody(today: DateTime(2026, 10, 25)),
+        ),
+      ),
+    ),
+  );
+  Future<void> open(WidgetTester tester) async {
+    await tester.tap(find.text('5/7'));
+    await tester.pumpAndSettle();
+  }
+
   goldenMatrix(
     'week_review',
     height: 1000,
     overrides: _overrides(),
-    build: (_) => Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: WeekReviewBody(today: DateTime(2026, 10, 25)),
-          ),
-        ),
-      ),
-    ),
-    act: (tester) async {
-      await tester.tap(find.text('5/7'));
-      await tester.pumpAndSettle();
-    },
+    build: body,
+    act: open,
+  );
+  goldenMatrix(
+    'week_review_phone',
+    height: 1100,
+    widths: const {'compact'},
+    a11yVariants: true,
+    overrides: _overrides(),
+    build: body,
+    act: open,
+  );
+  goldenMatrix(
+    'week_review_android',
+    height: 1000,
+    widths: const {'compact'},
+    platform: TargetPlatform.android,
+    overrides: _overrides(),
+    build: body,
+    act: open,
   );
   goldenMatrix(
     'week_share_titles_off',

@@ -874,6 +874,7 @@ Rules for every task in M18 to M22:
   - Android parity (R2-29, ED-332);
   - Mac and web parity, including Edit and Window menus (R2-30, ED-333);
   - keyboard and screen-reader paths (ED-248, E-DF3).
+  - [x] Part 1 done 2026-11-27 (ED-496): This week to E-R2-24 §1: renamed from "Week in review" everywhere (four languages; Mac menu "This Week"); one accent ring per day (done of planned) with letter and count, the chosen day on the tint; the open day's tasks under a hairline in the card; filled chips with full day names and planned time on the busiest line (owner); carry card, sentence and the centred share image to the board; other platforms the same look in their own sheet or panel (owner, derived). Open: a device, VoiceOver and TalkBack.
 - [ ] M20.14 Remove what M18 to M20 replaced: unused Concept A widgets, tokens and goldens, and the Concept A colour role names (`surface`, `raised`, `text`, `muted`, `outline`, `accentInk`, `accentTint`; ED-360) (named in the commit body; CLAUDE.md §6). Parity matrix §7: every entry point still reaches its feature.
 
 ## Milestone 21 — Platform QA (Prompt H)

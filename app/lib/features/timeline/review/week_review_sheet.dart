@@ -15,10 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// Week in review's content (11 D1, ED-099): dates, the seven dots (tap
-/// one for its thread), the chips, the sentence, the carry-forward and the
-/// share image, then "No streaks here — just what happened." It shows
-/// wherever the review does (`openReview`); R2-24 restyles it (M20.13).
+/// This week's content (11 D1, ED-099; E-R2-24 §1, ED-496): dates, the
+/// seven days (tap one for its tasks), the chips, the sentence, the
+/// carry-forward and the share image, then "No streaks here — just what
+/// happened." It shows wherever the review does (`openReview`): the board's
+/// iPhone sheet, and the same look inside each platform's own sheet or
+/// panel.
 class WeekReviewBody extends ConsumerStatefulWidget {
   const WeekReviewBody({
     required this.today,
@@ -62,27 +64,26 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
     final sentence = weekSentence(context, review);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: DotSpace.l,
+      spacing: WeekSize.gap,
       children: [
         if (widget.showRange)
           Text(
             weekRangeLabel(context, week),
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: WeekType.range(t.styles, t.colors),
           ),
         _card(context, review, days.first.settings.use24h),
         WeekReviewChips(review: review),
         if (sentence.isNotEmpty)
-          // E-R2-28: the sentence on the accent's tint, in its ink.
           DecoratedBox(
             decoration: BoxDecoration(
               color: t.colors.accentTint,
-              borderRadius: BorderRadius.circular(DotRadii.card),
+              borderRadius: BorderRadius.circular(WeekSize.sentenceRadius),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(DotSpace.l),
+              padding: WeekSize.sentencePad,
               child: Text(
                 sentence,
-                style: t.styles.cardTitle.copyWith(color: t.colors.accentInk),
+                style: WeekType.sentence(t.styles, t.colors),
               ),
             ),
           ),
@@ -103,11 +104,11 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
               unawaited(leaveInInbox(container, messenger, l10n, unfinished));
             },
           ),
-        _share(context, review, week),
+        ..._share(context, review, week),
         Text(
           l10n.weekReviewNoStreaks,
           textAlign: TextAlign.center,
-          style: t.styles.rowMeta,
+          style: WeekType.closing(t.styles, t.colors),
         ),
       ],
     );
@@ -119,14 +120,15 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
     final zone = ref.watch(timelineDataProvider(review.days.first.date)).value;
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DotRadii.cardLarge),
+        color: t.colors.raised,
+        borderRadius: BorderRadius.circular(WeekSize.cardRadius),
         border: Border.all(color: t.colors.outline),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(DotSpace.m),
+        padding: const EdgeInsets.all(WeekSize.cardPad),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.m,
+          spacing: WeekSize.threadTop,
           children: [
             WeekDotsRow(
               review: review,
@@ -159,48 +161,60 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
     );
   }
 
-  Widget _share(BuildContext context, WeekReview review, List<DateTime> week) {
+  /// The share image, the titles switch and Share image (no card round
+  /// them, as drawn).
+  List<Widget> _share(
+    BuildContext context,
+    WeekReview review,
+    List<DateTime> week,
+  ) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+    return [
+      WeekShareCard(
+        review: review,
+        range: weekRangeLabel(context, week, short: true),
+        titles: _titles,
+        boundary: _image,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(DotSpace.l),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.s,
-          children: [
-            WeekShareCard(
-              review: review,
-              range: weekRangeLabel(context, week, short: true),
-              titles: _titles,
-              boundary: _image,
-            ),
-            SwitchListTile.adaptive(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.weekShareTitles, style: t.styles.body),
-              value: _titles,
-              onChanged: (on) => setState(() => _titles = on),
-            ),
-            Builder(
-              builder: (button) => FilledButton.icon(
-                onPressed: () =>
-                    unawaited(shareWeekImage(button, _image, week.first)),
-                icon: DotIcon(
-                  DotGlyphs.share,
-                  color: t.colors.onAccent,
-                  size: DotSize.rowIcon,
+      MergeSemantics(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: WeekSize.switchRow),
+          child: Row(
+            spacing: WeekSize.threadGap,
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.weekShareTitles,
+                  style: WeekType.switchLabel(t.styles, t.colors),
                 ),
-                label: Text(l10n.weekShareImage),
               ),
-            ),
-          ],
+              Switch.adaptive(
+                value: _titles,
+                onChanged: (on) => setState(() => _titles = on),
+              ),
+            ],
+          ),
         ),
       ),
-    );
+      Builder(
+        builder: (button) => FilledButton.icon(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(WeekSize.shareButton),
+            textStyle: WeekType.shareButton(t.styles),
+            shape: const StadiumBorder(),
+          ),
+          onPressed: () =>
+              unawaited(shareWeekImage(button, _image, week.first)),
+          icon: DotIcon(
+            DotGlyphs.share,
+            color: t.colors.onAccent,
+            size: WeekSize.shareGlyph,
+          ),
+          label: Text(l10n.weekShareImage),
+        ),
+      ),
+    ];
   }
 }
 

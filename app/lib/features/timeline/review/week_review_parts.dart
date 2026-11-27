@@ -9,9 +9,10 @@ import 'package:intl/intl.dart';
 /// How many of a day's tasks its thread lists before "+4 more".
 const weekThreadRows = 3;
 
-/// The tapped day's thread (`B-ios-week-review` popover): its first
-/// [weekThreadRows] tasks with their times — done ones ticked and struck —
-/// then its planned time and "+N more".
+/// The tapped day's tasks (E-R2-24 §1, ED-496), under a hairline in the
+/// week card: its first [weekThreadRows] tasks — a dot in the task's colour
+/// (filled once done, a ring while open), the title (struck once done) and
+/// the time — then its planned time and "+N more".
 class WeekDayThread extends StatelessWidget {
   const WeekDayThread({
     required this.day,
@@ -29,64 +30,73 @@ class WeekDayThread extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final c = t.colors;
     final l10n = context.l10n;
     final dots = day.snapshot.dots;
     final planned = formatDurationShort(l10n, day.plannedMinutes);
     final more = dots.length - weekThreadRows;
+    final foot = WeekType.foot(t.styles, c);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        border: Border.all(color: t.colors.outline),
+        border: Border(top: BorderSide(color: c.outline, width: 0.5)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(DotSpace.m),
+        padding: WeekSize.threadPad,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.s,
           children: [
-            if (dots.isEmpty) Text(l10n.spreadNothing, style: t.styles.rowMeta),
+            if (dots.isEmpty) Text(l10n.spreadNothing, style: foot),
             for (final d in dots.take(weekThreadRows))
-              Row(
-                spacing: DotSpace.s,
-                children: [
-                  TaskDot(
-                    color: TaskColor.fromKey(d.colorKey),
-                    icon: TaskIcon.fromKey(d.iconKey),
-                    state: d.done ? DotState.done : DotState.upcoming,
-                    label: taskDotLabel(
-                      l10n,
-                      title: d.title,
-                      state: d.done ? DotState.done : DotState.upcoming,
-                    ),
-                    size: DotSize.pickerDot,
+              Semantics(
+                container: true,
+                label: taskDotLabel(
+                  l10n,
+                  title: d.title,
+                  state: d.done ? DotState.done : DotState.upcoming,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: WeekSize.threadRow,
                   ),
-                  Expanded(
-                    child: Text(
-                      d.title,
-                      style: t.styles.body.copyWith(
-                        color: d.done ? t.colors.muted : null,
-                        decoration: d.done ? TextDecoration.lineThrough : null,
+                  child: Row(
+                    spacing: WeekSize.threadGap,
+                    children: [
+                      _Dot(
+                        color: t.tasks[TaskColor.fromKey(d.colorKey)].color,
+                        done: d.done,
                       ),
-                    ),
+                      Expanded(
+                        child: ExcludeSemantics(
+                          child: Text(
+                            d.title,
+                            style: WeekType.task(t.styles, c, done: d.done),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        time(d.startUtc, d.endUtc),
+                        style: WeekType.time(t.styles, c),
+                      ),
+                    ],
                   ),
-                  Text(time(d.startUtc, d.endUtc), style: t.styles.rowMeta),
-                ],
+                ),
               ),
             if (dots.isNotEmpty)
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      busiest
-                          ? l10n.weekReviewPlannedBusiest(planned)
-                          : l10n.weekReviewPlanned(planned),
-                      style: t.styles.rowMeta.copyWith(color: t.colors.text),
+              Padding(
+                padding: const EdgeInsets.only(top: WeekSize.threadFoot),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        busiest
+                            ? l10n.weekReviewPlannedBusiest(planned)
+                            : l10n.weekReviewPlanned(planned),
+                        style: foot,
+                      ),
                     ),
-                  ),
-                  if (more > 0)
-                    Text(l10n.monthMore(more), style: t.styles.rowMeta),
-                ],
+                    if (more > 0) Text(l10n.monthMore(more), style: foot),
+                  ],
+                ),
               ),
           ],
         ),
@@ -95,8 +105,31 @@ class WeekDayThread extends StatelessWidget {
   }
 }
 
-/// "● 29 of 34 done", "Busiest · Thu", "Lightest · Sat": text chips that
-/// wrap at large text.
+/// A task in the open day: filled once done, a ring while open; the row's
+/// words say which.
+class _Dot extends StatelessWidget {
+  const _Dot({required this.color, required this.done});
+
+  final Color color;
+  final bool done;
+
+  @override
+  Widget build(BuildContext context) => SizedBox.square(
+    dimension: WeekSize.threadDot,
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: done ? color : null,
+        border: done
+            ? null
+            : Border.all(color: color, width: WeekSize.threadDotRing),
+      ),
+    ),
+  );
+}
+
+/// "29 of 39 done", "Busiest · Tuesday", "Lightest · Sunday": filled chips
+/// with the day's full name (owner, ED-496), wrapping at large text.
 class WeekReviewChips extends StatelessWidget {
   const WeekReviewChips({required this.review, super.key});
 
@@ -105,56 +138,38 @@ class WeekReviewChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final c = t.colors;
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    String day(WeekReviewDay d) => DateFormat.E(locale).format(d.date);
-    Widget chip(String text, {bool dot = false}) => DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DotRadii.pill),
-        border: Border.all(color: t.colors.outline),
-      ),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: DotSpace.m,
-          vertical: DotSpace.s,
+    String day(WeekReviewDay d) => DateFormat.EEEE(locale).format(d.date);
+    Widget chip(String text) => ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: WeekSize.chip),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: WeekColors.chip(c),
+          borderRadius: BorderRadius.circular(WeekSize.chip / 2),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: DotSpace.s,
-          children: [
-            if (dot)
-              const SizedBox.square(
-                dimension: DotSize.tabDot,
-                child: _AccentDot(),
-              ),
-            Flexible(child: Text(text, style: t.styles.body)),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: WeekSize.chipPad),
+          child: Align(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Text(text, style: WeekType.chip(t.styles, c)),
+          ),
         ),
       ),
     );
     return Wrap(
-      spacing: DotSpace.s,
-      runSpacing: DotSpace.s,
+      spacing: WeekSize.chipGap,
+      runSpacing: WeekSize.chipGap,
       children: [
-        chip(l10n.reviewSummary(review.done, review.total), dot: true),
+        chip(l10n.reviewSummary(review.done, review.total)),
         if (review.busiest case final b?) chip(l10n.weekReviewBusiest(day(b))),
         if (review.lightest case final l?)
           chip(l10n.weekReviewLightest(day(l))),
       ],
     );
   }
-}
-
-class _AccentDot extends StatelessWidget {
-  const _AccentDot();
-
-  @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: DotTheme.of(context).colors.accent,
-      shape: BoxShape.circle,
-    ),
-  );
 }
 
 /// The one rule-written sentence (11 D1): how the week's real starts went
@@ -179,7 +194,8 @@ String weekSentence(BuildContext context, WeekReview review) {
   return [?pace, ?load].join(' '); // l10n-ignore: joins two sentences
 }
 
-/// "○ 3 unfinished · move them to next week?  Place  Leave in Inbox".
+/// "3 unfinished · move them to next week?" with Place and Leave in Inbox
+/// (E-R2-24 §1, ED-496).
 class WeekCarryCard extends StatelessWidget {
   const WeekCarryCard({
     required this.count,
@@ -195,45 +211,49 @@ class WeekCarryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
+    final c = t.colors;
     final l10n = context.l10n;
+    final label = WeekType.carryButton(t.styles);
+    ButtonStyle pill(double pad) => ButtonStyle(
+      minimumSize: const WidgetStatePropertyAll(
+        Size(WeekSize.carryButton, WeekSize.carryButton),
+      ),
+      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: pad)),
+      textStyle: WidgetStatePropertyAll(label),
+      tapTargetSize: MaterialTapTargetSize.padded,
+      shape: const WidgetStatePropertyAll(StadiumBorder()),
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(DotRadii.card),
-        border: Border.all(color: t.colors.outline),
+        color: c.raised,
+        borderRadius: BorderRadius.circular(WeekSize.carryRadius),
+        border: Border.all(color: c.outline),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(DotSpace.m),
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: DotSpace.s,
-          runSpacing: DotSpace.s,
+        padding: WeekSize.carryPad,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: WeekSize.carryActionsTop,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              spacing: DotSpace.s,
+            Text(l10n.weekCarryAsk(count), style: WeekType.carry(t.styles, c)),
+            Wrap(
+              spacing: WeekSize.carryButtonGap,
+              runSpacing: WeekSize.carryButtonGap,
               children: [
-                SizedBox.square(
-                  dimension: DotSize.rowIcon,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: t.colors.muted,
-                        width: DotSize.smallDotOutline,
-                      ),
-                    ),
-                  ),
+                FilledButton(
+                  style: pill(WeekSize.carryPlacePad),
+                  onPressed: onPlace,
+                  child: Text(l10n.weekCarryPlace),
                 ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: DotSize.wideRowFrom - DotSpace.xxl,
+                TextButton(
+                  style: pill(WeekSize.carryInboxPad).copyWith(
+                    foregroundColor: WidgetStatePropertyAll(c.accentInk),
                   ),
-                  child: Text(l10n.weekCarryAsk(count), style: t.styles.body),
+                  onPressed: onInbox,
+                  child: Text(l10n.weekCarryInbox),
                 ),
               ],
             ),
-            FilledButton(onPressed: onPlace, child: Text(l10n.weekCarryPlace)),
-            TextButton(onPressed: onInbox, child: Text(l10n.weekCarryInbox)),
           ],
         ),
       ),

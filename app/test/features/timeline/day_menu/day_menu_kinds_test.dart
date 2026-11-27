@@ -45,7 +45,7 @@ void main() {
       'Duplicate day…',
       'Copy day as text',
       'Review the day',
-      'Week in review',
+      'This week',
       'Layout',
       'Low-energy mode',
       'Plan / Reality',

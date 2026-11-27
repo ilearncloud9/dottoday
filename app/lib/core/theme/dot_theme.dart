@@ -27,6 +27,7 @@ export 'look_metrics.dart';
 export 'onboarding_tokens.dart';
 export 'task_icons.dart';
 export 'task_palette.dart';
+export 'week_review_tokens.dart';
 
 /// Concept A design tokens as a [ThemeExtension] (docs/10-ui-concept-a.md
 /// §2, ADR-0007). The only theme: it lives in `app/lib/core/theme/`.

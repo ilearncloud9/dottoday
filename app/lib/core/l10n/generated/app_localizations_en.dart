@@ -5795,7 +5795,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get proposalOverlaps => 'already here · overlaps';
 
   @override
-  String get weekReviewTitle => 'Week in review';
+  String get weekReviewTitle => 'This week';
 
   @override
   String weekReviewDates(String from, String to) {
@@ -7604,7 +7604,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuDayReview => 'Review the Day';
 
   @override
-  String get menuDayWeekReview => 'Week in Review';
+  String get menuDayWeekReview => 'This Week';
 
   @override
   String get menuDayLowEnergy => 'Low-Energy Mode';

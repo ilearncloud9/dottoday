@@ -4,7 +4,7 @@
 /// the rest round to the next Wake Up. Without the night (`showNightArc`
 /// off, or no next Wake Up) the day takes the whole ring, as before M17.5.
 ///
-/// Painters draw it as is: `DayDot`, `WeekDayDot`, and, through the
+/// Painters draw it as is: `DayDot` and, through the
 /// snapshot's `night_start`, the Mac menu bar and the iOS and Android
 /// widgets.
 final class DayDotGeometry {
