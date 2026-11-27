@@ -3,9 +3,11 @@ import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:dottoday/core/theme/dot_type.dart';
 import 'package:flutter/painting.dart';
 
-/// B1 "Which settings should Dottoday use?" (E-CR160 `SettingsChoice`,
-/// `AndroidB1`, `TabletB1`, `AndroidTabletB1`, `DesktopB1`; ED-494).
-abstract final class SettingsChoiceSize {
+/// The account decisions, B1 "Which settings should Dottoday use?" (E-CR160
+/// `SettingsChoice`, `AndroidB1`, `TabletB1`, `AndroidTabletB1`,
+/// `DesktopB1`; ED-494) and G1/G1b "This device has tasks made without an
+/// account" (`GuestWork`, `GuestWorkLocked`; elsewhere as B1, ED-495).
+abstract final class AccountDecisionSize {
   /// Phones: iPhone 20 from the sides, 12 under the status bar, 36 below;
   /// Android 16 (the words 8 further in), 28 and 32.
   static const EdgeInsets padIphone = EdgeInsets.fromLTRB(20, 12, 20, 36);
@@ -41,6 +43,15 @@ abstract final class SettingsChoiceSize {
   static const double cardPad = 16;
   static const double cardInner = 12;
   static const double cardOutline = 2;
+
+  /// G1's cards (`GuestWork`): the mark 1 below the title's top; 4
+  /// between the title, the line and the box; the box row 44 tall, 6
+  /// above, 10 between the box and its words.
+  static const double markTop = 1;
+  static const double cardLines = 4;
+  static const double boxRow = 44;
+  static const double boxTop = 6;
+  static const double boxGap = 10;
 
   /// Corners 22 (iPhone, iPad), 20 (Android), 18 (Mac/web).
   static double radius(AccountDialogLook look) => switch (look) {
@@ -79,7 +90,7 @@ abstract final class SettingsChoiceSize {
 }
 
 /// B1's type.
-abstract final class SettingsChoiceType {
+abstract final class AccountDecisionType {
   /// 22/28 700 −0.2 (iPhone, iPad, Mac/web), 24/32 700 on Android.
   static TextStyle title(DotType t, AccountDialogLook look) =>
       look == AccountDialogLook.android

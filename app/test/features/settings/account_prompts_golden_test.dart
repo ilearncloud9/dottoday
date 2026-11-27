@@ -94,10 +94,18 @@ void main() {
     'account_delete_native',
     const DeleteAccountView(owner: 'a', wide: false),
   );
+  // `DeleteNative` is one frame for iPhone and Android (ED-495).
+  prompt(
+    'account_delete_native_android',
+    const DeleteAccountView(owner: 'a', wide: false),
+    platform: TargetPlatform.android,
+  );
+  // `DeleteWeb`: the web on a Mac (ED-495).
   prompt(
     'account_delete_web',
     const DeleteAccountView(owner: 'a', wide: true),
     widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
     browser: true,
   );
 }

@@ -84,21 +84,3 @@ class _Gap extends StatelessWidget {
     children: children,
   );
 }
-
-/// A short muted note under a button or a group (13/18 in the boards).
-class DecisionNote extends StatelessWidget {
-  const DecisionNote(this.text, {this.centred = false, super.key});
-
-  final String text;
-  final bool centred;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Text(
-      text,
-      textAlign: centred ? TextAlign.center : TextAlign.start,
-      style: t.styles.stripWeekday,
-    );
-  }
-}

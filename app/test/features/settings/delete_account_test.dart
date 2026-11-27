@@ -2,6 +2,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/features/settings/pages/delete_account.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +27,7 @@ void main() {
         browser: browser,
       );
 
-  Finder deleteButton() => find.widgetWithText(FilledButton, 'Delete account');
+  Finder deleteButton() => find.widgetWithText(AccountButton, 'Delete account');
 
   testWidgets('phone: summary, typed word, then delete', (t) async {
     await page(t);
@@ -43,11 +44,11 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('stay'), findsNothing);
-    expect(t.widget<FilledButton>(deleteButton()).onPressed, isNull);
+    expect(t.widget<AccountButton>(deleteButton()).onPressed, isNull);
     await expectA11yGuidelines(t);
     await t.enterText(find.byType(TextField), 'delete');
     await t.pump();
-    expect(t.widget<FilledButton>(deleteButton()).onPressed, isNull);
+    expect(t.widget<AccountButton>(deleteButton()).onPressed, isNull);
     await t.enterText(find.byType(TextField), 'DELETE');
     await t.pump();
     await tapIn(t, deleteButton());

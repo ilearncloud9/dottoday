@@ -5,12 +5,13 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/data/owners/account_gate.dart';
 import 'package:dottoday/data/sync/account_owners.dart';
+import 'package:dottoday/shared/account/account_decision.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:dottoday/shared/account/choice_card.dart';
-import 'package:dottoday/shared/account/decision_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// G1 (CR-160 policy §3, board `GuestWork`): an account signed in while
+/// G1 (CR-160 policy §3, board `GuestWork`; elsewhere as B1, ED-495): an account signed in while
 /// this device has tasks made without an account in the current guest
 /// session. Keeping them separate is the default; "Bring them into your
 /// account" needs "I made these N tasks myself" ticked. The tasks are
@@ -52,10 +53,14 @@ class _GuestWorkScreenState extends ConsumerState<GuestWorkScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final place = accountDecisionPlace(context);
+    final look = place.look;
     final n = widget.gate.eligible;
     final bring = _choice == GuestChoice.bringIn;
-    return DecisionFrame(
+    return AccountDecision(
+      place: place,
       title: l10n.guestWorkTitle,
       body: l10n.guestWorkBody(n),
       content: [
@@ -64,21 +69,27 @@ class _GuestWorkScreenState extends ConsumerState<GuestWorkScreen> {
           explicitChildNodes: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: DotSpace.m,
+            spacing: AccountDecisionSize.cardGap,
             children: [
               ChoiceCard(
+                look: look,
                 title: l10n.guestWorkKeep,
                 selected: !bring,
                 onTap: () => _pick(GuestChoice.keepSeparate),
-                children: [ChoiceDetail(l10n.guestWorkKeepBody(n))],
+                children: [ChoiceDetail(l10n.guestWorkKeepBody(n), look: look)],
               ),
               ChoiceCard(
+                look: look,
                 title: l10n.guestWorkBring,
                 selected: bring,
                 onTap: () => _pick(GuestChoice.bringIn),
                 children: [
-                  ChoiceDetail(l10n.guestWorkBringBody(widget.gate.email)),
+                  ChoiceDetail(
+                    l10n.guestWorkBringBody(widget.gate.email),
+                    look: look,
+                  ),
                   _MineBox(
+                    look: look,
                     label: l10n.guestWorkMine(n),
                     value: _mine,
                     onChanged: bring && !_busy
@@ -90,12 +101,20 @@ class _GuestWorkScreenState extends ConsumerState<GuestWorkScreen> {
             ],
           ),
         ),
-        DecisionNote(l10n.guestWorkNotSure),
+        AccountDecision.words(
+          place,
+          Text(
+            l10n.guestWorkNotSure,
+            style: AccountDialogType.note(t.styles, look),
+          ),
+        ),
       ],
-      actions: [
-        FilledButton(
+      buttons: [
+        AccountButton.filled(
+          look: look,
+          label: l10n.accountContinue,
           onPressed: _ready ? () => unawaited(_continue()) : null,
-          child: Text(l10n.accountContinue),
+          pad: accountDecisionPad(place, main: true),
         ),
       ],
     );
@@ -106,11 +125,13 @@ class _GuestWorkScreenState extends ConsumerState<GuestWorkScreen> {
 /// is chosen ([onChanged] null).
 class _MineBox extends StatelessWidget {
   const _MineBox({
+    required this.look,
     required this.label,
     required this.value,
     required this.onChanged,
   });
 
+  final AccountDialogLook look;
   final String label;
   final bool value;
   final ValueChanged<bool>? onChanged;
@@ -119,25 +140,40 @@ class _MineBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final change = onChanged;
-    return MergeSemantics(
-      child: InkWell(
-        onTap: change == null ? null : () => change(!value),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: DotTouch.min),
-          child: Row(
-            spacing: DotSpace.s,
-            children: [
-              Checkbox(
-                value: value,
-                onChanged: change == null ? null : (v) => change(v ?? false),
-              ),
-              Expanded(
-                child: Text(
-                  label,
-                  style: t.styles.body.copyWith(color: t.colors.muted),
+    return Padding(
+      padding: const EdgeInsets.only(top: AccountDecisionSize.boxTop),
+      child: MergeSemantics(
+        child: InkWell(
+          onTap: change == null ? null : () => change(!value),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: AccountDecisionSize.boxRow,
+            ),
+            child: Row(
+              spacing: AccountDecisionSize.boxGap,
+              children: [
+                // The box sits on the words' edge, as drawn; the row is
+                // the 44 pt target.
+                Checkbox(
+                  value: value,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: const VisualDensity(
+                    horizontal: VisualDensity.minimumDensity,
+                    vertical: VisualDensity.minimumDensity,
+                  ),
+                  onChanged: change == null ? null : (v) => change(v ?? false),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Text(
+                    label,
+                    style: AccountDecisionType.row(
+                      t.styles,
+                      look,
+                    ).copyWith(color: t.colors.muted),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -176,53 +212,32 @@ class _GuestNoticeScreenState extends ConsumerState<GuestNoticeScreen> {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
+    final place = accountDecisionPlace(context);
+    final look = place.look;
     final n = widget.gate.count;
-    return DecisionFrame(
+    return AccountDecision(
+      place: place,
       title: l10n.guestWorkTitle,
       body: l10n.guestNoticeBody(n),
       content: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: t.colors.raised,
-            borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-            border: Border.all(
-              color: t.colors.outline,
-              width: DotSize.smallDotOutline,
-            ),
+        ChoiceCardFrame(
+          look: look,
+          outline: t.colors.outline,
+          mark: DotIcon(
+            DotGlyphs.checkCircle,
+            color: t.colors.accentInk,
+            size: AccountDecisionSize.radio(look),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(DotSpace.l),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: DotSpace.m,
-              children: [
-                DotIcon(
-                  DotGlyphs.checkCircle,
-                  color: t.colors.accentInk,
-                  size: DotSize.pickerDot,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: DotSpace.xs,
-                    children: [
-                      Text(
-                        l10n.guestNoticeCardTitle,
-                        style: t.styles.choiceTitle,
-                      ),
-                      ChoiceDetail(l10n.guestNoticeCardBody(n)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          title: l10n.guestNoticeCardTitle,
+          children: [ChoiceDetail(l10n.guestNoticeCardBody(n), look: look)],
         ),
       ],
-      actions: [
-        FilledButton(
+      buttons: [
+        AccountButton.filled(
+          look: look,
+          label: l10n.accountContinue,
           onPressed: _busy ? null : () => unawaited(_continue()),
-          child: Text(l10n.accountContinue),
+          pad: accountDecisionPad(place, main: true),
         ),
       ],
     );

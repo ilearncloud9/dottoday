@@ -1,13 +1,15 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
-/// One option of a single choice on a decision screen (CR-160 B1, G1): a
-/// card with a radio mark, [title] and [children] under it. The chosen
-/// card has an accent outline as well as the filled mark, so the choice
-/// never rests on colour alone. Screen readers hear a radio button in a
-/// group, checked or not.
+/// One option of a single choice on a decision screen (CR-160 G1; board
+/// `GuestWork`, its sizes on other platforms as B1's, ED-495): a card with
+/// a radio mark beside [title] and [children]. The chosen card has an
+/// accent outline as well as the filled mark, so the choice never rests on
+/// colour alone. Screen readers hear a radio button in a group, checked or
+/// not.
 class ChoiceCard extends StatelessWidget {
   const ChoiceCard({
+    required this.look,
     required this.title,
     required this.selected,
     required this.onTap,
@@ -15,56 +17,94 @@ class ChoiceCard extends StatelessWidget {
     super.key,
   });
 
+  final AccountDialogLook look;
   final String title;
   final bool selected;
   final VoidCallback onTap;
 
-  /// Under the title, indented to it (details, a checkbox).
+  /// Under the title, beside the mark (details, a checkbox).
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    final c = t.colors;
-    final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-      side: BorderSide(
-        color: selected ? c.accent : c.outline,
-        width: DotSize.smallDotOutline,
-      ),
-    );
+    final c = DotTheme.of(context).colors;
+    final radio = AccountDecisionSize.radio(look);
     return Semantics(
       container: true,
       inMutuallyExclusiveGroup: true,
       checked: selected,
-      child: Material(
-        color: c.raised,
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(DotSpace.l),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: DotSpace.m,
+      child: ChoiceCardFrame(
+        look: look,
+        outline: selected ? c.accent : c.outline,
+        onTap: onTap,
+        mark: ExcludeSemantics(
+          child: RadioMark(selected: selected, size: radio),
+        ),
+        title: title,
+        children: children,
+      ),
+    );
+  }
+}
+
+/// The card around a choice or a statement (G1, G1b): [mark] beside
+/// [title] and [children], 16 in, the board's corners and a 2 [outline].
+class ChoiceCardFrame extends StatelessWidget {
+  const ChoiceCardFrame({
+    required this.look,
+    required this.outline,
+    required this.mark,
+    required this.title,
+    required this.children,
+    this.onTap,
+    super.key,
+  });
+
+  final AccountDialogLook look;
+  final Color outline;
+  final Widget mark;
+  final String title;
+  final List<Widget> children;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AccountDecisionSize.radius(look)),
+      side: BorderSide(color: outline, width: AccountDecisionSize.cardOutline),
+    );
+    final body = Padding(
+      padding: const EdgeInsets.all(AccountDecisionSize.cardPad),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: AccountDecisionSize.radioGap(look),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: AccountDecisionSize.markTop),
+            child: mark,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: AccountDecisionSize.cardLines,
               children: [
-                ExcludeSemantics(child: RadioMark(selected: selected)),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: DotSpace.xs,
-                    children: [
-                      Text(title, style: t.styles.choiceTitle),
-                      ...children,
-                    ],
-                  ),
+                Text(
+                  title,
+                  style: AccountDecisionType.cardTitle(t.styles, look),
                 ),
+                ...children,
               ],
             ),
           ),
-        ),
+        ],
       ),
+    );
+    return Material(
+      color: t.colors.raised,
+      shape: shape,
+      clipBehavior: Clip.antiAlias,
+      child: onTap == null ? body : InkWell(onTap: onTap, child: body),
     );
   }
 }
@@ -113,15 +153,22 @@ class RadioMark extends StatelessWidget {
   }
 }
 
-/// A muted detail line inside a [ChoiceCard] or a card.
+/// A muted detail line inside a [ChoiceCard]: 14/20 (Mac/web 13.5/20).
 class ChoiceDetail extends StatelessWidget {
-  const ChoiceDetail(this.text, {super.key});
+  const ChoiceDetail(this.text, {required this.look, super.key});
 
   final String text;
+  final AccountDialogLook look;
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    return Text(text, style: t.styles.body.copyWith(color: t.colors.muted));
+    return Text(
+      text,
+      style: AccountDecisionType.row(
+        t.styles,
+        look,
+      ).copyWith(color: t.colors.muted),
+    );
   }
 }

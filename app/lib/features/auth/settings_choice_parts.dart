@@ -41,12 +41,12 @@ class SettingsChoiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    final radio = SettingsChoiceSize.radio(look);
+    final radio = AccountDecisionSize.radio(look);
     final shape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(SettingsChoiceSize.radius(look)),
+      borderRadius: BorderRadius.circular(AccountDecisionSize.radius(look)),
       side: BorderSide(
         color: selected ? c.accent : c.outline,
-        width: SettingsChoiceSize.cardOutline,
+        width: AccountDecisionSize.cardOutline,
       ),
     );
     return Semantics(
@@ -60,17 +60,17 @@ class SettingsChoiceCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(SettingsChoiceSize.cardPad),
+            padding: const EdgeInsets.all(AccountDecisionSize.cardPad),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: SettingsChoiceSize.cardInner,
+              spacing: AccountDecisionSize.cardInner,
               children: [
                 ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: SettingsChoiceSize.headMin(look),
+                    minHeight: AccountDecisionSize.headMin(look),
                   ),
                   child: Row(
-                    spacing: SettingsChoiceSize.radioGap(look),
+                    spacing: AccountDecisionSize.radioGap(look),
                     children: [
                       ExcludeSemantics(
                         child: RadioMark(selected: selected, size: radio),
@@ -78,7 +78,7 @@ class SettingsChoiceCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           title,
-                          style: SettingsChoiceType.cardTitle(t.styles, look),
+                          style: AccountDecisionType.cardTitle(t.styles, look),
                         ),
                       ),
                     ],
@@ -86,7 +86,7 @@ class SettingsChoiceCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.only(
-                    start: radio + SettingsChoiceSize.radioGap(look),
+                    start: radio + AccountDecisionSize.radioGap(look),
                   ),
                   child: _Rows(
                     look: look,
@@ -121,13 +121,13 @@ class _Rows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final value = SettingsChoiceType.row(t.styles, look);
+    final value = AccountDecisionType.row(t.styles, look);
     final label = value.copyWith(color: t.colors.muted);
-    final gap = SettingsChoiceSize.rowGap(look);
+    final gap = AccountDecisionSize.rowGap(look);
     return Table(
       columnWidths: {
         0: MaxColumnWidth(
-          FixedColumnWidth(SettingsChoiceSize.labelMin(look, phone: phone)),
+          FixedColumnWidth(AccountDecisionSize.labelMin(look, phone: phone)),
           const IntrinsicColumnWidth(),
         ),
       },
@@ -137,7 +137,7 @@ class _Rows extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.only(
-                  end: SettingsChoiceSize.columnGap,
+                  end: AccountDecisionSize.columnGap,
                   top: i == 0 ? 0 : gap,
                 ),
                 child: Text(_label(context, f), style: label),
@@ -204,7 +204,7 @@ class SettingsChoicePair extends StatelessWidget {
   Widget build(BuildContext context) {
     final stacked = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: SettingsChoiceSize.cardGap,
+      spacing: AccountDecisionSize.cardGap,
       children: children,
     );
     final floor = min;
@@ -213,13 +213,13 @@ class SettingsChoicePair extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, box) {
         final side =
-            box.maxWidth >= 2 * floor + SettingsChoiceSize.cardGap &&
+            box.maxWidth >= 2 * floor + AccountDecisionSize.cardGap &&
             MediaQuery.textScalerOf(context).scale(1) <= 1.5;
         if (!side) return stacked;
         return IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            spacing: SettingsChoiceSize.cardGap,
+            spacing: AccountDecisionSize.cardGap,
             children: [for (final c in children) Expanded(child: c)],
           ),
         );

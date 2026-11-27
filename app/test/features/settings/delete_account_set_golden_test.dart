@@ -5,6 +5,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/features/settings/pages/delete_account.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
@@ -36,6 +37,8 @@ void main() {
       name,
       height: 900,
       widths: widths,
+      // The web on a Mac (`DeleteWeb`, ED-495).
+      platform: wide ? TargetPlatform.macOS : TargetPlatform.iOS,
       a11yVariants: !wide,
       overrides: accountScreenOverrides(_uncertain(), browser: wide),
       build: (_) => Scaffold(
@@ -57,7 +60,7 @@ void main() {
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField), 'DELETE');
       await t.pump();
-      final delete = find.widgetWithText(FilledButton, 'Delete account');
+      final delete = find.widgetWithText(AccountButton, 'Delete account');
       await t.ensureVisible(delete);
       await t.pumpAndSettle();
       await t.tap(delete);

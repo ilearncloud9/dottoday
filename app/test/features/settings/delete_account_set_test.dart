@@ -10,6 +10,7 @@ import 'package:dottoday/data/export/prepared_file.dart';
 import 'package:dottoday/data/owners/account_export.dart';
 import 'package:dottoday/domain/export/multipart_format.dart';
 import 'package:dottoday/features/settings/pages/delete_account.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -95,7 +96,7 @@ void main() {
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'DELETE');
     await t.pump();
-    await tapIn(t, find.widgetWithText(FilledButton, 'Delete account'));
+    await tapIn(t, find.widgetWithText(AccountButton, 'Delete account'));
     await t.pumpAndSettle();
     expect(
       find.text(

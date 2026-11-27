@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- "This device has tasks made without an account", Delete account and "Removal from this browser didn't finish" now look as the account boards draw on every device: Delete account is a full page on phones and a compact dialog on the Mac and web, and buttons that can't be pressed yet look disabled (redesign branch).
 - "Which settings should Dottoday use?" now looks as the account boards draw on every device (the two choices side by side on tablets, the Mac and the web) and compares time zone, language, your day and layout only; Settings › Account shows whether everything has synced or how many changes are waiting, and Choose settings as its own row (redesign branch).
 - After signing out, "You're signed out" now looks as the account boards draw on every device: the buttons at the foot on phones, a centred column with the buttons under the words on tablets, and on the Mac and web Sign in and Use without an account side by side (redesign branch).
 - Signing out now looks as the account boards draw on every device: Dottoday's own dialog on iPhone, iPad and the Mac (Cancel focused on the Mac and web), Android's dialog with text buttons, and when changes are still waiting to sync, Stay signed in first with a short hint, centred at 440 on tablets (redesign branch).

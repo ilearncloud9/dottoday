@@ -8,6 +8,7 @@ import 'package:dottoday/data/owners/owner_switch.dart';
 import 'package:dottoday/features/notifications/reminder_refusal_snack.dart';
 import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/shared/account/account_buttons.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -118,7 +119,7 @@ void main() {
   Future<void> confirm(WidgetTester t) async {
     await t.enterText(find.byType(TextField), 'DELETE');
     await t.pump();
-    await tapIn(t, find.widgetWithText(FilledButton, 'Delete account'));
+    await tapIn(t, find.widgetWithText(AccountButton, 'Delete account'));
     await t.pump();
   }
 
@@ -207,8 +208,8 @@ void main() {
     expect(find.text(_refused), findsNothing);
     expect(find.byType(Dialog), findsOneWidget);
     // The typed word is asked again: deleting needs it.
-    final delete = find.widgetWithText(FilledButton, 'Delete account');
-    expect(t.widget<FilledButton>(delete).onPressed, isNull);
+    final delete = find.widgetWithText(AccountButton, 'Delete account');
+    expect(t.widget<AccountButton>(delete).onPressed, isNull);
   });
 
   testWidgets('a server error wins over the refusal', (t) async {

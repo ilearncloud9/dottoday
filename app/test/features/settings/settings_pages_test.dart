@@ -6,6 +6,7 @@ import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -107,8 +108,8 @@ void main() {
       );
       expect(find.text('Signed in as kody@example.com'), findsOneWidget);
       await _tap(tester, 'Delete account');
-      Finder confirm() => find.widgetWithText(FilledButton, 'Delete account');
-      expect(tester.widget<FilledButton>(confirm()).onPressed, isNull);
+      Finder confirm() => find.widgetWithText(AccountButton, 'Delete account');
+      expect(tester.widget<AccountButton>(confirm()).onPressed, isNull);
       await tester.tap(find.text('Export my data first'));
       await tester.pumpAndSettle();
       expect(actions.calls, ['export']);

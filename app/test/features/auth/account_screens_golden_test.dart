@@ -82,23 +82,36 @@ void main() {
     widths: const {'expanded'},
     platform: TargetPlatform.macOS,
   );
-  screen(
-    'account_guest_work',
-    () => const GuestWorkScreen(
-      gate: GuestWorkGate(
-        accountId: 'a',
-        email: 'sam@example.com',
-        eligible: 12,
-      ),
-    ),
-    height: 1000,
+  // G1 and G1b (`GuestWork`, `GuestWorkLocked`; elsewhere as B1, ED-495):
+  // iPhone with 200 % and right to left, then Android, iPad, Android
+  // tablet and the Mac/web.
+  Widget g1() => const GuestWorkScreen(
+    gate: GuestWorkGate(accountId: 'a', email: 'sam@example.com', eligible: 12),
   );
-  screen(
-    'account_guest_notice',
-    () => const GuestNoticeScreen(
-      gate: GuestNoticeGate(accountId: 'a', count: 12),
-    ),
-  );
+  Widget g1b() =>
+      const GuestNoticeScreen(gate: GuestNoticeGate(accountId: 'a', count: 12));
+  for (final (name, build) in [
+    ('account_guest_work', g1),
+    ('account_guest_notice', g1b),
+  ]) {
+    screen(name, build, a11yVariants: true);
+    screen('${name}_android', build, platform: TargetPlatform.android);
+    screen('${name}_ipad', build, height: 820, widths: const {'expanded'});
+    screen(
+      '${name}_android_tablet',
+      build,
+      height: 800,
+      widths: const {'expanded'},
+      platform: TargetPlatform.android,
+    );
+    screen(
+      '${name}_wide',
+      build,
+      height: 800,
+      widths: const {'expanded'},
+      platform: TargetPlatform.macOS,
+    );
+  }
   final account = profileFixture().copyWith(
     tzId: 'Europe/Berlin',
     locale: 'de',
@@ -148,6 +161,14 @@ void main() {
     'account_settings_choice_wide',
     b1,
     height: 800,
+    widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
+  );
+  // `DeleteWebRetry` (ED-495): the web, on a Mac and in a phone browser.
+  screen(
+    'account_removal_retry_wide',
+    () => const RemovalRetryScreen(),
+    height: 640,
     widths: const {'expanded'},
     platform: TargetPlatform.macOS,
   );

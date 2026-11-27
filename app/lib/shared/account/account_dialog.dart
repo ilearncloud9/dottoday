@@ -21,11 +21,15 @@ class AccountDialog extends StatelessWidget {
     required this.look,
     required this.children,
     this.plain = false,
+    this.width,
     super.key,
   });
 
   final AccountDialogLook look;
   final bool plain;
+
+  /// A board's own width on tablets and the Mac/web (D1: 480).
+  final double? width;
   final List<Widget> children;
 
   @override
@@ -35,9 +39,11 @@ class AccountDialog extends StatelessWidget {
         WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.compact;
     final desktop = look == AccountDialogLook.desktop;
     final android = look == AccountDialogLook.android;
-    final width = android && plain
-        ? AccountDialogSize.widthAndroidPlain
-        : AccountDialogSize.width;
+    final width =
+        this.width ??
+        (android && plain
+            ? AccountDialogSize.widthAndroidPlain
+            : AccountDialogSize.width);
     return Dialog(
       backgroundColor: AccountDialogColors.fill(c),
       insetPadding: EdgeInsets.symmetric(
@@ -76,7 +82,7 @@ class AccountDialog extends StatelessWidget {
   }
 }
 
-enum _Kind { filled, outlined, tonal, text }
+enum _Kind { filled, outlined, tonal, tint, text }
 
 /// A button of an E-CR160 dialog in [look]'s size and type: 52 pills on
 /// iPhone, 48 on Android (Roboto 14/500), 40 on the Mac and web. Focus
@@ -110,6 +116,16 @@ class AccountButton extends StatelessWidget {
     super.key,
   }) : _kind = _Kind.tonal;
 
+  /// The accent's tint behind its ink (D1's "Export my data first").
+  const AccountButton.tint({
+    required this.look,
+    required this.label,
+    required this.onPressed,
+    this.autofocus = false,
+    this.pad,
+    super.key,
+  }) : _kind = _Kind.tint;
+
   /// Android's text button, in the accent's ink.
   const AccountButton.text({
     required this.look,
@@ -139,6 +155,7 @@ class AccountButton extends StatelessWidget {
       // Android's outlined button reads in the accent (`AndroidA3`).
       _Kind.outlined => (Colors.transparent, android ? c.accentInk : c.text),
       _Kind.tonal => (c.tonalAndroid, c.onTonalAndroid),
+      _Kind.tint => (Color.alphaBlend(c.accentTint, c.raised), c.accentInk),
       _Kind.text => (Colors.transparent, c.accentInk),
     };
     final rest = _kind == _Kind.outlined
@@ -168,8 +185,16 @@ class AccountButton extends StatelessWidget {
       textStyle: WidgetStatePropertyAll(
         AccountDialogType.button(t.styles, look),
       ),
-      foregroundColor: WidgetStatePropertyAll(ink),
-      backgroundColor: WidgetStatePropertyAll(fill),
+      // Disabled (Delete until the word is typed, a request in flight):
+      // the control fill and secondary words, never the live colours.
+      foregroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled) ? c.muted : ink,
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (s) => s.contains(WidgetState.disabled) && fill != Colors.transparent
+            ? c.control
+            : fill,
+      ),
       elevation: const WidgetStatePropertyAll(0),
       side: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.focused)
