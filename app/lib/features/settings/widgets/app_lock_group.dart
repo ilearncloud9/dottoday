@@ -94,6 +94,9 @@ class _WebLock extends StatelessWidget {
           tint: DotTheme.of(context).colors.muted,
           title: l10n.lockWebTitle,
           subtitle: l10n.lockWebDetail,
+          // Only tells, as drawn (E-R2-24 §3, ED-497).
+          bare: true,
+          quiet: true,
         ),
       ],
     );

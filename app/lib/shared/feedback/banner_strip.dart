@@ -2,18 +2,25 @@ import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A strip above every screen (docs/10 §5.4): a glyph, one line of text
-/// and up to two text actions. Used by the sync banner (M3f.8) and the
-/// in-app reminder (M5.3), which takes the [card] form.
+/// and up to two text actions. Used by the sync banner (M3f.8); the
+/// in-app reminder (M5.3, [bell]) and E-R2-24's strips (the update, the
+/// install, the calendar's, ED-497) take the [card] form.
 class BannerStrip extends StatelessWidget {
   const BannerStrip({
-    required this.glyph,
     required this.text,
+    this.glyph,
     this.actions = const [],
     this.emphasis = false,
     this.card = false,
+    this.bell = false,
     this.lead,
     super.key,
   });
+
+  /// The card's glyph in a raised circle (the in-app reminder, E-R2-20);
+  /// otherwise it stands bare in the accent's ink (E-R2-24's install),
+  /// and a card with no [glyph] has none.
+  final bool bell;
 
   /// The in-app reminder's form (E-R2-20, ED-467): a rounded teal-tinted
   /// card 12 from the sides, the glyph in a circle, the actions as pills
@@ -23,7 +30,7 @@ class BannerStrip extends StatelessWidget {
   /// The part of [text] set in the title's weight (the reminder's title).
   final String? lead;
 
-  final DotGlyph glyph;
+  final DotGlyph? glyph;
   final String text;
 
   /// (label, onPressed), at most two.
@@ -62,7 +69,8 @@ class BannerStrip extends StatelessWidget {
   /// otherwise wrap into a narrow column beside them (M5.9).
   Widget _layout(DotTheme t, double width) {
     final glyphAndText = [
-      DotIcon(glyph, color: t.colors.muted, size: DotSize.rowIcon),
+      if (glyph case final g?)
+        DotIcon(g, color: t.colors.muted, size: DotSize.rowIcon),
       Expanded(
         child: Text(
           text,
@@ -91,16 +99,24 @@ class BannerStrip extends StatelessWidget {
 
   Widget _card(BuildContext context, DotTheme t) {
     final c = t.colors;
+    // On a phone two actions go under the words; one stays beside them,
+    // as E-R2-24 draws the strips (ED-497).
     final compact =
-        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.compact;
-    final bell = Container(
-      width: DotSize.alertBell,
-      height: DotSize.alertBell,
-      decoration: BoxDecoration(color: c.raised, shape: BoxShape.circle),
-      child: Center(
-        child: DotIcon(glyph, color: c.accentInk, size: DotSize.rowIcon),
-      ),
-    );
+        WidthClass.of(MediaQuery.sizeOf(context).width) == WidthClass.compact &&
+        actions.length > 1;
+    final g = glyph;
+    final mark = g == null
+        ? null
+        : bell
+        ? Container(
+            width: DotSize.alertBell,
+            height: DotSize.alertBell,
+            decoration: BoxDecoration(color: c.raised, shape: BoxShape.circle),
+            child: Center(
+              child: DotIcon(g, color: c.accentInk, size: DotSize.rowIcon),
+            ),
+          )
+        : DotIcon(g, color: c.accentInk, size: DotSize.rowIcon);
     final line = Text.rich(_spans(t));
     final pills = Wrap(
       spacing: DotSpace.xs,
@@ -131,10 +147,10 @@ class BannerStrip extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: DotSpace.m,
                 children: [
-                  bell,
+                  ?mark,
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: DotSpace.xs),
+                      padding: EdgeInsets.only(top: bell ? DotSpace.xs : 0),
                       child: line,
                     ),
                   ),
@@ -146,7 +162,7 @@ class BannerStrip extends StatelessWidget {
         : Row(
             spacing: DotSpace.m,
             children: [
-              bell,
+              ?mark,
               Expanded(child: line),
               pills,
             ],
@@ -187,10 +203,19 @@ class BannerStrip extends StatelessWidget {
   /// [text] with [lead] in the title's weight, wherever the language puts it.
   TextSpan _spans(DotTheme t) {
     final at = lead == null ? -1 : text.indexOf(lead!);
-    if (at < 0) return TextSpan(text: text, style: t.styles.alertText);
+    // E-R2-24's strips set their one line in 600 14.5/19 (ED-497).
+    final plain = bell
+        ? t.styles.alertText
+        : t.styles.alertText.copyWith(
+            fontSize: 14.5,
+            height: 19 / 14.5,
+            fontWeight: FontWeight.w600,
+            fontVariations: const [FontVariation.weight(600)],
+          );
+    if (at < 0) return TextSpan(text: text, style: plain);
     final end = at + lead!.length;
     return TextSpan(
-      style: t.styles.alertText,
+      style: plain,
       children: [
         TextSpan(text: text.substring(0, at)),
         TextSpan(text: lead, style: t.styles.alertTitle),

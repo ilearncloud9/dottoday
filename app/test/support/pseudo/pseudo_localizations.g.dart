@@ -206,6 +206,9 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get navInbox => pseudo(super.navInbox);
 
   @override
+  String get navInboxTab => pseudo(super.navInboxTab);
+
+  @override
   String get navWeek => pseudo(super.navWeek);
 
   @override
@@ -1274,9 +1277,6 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   @override
   String settingsAvatarLabel(String name) =>
       pseudo(super.settingsAvatarLabel(name));
-
-  @override
-  String get settingsDayShape => pseudo(super.settingsDayShape);
 
   @override
   String settingsAwake(String length) => pseudo(super.settingsAwake(length));

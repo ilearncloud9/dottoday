@@ -50,6 +50,7 @@ class InAppAlertBanner extends ConsumerWidget {
       return BannerStrip(
         glyph: DotGlyphs.bell,
         card: true,
+        bell: true,
         lead: n.title,
         text: l10n.inAppAlertText(n.title, n.body),
         actions: [(l10n.inAppAlertOk, () => act(null))],
@@ -58,6 +59,7 @@ class InAppAlertBanner extends ConsumerWidget {
     return BannerStrip(
       glyph: DotGlyphs.bell,
       card: true,
+      bell: true,
       lead: n.title,
       text: l10n.inAppAlertText(n.title, n.body),
       actions: n.withActions

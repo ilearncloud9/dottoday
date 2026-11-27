@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/shared/feedback/banner_strip.dart';
 import 'package:flutter/widgets.dart';
@@ -26,7 +25,7 @@ class WhatsNewBanner extends ConsumerWidget {
     void seen() =>
         unawaited(ref.read(whatsNewSeenProvider.notifier).markSeen(newest));
     return BannerStrip(
-      glyph: DotGlyphs.bolt,
+      card: true,
       text: l10n.whatsNewBanner(newest),
       actions: [
         (

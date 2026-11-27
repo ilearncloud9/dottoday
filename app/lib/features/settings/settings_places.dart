@@ -172,7 +172,8 @@ SettingsPlace settingsPlace(AppLocalizations l10n, SettingsPage page) =>
         summary: null,
         glyph: DotGlyphs.bolt,
         colour: TaskColor.slate,
-        parent: SettingsPage.helpAbout,
+        // Opened from About Dottoday, so Back says so (E-R2-24 §4, ED-497).
+        parent: SettingsPage.about,
       ),
       SettingsPage.siri => (
         title: l10n.settingsSiri,

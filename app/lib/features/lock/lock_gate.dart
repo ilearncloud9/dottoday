@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/security/app_lock_store.dart';
-import 'package:dottoday/domain/time/day_dot_geometry.dart';
-import 'package:dottoday/shared/dot/day_dot.dart';
+import 'package:dottoday/shared/brand/brand_mark.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -112,18 +111,34 @@ class _LockScreenState extends ConsumerState<LockScreen> {
             padding: const EdgeInsets.all(DotSpace.page),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              spacing: DotSpace.l,
+              spacing: LockSize.gap,
               children: [
-                const _Dot(),
+                const BrandMark(),
                 Semantics(
                   header: true,
                   child: Text(
                     l10n.lockTitle,
-                    style: t.styles.pageTitle,
+                    style: t.styles.promptTitle.copyWith(
+                      fontSize: 24,
+                      height: 30 / 24,
+                      fontWeight: FontWeight.w800,
+                      fontVariations: const [FontVariation.weight(800)],
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                FilledButton(onPressed: _unlock, child: Text(l10n.lockUnlock)),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size(0, LockSize.button),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: LockSize.buttonPad,
+                    ),
+                    shape: const StadiumBorder(),
+                    textStyle: t.styles.button.copyWith(fontSize: 17),
+                  ),
+                  onPressed: _unlock,
+                  child: Text(l10n.lockUnlock),
+                ),
               ],
             ),
           ),
@@ -133,23 +148,14 @@ class _LockScreenState extends ConsumerState<LockScreen> {
   }
 }
 
-/// The app switcher's view of a locked-capable app: the surface and dot.
+/// The app switcher's view of a locked-capable app: the page colour and
+/// the Dottoday mark, no tasks (E-R2-24 §3).
 class _Cover extends StatelessWidget {
   const _Cover();
 
   @override
   Widget build(BuildContext context) => ColoredBox(
     color: DotTheme.of(context).colors.surface,
-    child: const Center(child: _Dot()),
-  );
-}
-
-/// The brand dot, full (the welcome screen's DayDot).
-class _Dot extends StatelessWidget {
-  const _Dot();
-
-  @override
-  Widget build(BuildContext context) => const ExcludeSemantics(
-    child: DayDot(geometry: DayDotGeometry.filled(1), size: DotSize.dayDot * 3),
+    child: const Center(child: BrandMark()),
   );
 }

@@ -11,6 +11,7 @@ import 'package:dottoday/data/shell/window_material.dart';
 import 'package:dottoday/domain/layout/feature_id.dart';
 import 'package:dottoday/domain/layout/layout_policy.dart';
 import 'package:dottoday/domain/scheduling/inbox_plan.dart';
+import 'package:dottoday/features/calendar_import/reconnect_banner.dart';
 import 'package:dottoday/features/calendar_import/write_back_banner.dart';
 import 'package:dottoday/features/notifications/in_app_alert_banner.dart';
 import 'package:dottoday/features/onboarding/install_banner.dart';
@@ -129,6 +130,8 @@ class AppShell extends ConsumerWidget {
       if (this.shell.currentIndex != ShellTab.today.index) const SyncBanner(),
       // Edits that didn't reach their calendar (M7.3).
       const WriteBackBanner(),
+      // A Google or Microsoft account to sign in again (E-R2-24, ED-497).
+      const ReconnectBanner(),
       // The device moved zone: keep times or shift (M5.9).
       const ZoneBanner(),
       // The web's install offer, from the 2nd visit (M5.7).
@@ -192,7 +195,7 @@ List<ShellDestination> minimalDestinations(
       ),
       ShellTab.inbox => ShellDestination(
         glyph: DotGlyphs.inbox,
-        label: l10n.navInbox,
+        label: l10n.navInboxTab,
         badge: inbox,
         badgeLabel: l10n.navInboxBadge(inbox),
         onDropTask: onDropOnInbox,
@@ -243,7 +246,7 @@ List<ShellDestination> shellDestinations(
       ),
       ShellTab.inbox => ShellDestination(
         glyph: DotGlyphs.inbox,
-        label: l10n.navInbox,
+        label: l10n.navInboxTab,
         visible: inboxTab,
         badge: inbox,
         badgeLabel: l10n.navInboxBadge(inbox),

@@ -229,6 +229,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get navInbox => 'Eingang';
 
   @override
+  String get navInboxTab => 'Eingang';
+
+  @override
   String get navWeek => 'Woche';
 
   @override
@@ -1639,9 +1642,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get settingsDayShape => 'Tagesform';
-
-  @override
   String settingsAwake(String length) {
     return '$length wach';
   }
@@ -1847,7 +1847,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get releaseNotes010 =>
-      'Plane deinen Tag an einem Faden: Zieh eine Aufgabe, um sie zu verschieben, zieh ihren Rand, um ihre Dauer zu ändern, und verschieb alles danach in einem Zug.\nFüge eine Aufgabe mit zwei Tipps hinzu, gib Zeiten in normalen Worten ein oder füge eine Liste ein, um mehrere auf einmal anzulegen.\nWiederkehrende Aufgaben, Erinnerungen mit Vorlauf und deine Kalender auf der Zeitleiste – alles kostenlos.\nSync zwischen iPhone, Android, Mac und Web, mit sichtbarem Status und ohne Datenverlust.\nExportiere alles als JSON, CSV oder Kalenderdatei und spiel ein Backup wieder ein.\nSende Feedback aus den Einstellungen und lies nach jedem Update hier die Neuigkeiten.';
+      'Plane deinen Tag an einem Faden: Zieh eine Aufgabe, um sie zu verschieben, zieh ihren Rand, um ihre Dauer zu ändern, und verschieb alles danach in einem Zug.\nFüge eine Aufgabe mit zwei Tipps hinzu, gib Zeiten in normalen Worten ein oder füge eine Liste ein, um mehrere auf einmal anzulegen.\nWiederkehrende Aufgaben, Erinnerungen mit Vorlauf und deine Kalender auf der Zeitleiste.\nSync zwischen iPhone, Android, Mac und Web, mit sichtbarem Status und ohne Datenverlust.\nExportiere alles als JSON, CSV oder Kalenderdatei und spiel ein Backup wieder ein.\nSende Feedback aus den Einstellungen und lies nach jedem Update hier die Neuigkeiten.';
 
   @override
   String whatsNewBanner(String version) {
@@ -3071,7 +3071,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calendarsIntro =>
-      'Deine Kalendertermine auf der Zeitleiste, neben deinen Aufgaben. Kostenlos, immer.';
+      'Deine Kalendertermine auf der Zeitleiste, neben deinen Aufgaben.';
 
   @override
   String get calendarsConnected => 'Verbunden';
@@ -3157,7 +3157,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get exportIntro =>
-      'Deine Aufgaben gehören dir. Exportieren ist kostenlos, immer, mit oder ohne Konto.';
+      'Deine Aufgaben gehören dir. Exportiere sie jederzeit, mit oder ohne Konto.';
 
   @override
   String get exportFormats => 'Formate';
@@ -6846,7 +6846,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get releaseNotes120 =>
-      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Tagesform ein, und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.\nDie Nacht: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Morgen nach vorn. Der Tagespunkt zeigt die Nacht, und der Rückblick zur Abendruhe beginnt mit ihr.\nDein Morgen auf einer Karte: Stopp den Aufstehen-Wecker, und die Karte zeigt deinen Tag und startet ihn mit einem Tipp, mit einer sanften Nachfrage, wenn nichts begonnen hat. Missionen sorgen dafür, dass du auf bist: ein paar Schritte, Licht, Atmen oder die eine Sache für heute wählen.\nDie eine Sache heute: Wähl, was am meisten zählt, und ihr Punkt bekommt einen Ring, auf Heute, der Karte und deinen Widgets.';
+      'Aufstehen-Wecker: Schalte ihn unter Einstellungen › Dein Tag › Aufstehen und Abendruhe ein (in Minimal direkt unter Einstellungen), und deine Aufstehzeit klingelt an geplanten Tagen — auf Android und auf iPhones mit iOS 26 wie ein Wecker, auf älteren iPhones als zeitkritische Mitteilung. Ton und Schlummern wählst du unter Ton und Schlummern, mit einem Testwecker. Nichts klingelt, bevor du ihn einschaltest.\nTöne: 48 Erinnerungstöne, die gut zusammenpassen. Wähle einen für alle Aufgaben oder gib einer Aufgabe ihren eigenen; deine erste Aufgabe des Tages klingelt mit deinem Start-Ton.\nNur der nächste Punkt: ein minimales Layout, jederzeit wählbar, ohne dass etwas verloren geht. Heute zeigt deinen Faden, das Datum und ein Menü.\nZieh eine Aufgabe irgendwohin auf den Tag, auch auf eine andere: Überschneidungen knüpfen einen kleinen Knoten in den Faden.\nAus Schlafenszeit wird Abendruhe. Die beiden Enden deines Tages sind Punkte, eine Sonne und ein Mond; tipp einen an, um seine Zeit zu ändern.\nIcons füllen sich selbst: Schreib „Fitnessstudio“, und die Aufgabe bekommt eine Hantel — aus 524 Icons.\nDie Nacht: Sag Dottoday, wie viel Schlaf du willst, und die Abendruhe rückt vor einem frühen Morgen nach vorn. Der Tagespunkt zeigt die Nacht, und der Rückblick zur Abendruhe beginnt mit ihr.\nDein Morgen auf einer Karte: Stopp den Aufstehen-Wecker, und die Karte zeigt deinen Tag und startet ihn mit einem Tipp, mit einer sanften Nachfrage, wenn nichts begonnen hat. Missionen sorgen dafür, dass du auf bist: ein paar Schritte, Licht, Atmen oder die eine Sache für heute wählen.\nDie eine Sache heute: Wähl, was am meisten zählt, und ihr Punkt bekommt einen Ring, auf Heute, der Karte und deinen Widgets.';
 
   @override
   String get settingsMissions => 'Missionen';

@@ -180,8 +180,24 @@ class SettingsRow extends StatelessWidget {
     this.formReady,
     this.choiceHeaders,
     this.flush = false,
+    this.dot,
+    this.quiet = false,
+    this.bare = false,
     super.key,
   });
+
+  /// A colour dot in place of the icon tile: a calendar in its own colour
+  /// (E-R2-24 §2, ED-497; status and list rows keep what they show,
+  /// ED-332).
+  final Color? dot;
+
+  /// The title in secondary: a row that only says nothing is there yet
+  /// ("No calendars connected yet", E-R2-24 §2).
+  final bool quiet;
+
+  /// No icon: a row that only tells (the web's "Uses your computer's
+  /// lock", E-R2-24 §3).
+  final bool bare;
 
   /// No side inset: the row sits flush with a sheet's title and text, as
   /// E-R2-21's sheet rows do (the multi-file rows, ED-477), not inside a
@@ -371,7 +387,20 @@ class SettingsRow extends StatelessWidget {
         child: Row(
           spacing: DotSpace.m,
           children: [
-            SettingsIcon(glyph: glyph, tint: tint),
+            if (dot case final colour?)
+              ExcludeSemantics(
+                child: SizedBox.square(
+                  dimension: DotSize.settingsDot,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: colour,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              )
+            else if (!bare)
+              SettingsIcon(glyph: glyph, tint: tint),
             Expanded(child: _texts(t, stacked: stacked)),
             if (value case final v? when !stacked)
               // As wide as it needs, up to 45 % of the row: short values
@@ -458,6 +487,8 @@ class SettingsRow extends StatelessWidget {
         title,
         style: action
             ? t.styles.body.copyWith(color: t.colors.accentInk)
+            : quiet
+            ? t.styles.body.copyWith(color: t.colors.muted)
             : t.styles.body,
       ),
       if (subtitle case final s?) Text(s, style: t.styles.rowMeta),

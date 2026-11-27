@@ -44,7 +44,9 @@ class CalendarsPage extends ConsumerWidget {
         if (ref.watch(cloudCalendarsProvider).available)
           const CloudCalendarsGroup(),
         ..._writeBack(context, ref),
-        if (settings != null)
+        // Shifting and travel time only mean something once a calendar is
+        // in (E-R2-24 §2 draws them only then, ED-497).
+        if (settings != null && _anyCalendar(ref))
           SettingsGroup(
             caption: l10n.calendarsShifting,
             children: [
@@ -61,10 +63,16 @@ class CalendarsPage extends ConsumerWidget {
               ),
             ],
           ),
-        if (settings != null) TravelTimeGroup(settings: settings),
+        if (settings != null && _anyCalendar(ref))
+          TravelTimeGroup(settings: settings),
       ],
     );
   }
+
+  /// Whether any calendar, on this device or connected, is listed.
+  bool _anyCalendar(WidgetRef ref) =>
+      (ref.watch(calendarChoiceListProvider).value?.isNotEmpty ?? false) ||
+      (ref.watch(cloudCalendarChoiceListProvider).value?.isNotEmpty ?? false);
 
   /// What this device can do about its calendars right now.
   List<Widget> _source(BuildContext context, WidgetRef ref) {
@@ -81,10 +89,7 @@ class CalendarsPage extends ConsumerWidget {
       PermissionState.notAsked => [
         const _NoneConnected(),
         PageText(l10n.calendarsAsk),
-        OutlinedButton(
-          onPressed: () => unawaited(connect()),
-          child: const _ConnectLabel(),
-        ),
+        _ConnectPill(onPressed: () => unawaited(connect())),
       ],
       PermissionState.denied => [
         PermissionNotice(
@@ -191,9 +196,40 @@ class _NoneConnected extends StatelessWidget {
   );
 }
 
-class _ConnectLabel extends StatelessWidget {
-  const _ConnectLabel();
+/// "Connect a calendar": a 40 outlined pill at the start, its words in the
+/// accent (E-R2-24 §2, ED-497).
+class _ConnectPill extends StatelessWidget {
+  const _ConnectPill({required this.onPressed});
+
+  final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => Text(context.l10n.calendarsConnect);
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final c = t.colors;
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, CalendarsSize.pill),
+          padding: const EdgeInsets.symmetric(
+            horizontal: CalendarsSize.pillPad,
+          ),
+          shape: const StadiumBorder(),
+          side: BorderSide(
+            color: c.controlOutline,
+            width: CalendarsSize.pillOutline,
+          ),
+          foregroundColor: c.accentInk,
+          textStyle: t.styles.button.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            fontVariations: const [FontVariation.weight(600)],
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(context.l10n.calendarsConnect),
+      ),
+    );
+  }
 }

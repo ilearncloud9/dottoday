@@ -5,6 +5,7 @@ import 'package:dottoday/data/release/whats_new_seen.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
 import 'package:dottoday/domain/auth/account.dart';
+import 'package:dottoday/domain/notifications/notification_permission.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import '../../support/a11y.dart';
 import '../../support/account_fakes.dart';
 import '../../support/account_screen_fakes.dart';
+import '../../support/calendar_fakes.dart';
 import '../../support/sync_fakes.dart';
 import 'settings_harness.dart';
 
@@ -174,11 +176,27 @@ void main() {
     });
   });
 
+  testWidgets('Calendars: nothing to shift until a calendar is in', (
+    tester,
+  ) async {
+    await pumpSettings(tester, location: '/settings/calendars');
+    expect(find.text('No calendars connected yet'), findsOneWidget);
+    expect(find.text('Move calendar events too'), findsNothing);
+    expect(find.text('Suggest travel time'), findsNothing);
+  });
+
   testWidgets('Calendars: moving events when shifting is a real setting', (
     tester,
   ) async {
-    final h = await pumpSettings(tester, location: '/settings/calendars');
-    expect(find.text('No calendars connected yet'), findsOneWidget);
+    // Shifting only shows once a calendar is in (E-R2-24 §2, ED-497).
+    final h = await pumpSettings(
+      tester,
+      location: '/settings/calendars',
+      calendarGateway: FakeDeviceCalendarGateway(
+        state: PermissionState.granted,
+        list: sampleCalendars,
+      ),
+    );
     await _tap(tester, 'Move calendar events too');
     expect((await storedSettings(h)).includeCalendarInShift, isTrue);
   });
@@ -186,7 +204,14 @@ void main() {
   testWidgets('Calendars: travel time is off until chosen, then a length', (
     tester,
   ) async {
-    final h = await pumpSettings(tester, location: '/settings/calendars');
+    final h = await pumpSettings(
+      tester,
+      location: '/settings/calendars',
+      calendarGateway: FakeDeviceCalendarGateway(
+        state: PermissionState.granted,
+        list: sampleCalendars,
+      ),
+    );
     expect((await storedSettings(h)).suggestTravelTime, isFalse);
     await _tap(tester, 'Suggest travel time');
     expect((await storedSettings(h)).suggestTravelTime, isTrue);

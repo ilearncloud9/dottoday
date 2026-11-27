@@ -8,6 +8,7 @@ import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/search/recent_searches.dart';
 import 'package:dottoday/data/system/system_providers.dart';
 import 'package:dottoday/data/thinking/thinking_providers.dart';
+import 'package:dottoday/features/settings/pages/help_answers.dart';
 import 'package:dottoday/features/settings/pages/page_frame.dart';
 import 'package:dottoday/features/settings/pages/thinking_status_block.dart';
 import 'package:dottoday/features/settings/widgets/app_lock_group.dart';
@@ -31,50 +32,28 @@ class HelpPage extends StatelessWidget {
       page: SettingsPage.help,
       children: [
         PageText(l10n.helpIntro),
-        Column(
+        HelpAnswers(
           children: [
-            _Answer(l10n.helpMoveQ, l10n.helpMoveA),
-            _Answer(l10n.helpLateQ, l10n.helpLateA),
-            _Answer(l10n.helpRepeatQ, l10n.helpRepeatA),
-            _Answer(l10n.helpPasteQ, l10n.helpPasteA),
-            _Answer(l10n.helpKeysQ, l10n.helpKeysA),
+            HelpAnswer(l10n.helpMoveQ, l10n.helpMoveA),
+            HelpAnswer(l10n.helpLateQ, l10n.helpLateA),
+            HelpAnswer(l10n.helpRepeatQ, l10n.helpRepeatA),
+            HelpAnswer(l10n.helpPasteQ, l10n.helpPasteA),
+            HelpAnswer(l10n.helpKeysQ, l10n.helpKeysA),
             const _WakeUpAnswer(),
           ],
         ),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: FilledButton(
-            onPressed: () => unawaited(showFeedbackSheet(context)),
-            child: Text(l10n.settingsFeedback),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(HelpSize.button),
+            shape: const StadiumBorder(),
+            textStyle: DotTheme.of(
+              context,
+            ).styles.button.copyWith(fontSize: 16),
           ),
+          onPressed: () => unawaited(showFeedbackSheet(context)),
+          child: Text(l10n.settingsFeedback),
         ),
       ],
-    );
-  }
-}
-
-/// A question that opens to its answer.
-class _Answer extends StatelessWidget {
-  const _Answer(this.question, this.answer, {this.child});
-
-  final String question;
-  final String answer;
-
-  /// Shown in place of [answer]'s text.
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
-    return Theme(
-      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-      child: ExpansionTile(
-        tilePadding: EdgeInsets.zero,
-        expandedAlignment: AlignmentDirectional.centerStart,
-        childrenPadding: const EdgeInsets.only(bottom: DotSpace.m),
-        title: Text(question, style: t.styles.body),
-        children: [child ?? PageText(answer)],
-      ),
     );
   }
 }
@@ -89,7 +68,11 @@ class _WakeUpAnswer extends ConsumerWidget {
     final l10n = context.l10n;
     final caps = ref.watch(alarmCapabilitiesNowProvider).value;
     final tier = caps == null ? null : wakeUpTierText(l10n, caps).$1;
-    return _Answer(l10n.helpWakeUpQ, '', child: WakeUpExplain(tierLine: tier));
+    return HelpAnswer(
+      l10n.helpWakeUpQ,
+      '',
+      child: WakeUpExplain(tierLine: tier),
+    );
   }
 }
 

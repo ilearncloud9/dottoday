@@ -42,37 +42,54 @@ class _FeedbackState extends ConsumerState<_Feedback> {
       spacing: DotSpace.m,
       children: [
         Text(l10n.settingsFeedbackIntro, style: t.styles.body),
-        MergeSemantics(
-          child: InkWell(
-            onTap: () => setState(() => _diagnostics = !_diagnostics),
-            child: Row(
-              spacing: DotSpace.m,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.settingsFeedbackDiagnostics,
-                        style: t.styles.body,
+        // Add diagnostics in its own card, off until added (owner, ED-497).
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: t.colors.raised,
+            borderRadius: BorderRadius.circular(FeedbackSize.cardRadius),
+            border: Border.all(color: t.colors.outline),
+          ),
+          child: MergeSemantics(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(FeedbackSize.cardRadius),
+              onTap: () => setState(() => _diagnostics = !_diagnostics),
+              child: Padding(
+                padding: FeedbackSize.cardPad,
+                child: Row(
+                  spacing: DotSpace.m,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.settingsFeedbackDiagnostics,
+                            style: t.styles.body.copyWith(fontSize: 16),
+                          ),
+                          Text(
+                            l10n.settingsFeedbackDiagnosticsHint,
+                            style: t.styles.rowMeta,
+                          ),
+                        ],
                       ),
-                      Text(
-                        l10n.settingsFeedbackDiagnosticsHint,
-                        style: t.styles.rowMeta,
-                      ),
-                    ],
-                  ),
+                    ),
+                    DotSwitch(
+                      value: _diagnostics,
+                      onChanged: (v) => setState(() => _diagnostics = v),
+                    ),
+                  ],
                 ),
-                DotSwitch(
-                  value: _diagnostics,
-                  onChanged: (v) => setState(() => _diagnostics = v),
-                ),
-              ],
+              ),
             ),
           ),
         ),
         if (_diagnostics) const _Preview(),
         FilledButton(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(FeedbackSize.button),
+            shape: const StadiumBorder(),
+            textStyle: t.styles.button.copyWith(fontSize: 16),
+          ),
           onPressed: () => unawaited(_send(context)),
           child: Text(l10n.settingsFeedbackWrite),
         ),
@@ -135,17 +152,32 @@ class _Preview extends ConsumerWidget {
     if (text == null) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: DotSpace.xs,
+      spacing: DotSpace.s,
       children: [
-        Text(l10n.settingsFeedbackPreview, style: t.styles.rowMeta),
+        Text(
+          l10n.settingsFeedbackPreview,
+          style: t.styles.rowMeta.copyWith(
+            fontWeight: FontWeight.w600,
+            fontVariations: const [FontVariation.weight(600)],
+          ),
+        ),
+        // Exactly the text the email gets, on the control colour.
         DecoratedBox(
           decoration: BoxDecoration(
-            border: Border.all(color: t.colors.outline),
-            borderRadius: BorderRadius.circular(DotRadii.card),
+            color: t.colors.control,
+            borderRadius: BorderRadius.circular(FeedbackSize.previewRadius),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(DotSpace.m),
-            child: SelectableText(text, style: t.styles.rowMeta),
+            padding: FeedbackSize.previewPad,
+            child: SelectableText(
+              text,
+              style: t.styles.rowMeta.copyWith(
+                fontSize: 12,
+                height: 17 / 12,
+                color: t.colors.ink2,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
           ),
         ),
       ],

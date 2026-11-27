@@ -42,6 +42,7 @@ class CloudCalendarsGroup extends ConsumerWidget {
             glyph: DotGlyphs.person,
             tint: DotTheme.of(context).colors.accentInk,
             title: l10n.calendarsOnlineSignIn,
+            action: true,
             onTap: () => unawaited(
               context.push(AppRoutes.settingsPage(SettingsPage.account)),
             ),
@@ -106,6 +107,7 @@ class _AccountGroup extends ConsumerWidget {
             tint: t.colors.accentInk,
             title: l10n.calendarsReconnect,
             subtitle: l10n.calendarsReconnectDetail,
+            action: true,
             onTap: () =>
                 saveCalendarChange(context, cloud.connect(account.provider)),
           ),
@@ -115,6 +117,7 @@ class _AccountGroup extends ConsumerWidget {
           glyph: DotGlyphs.close,
           tint: t.colors.muted,
           title: l10n.calendarsDisconnect,
+          action: true,
           onTap: () => unawaited(_disconnect(context, ref)),
         ),
       ],
@@ -157,6 +160,7 @@ class _ConnectGroup extends ConsumerWidget {
       glyph: DotGlyphs.add,
       tint: tint,
       title: title,
+      action: true,
       onTap: () => saveCalendarChange(context, cloud.connect(provider)),
     );
     return SettingsGroup(

@@ -22,7 +22,8 @@ class InstallBanner extends ConsumerWidget {
     final prompt = ref.read(installPromptProvider);
     void hide() => ref.invalidate(installAvailableProvider);
     return BannerStrip(
-      glyph: DotGlyphs.add,
+      glyph: DotGlyphs.download,
+      card: true,
       text: l10n.installText,
       actions: [
         (

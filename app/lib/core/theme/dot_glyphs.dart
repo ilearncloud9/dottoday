@@ -217,6 +217,9 @@ abstract final class DotGlyphs {
   );
   // Settings sub-pages (M3f.7): account, export, help, about.
   static final person = DotGlyph('${_c(12, 8, 4)}M4 21a8 8 0 0 1 16 0');
+
+  /// Install on the web (E-R2-24 §4, ED-497): an arrow down onto a line.
+  static const download = DotGlyph('M12 4v11M7 10l5 5 5-5M5 20h14');
   static const share = DotGlyph(
     'M12 15V3M7 8l5-5 5 5M5 15v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4',
   );

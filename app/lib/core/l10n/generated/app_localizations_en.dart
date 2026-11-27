@@ -227,6 +227,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navInbox => 'Inbox';
 
   @override
+  String get navInboxTab => 'Inbox';
+
+  @override
   String get navWeek => 'Week';
 
   @override
@@ -1633,9 +1636,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settingsDayShape => 'Day shape';
-
-  @override
   String settingsAwake(String length) {
     return '$length awake';
   }
@@ -1838,7 +1838,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get releaseNotes010 =>
-      'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.';
+      'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.';
 
   @override
   String whatsNewBanner(String version) {
@@ -3057,7 +3057,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarsIntro =>
-      'Your calendar events on the timeline, next to your tasks. Free, always.';
+      'Your calendar events on the timeline, next to your tasks.';
 
   @override
   String get calendarsConnected => 'Connected';
@@ -3142,7 +3142,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportIntro =>
-      'Your tasks are yours. Export is free, always, with or without an account.';
+      'Your tasks are yours. Export them any time, with or without an account.';
 
   @override
   String get exportFormats => 'Formats';
@@ -6807,7 +6807,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get releaseNotes120 =>
-      'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.\nYour morning on one card: stop the Wake Up alarm and the card shows your day and starts it in one tap, with one gentle check if nothing has started. Missions can make sure you\'re up: a quick walk, a light, Breathe, or picking today\'s one thing.\nToday\'s one thing: pick what matters most and its dot gets a ring, on Today, the card and your widgets.';
+      'Wake Up alarm: turn it on in Settings › Your day › Wake Up and Wind Down (in Minimal, on Settings itself) and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.\nYour morning on one card: stop the Wake Up alarm and the card shows your day and starts it in one tap, with one gentle check if nothing has started. Missions can make sure you\'re up: a quick walk, a light, Breathe, or picking today\'s one thing.\nToday\'s one thing: pick what matters most and its dot gets a ring, on Today, the card and your widgets.';
 
   @override
   String get settingsMissions => 'Missions';

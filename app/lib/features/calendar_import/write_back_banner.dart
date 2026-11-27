@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dottoday/core/l10n/l10n.dart';
-import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/calendar/write_back_providers.dart';
 import 'package:dottoday/domain/calendar/write_back_merge.dart';
 import 'package:dottoday/shared/feedback/banner_strip.dart';
@@ -23,7 +22,7 @@ class WriteBackBanner extends ConsumerWidget {
     final controller = ref.read(writeBackControllerProvider.notifier);
     if (state.clashes > 0) {
       return BannerStrip(
-        glyph: DotGlyphs.calendar,
+        card: true,
         text: l10n.bannerWriteBackClash(state.clashes),
         actions: [
           (
@@ -39,7 +38,7 @@ class WriteBackBanner extends ConsumerWidget {
     }
     if (state.failed > 0) {
       return BannerStrip(
-        glyph: DotGlyphs.calendar,
+        card: true,
         text: l10n.bannerWriteBackPending(state.failed),
         actions: [(l10n.stateRetry, () => unawaited(controller.retry()))],
       );

@@ -322,6 +322,30 @@ void main() {
       build: (_) => page,
     );
   }
+  // E-R2-24 §4 (ED-497): Help with its first question open; the not-asked
+  // Calendars on a phone (the Connect pill, Google and Microsoft).
+  goldenMatrix(
+    'settings_page_help_open',
+    height: 844,
+    widths: const {'compact'},
+    a11yVariants: true,
+    overrides: _overrides,
+    build: (_) => const HelpPage(),
+    act: (tester) async {
+      await tester.tap(find.text('How do I move a task?'));
+      await tester.pumpAndSettle();
+    },
+  );
+  goldenMatrix(
+    'settings_page_calendars_not_asked',
+    height: 844,
+    widths: const {'compact'},
+    overrides: _overridesWith(
+      calendarGateway: FakeDeviceCalendarGateway(),
+      extra: [cloudCalendarsProvider.overrideWithValue(FakeCloudCalendars())],
+    ),
+    build: (_) => const CalendarsPage(),
+  );
   // M7.1: device calendars allowed (grouped, inherited colours) and denied.
   for (final (name, gateway) in [
     (

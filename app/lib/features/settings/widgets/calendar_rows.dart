@@ -30,8 +30,9 @@ void saveCalendarChange(
   );
 }
 
-/// One calendar: its name in its inherited colour, and a switch (shown
-/// in, by default; [toggle] for another one, like write-back).
+/// One calendar: a dot in its inherited colour, its name, and a switch
+/// (shown in, by default; [toggle] for another one, like write-back).
+/// E-R2-24 §2, ED-497.
 class CalendarChoiceRow extends StatelessWidget {
   const CalendarChoiceRow({
     required this.choice,
@@ -51,6 +52,7 @@ class CalendarChoiceRow extends StatelessWidget {
     return SettingsRow(
       glyph: DotGlyphs.calendar,
       tint: t.tasks[TaskColor.fromKey(choice.colorKey)].ink,
+      dot: t.tasks[TaskColor.fromKey(choice.colorKey)].color,
       title: calendar.name,
       subtitle: calendar.readOnly ? context.l10n.calendarsReadOnly : null,
       toggle: toggle ?? choice.enabled,
@@ -70,5 +72,6 @@ class CalendarEmptyRow extends StatelessWidget {
     glyph: DotGlyphs.calendar,
     tint: DotTheme.of(context).colors.muted,
     title: title,
+    quiet: true,
   );
 }

@@ -228,6 +228,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navInbox => 'Bandeja de entrada';
 
   @override
+  String get navInboxTab => 'Bandeja de entrada';
+
+  @override
   String get navWeek => 'Semana';
 
   @override
@@ -1636,9 +1639,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get settingsDayShape => 'Forma del día';
-
-  @override
   String settingsAwake(String length) {
     return '$length despierto';
   }
@@ -1841,7 +1841,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get releaseNotes010 =>
-      'Planifica tu día en un solo hilo: arrastra una tarea para moverla, arrastra su borde para cambiar su duración y mueve todo lo que viene después de una vez.\nAñade una tarea con dos toques, escribe horas con palabras sencillas o pega una lista para añadir varias a la vez.\nTareas periódicas, recordatorios con antelación y tus calendarios en la línea de tiempo, todo gratis.\nSincroniza entre iPhone, Android, Mac y la web, con un estado visible y sin perder nada.\nExporta todo como JSON, CSV o archivo de calendario, y restaura una copia de seguridad.\nEnvía comentarios desde Ajustes y lee aquí las novedades tras cada actualización.';
+      'Planifica tu día en un solo hilo: arrastra una tarea para moverla, arrastra su borde para cambiar su duración y mueve todo lo que viene después de una vez.\nAñade una tarea con dos toques, escribe horas con palabras sencillas o pega una lista para añadir varias a la vez.\nTareas periódicas, recordatorios con antelación y tus calendarios en la línea de tiempo.\nSincroniza entre iPhone, Android, Mac y la web, con un estado visible y sin perder nada.\nExporta todo como JSON, CSV o archivo de calendario, y restaura una copia de seguridad.\nEnvía comentarios desde Ajustes y lee aquí las novedades tras cada actualización.';
 
   @override
   String whatsNewBanner(String version) {
@@ -3062,7 +3062,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarsIntro =>
-      'Los eventos de tu calendario en la línea de tiempo, junto a tus tareas. Gratis, siempre.';
+      'Los eventos de tu calendario en la línea de tiempo, junto a tus tareas.';
 
   @override
   String get calendarsConnected => 'Conectados';
@@ -3149,7 +3149,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exportIntro =>
-      'Tus tareas son tuyas. Exportar es gratis, siempre, con o sin cuenta.';
+      'Tus tareas son tuyas. Expórtalas cuando quieras, con o sin cuenta.';
 
   @override
   String get exportFormats => 'Formatos';
@@ -6839,7 +6839,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get releaseNotes120 =>
-      'Alarma al despertar: actívala en Ajustes › Forma del día y tu hora de despertar suena los días que tienes planificados — como una alarma en Android y en iPhones con iOS 26, como notificación urgente en iPhones anteriores. Elige su sonido y posponer en Sonido y posponer, con una alarma de prueba. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.\nLa noche: dile a Dottoday cuánto quieres dormir y la desconexión se adelanta antes de una mañana temprana. El punto del día muestra la noche, y el repaso de la desconexión empieza por ella.\nTu mañana en una tarjeta: detén el despertar y la tarjeta muestra tu día y lo empieza con un toque, con un aviso suave si nada ha empezado. Las misiones se aseguran de que estés en pie: unos pasos, una luz, Respirar o elegir lo importante de hoy.\nLo importante de hoy: elige lo que más importa y su punto lleva un anillo, en Hoy, la tarjeta y tus widgets.';
+      'Alarma al despertar: actívala en Ajustes › Tu día › Despertar y Desconexión (en Mínima, en los propios Ajustes) y tu hora de despertar suena los días que tienes planificados — como una alarma en Android y en iPhones con iOS 26, como notificación urgente en iPhones anteriores. Elige su sonido y posponer en Sonido y posponer, con una alarma de prueba. Nada suena hasta que la actives.\nSonidos: 48 sonidos de recordatorio que combinan bien. Elige uno para todas tus tareas o da a una tarea el suyo; tu primera tarea del día suena con tu sonido de inicio.\nSolo el siguiente punto: un diseño mínimo que puedes elegir cuando quieras, sin perder nada. Hoy muestra tu hilo, la fecha y un menú.\nArrastra una tarea a cualquier parte del día, incluso encima de otra: las tareas que se solapan hacen un pequeño nudo en el hilo.\nLa hora de dormir ahora es Desconexión. Los dos extremos de tu día son puntos, un sol y una luna; toca uno para cambiar su hora.\nLos iconos se rellenan solos: escribe «Gimnasio» y la tarea recibe una mancuerna, entre 524 iconos.\nLa noche: dile a Dottoday cuánto quieres dormir y la desconexión se adelanta antes de una mañana temprana. El punto del día muestra la noche, y el repaso de la desconexión empieza por ella.\nTu mañana en una tarjeta: detén el despertar y la tarjeta muestra tu día y lo empieza con un toque, con un aviso suave si nada ha empezado. Las misiones se aseguran de que estés en pie: unos pasos, una luz, Respirar o elegir lo importante de hoy.\nLo importante de hoy: elige lo que más importa y su punto lleva un anillo, en Hoy, la tarjeta y tus widgets.';
 
   @override
   String get settingsMissions => 'Misiones';

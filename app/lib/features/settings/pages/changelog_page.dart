@@ -84,7 +84,8 @@ List<String> releaseNoteItems(AppLocalizations l10n, Release release) => [
     if (line.trim().isNotEmpty) line.trim(),
 ];
 
-/// One note: a small accent dot, then the text.
+/// One note: an 8 accent dot, then the text at 15/21 (E-R2-24 §4,
+/// ED-497).
 class _Item extends StatelessWidget {
   const _Item(this.text);
 
@@ -94,17 +95,17 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(DotSpace.l),
+      padding: ChangelogSize.itemPad,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: DotSpace.m,
+        spacing: ChangelogSize.gap,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: DotSpace.s),
+            padding: const EdgeInsets.only(top: ChangelogSize.dotTop),
             child: ExcludeSemantics(
               child: Container(
-                width: DotSize.weekDot,
-                height: DotSize.weekDot,
+                width: ChangelogSize.dot,
+                height: ChangelogSize.dot,
                 decoration: BoxDecoration(
                   color: t.colors.accent,
                   shape: BoxShape.circle,
@@ -112,7 +113,12 @@ class _Item extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: Text(text, style: t.styles.body)),
+          Expanded(
+            child: Text(
+              text,
+              style: t.styles.body.copyWith(fontSize: 15, height: 21 / 15),
+            ),
+          ),
         ],
       ),
     );

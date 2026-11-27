@@ -474,6 +474,12 @@ abstract class AppLocalizations {
   /// **'Inbox'**
   String get navInbox;
 
+  /// The Inbox tab's own label, on one line (ED-327): French "Boîte" on the tab only; titles, toasts and buttons keep navInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get navInboxTab;
+
   /// Tab: week view.
   ///
   /// In en, this message translates to:
@@ -2454,12 +2460,6 @@ abstract class AppLocalizations {
   /// **'Account: {name}'**
   String settingsAvatarLabel(String name);
 
-  /// Settings group caption (shown uppercase).
-  ///
-  /// In en, this message translates to:
-  /// **'Day shape'**
-  String get settingsDayShape;
-
   /// DAY SHAPE: length of the waking day, '15 h awake'.
   ///
   /// In en, this message translates to:
@@ -2811,7 +2811,7 @@ abstract class AppLocalizations {
   /// Changelog notes for version 0.1.0; one item per line (each line becomes a bullet).
   ///
   /// In en, this message translates to:
-  /// **'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline — all free.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.'**
+  /// **'Plan your day on one thread: drag a task to move it, drag its edge to change how long it takes, and shift everything after it in one go.\nAdd a task in two taps, type times in plain words, or paste a list to add several at once.\nRepeating tasks, reminders with lead times, and your calendars on the timeline.\nSync between iPhone, Android, Mac and the web, with a status you can see and nothing lost.\nExport everything as JSON, CSV or a calendar file, and bring a backup back.\nSend feedback from Settings, and read what\'s new here after each update.'**
   String get releaseNotes010;
 
   /// Banner after an update that brought release notes.
@@ -4527,7 +4527,7 @@ abstract class AppLocalizations {
   /// Calendars page intro.
   ///
   /// In en, this message translates to:
-  /// **'Your calendar events on the timeline, next to your tasks. Free, always.'**
+  /// **'Your calendar events on the timeline, next to your tasks.'**
   String get calendarsIntro;
 
   /// Calendars page group caption.
@@ -4677,7 +4677,7 @@ abstract class AppLocalizations {
   /// Export page intro.
   ///
   /// In en, this message translates to:
-  /// **'Your tasks are yours. Export is free, always, with or without an account.'**
+  /// **'Your tasks are yours. Export them any time, with or without an account.'**
   String get exportIntro;
 
   /// Export page group caption.
@@ -9768,7 +9768,7 @@ abstract class AppLocalizations {
   /// **'Show me'**
   String get hintShowMe;
 
-  /// Settings › Day shape and onboarding: the Wake Up alarm switch (docs/15 W1).
+  /// Settings › Your day › Wake Up and Wind Down, minimal Settings and onboarding: the Wake Up alarm switch (docs/15 W1).
   ///
   /// In en, this message translates to:
   /// **'Wake Up alarm'**
@@ -9834,7 +9834,7 @@ abstract class AppLocalizations {
   /// **'Good morning.'**
   String get notifWakeUpBody;
 
-  /// Day shape row under Wake Up alarm: opens its sound and snooze page.
+  /// Wake Up and Wind Down row under Wake Up alarm: opens its sound and snooze page.
   ///
   /// In en, this message translates to:
   /// **'Wake Up options'**
@@ -10158,7 +10158,7 @@ abstract class AppLocalizations {
   /// **'Start {title}?'**
   String wakeUpCheckStart(String title);
 
-  /// Day shape row: how much sleep Wind Down plans for (docs/15 W4).
+  /// Wake Up and Wind Down row: how much sleep Wind Down plans for (docs/15 W4).
   ///
   /// In en, this message translates to:
   /// **'Sleep target'**
@@ -10353,7 +10353,7 @@ abstract class AppLocalizations {
   /// What's new in 1.2.0 (M15 sounds, M16 minimal layout, the Structured-style day, M17 Wake Up alarm), one item per line (PRD F11).
   ///
   /// In en, this message translates to:
-  /// **'Wake Up alarm: turn it on in Settings › Day shape and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.\nYour morning on one card: stop the Wake Up alarm and the card shows your day and starts it in one tap, with one gentle check if nothing has started. Missions can make sure you\'re up: a quick walk, a light, Breathe, or picking today\'s one thing.\nToday\'s one thing: pick what matters most and its dot gets a ring, on Today, the card and your widgets.'**
+  /// **'Wake Up alarm: turn it on in Settings › Your day › Wake Up and Wind Down (in Minimal, on Settings itself) and your Wake Up time rings on days you\'ve planned — like an alarm on Android and on iPhones with iOS 26, as a time-sensitive notification on older iPhones. Pick its sound and snooze under Sound and snooze, and send yourself a test. Nothing rings until you turn it on.\nSounds: 48 reminder sounds made to sit well together. Pick one for every task or give a task its own; your first task of the day rings with your Start sound.\nJust the next dot: a minimal layout you can choose any time, with nothing lost. Today shows your thread, the date and one menu.\nDrag a task anywhere on the day, even onto another one: overlapping tasks tie a small knot in the thread.\nBedtime is now Wind Down. The two ends of your day are dots, a sun and a moon; tap one to change its time.\nIcons fill themselves in: type \"Gym\" and the task gets a dumbbell, from 524 icons.\nThe night: tell Dottoday how much sleep you want and Wind Down moves earlier before an early morning. The day dot shows the night, and the Wind Down review opens with it.\nYour morning on one card: stop the Wake Up alarm and the card shows your day and starts it in one tap, with one gentle check if nothing has started. Missions can make sure you\'re up: a quick walk, a light, Breathe, or picking today\'s one thing.\nToday\'s one thing: pick what matters most and its dot gets a ring, on Today, the card and your widgets.'**
   String get releaseNotes120;
 
   /// Settings › Wake Up: which mornings ask for a mission (docs/15 §8).
@@ -10752,7 +10752,7 @@ abstract class AppLocalizations {
   /// **'Keep it'**
   String get windDownLearnKeep;
 
-  /// Day shape switch (docs/15 §9).
+  /// Wake Up and Wind Down switch (docs/15 §9).
   ///
   /// In en, this message translates to:
   /// **'Offer to move Wind Down from how I actually get up'**

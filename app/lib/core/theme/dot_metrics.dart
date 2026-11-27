@@ -815,6 +815,9 @@ abstract final class DotSize {
   /// The year strip's month dots, option B (E-R2-34, ED-348): 50 across
   /// with a 5 ring, each a touch target.
   static const double yearMonthDot = 50;
+
+  /// A calendar's colour dot in a Settings row (E-R2-24 §2, ED-497).
+  static const double settingsDot = 14;
   static const double yearMonthStroke = 5;
 
   /// A day of the year strip's open month (E-R2-34 option B).
@@ -995,4 +998,71 @@ abstract final class DotDial {
   /// A handle moves 5 min a step, 30 with Shift (E-FullA-v2 Mac panel).
   static const int step = 5;
   static const int bigStep = 30;
+}
+
+/// Settings › Calendars (E-R2-24 §2, ED-497): "Connect a calendar", a 40
+/// pill, 16 in, a 1.5 ring.
+abstract final class CalendarsSize {
+  static const double pill = 40;
+  static const double pillPad = 16;
+  static const double pillOutline = 1.5;
+}
+
+/// The Dottoday mark (ED-011) as E-R2-24 §3 draws it on the locked screen
+/// and the app-switcher cover: 96 across, the ring 9, the centre 34.
+abstract final class BrandMarkSize {
+  static const double lock = 96;
+  static const double ring = 9 / 96;
+  static const double centre = 34 / 96;
+}
+
+/// The locked screen (E-R2-24 §3, ED-497): 22 between the mark, the words
+/// and Unlock; Unlock 52 tall with 40 in.
+abstract final class LockSize {
+  static const double gap = 22;
+  static const double button = 52;
+  static const double buttonPad = 40;
+}
+
+/// Settings › Help (E-R2-24 §4, ED-497): the questions in one card (18
+/// corners, each 14 by 12 in, the answer 6 under its question, a 16
+/// chevron); Send feedback 50 tall across the page.
+abstract final class HelpSize {
+  static const double cardRadius = 18;
+  static const EdgeInsets rowPad = EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 12,
+  );
+  static const double answerTop = 6;
+  static const double chevron = 16;
+  static const double button = 50;
+}
+
+/// Send feedback (E-R2-24 §4, ED-497): Add diagnostics in its own card
+/// (18 corners, 14 by 8 in); the preview on the control colour (14
+/// corners, 12 by 10 in); Write email 50 tall.
+abstract final class FeedbackSize {
+  static const double cardRadius = 18;
+  static const EdgeInsets cardPad = EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 8,
+  );
+  static const double previewRadius = 14;
+  static const EdgeInsets previewPad = EdgeInsets.symmetric(
+    horizontal: 12,
+    vertical: 10,
+  );
+  static const double button = 50;
+}
+
+/// What's new (E-R2-24 §4, ED-497): each note 14 by 10 in, an 8 dot 7
+/// down, 10 before its words.
+abstract final class ChangelogSize {
+  static const EdgeInsets itemPad = EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 10,
+  );
+  static const double dot = 8;
+  static const double dotTop = 7;
+  static const double gap = 10;
 }
