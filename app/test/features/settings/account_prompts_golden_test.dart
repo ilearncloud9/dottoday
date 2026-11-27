@@ -4,6 +4,7 @@ library;
 import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
@@ -15,7 +16,13 @@ import '../../support/dot_golden.dart';
 // `DeleteWeb`), light and dark, 1× and 2×.
 
 void main() {
-  setUpAll(loadAppFonts);
+  setUpAll(() async {
+    await loadAppFonts();
+    // Android's buttons are in the system's Roboto (`AndroidA1`); the test
+    // has none, so the bundled copy stands in under that name.
+    final roboto = rootBundle.load('assets/fonts/Roboto-Variable.ttf');
+    await (FontLoader('Roboto')..addFont(roboto)).load();
+  });
 
   void prompt(
     String name,
@@ -50,7 +57,39 @@ void main() {
     'account_sign_out_pending_wide',
     const SignOutPrompt(email: email, pending: 3),
     widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
   );
+  // M20.12 part 1 (owner: as the boards draw): `AndroidA1`, `DesktopA1`,
+  // `A2Unconfirmed`, and the tablets' `TabletA1/A2`, `AndroidTabletA1/A2`.
+  prompt(
+    'account_sign_out_synced_android',
+    const SignOutPrompt(email: email, pending: null),
+    platform: TargetPlatform.android,
+  );
+  prompt(
+    'account_sign_out_synced_wide',
+    const SignOutPrompt(email: email, pending: null),
+    widths: const {'expanded'},
+    platform: TargetPlatform.macOS,
+  );
+  prompt(
+    'account_sign_out_unconfirmed',
+    const SignOutPrompt(email: email, pending: 0),
+  );
+  for (final pending in [null, 3]) {
+    final kind = pending == null ? 'synced' : 'pending';
+    prompt(
+      'account_sign_out_${kind}_ipad',
+      SignOutPrompt(email: email, pending: pending),
+      widths: const {'expanded'},
+    );
+    prompt(
+      'account_sign_out_${kind}_android_tablet',
+      SignOutPrompt(email: email, pending: pending),
+      widths: const {'expanded'},
+      platform: TargetPlatform.android,
+    );
+  }
   prompt(
     'account_delete_native',
     const DeleteAccountView(owner: 'a', wide: false),

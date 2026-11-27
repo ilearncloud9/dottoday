@@ -8,6 +8,7 @@ import 'package:dottoday/data/owners/account_actions.dart';
 import 'package:dottoday/domain/sync/sign_out_check.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/shared/account/account_buttons.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -65,10 +66,13 @@ Future<void> signOutWithCheck(
   }
 }
 
-/// A1 ([pending] null) or A2 with [pending] changes not yet synced, laid
-/// out for the width (boards `SignOutPlain`, `Main`, `AndroidA2`,
-/// `DesktopA2`): compact follows the platform's dialog idiom, wider windows
-/// put the buttons at the end with Esc's note.
+/// A1 ([pending] null) or A2 with [pending] changes not yet synced, as the
+/// E-CR160 boards draw them (owner, M20.12 part 1: as drawn): iPhone and
+/// iPad (`SignOutPlain`, `Main`, `A2Unconfirmed`, `Tablet…`), Android
+/// phones and tablets (`AndroidA1`, `AndroidA2`, `AndroidTablet…`), and
+/// the Mac and web (`DesktopA1`, `DesktopA2`). Dottoday's own dialog, not
+/// the system alert: it holds A2's badge, the hint under Stay signed in and
+/// the Esc note (a recorded departure from native first, ED-492).
 class SignOutPrompt extends StatelessWidget {
   const SignOutPrompt({required this.email, required this.pending, super.key});
 
@@ -79,9 +83,7 @@ class SignOutPrompt extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final wide =
-        WidthClass.of(MediaQuery.sizeOf(context).width) != WidthClass.compact;
-    final android = !wide && DotIdiom.of(context) == DotIdiom.material;
+    final look = accountDialogLook(context);
     final n = pending;
     final title = n == null
         ? l10n.accountSignOutTitle
@@ -94,142 +96,214 @@ class SignOutPrompt extends StatelessWidget {
                 ? l10n.accountSignOutIsolation
                 : l10n.accountSignOutKeptHere,
           );
-    final actions = n == null
-        ? _plainActions(context, wide: wide)
-        : _pendingActions(context, wide: wide, android: android);
-    return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: android ? DotSpace.xl : DotSpace.page,
-        vertical: DotSpace.xl,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          wide ? DotRadii.cardLarge : DotRadii.sheet,
-        ),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(DotSpace.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: DotSpace.l,
-          children: [
-            if (n != null && !wide)
-              android
-                  ? DotIcon(DotGlyphs.cloudSync, color: t.colors.accentInk)
-                  : const TonalBadge(DotGlyphs.cloudSync),
-            Semantics(
-              header: true,
-              child: Text(
-                title,
-                textAlign: android ? TextAlign.center : TextAlign.start,
-                style: t.styles.promptTitle,
-              ),
+    final android = look == AccountDialogLook.android;
+    return AccountDialog(
+      look: look,
+      plain: n == null,
+      children: [
+        if (n != null && look == AccountDialogLook.iphone)
+          const TonalBadge(DotGlyphs.cloudSync),
+        if (n != null && android)
+          Center(
+            child: DotIcon(
+              DotGlyphs.cloudSync,
+              color: t.colors.accentInk,
+              size: AccountDialogSize.androidIcon,
             ),
-            Text(body, style: t.styles.body.copyWith(color: t.colors.muted)),
-            ...actions,
-          ],
+          ),
+        Semantics(
+          header: true,
+          child: Text(
+            title,
+            textAlign: android && n != null
+                ? TextAlign.center
+                : TextAlign.start,
+            style: AccountDialogType.title(t.styles, look),
+          ),
         ),
-      ),
+        Text(body, style: AccountDialogType.body(t.styles, t.colors, look)),
+        Padding(
+          padding: EdgeInsets.only(top: _actionsTop(look)),
+          child: n == null
+              ? _PlainActions(look: look)
+              : _PendingActions(look: look),
+        ),
+      ],
     );
-  }
-
-  List<Widget> _plainActions(BuildContext context, {required bool wide}) {
-    final l10n = context.l10n;
-    final cancel = OutlinedButton(
-      onPressed: () => Navigator.of(context).pop(),
-      child: Text(l10n.editorCancel),
-    );
-    final signOut = FilledButton(
-      onPressed: () => Navigator.of(context).pop(SignOutAnswer.signOut),
-      child: Text(l10n.accountSignOut),
-    );
-    if (wide) {
-      return [
-        _EndRow(children: [cancel, signOut]),
-      ];
-    }
-    return [
-      Row(
-        spacing: DotSpace.s,
-        children: [
-          Expanded(child: cancel),
-          Expanded(child: signOut),
-        ],
-      ),
-    ];
-  }
-
-  List<Widget> _pendingActions(
-    BuildContext context, {
-    required bool wide,
-    required bool android,
-  }) {
-    final t = DotTheme.of(context);
-    final l10n = context.l10n;
-    void pop(SignOutAnswer a) => Navigator.of(context).pop(a);
-    final stayLabel = Text(l10n.accountStaySignedIn);
-    final keepLabel = Text(l10n.accountSignOutKeep);
-    if (wide) {
-      return [
-        _EndRow(
-          children: [
-            OutlinedButton(
-              onPressed: () => pop(SignOutAnswer.signOut),
-              child: keepLabel,
-            ),
-            FilledButton(
-              onPressed: () => pop(SignOutAnswer.stay),
-              child: stayLabel,
-            ),
-          ],
-        ),
-        Text(
-          l10n.accountSignOutEscHint,
-          textAlign: TextAlign.end,
-          style: t.styles.rowMeta,
-        ),
-      ];
-    }
-    if (android) {
-      return [
-        FilledButton(
-          style: tonalPillStyle(context),
-          onPressed: () => pop(SignOutAnswer.stay),
-          child: stayLabel,
-        ),
-        TextButton(
-          onPressed: () => pop(SignOutAnswer.signOut),
-          child: keepLabel,
-        ),
-      ];
-    }
-    return [
-      FilledButton(onPressed: () => pop(SignOutAnswer.stay), child: stayLabel),
-      Text(
-        l10n.accountStaySignedInHint,
-        textAlign: TextAlign.center,
-        style: t.styles.stripWeekday,
-      ),
-      OutlinedButton(
-        onPressed: () => pop(SignOutAnswer.signOut),
-        child: keepLabel,
-      ),
-    ];
   }
 }
 
-/// Buttons at the end of a wide dialog, wrapping when they don't fit.
+double _actionsTop(AccountDialogLook look) => switch (look) {
+  AccountDialogLook.iphone => AccountDialogSize.actionsTopIphone,
+  AccountDialogLook.android => AccountDialogSize.actionsTopAndroid,
+  AccountDialogLook.desktop => AccountDialogSize.actionsTopDesktop,
+};
+
+/// A1's Cancel and Sign out: two pills side by side on iPhone, text
+/// buttons at the end on Android, pills at the end on the Mac and web with
+/// focus starting on Cancel (ED-174 ring).
+class _PlainActions extends StatelessWidget {
+  const _PlainActions({required this.look});
+
+  final AccountDialogLook look;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    void pop([SignOutAnswer? a]) => Navigator.of(context).pop(a);
+    switch (look) {
+      case AccountDialogLook.iphone:
+        return Row(
+          spacing: AccountDialogSize.buttonGap,
+          children: [
+            Expanded(
+              child: AccountButton.outlined(
+                look: look,
+                label: l10n.editorCancel,
+                onPressed: pop,
+              ),
+            ),
+            Expanded(
+              child: AccountButton.filled(
+                look: look,
+                label: l10n.accountSignOut,
+                onPressed: () => pop(SignOutAnswer.signOut),
+              ),
+            ),
+          ],
+        );
+      case AccountDialogLook.android:
+        return _EndRow(
+          gap: AccountDialogSize.buttonGapAndroid,
+          children: [
+            AccountButton.text(
+              look: look,
+              label: l10n.editorCancel,
+              onPressed: pop,
+            ),
+            AccountButton.text(
+              look: look,
+              label: l10n.accountSignOut,
+              onPressed: () => pop(SignOutAnswer.signOut),
+            ),
+          ],
+        );
+      case AccountDialogLook.desktop:
+        return _EndRow(
+          children: [
+            AccountButton.outlined(
+              look: look,
+              label: l10n.editorCancel,
+              onPressed: pop,
+              autofocus: true,
+            ),
+            AccountButton.filled(
+              look: look,
+              label: l10n.accountSignOut,
+              onPressed: () => pop(SignOutAnswer.signOut),
+            ),
+          ],
+        );
+    }
+  }
+}
+
+/// A2's Stay signed in and "Sign out and keep them here": stacked with
+/// the hint between on phones and tablets (Android: tonal Stay, text
+/// Keep); at the end on the Mac and web, Stay rightmost, then Esc's note.
+class _PendingActions extends StatelessWidget {
+  const _PendingActions({required this.look});
+
+  final AccountDialogLook look;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = DotTheme.of(context);
+    final l10n = context.l10n;
+    void pop(SignOutAnswer a) => Navigator.of(context).pop(a);
+    final note = AccountDialogType.note(t.styles, look);
+    if (look == AccountDialogLook.desktop) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AccountDialogSize.gapDesktop,
+        children: [
+          _EndRow(
+            children: [
+              AccountButton.outlined(
+                look: look,
+                label: l10n.accountSignOutKeep,
+                onPressed: () => pop(SignOutAnswer.signOut),
+              ),
+              AccountButton.filled(
+                look: look,
+                label: l10n.accountStaySignedIn,
+                onPressed: () => pop(SignOutAnswer.stay),
+              ),
+            ],
+          ),
+          Text(
+            l10n.accountSignOutEscHint,
+            textAlign: TextAlign.end,
+            style: note,
+          ),
+        ],
+      );
+    }
+    final android = look == AccountDialogLook.android;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: android
+          ? AccountDialogSize.buttonGapAndroid
+          : AccountDialogSize.buttonGap,
+      children: [
+        android
+            ? AccountButton.tonal(
+                look: look,
+                label: l10n.accountStaySignedIn,
+                onPressed: () => pop(SignOutAnswer.stay),
+              )
+            : AccountButton.filled(
+                look: look,
+                label: l10n.accountStaySignedIn,
+                onPressed: () => pop(SignOutAnswer.stay),
+              ),
+        Text(
+          l10n.accountStaySignedInHint,
+          textAlign: TextAlign.center,
+          style: note,
+        ),
+        android
+            ? AccountButton.text(
+                look: look,
+                label: l10n.accountSignOutKeep,
+                onPressed: () => pop(SignOutAnswer.signOut),
+              )
+            : AccountButton.outlined(
+                look: look,
+                label: l10n.accountSignOutKeep,
+                onPressed: () => pop(SignOutAnswer.signOut),
+              ),
+      ],
+    );
+  }
+}
+
+/// Buttons at the end, wrapping onto a new line when they don't fit
+/// (200 % text): labels never truncate.
 class _EndRow extends StatelessWidget {
-  const _EndRow({required this.children});
+  const _EndRow({
+    required this.children,
+    this.gap = AccountDialogSize.buttonGap,
+  });
 
   final List<Widget> children;
+  final double gap;
 
   @override
   Widget build(BuildContext context) => Wrap(
     alignment: WrapAlignment.end,
-    spacing: DotSpace.s,
-    runSpacing: DotSpace.s,
+    spacing: gap,
+    runSpacing: gap,
     children: children,
   );
 }

@@ -6053,6 +6053,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze, policies and Minimal's way back clean; the habit's days unit tests; card tests (each trigger, Try Less, the proposal writing nothing before Accept then the weekly rule, Close the day, the second Sign in to sync, one at a time, a11y); goldens of the four cards light and dark, phone and wide, 200 % and right to left; all tests but the Supabase ones (Docker off).
 - **Not run:** a device, VoiceOver and TalkBack.
 
+### ED-492 · M20.12 part 1: the sign-out dialogs as the boards draw
+- **Date:** 2026-11-27. **Owner:** "Go!" (the four-part split of M20.12, each stage checked against E-CR160 first). Review page: https://claude.ai/artifact/Y4ZRXQpT3j8yyeBtzWHfqv. **Approved 2026-11-27: "Approve part 1".** Source: E-CR160 "Signing out and settings" `1795736627-05d7` (`SignOutPlain`, `Main`, `AndroidA1`, `AndroidA2`, `DesktopA1`, `DesktopA2`, `TabletA1`, `TabletA2`).
+- **Owner answer (asked, 2026-11-27):** "As the boards draw": iPhone, iPad and the Mac use Dottoday's own dialog as drawn, not the system alert. This is a recorded departure from native-first for these two dialogs only.
+- **iPhone (and iPad, centred at 440):** radius 28, padding 28/24/20, gap 16; title 22/28 700 (−0.2), body 15/22 ink 2; 52 pills 10 apart. A2: badge, filled Stay signed in, the hint (13/18), outlined Keep changes and sign out.
+- **Android (tablet centred at 400 for A1, 440 for A2):** radius 28, padding 24 (A1 16 below); title 24/32, body 14/20; A1 text buttons at the end, 48 tall, Roboto 14/500 in the accent's ink; A2 the 24 px cloud, tonal Stay signed in, the hint, Keep as a text button.
+- **Mac and web:** 440 wide, radius 20, padding 24, gap 14; title 18/23, body 14/21; 40-tall buttons at the end; A1 Cancel autofocused with the focus ring; A2 Keep outlined then Stay filled, then the Esc note.
+- **Built as:** `AccountDialog` and `AccountButton` (`shared/account/`), sizes, type and colours in `AccountDialogSize`/`Type`/`Colors` (`core/theme/account_tokens.dart`); the look follows width and `touchApp`, never `Platform.isX`. `SignOutPrompt` rewritten on them; `signOutWithCheck` unchanged.
+- **Checks:** format, analyze, policies clean; sign-out tests (16, including each board's layout); 52 goldens (iPhone, Android, Mac, iPad, Android tablet, light and dark, unconfirmed); all tests but the Supabase ones (Docker off) and one locale-sweep test that passes alone.
+- **Not run:** a device, VoiceOver and TalkBack.
+
 ---
 
 ## Pending owner answers

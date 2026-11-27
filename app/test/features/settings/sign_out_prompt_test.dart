@@ -4,6 +4,7 @@ import 'package:dottoday/core/failures/app_failure.dart';
 import 'package:dottoday/core/failures/result.dart';
 import 'package:dottoday/domain/sync/sync_status.dart';
 import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
+import 'package:dottoday/shared/account/account_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -74,7 +75,7 @@ void main() {
     expect(find.text('Sign out?'), findsOneWidget);
     expect(find.textContaining('Everything has synced'), findsOneWidget);
     await expectA11yGuidelines(t);
-    await t.tap(find.widgetWithText(FilledButton, 'Sign out'));
+    await t.tap(find.widgetWithText(AccountButton, 'Sign out'));
     await t.pumpAndSettle();
     expect(actions.calls, ['signOut']);
   });
@@ -126,7 +127,12 @@ void main() {
   });
 
   testWidgets('Mac/web: Esc cancels and starts nothing (no sync)', (t) async {
-    await open(t, pending: 3, size: const Size(1280, 800));
+    await open(
+      t,
+      pending: 3,
+      size: const Size(1280, 800),
+      platform: TargetPlatform.macOS,
+    );
     expect(
       find.text(
         'Esc cancels and starts nothing. Stay signed in tries to sync now.',
@@ -150,7 +156,7 @@ void main() {
 
   testWidgets('a sign-out that took effect shows no error', (t) async {
     await open(t, status: _confirmed);
-    await t.tap(find.widgetWithText(FilledButton, 'Sign out'));
+    await t.tap(find.widgetWithText(AccountButton, 'Sign out'));
     await t.pumpAndSettle();
     expect(find.byType(SnackBar), findsNothing);
   });
@@ -160,11 +166,99 @@ void main() {
   ) async {
     actions.signOutResult = const Err(SignedOutHereOnlyFailure());
     await open(t, status: _confirmed);
-    await t.tap(find.widgetWithText(FilledButton, 'Sign out'));
+    await t.tap(find.widgetWithText(AccountButton, 'Sign out'));
     await t.pumpAndSettle();
     expect(
       find.textContaining('other devices couldn’t be signed out'),
       findsOneWidget,
     );
   });
+
+  // M20.12 part 1: the E-CR160 boards as drawn (owner).
+  group('as the boards draw', () {
+    testWidgets('Android A1: Cancel and Sign out as text buttons at the end', (
+      t,
+    ) async {
+      await open(t, status: _confirmed, platform: TargetPlatform.android);
+      final cancel = t.getRect(find.widgetWithText(AccountButton, 'Cancel'));
+      final out = t.getRect(find.widgetWithText(AccountButton, 'Sign out'));
+      final dialog = _sheet(t);
+      expect(cancel.top, out.top);
+      expect(out.right, closeTo(dialog.right - 24, 0.5));
+      expect(out.height, 48);
+    });
+
+    testWidgets('Android A2: the hint sits under Stay signed in', (t) async {
+      await open(t, pending: 2, platform: TargetPlatform.android);
+      final stay = t.getRect(
+        find.widgetWithText(AccountButton, 'Stay signed in'),
+      );
+      final hint = t.getRect(find.text('Dottoday tries to sync them now.'));
+      final keep = t.getRect(
+        find.widgetWithText(AccountButton, 'Sign out and keep them here'),
+      );
+      expect(hint.top, greaterThan(stay.bottom));
+      expect(keep.top, greaterThan(hint.bottom));
+    });
+
+    testWidgets('Mac/web A1: 440 wide, focus starts on Cancel', (t) async {
+      await open(
+        t,
+        status: _confirmed,
+        size: const Size(1280, 800),
+        platform: TargetPlatform.macOS,
+      );
+      expect(_sheet(t).width, 440);
+      final cancel = t.widget<TextButton>(
+        find.descendant(
+          of: find.widgetWithText(AccountButton, 'Cancel'),
+          matching: find.byType(TextButton),
+        ),
+      );
+      expect(cancel.autofocus, isTrue);
+      expect(
+        t.getSize(find.widgetWithText(AccountButton, 'Cancel')).height,
+        40,
+      );
+    });
+
+    testWidgets('iPad: the iPhone dialog, centred at 440', (t) async {
+      await open(t, pending: 3, size: const Size(1180, 820));
+      final dialog = _sheet(t);
+      expect(dialog.width, 440);
+      expect(dialog.center.dx, closeTo(590, 0.5));
+      expect(find.text('Dottoday tries to sync them now.'), findsOneWidget);
+      expect(
+        find.text(
+          'Esc cancels and starts nothing. Stay signed in tries to sync now.',
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('Android tablet A1: 400 wide', (t) async {
+      await open(
+        t,
+        status: _confirmed,
+        size: const Size(1280, 800),
+        platform: TargetPlatform.android,
+      );
+      expect(_sheet(t).width, 400);
+    });
+
+    testWidgets('iPhone: 52 pills side by side', (t) async {
+      await open(t, status: _confirmed);
+      final cancel = t.getRect(find.widgetWithText(AccountButton, 'Cancel'));
+      final out = t.getRect(find.widgetWithText(AccountButton, 'Sign out'));
+      expect(cancel.height, 52);
+      expect(cancel.width, closeTo(out.width, 0.5));
+    });
+  });
 }
+
+/// The dialog's card, without its inset.
+Rect _sheet(WidgetTester t) => t.getRect(
+  find
+      .descendant(of: find.byType(Dialog), matching: find.byType(Material))
+      .first,
+);
