@@ -6177,6 +6177,10 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
       pseudo(super.settingsHelpAndAboutSummary);
 
   @override
+  String get settingsHelpAndAboutSummaryNoSiri =>
+      pseudo(super.settingsHelpAndAboutSummaryNoSiri);
+
+  @override
   String get settingsWakeWindDown => pseudo(super.settingsWakeWindDown);
 
   @override

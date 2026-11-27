@@ -4,7 +4,6 @@ library;
 import 'package:dottoday/features/settings/pages/delete_account.dart';
 import 'package:dottoday/features/settings/pages/sign_out_prompt.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
@@ -18,10 +17,6 @@ import '../../support/dot_golden.dart';
 void main() {
   setUpAll(() async {
     await loadAppFonts();
-    // Android's buttons are in the system's Roboto (`AndroidA1`); the test
-    // has none, so the bundled copy stands in under that name.
-    final roboto = rootBundle.load('assets/fonts/Roboto-Variable.ttf');
-    await (FontLoader('Roboto')..addFont(roboto)).load();
   });
 
   void prompt(

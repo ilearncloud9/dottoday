@@ -7743,6 +7743,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Hilfe, Neuigkeiten, Siri und Kurzbefehle, Feedback';
 
   @override
+  String get settingsHelpAndAboutSummaryNoSiri =>
+      'Hilfe, Neuigkeiten, Feedback';
+
+  @override
   String get settingsWakeWindDown => 'Aufstehen und Abendruhe';
 
   @override

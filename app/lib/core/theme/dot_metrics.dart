@@ -483,8 +483,9 @@ abstract final class DotSize {
 
   /// Narrower than this, Layout's Everything · Less goes under its title:
   /// at the 48 pt touch height it doesn't fit beside it in a phone's card
-  /// (350 at 390, M20.7).
-  static const double layoutSegmentsBeside = 380;
+  /// (358 at 390, M20.7; 380 in Android's 412 card with its 16 edge and
+  /// 398 on the largest iPhone, ED-499).
+  static const double layoutSegmentsBeside = 400;
 
   /// The preview's Now ring (Less).
   static const double previewRing = 56;

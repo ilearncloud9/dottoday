@@ -36,7 +36,22 @@ void _noNativeBridges() {
   }
 }
 
+/// Android's own Roboto, which Settings' rows name (E-R2-29, ED-499): the
+/// test host has no system Roboto, so the bundled copy stands in under
+/// that name, as it does for Account's Android buttons. Only for files
+/// that pump widgets; a plain test() has no binding to load it into.
+Future<void> _loadRoboto() async {
+  try {
+    TestDefaultBinaryMessengerBinding.instance;
+  } on FlutterError {
+    return;
+  }
+  final roboto = rootBundle.load('assets/fonts/Roboto-Variable.ttf');
+  await (FontLoader('Roboto')..addFont(roboto)).load();
+}
+
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
+  setUpAll(_loadRoboto);
   setUp(_noNativeBridges);
   final current = goldenFileComparator;
   if (current is LocalFileComparator) {

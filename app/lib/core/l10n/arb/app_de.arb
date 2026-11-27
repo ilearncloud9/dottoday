@@ -1934,6 +1934,7 @@
   "settingsDataAndPrivacySummary": "Kalender, Export und Backups, Papierkorb, App-Sperre",
   "settingsHelpAndAbout": "Hilfe und Info",
   "settingsHelpAndAboutSummary": "Hilfe, Neuigkeiten, Siri und Kurzbefehle, Feedback",
+  "settingsHelpAndAboutSummaryNoSiri": "Hilfe, Neuigkeiten, Feedback",
   "settingsWakeWindDown": "Aufstehen und Abendruhe",
   "settingsTheTwoEnds": "Die beiden Enden deines Tages",
   "settingsTheDayItself": "Der Tag selbst",

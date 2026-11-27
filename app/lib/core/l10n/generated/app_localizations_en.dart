@@ -7695,6 +7695,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Help, what’s new, Siri and Shortcuts, feedback';
 
   @override
+  String get settingsHelpAndAboutSummaryNoSiri => 'Help, what’s new, feedback';
+
+  @override
   String get settingsWakeWindDown => 'Wake Up and Wind Down';
 
   @override

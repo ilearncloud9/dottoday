@@ -7733,6 +7733,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ayuda, novedades, Siri y Atajos, comentarios';
 
   @override
+  String get settingsHelpAndAboutSummaryNoSiri =>
+      'Ayuda, novedades, comentarios';
+
+  @override
   String get settingsWakeWindDown => 'Despertar y Desconexión';
 
   @override

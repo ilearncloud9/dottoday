@@ -7752,6 +7752,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aide, nouveautés, Siri et Raccourcis, avis';
 
   @override
+  String get settingsHelpAndAboutSummaryNoSiri => 'Aide, nouveautés, avis';
+
+  @override
   String get settingsWakeWindDown => 'Réveil et Détente';
 
   @override

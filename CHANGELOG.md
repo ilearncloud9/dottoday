@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file (Keep a Chan
 ## [Unreleased]
 
 ### Changed
+- Settings on Android is redrawn as Android draws settings: a back arrow with the page's icon and a lighter title, each value under its setting instead of beside it, no arrows or lines between rows, and captions in the accent. Help and about no longer mentions Siri where there is no Siri.
 - Settings on iPhone and iPad is redrawn: a plain back link, a bold title with its page's colour, cards closer to the edge with thin lines between rows, and every setting with one icon and one colour wherever it appears (an alarm clock for the Wake Up alarm, a padlock for app lock, an envelope for feedback, and more) (redesign branch).
 - Calendars, App lock, Help, Send feedback and What's new are redrawn: calendars show a dot in their own colour, the locked screen shows the Dottoday mark, Help's questions sit in one card, a connected account that needs signing in again gets a Reconnect strip above every screen, and the update, install and calendar strips are rounded and tinted. The French Inbox tab reads "Boîte", the 1.2.0 release note points to Settings › Your day › Wake Up and Wind Down, and the Calendars and Export pages no longer promise to be free forever (redesign branch).
 - "Week in review" is now "This week", redrawn: each day is one ring showing how much of its plan was done, an open day lists its tasks in the week card, the busiest and lightest chips name the whole day, and the share image is centred with the same rings (redesign branch).

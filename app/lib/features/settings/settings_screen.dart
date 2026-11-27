@@ -13,6 +13,7 @@ import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/features/settings/settings_search.dart';
 import 'package:dottoday/features/settings/widgets/account_row.dart';
+import 'package:dottoday/shared/settings/settings_frame.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:dottoday/shared/states/screen_states.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,6 @@ class SettingsScreen extends ConsumerWidget {
             touchApp(context) &&
             DotIdiom.of(context) == DotIdiom.material);
     void back() => context.go(ref.read(settingsReturnProvider.notifier).take());
-    final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     final page = Scaffold(
       key: _key,
       body: SafeArea(
@@ -77,11 +77,10 @@ class SettingsScreen extends ConsumerWidget {
                     ? 'settings:minimal' // l10n-ignore: storage key
                     : 'settings', // l10n-ignore: storage key
               ),
-              // iPhone and iPad: cards 16 from the edge (E-R2-24, ED-498).
               padding: EdgeInsets.fromLTRB(
-                iphone ? SettingsFrameSize.side : DotSpace.page,
+                settingsSide(context),
                 DotSpace.l,
-                iphone ? SettingsFrameSize.side : DotSpace.page,
+                settingsSide(context),
                 DotSpace.fabClearance,
               ),
               children: [
@@ -145,7 +144,6 @@ class _RootTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = DotTheme.of(context);
     final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     // iPhone: 34/41, 4 in from the cards (E-Phones, ED-498).
     final title = Padding(
@@ -156,12 +154,7 @@ class _RootTitle extends StatelessWidget {
         header: true,
         child: Text(
           context.l10n.navSettings,
-          style: iphone
-              ? t.styles.pageTitle.copyWith(
-                  fontSize: SettingsFrameSize.title,
-                  height: SettingsFrameSize.titleLine / SettingsFrameSize.title,
-                )
-              : t.styles.pageTitle,
+          style: settingsTitleStyle(context),
         ),
       ),
     );

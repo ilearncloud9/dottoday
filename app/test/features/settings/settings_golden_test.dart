@@ -8,6 +8,7 @@ import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/data/auth/account_providers.dart';
 import 'package:dottoday/data/calendar/cloud_calendar_providers.dart';
 import 'package:dottoday/data/calendar/no_device_calendar_gateway.dart';
+import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/data/notifications/fln_exact_alarms.dart';
 import 'package:dottoday/data/notifications/permission_providers.dart';
 import 'package:dottoday/data/sync/sync_providers.dart';
@@ -103,7 +104,8 @@ void main() {
   goldenMatrix(
     'settings',
     height: 844,
-    overrides: _overrides,
+    // An iPhone, which has Siri: Help and about names it (ED-499).
+    overrides: [..._overrides, siriAvailableProvider.overrideWithValue(true)],
     build: (_) => _settings(),
   );
   // Day shape with a sleep target that pulls Wind Down earlier (docs/15

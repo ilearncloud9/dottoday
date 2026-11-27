@@ -11706,6 +11706,12 @@ abstract class AppLocalizations {
   /// **'Help, what’s new, Siri and Shortcuts, feedback'**
   String get settingsHelpAndAboutSummary;
 
+  /// Settings root: what the Help and about group holds where there is no Siri (Android, Mac, web).
+  ///
+  /// In en, this message translates to:
+  /// **'Help, what’s new, feedback'**
+  String get settingsHelpAndAboutSummaryNoSiri;
+
   /// Settings › Your day: the row and page for the two ends of the day (ED-084).
   ///
   /// In en, this message translates to:

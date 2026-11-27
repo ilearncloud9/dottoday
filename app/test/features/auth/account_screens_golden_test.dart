@@ -11,7 +11,6 @@ import 'package:dottoday/features/auth/removal_retry_screen.dart';
 import 'package:dottoday/features/auth/settings_choice_screen.dart';
 import 'package:dottoday/features/auth/signed_out_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 
@@ -26,10 +25,6 @@ import '../../support/dot_golden.dart';
 void main() {
   setUpAll(() async {
     await loadAppFonts();
-    // Android's buttons are in the system's Roboto (`AndroidA3`); the test
-    // has none, so the bundled copy stands in under that name.
-    final roboto = rootBundle.load('assets/fonts/Roboto-Variable.ttf');
-    await (FontLoader('Roboto')..addFont(roboto)).load();
   });
   final overrides = accountScreenOverrides(FakeAccountActions());
 

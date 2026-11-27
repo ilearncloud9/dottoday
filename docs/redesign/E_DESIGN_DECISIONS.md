@@ -6127,6 +6127,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze clean; one test updated for the one-piece back link; every changed golden regenerated and compared by eye with the boards; the full suite but the Supabase tests (Docker off).
 - **Not run:** a device, VoiceOver.
 
+### ED-499 · M20.13 part 3b: Android's Settings rows and frame
+- **Date:** 2026-11-27. **Owner:** "Push and start 3b", then the change-by-change page (https://claude.ai/artifact/JpNSCSrnmfXNGEoBqS9Ln7): "Build 1–4, 6 and 9; keep 5, 7, 8 as now". Review page: https://claude.ai/artifact/PoWwZ9uYrBLX4D3qj7NCMV. **Approved 2026-11-27: "Approve part 3b".** Source: E-R2-29 (Android Settings).
+- **Built on Android (the app, not the web; `androidApp`):** (1) the header: ← then the page's icon in a 32 circle, the title in Roboto 22/28 regular; (2) rows: the value as a second line under the title, no chevron, Roboto 16/24 titles and 14/20 second lines in ink 2, 40 circles, 16 between icon and words, 56 tall with one line and 72 with two; (3) cards 16 from the edge with 20 corners and no lines between rows; (4) captions Roboto 14/20 medium in the accent, page text Roboto 14/20 in ink 2; (6) the Wake Up alarm keeps its switch, only the row's look changes; (9) Help and about's summary names Siri only where its page has the Siri row (iPhone and iPad; new string `settingsHelpAndAboutSummaryNoSiri`, which the Mac and the web also show, since neither has the row). Tokens: `SettingsAndroidSize`, `SettingsAndroidType`.
+- **Kept as now (owner):** (5) minimal Settings' Layout keeps its inline Everything | Less control under its words (the "beside" width rises from 380 to 400 so Android's wider 380 card keeps it under); (7) no "● Synced" line; (8) Everything else… keeps its title, account card and Search settings. Why: these change what a row does and would make Android differ from iPhone in structure (Android mirrors iPhone); if wanted later, they come to both phones together.
+- **Same look elsewhere on Android:** the sheets that use Settings rows (sounds, choice sheets, the test alarm card).
+- **Tests:** bundled Roboto now loads for every widget test (`flutter_test_config.dart`), replacing the two account goldens' own loaders; the iPhone `settings` golden says it has Siri.
+- **Checks:** format, analyze clean; every changed golden regenerated (Android, the Mac and web Help summary, the account dialogs' Roboto anti-aliasing) and compared by eye; no iPhone golden changed; the full suite but the Supabase tests (Docker off).
+- **Not run:** a device, TalkBack.
+
 ---
 
 ## Pending owner answers

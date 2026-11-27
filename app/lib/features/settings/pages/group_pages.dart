@@ -1,6 +1,7 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/router/app_routes.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/data/intents/siri_providers.dart';
 import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/domain/entities/settings.dart';
 import 'package:dottoday/domain/time/day_boundaries.dart';
@@ -89,7 +90,9 @@ String _week(BuildContext context, Settings s) {
 }
 
 /// A row that opens [page]: its icon, title and summary from its place.
-class PlaceRow extends StatelessWidget {
+/// Help and about names Siri only where its page has the Siri row
+/// (ED-499).
+class PlaceRow extends ConsumerWidget {
   const PlaceRow(this.page, {this.summary, super.key});
 
   final SettingsPage page;
@@ -98,14 +101,20 @@ class PlaceRow extends StatelessWidget {
   final String? summary;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = DotTheme.of(context);
     final place = settingsPlace(context.l10n, page);
+    final noSiri =
+        page == SettingsPage.helpAbout && !ref.watch(siriAvailableProvider);
     return SettingsRow(
       glyph: place.glyph,
       tint: t.tasks[place.colour].ink,
       title: place.title,
-      subtitle: summary ?? place.summary,
+      subtitle:
+          summary ??
+          (noSiri
+              ? context.l10n.settingsHelpAndAboutSummaryNoSiri
+              : place.summary),
       selected: SettingsPaneScope.selectedAt(context, page),
       onTap: () => openSettingsPage(context, page),
     );

@@ -45,6 +45,11 @@ bool appleChrome(BuildContext context) {
 bool macApp(BuildContext context) =>
     !kIsWeb && Theme.of(context).platform == TargetPlatform.macOS;
 
+/// Whether this is the Android app (not the web on an Android phone):
+/// its Settings rows are Material's own (E-R2-29, ED-499).
+bool androidApp(BuildContext context) =>
+    !webChrome(context) && Theme.of(context).platform == TargetPlatform.android;
+
 /// Whether this is the iPhone or iPad app (not the web on an iPhone).
 bool iosApp(BuildContext context) =>
     !kIsWeb && Theme.of(context).platform == TargetPlatform.iOS;

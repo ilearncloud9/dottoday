@@ -1934,6 +1934,7 @@
   "settingsDataAndPrivacySummary": "Calendarios, exportación y copias, papelera, bloqueo",
   "settingsHelpAndAbout": "Ayuda e información",
   "settingsHelpAndAboutSummary": "Ayuda, novedades, Siri y Atajos, comentarios",
+  "settingsHelpAndAboutSummaryNoSiri": "Ayuda, novedades, comentarios",
   "settingsWakeWindDown": "Despertar y Desconexión",
   "settingsTheTwoEnds": "Los dos extremos de tu día",
   "settingsTheDayItself": "El día en sí",

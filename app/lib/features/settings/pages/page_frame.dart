@@ -5,6 +5,7 @@ import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/features/settings/panes/settings_pane_scope.dart';
 import 'package:dottoday/features/settings/settings_places.dart';
 import 'package:dottoday/shared/settings/settings_form.dart';
+import 'package:dottoday/shared/settings/settings_frame.dart';
 import 'package:dottoday/shared/settings/settings_group.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -50,10 +51,7 @@ class SettingsPageFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // iPhone and iPad: cards 16 from the edge (E-R2-24, ED-498).
-    final edge = DotIdiom.of(context) == DotIdiom.cupertino
-        ? SettingsFrameSize.side
-        : DotSpace.page;
+    final edge = settingsSide(context);
     final side = EdgeInsets.symmetric(horizontal: edge);
     final asForm = form && settingsFormFits(context);
     final head = [
@@ -142,20 +140,15 @@ class _TitleRow extends StatelessWidget {
     final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
     final heading = Semantics(
       header: true,
-      // iPhone: 34/41, as E-R2-24 draws it (ED-498).
-      child: Text(
-        title,
-        style: iphone
-            ? t.styles.pageTitle.copyWith(
-                fontSize: SettingsFrameSize.title,
-                height: SettingsFrameSize.titleLine / SettingsFrameSize.title,
-              )
-            : t.styles.pageTitle,
-      ),
+      child: Text(title, style: settingsTitleStyle(context)),
     );
     final icon = place == null
         ? null
-        : SettingsIcon(glyph: place.glyph, tint: t.tasks[place.colour].ink);
+        : SettingsIcon(
+            glyph: place.glyph,
+            tint: t.tasks[place.colour].ink,
+            header: true,
+          );
     if (settingsDetailWithoutBack(context, page)) {
       return Row(
         spacing: DotSpace.m,
@@ -199,13 +192,16 @@ class _TitleRow extends StatelessWidget {
             box.maxWidth -
             kMinInteractiveDimension -
             DotSpace.m -
-            (icon == null ? 0 : DotSize.rowDot + DotSpace.m);
+            (icon == null
+                ? 0
+                : SettingsIcon.extentOf(context, header: true) + DotSpace.m);
         final lead = Row(
           mainAxisSize: MainAxisSize.min,
           spacing: DotSpace.m,
           children: [back, ?icon],
         );
-        if (longestWordFits(context, title, t.styles.pageTitle, beside)) {
+        final style = settingsTitleStyle(context);
+        if (longestWordFits(context, title, style, beside)) {
           return Row(
             spacing: DotSpace.m,
             children: [
@@ -283,7 +279,8 @@ class _ParentBack extends StatelessWidget {
 }
 
 /// A paragraph in the page's body style: ink 2, the words 4 in from the
-/// cards on iPhone and iPad (E-R2-24, ED-498).
+/// cards on iPhone and iPad (E-R2-24, ED-498); Roboto 14/20 on Android
+/// (E-R2-29, ED-499).
 class PageText extends StatelessWidget {
   const PageText(this.text, {super.key});
 
@@ -297,7 +294,12 @@ class PageText extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: iphone ? SettingsFrameSize.wordsInset : 0,
       ),
-      child: Text(text, style: t.styles.body.copyWith(color: t.colors.ink2)),
+      child: Text(
+        text,
+        style: androidApp(context)
+            ? SettingsAndroidType.second(t.colors)
+            : t.styles.body.copyWith(color: t.colors.ink2),
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/core/utils/text_fit.dart';
 import 'package:dottoday/shared/settings/settings_form.dart';
+import 'package:dottoday/shared/settings/settings_frame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -60,8 +61,10 @@ class SettingsGroup extends StatelessWidget {
   }
 
   Widget _card(BuildContext context, DotTheme t) {
-    // iPhone and iPad: E-R2-24's cards (ED-498); Android's are part 3b.
+    // iPhone and iPad: E-R2-24's cards (ED-498); Android: E-R2-29's,
+    // 20 corners and no lines between rows (ED-499).
     final iphone = DotIdiom.of(context) == DotIdiom.cupertino;
+    final android = androidApp(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
@@ -78,11 +81,13 @@ class SettingsGroup extends StatelessWidget {
               child: Text(
                 caption,
                 // iPhone: regular weight, as E-R2-24 draws it (ED-498).
-                style: DotIdiom.of(context) == DotIdiom.cupertino
+                style: iphone
                     ? t.styles.caption.copyWith(
                         fontWeight: FontWeight.w400,
                         fontVariations: const [],
                       )
+                    : android
+                    ? SettingsAndroidType.caption(t.colors)
                     : t.styles.caption.copyWith(color: t.colors.accentInk),
               ),
             ),
@@ -91,7 +96,11 @@ class SettingsGroup extends StatelessWidget {
           color: t.colors.raised,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              iphone ? SettingsFrameSize.cardRadius : DotRadii.cardLarge,
+              iphone
+                  ? SettingsFrameSize.cardRadius
+                  : android
+                  ? SettingsAndroidSize.cardRadius
+                  : DotRadii.cardLarge,
             ),
             side: BorderSide(color: t.colors.outline),
           ),
@@ -99,7 +108,7 @@ class SettingsGroup extends StatelessWidget {
           child: Column(
             children: [
               for (final (i, child) in children.indexed) ...[
-                if (i > 0)
+                if (i > 0 && !android)
                   Divider(
                     height: iphone ? SettingsFrameSize.hairline : 1,
                     thickness: iphone ? SettingsFrameSize.hairline : null,
@@ -272,6 +281,7 @@ class SettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (settingsFormAt(context)) return _form(context);
+    if (androidApp(context)) return AndroidSettingsRow(this);
     // Only a value can stack under the title; without one the row needs no
     // width, so it also lays out where its size is measured first (the
     // multi-file rows inside Delete account's frame, ED-477).
@@ -450,17 +460,7 @@ class SettingsRow extends StatelessWidget {
         ),
       ),
     );
-    if (on != null) {
-      return MergeSemantics(
-        child: InkWell(onTap: () => onToggle?.call(!on), child: row),
-      );
-    }
-    final tap = InkWell(onTap: onTap, child: row);
-    if (!selected) return tap;
-    return Semantics(
-      selected: true,
-      child: Ink(decoration: paneSelectedFill(context), child: tap),
-    );
+    return settingsRowTap(context, this, row);
   }
 
   /// A row that only tells, as a form line: a small mark, the title and
@@ -526,11 +526,26 @@ class SettingsRow extends StatelessWidget {
 /// A Settings row's icon: [glyph] on its solid tile in the boards' pair
 /// for [tint]'s colour (ED-332, ED-498): a rounded tile on iPhone and iPad,
 /// a circle on Material. 36 across, the owner's size (ED-498; the boards
-/// draw 30). The mission picker's rows wear it too (E-R2-28).
+/// draw 30); Android's rows 40 and its page header 32, as E-R2-29 draws
+/// them (ED-499). The mission picker's rows wear it too (E-R2-28).
 class SettingsIcon extends StatelessWidget {
-  const SettingsIcon({required this.glyph, required this.tint, super.key});
+  const SettingsIcon({
+    required this.glyph,
+    required this.tint,
+    this.header = false,
+    super.key,
+  });
 
   final DotGlyph glyph;
+
+  /// Beside a page's title: Android's smaller circle.
+  final bool header;
+
+  /// How wide the icon is drawn at [context].
+  static double extentOf(BuildContext context, {bool header = false}) {
+    if (!androidApp(context)) return DotSize.rowDot;
+    return header ? SettingsAndroidSize.headerIcon : SettingsAndroidSize.icon;
+  }
 
   /// The setting's colour; [SettingsTiles.of] turns it into the drawn pair.
   final Color tint;
@@ -540,16 +555,22 @@ class SettingsIcon extends StatelessWidget {
     final t = DotTheme.of(context);
     final pair = SettingsTiles.of(t.colors, t.tasks, tint);
     final tile = DotIdiom.of(context) == DotIdiom.cupertino;
+    final side = extentOf(context, header: header);
+    final glyphSize = !androidApp(context)
+        ? DotSize.rowIcon
+        : header
+        ? SettingsAndroidSize.headerGlyph
+        : SettingsAndroidSize.glyph;
     return Container(
-      width: DotSize.rowDot,
-      height: DotSize.rowDot,
+      width: side,
+      height: side,
       decoration: BoxDecoration(
         shape: tile ? BoxShape.rectangle : BoxShape.circle,
         borderRadius: tile ? BorderRadius.circular(DotRadii.iconTile) : null,
         color: pair.tile,
       ),
       child: Center(
-        child: DotIcon(glyph, color: pair.glyph, size: DotSize.rowIcon),
+        child: DotIcon(glyph, color: pair.glyph, size: glyphSize),
       ),
     );
   }
@@ -589,6 +610,22 @@ BoxDecoration paneSelectedFill(BuildContext context) {
   return BoxDecoration(
     color: c.paneSelectedMaterial,
     borderRadius: BorderRadius.circular(DotRadii.paneRowAndroid),
+  );
+}
+
+/// [line] made [row]'s tap target: a switch row toggles anywhere on it,
+/// another opens [SettingsRow.onTap]; the open page's row is tinted.
+Widget settingsRowTap(BuildContext context, SettingsRow row, Widget line) {
+  if (row.toggle case final on?) {
+    return MergeSemantics(
+      child: InkWell(onTap: () => row.onToggle?.call(!on), child: line),
+    );
+  }
+  final tap = InkWell(onTap: row.onTap, child: line);
+  if (!row.selected) return tap;
+  return Semantics(
+    selected: true,
+    child: Ink(decoration: paneSelectedFill(context), child: tap),
   );
 }
 
