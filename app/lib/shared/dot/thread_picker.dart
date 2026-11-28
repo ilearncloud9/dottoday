@@ -157,7 +157,7 @@ class _ThreadPickerState extends State<ThreadPicker> {
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(DotRadii.card),
       border: Border.all(
-        color: _focus.hasFocus ? t.colors.accent : t.colors.outline,
+        color: _focus.hasFocus ? t.colors.accent : t.colors.hairline,
         width: _focus.hasFocus ? DotSize.freeLine : DotSpace.hairline,
       ),
     ),

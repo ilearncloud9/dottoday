@@ -65,7 +65,7 @@ class LearningGroup extends ConsumerWidget {
     if (p?.realityRevealed ?? false) {
       return SettingsRow(
         glyph: DotGlyphs.review,
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
         title: l10n.settingsLearningReality,
         subtitle: l10n.settingsLearningRealityReady,
         formLabel: l10n.settingsLearning,
@@ -76,7 +76,7 @@ class LearningGroup extends ConsumerWidget {
     // "6/10" at the row's end (E-R2-23 §4), read as a sentence.
     return SettingsRow(
       glyph: DotGlyphs.review,
-      tint: t.colors.accentInk,
+      tint: t.colors.accentText,
       title: l10n.settingsLearningReality,
       subtitle: l10n.settingsLearningRealityPending(total),
       formLabel: l10n.settingsLearning,
@@ -86,7 +86,7 @@ class LearningGroup extends ConsumerWidget {
         excludeSemantics: true,
         child: Text(
           l10n.settingsLearningProgress(done, total),
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
       ),
     );

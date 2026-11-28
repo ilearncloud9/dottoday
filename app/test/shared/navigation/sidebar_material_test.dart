@@ -73,7 +73,7 @@ void main() {
             )
             .first,
       );
-      expect(content.color, c.surface);
+      expect(content.color, c.ground);
       expect(content.color.a, 1);
     });
   }
@@ -108,14 +108,14 @@ void main() {
     await _wide(tester);
     await tester.pumpWidget(_shell(vibrant: true, mode: ThemeMode.dark));
     final c = DotTheme.of(tester.element(find.byType(DotSidebar))).colors;
-    expect(labelColor(tester), c.text);
+    expect(labelColor(tester), c.ink);
   }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
   testWidgets('light Mac keeps the accent text', (tester) async {
     await _wide(tester);
     await tester.pumpWidget(_shell(vibrant: true));
     final c = DotTheme.of(tester.element(find.byType(DotSidebar))).colors;
-    expect(labelColor(tester), c.accentInk);
+    expect(labelColor(tester), c.accentText);
   }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
   testWidgets(
@@ -124,7 +124,7 @@ void main() {
       await _wide(tester);
       await tester.pumpWidget(_shell(vibrant: false, mode: ThemeMode.dark));
       final c = DotTheme.of(tester.element(find.byType(DotSidebar))).colors;
-      expect(labelColor(tester), c.accentInk);
+      expect(labelColor(tester), c.accentText);
     },
     variant: const TargetPlatformVariant({
       TargetPlatform.iOS,

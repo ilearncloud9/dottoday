@@ -104,14 +104,14 @@ List<Widget> wakeUpSnoozeRows(BuildContext context, Settings settings) {
     if (settings.wakeUpSnooze) ...[
       SettingsRow(
         glyph: DotGlyphs.clock,
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
         title: l10n.wakeUpSnoozeLength,
         value: l10n.durationMinutes(settings.wakeUpSnoozeMin),
         onTap: () => unawaited(_pickLength(context, settings)),
       ),
       SettingsRow(
         glyph: DotGlyphs.repeat,
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
         title: l10n.wakeUpSnoozeLimit,
         // The count alone, as E-Phones draws it; the picker says "times".
         value: limit,

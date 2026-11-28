@@ -81,7 +81,7 @@ class _Header extends StatelessWidget {
           IconButton(
             onPressed: () => Navigator.of(context).maybePop(),
             tooltip: context.l10n.sheetClose,
-            icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+            icon: DotIcon(DotGlyphs.close, color: t.colors.secondary),
           ),
         ],
       ),
@@ -121,17 +121,17 @@ class _SearchFieldState extends State<_SearchField> {
       decoration: InputDecoration(
         hintText: context.l10n.iconSearchHint,
         filled: true,
-        fillColor: t.colors.raised,
+        fillColor: t.colors.card,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-          borderSide: BorderSide(color: t.colors.outline),
+          borderSide: BorderSide(color: t.colors.hairline),
         ),
         prefixIcon: Center(
           widthFactor: 1,
           heightFactor: 1,
           child: DotIcon(
             DotGlyphs.search,
-            color: t.colors.accentInk,
+            color: t.colors.accentText,
             size: DotSize.rowIcon + DotSpace.xxs,
           ),
         ),

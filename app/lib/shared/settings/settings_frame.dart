@@ -90,15 +90,17 @@ class AndroidSettingsRow extends StatelessWidget {
         Text(
           r.title,
           style: r.action
-              ? title.copyWith(color: c.accentInk)
+              ? title.copyWith(color: c.accentText)
               : r.quiet
-              ? title.copyWith(color: c.muted)
+              ? title.copyWith(color: c.secondary)
               : title,
         ),
         if (r.value case final v?)
           Text(
             v,
-            style: r.accentValue ? second.copyWith(color: c.accentInk) : second,
+            style: r.accentValue
+                ? second.copyWith(color: c.accentText)
+                : second,
           ),
         if (r.subtitle case final s?) Text(s, style: second),
         ?r.below,

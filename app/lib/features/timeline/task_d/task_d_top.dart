@@ -49,7 +49,7 @@ class TaskDTopBar extends StatelessWidget {
               tooltip: l10n.sheetClose,
               onPressed:
                   onBack ?? () => unawaited(Navigator.of(context).maybePop()),
-              icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.ink),
             ),
             Expanded(
               child: Text(l10n.editorCaption, style: t.styles.topBarTitle),
@@ -98,7 +98,7 @@ class TaskDMenu extends ConsumerWidget {
       tooltip: l10n.createMore,
       icon: DotIcon(
         android ? DotGlyphs.moreVertical : DotGlyphs.more,
-        color: t.colors.text,
+        color: t.colors.ink,
       ),
       onSelected: (item) => switch (item) {
         _Item.breakDown => onBreakDown(),

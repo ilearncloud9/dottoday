@@ -267,14 +267,17 @@ class _AlarmLine extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(DotSpace.m),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.monthCard),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Row(
         spacing: DotSpace.m,
         children: [
-          SettingsIcon(glyph: TaskIcon.flipphone.glyph!, tint: t.colors.muted),
+          SettingsIcon(
+            glyph: TaskIcon.flipphone.glyph!,
+            tint: t.colors.secondary,
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +298,7 @@ class _AlarmLine extends ConsumerWidget {
                   style: t.styles.inspectorLabel.copyWith(
                     color: state == AlarmDeviceState.ready
                         ? t.colors.success
-                        : t.colors.muted,
+                        : t.colors.secondary,
                   ),
                 ),
                 FormHelp(

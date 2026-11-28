@@ -163,7 +163,7 @@ class _DayHorizonState extends State<DayHorizon> {
             return best;
           }
 
-          final style = t.styles.threadMeta.copyWith(color: t.colors.muted);
+          final style = t.styles.threadMeta.copyWith(color: t.colors.secondary);
           final menu = w.onDotMenu;
           return GestureDetector(
             behavior: HitTestBehavior.opaque,

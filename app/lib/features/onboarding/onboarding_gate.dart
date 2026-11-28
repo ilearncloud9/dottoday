@@ -132,7 +132,7 @@ class _Card extends StatelessWidget {
       height: height,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: c.surface,
+        color: c.ground,
         borderRadius: BorderRadius.circular(OnbSize.cardRadius),
         boxShadow: [
           BoxShadow(

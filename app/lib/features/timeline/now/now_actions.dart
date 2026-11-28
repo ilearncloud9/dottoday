@@ -50,10 +50,10 @@ class NowActions extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
         decoration: BoxDecoration(
           // Android: tonal; the iPhone: outlined (E-PhonesMinimal).
-          color: android ? t.colors.accentTint : null,
+          color: android ? t.colors.tonal : null,
           border: android
               ? null
-              : Border.all(color: t.colors.outline, width: DotSpace.hairline),
+              : Border.all(color: t.colors.hairline, width: DotSpace.hairline),
           borderRadius: BorderRadius.circular(DotRadii.pill),
         ),
         child: Row(
@@ -64,13 +64,13 @@ class NowActions extends ConsumerWidget {
             Flexible(
               child: Text(
                 l10n.lateNudgeTitle,
-                style: t.styles.button.copyWith(color: t.colors.text),
+                style: t.styles.button.copyWith(color: t.colors.ink),
               ),
             ),
             if (!android)
               DotIcon(
                 DotGlyphs.chevronDown,
-                color: t.colors.text,
+                color: t.colors.ink,
                 size: DotSize.rowIcon,
               ),
           ],
@@ -98,8 +98,8 @@ class NowActions extends ConsumerWidget {
             onPressed: () => openFocus(context, task.id),
             style: FilledButton.styleFrom(
               minimumSize: const Size(DotSize.nowActionWide, DotTouch.min),
-              backgroundColor: t.colors.accentTint,
-              foregroundColor: t.colors.accentInk,
+              backgroundColor: t.colors.tonal,
+              foregroundColor: t.colors.accentText,
             ),
             child: Text(l10n.focusTitle),
           ),

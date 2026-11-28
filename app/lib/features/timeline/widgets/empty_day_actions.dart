@@ -237,7 +237,7 @@ class EmptyDayLine extends StatelessWidget {
       ),
       child: Text(
         context.l10n.todayEmpty,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       ),
     );
   }

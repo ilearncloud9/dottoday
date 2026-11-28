@@ -132,7 +132,7 @@ class _SignedOutScreenState extends ConsumerState<SignedOutScreen> {
             );
     }
     return Material(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: SafeArea(child: body),
     );
   }

@@ -169,7 +169,7 @@ class _SearchOrRunState extends ConsumerState<SearchOrRun> {
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: t.colors.raised,
+              color: t.colors.card,
               borderRadius: BorderRadius.circular(DotRadii.card),
               border: Border.all(color: t.colors.threadAhead),
               boxShadow: DotElevation.floating,
@@ -206,7 +206,11 @@ class _SearchOrRunState extends ConsumerState<SearchOrRun> {
     child: Row(
       spacing: DotSpace.s,
       children: [
-        DotIcon(DotGlyphs.search, color: t.colors.muted, size: DotSize.rowIcon),
+        DotIcon(
+          DotGlyphs.search,
+          color: t.colors.secondary,
+          size: DotSize.rowIcon,
+        ),
         Expanded(
           child: TextField(
             contextMenuBuilder: systemTextMenu,
@@ -218,7 +222,7 @@ class _SearchOrRunState extends ConsumerState<SearchOrRun> {
             onChanged: (_) => setState(() => _at = 0),
             decoration: InputDecoration(
               hintText: widget.placeholder,
-              hintStyle: t.styles.body.copyWith(color: t.colors.muted),
+              hintStyle: t.styles.body.copyWith(color: t.colors.secondary),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,

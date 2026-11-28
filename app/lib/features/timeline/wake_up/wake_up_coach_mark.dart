@@ -47,7 +47,7 @@ class WakeUpCoachMark extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DotSpace.s),
       child: Text(
         text,
-        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
       ),
     );
   }

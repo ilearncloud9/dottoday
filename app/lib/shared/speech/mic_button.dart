@@ -59,8 +59,8 @@ class MicButton extends StatelessWidget {
         ),
         icon: switch (state) {
           MicState.listening => const _ListeningDot(),
-          MicState.idle => DotIcon(DotGlyphs.mic, color: t.colors.accentInk),
-          MicState.busy => DotIcon(DotGlyphs.mic, color: t.colors.muted),
+          MicState.idle => DotIcon(DotGlyphs.mic, color: t.colors.accentText),
+          MicState.busy => DotIcon(DotGlyphs.mic, color: t.colors.secondary),
         },
       ),
     );

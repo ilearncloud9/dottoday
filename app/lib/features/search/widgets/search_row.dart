@@ -65,7 +65,7 @@ class SearchRow extends StatelessWidget {
       label: l10n.searchRowLabel(task.title, info.meta),
       excludeSemantics: true,
       child: Material(
-        color: cards ? t.colors.raised : Colors.transparent,
+        color: cards ? t.colors.card : Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.card),
           side: cards
@@ -104,7 +104,7 @@ class SearchRow extends StatelessWidget {
     required bool cards,
   }) {
     final base = (cards ? t.styles.cardTitle : t.styles.rowTitle).copyWith(
-      color: done ? t.colors.muted : t.colors.text,
+      color: done ? t.colors.secondary : t.colors.ink,
       decoration: done ? TextDecoration.lineThrough : null,
     );
     final title = task.title;
@@ -115,7 +115,7 @@ class SearchRow extends StatelessWidget {
       spans.add(
         TextSpan(
           text: title.substring(start, end),
-          style: TextStyle(backgroundColor: t.colors.accentTint),
+          style: TextStyle(backgroundColor: t.colors.tonal),
         ),
       );
       at = end;
@@ -213,7 +213,7 @@ class _ScheduleButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onTap,
       style: OutlinedButton.styleFrom(
-        foregroundColor: t.colors.text,
+        foregroundColor: t.colors.ink,
         textStyle: small ? t.styles.rowMeta : t.styles.button,
         padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
         minimumSize: Size(
@@ -259,7 +259,7 @@ class _Meta extends StatelessWidget {
             TextSpan(
               text: ' $left', // l10n-ignore: spacing
               style: TextStyle(
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 fontWeight: FontWeight.w600,
               ),
             ),

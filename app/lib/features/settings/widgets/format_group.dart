@@ -93,7 +93,7 @@ class FormatGroup extends StatelessWidget {
         DateFormat.EEEE(locale).format(DateTime(2024, 1, iso));
     return SettingsRow(
       glyph: DotGlyphs.clockFace,
-      tint: t.colors.muted,
+      tint: t.colors.secondary,
       title: l10n.settingsWeekStarts,
       value: name(settings.firstDayOfWeek),
       choices: formChoices(
@@ -133,7 +133,7 @@ class FormatGroup extends StatelessWidget {
     final current = _Format.of(settings.use24h);
     return SettingsRow(
       glyph: DotGlyphs.clock,
-      tint: t.colors.muted,
+      tint: t.colors.secondary,
       title: l10n.settingsTimeFormat,
       value: label(current),
       choices: formChoices(

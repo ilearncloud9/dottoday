@@ -41,7 +41,7 @@ class InboxAutoPlanButton extends StatelessWidget {
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(DotTouch.android),
-        foregroundColor: t.colors.text,
+        foregroundColor: t.colors.ink,
         textStyle: t.styles.button,
       ),
       child: Row(

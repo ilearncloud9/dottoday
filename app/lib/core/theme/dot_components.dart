@@ -69,19 +69,19 @@ final class DotComponents {
           ? c.control
           : s.contains(WidgetState.selected)
           ? c.accentFill
-          : c.accentTint,
+          : c.tonal,
     ),
     // The chip resolves its state from the label's colour, not the style.
     labelStyle: type.chip.copyWith(
       color: WidgetStateColor.resolveWith(
         (s) => s.contains(WidgetState.disabled)
-            ? c.muted
+            ? c.secondary
             : s.contains(WidgetState.selected)
             ? c.onAccent
-            : c.accentInk,
+            : c.accentText,
       ),
     ),
-    iconTheme: IconThemeData(color: c.accentInk, size: DotSize.rowIcon),
+    iconTheme: IconThemeData(color: c.accentText, size: DotSize.rowIcon),
   );
 
   /// Menus drawn in Flutter: the iOS pull-down's 26 corners, the Android
@@ -111,10 +111,10 @@ final class DotComponents {
   /// the words come from `FieldError`.
   InputDecorationTheme get input => InputDecorationTheme(
     errorBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: c.text, width: DotSize.smallDotOutline),
+      borderSide: BorderSide(color: c.ink, width: DotSize.smallDotOutline),
     ),
     focusedErrorBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: c.text, width: DotSize.smallDotOutline),
+      borderSide: BorderSide(color: c.ink, width: DotSize.smallDotOutline),
     ),
     errorStyle: type.fieldError,
   );
@@ -127,13 +127,13 @@ final class DotComponents {
       shape: const WidgetStatePropertyAll(StadiumBorder()),
       side: const WidgetStatePropertyAll(BorderSide.none),
       backgroundColor: WidgetStateProperty.resolveWith(
-        (s) => s.contains(WidgetState.selected) ? c.raised : c.tile,
+        (s) => s.contains(WidgetState.selected) ? c.card : c.tile,
       ),
       foregroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled)
             ? c.ring
             : s.contains(WidgetState.selected)
-            ? c.text
+            ? c.ink
             : c.ink2,
       ),
       textStyle: WidgetStateProperty.resolveWith(
@@ -177,7 +177,7 @@ final class DotComponents {
       !kIsWeb &&
       (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
 
-  Color get _menuFill => _android ? c.menuAndroid : c.raised;
+  Color get _menuFill => _android ? c.menuAndroid : c.card;
 
   double get _menuRadius => _ios
       ? DotRadii.pullDownIos

@@ -139,7 +139,7 @@ class _Legend extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final style = t.styles.rowMeta.copyWith(color: t.colors.muted);
+    final style = t.styles.rowMeta.copyWith(color: t.colors.secondary);
     Widget ring(Color color, double width) => Container(
       width: DotSize.weekDot + DotSpace.xs,
       height: DotSize.weekDot + DotSpace.xs,
@@ -157,7 +157,7 @@ class _Legend extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: DotSpace.xs,
             children: [
-              ring(t.colors.muted, DotSize.smallDotOutline),
+              ring(t.colors.secondary, DotSize.smallDotOutline),
               Text(l10n.proposalLegendNow, style: style),
             ],
           ),

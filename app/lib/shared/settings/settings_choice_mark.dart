@@ -20,7 +20,7 @@ class SettingsChoiceMark extends StatelessWidget {
     final t = DotTheme.of(context);
     if (DotIdiom.of(context) == DotIdiom.cupertino) {
       return selected
-          ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
+          ? DotIcon(DotGlyphs.check, color: t.colors.accentText)
           : const SizedBox.shrink();
     }
     if (multiple) {

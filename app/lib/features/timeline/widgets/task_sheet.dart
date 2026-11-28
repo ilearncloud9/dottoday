@@ -253,7 +253,7 @@ class _NotFound extends StatelessWidget {
       child: Text(
         context.l10n.sheetNotFound,
         textAlign: TextAlign.center,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       ),
     );
   }

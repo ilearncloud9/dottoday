@@ -134,10 +134,7 @@ class ColourDot extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: colour.color,
                 border: selected
-                    ? Border.all(
-                        color: c.raised,
-                        width: DotSize.smallDotOutline,
-                      )
+                    ? Border.all(color: c.card, width: DotSize.smallDotOutline)
                     : null,
                 boxShadow: selected
                     ? [
@@ -151,7 +148,7 @@ class ColourDot extends StatelessWidget {
               child: selected
                   ? DotIcon(
                       DotGlyphs.check,
-                      color: c.raised,
+                      color: c.card,
                       size: DotSize.rowIcon - DotSpace.xs,
                       active: true,
                     )
@@ -175,7 +172,7 @@ class _More extends StatelessWidget {
     return IconButton(
       onPressed: () => onTap(globalRectOf(context)),
       tooltip: context.l10n.colourIconMore,
-      icon: DotIcon(DotGlyphs.more, color: c.muted),
+      icon: DotIcon(DotGlyphs.more, color: c.secondary),
     );
   }
 }

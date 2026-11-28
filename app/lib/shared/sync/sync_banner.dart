@@ -99,11 +99,11 @@ class _Strip extends StatelessWidget {
             child: Row(
               spacing: DotSpace.s,
               children: [
-                DotIcon(glyph, color: t.colors.text, size: DotSize.rowIcon),
+                DotIcon(glyph, color: t.colors.ink, size: DotSize.rowIcon),
                 Expanded(
                   child: Text(
                     text,
-                    style: t.styles.rowMeta.copyWith(color: t.colors.text),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.ink),
                   ),
                 ),
                 if (action != null)

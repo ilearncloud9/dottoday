@@ -94,8 +94,8 @@ class _Chip extends StatelessWidget {
           child: Theme(
             data: Theme.of(context).copyWith(
               splashFactory: NoSplash.splashFactory,
-              highlightColor: c.raised.withValues(alpha: 0),
-              hoverColor: c.raised.withValues(alpha: 0),
+              highlightColor: c.card.withValues(alpha: 0),
+              hoverColor: c.card.withValues(alpha: 0),
             ),
             child: FilterChip(
               selected: on,
@@ -107,7 +107,7 @@ class _Chip extends StatelessWidget {
               visualDensity: VisualDensity.standard,
               // The card colour picked or not (`.rchip` background); the
               // app's chip theme would tint it.
-              color: WidgetStatePropertyAll(c.raised),
+              color: WidgetStatePropertyAll(c.card),
               side: BorderSide(
                 color: on ? cc : line,
                 width: on ? OnbSize.chipPickedRing : 1,
@@ -167,13 +167,13 @@ class FillsChipDot extends StatelessWidget {
       height: OnbSize.chipDot,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: filled ? color : c.raised,
+        color: filled ? color : c.card,
         border: Border.all(color: color, width: OnbSize.chipRing),
       ),
       child: Center(
         child: DotIcon(
           glyph,
-          color: filled ? c.raised : color,
+          color: filled ? c.card : color,
           size: OnbSize.chipIcon,
           bold: true,
         ),

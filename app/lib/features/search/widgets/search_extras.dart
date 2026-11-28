@@ -50,7 +50,7 @@ class RecentSearchesRow extends ConsumerWidget {
                     child: ActionChip(
                       avatar: DotIcon(
                         DotGlyphs.clock,
-                        color: t.colors.muted,
+                        color: t.colors.secondary,
                         size: DotSize.rowIcon,
                       ),
                       label: Text(q),
@@ -89,7 +89,7 @@ class _RecentRow extends StatelessWidget {
             children: [
               DotIcon(
                 DotGlyphs.search,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
               Expanded(child: Text(query, style: t.styles.body)),
@@ -112,7 +112,7 @@ class SearchEmpty extends StatelessWidget {
       padding: const EdgeInsets.only(top: DotSpace.xl),
       child: Text(
         context.l10n.searchEmpty,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       ),
     );
   }
@@ -150,14 +150,14 @@ class NoResults extends StatelessWidget {
             ),
             Text(
               l10n.searchNoResultsHint,
-              style: t.styles.body.copyWith(color: t.colors.muted),
+              style: t.styles.body.copyWith(color: t.colors.secondary),
               textAlign: TextAlign.center,
             ),
             if (filtered) ...[
               const SizedBox(height: DotSpace.s),
               OutlinedButton(
                 onPressed: onShowAll,
-                style: OutlinedButton.styleFrom(foregroundColor: t.colors.text),
+                style: OutlinedButton.styleFrom(foregroundColor: t.colors.ink),
                 child: Text(l10n.searchShowAll),
               ),
             ],

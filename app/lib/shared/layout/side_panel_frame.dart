@@ -84,13 +84,13 @@ class SidePanelFrame extends StatelessWidget {
                 // Floating, it is a card over the content (rules §7.3
                 // inspector look); docked, a hairline divides them.
                 decoration: BoxDecoration(
-                  color: edge ? c.sheet : c.raised,
+                  color: edge ? c.sheet : c.card,
                   borderRadius: radius,
                   border: docked
-                      ? BorderDirectional(start: BorderSide(color: c.outline))
+                      ? BorderDirectional(start: BorderSide(color: c.hairline))
                       : edge
                       ? null
-                      : Border.all(color: c.outline),
+                      : Border.all(color: c.hairline),
                   boxShadow: docked ? null : DotElevation.floating,
                 ),
                 child: Padding(

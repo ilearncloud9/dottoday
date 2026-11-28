@@ -26,7 +26,7 @@ Map<String, Map<String, String>> appColourTones(Profile profile) {
         : b == Brightness.dark
         ? DotColors.dark(key)
         : DotColors.light(key);
-    final Color text = teal ? c.accent : c.accentInk;
+    final Color text = teal ? c.accent : c.accentText;
     return {
       'dot': colourHex(c.accent),
       'text': colourHex(text),

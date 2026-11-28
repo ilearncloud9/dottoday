@@ -80,7 +80,7 @@ class _FootOfferCardState extends State<FootOfferCard> {
                 OnbSize.syncPadV,
               ),
               decoration: ShapeDecoration(
-                color: c.raised,
+                color: c.card,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(OnbSize.syncRadius),
                   side: BorderSide(color: line),
@@ -109,12 +109,12 @@ class _FootOfferCardState extends State<FootOfferCard> {
         ],
       ),
     );
-    final icon = DotIcon(w.glyph, color: c.accentInk, size: OnbSize.syncIcon);
+    final icon = DotIcon(w.glyph, color: c.accentText, size: OnbSize.syncIcon);
     final act = FilledButton.tonal(
       onPressed: () => _leave(act: true),
       style: FilledButton.styleFrom(
-        backgroundColor: c.accentTint,
-        foregroundColor: c.accentInk,
+        backgroundColor: c.tonal,
+        foregroundColor: c.accentText,
         textStyle: t.styles.onbSyncButton,
         minimumSize: const Size(0, OnbSize.syncButton),
         padding: const EdgeInsets.symmetric(horizontal: OnbSize.syncButtonPad),
@@ -131,7 +131,7 @@ class _FootOfferCardState extends State<FootOfferCard> {
       ),
       icon: DotIcon(
         DotGlyphs.close,
-        color: c.muted,
+        color: c.secondary,
         size: OnbSize.syncCloseIcon,
       ),
     );

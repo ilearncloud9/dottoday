@@ -30,7 +30,7 @@ class PasteConfirm extends StatelessWidget {
           DotSpace.s,
         ),
         decoration: BoxDecoration(
-          color: t.colors.accentTint,
+          color: t.colors.tonal,
           borderRadius: BorderRadius.circular(DotRadii.card),
         ),
         child: Wrap(
@@ -46,7 +46,7 @@ class PasteConfirm extends StatelessWidget {
                 TextButton(
                   onPressed: onKeepOne,
                   style: TextButton.styleFrom(
-                    foregroundColor: t.colors.accentInk,
+                    foregroundColor: t.colors.accentText,
                   ),
                   child: Text(l10n.pasteKeep),
                 ),

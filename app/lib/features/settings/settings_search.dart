@@ -123,7 +123,7 @@ class _SettingsSearchState extends State<SettingsSearch> {
         else if (hits.isEmpty)
           Text(
             l10n.settingsSearchNone(_query.trim()),
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: t.styles.body.copyWith(color: t.colors.secondary),
           )
         else
           SettingsGroup(
@@ -144,10 +144,10 @@ class _SettingsSearchState extends State<SettingsSearch> {
         placeholder: l10n.settingsSearchHint,
         onChanged: changed,
         style: t.styles.body,
-        placeholderStyle: t.styles.body.copyWith(color: t.colors.muted),
+        placeholderStyle: t.styles.body.copyWith(color: t.colors.secondary),
         // The app's glyph: the default is CupertinoIcons' font, which the
         // app doesn't bundle (drew a "?" box on the iPhone).
-        prefixIcon: DotIcon(DotGlyphs.search, color: t.colors.muted),
+        prefixIcon: DotIcon(DotGlyphs.search, color: t.colors.secondary),
         backgroundColor: t.colors.chip,
         autocorrect: false,
         // UIKit's 36 pt bar grown to the 48 pt touch target (03 §1); its
@@ -166,7 +166,7 @@ class _SettingsSearchState extends State<SettingsSearch> {
       elevation: const WidgetStatePropertyAll(0),
       backgroundColor: WidgetStatePropertyAll(t.colors.chip),
       textStyle: WidgetStatePropertyAll(t.styles.body),
-      leading: DotIcon(DotGlyphs.search, color: t.colors.muted),
+      leading: DotIcon(DotGlyphs.search, color: t.colors.secondary),
     );
   }
 }

@@ -60,8 +60,8 @@ class _Keys extends StatelessWidget {
     final t = DotTheme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.surface,
-        border: Border.all(color: t.colors.outline),
+        color: t.colors.ground,
+        border: Border.all(color: t.colors.hairline),
         borderRadius: BorderRadius.circular(DotRadii.chipAndroid),
       ),
       child: Padding(
@@ -71,7 +71,7 @@ class _Keys extends StatelessWidget {
         ),
         child: Text(
           keys,
-          style: t.styles.rowMeta.copyWith(color: t.colors.text),
+          style: t.styles.rowMeta.copyWith(color: t.colors.ink),
         ),
       ),
     );

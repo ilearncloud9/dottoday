@@ -19,7 +19,7 @@ class FieldError extends StatelessWidget {
         children: [
           DotIcon(
             DotGlyphs.warning,
-            color: t.colors.text,
+            color: t.colors.ink,
             size: DotSize.fieldErrorGlyph,
           ),
           Flexible(child: Text(message, style: t.styles.fieldError)),

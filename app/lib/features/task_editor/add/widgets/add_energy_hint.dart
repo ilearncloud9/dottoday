@@ -42,7 +42,7 @@ class AddEnergyHint extends StatelessWidget {
           explanation: LearnedExplanation(
             why: l10n.learnEnergyBasedOn(w.completions),
           ),
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
         if (!inside)
           TextButton(

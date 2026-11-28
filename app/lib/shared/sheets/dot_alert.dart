@@ -118,7 +118,7 @@ Future<T?> showChoiceAlert<T>(
           ),
       ],
       preferred: preferred < 0 ? null : preferred,
-      tint: hexOf(DotTheme.of(context).colors.accentInk),
+      tint: hexOf(DotTheme.of(context).colors.accentText),
     );
     if (index != null) return index < 0 ? null : choices[index].value;
   }
@@ -157,7 +157,7 @@ Future<String?> showTextAlert(
       initial: initial,
       action: action,
       cancel: cancel,
-      tint: hexOf(DotTheme.of(context).colors.accentInk),
+      tint: hexOf(DotTheme.of(context).colors.accentText),
     );
     if (answer != null) return answer.ok ? answer.text : null;
   }

@@ -101,7 +101,7 @@ class _SubtaskRowState extends State<SubtaskRow> {
           if (widget.now)
             Text(
               l10n.subtaskNow,
-              style: t.styles.rowMeta.copyWith(color: t.colors.accentInk),
+              style: t.styles.rowMeta.copyWith(color: t.colors.accentText),
             ),
           if (widget.editing && widget.quiet) ..._quiet(t, l10n),
           if (widget.editing && !widget.quiet) ...[
@@ -114,7 +114,7 @@ class _SubtaskRowState extends State<SubtaskRow> {
             IconButton(
               tooltip: l10n.subtaskRemove(s.title),
               onPressed: widget.onRemove,
-              icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+              icon: DotIcon(DotGlyphs.close, color: t.colors.secondary),
             ),
             ReorderableDragStartListener(
               index: widget.index,
@@ -124,7 +124,10 @@ class _SubtaskRowState extends State<SubtaskRow> {
                 child: SizedBox.square(
                   dimension: DotTouch.android,
                   child: Center(
-                    child: DotIcon(DotGlyphs.dragHandle, color: t.colors.muted),
+                    child: DotIcon(
+                      DotGlyphs.dragHandle,
+                      color: t.colors.secondary,
+                    ),
                   ),
                 ),
               ),
@@ -146,11 +149,11 @@ class _SubtaskRowState extends State<SubtaskRow> {
       if (minutes != null)
         Text(
           formatDurationShort(l10n, minutes),
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
       DotMenuButton<VoidCallback>(
         tooltip: l10n.subtaskMenu(s.title),
-        icon: DotIcon(DotGlyphs.more, color: t.colors.muted),
+        icon: DotIcon(DotGlyphs.more, color: t.colors.secondary),
         onSelected: (run) => run(),
         // The row's context: the menu's is gone once an item is picked.
         entries: () => [
@@ -181,7 +184,7 @@ class _SubtaskRowState extends State<SubtaskRow> {
         child: Text(
           s.title,
           style: t.styles.body.copyWith(
-            color: s.done ? t.colors.muted : null,
+            color: s.done ? t.colors.secondary : null,
             decoration: s.done ? TextDecoration.lineThrough : null,
           ),
         ),

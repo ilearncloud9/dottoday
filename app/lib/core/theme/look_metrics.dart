@@ -64,9 +64,6 @@ abstract final class DotLook {
   /// (ED-156: iPhone 330 of 844).
   static const double coloursShare = 0.61;
 
-  /// The compact sheet's share of the screen at most.
-  static const double compactShare = 0.52;
-
   /// All icons leaves this much of the screen above it.
   static const double iconsTop = 56;
 

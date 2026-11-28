@@ -120,11 +120,11 @@ class _Field extends StatelessWidget {
       ),
     );
     final border = BorderSide(
-      color: selected ? t.colors.accentInk : t.colors.outline,
+      color: selected ? t.colors.accentText : t.colors.hairline,
       width: selected ? DotSize.smallDotOutline : DotSpace.hairline,
     );
     final box = Material(
-      color: ios && selected ? t.colors.tonal : t.colors.raised,
+      color: ios && selected ? t.colors.tonal : t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           ios ? DotRadii.card : DotRadii.field,
@@ -175,7 +175,7 @@ class _Field extends StatelessWidget {
                 Text(
                   label,
                   style: t.styles.rowMeta.copyWith(
-                    color: selected ? t.colors.accentInk : t.colors.text,
+                    color: selected ? t.colors.accentText : t.colors.ink,
                   ),
                 ),
                 box,

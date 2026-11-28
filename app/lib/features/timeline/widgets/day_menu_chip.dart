@@ -16,7 +16,7 @@ class DayMenuChip extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: DotTouch.android),
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         border: solidOutline(context),
         borderRadius: BorderRadius.circular(DotRadii.pill),
         boxShadow: DotElevation.capsule(t.colors),
@@ -28,7 +28,7 @@ class DayMenuChip extends StatelessWidget {
           Text(context.l10n.workspaceDay, style: t.styles.button),
           DotIcon(
             DotGlyphs.chevronDown,
-            color: t.colors.text,
+            color: t.colors.ink,
             size: DotSize.rowIcon,
           ),
         ],

@@ -88,7 +88,7 @@ Widget _today() => DotShell(
 Widget _add() => Builder(
   builder: (context) => Container(
     decoration: BoxDecoration(
-      color: DotTheme.of(context).colors.raised,
+      color: DotTheme.of(context).colors.card,
       borderRadius: const BorderRadius.vertical(
         top: Radius.circular(DotRadii.sheet),
       ),

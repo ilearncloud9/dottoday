@@ -134,7 +134,7 @@ class InboxBody extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: DotSpace.xl),
         child: Text(
           l10n.inboxNoMatch,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
           textAlign: TextAlign.center,
         ),
       ),

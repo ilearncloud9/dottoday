@@ -251,7 +251,7 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return ColoredBox(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.xxl),
         child: Column(

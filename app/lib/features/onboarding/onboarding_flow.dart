@@ -92,7 +92,7 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
             child: _body(step),
           );
     return Scaffold(
-      backgroundColor: DotTheme.of(context).colors.surface,
+      backgroundColor: DotTheme.of(context).colors.ground,
       body: CallbackShortcuts(
         bindings: {
           const SingleActivator(LogicalKeyboardKey.escape): () {

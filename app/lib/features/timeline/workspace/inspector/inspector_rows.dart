@@ -205,7 +205,7 @@ class _AlertChip extends ConsumerWidget {
       side: add ? BorderSide(color: c.hairlineStrong) : BorderSide.none,
     );
     return Material(
-      color: add ? Colors.transparent : c.accentTint,
+      color: add ? Colors.transparent : c.tonal,
       shape: shape,
       child: InkWell(
         onTap: onTap,
@@ -218,7 +218,7 @@ class _AlertChip extends ConsumerWidget {
             child: Text(
               text,
               style: t.styles.inspectorChip.copyWith(
-                color: add ? c.ink2 : c.accentInk,
+                color: add ? c.ink2 : c.accentText,
               ),
             ),
           ),

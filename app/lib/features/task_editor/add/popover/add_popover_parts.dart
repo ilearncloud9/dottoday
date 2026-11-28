@@ -34,7 +34,7 @@ class PopoverTitleBox extends StatelessWidget {
     final l10n = context.l10n;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.popoverCard),
         border: Border.all(
           color: t.colors.focus,
@@ -153,7 +153,7 @@ class PopoverLengths extends ConsumerWidget {
           padding: const EdgeInsetsDirectional.only(end: DotSpace.xs),
           child: Text(
             l10n.addDurationCaption,
-            style: t.styles.viewTab.copyWith(color: t.colors.muted),
+            style: t.styles.viewTab.copyWith(color: t.colors.secondary),
           ),
         ),
         for (final m in presets)
@@ -196,7 +196,7 @@ class _Pill extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final shape = StadiumBorder(
-      side: selected ? BorderSide.none : BorderSide(color: t.colors.outline),
+      side: selected ? BorderSide.none : BorderSide(color: t.colors.hairline),
     );
     return Semantics(
       button: true,
@@ -205,7 +205,7 @@ class _Pill extends StatelessWidget {
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: selected ? t.colors.accentFill : t.colors.raised,
+        color: selected ? t.colors.accentFill : t.colors.card,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -222,7 +222,7 @@ class _Pill extends StatelessWidget {
                   label,
                   style: t.styles.viewTab.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: selected ? t.colors.onAccent : t.colors.text,
+                    color: selected ? t.colors.onAccent : t.colors.ink,
                   ),
                 ),
               ),

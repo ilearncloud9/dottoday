@@ -40,7 +40,7 @@ class CloudCalendarsGroup extends ConsumerWidget {
         children: [
           SettingsRow(
             glyph: DotGlyphs.person,
-            tint: DotTheme.of(context).colors.accentInk,
+            tint: DotTheme.of(context).colors.accentText,
             title: l10n.calendarsOnlineSignIn,
             action: true,
             onTap: () => unawaited(
@@ -104,7 +104,7 @@ class _AccountGroup extends ConsumerWidget {
         if (account.status == CloudAccountStatus.reconnect)
           SettingsRow(
             glyph: DotGlyphs.warning,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.calendarsReconnect,
             subtitle: l10n.calendarsReconnectDetail,
             action: true,
@@ -115,7 +115,7 @@ class _AccountGroup extends ConsumerWidget {
           CalendarEmptyRow(title: l10n.calendarsUnreachable),
         SettingsRow(
           glyph: DotGlyphs.close,
-          tint: t.colors.muted,
+          tint: t.colors.secondary,
           title: l10n.calendarsDisconnect,
           action: true,
           onTap: () => unawaited(_disconnect(context, ref)),
@@ -153,7 +153,7 @@ class _ConnectGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tint = DotTheme.of(context).colors.accentInk;
+    final tint = DotTheme.of(context).colors.accentText;
     final l10n = context.l10n;
     final cloud = ref.read(cloudCalendarActionsProvider);
     SettingsRow row(String title, CalendarProvider provider) => SettingsRow(

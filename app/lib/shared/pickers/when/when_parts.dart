@@ -64,7 +64,7 @@ class WhenHeader extends StatelessWidget {
               ),
               Text(
                 subtitle,
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
               ),
             ],
           ),
@@ -73,7 +73,7 @@ class WhenHeader extends StatelessWidget {
           IconButton(
             tooltip: l10n.sheetClose,
             onPressed: () => Navigator.of(context).maybePop(),
-            icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+            icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
           ),
       ],
     );

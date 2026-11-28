@@ -138,11 +138,11 @@ class _AddStep extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DotRadii.card),
             ),
-            foregroundColor: t.colors.accentInk,
+            foregroundColor: t.colors.accentText,
           ),
           icon: DotIcon(
             DotGlyphs.add,
-            color: t.colors.accentInk,
+            color: t.colors.accentText,
             size: DotSize.rowIcon,
           ),
           label: Text(context.l10n.breakdownAddStep),

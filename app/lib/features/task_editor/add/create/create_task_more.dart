@@ -31,7 +31,7 @@ class CreateTaskMore extends ConsumerWidget {
     final android = DotIdiom.of(context) == DotIdiom.material;
     final glyph = DotIcon(
       android ? DotGlyphs.moreVertical : DotGlyphs.more,
-      color: t.colors.text,
+      color: t.colors.ink,
     );
     return DotMenuButton<_More>(
       tooltip: l10n.createMore,
@@ -40,9 +40,9 @@ class CreateTaskMore extends ConsumerWidget {
           ? glyph
           : DecoratedBox(
               decoration: BoxDecoration(
-                color: t.colors.raised,
+                color: t.colors.card,
                 shape: BoxShape.circle,
-                border: Border.all(color: t.colors.outline),
+                border: Border.all(color: t.colors.hairline),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(DotSpace.s),

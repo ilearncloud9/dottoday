@@ -135,7 +135,7 @@ class _MonthNav extends StatelessWidget {
           child: Text(
             l10n.monthNav(name(-1), name(0), name(1)),
             textAlign: TextAlign.center,
-            style: t.styles.rowTitle.copyWith(color: t.colors.muted),
+            style: t.styles.rowTitle.copyWith(color: t.colors.secondary),
           ),
         ),
         _NavButton(
@@ -166,11 +166,11 @@ class _NavButton extends StatelessWidget {
       onPressed: onTap,
       tooltip: label,
       style: IconButton.styleFrom(
-        backgroundColor: c.raised,
-        side: BorderSide(color: c.outline, width: DotSpace.hairline),
+        backgroundColor: c.card,
+        side: BorderSide(color: c.hairline, width: DotSpace.hairline),
         minimumSize: const Size.square(DotTouch.android),
       ),
-      icon: DotIcon(glyph, color: c.text, size: DotSize.rowIcon),
+      icon: DotIcon(glyph, color: c.ink, size: DotSize.rowIcon),
     );
   }
 }
@@ -199,7 +199,7 @@ class _Footer extends StatelessWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final current = month.year == today.year && month.month == today.month;
-    final meta = t.styles.rowTitle.copyWith(color: t.colors.muted);
+    final meta = t.styles.rowTitle.copyWith(color: t.colors.secondary);
     final days = DateTime(month.year, month.month + 1, 0).day;
     return Row(
       children: [
@@ -221,7 +221,7 @@ class _Footer extends StatelessWidget {
             onPressed: onToday,
             child: Text(
               l10n.todayPill,
-              style: t.styles.rowTitle.copyWith(color: t.colors.accentInk),
+              style: t.styles.rowTitle.copyWith(color: t.colors.accentText),
             ),
           ),
       ],

@@ -47,7 +47,7 @@ class BannerStrip extends StatelessWidget {
       container: true,
       liveRegion: true,
       child: ColoredBox(
-        color: t.colors.raised,
+        color: t.colors.card,
         child: SafeArea(
           bottom: false,
           child: Padding(
@@ -70,7 +70,7 @@ class BannerStrip extends StatelessWidget {
   Widget _layout(DotTheme t, double width) {
     final glyphAndText = [
       if (glyph case final g?)
-        DotIcon(g, color: t.colors.muted, size: DotSize.rowIcon),
+        DotIcon(g, color: t.colors.secondary, size: DotSize.rowIcon),
       Expanded(
         child: Text(
           text,
@@ -111,12 +111,12 @@ class BannerStrip extends StatelessWidget {
         ? Container(
             width: DotSize.alertBell,
             height: DotSize.alertBell,
-            decoration: BoxDecoration(color: c.raised, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: c.card, shape: BoxShape.circle),
             child: Center(
-              child: DotIcon(g, color: c.accentInk, size: DotSize.rowIcon),
+              child: DotIcon(g, color: c.accentText, size: DotSize.rowIcon),
             ),
           )
-        : DotIcon(g, color: c.accentInk, size: DotSize.rowIcon);
+        : DotIcon(g, color: c.accentText, size: DotSize.rowIcon);
     final line = Text.rich(_spans(t));
     final pills = Wrap(
       spacing: DotSpace.xs,
@@ -127,8 +127,8 @@ class BannerStrip extends StatelessWidget {
           TextButton(
             onPressed: onPressed,
             style: TextButton.styleFrom(
-              backgroundColor: i == 0 ? c.raised : null,
-              foregroundColor: c.accentInk,
+              backgroundColor: i == 0 ? c.card : null,
+              foregroundColor: c.accentText,
               textStyle: t.styles.alertAction,
               minimumSize: const Size(0, DotSize.alertAction),
               padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
@@ -181,7 +181,7 @@ class BannerStrip extends StatelessWidget {
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: c.accentTint,
+              color: c.tonal,
               borderRadius: BorderRadius.circular(DotRadii.alertStrip),
             ),
             child: Padding(

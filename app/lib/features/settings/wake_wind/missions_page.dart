@@ -143,7 +143,7 @@ class MissionsPage extends ConsumerWidget {
               if (kind == MissionKind.walk)
                 SettingsRow(
                   glyph: DotGlyphs.clock,
-                  tint: t.colors.accentInk,
+                  tint: t.colors.accentText,
                   title: l10n.settingsMissionSteps,
                   value: '${settings.missionSteps}', // l10n-ignore: a count
                   onTap: () => unawaited(pickMissionSteps(context, settings)),
@@ -155,14 +155,14 @@ class MissionsPage extends ConsumerWidget {
             children: [
               SettingsRow(
                 glyph: DotGlyphs.check,
-                tint: t.colors.accentInk,
+                tint: t.colors.accentText,
                 title: l10n.settingsMissionBackup,
                 value: missionBackupText(l10n, settings.missionBackup),
                 onTap: () => unawaited(pickMissionBackup(context, settings)),
               ),
               SettingsRow(
                 glyph: DotGlyphs.bell,
-                tint: t.colors.accentInk,
+                tint: t.colors.accentText,
                 title: l10n.settingsMissionSkipOffer,
                 toggle: settings.missionSkipOffer,
                 onToggle: (v) => changeSettings(
@@ -186,7 +186,7 @@ class _DaysRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SettingsRow(
     glyph: DotGlyphs.week,
-    tint: DotTheme.of(context).colors.accentInk,
+    tint: DotTheme.of(context).colors.accentText,
     title: context.l10n.settingsMissionDays,
     below: WeekdayChips(
       days: settings.missionDays.toSet(),
@@ -249,7 +249,7 @@ class _MissionChoice extends ConsumerWidget {
       leading: SettingsIcon(
         glyph: missionIcon(kind).glyph!,
         // In the accent, as E-R2-28 draws them.
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
       ),
       onTap: blocked ? null : () => unawaited(_pick(context, ref, support)),
     );

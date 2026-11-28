@@ -88,7 +88,7 @@ class ScheduleBody extends StatelessWidget {
               if (focusedEnd != null)
                 l10n.schFocusHint(_endName(l10n, focusedEnd)),
             ].join('\n'), // l10n-ignore: line break
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ScheduleCheckNotes(
           draft: draft,
@@ -144,9 +144,9 @@ class ScheduleBody extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: dial,
     );
@@ -170,7 +170,7 @@ class _Caption extends StatelessWidget {
         style: ios
             ? t.styles.caption
             : t.styles.rowMeta.copyWith(
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 fontWeight: FontWeight.w700,
               ),
       ),

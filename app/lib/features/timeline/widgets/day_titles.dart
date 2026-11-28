@@ -118,7 +118,7 @@ class TodayPill extends StatelessWidget {
       ),
       label: Text(
         context.l10n.todayPill,
-        style: t.styles.button.copyWith(color: c.accentInk),
+        style: t.styles.button.copyWith(color: c.accentText),
       ),
     );
   }

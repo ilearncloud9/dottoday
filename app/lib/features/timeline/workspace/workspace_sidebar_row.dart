@@ -66,7 +66,7 @@ class WorkspaceSidebarRow extends StatelessWidget {
       fontWeight: on ? FontWeight.w600 : null,
     );
     final fill = switch (mark) {
-      SidebarMark.place => c.accentTint,
+      SidebarMark.place => c.tonal,
       SidebarMark.view => c.ink.withValues(alpha: 0.06),
       SidebarMark.none => Colors.transparent,
     };

@@ -95,7 +95,7 @@ class WhenCard extends StatelessWidget {
     final t = DotTheme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.popoverCard),
         border: Border.all(color: t.colors.hairline),
       ),

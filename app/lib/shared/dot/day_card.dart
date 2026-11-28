@@ -116,9 +116,9 @@ class DayCard extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: c.outline, width: DotSpace.hairline),
+        border: Border.all(color: c.hairline, width: DotSpace.hairline),
       ),
       // No rounded clip: an anti-aliased clip over a scrolling list costs
       // the raster thread every frame (R-15). The list's own rectangular
@@ -307,7 +307,7 @@ class _Header extends StatelessWidget {
                   if (isToday)
                     TextSpan(
                       text: l10n.dayCardTodaySuffix,
-                      style: TextStyle(color: t.colors.accentInk),
+                      style: TextStyle(color: t.colors.accentText),
                     ),
                 ],
               ),

@@ -64,7 +64,7 @@ class _FocusScreenState extends ConsumerState<FocusScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: DotTheme.of(context).colors.surface,
+        backgroundColor: DotTheme.of(context).colors.ground,
         body: SafeArea(
           child: CallbackShortcuts(
             bindings: {

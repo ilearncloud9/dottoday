@@ -97,7 +97,7 @@ class _BrainDumpBodyState extends ConsumerState<BrainDumpBody> {
     final lines = LineSplitter.split(
       _text.text,
     ).where((l) => l.trim().isNotEmpty).length;
-    final muted = t.styles.rowMeta.copyWith(color: t.colors.muted);
+    final muted = t.styles.rowMeta.copyWith(color: t.colors.secondary);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.m,

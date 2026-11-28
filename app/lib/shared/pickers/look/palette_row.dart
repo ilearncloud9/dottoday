@@ -100,7 +100,7 @@ class _PaletteRowState extends State<PaletteRow> {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: shape,
-        color: t.colors.raised,
+        color: t.colors.card,
         border: Border.all(color: t.colors.hairline, width: DotSpace.hairline),
       ),
       child: row,

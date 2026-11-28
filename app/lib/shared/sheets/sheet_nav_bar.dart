@@ -62,7 +62,7 @@ class SheetNavBar extends StatelessWidget {
             IconButton(
               tooltip: context.l10n.sheetClose,
               onPressed: onCancel,
-              icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
             ),
           Expanded(
             child: Semantics(

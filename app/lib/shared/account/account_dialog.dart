@@ -153,10 +153,10 @@ class AccountButton extends StatelessWidget {
     final (fill, ink) = switch (_kind) {
       _Kind.filled => (c.accentFill, c.onAccent),
       // Android's outlined button reads in the accent (`AndroidA3`).
-      _Kind.outlined => (Colors.transparent, android ? c.accentInk : c.text),
+      _Kind.outlined => (Colors.transparent, android ? c.accentText : c.ink),
       _Kind.tonal => (c.tonalAndroid, c.onTonalAndroid),
-      _Kind.tint => (Color.alphaBlend(c.accentTint, c.raised), c.accentInk),
-      _Kind.text => (Colors.transparent, c.accentInk),
+      _Kind.tint => (Color.alphaBlend(c.tonal, c.card), c.accentText),
+      _Kind.text => (Colors.transparent, c.accentText),
     };
     final rest = _kind == _Kind.outlined
         ? BorderSide(
@@ -188,7 +188,7 @@ class AccountButton extends StatelessWidget {
       // Disabled (Delete until the word is typed, a request in flight):
       // the control fill and secondary words, never the live colours.
       foregroundColor: WidgetStateProperty.resolveWith(
-        (s) => s.contains(WidgetState.disabled) ? c.muted : ink,
+        (s) => s.contains(WidgetState.disabled) ? c.secondary : ink,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled) && fill != Colors.transparent

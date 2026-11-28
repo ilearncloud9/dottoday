@@ -38,7 +38,7 @@ class WakeUpCardGroup extends StatelessWidget {
       Color? tint,
     }) => SettingsRow(
       glyph: glyph,
-      tint: tint ?? t.colors.accentInk,
+      tint: tint ?? t.colors.accentText,
       title: title,
       toggle: value,
       onToggle: (v) => changeSettings(context, (s) => write(s, v)),
@@ -88,7 +88,7 @@ class WakeUpCardGroup extends StatelessWidget {
           if (settings.wakeUpLateOffer || settingsFormAt(context))
             SettingsRow(
               glyph: DotGlyphs.clock,
-              tint: t.colors.accentInk,
+              tint: t.colors.accentText,
               title: l10n.wakeUpLateOfferAfterRow,
               value: l10n.durationMinutes(settings.wakeUpLateMin),
               choices: settings.wakeUpLateOffer

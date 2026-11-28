@@ -44,7 +44,7 @@ class DotRailShell extends StatelessWidget {
               // E-R2-1 3b: the rail on the sunk surface.
               color: c.sunk,
               border: BorderDirectional(
-                end: BorderSide(color: c.outline, width: DotSpace.hairline),
+                end: BorderSide(color: c.hairline, width: DotSpace.hairline),
               ),
             ),
             child: SafeArea(
@@ -151,7 +151,7 @@ class _RailTile extends StatelessWidget {
                     .androidTab(
                       selected ? t.styles.tabLabelActive : t.styles.tabLabel,
                     )
-                    .copyWith(color: selected ? c.text : c.muted),
+                    .copyWith(color: selected ? c.ink : c.secondary),
               ),
             ],
           ),

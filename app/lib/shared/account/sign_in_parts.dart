@@ -46,7 +46,7 @@ class SignInChoices extends StatelessWidget {
         if (!available)
           Text(
             l10n.accountComingSoon,
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: t.styles.body.copyWith(color: t.colors.secondary),
           ),
       ],
     );

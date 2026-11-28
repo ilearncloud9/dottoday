@@ -38,7 +38,7 @@ class WeekDayThread extends StatelessWidget {
     final foot = WeekType.foot(t.styles, c);
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: c.outline, width: 0.5)),
+        border: Border(top: BorderSide(color: c.hairline, width: 0.5)),
       ),
       child: Padding(
         padding: WeekSize.threadPad,
@@ -225,9 +225,9 @@ class WeekCarryCard extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(WeekSize.carryRadius),
-        border: Border.all(color: c.outline),
+        border: Border.all(color: c.hairline),
       ),
       child: Padding(
         padding: WeekSize.carryPad,
@@ -247,7 +247,7 @@ class WeekCarryCard extends StatelessWidget {
                 ),
                 TextButton(
                   style: pill(WeekSize.carryInboxPad).copyWith(
-                    foregroundColor: WidgetStatePropertyAll(c.accentInk),
+                    foregroundColor: WidgetStatePropertyAll(c.accentText),
                   ),
                   onPressed: onInbox,
                   child: Text(l10n.weekCarryInbox),

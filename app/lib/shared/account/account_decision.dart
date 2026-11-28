@@ -128,7 +128,7 @@ class AccountDecision extends StatelessWidget {
       );
     }
     return Material(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: SafeArea(child: page),
     );
   }

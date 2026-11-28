@@ -60,7 +60,7 @@ class LookGlassButton extends StatelessWidget {
           ? IconButton.filledTonal(
               onPressed: onTap,
               tooltip: tooltip,
-              icon: DotIcon(glyph!, color: t.colors.text),
+              icon: DotIcon(glyph!, color: t.colors.ink),
             )
           : FilledButton(onPressed: onTap, child: Text(text));
     }
@@ -93,7 +93,7 @@ class LookGlassButton extends StatelessWidget {
                     child: Center(
                       widthFactor: 1,
                       child: text == null
-                          ? DotIcon(glyph!, color: t.colors.text)
+                          ? DotIcon(glyph!, color: t.colors.ink)
                           : Text(
                               text,
                               style: t.styles.button.copyWith(
@@ -150,7 +150,7 @@ class LookSwatch extends StatelessWidget {
     final s = t.tasks[colour];
     final faint =
         colour.isCustom &&
-        contrastRatio(s.color, t.colors.raised) < DotLook.outlineBelow;
+        contrastRatio(s.color, t.colors.card) < DotLook.outlineBelow;
     return Semantics(
       inMutuallyExclusiveGroup: true,
       checked: selected,
@@ -195,7 +195,7 @@ class LookSwatch extends StatelessWidget {
 /// A section label in the Mac and web popover ("Dottoday colours",
 /// "Your colours", "Icon"; E-G3-9b): sentence case, semibold.
 TextStyle lookPopoverLabel(DotTheme t) => t.styles.inspectorLabel.copyWith(
-  color: t.colors.text,
+  color: t.colors.ink,
   fontWeight: FontWeight.w600,
 );
 
@@ -203,7 +203,7 @@ TextStyle lookPopoverLabel(DotTheme t) => t.styles.inspectorLabel.copyWith(
 /// The outer ring paints first, so the gap stays on top of it.
 List<BoxShadow> lookRing(DotTheme t, Color colour) => [
   BoxShadow(color: colour, spreadRadius: DotLook.ringGap + DotLook.ringWidth),
-  BoxShadow(color: t.colors.raised, spreadRadius: DotLook.ringGap),
+  BoxShadow(color: t.colors.card, spreadRadius: DotLook.ringGap),
 ];
 
 /// One icon as a circle (E-Phones): the task's colour with its ring when
@@ -245,7 +245,7 @@ class LookIconCircle extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: selected ? s.color : t.colors.raised,
+            color: selected ? s.color : t.colors.card,
             border: selected
                 ? null
                 : Border.all(
@@ -258,7 +258,7 @@ class LookIconCircle extends StatelessWidget {
               ? null
               : DotIcon(
                   glyph,
-                  color: selected ? s.check : t.colors.text,
+                  color: selected ? s.check : t.colors.ink,
                   size: DotLook.glyph,
                   active: selected,
                 ),

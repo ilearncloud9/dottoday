@@ -165,7 +165,7 @@ class ConflictResolved extends ConsumerWidget {
                 children: [
                   DotIcon(
                     DotGlyphs.check,
-                    color: t.colors.text,
+                    color: t.colors.ink,
                     size: DotSize.rowIcon,
                   ),
                   Expanded(

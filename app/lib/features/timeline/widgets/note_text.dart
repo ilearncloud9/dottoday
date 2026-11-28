@@ -73,7 +73,10 @@ class _Line extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: DotSpace.s,
         children: [
-          Text(marker, style: t.styles.body.copyWith(color: t.colors.muted)),
+          Text(
+            marker,
+            style: t.styles.body.copyWith(color: t.colors.secondary),
+          ),
           Expanded(child: text),
         ],
       ),
@@ -89,9 +92,9 @@ class _Line extends StatelessWidget {
             s.link == null
                 ? t.styles.body
                 : t.styles.body.copyWith(
-                    color: t.colors.accentInk,
+                    color: t.colors.accentText,
                     decoration: TextDecoration.underline,
-                    decorationColor: t.colors.accentInk,
+                    decorationColor: t.colors.accentText,
                   ),
             bold: s.bold,
             italic: s.italic,

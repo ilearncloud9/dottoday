@@ -125,7 +125,7 @@ class _AlertsState extends State<_Alerts> {
                   trailing: IconButton(
                     tooltip: l10n.alertsRemove(alertLabel(l10n, a)),
                     onPressed: () => setState(() => _alerts.remove(a)),
-                    icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+                    icon: DotIcon(DotGlyphs.close, color: t.colors.secondary),
                   ),
                 ),
             ],
@@ -148,7 +148,7 @@ class _AlertsState extends State<_Alerts> {
         if (full)
           Text(
             l10n.alertsMax,
-            style: t.styles.cardTitle.copyWith(color: t.colors.accentInk),
+            style: t.styles.cardTitle.copyWith(color: t.colors.accentText),
           ),
         if (widget.onWindDown case final set?)
           _Card(
@@ -185,16 +185,16 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     return Material(
-      color: c.raised,
+      color: c.card,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
-        side: BorderSide(color: c.outline),
+        side: BorderSide(color: c.hairline),
       ),
       child: Column(
         children: [
           for (final (i, row) in children.indexed) ...[
-            if (i > 0) Divider(height: DotSpace.hairline, color: c.outline),
+            if (i > 0) Divider(height: DotSpace.hairline, color: c.hairline),
             row,
           ],
         ],

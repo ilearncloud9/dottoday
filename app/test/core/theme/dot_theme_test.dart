@@ -71,13 +71,13 @@ void main() {
     for (final a in DotAccent.values) {
       for (final c in [DotColors.light(a), DotColors.dark(a)]) {
         test('${a.key} ${c.brightness.name}: text roles reach 4.5:1', () {
-          final tint = Color.alphaBlend(c.accentTint, c.raised);
-          for (final bg in [c.surface, c.raised]) {
-            expect(contrastRatio(c.text, bg), greaterThanOrEqualTo(4.5));
-            expect(contrastRatio(c.muted, bg), greaterThanOrEqualTo(4.5));
-            expect(contrastRatio(c.accentInk, bg), greaterThanOrEqualTo(4.5));
+          final tint = Color.alphaBlend(c.tonal, c.card);
+          for (final bg in [c.ground, c.card]) {
+            expect(contrastRatio(c.ink, bg), greaterThanOrEqualTo(4.5));
+            expect(contrastRatio(c.secondary, bg), greaterThanOrEqualTo(4.5));
+            expect(contrastRatio(c.accentText, bg), greaterThanOrEqualTo(4.5));
           }
-          expect(contrastRatio(c.accentInk, tint), greaterThanOrEqualTo(4.5));
+          expect(contrastRatio(c.accentText, tint), greaterThanOrEqualTo(4.5));
           expect(
             contrastRatio(c.onAccent, c.accentFill),
             greaterThanOrEqualTo(5),
@@ -91,7 +91,7 @@ void main() {
 
     test('the default light accent is its own ink on raised cards', () {
       final l = DotColors.light();
-      expect(contrastRatio(l.accent, l.raised), greaterThanOrEqualTo(4.5));
+      expect(contrastRatio(l.accent, l.card), greaterThanOrEqualTo(4.5));
     });
   });
 
@@ -220,8 +220,8 @@ void main() {
       expect(dark.colorScheme.primary, DotAccent.teal.dark);
       expect(ext.tasks[TaskColor.rose].color, TaskColor.rose.color);
       expect(
-        DotTheme.light().extension<DotTheme>()!.colors.surface,
-        DotColors.light().surface,
+        DotTheme.light().extension<DotTheme>()!.colors.ground,
+        DotColors.light().ground,
       );
     });
   });

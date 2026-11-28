@@ -156,7 +156,7 @@ class NowRow extends StatelessWidget {
           children: [
             DecoratedBox(
               decoration: BoxDecoration(
-                color: c.raised,
+                color: c.card,
                 borderRadius: BorderRadius.circular(DotRadii.nowPill),
                 border: Border.all(
                   color: c.accent.withValues(alpha: TaskAlpha.nowPill),
@@ -302,7 +302,7 @@ class _AddHere extends StatelessWidget {
                   if (action.isNotEmpty)
                     TextSpan(
                       text: action,
-                      style: TextStyle(color: c.accentInk),
+                      style: TextStyle(color: c.accentText),
                     ),
                 ],
               ),

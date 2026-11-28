@@ -21,7 +21,7 @@ class SheetMeta extends ConsumerWidget {
     final l10n = context.l10n;
     final o = task.occurrence;
     final start = o.startUtc;
-    final muted = t.styles.body.copyWith(color: t.colors.muted);
+    final muted = t.styles.body.copyWith(color: t.colors.secondary);
     if (start == null) return Text(l10n.sheetInbox, style: muted);
     final zone = tz.getLocation(o.tzId);
     final today = ref.watch(todayDateProvider).value;
@@ -46,7 +46,7 @@ class SheetMeta extends ConsumerWidget {
           if (minutesLeft case final left?)
             TextSpan(
               text: l10n.sheetLeftSuffix(l10n.liveMinutesLeft(left)),
-              style: TextStyle(color: t.colors.accentInk),
+              style: TextStyle(color: t.colors.accentText),
             ),
         ],
       ),

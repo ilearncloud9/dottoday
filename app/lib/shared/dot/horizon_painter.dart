@@ -80,7 +80,7 @@ class HorizonPainter extends CustomPainter {
             DotSize.horizonCut +
             DotSize.smallDotOutline / 2,
         Paint()
-          ..color = colors.accentInk
+          ..color = colors.accentText
           ..style = PaintingStyle.stroke
           ..strokeWidth = DotSize.smallDotOutline,
       );

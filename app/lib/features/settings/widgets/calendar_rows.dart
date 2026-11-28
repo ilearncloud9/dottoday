@@ -70,7 +70,7 @@ class CalendarEmptyRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SettingsRow(
     glyph: DotGlyphs.calendar,
-    tint: DotTheme.of(context).colors.muted,
+    tint: DotTheme.of(context).colors.secondary,
     title: title,
     quiet: true,
   );

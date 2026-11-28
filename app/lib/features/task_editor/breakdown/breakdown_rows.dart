@@ -99,7 +99,10 @@ class _StepTileState extends State<StepTile> {
                 child: SizedBox.square(
                   dimension: DotTouch.android,
                   child: Center(
-                    child: DotIcon(DotGlyphs.dragHandle, color: t.colors.muted),
+                    child: DotIcon(
+                      DotGlyphs.dragHandle,
+                      color: t.colors.secondary,
+                    ),
                   ),
                 ),
               ),
@@ -147,7 +150,7 @@ class _StepTileState extends State<StepTile> {
             onPressed: () => widget.onToggle(s.id),
             icon: DotIcon(
               open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.rowIcon,
             ),
           ),
@@ -201,7 +204,7 @@ class _StepTileState extends State<StepTile> {
                       widget.depth + 1,
                       BreakdownRequest.maxDepth,
                     ),
-                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                   ),
                 if (splitting)
                   const SizedBox.square(

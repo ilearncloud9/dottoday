@@ -24,7 +24,7 @@ class InboxSwipeHint extends StatelessWidget {
           children: [
             DotIcon(
               rtl ? DotGlyphs.arrowRight : DotGlyphs.arrowLeft,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: arrow,
             ),
             const SizedBox(width: DotSpace.xs),
@@ -39,7 +39,7 @@ class InboxSwipeHint extends StatelessWidget {
             const SizedBox(width: DotSpace.xs),
             DotIcon(
               rtl ? DotGlyphs.arrowLeft : DotGlyphs.arrowRight,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: arrow,
             ),
           ],

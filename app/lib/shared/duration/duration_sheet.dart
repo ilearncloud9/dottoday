@@ -133,9 +133,9 @@ class _DurationSheetState extends State<_DurationSheet> {
   Widget _wheelBox(DotTheme t) => Container(
     height: _wheelHeight,
     decoration: BoxDecoration(
-      color: t.colors.surface,
+      color: t.colors.ground,
       borderRadius: BorderRadius.circular(DotRadii.card),
-      border: Border.all(color: t.colors.outline),
+      border: Border.all(color: t.colors.hairline),
     ),
     // Inter, not the platform's SF default (not bundled; would fall back
     // on Android and web): one wheel on every platform (§4).
@@ -144,7 +144,7 @@ class _DurationSheetState extends State<_DurationSheet> {
         brightness: Theme.of(context).brightness,
         textTheme: CupertinoTextThemeData(
           pickerTextStyle: t.styles.cardTitle.copyWith(
-            color: t.colors.text,
+            color: t.colors.ink,
             fontWeight: FontWeight.w500,
           ),
         ),

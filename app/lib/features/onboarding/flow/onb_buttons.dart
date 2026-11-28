@@ -58,7 +58,7 @@ class OnbSecondary extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: t.colors.accentInk,
+        foregroundColor: t.colors.accentText,
         textStyle: t.styles.onbSecondary,
         minimumSize: const Size.fromHeight(OnbSize.secondary),
         shape: const StadiumBorder(),

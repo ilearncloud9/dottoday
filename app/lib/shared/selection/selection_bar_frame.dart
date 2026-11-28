@@ -60,9 +60,9 @@ class SelectionBarFrame extends StatelessWidget {
         // shadow, 6 inside.
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: t.colors.raised,
+            color: t.colors.card,
             borderRadius: BorderRadius.circular(DotRadii.selectionCard),
-            border: Border.all(color: t.colors.outline),
+            border: Border.all(color: t.colors.hairline),
             boxShadow: DotElevation.floating,
           ),
           child: Padding(
@@ -75,7 +75,7 @@ class SelectionBarFrame extends StatelessWidget {
                     IconButton(
                       tooltip: l10n.selectionClose,
                       onPressed: onClose,
-                      icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                      icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
                     ),
                     Expanded(
                       child: Semantics(
@@ -127,7 +127,7 @@ class _Action extends StatelessWidget {
                   Text(
                     label,
                     style: t.styles.caption.copyWith(
-                      color: onTap == null ? t.colors.tertiary : t.colors.text,
+                      color: onTap == null ? t.colors.tertiary : t.colors.ink,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -158,10 +158,10 @@ class ColourSwatchIcon extends StatelessWidget {
           height: DotSize.rowIcon,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: c.text, width: DotSize.smallDotOutline),
+            border: Border.all(color: c.ink, width: DotSize.smallDotOutline),
             // The start half filled: a hard stop at the middle.
             gradient: LinearGradient(
-              colors: [c.text, c.text, Colors.transparent, Colors.transparent],
+              colors: [c.ink, c.ink, Colors.transparent, Colors.transparent],
               stops: const [0, 0.5, 0.5, 1],
             ),
           ),

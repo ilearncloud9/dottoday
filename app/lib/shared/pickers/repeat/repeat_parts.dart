@@ -113,7 +113,7 @@ class _Row extends StatelessWidget {
         minTileHeight: DotTouch.android,
         title: Text(label, style: t.styles.body),
         trailing: picked
-            ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
+            ? DotIcon(DotGlyphs.check, color: t.colors.accentText)
             : null,
         onTap: onTap,
       ),

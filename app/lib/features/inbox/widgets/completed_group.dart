@@ -35,7 +35,7 @@ class CompletedGroup extends StatelessWidget {
         childrenPadding: EdgeInsets.zero,
         title: Text(
           context.l10n.inboxCompleted(items.length),
-          style: t.styles.cardTitle.copyWith(color: c.muted),
+          style: t.styles.cardTitle.copyWith(color: c.secondary),
         ),
         children: [
           for (final o in items)
@@ -72,7 +72,7 @@ class _DoneRow extends StatelessWidget {
       title: Text(
         item.title,
         style: t.styles.body.copyWith(
-          color: t.colors.muted,
+          color: t.colors.secondary,
           decoration: TextDecoration.lineThrough,
         ),
       ),
@@ -89,7 +89,7 @@ class _DoneRow extends StatelessWidget {
       trailing: IconButton(
         tooltip: l10n.inboxNotDone(item.title),
         onPressed: onNotDone,
-        icon: DotIcon(DotGlyphs.undo, color: t.colors.muted),
+        icon: DotIcon(DotGlyphs.undo, color: t.colors.secondary),
       ),
     );
   }

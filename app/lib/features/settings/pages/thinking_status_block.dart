@@ -30,7 +30,7 @@ class ThinkingStatusBlock extends ConsumerWidget {
         // The status in a tinted box, bold (E-R2-23 §3).
         DecoratedBox(
           decoration: BoxDecoration(
-            color: t.colors.accentTint,
+            color: t.colors.tonal,
             borderRadius: BorderRadius.circular(DotRadii.card),
           ),
           child: Padding(
@@ -40,7 +40,7 @@ class ThinkingStatusBlock extends ConsumerWidget {
             ),
             child: Text(
               l10n.thinkingStatusLine(status),
-              style: t.styles.chip.copyWith(color: t.colors.accentInk),
+              style: t.styles.chip.copyWith(color: t.colors.accentText),
             ),
           ),
         ),
@@ -57,7 +57,7 @@ class ThinkingStatusBlock extends ConsumerWidget {
           if (status.vendor == ThinkingVendor.appleIos)
             Text(
               l10n.privacyAiOpenSettingsIos,
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
             ),
         ],
       ],

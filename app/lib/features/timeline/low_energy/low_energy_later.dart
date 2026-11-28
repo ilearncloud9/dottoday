@@ -145,7 +145,7 @@ class ProposeTomorrowCard extends StatelessWidget {
     final l10n = context.l10n;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.accentTint,
+        color: c.tonal,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Padding(
@@ -166,7 +166,7 @@ class ProposeTomorrowCard extends StatelessWidget {
               child: Text(
                 l10n.lowEnergyPropose,
                 style: t.styles.body.copyWith(
-                  color: c.accentInk,
+                  color: c.accentText,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -174,8 +174,8 @@ class ProposeTomorrowCard extends StatelessWidget {
             FilledButton(
               onPressed: onPropose,
               style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(c.raised),
-                foregroundColor: WidgetStatePropertyAll(c.accentInk),
+                backgroundColor: WidgetStatePropertyAll(c.card),
+                foregroundColor: WidgetStatePropertyAll(c.accentText),
                 textStyle: WidgetStatePropertyAll(t.styles.button),
                 minimumSize: const WidgetStatePropertyAll(
                   Size(0, DotTouch.min),
@@ -206,13 +206,13 @@ class NudgesOffLine extends StatelessWidget {
       children: [
         DotIcon(
           DotGlyphs.bellOff,
-          color: t.colors.muted,
+          color: t.colors.secondary,
           size: DotSize.miniRing + DotSpace.xxs,
         ),
         Flexible(
           child: Text(
             context.l10n.lowEnergyNudgesOff,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ),
       ],

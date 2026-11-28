@@ -32,11 +32,11 @@ class BrainDumpDay extends StatelessWidget {
         showCheckmark: true,
         checkmarkColor: t.colors.onAccent,
         selectedColor: t.colors.accent,
-        backgroundColor: t.colors.accentTint,
+        backgroundColor: t.colors.tonal,
         side: BorderSide.none,
         shape: const StadiumBorder(),
         labelStyle: t.styles.chip.copyWith(
-          color: on ? t.colors.onAccent : t.colors.accentInk,
+          color: on ? t.colors.onAccent : t.colors.accentText,
         ),
       );
     }

@@ -41,7 +41,7 @@ class WakeUpCheckGroup extends StatelessWidget {
         if (on || settingsFormAt(context)) ...[
           SettingsRow(
             glyph: DotGlyphs.clock,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.wakeUpCheckAfterRow,
             value: l10n.durationMinutes(settings.wakeUpCheckMin),
             choices: on
@@ -59,7 +59,7 @@ class WakeUpCheckGroup extends StatelessWidget {
           ),
           SettingsRow(
             glyph: DotGlyphs.bell,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.wakeUpCheckAsRow,
             value: _tier(l10n, loud: settings.wakeUpCheckLoud),
             choices: on

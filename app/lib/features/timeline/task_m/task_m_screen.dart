@@ -44,7 +44,7 @@ class TaskMScreen extends ConsumerWidget {
           child: Text(
             l10n.sheetNotFound,
             textAlign: TextAlign.center,
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: t.styles.body.copyWith(color: t.colors.secondary),
           ),
         );
       }
@@ -69,7 +69,7 @@ class TaskMScreen extends ConsumerWidget {
               IconButton(
                 tooltip: l10n.editorClose,
                 onPressed: onClose,
-                icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
               ),
             ],
           ),

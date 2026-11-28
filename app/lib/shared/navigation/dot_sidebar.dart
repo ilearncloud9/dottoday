@@ -190,8 +190,8 @@ class _SidebarRow extends StatelessWidget {
     // The dark Mac sidebar's current place reads in the primary text over
     // its pill (ED-176); its icon keeps the accent text (I1, ED-178).
     final ink = macApp(context) && c.brightness == Brightness.dark
-        ? c.text
-        : c.accentInk;
+        ? c.ink
+        : c.accentText;
     final label = selected
         ? DotType.emphasis(
             t.styles.body.copyWith(color: ink),
@@ -206,7 +206,7 @@ class _SidebarRow extends StatelessWidget {
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: selected ? c.accentTint : Colors.transparent,
+        color: selected ? c.tonal : Colors.transparent,
         borderRadius: BorderRadius.circular(DotRadii.railItem),
         child: InkWell(
           onTap: onTap,
@@ -223,7 +223,7 @@ class _SidebarRow extends StatelessWidget {
                   ShellIcon(
                     destination: destination,
                     active: selected,
-                    color: selected ? c.accentInk : c.ink2,
+                    color: selected ? c.accentText : c.ink2,
                     badge: !ends,
                   ),
                   Expanded(child: Text(destination.label, style: label)),
@@ -244,7 +244,7 @@ class _SidebarRow extends StatelessWidget {
         NumberFormat.decimalPattern(
           Localizations.localeOf(context).toLanguageTag(),
         ).format(n),
-        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
       ),
     if (destination.keyCap case final k?) KeyCap(k),
   ];

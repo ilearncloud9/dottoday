@@ -86,7 +86,7 @@ class _Header extends StatelessWidget {
         ),
         Text(
           l10n.journalDays(planned),
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
       ],
     );

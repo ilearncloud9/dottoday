@@ -28,7 +28,7 @@ class OneThingPicker extends StatelessWidget {
       children: [
         Text(
           l10n.oneThingEveryAnswer,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
         if (offer.dots.isNotEmpty) ...[
           _Caption(l10n.oneThingToday),
@@ -154,7 +154,7 @@ class _PickRow extends StatelessWidget {
       Text(
         picked ? l10n.oneThingMetaJoin(meta) : meta,
         style: picked
-            ? t.styles.rowMeta.copyWith(color: t.colors.accentInk)
+            ? t.styles.rowMeta.copyWith(color: t.colors.accentText)
             : t.styles.rowMeta,
       ),
     ],

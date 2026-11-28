@@ -104,7 +104,7 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     return ColoredBox(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: SafeArea(
         child: Center(
           child: Padding(
@@ -155,7 +155,7 @@ class _Cover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-    color: DotTheme.of(context).colors.surface,
+    color: DotTheme.of(context).colors.ground,
     child: const Center(child: BrandMark()),
   );
 }

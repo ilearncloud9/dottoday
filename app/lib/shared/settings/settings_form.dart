@@ -125,7 +125,7 @@ class FormBreak extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Divider(
     height: DotSpace.hairline,
-    color: DotTheme.of(context).colors.outline,
+    color: DotTheme.of(context).colors.hairline,
   );
 }
 
@@ -163,7 +163,7 @@ class FormCheck extends StatelessWidget {
       width: DotSize.formCheck,
       height: DotSize.formCheck,
       decoration: BoxDecoration(
-        color: value ? c.accentFill : c.raised,
+        color: value ? c.accentFill : c.card,
         borderRadius: BorderRadius.circular(DotRadii.field - DotSpace.xxs),
         border: value ? null : Border.all(color: c.hairlineStrong, width: 1.5),
       ),
@@ -279,7 +279,7 @@ class FormRadio extends StatelessWidget {
                               title,
                               style: t.styles.inspectorValue.copyWith(
                                 fontWeight: FontWeight.w400,
-                                color: on ? c.text : c.muted,
+                                color: on ? c.ink : c.secondary,
                               ),
                             ),
                           ),
@@ -323,7 +323,7 @@ class FormRadioMark extends StatelessWidget {
         height: DotSize.formCheck,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: c.raised,
+          color: c.card,
           border: Border.all(
             color: selected ? c.accentFill : c.hairlineStrong,
             width: selected ? DotSize.formCheck * _ring : _line,
@@ -391,7 +391,7 @@ class FormControlFace extends StatelessWidget {
         horizontal: DotSpace.s + DotSpace.xxs,
       ),
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(DotRadii.field),
         border: Border.all(color: c.hairlineStrong),
       ),
@@ -486,17 +486,17 @@ class FormList extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     return Material(
-      color: c.raised,
+      color: c.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.monthCard),
-        side: BorderSide(color: c.outline),
+        side: BorderSide(color: c.hairline),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (final (i, child) in children.indexed) ...[
-            if (i > 0) Divider(height: DotSpace.hairline, color: c.outline),
+            if (i > 0) Divider(height: DotSpace.hairline, color: c.hairline),
             child,
           ],
         ],
@@ -550,7 +550,7 @@ class FormListRow extends StatelessWidget {
                     title,
                     style: t.styles.inspectorValue.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: dimmed ? t.colors.muted : t.colors.text,
+                      color: dimmed ? t.colors.secondary : t.colors.ink,
                     ),
                   ),
                   ?detail,

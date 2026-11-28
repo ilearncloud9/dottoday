@@ -146,7 +146,7 @@ class _BreatheMissionState extends State<BreatheMission>
           child: Text(
             l10n.missionBreathCount((_done + 1).clamp(1, breaths), breaths),
             style: t.styles.dawnStatus.copyWith(
-              color: t.colors.text.withValues(alpha: _statusAlpha),
+              color: t.colors.ink.withValues(alpha: _statusAlpha),
             ),
           ),
         ),

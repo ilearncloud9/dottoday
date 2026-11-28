@@ -58,7 +58,7 @@ abstract final class DeleteType {
   static TextStyle caption(DotType t, DotColors c) => t.caption.copyWith(
     fontWeight: FontWeight.w700,
     fontVariations: const [FontVariation.weight(700)],
-    color: c.muted,
+    color: c.secondary,
   );
 
   /// What goes, and the field's label: 14/20 (dialog 13.5/20); the label
@@ -77,11 +77,11 @@ abstract final class DeleteType {
 abstract final class DeleteColors {
   /// The phone's summary card: `#FFFDF9` / `#1F1B1E`.
   static Color card(DotColors c) =>
-      c.brightness == Brightness.dark ? c.sunk : c.raised;
+      c.brightness == Brightness.dark ? c.sunk : c.card;
 
   /// The dialog's summary box: `#F6F1EA` / `#28232A`.
   static Color box(DotColors c) =>
-      c.brightness == Brightness.dark ? c.raised : c.sunk;
+      c.brightness == Brightness.dark ? c.card : c.sunk;
 
   /// The field: phones `#F6F1EA` / `#28232A`; the dialog `#FFFDF9` /
   /// `#1F1B1E`.
@@ -90,15 +90,12 @@ abstract final class DeleteColors {
 }
 
 /// "Removal from this browser didn't finish" (E-CR160 `DeleteWebRetry`;
-/// ED-495): a 480 card, 20 corners, 28 in, 14 between lines; the 44 badge
-/// with a 22 glyph.
+/// ED-495): a 480 card, 20 corners, 28 in, 14 between lines.
 abstract final class RemovalRetrySize {
   static const double width = 480;
   static const double radius = 20;
   static const double pad = 28;
   static const double gap = 14;
-  static const double badge = 44;
-  static const double glyph = 22;
   static const double buttonsTop = 4;
 }
 

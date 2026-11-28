@@ -68,7 +68,7 @@ class BreakdownLead extends StatelessWidget {
                 Text(title, style: t.styles.rowTitle),
                 Text(
                   [?when, length].join(' · '), // l10n-ignore: a separator
-                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                 ),
               ],
             ),
@@ -129,7 +129,7 @@ class BreakdownTotal extends StatelessWidget {
                   ring(grows ? _small : _large, TaskAlpha.faded),
                   DotIcon(
                     DotGlyphs.arrowRight,
-                    color: t.colors.muted,
+                    color: t.colors.secondary,
                     size: DotSize.rowIcon,
                   ),
                   ring(grows ? _large : _small, 1),
@@ -146,7 +146,7 @@ class BreakdownTotal extends StatelessWidget {
         ),
         Text(
           l10n.breakdownSmallest,
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
       ],
     );

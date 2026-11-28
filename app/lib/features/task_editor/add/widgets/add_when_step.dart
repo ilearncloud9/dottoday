@@ -189,7 +189,7 @@ class AddWhenStep extends StatelessWidget {
 
   static TextStyle _quiet(BuildContext context) {
     final t = DotTheme.of(context);
-    return t.styles.rowMeta.copyWith(color: t.colors.muted);
+    return t.styles.rowMeta.copyWith(color: t.colors.secondary);
   }
 
   Widget _identity(BuildContext context, String range) {
@@ -223,7 +223,7 @@ class AddWhenStep extends StatelessWidget {
                         range,
                         formatDurationShort(l10n, draft.length),
                       ),
-                style: t.styles.body.copyWith(color: t.colors.muted),
+                style: t.styles.body.copyWith(color: t.colors.secondary),
               ),
             ],
           ),

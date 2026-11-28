@@ -91,7 +91,7 @@ List<Widget> gridProposedBlocks(
                         p.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: scale.pill(t.styles).copyWith(color: c.text),
+                        style: scale.pill(t.styles).copyWith(color: c.ink),
                       ),
                     ),
                     if (p.added) _NewTag(scale: scale),
@@ -115,7 +115,7 @@ class _NewTag extends StatelessWidget {
     final t = DotTheme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.accentTint,
+        color: t.colors.tonal,
         borderRadius: BorderRadius.circular(DotRadii.pill),
       ),
       child: Padding(

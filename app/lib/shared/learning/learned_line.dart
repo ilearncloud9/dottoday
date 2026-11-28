@@ -151,7 +151,7 @@ class _LearnedLineState extends State<LearnedLine> {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final style =
-        widget.style ?? t.styles.rowMeta.copyWith(color: t.colors.muted);
+        widget.style ?? t.styles.rowMeta.copyWith(color: t.colors.secondary);
     final e = widget.explanation;
     if (e == null) return _text(context, style);
     final line = Semantics(
@@ -217,14 +217,14 @@ class _Why extends StatelessWidget {
           liveRegion: true,
           child: Text(
             explanation.why,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ),
         if (explanation.reset != null)
           TextButton(
             onPressed: onReset,
             style: TextButton.styleFrom(
-              foregroundColor: t.colors.accentInk,
+              foregroundColor: t.colors.accentText,
               minimumSize: const Size(DotTouch.android, DotTouch.android),
             ),
             child: Text(context.l10n.learnReset),
@@ -251,7 +251,7 @@ class _Confirm extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final style = TextButton.styleFrom(
-      foregroundColor: t.colors.accentInk,
+      foregroundColor: t.colors.accentText,
       minimumSize: const Size(DotTouch.android, DotTouch.android),
     );
     return Wrap(

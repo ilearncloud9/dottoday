@@ -37,11 +37,11 @@ class ThreadRowFrame extends StatelessWidget {
           piece: piece,
           hairline: c.threadAhead,
           accent: c.accent,
-          card: c.raised,
+          card: c.card,
           ghostSide: Directionality.of(context) == TextDirection.rtl ? 1 : -1,
         ),
         rtl: Directionality.of(context) == TextDirection.rtl,
-        card: card ? (fill: c.raised, edge: c.hairline) : null,
+        card: card ? (fill: c.card, edge: c.hairline) : null,
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(minHeight: minHeight),

@@ -36,7 +36,7 @@ class StepFrame extends StatelessWidget {
             header: true,
             child: Text(title, style: t.styles.pageTitle),
           ),
-          Text(body, style: t.styles.body.copyWith(color: t.colors.muted)),
+          Text(body, style: t.styles.body.copyWith(color: t.colors.secondary)),
           ...children,
           const SizedBox(height: DotSpace.s),
           FilledButton(onPressed: onPrimary, child: Text(primary)),

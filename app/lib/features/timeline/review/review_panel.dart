@@ -104,7 +104,7 @@ class _ReviewPanelState extends ConsumerState<ReviewPanel> {
         IconButton(
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: _back,
-          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.ink),
         ),
         Expanded(child: header),
       ],
@@ -123,7 +123,7 @@ class _ReviewPanelState extends ConsumerState<ReviewPanel> {
           child: LandingTitle(
             child: Text(
               l10n.reviewColumnCaption(_date(context)),
-              style: t.styles.caption.copyWith(color: t.colors.muted),
+              style: t.styles.caption.copyWith(color: t.colors.secondary),
             ),
           ),
         ),

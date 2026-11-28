@@ -126,7 +126,7 @@ class _NoteLine extends StatelessWidget {
               Expanded(
                 child: Text(
                   text,
-                  style: t.styles.smallChip.copyWith(color: t.colors.text),
+                  style: t.styles.smallChip.copyWith(color: t.colors.ink),
                 ),
               ),
               if (hide != null)
@@ -140,7 +140,7 @@ class _NoteLine extends StatelessWidget {
                   ),
                   icon: DotIcon(
                     DotGlyphs.close,
-                    color: t.colors.muted,
+                    color: t.colors.secondary,
                     size: DotSize.rowIcon,
                   ),
                 ),

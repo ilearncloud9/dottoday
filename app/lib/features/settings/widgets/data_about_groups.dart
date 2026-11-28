@@ -35,7 +35,7 @@ class DataGroup extends ConsumerWidget {
       children: [
         SettingsRow(
           glyph: DotGlyphs.sync,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.settingsSync,
           value: _syncValue(l10n, sync),
           // The sheet belongs to the sync feature; the app root opens it.
@@ -50,14 +50,14 @@ class DataGroup extends ConsumerWidget {
         ),
         SettingsRow(
           glyph: DotGlyphs.share,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.settingsExport,
           subtitle: l10n.settingsExportDetail,
           onTap: () => _open(context, SettingsPage.export),
         ),
         SettingsRow(
           glyph: DotGlyphs.trash,
-          tint: t.colors.muted,
+          tint: t.colors.secondary,
           title: l10n.settingsTrash,
           subtitle: l10n.settingsTrashDetail,
           onTap: () => unawaited(showTrashSheet(context)),
@@ -121,7 +121,7 @@ class AboutGroup extends ConsumerWidget {
       children: [
         SettingsRow(
           glyph: DotGlyphs.help,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.settingsHelp,
           onTap: () => _open(context, SettingsPage.help),
         ),
@@ -136,14 +136,14 @@ class AboutGroup extends ConsumerWidget {
           ),
         SettingsRow(
           glyph: DotGlyphs.info,
-          tint: t.colors.muted,
+          tint: t.colors.secondary,
           title: l10n.settingsAboutApp,
           value: version,
           onTap: () => _open(context, SettingsPage.about),
         ),
         SettingsRow(
           glyph: DotGlyphs.envelope,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.settingsFeedback,
           onTap: () => unawaited(showFeedbackSheet(context)),
         ),

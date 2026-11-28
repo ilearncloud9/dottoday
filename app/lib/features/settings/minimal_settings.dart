@@ -51,7 +51,7 @@ class MinimalSettings extends ConsumerWidget {
             ...dayTimeRows(context, settings),
             SettingsRow(
               glyph: DotGlyphs.bell,
-              tint: t.colors.accentInk,
+              tint: t.colors.accentText,
               title: l10n.settingsRemindDotStarts,
               toggle: settings.defaultAlerts.isNotEmpty,
               // On/off over the existing default alert: at the start, or
@@ -74,14 +74,14 @@ class MinimalSettings extends ConsumerWidget {
             ),
             SettingsRow(
               glyph: DotGlyphs.person,
-              tint: t.colors.accentInk,
+              tint: t.colors.accentText,
               title: l10n.settingsAccountAndSync,
               selected: picked(SettingsPage.account),
               onTap: () => open(SettingsPage.account),
             ),
             SettingsRow(
               glyph: DotGlyphs.more,
-              tint: t.colors.muted,
+              tint: t.colors.secondary,
               title: l10n.settingsEverythingElse,
               onTap: () => open(SettingsPage.everything),
             ),

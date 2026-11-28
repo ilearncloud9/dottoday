@@ -93,7 +93,7 @@ class _SettingsPanesState extends ConsumerState<SettingsPanes> {
               width: listWidth,
               decoration: BoxDecoration(
                 border: BorderDirectional(
-                  end: BorderSide(color: t.colors.outline),
+                  end: BorderSide(color: t.colors.hairline),
                 ),
               ),
               child: SettingsPaneScope(

@@ -77,7 +77,7 @@ class _Heading extends StatelessWidget {
           TextSpan(text: upper.substring(0, at)),
           TextSpan(
             text: upper.substring(at, at + today.length),
-            style: TextStyle(color: t.colors.accentInk),
+            style: TextStyle(color: t.colors.accentText),
           ),
           TextSpan(text: upper.substring(at + today.length)),
         ],

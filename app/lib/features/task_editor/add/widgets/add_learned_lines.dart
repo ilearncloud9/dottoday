@@ -102,7 +102,7 @@ class AddLearnedLines extends ConsumerWidget {
     return LearnedLine(
       text: text,
       explanation: why,
-      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+      style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
     );
   }
 

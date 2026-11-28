@@ -15,7 +15,7 @@ class NextFreeSlot extends StatelessWidget {
     final c = t.colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.accentTint,
+        color: c.tonal,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Padding(
@@ -26,7 +26,7 @@ class NextFreeSlot extends StatelessWidget {
         child: Text(
           text,
           style: t.styles.rowMeta.copyWith(
-            color: c.accentInk,
+            color: c.accentText,
             fontWeight: FontWeight.w600,
           ),
         ),

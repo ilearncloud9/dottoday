@@ -84,7 +84,7 @@ class DayReviewBody extends ConsumerWidget {
             ask,
             style: review.hasRest
                 ? t.styles.body
-                : t.styles.body.copyWith(color: t.colors.accentInk),
+                : t.styles.body.copyWith(color: t.colors.accentText),
           ),
           ?staying,
           _buttons(context, ref, review, roll),

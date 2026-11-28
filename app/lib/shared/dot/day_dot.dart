@@ -47,7 +47,7 @@ class DayDot extends StatelessWidget {
           painter: _DayDotPainter(
             sweep: sweep,
             dayEnd: g.dayEnd,
-            track: t.colors.outline,
+            track: t.colors.hairline,
             night: t.colors.night,
             accent: t.colors.accent,
           ),

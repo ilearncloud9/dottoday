@@ -30,7 +30,7 @@ class SubtasksHeader extends StatelessWidget {
               total == 0
                   ? l10n.sheetSubtasksNone
                   : l10n.sheetSubtasks(done, total),
-              style: t.styles.rowTitle.copyWith(color: t.colors.muted),
+              style: t.styles.rowTitle.copyWith(color: t.colors.secondary),
             ),
           ),
         ),
@@ -39,14 +39,14 @@ class SubtasksHeader extends StatelessWidget {
             onPressed: breakDown,
             child: Text(
               l10n.breakdownAction,
-              style: t.styles.button.copyWith(color: t.colors.accentInk),
+              style: t.styles.button.copyWith(color: t.colors.accentText),
             ),
           ),
         TextButton(
           onPressed: onAdd,
           child: Text(
             l10n.sheetAddSubtask,
-            style: t.styles.button.copyWith(color: t.colors.accentInk),
+            style: t.styles.button.copyWith(color: t.colors.accentText),
           ),
         ),
       ],

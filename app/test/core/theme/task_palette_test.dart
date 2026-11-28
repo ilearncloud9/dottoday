@@ -75,7 +75,7 @@ void main() {
             reason: 'graphics keep the spec hue of their theme (ED-175)',
           );
           expect(s.tint.a, 1);
-          for (final bg in [colors.surface, colors.raised, s.tint]) {
+          for (final bg in [colors.ground, colors.card, s.tint]) {
             expect(contrastRatio(s.ink, bg), greaterThanOrEqualTo(4.5));
           }
           // A dot's icon on its tint is graphics-grade (ADR-0015).

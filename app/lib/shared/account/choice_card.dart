@@ -35,7 +35,7 @@ class ChoiceCard extends StatelessWidget {
       checked: selected,
       child: ChoiceCardFrame(
         look: look,
-        outline: selected ? c.accent : c.outline,
+        outline: selected ? c.accent : c.hairline,
         onTap: onTap,
         mark: ExcludeSemantics(
           child: RadioMark(selected: selected, size: radio),
@@ -101,7 +101,7 @@ class ChoiceCardFrame extends StatelessWidget {
       ),
     );
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: shape,
       clipBehavior: Clip.antiAlias,
       child: onTap == null ? body : InkWell(onTap: onTap, child: body),
@@ -168,7 +168,7 @@ class ChoiceDetail extends StatelessWidget {
       style: AccountDecisionType.row(
         t.styles,
         look,
-      ).copyWith(color: t.colors.muted),
+      ).copyWith(color: t.colors.secondary),
     );
   }
 }

@@ -91,7 +91,7 @@ class WeekTable extends StatelessWidget {
 
   BoxDecoration _line(DotTheme t, {bool tint = false}) => BoxDecoration(
     color: tint ? t.colors.chip : null,
-    border: Border(bottom: BorderSide(color: t.colors.outline)),
+    border: Border(bottom: BorderSide(color: t.colors.hairline)),
   );
 
   TableRow _row(
@@ -161,9 +161,9 @@ class WeekTable extends StatelessWidget {
                     child: Text(
                       name,
                       style: text.copyWith(
-                        color: t.colors.accentInk,
+                        color: t.colors.accentText,
                         decoration: TextDecoration.underline,
-                        decorationColor: t.colors.accentInk,
+                        decorationColor: t.colors.accentText,
                       ),
                     ),
                   ),
@@ -183,7 +183,7 @@ class WeekTable extends StatelessWidget {
         cell(
           Text(
             formatDurationShort(l10n, nightAfter(settings, day)),
-            style: text.copyWith(color: t.colors.muted),
+            style: text.copyWith(color: t.colors.secondary),
           ),
         ),
         cell(

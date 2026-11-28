@@ -22,8 +22,8 @@ class WeekSummaryStrip extends StatelessWidget {
         for (final c in chips)
           DecoratedBox(
             decoration: ShapeDecoration(
-              color: t.colors.raised,
-              shape: StadiumBorder(side: BorderSide(color: t.colors.outline)),
+              color: t.colors.card,
+              shape: StadiumBorder(side: BorderSide(color: t.colors.hairline)),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -34,7 +34,7 @@ class WeekSummaryStrip extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 spacing: DotSpace.s,
                 children: [
-                  DotIcon(c.glyph, color: t.colors.text, size: DotSize.rowIcon),
+                  DotIcon(c.glyph, color: t.colors.ink, size: DotSize.rowIcon),
                   // Wraps inside the chip at large text (M3f.9b).
                   Flexible(child: Text(c.text, style: t.styles.body)),
                 ],

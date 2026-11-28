@@ -201,7 +201,7 @@ class RoutineStepRow extends StatelessWidget {
                 ),
                 child: Text(
                   l10n.routineGap(formatDurationShort(l10n, step.gapMin)),
-                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                 ),
               ),
           ],
@@ -259,7 +259,7 @@ class _Length extends StatelessWidget {
               child: Text(
                 formatDurationShort(l10n, step.durationMin),
                 style: t.styles.rowMeta.copyWith(
-                  color: t.colors.text,
+                  color: t.colors.ink,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -291,7 +291,7 @@ class _Icon extends StatelessWidget {
       padding: EdgeInsets.zero,
       icon: DotIcon(
         glyph,
-        color: onPressed == null ? t.colors.threadAhead : t.colors.muted,
+        color: onPressed == null ? t.colors.threadAhead : t.colors.secondary,
         size: DotSize.rowIcon,
       ),
     );

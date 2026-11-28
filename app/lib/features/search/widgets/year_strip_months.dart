@@ -128,7 +128,7 @@ class _YearStripMonthsState extends State<YearStripMonths> {
               ),
               Text(
                 DateFormat.MMM(locale).format(m.month),
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
               ),
             ],
           ),
@@ -181,9 +181,9 @@ class _MonthDays extends StatelessWidget {
     final cells = [for (var i = 0; i < lead; i++) null, ...shares.indexed];
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.card),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.m),
@@ -201,7 +201,7 @@ class _MonthDays extends StatelessWidget {
                 Text(name, style: t.styles.rowTitle),
                 Text(
                   context.l10n.monthFooterPlanned(name, planned, shares.length),
-                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                 ),
               ],
             ),

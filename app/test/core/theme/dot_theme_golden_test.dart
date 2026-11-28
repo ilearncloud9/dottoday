@@ -17,15 +17,15 @@ class _Specimen extends StatelessWidget {
     final c = t.colors;
     final s = t.styles;
     final roles = {
-      'surface': c.surface,
-      'raised': c.raised,
-      'text': c.text,
-      'muted': c.muted,
-      'outline': c.outline,
+      'surface': c.ground,
+      'raised': c.card,
+      'text': c.ink,
+      'muted': c.secondary,
+      'outline': c.hairline,
       'hairline': c.threadAhead,
       'accent': c.accent,
-      'accentInk': c.accentInk,
-      'tint': Color.alphaBlend(c.accentTint, c.raised),
+      'accentInk': c.accentText,
+      'tint': Color.alphaBlend(c.tonal, c.card),
       'success': c.success,
     };
     return Scaffold(

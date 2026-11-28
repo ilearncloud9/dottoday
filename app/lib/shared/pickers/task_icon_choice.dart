@@ -49,7 +49,7 @@ class TaskIconChoice extends StatelessWidget {
                 : null,
             child: DotIcon(
               icon.glyph!,
-              color: on ? swatch.color : t.colors.text,
+              color: on ? swatch.color : t.colors.ink,
               active: selected,
             ),
           ),

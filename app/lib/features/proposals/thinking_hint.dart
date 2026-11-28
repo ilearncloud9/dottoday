@@ -56,7 +56,7 @@ class ThinkingHint extends ConsumerWidget {
           ),
           child: Text(
             l10n.statusHintJoin(l10n.thinkingHintLead, action),
-            style: t.styles.smallChip.copyWith(color: t.colors.accentInk),
+            style: t.styles.smallChip.copyWith(color: t.colors.accentText),
           ),
         ),
       ),
@@ -70,7 +70,7 @@ class ThinkingHint extends ConsumerWidget {
     // A tinted box with Don't show again (E-R2-23 §1, simple rules).
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.accentTint,
+        color: t.colors.tonal,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: _stacks(context)

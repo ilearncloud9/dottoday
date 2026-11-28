@@ -77,7 +77,7 @@ class SearchFilters extends StatelessWidget {
           ? null
           : DotIcon(
               current!.glyph!,
-              color: t.colors.text,
+              color: t.colors.ink,
               size: DotSize.rowIcon,
             ),
       label: current == null
@@ -134,7 +134,7 @@ class _Menu extends StatelessWidget {
         Text(label),
         DotIcon(
           DotGlyphs.chevronDown,
-          color: ink ?? DotTheme.of(context).colors.text,
+          color: ink ?? DotTheme.of(context).colors.ink,
           size: DotSize.rowIcon - DotSpace.xs,
         ),
       ],

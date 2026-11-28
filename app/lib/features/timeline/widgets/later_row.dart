@@ -44,11 +44,13 @@ class LaterRow extends ConsumerWidget {
               child: Row(
                 spacing: DotSpace.s,
                 children: [
-                  DotIcon(DotGlyphs.inbox, color: t.colors.muted),
+                  DotIcon(DotGlyphs.inbox, color: t.colors.secondary),
                   Expanded(
                     child: Text(
                       l10n.laterRow(count),
-                      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                      style: t.styles.rowMeta.copyWith(
+                        color: t.colors.secondary,
+                      ),
                     ),
                   ),
                 ],

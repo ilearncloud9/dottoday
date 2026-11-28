@@ -42,7 +42,7 @@ class _UnstickLineState extends State<UnstickLine> {
       children: [
         Text(
           l10n.unstickPrompt,
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
         Row(
           children: [
@@ -67,7 +67,7 @@ class _UnstickLineState extends State<UnstickLine> {
               onPressed: _send,
               icon: DotIcon(
                 DotGlyphs.arrowRight,
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 size: DotSize.rowIcon,
               ),
             ),

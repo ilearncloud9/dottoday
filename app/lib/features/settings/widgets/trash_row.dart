@@ -43,12 +43,12 @@ class TrashRow extends StatelessWidget {
         : <Widget>[
             _TextAction(
               label: l10n.trashDeleteNow,
-              color: t.colors.text,
+              color: t.colors.ink,
               onPressed: onDeleteNow,
             ),
             _TextAction(
               label: l10n.settingsRestore,
-              color: t.colors.accentInk,
+              color: t.colors.accentText,
               onPressed: onRestore,
             ),
           ];

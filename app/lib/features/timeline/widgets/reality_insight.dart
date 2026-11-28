@@ -35,9 +35,9 @@ class RealityInsightStrip extends ConsumerWidget {
       padding: const EdgeInsets.only(top: DotSpace.s),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(DotRadii.card),
-          border: Border.all(color: t.colors.outline),
+          border: Border.all(color: t.colors.hairline),
         ),
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -72,8 +72,8 @@ class RealityInsightStrip extends ConsumerWidget {
               // OK in a tinted pill (E-R2-23 §4).
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor: t.colors.accentTint,
-                  foregroundColor: t.colors.accentInk,
+                  backgroundColor: t.colors.tonal,
+                  foregroundColor: t.colors.accentText,
                 ),
                 onPressed: () => ref
                     .read(dismissedInsightsProvider.notifier)

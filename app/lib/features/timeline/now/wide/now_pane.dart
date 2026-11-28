@@ -157,7 +157,7 @@ class _WebHeader extends StatelessWidget {
               ),
               Text(
                 l10n.nowWindDown(n.time(n.shape.bedUtc)),
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
               ),
             ],
           ),
@@ -199,9 +199,9 @@ class _Aside extends ConsumerWidget {
       DotGlyph? glyph,
       bool outlined = false,
     }) => Material(
-      color: outlined ? t.colors.raised : t.colors.sunk,
+      color: outlined ? t.colors.card : t.colors.sunk,
       shape: StadiumBorder(
-        side: outlined ? BorderSide(color: t.colors.outline) : BorderSide.none,
+        side: outlined ? BorderSide(color: t.colors.hairline) : BorderSide.none,
       ),
       child: InkWell(
         onTap: onTap,
@@ -216,19 +216,23 @@ class _Aside extends ConsumerWidget {
               spacing: DotSpace.s,
               children: [
                 if (glyph != null)
-                  DotIcon(glyph, color: t.colors.muted, size: DotSize.rowIcon),
+                  DotIcon(
+                    glyph,
+                    color: t.colors.secondary,
+                    size: DotSize.rowIcon,
+                  ),
                 Expanded(
                   child: Text(
                     label,
                     style: t.styles.rowMeta.copyWith(
-                      color: outlined ? t.colors.muted : t.colors.text,
+                      color: outlined ? t.colors.secondary : t.colors.ink,
                     ),
                   ),
                 ),
                 if (mac && keys != null)
                   Text(
                     keys,
-                    style: t.styles.caption.copyWith(color: t.colors.muted),
+                    style: t.styles.caption.copyWith(color: t.colors.secondary),
                   ),
               ],
             ),

@@ -42,7 +42,7 @@ class FoldRow extends StatelessWidget {
     final l10n = context.l10n;
     // 700 13 in the accent ink (E-Earlier).
     final action = DotType.emphasis(
-      t.styles.threadMeta.copyWith(color: t.colors.accentInk),
+      t.styles.threadMeta.copyWith(color: t.colors.accentText),
       bold: true,
       italic: false,
     );
@@ -85,7 +85,7 @@ class FoldRow extends StatelessWidget {
                   const SizedBox(width: DotSpace.xxs),
                   DotIcon(
                     open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-                    color: t.colors.accentInk,
+                    color: t.colors.accentText,
                     size: DotSize.rowIcon,
                   ),
                 ],

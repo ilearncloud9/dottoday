@@ -72,7 +72,7 @@ class SheetTile extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     final enabled = onTap != null;
-    final ink = filled ? c.onAccent : (enabled ? c.text : c.muted);
+    final ink = filled ? c.onAccent : (enabled ? c.ink : c.secondary);
     return Semantics(
       button: true,
       enabled: enabled,
@@ -80,10 +80,10 @@ class SheetTile extends StatelessWidget {
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: filled ? c.accentFill : c.surface,
+        color: filled ? c.accentFill : c.ground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.card),
-          side: filled ? BorderSide.none : BorderSide(color: c.outline),
+          side: filled ? BorderSide.none : BorderSide(color: c.hairline),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

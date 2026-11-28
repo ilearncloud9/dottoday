@@ -70,7 +70,7 @@ class _ReviewPlaceState extends ConsumerState<ReviewPlace> {
     );
     // A Material, so the switches and rows inside show their ink.
     return Material(
-      color: DotTheme.of(context).colors.surface,
+      color: DotTheme.of(context).colors.ground,
       child: LayoutBuilder(
         builder: (context, box) {
           const pad = EdgeInsets.all(DotSpace.xl);
@@ -138,14 +138,14 @@ class _Half extends StatelessWidget {
             IconButton(
               tooltip: previous,
               onPressed: onPrevious,
-              icon: DotIcon(DotGlyphs.chevronLeft, color: c.muted),
+              icon: DotIcon(DotGlyphs.chevronLeft, color: c.secondary),
             ),
             IconButton(
               tooltip: next,
               onPressed: onNext,
               icon: DotIcon(
                 DotGlyphs.chevronRight,
-                color: onNext == null ? c.placeholder : c.muted,
+                color: onNext == null ? c.placeholder : c.secondary,
               ),
             ),
           ],

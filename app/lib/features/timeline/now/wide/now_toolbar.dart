@@ -62,7 +62,9 @@ class NowToolbar extends ConsumerWidget {
                   if (!narrow)
                     Text(
                       l10n.nowSummary(n.time(n.nowUtc), n.time(n.shape.bedUtc)),
-                      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                      style: t.styles.rowMeta.copyWith(
+                        color: t.colors.secondary,
+                      ),
                     ),
                 ],
               ),

@@ -151,13 +151,13 @@ class _PlayButton extends ConsumerWidget {
             height: DotSize.formCheck + DotSpace.xs,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: t.colors.raised,
+              color: t.colors.card,
               border: Border.all(color: t.colors.hairlineStrong),
             ),
             child: Center(
               child: DotIcon(
                 DotGlyphs.play,
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 size: DotSize.inspectorChevron,
               ),
             ),
@@ -354,7 +354,7 @@ class _Credits extends ConsumerWidget {
             child: TextButton(
               style: TextButton.styleFrom(
                 alignment: AlignmentDirectional.centerStart,
-                foregroundColor: t.colors.muted,
+                foregroundColor: t.colors.secondary,
                 textStyle: t.styles.rowMeta,
               ),
               onPressed: () => unawaited(

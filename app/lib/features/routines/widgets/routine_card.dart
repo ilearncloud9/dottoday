@@ -33,9 +33,9 @@ class RoutineCard extends StatelessWidget {
     final l10n = context.l10n;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline, width: DotSpace.hairline),
+        border: Border.all(color: t.colors.hairline, width: DotSpace.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.l),
@@ -60,7 +60,7 @@ class RoutineCard extends StatelessWidget {
                   ),
                   Text(
                     routineSummary(context, routine, use24h: use24h),
-                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                   ),
                   Wrap(
                     spacing: DotSpace.xs,

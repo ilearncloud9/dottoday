@@ -124,7 +124,7 @@ class QuietHoursRow extends StatelessWidget {
     final minute = windowMinutes(hhmm);
     return SettingsRow(
       glyph: DotGlyphs.clock,
-      tint: t.colors.muted,
+      tint: t.colors.secondary,
       title: title,
       value: clockText(context, minute, settings.use24h),
       onTap: () => unawaited(_pick(context, title, minute, window)),

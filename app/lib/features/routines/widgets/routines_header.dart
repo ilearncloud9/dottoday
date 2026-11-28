@@ -50,7 +50,7 @@ class RoutinesHeader extends StatelessWidget {
               IconButton(
                 tooltip: l10n.settingsBack,
                 onPressed: () => _back(context),
-                icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
+                icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.ink),
               ),
             const _Tile(),
             Flexible(child: title),
@@ -62,7 +62,7 @@ class RoutinesHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.routinesSubtitle,
-                  style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                  style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                 ),
               ),
               CountPill(l10n.routinesCount(count)),
@@ -76,7 +76,7 @@ class RoutinesHeader extends StatelessWidget {
                     l10n.routinesCount(count),
                   )
                 : l10n.routinesSubtitle,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
       ],
     );
@@ -108,12 +108,12 @@ class _BackToPlanning extends StatelessWidget {
             children: [
               DotIcon(
                 DotGlyphs.chevronLeft,
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 size: DotSize.rowIcon,
               ),
               Text(
                 context.l10n.settingsPlanning,
-                style: t.styles.body.copyWith(color: t.colors.accentInk),
+                style: t.styles.body.copyWith(color: t.colors.accentText),
               ),
             ],
           ),
@@ -135,13 +135,13 @@ class _Tile extends StatelessWidget {
         width: DotSize.pageTile,
         height: DotSize.pageTile,
         decoration: BoxDecoration(
-          color: c.accentTint,
+          color: c.tonal,
           borderRadius: BorderRadius.circular(DotRadii.sidebarRow),
         ),
         alignment: Alignment.center,
         child: DotIcon(
           DotGlyphs.repeat,
-          color: c.accentInk,
+          color: c.accentText,
           size: DotSize.rowIcon,
         ),
       ),
@@ -166,10 +166,10 @@ class NewRoutineCard extends StatelessWidget {
       hint: l10n.routineNewHint,
       excludeSemantics: true,
       child: Material(
-        color: c.raised,
+        color: c.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-          side: BorderSide(color: c.outline, width: DotSpace.hairline),
+          side: BorderSide(color: c.hairline, width: DotSpace.hairline),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -183,13 +183,13 @@ class NewRoutineCard extends StatelessWidget {
                   width: DotSize.pageTile,
                   height: DotSize.pageTile,
                   decoration: BoxDecoration(
-                    color: c.accentTint,
+                    color: c.tonal,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
                   child: DotIcon(
                     DotGlyphs.add,
-                    color: c.accentInk,
+                    color: c.accentText,
                     size: DotSize.rowIcon,
                   ),
                 ),
@@ -199,11 +199,11 @@ class NewRoutineCard extends StatelessWidget {
                     children: [
                       Text(
                         l10n.routineNew,
-                        style: t.styles.cardTitle.copyWith(color: c.accentInk),
+                        style: t.styles.cardTitle.copyWith(color: c.accentText),
                       ),
                       Text(
                         l10n.routineNewHint,
-                        style: t.styles.rowMeta.copyWith(color: c.muted),
+                        style: t.styles.rowMeta.copyWith(color: c.secondary),
                       ),
                     ],
                   ),

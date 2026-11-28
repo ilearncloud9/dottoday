@@ -165,8 +165,8 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
                     ? null
                     : BorderRadius.circular(DotRadii.block),
                 border: docked
-                    ? BorderDirectional(start: BorderSide(color: c.outline))
-                    : Border.all(color: c.outline),
+                    ? BorderDirectional(start: BorderSide(color: c.hairline))
+                    : Border.all(color: c.hairline),
                 boxShadow: docked ? null : DotElevation.floating,
               ),
               child: Padding(

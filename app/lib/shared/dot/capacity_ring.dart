@@ -56,7 +56,7 @@ class CapacityRing extends StatelessWidget {
         child: CustomPaint(
           painter: _RingPainter(
             share: share.clamp(0, 1),
-            track: t.colors.outline,
+            track: t.colors.hairline,
             fill: t.colors.accent,
           ),
           child: Center(
@@ -65,7 +65,7 @@ class CapacityRing extends StatelessWidget {
                 : Text(
                     quarterHours(plannedMinutes!),
                     style: t.styles.rowMeta.copyWith(
-                      color: t.colors.text,
+                      color: t.colors.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

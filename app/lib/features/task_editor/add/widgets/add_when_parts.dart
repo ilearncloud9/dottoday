@@ -59,13 +59,13 @@ class LandsOn extends StatelessWidget {
     final full = allDay
         ? l10n.addLandsOnAllDay(day)
         : l10n.alertJoin(l10n.addLandsOn(day, range), suffix);
-    final style = t.styles.body.copyWith(color: t.colors.muted);
+    final style = t.styles.body.copyWith(color: t.colors.secondary);
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
       decoration: BoxDecoration(
-        color: t.colors.surface,
+        color: t.colors.ground,
         borderRadius: BorderRadius.circular(DotRadii.card),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Row(
         spacing: DotSpace.m,
@@ -108,7 +108,7 @@ class LandsOn extends StatelessWidget {
             TextSpan(
               text: day,
               style: TextStyle(
-                color: t.colors.text,
+                color: t.colors.ink,
                 fontWeight: FontWeight.w600,
               ),
             ),

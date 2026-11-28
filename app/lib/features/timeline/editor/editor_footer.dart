@@ -52,7 +52,7 @@ class EditorFooter extends ConsumerWidget {
         IconButton.outlined(
           tooltip: l10n.editorDelete,
           onPressed: () => _leave.delete(context, ref),
-          icon: DotIcon(DotGlyphs.trash, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.trash, color: t.colors.ink),
         ),
         if (task.startUtc != null)
           OutlinedButton(

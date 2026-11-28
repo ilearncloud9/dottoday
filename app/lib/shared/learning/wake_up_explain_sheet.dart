@@ -35,7 +35,7 @@ class WakeUpExplain extends StatelessWidget {
       spacing: DotSpace.m,
       children: [
         for (final line in lines)
-          Text(line, style: t.styles.body.copyWith(color: t.colors.text)),
+          Text(line, style: t.styles.body.copyWith(color: t.colors.ink)),
       ],
     );
   }

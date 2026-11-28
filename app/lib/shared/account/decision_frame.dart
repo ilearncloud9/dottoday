@@ -31,10 +31,10 @@ class DecisionFrame extends StatelessWidget {
     final head = [
       Semantics(header: true, child: Text(title, style: t.styles.promptTitle)),
       if (body case final text?)
-        Text(text, style: t.styles.body.copyWith(color: t.colors.muted)),
+        Text(text, style: t.styles.body.copyWith(color: t.colors.secondary)),
     ];
     return Material(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: SafeArea(
         child: Center(
           child: ConstrainedBox(

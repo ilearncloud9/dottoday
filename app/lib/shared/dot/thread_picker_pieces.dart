@@ -48,7 +48,7 @@ class PickerDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final label = t.styles.rowMeta.copyWith(color: t.colors.muted);
+    final label = t.styles.rowMeta.copyWith(color: t.colors.secondary);
     // Half a label line, so a label centres on its hour.
     final half = (label.fontSize ?? DotSpace.l) / 2 * (label.height ?? 1);
     return SizedBox(
@@ -84,7 +84,7 @@ class PickerDay extends StatelessWidget {
         Row(
           spacing: DotSpace.xs,
           children: [
-            DotIcon(DotGlyphs.moon, color: t.colors.muted, size: half * 2),
+            DotIcon(DotGlyphs.moon, color: t.colors.secondary, size: half * 2),
             Text(bedText, style: label),
           ],
         ),
@@ -97,7 +97,7 @@ class PickerDay extends StatelessWidget {
       piece: const FreePiece(),
       hairline: t.colors.threadAhead,
       accent: t.colors.accent,
-      card: t.colors.raised,
+      card: t.colors.card,
     ),
   );
 
@@ -125,7 +125,7 @@ class PickerDay extends StatelessWidget {
                     ),
                     hairline: t.colors.threadAhead,
                     accent: t.colors.accent,
-                    card: t.colors.raised,
+                    card: t.colors.card,
                   ),
                 ),
               ),
@@ -169,7 +169,7 @@ class PickerWindow extends StatelessWidget {
     final rule = BorderSide(color: t.colors.accent);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.accentTint,
+        color: t.colors.tonal,
         border: Border(top: rule, bottom: rule),
       ),
       child: Stack(

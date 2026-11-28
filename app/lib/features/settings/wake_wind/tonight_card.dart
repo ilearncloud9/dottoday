@@ -39,9 +39,9 @@ class TonightCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: IntrinsicHeight(
         child: Row(

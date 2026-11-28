@@ -128,7 +128,7 @@ class _DictationTip extends StatelessWidget {
     final l10n = context.l10n;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.accentTint,
+        color: t.colors.tonal,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Padding(
@@ -169,7 +169,7 @@ class _DictationTip extends StatelessWidget {
               ),
               icon: DotIcon(
                 DotGlyphs.close,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
             ),

@@ -213,7 +213,7 @@ class _ExtendChip extends StatelessWidget {
             widthFactor: 1,
             child: DecoratedBox(
               decoration: ShapeDecoration(
-                color: t.colors.accentTint,
+                color: t.colors.tonal,
                 shape: const StadiumBorder(),
               ),
               child: ConstrainedBox(

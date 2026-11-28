@@ -105,7 +105,7 @@ class _TimeMenuState extends State<TimeMenu> {
           w.onTypeTime,
           trailing: DotIcon(
             DotGlyphs.chevronRight,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: DotSize.rowIcon,
           ),
         ),
@@ -137,12 +137,13 @@ class _TimeMenuState extends State<TimeMenu> {
     leadingIcon: Container(
       width: DotSize.macRowDot + DotSpace.xs,
       height: DotSize.macRowDot + DotSpace.xs,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: t.colors.accentTint,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: t.colors.tonal),
       child: Center(
-        child: DotIcon(glyph, color: t.colors.accentInk, size: DotSize.rowIcon),
+        child: DotIcon(
+          glyph,
+          color: t.colors.accentText,
+          size: DotSize.rowIcon,
+        ),
       ),
     ),
     trailingIcon:
@@ -151,7 +152,7 @@ class _TimeMenuState extends State<TimeMenu> {
             ? null
             : Text(
                 value,
-                style: t.styles.body.copyWith(color: t.colors.muted),
+                style: t.styles.body.copyWith(color: t.colors.secondary),
               )),
     child: Padding(
       padding: const EdgeInsetsDirectional.only(end: DotSpace.xl),

@@ -190,7 +190,7 @@ class DictationNotice extends ConsumerWidget {
     if (s.owner != field) return const SizedBox.shrink();
     final t = DotTheme.of(context);
     final l10n = context.l10n;
-    final style = t.styles.rowMeta.copyWith(color: t.colors.muted);
+    final style = t.styles.rowMeta.copyWith(color: t.colors.secondary);
     final caption = listeningCaption;
     if (s.phase == DictationPhase.listening && caption != null) {
       return _gap(

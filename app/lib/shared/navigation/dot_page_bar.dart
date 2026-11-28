@@ -30,7 +30,7 @@ PreferredSizeWidget dotPageBar(
                     excludeSemantics: true,
                     child: DotIcon(
                       DotGlyphs.chevronLeft,
-                      color: t.colors.accentInk,
+                      color: t.colors.accentText,
                     ),
                   ),
                 )
@@ -39,7 +39,7 @@ PreferredSizeWidget dotPageBar(
       trailing: actions.isEmpty
           ? null
           : Row(mainAxisSize: MainAxisSize.min, children: actions),
-      backgroundColor: t.colors.surface,
+      backgroundColor: t.colors.ground,
       border: Border(bottom: BorderSide(color: t.colors.hairline)),
       automaticallyImplyLeading: false,
     );

@@ -98,7 +98,7 @@ class AddWhatStep extends StatelessWidget {
                   : IconButton(
                       tooltip: l10n.addClear,
                       onPressed: () => onType(''),
-                      icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                      icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
                     ),
             )
           : InputDecoration.collapsed(hintText: l10n.addWhatAndWhen),

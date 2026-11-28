@@ -43,7 +43,7 @@ class _Trash extends ConsumerWidget {
     if (items.isEmpty) {
       return Text(
         l10n.settingsTrashEmpty,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       );
     }
     final push = settingsFormFits(context);
@@ -78,7 +78,7 @@ class _Trash extends ConsumerWidget {
               : OutlinedButton(
                   onPressed: () => unawaited(_empty(context, ref, items)),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: t.colors.text,
+                    foregroundColor: t.colors.ink,
                   ),
                   child: Text(l10n.trashEmptyAction),
                 ),

@@ -89,7 +89,7 @@ class DurationPreviewBar extends StatelessWidget {
                 child: Text(
                   preview.start,
                   style: t.styles.rowMeta.copyWith(
-                    color: t.colors.text,
+                    color: t.colors.ink,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -153,7 +153,7 @@ class DurationPreviewBar extends StatelessWidget {
                   : Center(
                       child: DotIcon(
                         icon.glyph!,
-                        color: t.colors.raised,
+                        color: t.colors.card,
                         size: DotSize.rowIcon - DotSpace.xs,
                       ),
                     ),

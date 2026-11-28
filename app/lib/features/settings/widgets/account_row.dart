@@ -37,10 +37,12 @@ class AccountCard extends ConsumerWidget {
       SettingsPage.account,
     );
     return Material(
-      color: cupertino ? t.colors.raised : t.colors.chip,
+      color: cupertino ? t.colors.card : t.colors.chip,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        side: cupertino ? BorderSide(color: t.colors.outline) : BorderSide.none,
+        side: cupertino
+            ? BorderSide(color: t.colors.hairline)
+            : BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias,
       child: _row(
@@ -83,7 +85,7 @@ class AccountCard extends ConsumerWidget {
             ),
             DotIcon(
               DotGlyphs.chevronRight,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.rowIcon,
             ),
           ],

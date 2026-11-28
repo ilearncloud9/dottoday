@@ -11,7 +11,7 @@ void main() {
   ]) {
     test('$name: focused buttons are ringed, resting ones are not', () {
       // ED-211: the ring is the accent, as text on the surfaces.
-      final text = theme.extension<DotTheme>()!.colors.accentInk;
+      final text = theme.extension<DotTheme>()!.colors.accentText;
       for (final style in [
         theme.filledButtonTheme.style!,
         theme.outlinedButtonTheme.style!,

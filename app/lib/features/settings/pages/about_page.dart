@@ -29,7 +29,7 @@ class AboutPage extends ConsumerWidget {
           children: [
             SettingsRow(
               glyph: DotGlyphs.info,
-              tint: t.colors.muted,
+              tint: t.colors.secondary,
               title: l10n.settingsVersion,
               value: version,
             ),
@@ -43,7 +43,7 @@ class AboutPage extends ConsumerWidget {
             ),
             SettingsRow(
               glyph: DotGlyphs.document,
-              tint: t.colors.muted,
+              tint: t.colors.secondary,
               title: l10n.aboutLicences,
               onTap: () => showLicensePage(
                 context: context,

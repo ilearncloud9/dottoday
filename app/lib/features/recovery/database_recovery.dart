@@ -183,7 +183,7 @@ class _Kept extends StatelessWidget {
     final t = DotTheme.of(context);
     const mark = '\u0000'; // l10n-ignore: a split marker, never shown
     final parts = context.l10n.recoveryKept(mark).split(mark);
-    final style = t.styles.rowMeta.copyWith(color: t.colors.text);
+    final style = t.styles.rowMeta.copyWith(color: t.colors.ink);
     return Text.rich(
       TextSpan(
         style: style,

@@ -47,7 +47,7 @@ class InboxSelectionBar extends ConsumerWidget {
       onClose: selection.clear,
       actions: [
         (
-          icon: DotIcon(DotGlyphs.week, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.week, color: t.colors.ink),
           label: l10n.inboxPlanThese,
           onTap: () => then(() => _plan(container, rows)),
         ),
@@ -60,7 +60,7 @@ class InboxSelectionBar extends ConsumerWidget {
           }()),
         ),
         (
-          icon: DotIcon(DotGlyphs.trash, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.trash, color: t.colors.ink),
           label: l10n.selectionDelete,
           onTap: () => unawaited(() async {
             if (await confirmDeleteMany(context, rows.length)) {

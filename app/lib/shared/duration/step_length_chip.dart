@@ -58,7 +58,7 @@ class StepLengthChip extends StatelessWidget {
         child: Text(
           m == null ? l10n.stepLengthAdd : formatDurationShort(l10n, m),
           style: t.styles.smallChip.copyWith(
-            color: m == null ? t.colors.muted : t.colors.text,
+            color: m == null ? t.colors.secondary : t.colors.ink,
           ),
         ),
       ),
@@ -122,7 +122,7 @@ class _LengthChoices extends StatelessWidget {
                 side: BorderSide.none,
                 shape: const StadiumBorder(),
                 labelStyle: t.styles.chip.copyWith(
-                  color: m == selected ? t.colors.onAccent : t.colors.text,
+                  color: m == selected ? t.colors.onAccent : t.colors.ink,
                 ),
               ),
           ],

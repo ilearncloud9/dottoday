@@ -74,7 +74,7 @@ class ExportPage extends StatelessWidget {
           children: [
             SettingsRow(
               glyph: DotGlyphs.undo,
-              tint: t.colors.accentInk,
+              tint: t.colors.accentText,
               title: l10n.exportImport,
               subtitle: l10n.exportImportDetail,
               onTap: () => unawaited(importBackup(context)),
@@ -222,13 +222,13 @@ class _LocalBackups extends ConsumerWidget {
         if (list.isEmpty)
           SettingsRow(
             glyph: DotGlyphs.clock,
-            tint: t.colors.muted,
+            tint: t.colors.secondary,
             title: l10n.exportBackupsNone,
           ),
         for (final b in list)
           SettingsRow(
             glyph: DotGlyphs.clock,
-            tint: t.colors.muted,
+            tint: t.colors.secondary,
             title: backupLabel(b.createdAtUtc, tzId, locale),
             subtitle: _reason(l10n, b.reason),
             onTap: () => unawaited(restoreBackup(context, b)),

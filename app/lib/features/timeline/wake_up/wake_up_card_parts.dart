@@ -46,7 +46,7 @@ class WakeUpCardHeader extends StatelessWidget {
               IconButton(
                 tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                 onPressed: close,
-                icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+                icon: DotIcon(DotGlyphs.close, color: t.colors.secondary),
               ),
           ],
         ),
@@ -163,7 +163,7 @@ class WakeUpThread extends StatelessWidget {
         x: DotSize.wakeCardTime + DotSpace.m + DotSize.wakeCardMark / 2,
         top: DotSize.wakeCardSun / 2,
         from: start,
-        to: t.colors.outline,
+        to: t.colors.hairline,
         dashed: openEnd,
       ),
       child: Column(
@@ -324,7 +324,7 @@ class WakeUpChips extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               spacing: DotSpace.xs + DotSpace.xxs,
               children: [
-                DotIcon(glyph, color: t.colors.text, size: DotSize.navIcon),
+                DotIcon(glyph, color: t.colors.ink, size: DotSize.navIcon),
                 Flexible(child: Text(text, style: t.styles.smallChip)),
               ],
             ),

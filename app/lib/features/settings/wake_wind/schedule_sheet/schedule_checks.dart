@@ -84,7 +84,7 @@ class _Note extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.tasks[TaskColor.violet];
-    final ink = violet ? c.ink : t.colors.text;
+    final ink = violet ? c.ink : t.colors.ink;
     return Semantics(
       liveRegion: true,
       child: Container(

@@ -34,10 +34,10 @@ class PromptCard extends StatelessWidget {
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(radius),
           border: Border.all(
-            color: floating ? t.colors.outline : t.colors.threadAhead,
+            color: floating ? t.colors.hairline : t.colors.threadAhead,
           ),
           boxShadow: floating ? DotElevation.floating : null,
         ),

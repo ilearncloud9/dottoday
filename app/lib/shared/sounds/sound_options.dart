@@ -120,7 +120,7 @@ class SoundMutedBanner extends StatelessWidget {
       liveRegion: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(DotRadii.card),
           border: Border.all(color: t.colors.threadAhead),
         ),
@@ -129,7 +129,7 @@ class SoundMutedBanner extends StatelessWidget {
           child: Row(
             spacing: DotSpace.s,
             children: [
-              DotIcon(DotGlyphs.sound, color: t.colors.muted),
+              DotIcon(DotGlyphs.sound, color: t.colors.secondary),
               Expanded(
                 child: Text(context.l10n.soundsMuted, style: t.styles.body),
               ),

@@ -67,7 +67,7 @@ class _FillsAddState extends State<FillsAdd> {
         end: OnbSize.addEnd,
       ),
       decoration: ShapeDecoration(
-        color: c.raised,
+        color: c.card,
         shape: StadiumBorder(
           side: BorderSide(
             color: typing ? c.accent : line,

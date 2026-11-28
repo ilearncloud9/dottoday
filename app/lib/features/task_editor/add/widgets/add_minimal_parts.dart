@@ -79,7 +79,7 @@ class AddQuickChips extends StatelessWidget {
     final chips = [
       if (when case final w?)
         ActionChip(
-          avatar: DotIcon(DotGlyphs.clock, color: t.colors.accentInk),
+          avatar: DotIcon(DotGlyphs.clock, color: t.colors.accentText),
           label: Text(w),
           onPressed: onWhen,
         ),
@@ -134,7 +134,7 @@ class AddLandsAt extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final bold = t.styles.rowMeta.copyWith(
-      color: t.colors.text,
+      color: t.colors.ink,
       fontWeight: FontWeight.w700,
     );
     return Column(
@@ -169,7 +169,7 @@ class AddManyHint extends StatelessWidget {
       children: [
         DotIcon(
           DotGlyphs.list,
-          color: t.colors.accentInk,
+          color: t.colors.accentText,
           size: DotSize.rowIcon,
         ),
         Expanded(

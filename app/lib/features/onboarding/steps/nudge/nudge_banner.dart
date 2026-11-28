@@ -35,12 +35,12 @@ class NudgeBanner extends StatelessWidget {
     final radius = BorderRadius.circular(
       android ? OnbSize.bannerRadiusAndroid : OnbSize.bannerRadius,
     );
-    final glass = c.raised.withValues(
+    final glass = c.card.withValues(
       alpha: c.isDark ? OnbSize.glassAlphaDark : OnbSize.glassAlphaLight,
     );
     final solid = solidChrome(context);
     final body = ColoredBox(
-      color: solid ? c.raised : glass,
+      color: solid ? c.card : glass,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: OnbSize.bannerPadV,

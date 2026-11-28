@@ -111,7 +111,7 @@ class _RoutineAddTabState extends ConsumerState<RoutineAddTab> {
         else
           Text(
             l10n.routineTabHint,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         const SizedBox(height: DotSpace.s),
         Align(
@@ -146,10 +146,10 @@ class _RoutineRow extends StatelessWidget {
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-          side: BorderSide(color: t.colors.outline),
+          side: BorderSide(color: t.colors.hairline),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -190,7 +190,7 @@ class _RoutineRow extends StatelessWidget {
                 ),
                 DotIcon(
                   DotGlyphs.chevronRight,
-                  color: t.colors.muted,
+                  color: t.colors.secondary,
                   size: DotSize.sidebarGlyph,
                 ),
               ],

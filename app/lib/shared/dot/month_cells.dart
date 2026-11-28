@@ -30,7 +30,7 @@ class CompactMonthCell extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     final date = t.styles.monthDate.copyWith(
-      color: selected ? c.onAccent : (day.isPast ? c.muted : c.text),
+      color: selected ? c.onAccent : (day.isPast ? c.secondary : c.ink),
       fontWeight: selected ? FontWeight.w700 : null,
     );
     return Semantics(
@@ -44,7 +44,7 @@ class CompactMonthCell extends StatelessWidget {
         autofocus: autofocus,
         child: Container(
           constraints: const BoxConstraints(minHeight: DotTouch.android),
-          color: day.tinted ? c.accentTint : null,
+          color: day.tinted ? c.tonal : null,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -175,7 +175,7 @@ class ExpandedMonthCell extends StatelessWidget {
       onTap: onTap,
       excludeSemantics: true,
       child: Material(
-        color: c.raised,
+        color: c.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.monthCard),
           side: day.isToday
@@ -206,7 +206,7 @@ class ExpandedMonthCell extends StatelessWidget {
         Text(
           day.date,
           style: t.styles.monthCellDate.copyWith(
-            color: day.isToday ? c.accentInk : null,
+            color: day.isToday ? c.accentText : null,
           ),
         ),
         for (final item in day.items.take(_shown)) _Item(item: item),
@@ -253,9 +253,9 @@ class _Item extends StatelessWidget {
     return Text(
       text,
       style: t.styles.monthItem.copyWith(
-        color: item.done ? c.muted : null,
+        color: item.done ? c.secondary : null,
         decoration: item.done ? TextDecoration.lineThrough : null,
-        decorationColor: c.muted,
+        decorationColor: c.secondary,
       ),
     );
   }

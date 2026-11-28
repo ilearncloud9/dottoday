@@ -61,7 +61,7 @@ PopupMenuEntry<T> _item<T>(
     final g? => Row(
       spacing: DotSpace.m,
       children: [
-        DotIcon(g, color: t.colors.text),
+        DotIcon(g, color: t.colors.ink),
         Flexible(child: Text(e.label)),
       ],
     ),
@@ -74,7 +74,7 @@ PopupMenuEntry<T> _item<T>(
       child: Row(
         children: [
           Expanded(child: label),
-          DotIcon(DotGlyphs.chevronRight, color: t.colors.muted),
+          DotIcon(DotGlyphs.chevronRight, color: t.colors.secondary),
         ],
       ),
     );
@@ -196,7 +196,7 @@ class _ChipRowState<T> extends State<_ChipRow<T>> {
           Text(
             e.label,
             style: t.styles.body.copyWith(
-              color: e.enabled ? t.colors.text : t.colors.muted,
+              color: e.enabled ? t.colors.ink : t.colors.secondary,
             ),
           ),
           chips,

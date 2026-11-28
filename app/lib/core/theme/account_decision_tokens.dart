@@ -99,7 +99,7 @@ abstract final class AccountDecisionType {
 
   /// Secondary: 15/22 on iPhone and iPad, 14/20 Android, 14/21 Mac/web.
   static TextStyle body(DotType t, DotColors c, AccountDialogLook look) {
-    final base = t.body.copyWith(color: c.muted);
+    final base = t.body.copyWith(color: c.secondary);
     return switch (look) {
       AccountDialogLook.iphone => base,
       AccountDialogLook.android => base.copyWith(fontSize: 14, height: 20 / 14),
@@ -182,7 +182,7 @@ abstract final class AccountSyncType {
 
   /// "Synced" / "3 changes waiting to sync": 14/20 secondary.
   static TextStyle status(DotType t, DotColors c) =>
-      t.body.copyWith(fontSize: 14, height: 20 / 14, color: c.muted);
+      t.body.copyWith(fontSize: 14, height: 20 / 14, color: c.secondary);
 
   /// The row's title: 16/22 700 (Android 16/24 600, Mac/web 14/20 700).
   static TextStyle rowTitle(DotType t, AccountDialogLook look) =>
@@ -210,6 +210,6 @@ abstract final class AccountSyncType {
   /// The row's line: 14/20 secondary (Mac/web 13/19).
   static TextStyle rowLine(DotType t, DotColors c, AccountDialogLook look) =>
       look == AccountDialogLook.desktop
-      ? t.body.copyWith(fontSize: 13, height: 19 / 13, color: c.muted)
+      ? t.body.copyWith(fontSize: 13, height: 19 / 13, color: c.secondary)
       : status(t, c);
 }

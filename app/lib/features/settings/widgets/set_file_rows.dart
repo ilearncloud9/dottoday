@@ -50,12 +50,14 @@ class _DownloadListState extends ConsumerState<DownloadList> {
                     children: [
                       DotIcon(
                         DotGlyphs.check,
-                        color: t.colors.muted,
+                        color: t.colors.secondary,
                         size: DotSize.rowIcon,
                       ),
                       Text(
                         l10n.exportDownloaded,
-                        style: t.styles.body.copyWith(color: t.colors.muted),
+                        style: t.styles.body.copyWith(
+                          color: t.colors.secondary,
+                        ),
                       ),
                     ],
                   )
@@ -67,7 +69,7 @@ class _DownloadListState extends ConsumerState<DownloadList> {
         const SizedBox(height: DotSpace.xs),
         Text(
           l10n.exportDownloadNote,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
       ],
     );
@@ -114,7 +116,7 @@ class _CheckFilesRowState extends ConsumerState<CheckFilesRow> {
         SettingsRow(
           flush: true,
           glyph: DotGlyphs.check,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.exportCheckFiles,
           subtitle: l10n.exportCheckFilesDetail,
           onTap: _checking ? null : () => unawaited(_pick()),
@@ -202,7 +204,7 @@ class SetNote extends StatelessWidget {
               child: Text(
                 text,
                 style: t.styles.body.copyWith(
-                  color: kind == SetNoteKind.plain ? t.colors.muted : null,
+                  color: kind == SetNoteKind.plain ? t.colors.secondary : null,
                 ),
               ),
             ),

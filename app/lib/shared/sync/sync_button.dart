@@ -68,7 +68,7 @@ class SyncButton extends StatelessWidget {
                     value: _syncingArc,
                     strokeWidth: DotSize.syncDotRing,
                     color: c.accent,
-                    backgroundColor: c.outline,
+                    backgroundColor: c.hairline,
                   ),
                 ),
               DotIcon(
@@ -86,7 +86,7 @@ class SyncButton extends StatelessWidget {
                 PositionedDirectional(
                   top: DotTouch.android / 2,
                   start: DotTouch.android / 2,
-                  child: _Dot(color: c.accent, ring: c.surface),
+                  child: _Dot(color: c.accent, ring: c.ground),
                 ),
               if (conflicts > 0)
                 // Down and out from the glyph's corner, as E-Phones draws it.
@@ -150,10 +150,7 @@ class _Badge extends StatelessWidget {
         color: t.colors.ink,
         borderRadius: BorderRadius.circular(DotSize.badge / 2),
       ),
-      child: Text(
-        text,
-        style: t.styles.badge.copyWith(color: t.colors.surface),
-      ),
+      child: Text(text, style: t.styles.badge.copyWith(color: t.colors.ground)),
     );
   }
 }

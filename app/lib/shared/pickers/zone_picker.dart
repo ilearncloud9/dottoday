@@ -59,7 +59,7 @@ class _ZonePickerState extends State<_ZonePicker> {
               heightFactor: 1,
               child: DotIcon(
                 DotGlyphs.search,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
             ),
@@ -73,7 +73,7 @@ class _ZonePickerState extends State<_ZonePicker> {
             subtitle: Text(id, style: t.styles.rowMeta),
             selected: id == widget.current,
             trailing: id == widget.current
-                ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
+                ? DotIcon(DotGlyphs.check, color: t.colors.accentText)
                 : null,
             onTap: () => Navigator.of(context).pop(id),
           ),

@@ -67,7 +67,7 @@ class InspectorField extends ConsumerWidget {
       side: BorderSide(color: c.hairlineStrong),
     );
     return Material(
-      color: c.raised,
+      color: c.card,
       shape: shape,
       child: InkWell(
         onTap: onTap,

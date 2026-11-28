@@ -61,18 +61,18 @@ class _SearchFieldState extends State<SearchField> {
     final l10n = context.l10n;
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-      borderSide: BorderSide(color: t.colors.outline),
+      borderSide: BorderSide(color: t.colors.hairline),
     );
     return InputDecoration(
       hintText: l10n.searchFieldLabel,
       filled: true,
-      fillColor: t.colors.raised,
+      fillColor: t.colors.card,
       prefixIcon: Center(
         widthFactor: 1,
         heightFactor: 1,
         child: DotIcon(
           DotGlyphs.search,
-          color: t.colors.accentInk,
+          color: t.colors.accentText,
           size: DotSize.rowIcon + DotSpace.xxs,
         ),
       ),
@@ -86,7 +86,7 @@ class _SearchFieldState extends State<SearchField> {
               },
               icon: DotIcon(
                 DotGlyphs.close,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
             ),

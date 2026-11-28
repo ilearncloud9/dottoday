@@ -44,12 +44,12 @@ class SelectionBar extends ConsumerWidget {
       onClose: ref.read(taskSelectionProvider.notifier).clear,
       actions: [
         (
-          icon: DotIcon(DotGlyphs.arrowRight, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.arrowRight, color: t.colors.ink),
           label: l10n.selectionMove,
           onTap: commands.move,
         ),
         (
-          icon: DotIcon(DotGlyphs.duplicate, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.duplicate, color: t.colors.ink),
           label: l10n.selectionDuplicate,
           onTap: commands.duplicate,
         ),
@@ -61,14 +61,14 @@ class SelectionBar extends ConsumerWidget {
         (
           icon: DotIcon(
             DotGlyphs.repeat,
-            color: picked.spansDays ? t.colors.tertiary : t.colors.text,
+            color: picked.spansDays ? t.colors.tertiary : t.colors.ink,
           ),
           label: l10n.routineSaveSelection,
           // A routine is one day's order and gaps.
           onTap: picked.spansDays ? null : commands.saveAsRoutine,
         ),
         (
-          icon: DotIcon(DotGlyphs.trash, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.trash, color: t.colors.ink),
           label: l10n.selectionDelete,
           onTap: commands.delete,
         ),

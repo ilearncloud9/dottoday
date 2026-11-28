@@ -155,7 +155,10 @@ class _Title extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(header: true, child: Text(title, style: t.styles.pageTitle)),
-        Text(subtitle, style: t.styles.body.copyWith(color: t.colors.muted)),
+        Text(
+          subtitle,
+          style: t.styles.body.copyWith(color: t.colors.secondary),
+        ),
       ],
     );
   }

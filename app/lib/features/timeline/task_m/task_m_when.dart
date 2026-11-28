@@ -90,12 +90,12 @@ class TaskMWhen extends ConsumerWidget {
               onPressed: o.durationMin <= _step
                   ? null
                   : () => unawaited(lengthTo(o.durationMin - _step)),
-              icon: DotIcon(DotGlyphs.minus, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.minus, color: t.colors.ink),
             ),
             IconButton(
               tooltip: l10n.taskMLonger,
               onPressed: () => unawaited(lengthTo(o.durationMin + _step)),
-              icon: DotIcon(DotGlyphs.add, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.add, color: t.colors.ink),
             ),
           ],
         ),
@@ -162,10 +162,10 @@ class _Box extends StatelessWidget {
     // One stop for a screen reader: "Starts, 9:00 AM", a button.
     return MergeSemantics(
       child: Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.sheetCardAndroid),
-          side: BorderSide(color: t.colors.outline),
+          side: BorderSide(color: t.colors.hairline),
         ),
         child: InkWell(
           onTap: onTap,
@@ -205,8 +205,8 @@ class _Pill extends StatelessWidget {
     return Semantics(
       label: label,
       child: Material(
-        color: t.colors.raised,
-        shape: StadiumBorder(side: BorderSide(color: t.colors.outline)),
+        color: t.colors.card,
+        shape: StadiumBorder(side: BorderSide(color: t.colors.hairline)),
         child: InkWell(
           onTap: onTap,
           customBorder: const StadiumBorder(),

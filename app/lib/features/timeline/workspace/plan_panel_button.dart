@@ -42,7 +42,7 @@ class PlanPanelButton extends ConsumerWidget {
       child: Tooltip(
         message: label,
         child: Material(
-          color: pressed ? t.colors.accentTint : Colors.transparent,
+          color: pressed ? t.colors.tonal : Colors.transparent,
           shape: const StadiumBorder(),
           child: InkWell(
             onTap: tap,

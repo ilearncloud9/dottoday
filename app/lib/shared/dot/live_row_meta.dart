@@ -43,7 +43,7 @@ class NowMeta extends StatelessWidget {
             text: now,
             // Manrope is variable: bold needs the wght axis too.
             style: DotType.emphasis(
-              TextStyle(color: DotTheme.of(context).colors.accentInk),
+              TextStyle(color: DotTheme.of(context).colors.accentText),
               bold: true,
               italic: false,
             ),

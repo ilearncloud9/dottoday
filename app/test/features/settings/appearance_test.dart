@@ -25,8 +25,8 @@ void main() {
     for (final b in Brightness.values) {
       final colors = DotTheme.custom(b, sage).extension<DotTheme>()!.colors;
       expect(colors.accent, sage, reason: '$b: the stored colour, unchanged');
-      for (final ground in [colors.surface, colors.raised]) {
-        expect(contrastRatio(colors.accentInk, ground), greaterThan(4.5));
+      for (final ground in [colors.ground, colors.card]) {
+        expect(contrastRatio(colors.accentText, ground), greaterThan(4.5));
       }
     }
   });

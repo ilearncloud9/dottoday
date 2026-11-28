@@ -67,7 +67,7 @@ class ProposalEditRow extends StatelessWidget {
                   Text(
                     dot.title,
                     style: t.styles.rowTitle.copyWith(
-                      color: leaves ? t.colors.muted : null,
+                      color: leaves ? t.colors.secondary : null,
                     ),
                   ),
                   if (label)
@@ -153,7 +153,7 @@ class _TimeLine extends StatelessWidget {
     final t = DotTheme.of(context);
     final style = t.styles.rowMeta;
     final struck = style.copyWith(
-      color: t.colors.muted,
+      color: t.colors.secondary,
       decoration: TextDecoration.lineThrough,
     );
     final b = edit.before;
@@ -176,7 +176,7 @@ class _TimeLine extends StatelessWidget {
           alignment: PlaceholderAlignment.middle,
           child: DotIcon(
             DotGlyphs.lock,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: DotSize.lockGlyph,
           ),
         ),
@@ -215,7 +215,7 @@ class ProposalWindDownRow extends StatelessWidget {
           child: moon
               ? DotIcon(
                   DotGlyphs.moon,
-                  color: t.colors.muted,
+                  color: t.colors.secondary,
                   size: DotSize.rowIcon,
                 )
               : null,
@@ -224,7 +224,7 @@ class ProposalWindDownRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ),
       ],

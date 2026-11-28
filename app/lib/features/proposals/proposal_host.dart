@@ -97,7 +97,7 @@ class _Panel extends ConsumerWidget {
     // it (ED-167, ED-168).
     return SidePanelFrame(
       panel: Material(
-        color: c.raised,
+        color: c.card,
         child: CallbackShortcuts(
           bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
           // Focus starts in the panel and Tab stays there.

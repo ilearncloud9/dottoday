@@ -76,7 +76,7 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
         if (sentence.isNotEmpty)
           DecoratedBox(
             decoration: BoxDecoration(
-              color: t.colors.accentTint,
+              color: t.colors.tonal,
               borderRadius: BorderRadius.circular(WeekSize.sentenceRadius),
             ),
             child: Padding(
@@ -120,9 +120,9 @@ class _WeekReviewBodyState extends ConsumerState<WeekReviewBody> {
     final zone = ref.watch(timelineDataProvider(review.days.first.date)).value;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(WeekSize.cardRadius),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(WeekSize.cardPad),

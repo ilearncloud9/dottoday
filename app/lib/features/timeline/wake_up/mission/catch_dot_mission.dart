@@ -377,7 +377,7 @@ class CatchDotHint extends StatelessWidget {
             ),
             Text(
               l10n.missionCatchCount(n, catchTaps),
-              style: t.styles.gridMetaTouch.copyWith(color: t.colors.text),
+              style: t.styles.gridMetaTouch.copyWith(color: t.colors.ink),
             ),
           ],
         ),

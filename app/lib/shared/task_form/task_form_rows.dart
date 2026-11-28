@@ -45,16 +45,16 @@ class TaskFormCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        side: BorderSide(color: t.colors.outline),
+        side: BorderSide(color: t.colors.hairline),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (final (i, row) in rows.indexed) ...[
-            if (i > 0) Divider(height: 1, color: t.colors.outline),
+            if (i > 0) Divider(height: 1, color: t.colors.hairline),
             _Row(row: row),
           ],
         ],
@@ -81,11 +81,11 @@ class _Row extends StatelessWidget {
         ? null
         : Text(
             row.trailing!,
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: t.styles.body.copyWith(color: t.colors.secondary),
           );
     final chevron = DotIcon(
       DotGlyphs.chevronRight,
-      color: t.colors.muted,
+      color: t.colors.secondary,
       size: DotSize.sidebarGlyph,
     );
     final main = Semantics(
@@ -207,7 +207,7 @@ class _Pill extends StatelessWidget {
     final t = DotTheme.of(context);
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(DotRadii.pill),
-      side: BorderSide(color: t.colors.outline),
+      side: BorderSide(color: t.colors.hairline),
     );
     void tap() => pill.onTap(globalRectOf(context));
     return Semantics(
@@ -216,7 +216,7 @@ class _Pill extends StatelessWidget {
       excludeSemantics: true,
       onTap: tap,
       child: Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(

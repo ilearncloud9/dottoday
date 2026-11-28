@@ -85,7 +85,7 @@ Widget addSheet(
       final c = DotTheme.of(context).colors;
       return Container(
         decoration: BoxDecoration(
-          color: c.raised,
+          color: c.card,
           borderRadius: const BorderRadius.vertical(
             top: Radius.circular(DotRadii.sheet),
           ),

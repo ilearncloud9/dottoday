@@ -100,7 +100,7 @@ class _Face extends StatelessWidget {
     final dense = _dense(context);
     final picked = row.selected == true;
     return Material(
-      color: c.raised,
+      color: c.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
         side: BorderSide(
@@ -170,8 +170,8 @@ class _Trailing extends StatelessWidget {
     return FilledButton.tonal(
       onPressed: row.onPlace,
       style: FilledButton.styleFrom(
-        backgroundColor: c.accentTint,
-        foregroundColor: c.accentInk,
+        backgroundColor: c.tonal,
+        foregroundColor: c.accentText,
         textStyle: t.styles.button,
         padding: const EdgeInsets.symmetric(horizontal: DotSpace.m),
         minimumSize: Size(
@@ -203,7 +203,7 @@ class _PickCheck extends StatelessWidget {
         shape: BoxShape.circle,
         color: picked ? c.accent : null,
         border: Border.all(
-          color: picked ? c.accent : c.outline,
+          color: picked ? c.accent : c.hairline,
           width: DotSize.smallDotOutline,
         ),
       ),
@@ -289,7 +289,7 @@ class _Texts extends StatelessWidget {
             Text(
               fit,
               style: meta.copyWith(
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 fontWeight: FontWeight.w600,
               ),
             ),

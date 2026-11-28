@@ -45,9 +45,9 @@ class _FeedbackState extends ConsumerState<_Feedback> {
         // Add diagnostics in its own card, off until added (owner, ED-497).
         DecoratedBox(
           decoration: BoxDecoration(
-            color: t.colors.raised,
+            color: t.colors.card,
             borderRadius: BorderRadius.circular(FeedbackSize.cardRadius),
-            border: Border.all(color: t.colors.outline),
+            border: Border.all(color: t.colors.hairline),
           ),
           child: MergeSemantics(
             child: InkWell(

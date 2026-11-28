@@ -171,7 +171,7 @@ class _Header extends StatelessWidget {
             IconButton(
               tooltip: l10n.editorCancel,
               onPressed: onCancel,
-              icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
             ),
             // Android titles the mode; the iPhone's tabs name it (ED-153).
             Expanded(

@@ -87,7 +87,7 @@ class WhenFields extends ConsumerWidget {
           onPressed: () => unawaited(_pickDay(context, ref, day, today)),
           icon: DotIcon(
             DotGlyphs.calendar,
-            color: t.colors.text,
+            color: t.colors.ink,
             size: DotSize.rowIcon,
           ),
           label: Text(DateFormat.MMMEd(locale).format(day)),
@@ -121,7 +121,7 @@ class WhenFields extends ConsumerWidget {
             context.l10n.editorEndsAt(
               timeOfUtc(context, zone, endUtc, use24h: use24h),
             ),
-            style: t.styles.body.copyWith(color: t.colors.muted),
+            style: t.styles.body.copyWith(color: t.colors.secondary),
           ),
         ],
       );
@@ -212,11 +212,11 @@ class RepeatAlertRows extends StatelessWidget {
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
       minTileHeight: DotTouch.android,
-      leading: DotIcon(glyph, color: t.colors.muted),
+      leading: DotIcon(glyph, color: t.colors.secondary),
       title: Text(label, style: t.styles.body),
       trailing: Text(
         value,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       ),
     );
     return Column(

@@ -116,7 +116,7 @@ class _LookCustomState extends ConsumerState<LookCustom> {
               IconButton.outlined(
                 tooltip: l10n.lookEyedropper,
                 onPressed: () => unawaited(_sample()),
-                icon: DotIcon(DotGlyphs.eyedropper, color: t.colors.text),
+                icon: DotIcon(DotGlyphs.eyedropper, color: t.colors.ink),
               ),
           ],
         ),

@@ -186,7 +186,7 @@ class _YourDayStepState extends ConsumerState<YourDayStep> {
           children: [
             TextSpan(
               text: l10n.settingsAwake(_hours(l10n, awake)),
-              style: TextStyle(color: t.colors.text),
+              style: TextStyle(color: t.colors.ink),
             ),
             const TextSpan(text: ' · '), // l10n-ignore: a separator
             TextSpan(

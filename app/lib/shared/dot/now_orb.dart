@@ -49,11 +49,11 @@ class NowOrb extends StatelessWidget {
       fontWeight: FontWeight.w800,
       height: 1,
       letterSpacing: -0.05 * size * 0.36,
-      color: c.text,
+      color: c.ink,
     );
     final caption = t.styles.rowMeta.copyWith(
       fontWeight: FontWeight.w600,
-      color: c.muted,
+      color: c.secondary,
     );
     final glyph = icon?.glyph;
     return ExcludeSemantics(
@@ -62,13 +62,13 @@ class NowOrb extends StatelessWidget {
         child: CustomPaint(
           painter: _OrbPainter(
             k: k,
-            disc: c.raised,
+            disc: c.card,
             hairline: c.hairline,
             track: swatch?.color.withValues(alpha: TaskAlpha.track) ?? c.sunk,
             arc: swatch?.ring,
             centre:
                 swatch?.color.withValues(alpha: TaskAlpha.orbCentre) ?? c.sunk,
-            shadow: (swatch?.color ?? c.text).withValues(
+            shadow: (swatch?.color ?? c.ink).withValues(
               alpha: TaskAlpha.orbShadow,
             ),
             progress: progress.clamp(0, 1),

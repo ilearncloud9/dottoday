@@ -46,7 +46,7 @@ class LandingStrip extends StatelessWidget {
                       landingX: x,
                       landing: t.tasks[color].ring,
                       line: t.colors.threadAhead,
-                      ground: t.colors.raised,
+                      ground: t.colors.card,
                     ),
                   ),
                 ),
@@ -59,7 +59,7 @@ class LandingStrip extends StatelessWidget {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     style: t.styles.threadMeta.copyWith(
-                      color: t.colors.text,
+                      color: t.colors.ink,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

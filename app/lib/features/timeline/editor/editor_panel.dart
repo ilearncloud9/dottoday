@@ -110,7 +110,7 @@ class _TaskEditorPanelState extends ConsumerState<TaskEditorPanel> {
     // Tablets: option D's editor, all of it, closing the panel (ED-273).
     if (!minimal && touchApp(context)) {
       return Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         child: CallbackShortcuts(
           bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
           child: FocusScope(
@@ -127,7 +127,7 @@ class _TaskEditorPanelState extends ConsumerState<TaskEditorPanel> {
       );
     }
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       child: CallbackShortcuts(
         bindings: {const SingleActivator(LogicalKeyboardKey.escape): close},
         // A scope keeps Tab inside the panel (the focus trap).
@@ -160,7 +160,7 @@ class _TaskEditorPanelState extends ConsumerState<TaskEditorPanel> {
                     IconButton(
                       tooltip: l10n.editorClose,
                       onPressed: close,
-                      icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                      icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
                     ),
                   ],
                 ),

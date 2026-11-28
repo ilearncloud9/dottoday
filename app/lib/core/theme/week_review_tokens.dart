@@ -68,14 +68,10 @@ abstract final class WeekSize {
   static const double shareLetterGap = 4;
   static const double shareNameTop = 14;
 
-  /// The titles switch row 44 tall, 10 above; Share image 50 tall, 6
-  /// above, an 18 glyph 8 before its words.
+  /// The titles switch row 44 tall; Share image 50 tall, with an 18 glyph.
   static const double switchRow = 44;
-  static const double switchTop = 10;
   static const double shareButton = 50;
-  static const double shareButtonTop = 6;
   static const double shareGlyph = 18;
-  static const double shareGlyphGap = 8;
 }
 
 /// This week's type: the board's system face (Manrope for the share
@@ -90,11 +86,11 @@ abstract final class WeekType {
 
   /// "November 2 – November 8": 500 14 secondary.
   static TextStyle range(DotType t, DotColors c) =>
-      _sys(t, 14, 20, 500).copyWith(color: c.muted);
+      _sys(t, 14, 20, 500).copyWith(color: c.secondary);
 
   /// A day's letter (600 12 secondary) and count (600 12 ink 2).
   static TextStyle letter(DotType t, DotColors c) =>
-      _sys(t, 12, 16, 600).copyWith(color: c.muted);
+      _sys(t, 12, 16, 600).copyWith(color: c.secondary);
   static TextStyle count(DotType t, DotColors c) =>
       _sys(t, 12, 16, 600).copyWith(color: c.ink2);
 
@@ -102,27 +98,27 @@ abstract final class WeekType {
   /// 600 12.5, all secondary but the open title.
   static TextStyle task(DotType t, DotColors c, {required bool done}) =>
       _sys(t, 14, 20, 600).copyWith(
-        color: done ? c.muted : c.text,
+        color: done ? c.secondary : c.ink,
         decoration: done ? TextDecoration.lineThrough : null,
-        decorationColor: c.muted,
+        decorationColor: c.secondary,
       );
   static TextStyle time(DotType t, DotColors c) =>
-      _sys(t, 12, 16, 500).copyWith(color: c.muted);
+      _sys(t, 12, 16, 500).copyWith(color: c.secondary);
   static TextStyle foot(DotType t, DotColors c) =>
-      _sys(t, 12.5, 18, 600).copyWith(color: c.muted);
+      _sys(t, 12.5, 18, 600).copyWith(color: c.secondary);
 
   /// A chip: 700 12 in ink.
   static TextStyle chip(DotType t, DotColors c) =>
-      _sys(t, 12, 16, 700).copyWith(color: c.text);
+      _sys(t, 12, 16, 700).copyWith(color: c.ink);
 
   /// The sentence: 600 15/21 in the accent's ink.
   static TextStyle sentence(DotType t, DotColors c) =>
-      _sys(t, 15, 21, 600).copyWith(color: c.accentInk);
+      _sys(t, 15, 21, 600).copyWith(color: c.accentText);
 
   /// The carry question: 600 15; its buttons 700 14 in the app's button
   /// face (as every E button).
   static TextStyle carry(DotType t, DotColors c) =>
-      _sys(t, 15, 21, 600).copyWith(color: c.text);
+      _sys(t, 15, 21, 600).copyWith(color: c.ink);
   static TextStyle carryButton(DotType t) => t.button.copyWith(fontSize: 14);
 
   /// The share image: "NOV 2 – NOV 8" Manrope 800 11 tracked 1, the
@@ -133,14 +129,14 @@ abstract final class WeekType {
     fontWeight: FontWeight.w800,
     fontVariations: const [FontVariation.weight(800)],
     letterSpacing: 1,
-    color: c.muted,
+    color: c.secondary,
   );
   static TextStyle shareLetter(DotType t, DotColors c) => t.rowMeta.copyWith(
     fontSize: 11,
     height: 14 / 11,
     fontWeight: FontWeight.w700,
     fontVariations: const [FontVariation.weight(700)],
-    color: c.muted,
+    color: c.secondary,
   );
   static TextStyle shareName(DotType t, DotColors c) => t.rowMeta.copyWith(
     fontSize: 14,
@@ -150,15 +146,15 @@ abstract final class WeekType {
     color: c.accent,
   );
   static TextStyle shareTitles(DotType t, DotColors c) =>
-      t.rowMeta.copyWith(color: c.text);
+      t.rowMeta.copyWith(color: c.ink);
 
   /// "Show task titles" 500 16; Share image 700 16; the closing line 500
   /// 13 secondary.
   static TextStyle switchLabel(DotType t, DotColors c) =>
-      _sys(t, 16, 22, 500).copyWith(color: c.text);
+      _sys(t, 16, 22, 500).copyWith(color: c.ink);
   static TextStyle shareButton(DotType t) => t.button.copyWith(fontSize: 16);
   static TextStyle closing(DotType t, DotColors c) =>
-      _sys(t, 13, 18, 500).copyWith(color: c.muted);
+      _sys(t, 13, 18, 500).copyWith(color: c.secondary);
 }
 
 /// This week's colours.

@@ -107,7 +107,7 @@ class _EditorNotesState extends ConsumerState<EditorNotes> {
           ),
           child: Text(
             context.l10n.editorNotesFormat,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ),
         DictationNotice(field: _notes),

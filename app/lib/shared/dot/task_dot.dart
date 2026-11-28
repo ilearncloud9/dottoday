@@ -146,7 +146,7 @@ class TaskDot extends StatelessWidget {
     if (calendar) {
       // A live event keeps the recipe; its progress runs in the ring grey.
       return _Look(
-        fill: c.surface,
+        fill: c.ground,
         ring: c.tertiary,
         glyph: c.calendarIcon,
         track: c.tertiary.withValues(alpha: c.isDark ? 0.25 : 0.2),
@@ -159,18 +159,18 @@ class TaskDot extends StatelessWidget {
         glyph: swatch.check,
       ),
       DotState.live => _Look(
-        fill: c.raised,
+        fill: c.card,
         ring: swatch.ring,
         glyph: swatch.ring,
         track: swatch.color.withValues(alpha: c.isDark ? 0.25 : 0.2),
       ),
       DotState.skipped => _Look(
-        fill: c.raised,
+        fill: c.card,
         ring: swatch.ring.withValues(alpha: TaskAlpha.faded),
         glyph: swatch.ring.withValues(alpha: TaskAlpha.faded),
       ),
       DotState.upcoming || DotState.missed => _Look(
-        fill: c.raised,
+        fill: c.card,
         ring: swatch.ring,
         glyph: swatch.ring,
       ),

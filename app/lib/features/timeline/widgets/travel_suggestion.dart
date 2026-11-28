@@ -92,7 +92,7 @@ class _Card extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DotSpace.l),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(DotRadii.card),
           border: Border.all(color: t.colors.threadAhead),
         ),
@@ -109,7 +109,7 @@ class _Card extends StatelessWidget {
                   children: [
                     DotIcon(
                       TaskIcon.car.glyph ?? DotGlyphs.clock,
-                      color: t.colors.muted,
+                      color: t.colors.secondary,
                       size: DotSize.rowIcon,
                     ),
                     Semantics(

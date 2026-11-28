@@ -135,7 +135,7 @@ class _InBrowser extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: DotSpace.s,
       children: [
-        Divider(height: 1, thickness: 1, color: t.colors.outline),
+        Divider(height: 1, thickness: 1, color: t.colors.hairline),
         Semantics(
           header: true,
           child: Text(l10n.webInBrowser, style: t.styles.rowMeta),
@@ -181,7 +181,7 @@ class WebLine extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: DotSpace.s,
         children: [
-          DotIcon(glyph, color: t.colors.text, size: DotSize.rowIcon),
+          DotIcon(glyph, color: t.colors.ink, size: DotSize.rowIcon),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +195,7 @@ class WebLine extends StatelessWidget {
                   text,
                   // A line with no title reads in the text colour (Q2a).
                   style: heading == null
-                      ? t.styles.rowMeta.copyWith(color: t.colors.text)
+                      ? t.styles.rowMeta.copyWith(color: t.colors.ink)
                       : t.styles.rowMeta,
                 ),
               ],
@@ -230,7 +230,7 @@ class WebCaution extends StatelessWidget {
             // A breath of amber over the panel (Q2b light and dark).
             color: Color.alphaBlend(
               amber.color.withValues(alpha: DotOpacity.cautionWash),
-              t.colors.raised,
+              t.colors.card,
             ),
             border: BorderDirectional(
               start: BorderSide(color: amber.color, width: DotSize.cautionRule),
@@ -244,7 +244,7 @@ class WebCaution extends StatelessWidget {
               children: [
                 DotIcon(
                   DotGlyphs.info,
-                  color: t.colors.text,
+                  color: t.colors.ink,
                   size: DotSize.rowIcon,
                 ),
                 Expanded(

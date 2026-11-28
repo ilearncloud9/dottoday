@@ -64,7 +64,7 @@ class _ImportSetSheetState extends ConsumerState<ImportSetSheet> {
         SettingsRow(
           flush: true,
           glyph: DotGlyphs.add,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.importAddFiles,
           onTap: _picking ? null : () => unawaited(_add()),
         ),

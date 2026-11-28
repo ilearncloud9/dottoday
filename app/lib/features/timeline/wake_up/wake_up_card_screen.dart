@@ -46,10 +46,10 @@ class _WakeUpCardScreenState extends ConsumerState<WakeUpCardScreen> {
           context.go(AppRoutes.today);
         });
       }
-      return Scaffold(backgroundColor: t.colors.surface);
+      return Scaffold(backgroundColor: t.colors.ground);
     }
     return Scaffold(
-      backgroundColor: t.colors.surface,
+      backgroundColor: t.colors.ground,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

@@ -19,7 +19,7 @@ class _Library extends StatelessWidget {
     final t = DotTheme.of(context);
     final en = AppLocalizationsEn();
     return ColoredBox(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.page),
         child: Column(
@@ -41,8 +41,7 @@ class _Library extends StatelessWidget {
                 runSpacing: DotSpace.l,
                 children: [
                   for (final i in TaskIcon.picker)
-                    if (i.category == c)
-                      DotIcon(i.glyph!, color: t.colors.text),
+                    if (i.category == c) DotIcon(i.glyph!, color: t.colors.ink),
                 ],
               ),
             ],

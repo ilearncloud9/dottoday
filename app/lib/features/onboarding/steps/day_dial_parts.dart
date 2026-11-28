@@ -111,7 +111,7 @@ class _DayDialHandleState extends State<DayDialHandle> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: c.raised,
+                  color: c.card,
                   border: Border.all(color: hc, width: OnbSize.handleRing),
                   boxShadow: [
                     if (_focused)
@@ -203,7 +203,7 @@ class _DayDialBubbleState extends State<DayDialBubble>
       scale: _scale,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(OnbSize.bubbleRadius),
           boxShadow: [onbSoftShadow(t.colors)],
         ),

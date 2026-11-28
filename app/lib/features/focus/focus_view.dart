@@ -134,7 +134,7 @@ class _FocusViewState extends ConsumerState<FocusView> {
         Text(
           _range(context, view),
           textAlign: TextAlign.center,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
         // E-R2-9: the title at 28–30, 800.
         Semantics(
@@ -150,7 +150,7 @@ class _FocusViewState extends ConsumerState<FocusView> {
           child: Text(
             l10n.liveMinutesLeft(state.minutesLeft),
             textAlign: TextAlign.center,
-            style: t.styles.liveRowTitle.copyWith(color: t.colors.accentInk),
+            style: t.styles.liveRowTitle.copyWith(color: t.colors.accentText),
           ),
         ),
       ],
@@ -207,7 +207,7 @@ class _FocusViewState extends ConsumerState<FocusView> {
               iconAlignment: IconAlignment.end,
               icon: DotIcon(
                 DotGlyphs.chevronRight,
-                color: step == null ? t.colors.muted : t.colors.text,
+                color: step == null ? t.colors.secondary : t.colors.ink,
                 size: DotSize.rowIcon,
               ),
               label: Text(l10n.focusNextStep),
@@ -219,7 +219,7 @@ class _FocusViewState extends ConsumerState<FocusView> {
       Text(
         l10n.focusBreakThrough,
         textAlign: TextAlign.center,
-        style: t.styles.caption.copyWith(color: t.colors.muted),
+        style: t.styles.caption.copyWith(color: t.colors.secondary),
       ),
     ];
   }

@@ -106,12 +106,12 @@ class InspectorMore extends ConsumerWidget {
                 unawaited(_leave(context, ref).delete(context, ref)),
             // The board's quiet row (E-R2-40), not a large button.
             style: TextButton.styleFrom(
-              foregroundColor: t.colors.text,
+              foregroundColor: t.colors.ink,
               textStyle: t.styles.inspectorValue.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
-            icon: DotIcon(DotGlyphs.trash, color: t.colors.text),
+            icon: DotIcon(DotGlyphs.trash, color: t.colors.ink),
             label: Text(l10n.editorDelete),
           ),
         ),

@@ -30,9 +30,9 @@ class _Card extends StatelessWidget {
           margin: const EdgeInsets.all(DotSpace.page),
           padding: const EdgeInsets.all(DotSpace.s),
           decoration: BoxDecoration(
-            color: c.raised,
+            color: c.card,
             borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-            border: Border.all(color: c.outline),
+            border: Border.all(color: c.hairline),
           ),
           child: Thread(entries: entries, actions: _actions),
         ),

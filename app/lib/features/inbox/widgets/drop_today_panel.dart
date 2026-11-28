@@ -60,9 +60,9 @@ class DropTodayPanel extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.l),
@@ -78,7 +78,7 @@ class DropTodayPanel extends StatelessWidget {
             ),
             Text(
               l10n.inboxDropHint(keys),
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
             ),
           ],
         ),

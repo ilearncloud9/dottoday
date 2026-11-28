@@ -30,7 +30,7 @@ bool solidChrome(BuildContext context) {
 /// (5.5:1 light, 8.5:1 dark); null otherwise.
 Border? solidOutline(BuildContext context) => solidChrome(context)
     ? Border.all(
-        color: DotTheme.of(context).colors.muted,
+        color: DotTheme.of(context).colors.secondary,
         width: DotSize.solidOutline,
       )
     : null;

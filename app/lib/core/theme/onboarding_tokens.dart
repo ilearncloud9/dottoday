@@ -329,11 +329,9 @@ abstract final class OnbSize {
   /// threshold, §5.4).
   static const double syncLargeText = 1.3;
 
-  /// Things rising in (`rise`): from 14 below. The hint leaves 6 up, the
-  /// card 10 down.
+  /// Things rising in (`rise`): from 14 below. The hint leaves 6 up.
   static const double arriveRise = 14;
   static const double hintLeave = 6;
-  static const double syncLeave = 10;
 }
 
 /// The dial's fade at its top and bottom (`.dial` `mask-image`): an

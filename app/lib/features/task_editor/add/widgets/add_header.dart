@@ -28,10 +28,10 @@ class AddHeader extends StatelessWidget {
               alignment: AlignmentDirectional.centerStart,
               child: TextButton.icon(
                 onPressed: onBack,
-                icon: DotIcon(back, color: t.colors.accentInk),
+                icon: DotIcon(back, color: t.colors.accentText),
                 label: Text(
                   l10n.addBack,
-                  style: t.styles.body.copyWith(color: t.colors.accentInk),
+                  style: t.styles.body.copyWith(color: t.colors.accentText),
                 ),
               ),
             ),
@@ -40,7 +40,7 @@ class AddHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () => Navigator.of(context).maybePop(),
               tooltip: l10n.sheetClose,
-              icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+              icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
             ),
           ),
         ],

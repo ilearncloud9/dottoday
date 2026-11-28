@@ -68,7 +68,7 @@ void main() {
       for (final of in [find.byType(GlassCapsule), find.byType(DayMenuChip)]) {
         final b = border(tester, of)!;
         expect(b.top.width, DotSize.solidOutline);
-        expect(b.top.color, c.muted);
+        expect(b.top.color, c.secondary);
       }
     });
   }
@@ -78,6 +78,6 @@ void main() {
   ) async {
     await pump(tester, reduce: true);
     final c = DotTheme.of(tester.element(find.byType(DayMenuChip))).colors;
-    expect(c.muted, DotColors.light().muted);
+    expect(c.secondary, DotColors.light().secondary);
   });
 }

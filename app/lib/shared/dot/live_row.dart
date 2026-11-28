@@ -177,9 +177,9 @@ class _Summary extends StatelessWidget {
           explanation: task.reality?.usualWhy,
           style: t.styles.threadMeta,
           linkStyle: TextStyle(
-            color: t.colors.accentInk,
+            color: t.colors.accentText,
             decoration: TextDecoration.underline,
-            decorationColor: t.colors.accentInk,
+            decorationColor: t.colors.accentText,
           ),
         ),
         Semantics(
@@ -234,7 +234,7 @@ class _Progress extends StatelessWidget {
               Text(
                 l10n.liveSubtasks(task.subtasksDone, task.subtasksTotal),
                 style: t.styles.stripWeekday.copyWith(
-                  color: t.colors.accentInk,
+                  color: t.colors.accentText,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -260,7 +260,7 @@ class SubtaskRing extends StatelessWidget {
       painter: _PiePainter(
         share: total == 0 ? 0 : done / total,
         fill: c.accent,
-        track: Color.alphaBlend(c.accentTint, c.raised),
+        track: Color.alphaBlend(c.tonal, c.card),
       ),
     );
   }

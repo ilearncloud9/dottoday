@@ -45,7 +45,7 @@ class _RemovalRetryState extends ConsumerState<RemovalRetryScreen> {
     final l10n = context.l10n;
     final look = accountDialogLook(context);
     return Material(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(

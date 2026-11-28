@@ -25,7 +25,7 @@ class DayEdge extends StatelessWidget {
     return Container(
       width: DotSize.dayEdge,
       decoration: BoxDecoration(
-        color: t.colors.surface,
+        color: t.colors.ground,
         border: BorderDirectional(start: BorderSide(color: t.colors.hairline)),
       ),
       alignment: Alignment.topCenter,
@@ -41,8 +41,8 @@ class DayEdge extends StatelessWidget {
               ? MaterialLocalizations.of(context).closeButtonTooltip
               : l10n.dayColumnShow,
           child: Material(
-            color: open ? t.colors.accentTint : t.colors.raised,
-            shape: StadiumBorder(side: BorderSide(color: t.colors.outline)),
+            color: open ? t.colors.tonal : t.colors.card,
+            shape: StadiumBorder(side: BorderSide(color: t.colors.hairline)),
             child: InkWell(
               focusNode: focusNode,
               onTap: onTap,

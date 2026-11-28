@@ -110,7 +110,7 @@ class _RepeatEditorState extends State<_RepeatEditor> {
             result == null
                 ? l10n.sheetNever
                 : repeatRuleText(l10n, locale, result, widget.start),
-            style: t.styles.body.copyWith(color: t.colors.accentInk),
+            style: t.styles.body.copyWith(color: t.colors.accentText),
           ),
         ),
         RepeatChoices(

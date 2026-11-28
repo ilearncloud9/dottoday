@@ -154,7 +154,7 @@ class _DeviceRow extends ConsumerWidget {
           title,
           style: device.canRing
               ? t.styles.body
-              : t.styles.body.copyWith(color: t.colors.muted),
+              : t.styles.body.copyWith(color: t.colors.secondary),
         ),
         subtitle: state == null
             ? null
@@ -239,7 +239,7 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final ink = ready ? t.tasks[TaskColor.mint].ink : t.colors.text;
+    final ink = ready ? t.tasks[TaskColor.mint].ink : t.colors.ink;
     return Container(
       margin: const EdgeInsets.only(top: DotSpace.xs),
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),

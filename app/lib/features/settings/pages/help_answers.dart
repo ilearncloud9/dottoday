@@ -13,9 +13,9 @@ class HelpAnswers extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(HelpSize.cardRadius),
-        border: Border.all(color: c.outline),
+        border: Border.all(color: c.hairline),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(HelpSize.cardRadius),
@@ -23,7 +23,8 @@ class HelpAnswers extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (final (i, child) in children.indexed) ...[
-              if (i > 0) Divider(height: 0.5, thickness: 0.5, color: c.outline),
+              if (i > 0)
+                Divider(height: 0.5, thickness: 0.5, color: c.hairline),
               child,
             ],
           ],
@@ -57,7 +58,7 @@ class _HelpAnswerState extends State<HelpAnswer> {
     final question = t.styles.caption.copyWith(
       fontSize: 16,
       height: 21 / 16,
-      color: c.text,
+      color: c.ink,
     );
     final answer = t.styles.body.copyWith(
       fontSize: 15,
@@ -80,7 +81,7 @@ class _HelpAnswerState extends State<HelpAnswer> {
                   Expanded(child: Text(widget.question, style: question)),
                   DotIcon(
                     _open ? DotGlyphs.chevronUp : DotGlyphs.chevronDown,
-                    color: c.muted,
+                    color: c.secondary,
                     size: HelpSize.chevron,
                   ),
                 ],

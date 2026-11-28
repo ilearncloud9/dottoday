@@ -59,7 +59,7 @@ class SyncStatusLine extends StatelessWidget {
                 status.state == SyncState.localOnly
                     ? DotGlyphs.device
                     : syncLineGlyph(status),
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
               Flexible(child: Text(text, style: t.styles.rowMeta)),

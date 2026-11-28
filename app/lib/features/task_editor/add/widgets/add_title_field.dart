@@ -171,12 +171,12 @@ class _TokenChip extends StatelessWidget {
     final t = DotTheme.of(context);
     return InputChip(
       label: Text(text, style: t.styles.rowMeta),
-      backgroundColor: t.colors.accentTint,
+      backgroundColor: t.colors.tonal,
       side: BorderSide.none,
       shape: dotChipShape(context),
       deleteIcon: DotIcon(
         DotGlyphs.close,
-        color: t.colors.accentInk,
+        color: t.colors.accentText,
         size: DotSize.rowIcon - DotSpace.xs,
       ),
       deleteButtonTooltipMessage: context.l10n.addRemoveToken(text),

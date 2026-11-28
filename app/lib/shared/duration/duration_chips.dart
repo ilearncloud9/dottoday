@@ -92,7 +92,7 @@ class DurationChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final shape = dotChipShape(context).copyWith(
-      side: selected ? BorderSide.none : BorderSide(color: t.colors.outline),
+      side: selected ? BorderSide.none : BorderSide(color: t.colors.hairline),
     );
     return Semantics(
       button: true,
@@ -100,7 +100,7 @@ class DurationChip extends StatelessWidget {
       label: semantics,
       excludeSemantics: true,
       child: Material(
-        color: selected ? t.colors.accentFill : t.colors.raised,
+        color: selected ? t.colors.accentFill : t.colors.card,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -116,7 +116,7 @@ class DurationChip extends StatelessWidget {
                 child: Text(
                   label,
                   style: t.styles.button.copyWith(
-                    color: selected ? t.colors.onAccent : t.colors.text,
+                    color: selected ? t.colors.onAccent : t.colors.ink,
                   ),
                 ),
               ),

@@ -104,7 +104,7 @@ class SettingsNotice extends StatelessWidget {
         TextButton(
           onPressed: onAction,
           style: TextButton.styleFrom(
-            backgroundColor: c.raised,
+            backgroundColor: c.card,
             foregroundColor: ink,
             textStyle: t.styles.noticeAction,
             minimumSize: Size(

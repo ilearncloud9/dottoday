@@ -133,7 +133,7 @@ class _HeroPainter extends CustomPainter {
 
   void _dashedLine(Canvas canvas) {
     final paint = Paint()
-      ..color = colors.outline
+      ..color = colors.hairline
       ..strokeWidth = _G.dashWidth
       ..strokeCap = StrokeCap.round;
     for (var y = _G.lineTop; y < _G.lineEnd; y += _G.dash + _G.dashGap) {
@@ -153,7 +153,7 @@ class _HeroPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = _G.stroke
-        ..color = colors.outline.withValues(alpha: _G.trackAlpha),
+        ..color = colors.hairline.withValues(alpha: _G.trackAlpha),
     );
     const circumference = 2 * math.pi * _G.r;
     // Each part starts 5° after its share begins and is 14 shorter,
@@ -210,7 +210,7 @@ class _HeroPainter extends CustomPainter {
         ..drawCircle(
           centre,
           _G.core,
-          Paint()..color = colors.raised.withValues(alpha: alpha),
+          Paint()..color = colors.card.withValues(alpha: alpha),
         )
         ..restore();
     }

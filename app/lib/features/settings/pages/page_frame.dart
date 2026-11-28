@@ -184,7 +184,7 @@ class _TitleRow extends StatelessWidget {
           ? context.l10n.settingsBack
           : context.l10n.settingsBackTo(_parentTitle(context, place)),
       onPressed: () => _onBack(context),
-      icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
+      icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.ink),
     );
     return LayoutBuilder(
       builder: (context, box) {

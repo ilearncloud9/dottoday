@@ -19,9 +19,9 @@ class TonalBadge extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color.alphaBlend(c.accentTint, c.raised),
+          color: Color.alphaBlend(c.tonal, c.card),
         ),
-        child: DotIcon(glyph, color: c.accentInk),
+        child: DotIcon(glyph, color: c.accentText),
       ),
     );
   }

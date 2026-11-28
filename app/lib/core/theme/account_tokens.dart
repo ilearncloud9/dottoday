@@ -114,7 +114,7 @@ abstract final class AccountDialogColors {
   /// The dialog: the card in light (`#FFFDF9`), the tile in dark
   /// (`#2F2A30`).
   static Color fill(DotColors c) =>
-      c.brightness == Brightness.dark ? c.tile : c.raised;
+      c.brightness == Brightness.dark ? c.tile : c.card;
 
   /// The outlined button's ring: `#DDD7E0`/`#CFC6D6` light, `#8C838A`
   /// dark.
@@ -180,7 +180,7 @@ abstract final class SignedOutType {
 
   /// 15/22 on iPhone and iPad, 14/20 on Android, 14/21 Mac/web.
   static TextStyle body(DotType t, DotColors c, AccountDialogLook look) {
-    final base = t.body.copyWith(color: c.muted);
+    final base = t.body.copyWith(color: c.secondary);
     return switch (look) {
       AccountDialogLook.iphone => base,
       AccountDialogLook.android => base.copyWith(fontSize: 14, height: 20 / 14),
@@ -193,6 +193,6 @@ abstract final class SignedOutType {
 /// (`#F6F1EA` / `#1F1B1E`).
 abstract final class SignedOutColors {
   static Color ring(DotColors c) =>
-      c.brightness == Brightness.dark ? c.raised : c.chip;
+      c.brightness == Brightness.dark ? c.card : c.chip;
   static Color inner(DotColors c) => c.sunk;
 }

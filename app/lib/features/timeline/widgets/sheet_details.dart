@@ -37,10 +37,10 @@ class SheetDetails extends StatelessWidget {
     final o = task.occurrence;
     // Material, not a DecoratedBox: the rows' ink must paint on it.
     return Material(
-      color: c.raised,
+      color: c.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
-        side: BorderSide(color: c.outline),
+        side: BorderSide(color: c.hairline),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -51,9 +51,9 @@ class SheetDetails extends StatelessWidget {
             value: alertsText(l10n, task.alerts),
             onTap: onEdit,
           ),
-          Divider(height: DotSpace.hairline, color: c.outline),
+          Divider(height: DotSpace.hairline, color: c.hairline),
           _SoundDetail(task: task, onEdit: onEdit),
-          Divider(height: DotSpace.hairline, color: c.outline),
+          Divider(height: DotSpace.hairline, color: c.hairline),
           _DetailRow(
             glyph: DotGlyphs.repeat,
             label: l10n.sheetRepeat,
@@ -61,7 +61,7 @@ class SheetDetails extends StatelessWidget {
             onTap: onEdit,
           ),
           if (o.travelBufferMin > 0) ...[
-            Divider(height: DotSpace.hairline, color: c.outline),
+            Divider(height: DotSpace.hairline, color: c.hairline),
             _DetailRow(
               glyph: TaskIcon.car.glyph ?? DotGlyphs.clock,
               label: l10n.travelTitle,
@@ -72,7 +72,7 @@ class SheetDetails extends StatelessWidget {
             ),
           ],
           if (onPinned case final onPinned?) ...[
-            Divider(height: DotSpace.hairline, color: c.outline),
+            Divider(height: DotSpace.hairline, color: c.hairline),
             PinRow(
               pinned: o.pinned,
               onChanged: onPinned,
@@ -80,7 +80,7 @@ class SheetDetails extends StatelessWidget {
             ),
           ],
           MakeSureUpRow(occurrence: o),
-          Divider(height: DotSpace.hairline, color: c.outline),
+          Divider(height: DotSpace.hairline, color: c.hairline),
           _DetailRow(
             glyph: TaskIcon.fromKey(o.iconKey).glyph ?? DotGlyphs.today,
             glyphColor: TaskColor.fromKey(o.colorKey).color,
@@ -115,11 +115,11 @@ class _DetailRow extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       minTileHeight: DotTouch.android + DotSpace.s,
-      leading: DotIcon(glyph, color: glyphColor ?? t.colors.muted),
+      leading: DotIcon(glyph, color: glyphColor ?? t.colors.secondary),
       title: Text(label, style: t.styles.body),
       trailing: Text(
         value,
-        style: t.styles.body.copyWith(color: t.colors.muted),
+        style: t.styles.body.copyWith(color: t.colors.secondary),
       ),
     );
   }

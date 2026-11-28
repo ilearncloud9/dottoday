@@ -35,9 +35,9 @@ class WeekShareCard extends StatelessWidget {
       key: boundary,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: c.surface,
+          color: c.ground,
           borderRadius: BorderRadius.circular(WeekSize.shareRadius),
-          border: Border.all(color: c.outline),
+          border: Border.all(color: c.hairline),
         ),
         child: Padding(
           padding: const EdgeInsets.all(WeekSize.sharePad),

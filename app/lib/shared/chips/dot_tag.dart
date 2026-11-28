@@ -33,7 +33,7 @@ class DotTag extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     final (fill, ink) = switch (tone) {
-      DotTagTone.accent => (c.accentTint, c.accentInk),
+      DotTagTone.accent => (c.tonal, c.accentText),
       DotTagTone.neutral => (c.control, c.ink2),
     };
     return ConstrainedBox(

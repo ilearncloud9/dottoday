@@ -25,11 +25,11 @@ class LateOptionGroup extends StatelessWidget {
     final t = DotTheme.of(context);
     // A Material, so the rows' ink shows on the card.
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
-        side: BorderSide(color: t.colors.outline),
+        side: BorderSide(color: t.colors.hairline),
       ),
       child: RadioGroup<int>(
         groupValue: selected,
@@ -40,7 +40,7 @@ class LateOptionGroup extends StatelessWidget {
           children: [
             for (final (i, o) in options.indexed) ...[
               if (i > 0)
-                Divider(height: DotSpace.hairline, color: t.colors.outline),
+                Divider(height: DotSpace.hairline, color: t.colors.hairline),
               _Row(index: i, option: o),
             ],
           ],
@@ -60,7 +60,7 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final (:title, :detail, :enabled) = option;
-    final ink = enabled ? t.colors.text : t.colors.muted;
+    final ink = enabled ? t.colors.ink : t.colors.secondary;
     return RadioListTile<int>.adaptive(
       value: index,
       enabled: enabled,

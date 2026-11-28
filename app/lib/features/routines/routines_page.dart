@@ -128,7 +128,7 @@ class _ListState extends ConsumerState<_List> {
         if (today != null && routines.isNotEmpty) ...[
           Text(
             l10n.routineDropDay,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
           const SizedBox(height: DotSpace.xs),
           Align(
@@ -172,13 +172,13 @@ class _ListState extends ConsumerState<_List> {
           children: [
             DotIcon(
               DotGlyphs.bell,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.miniRing + DotSpace.xxs,
             ),
             Flexible(
               child: Text(
                 l10n.routineAlarmNote,
-                style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
               ),
             ),
           ],
@@ -208,9 +208,9 @@ class _EmptyCard extends StatelessWidget {
     final t = DotTheme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline, width: DotSpace.hairline),
+        border: Border.all(color: t.colors.hairline, width: DotSpace.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.l),

@@ -16,7 +16,7 @@ class CountPill extends StatelessWidget {
       liveRegion: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: t.colors.accentTint,
+          color: t.colors.tonal,
           borderRadius: BorderRadius.circular(DotRadii.pill),
         ),
         child: Padding(
@@ -27,7 +27,7 @@ class CountPill extends StatelessWidget {
           child: Text(
             text,
             style: t.styles.rowMeta.copyWith(
-              color: t.colors.accentInk,
+              color: t.colors.accentText,
               fontWeight: FontWeight.w600,
             ),
           ),

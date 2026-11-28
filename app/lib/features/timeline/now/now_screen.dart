@@ -160,12 +160,12 @@ class _Header extends StatelessWidget {
                     onPressed: () => NowDateAnchor.open(context, today),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
-                      foregroundColor: t.colors.text,
+                      foregroundColor: t.colors.ink,
                     ),
                     iconAlignment: IconAlignment.end,
                     icon: DotIcon(
                       DotGlyphs.chevronDown,
-                      color: android ? t.colors.text : t.colors.accentInk,
+                      color: android ? t.colors.ink : t.colors.accentText,
                       size: DotSize.rowIcon,
                     ),
                     label: Text(
@@ -181,7 +181,7 @@ class _Header extends StatelessWidget {
         ),
         Text(
           l10n.nowSummary(now, windDown),
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
       ],
     );

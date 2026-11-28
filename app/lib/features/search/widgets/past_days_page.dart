@@ -123,7 +123,7 @@ class _PastDaysPageState extends ConsumerState<PastDaysPage> {
                   heightFactor: 1,
                   child: DotIcon(
                     DotGlyphs.search,
-                    color: t.colors.muted,
+                    color: t.colors.secondary,
                     size: DotSize.rowIcon,
                   ),
                 ),
@@ -171,7 +171,7 @@ class PastDaysEntry extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
         side: BorderSide(color: t.colors.threadAhead),

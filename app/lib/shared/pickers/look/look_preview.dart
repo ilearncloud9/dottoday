@@ -40,7 +40,7 @@ class LookPreview extends StatelessWidget {
               DotLook.previewDot,
               BoxDecoration(
                 shape: BoxShape.circle,
-                color: t.colors.raised,
+                color: t.colors.card,
                 border: Border.all(color: s.ring, width: DotLook.previewRing),
               ),
               DotIcon(glyph, color: s.ring, size: DotLook.previewGlyph),
@@ -88,7 +88,7 @@ class LookPreview extends StatelessWidget {
                   Text(
                     line,
                     style: t.styles.inspectorLabel.copyWith(
-                      color: t.colors.text,
+                      color: t.colors.ink,
                     ),
                   ),
               ],

@@ -45,7 +45,7 @@ class JournalDayRow extends StatelessWidget {
     );
     final date = DateFormat.MMMEd(locale).format(day.date);
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.card),
         side: BorderSide(color: t.colors.threadAhead),

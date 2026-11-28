@@ -105,7 +105,7 @@ class _RoutineEditorState extends State<RoutineEditor> {
       padding: const EdgeInsets.only(top: DotSpace.s),
       child: Text(
         text,
-        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+        style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
       ),
     );
     return Column(
@@ -159,19 +159,19 @@ class _RoutineEditorState extends State<RoutineEditor> {
                   RoutineStepDraft.blank(widget.ids.newId(), _steps.length),
                 ],
               ),
-              icon: DotIcon(DotGlyphs.add, color: t.colors.accentInk),
+              icon: DotIcon(DotGlyphs.add, color: t.colors.accentText),
               label: Text(l10n.routineAddStep),
             ),
           ),
         if (!_valid)
           Text(
             l10n.routineInvalid,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         if (widget.onDelete case final delete?)
           TextButton(
             onPressed: delete,
-            style: TextButton.styleFrom(foregroundColor: t.colors.text),
+            style: TextButton.styleFrom(foregroundColor: t.colors.ink),
             child: Text(l10n.routineDelete),
           ),
       ],
@@ -203,9 +203,9 @@ class _StepsCard extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(DotRadii.sheetCard),
-        border: Border.all(color: c.outline, width: DotSpace.hairline),
+        border: Border.all(color: c.hairline, width: DotSpace.hairline),
       ),
       child: Padding(
         padding: const EdgeInsetsDirectional.only(end: DotSpace.xs),
@@ -217,7 +217,7 @@ class _StepsCard extends StatelessWidget {
                   height: DotSpace.hairline,
                   thickness: DotSpace.hairline,
                   indent: DotTouch.min,
-                  color: c.outline,
+                  color: c.hairline,
                 ),
               child,
             ],

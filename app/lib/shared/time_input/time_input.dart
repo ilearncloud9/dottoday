@@ -158,7 +158,7 @@ class _TimeInputState extends State<TimeInput> {
                 tooltip: l10n.timeInputPick,
                 icon: DotIcon(
                   DotGlyphs.clock,
-                  color: DotTheme.of(context).colors.muted,
+                  color: DotTheme.of(context).colors.secondary,
                 ),
               )
             : null,
@@ -191,7 +191,7 @@ class _TimeInputState extends State<TimeInput> {
         decoration: InputDecoration(
           isDense: true,
           filled: true,
-          fillColor: c.raised,
+          fillColor: c.card,
           contentPadding: const EdgeInsets.symmetric(vertical: DotSpace.xs),
           border: edge,
           enabledBorder: edge,

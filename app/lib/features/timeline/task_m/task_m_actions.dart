@@ -58,11 +58,11 @@ class TaskMActions extends ConsumerWidget {
           onPressed: onTap,
           style: FilledButton.styleFrom(
             backgroundColor: t.colors.sunk,
-            foregroundColor: t.colors.text,
+            foregroundColor: t.colors.ink,
             minimumSize: const Size.fromHeight(DotTouch.android),
             padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
           ),
-          icon: DotIcon(glyph, color: t.colors.text, size: DotSize.rowIcon),
+          icon: DotIcon(glyph, color: t.colors.ink, size: DotSize.rowIcon),
           label: Text(label),
         );
     final tomorrow = quiet(
@@ -112,10 +112,10 @@ class TaskMActions extends ConsumerWidget {
         Center(
           child: TextButton.icon(
             onPressed: o.pinned ? null : () => then(() => drops.toTrash(o.id)),
-            style: TextButton.styleFrom(foregroundColor: t.colors.muted),
+            style: TextButton.styleFrom(foregroundColor: t.colors.secondary),
             icon: DotIcon(
               DotGlyphs.trash,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.rowIcon,
             ),
             label: Text(l10n.editorDelete),
@@ -153,7 +153,7 @@ class _MoreTime extends ConsumerWidget {
     final label = Text(
       l10n.lateNudgeTitle,
       style: t.styles.rowMeta.copyWith(
-        color: t.colors.text,
+        color: t.colors.ink,
         fontWeight: FontWeight.w700,
       ),
     );
@@ -162,8 +162,8 @@ class _MoreTime extends ConsumerWidget {
         FilledButton(
           onPressed: () => unawaited(add(m)),
           style: FilledButton.styleFrom(
-            backgroundColor: t.colors.accentTint,
-            foregroundColor: t.colors.accentInk,
+            backgroundColor: t.colors.tonal,
+            foregroundColor: t.colors.accentText,
             minimumSize: const Size(DotTouch.min, DotTouch.min),
             padding: const EdgeInsets.symmetric(horizontal: DotSpace.s),
             textStyle: t.styles.rowMeta.copyWith(fontWeight: FontWeight.w700),
@@ -226,10 +226,10 @@ class _MoreOptions extends StatelessWidget {
     final l10n = context.l10n;
     return MergeSemantics(
       child: Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.sheetCardAndroid),
-          side: BorderSide(color: t.colors.outline),
+          side: BorderSide(color: t.colors.hairline),
         ),
         child: InkWell(
           onTap: onTap,
@@ -252,7 +252,7 @@ class _MoreOptions extends StatelessWidget {
                 ),
                 DotIcon(
                   DotGlyphs.chevronRight,
-                  color: t.colors.text,
+                  color: t.colors.ink,
                   size: DotSize.rowIcon,
                 ),
               ],

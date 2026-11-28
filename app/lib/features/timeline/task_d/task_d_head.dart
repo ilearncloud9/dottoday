@@ -151,10 +151,10 @@ class TaskDSavedBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: DotSpace.s,
           children: [
-            DotIcon(DotGlyphs.check, color: t.colors.accentInk),
+            DotIcon(DotGlyphs.check, color: t.colors.accentText),
             Text(
               l10n.editorSavedAt(time),
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
             ),
             TextButton(onPressed: onUndo, child: Text(l10n.undoAction)),
           ],

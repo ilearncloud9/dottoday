@@ -28,7 +28,7 @@ class LearningStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final style = t.styles.rowMeta.copyWith(color: t.colors.accentInk);
+    final style = t.styles.rowMeta.copyWith(color: t.colors.accentText);
     final (d, o, l) = (done, of, label);
     if (d == null || o == null || l == null) {
       return Padding(

@@ -207,7 +207,7 @@ class InboxDraggable extends StatelessWidget {
     return HoldOrMouseDraggable<String>(
       data: item.id,
       feedback: Material(
-        color: t.colors.raised,
+        color: t.colors.card,
         shape: StadiumBorder(
           side: BorderSide(
             color: t.tasks[color].ink,

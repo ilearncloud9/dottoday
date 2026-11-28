@@ -16,22 +16,22 @@ import 'package:flutter/painting.dart';
 ///
 /// ```dart
 /// final c = DotTheme.of(context).colors;
-/// Text('Today', style: TextStyle(color: c.accentInk));
+/// Text('Today', style: TextStyle(color: c.accentText));
 /// ```
 final class DotColors {
   const DotColors._({
     required this.brightness,
-    required this.surface,
-    required this.raised,
-    required this.text,
-    required this.muted,
-    required this.outline,
+    required this.ground,
+    required this.card,
+    required this.ink,
+    required this.secondary,
+    required this.hairline,
     required this.threadAhead,
     required this.accent,
-    required this.accentInk,
+    required this.accentText,
     required this.onAccent,
     required this.accentFill,
-    required this.accentTint,
+    required this.tonal,
     required this.success,
     required this.sunk,
     required this.chip,
@@ -107,19 +107,19 @@ final class DotColors {
   final Brightness brightness;
 
   /// E `ground`: the page background.
-  final Color surface;
+  final Color ground;
 
   /// E card: cards, sheets, the now card (`#FFFDF9` / `#28232A`).
-  final Color raised;
+  final Color card;
 
   /// E `ink`: primary text and active icons.
-  final Color text;
+  final Color ink;
 
   /// E `secondary`: times, summaries, labels.
-  final Color muted;
+  final Color secondary;
 
-  /// Row and card edges, opaque over [raised] (Concept E: [hairline]).
-  final Color outline;
+  /// Row and card edges, opaque over [card].
+  final Color hairline;
 
   /// The dotted thread ahead and free-time dots.
   final Color threadAhead;
@@ -127,8 +127,8 @@ final class DotColors {
   /// The accent: Add, Done, selected tab, now-bead, sync dot.
   final Color accent;
 
-  /// E accent text: links, chip text, text on [accentTint].
-  final Color accentInk;
+  /// E accent text: links, chip text, text on [tonal].
+  final Color accentText;
 
   /// Text and icons on an [accent] fill.
   final Color onAccent;
@@ -139,7 +139,7 @@ final class DotColors {
   final Color accentFill;
 
   /// E tonal: chips, the Focus tile, +5 / +15 / +30.
-  final Color accentTint;
+  final Color tonal;
 
   /// Done check on a completed day; synced.
   final Color success;
@@ -262,31 +262,6 @@ final class DotColors {
   /// Base colour of elevation shadows (see `DotElevation`).
   final Color shadow;
 
-  // Concept E names for the roles above that still carry Concept A names.
-  // Rebuilt widgets read only these (test/policy/concept_e_names_test.dart);
-  // plan M20.14 renames the fields and deletes the old names (ED-360).
-
-  /// The page background (Concept A name: [surface]).
-  Color get ground => surface;
-
-  /// Cards, sheets, the now card (Concept A name: [raised]).
-  Color get card => raised;
-
-  /// Primary text and active icons (Concept A name: [text]).
-  Color get ink => text;
-
-  /// Times, summaries, labels (Concept A name: [muted]).
-  Color get secondary => muted;
-
-  /// Row and card edges (Concept A name: [outline]).
-  Color get hairline => outline;
-
-  /// Links, chip text, text on [tonal] (Concept A name: [accentInk]).
-  Color get accentText => accentInk;
-
-  /// Chips, the Focus tile, +5 / +15 / +30 (Concept A name: [accentTint]).
-  Color get tonal => accentTint;
-
   /// A picked row in a list of choices: the accent at 8 % (E-R2-34's
   /// one-thing pick).
   Color get selectedRow => accent.withValues(alpha: 0.08);
@@ -316,27 +291,27 @@ final class DotColors {
   /// Where a dragged task would land on the hour grid.
   Color get gridDrop => accent.withValues(alpha: GridAlpha.drop);
 
-  /// The night on a day dot (docs/15 W6): [text] over [surface] at 12 %
+  /// The night on a day dot (docs/15 W6): [ink] over [ground] at 12 %
   /// (light) or 18 % (dark), opaque. Faint by design, never a warning.
   Color get night =>
-      Color.alphaBlend(text.withValues(alpha: isDark ? 0.18 : 0.12), surface);
+      Color.alphaBlend(ink.withValues(alpha: isDark ? 0.18 : 0.12), ground);
 
   /// Interpolates every role; used by theme animations.
   DotColors lerp(DotColors other, double t) {
     Color l(Color a, Color b) => Color.lerp(a, b, t)!;
     return DotColors._(
       brightness: t < 0.5 ? brightness : other.brightness,
-      surface: l(surface, other.surface),
-      raised: l(raised, other.raised),
-      text: l(text, other.text),
-      muted: l(muted, other.muted),
-      outline: l(outline, other.outline),
+      ground: l(ground, other.ground),
+      card: l(card, other.card),
+      ink: l(ink, other.ink),
+      secondary: l(secondary, other.secondary),
+      hairline: l(hairline, other.hairline),
       threadAhead: l(threadAhead, other.threadAhead),
       accent: l(accent, other.accent),
-      accentInk: l(accentInk, other.accentInk),
+      accentText: l(accentText, other.accentText),
       onAccent: l(onAccent, other.onAccent),
       accentFill: l(accentFill, other.accentFill),
-      accentTint: l(accentTint, other.accentTint),
+      tonal: l(tonal, other.tonal),
       success: l(success, other.success),
       sunk: l(sunk, other.sunk),
       chip: l(chip, other.chip),
@@ -410,14 +385,14 @@ DotColors _resolve(Brightness brightness, Color accent, {bool more = false}) {
       : inkFor(accent, backgrounds: [p.ground, p.card, tonal], toward: p.ink);
   return DotColors._(
     brightness: brightness,
-    surface: p.ground,
-    raised: p.card,
-    text: p.ink,
-    muted: more ? DotContrast.secondary(brightness) : p.secondary,
-    outline: edge ?? Color.alphaBlend(p.hairline, p.card),
+    ground: p.ground,
+    card: p.card,
+    ink: p.ink,
+    secondary: more ? DotContrast.secondary(brightness) : p.secondary,
+    hairline: edge ?? Color.alphaBlend(p.hairline, p.card),
     threadAhead: edge ?? p.threadAhead,
     accent: accent,
-    accentInk: accentText,
+    accentText: accentText,
     onAccent: onAccent,
     accentFill: inkFor(
       accent,
@@ -430,7 +405,7 @@ DotColors _resolve(Brightness brightness, Color accent, {bool more = false}) {
       // colour; aim higher so the rendered text clears 4.5.
       minRatio: 5,
     ),
-    accentTint: tonal,
+    tonal: tonal,
     success: p.success,
     sunk: p.sunk,
     chip: p.chip,

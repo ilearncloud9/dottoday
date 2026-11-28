@@ -32,16 +32,16 @@ class HabitList extends StatelessWidget {
         const _Caption(),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: t.colors.raised,
+            color: t.colors.card,
             borderRadius: BorderRadius.circular(DotRadii.card),
-            border: Border.all(color: t.colors.outline),
+            border: Border.all(color: t.colors.hairline),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(DotRadii.card),
             child: Column(
               children: [
                 for (final (i, h) in habits.indexed) ...[
-                  if (i > 0) Divider(height: 1, color: t.colors.outline),
+                  if (i > 0) Divider(height: 1, color: t.colors.hairline),
                   _HabitRow(
                     habit: h,
                     selected: identical(h, selected),
@@ -130,7 +130,7 @@ class _HabitRow extends StatelessWidget {
       label: context.l10n.addHabitLabel(habit.title, meta),
       excludeSemantics: true,
       child: Material(
-        color: selected ? t.colors.accentTint : Colors.transparent,
+        color: selected ? t.colors.tonal : Colors.transparent,
         child: InkWell(
           onTap: onTap,
           child: Padding(

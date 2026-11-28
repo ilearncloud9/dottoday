@@ -88,12 +88,12 @@ class SettingsGroup extends StatelessWidget {
                       )
                     : android
                     ? SettingsAndroidType.caption(t.colors)
-                    : t.styles.caption.copyWith(color: t.colors.accentInk),
+                    : t.styles.caption.copyWith(color: t.colors.accentText),
               ),
             ),
           ),
         Material(
-          color: t.colors.raised,
+          color: t.colors.card,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               iphone
@@ -102,7 +102,7 @@ class SettingsGroup extends StatelessWidget {
                   ? SettingsAndroidSize.cardRadius
                   : DotRadii.cardLarge,
             ),
-            side: BorderSide(color: t.colors.outline),
+            side: BorderSide(color: t.colors.hairline),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -112,7 +112,7 @@ class SettingsGroup extends StatelessWidget {
                   Divider(
                     height: iphone ? SettingsFrameSize.hairline : 1,
                     thickness: iphone ? SettingsFrameSize.hairline : null,
-                    color: t.colors.outline,
+                    color: t.colors.hairline,
                   ),
                 child,
               ],
@@ -126,7 +126,7 @@ class SettingsGroup extends StatelessWidget {
             ),
             child: Text(
               f,
-              style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+              style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
             ),
           ),
       ],
@@ -354,7 +354,7 @@ class SettingsRow extends StatelessWidget {
               Text(
                 v,
                 style: t.styles.inspectorValue.copyWith(
-                  color: accentValue ? t.colors.accentInk : t.colors.text,
+                  color: accentValue ? t.colors.accentText : t.colors.ink,
                 ),
               ),
             ?trailing,
@@ -443,7 +443,9 @@ class SettingsRow extends StatelessWidget {
                   v,
                   textAlign: TextAlign.end,
                   style: t.styles.body.copyWith(
-                    color: accentValue ? t.colors.accentInk : t.colors.muted,
+                    color: accentValue
+                        ? t.colors.accentText
+                        : t.colors.secondary,
                   ),
                 ),
               ),
@@ -453,7 +455,7 @@ class SettingsRow extends StatelessWidget {
             else if (onTap != null && !action)
               DotIcon(
                 DotGlyphs.chevronRight,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: iphone ? SettingsFrameSize.chevron : DotSize.rowIcon,
               ),
           ],
@@ -509,15 +511,15 @@ class SettingsRow extends StatelessWidget {
             // iPhone rows 16 (E-R2-24, ED-498).
             style:
                 (action
-                        ? t.styles.body.copyWith(color: t.colors.accentInk)
+                        ? t.styles.body.copyWith(color: t.colors.accentText)
                         : quiet
-                        ? t.styles.body.copyWith(color: t.colors.muted)
+                        ? t.styles.body.copyWith(color: t.colors.secondary)
                         : t.styles.body)
                     .copyWith(fontSize: iphone ? 16 : null),
           ),
           if (subtitle case final s?) Text(s, style: t.styles.rowMeta),
           if (value case final v? when stacked)
-            Text(v, style: t.styles.body.copyWith(color: t.colors.muted)),
+            Text(v, style: t.styles.body.copyWith(color: t.colors.secondary)),
           ?below,
         ],
       );
@@ -641,7 +643,7 @@ class _FormMark extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     final g = glyph;
-    final ink = tint ?? c.muted;
+    final ink = tint ?? c.secondary;
     return Container(
       width: DotSize.formCheck + DotSpace.xs,
       height: DotSize.formCheck + DotSpace.xs,

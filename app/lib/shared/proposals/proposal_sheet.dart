@@ -112,8 +112,8 @@ class ProposalSheet extends StatelessWidget {
                 ?lead,
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    color: t.colors.raised,
-                    border: Border.all(color: t.colors.outline),
+                    color: t.colors.card,
+                    border: Border.all(color: t.colors.hairline),
                     borderRadius: BorderRadius.all(
                       Radius.circular(
                         DotIdiom.of(context) == DotIdiom.cupertino
@@ -191,7 +191,7 @@ class _Actions extends StatelessWidget {
           Text(
             footnote,
             textAlign: TextAlign.center,
-            style: t.styles.caption.copyWith(color: t.colors.muted),
+            style: t.styles.caption.copyWith(color: t.colors.secondary),
           ),
         ],
       ),

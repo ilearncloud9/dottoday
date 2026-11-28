@@ -38,7 +38,7 @@ class FillsRowDot extends StatelessWidget {
     final dot = DecoratedBox(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: filled ? color : c.raised,
+        color: filled ? color : c.card,
         border: filled
             ? null
             : Border.all(color: color, width: OnbSize.rowRing),
@@ -48,7 +48,7 @@ class FillsRowDot extends StatelessWidget {
           : Center(
               child: DotIcon(
                 glyph,
-                color: filled ? c.raised : color,
+                color: filled ? c.card : color,
                 size: iconSize,
                 bold: filled,
               ),

@@ -113,12 +113,12 @@ class MakeSureUpRow extends ConsumerWidget {
     );
     return Column(
       children: [
-        Divider(height: DotSpace.hairline, color: t.colors.outline),
+        Divider(height: DotSpace.hairline, color: t.colors.hairline),
         MergeSemantics(
           child: ListTile(
             onTap: () => set(!on),
             minTileHeight: DotTouch.android + DotSpace.s,
-            leading: DotIcon(DotGlyphs.bell, color: t.colors.muted),
+            leading: DotIcon(DotGlyphs.bell, color: t.colors.secondary),
             title: Text(l10n.makeSureUpTitle, style: t.styles.body),
             subtitle: Text(l10n.makeSureUpDetail, style: t.styles.rowMeta),
             trailing: DotSwitch(value: on, onChanged: set),

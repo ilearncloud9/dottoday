@@ -86,7 +86,7 @@ class LookLibrary extends StatelessWidget {
         child: Text(
           context.l10n.iconSearchEmpty(query.trim()),
           textAlign: TextAlign.center,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
       );
     }

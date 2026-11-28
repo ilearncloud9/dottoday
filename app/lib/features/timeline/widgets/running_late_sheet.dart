@@ -150,7 +150,7 @@ class _LateSheetState extends ConsumerState<_LateSheet> {
             .read(learningMetaProvider.notifier)
             .resetUndoable(target.title, ref.read(clockProvider).nowUtc()),
       ),
-      style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+      style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
     );
   }
 

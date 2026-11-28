@@ -51,7 +51,7 @@ class LowEnergyHeading extends ConsumerWidget {
             DateFormat.MMMMEEEEd(locale).format(date),
           ),
           style: t.styles.rowMeta.copyWith(
-            color: t.colors.muted,
+            color: t.colors.secondary,
             fontWeight: FontWeight.w600,
           ),
         ),

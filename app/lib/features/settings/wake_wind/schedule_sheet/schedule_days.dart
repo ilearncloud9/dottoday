@@ -72,9 +72,9 @@ class ScheduleDays extends StatelessWidget {
         vertical: DotSpace.m,
       ),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -143,7 +143,7 @@ class _Circle extends StatelessWidget {
                   letter,
                   style: t.styles.rowTitle.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: picked ? t.colors.onAccent : t.colors.text,
+                    color: picked ? t.colors.onAccent : t.colors.ink,
                   ),
                 ),
               ),
@@ -184,7 +184,7 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final ink = picked ? t.colors.accentInk : t.colors.text;
+    final ink = picked ? t.colors.accentText : t.colors.ink;
     return Semantics(
       label: label,
       selected: picked,
@@ -194,7 +194,9 @@ class _Chip extends StatelessWidget {
         color: picked ? t.colors.tonal : Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.dayChipAndroid),
-          side: picked ? BorderSide.none : BorderSide(color: t.colors.muted),
+          side: picked
+              ? BorderSide.none
+              : BorderSide(color: t.colors.secondary),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

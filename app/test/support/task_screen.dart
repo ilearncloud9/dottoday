@@ -18,8 +18,8 @@ class TaskScreen extends StatelessWidget {
     return Scaffold(
       key: ValueKey('route:task:$id'),
       appBar: AppBar(
-        backgroundColor: c.surface,
-        surfaceTintColor: c.surface,
+        backgroundColor: c.ground,
+        surfaceTintColor: c.ground,
         leading: BackButton(
           onPressed: () =>
               context.canPop() ? context.pop() : context.go(AppRoutes.today),

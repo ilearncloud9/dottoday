@@ -68,7 +68,7 @@ class PaletteList extends StatelessWidget {
         padding: const EdgeInsets.all(DotSpace.l),
         child: Text(
           l10n.paletteNothing,
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
           textAlign: TextAlign.center,
         ),
       );
@@ -157,7 +157,7 @@ class _RowState extends State<_Row> {
         child: MouseRegion(
           onEnter: (_) => widget.onHover(),
           child: Material(
-            color: widget.selected ? t.colors.accentTint : Colors.transparent,
+            color: widget.selected ? t.colors.tonal : Colors.transparent,
             borderRadius: BorderRadius.circular(DotRadii.menuMac),
             child: InkWell(
               onTap: widget.onTap,
@@ -225,7 +225,7 @@ class _TaskLine extends ConsumerWidget {
           child: Text(
             task.title,
             style: t.styles.rowMeta.copyWith(
-              color: t.colors.text,
+              color: t.colors.ink,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -255,13 +255,13 @@ class _CommandLine extends StatelessWidget {
         if (command.search)
           DotIcon(
             DotGlyphs.search,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: DotSize.rowIcon - DotSpace.xs,
           ),
         Expanded(
           child: Text(
             command.label,
-            style: t.styles.rowMeta.copyWith(color: t.colors.text),
+            style: t.styles.rowMeta.copyWith(color: t.colors.ink),
           ),
         ),
         if (command.keys case final k?)

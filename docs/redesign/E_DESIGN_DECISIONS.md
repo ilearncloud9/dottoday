@@ -6168,6 +6168,20 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 
 ---
 
+### ED-503 · M20.14: remove what M18 to M20 replaced
+- **Date:** 2026-11-28. **Owner:** "Yes, go ahead" to the listed removals and rename. No visual change, so no review page; goldens unchanged.
+- **Deleted (unused since the Concept E rebuild):**
+  - 12 goldens no test checks: `today_inbox_sidebar_{dark,light}_expanded_{1x,2x}` (Concept A's Mac Inbox sidebar, M3e.2) and `onboarding_reminders_allowed_*` (8; the old reminders step from M6.5.9, replaced in M20.11). Found by logging every golden the full suite compares.
+  - `CountRing` (`lib/shared/dot/count_ring.dart`): Concept A's dotted count ring for the Inbox and Search headers.
+  - `firstThreadProvider` (`lib/data/onboarding/first_thread.dart` and its `.g`): the old O6 step's tomorrow (M4.6); nothing has read it since the new onboarding. The test fixture `firstThreadRows` stays (the onboarding goldens use it).
+  - 13 theme sizes nothing reads: `DotSpace.pageExpanded`; `DotSize.inspectorCheck`, `spreadCardFlex`, `spreadSideFlex`, `wakeUpDayDot`, `addDot`; `RemovalRetrySize.badge`, `glyph`; `DotLook.compactShare`; `OnbSize.syncLeave`; `WeekSize.switchTop`, `shareButtonTop`, `shareGlyphGap`.
+- **Renamed (ED-360's staged names end):** the `DotColors` fields take their Concept E names, `surface`→`ground`, `raised`→`card`, `text`→`ink`, `muted`→`secondary`, `outline`→`hairline`, `accentInk`→`accentText`, `accentTint`→`tonal`, and the alias getters are gone. 1,090 reads changed at the positions the analyzer reported, so Material's own `colorScheme.surface` and `outline` were not touched.
+- **Guard:** `test/policy/concept_e_names_test.dart` now fails if `DotColors` declares any Concept A name again; the compiler rejects reads of the old names. The `// concept-e: rebuilt` marker is gone (no file carried it), and with it the marker-only uppercase check: 10 `toUpperCase()` headings remain in Focus, Search, Add's routine chips and the palette sheet, open for a board check.
+- **Reach (parity matrix §7):** no route, screen, sheet or entry point was removed; every §7 entry is reached as before.
+- **Left alone (not Concept A):** unused domain and data functions (`auditBackups`, `preparedText`, `customDays`, `validateCalendarAccount`, `validateCalendarLink`, `completionOf`, `formatDuration`).
+
+---
+
 ## Pending owner answers
 
 > **Round 2 close-out (2026-11-14, ED-335).** Rows answered by later decisions are marked. The decisions still waiting on the owner are listed in ED-335.

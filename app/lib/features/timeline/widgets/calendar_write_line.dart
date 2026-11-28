@@ -29,7 +29,7 @@ class CalendarWriteLine extends ConsumerWidget {
         children: [
           DotIcon(
             DotGlyphs.calendar,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: DotSize.rowIcon,
           ),
           Expanded(

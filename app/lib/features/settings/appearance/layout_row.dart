@@ -44,7 +44,7 @@ class LayoutRow extends ConsumerWidget {
         final beside = box.maxWidth >= DotSize.layoutSegmentsBeside;
         return SettingsRow(
           glyph: DotGlyphs.layout,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.layoutRow,
           subtitle: l10n.layoutRowDetail,
           trailing: beside ? control : null,

@@ -85,7 +85,7 @@ class _Rule extends StatelessWidget {
       selected: on,
       onSelected: onChanged,
       shape: const StadiumBorder(),
-      side: BorderSide(color: on ? c.accentTint : c.hairlineStrong),
+      side: BorderSide(color: on ? c.tonal : c.hairlineStrong),
       // The board's compact chips: two rules fit a phone's line.
       visualDensity: VisualDensity.compact,
       padding: const EdgeInsetsDirectional.symmetric(horizontal: DotSpace.xs),
@@ -93,15 +93,15 @@ class _Rule extends StatelessWidget {
         horizontal: DotSpace.xxs,
       ),
       color: WidgetStateProperty.resolveWith(
-        (s) => s.contains(WidgetState.selected) ? c.accentTint : c.raised,
+        (s) => s.contains(WidgetState.selected) ? c.tonal : c.card,
       ),
-      labelStyle: t.styles.smallChip.copyWith(color: on ? c.accentInk : c.text),
-      checkmarkColor: c.accentInk,
+      labelStyle: t.styles.smallChip.copyWith(color: on ? c.accentText : c.ink),
+      checkmarkColor: c.accentText,
       showCheckmark: true,
       iconTheme: const IconThemeData(size: DotSize.rowIcon),
       avatar: on || glyph == null
           ? null
-          : DotIcon(glyph!, color: c.text, size: DotSize.rowIcon),
+          : DotIcon(glyph!, color: c.ink, size: DotSize.rowIcon),
     );
   }
 }

@@ -54,7 +54,7 @@ class NudgeSheet extends StatelessWidget {
       explicitChildNodes: true,
       child: Container(
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(radius),
           boxShadow: [
             BoxShadow(
@@ -127,7 +127,7 @@ class NudgeSheet extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(OnbSize.moreRadius),
           child: ColoredBox(
-            color: t.colors.surface,
+            color: t.colors.ground,
             child: Column(
               children: [
                 for (final (i, o) in options.indexed) ...[
@@ -187,7 +187,7 @@ class _Option extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: t.colors.raised,
+                    color: t.colors.card,
                     border: Border.all(color: o.color, width: OnbSize.rowRing),
                   ),
                   child: DotIcon(o.glyph, color: o.color, size: o.glyphSize),

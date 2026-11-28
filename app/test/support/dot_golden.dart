@@ -155,6 +155,6 @@ class GoldenFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RepaintBoundary(
     key: boundaryKey,
-    child: Material(color: DotTheme.of(context).colors.surface, child: child),
+    child: Material(color: DotTheme.of(context).colors.ground, child: child),
   );
 }

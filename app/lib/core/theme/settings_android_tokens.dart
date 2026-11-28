@@ -39,10 +39,10 @@ abstract final class SettingsAndroidType {
 
   /// The page title beside ←: 22/28 regular.
   static TextStyle title(DotColors c) =>
-      _roboto(22, 28, FontWeight.w400, c.text);
+      _roboto(22, 28, FontWeight.w400, c.ink);
 
   /// A row's title: 16/24.
-  static TextStyle row(DotColors c) => _roboto(16, 24, FontWeight.w400, c.text);
+  static TextStyle row(DotColors c) => _roboto(16, 24, FontWeight.w400, c.ink);
 
   /// A row's second line (its value or detail) and page text: 14/20, ink 2.
   static TextStyle second(DotColors c) =>

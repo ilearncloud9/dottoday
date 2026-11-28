@@ -70,7 +70,7 @@ class _EditPaletteState extends ConsumerState<_EditPalette> {
     final (:hue, :shade) = hueShadeOf(base);
     // The ink this colour gets, from the colour itself: the theme follows
     // only once the pick is written.
-    final ink = DotColors.custom(t.colors.brightness, base).accentInk;
+    final ink = DotColors.custom(t.colors.brightness, base).accentText;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -117,7 +117,7 @@ class _EditPaletteState extends ConsumerState<_EditPalette> {
         if (ink != base)
           Text(
             l10n.settingsAppColourInk(hexOf(ink), hexOf(base)),
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
       ],
     );

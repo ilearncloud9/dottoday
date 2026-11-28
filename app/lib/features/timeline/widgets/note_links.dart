@@ -59,14 +59,14 @@ class _LinkRow extends StatelessWidget {
         contentPadding: EdgeInsets.zero,
         minTileHeight: DotTouch.android + DotSpace.s,
         leading: ExcludeSemantics(
-          child: DotIcon(DotGlyphs.link, color: t.colors.muted),
+          child: DotIcon(DotGlyphs.link, color: t.colors.secondary),
         ),
         title: Text(
           uri.toString(),
           style: t.styles.body.copyWith(
-            color: t.colors.accentInk,
+            color: t.colors.accentText,
             decoration: TextDecoration.underline,
-            decorationColor: t.colors.accentInk,
+            decorationColor: t.colors.accentText,
           ),
         ),
       ),

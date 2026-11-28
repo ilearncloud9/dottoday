@@ -99,10 +99,10 @@ class _DayBarState extends State<DayBar> {
                 rtl: rtl,
                 line: t.colors.threadAhead,
                 ring: t.colors.accent,
-                fill: t.colors.raised,
+                fill: t.colors.card,
                 colors: (c) => t.tasks[c].color,
                 focused: _focus.hasFocus,
-                halo: t.colors.accentTint,
+                halo: t.colors.tonal,
               ),
             ),
           ),
@@ -166,7 +166,7 @@ class _DayBarState extends State<DayBar> {
       (to / 60).floor() * 60,
     }.toList()..sort();
     final style = t.styles.rowMeta.copyWith(
-      color: t.colors.muted,
+      color: t.colors.secondary,
       fontWeight: FontWeight.w600,
     );
     return LayoutBuilder(

@@ -21,7 +21,7 @@ List<Widget> horizonLabels(
   final w = width;
   const top = DotSize.horizonCap + DotSpace.xxs;
   final now = t.styles.threadMeta.copyWith(
-    color: t.colors.accentInk,
+    color: t.colors.accentText,
     fontWeight: FontWeight.w700,
   );
   // Each label measured at the person's text size (M19.7: at 200 %

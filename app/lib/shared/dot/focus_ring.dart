@@ -56,7 +56,7 @@ class FocusRing extends StatelessWidget {
               track: screen
                   ? swatch.color.withValues(alpha: TaskAlpha.focusTrack)
                   : t.colors.threadAhead,
-              inner: screen ? null : t.colors.raised,
+              inner: screen ? null : t.colors.card,
               stroke: screen
                   ? DotSize.focusScreenStroke
                   : DotSize.focusRingStroke * size / DotSize.focusRing,

@@ -30,7 +30,7 @@ class InspectorToggle extends ConsumerWidget {
       child: Tooltip(
         message: label,
         child: Material(
-          color: on ? t.colors.accentTint : Colors.transparent,
+          color: on ? t.colors.tonal : Colors.transparent,
           shape: const StadiumBorder(),
           child: InkWell(
             onTap: tap,

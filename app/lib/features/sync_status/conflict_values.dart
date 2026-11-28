@@ -145,9 +145,9 @@ class _Version extends StatelessWidget {
             ),
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: t.colors.surface,
+                color: t.colors.ground,
                 borderRadius: BorderRadius.circular(DotRadii.field),
-                border: Border.all(color: t.colors.outline),
+                border: Border.all(color: t.colors.hairline),
               ),
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(DotSpace.s),

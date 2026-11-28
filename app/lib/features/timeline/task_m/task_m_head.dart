@@ -83,7 +83,7 @@ class TaskMHead extends ConsumerWidget {
               Text(
                 meta,
                 style: t.styles.rowMeta.copyWith(
-                  color: live ? t.colors.accentInk : t.colors.muted,
+                  color: live ? t.colors.accentText : t.colors.secondary,
                   fontWeight: live ? FontWeight.w700 : null,
                 ),
               ),
@@ -95,7 +95,7 @@ class TaskMHead extends ConsumerWidget {
             tooltip: l10n.editorClose,
             onPressed: close,
             style: IconButton.styleFrom(backgroundColor: t.colors.sunk),
-            icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+            icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
           ),
       ],
     );

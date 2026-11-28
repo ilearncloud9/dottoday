@@ -80,9 +80,7 @@ class _RevealHighlightState extends State<RevealHighlight> {
       duration: t.motion.slow,
       curve: t.motion.curve,
       decoration: BoxDecoration(
-        color: _lit
-            ? t.colors.accentTint
-            : t.colors.accentTint.withValues(alpha: 0),
+        color: _lit ? t.colors.tonal : t.colors.tonal.withValues(alpha: 0),
         borderRadius: const BorderRadius.all(Radius.circular(DotRadii.pill)),
       ),
       child: widget.child,

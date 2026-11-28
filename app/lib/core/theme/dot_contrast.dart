@@ -15,7 +15,7 @@ abstract final class DotContrast {
 
   /// [c]'s text styles, recoloured once per set of roles.
   static DotType styles(DotColors c) =>
-      _styles[c] ??= DotType.withColors(text: c.text, muted: c.muted);
+      _styles[c] ??= DotType.withColors(text: c.ink, muted: c.secondary);
 
   static final _styles = Expando<DotType>();
 }

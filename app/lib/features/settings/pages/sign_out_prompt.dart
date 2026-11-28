@@ -107,7 +107,7 @@ class SignOutPrompt extends StatelessWidget {
           Center(
             child: DotIcon(
               DotGlyphs.cloudSync,
-              color: t.colors.accentInk,
+              color: t.colors.accentText,
               size: AccountDialogSize.androidIcon,
             ),
           ),

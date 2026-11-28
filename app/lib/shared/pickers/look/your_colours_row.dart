@@ -122,11 +122,11 @@ class _AddButton extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: t.colors.muted,
+                  color: t.colors.secondary,
                   width: DotLook.outline,
                 ),
               ),
-              child: DotIcon(DotGlyphs.add, color: t.colors.text),
+              child: DotIcon(DotGlyphs.add, color: t.colors.ink),
             ),
           ),
         ),

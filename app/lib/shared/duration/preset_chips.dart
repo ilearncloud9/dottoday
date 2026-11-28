@@ -71,7 +71,7 @@ class PresetChips extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final selected = minutes == value;
-    final ink = selected ? t.colors.onAccent : t.colors.text;
+    final ink = selected ? t.colors.onAccent : t.colors.ink;
     return InputChip(
       label: Text(
         presetLabel(l10n, minutes),
@@ -81,8 +81,8 @@ class PresetChips extends StatelessWidget {
       selected: selected,
       showCheckmark: false,
       selectedColor: t.colors.accentFill,
-      backgroundColor: t.colors.raised,
-      side: selected ? BorderSide.none : BorderSide(color: t.colors.outline),
+      backgroundColor: t.colors.card,
+      side: selected ? BorderSide.none : BorderSide(color: t.colors.hairline),
       shape: dotChipShape(context),
       onSelected: (_) => onPick(minutes),
       deleteIcon: DotIcon(
@@ -117,7 +117,7 @@ class _AddPreset extends StatelessWidget {
         onTap: onTap,
         customBorder: const StadiumBorder(),
         child: CustomPaint(
-          painter: DashedPillPainter(color: t.colors.muted),
+          painter: DashedPillPainter(color: t.colors.secondary),
           child: ConstrainedBox(
             constraints: const BoxConstraints(minHeight: DotTouch.android),
             child: Padding(
@@ -128,12 +128,12 @@ class _AddPreset extends StatelessWidget {
                 children: [
                   DotIcon(
                     DotGlyphs.add,
-                    color: t.colors.muted,
+                    color: t.colors.secondary,
                     size: DotSize.rowIcon,
                   ),
                   Text(
                     l10n.durationAddPreset,
-                    style: t.styles.button.copyWith(color: t.colors.muted),
+                    style: t.styles.button.copyWith(color: t.colors.secondary),
                   ),
                 ],
               ),

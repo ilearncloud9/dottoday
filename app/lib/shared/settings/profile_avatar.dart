@@ -22,17 +22,17 @@ class ProfileAvatar extends StatelessWidget {
     final t = DotTheme.of(context);
     return CircleAvatar(
       radius: size / 2,
-      backgroundColor: t.colors.accentTint,
+      backgroundColor: t.colors.tonal,
       child: name.isEmpty
           ? DotIcon(
               DotGlyphs.person,
-              color: t.colors.accentInk,
+              color: t.colors.accentText,
               // 24 in the 44 circle, as before; about 18 in the 32 one.
               size: size * DotSize.navIcon / DotSize.dayDot,
             )
           : Text(
               name.characters.first.toUpperCase(),
-              style: t.styles.cardTitle.copyWith(color: t.colors.accentInk),
+              style: t.styles.cardTitle.copyWith(color: t.colors.accentText),
             ),
     );
   }

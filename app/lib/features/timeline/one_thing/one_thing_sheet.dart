@@ -38,9 +38,9 @@ class _OneThingSheetBody extends ConsumerWidget {
         if (offer.isEmpty)
           Text(
             context.l10n.oneThingNothing,
-            style: DotTheme.of(
-              context,
-            ).styles.body.copyWith(color: DotTheme.of(context).colors.muted),
+            style: DotTheme.of(context).styles.body.copyWith(
+              color: DotTheme.of(context).colors.secondary,
+            ),
           )
         else
           OneThingPicker(

@@ -105,7 +105,7 @@ class FocusTopBar extends StatelessWidget {
       children: [
         TextButton.icon(
           onPressed: onLeave,
-          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentInk),
+          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentText),
           label: Text(l10n.focusBack),
         ),
         Expanded(
@@ -120,7 +120,7 @@ class FocusTopBar extends StatelessWidget {
         ),
         DotMenuButton<VoidCallback>(
           tooltip: l10n.focusMore,
-          icon: DotIcon(DotGlyphs.more, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.more, color: t.colors.ink),
           onSelected: (run) => run(),
           entries: () => [
             ContextMenuEntry(

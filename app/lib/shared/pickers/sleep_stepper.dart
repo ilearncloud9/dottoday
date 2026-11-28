@@ -35,7 +35,7 @@ class SleepStepper extends StatelessWidget {
         IconButton(
           tooltip: l10n.sleepLess,
           onPressed: i == 0 ? null : () => onChanged(choices[i - 1]),
-          icon: DotIcon(DotGlyphs.minus, color: t.colors.accentInk),
+          icon: DotIcon(DotGlyphs.minus, color: t.colors.accentText),
         ),
         Semantics(
           liveRegion: true,
@@ -46,7 +46,7 @@ class SleepStepper extends StatelessWidget {
           onPressed: i == choices.length - 1
               ? null
               : () => onChanged(choices[i + 1]),
-          icon: DotIcon(DotGlyphs.add, color: t.colors.accentInk),
+          icon: DotIcon(DotGlyphs.add, color: t.colors.accentText),
         ),
       ],
     );

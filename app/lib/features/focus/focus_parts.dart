@@ -31,7 +31,7 @@ class FocusStepCard extends StatelessWidget {
     final l10n = context.l10n;
     final step = state.step;
     final left = state.stepLeft;
-    final meta = t.styles.cardTitle.copyWith(color: t.colors.muted);
+    final meta = t.styles.cardTitle.copyWith(color: t.colors.secondary);
     final usual = switch (state.stepLearned) {
       Learned(usualMinutes: final usual?, :final samples) => LearnedLine(
         text: l10n.learnUsually(formatDurationShort(l10n, usual)),
@@ -48,8 +48,8 @@ class FocusStepCard extends StatelessWidget {
     // E-R2-9: "STEP 3 OF 4", the step, then "8:00 left · usually 20 min".
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
-        border: Border.all(color: t.colors.outline),
+        color: t.colors.card,
+        border: Border.all(color: t.colors.hairline),
         borderRadius: const BorderRadius.all(
           Radius.circular(DotRadii.cardLarge),
         ),
@@ -79,7 +79,7 @@ class FocusStepCard extends StatelessWidget {
                   if (left != null)
                     Text(
                       l10n.liveActivityLeft(countdown(left)),
-                      style: meta.copyWith(color: t.colors.accentInk),
+                      style: meta.copyWith(color: t.colors.accentText),
                     ),
                   if (left != null && usual != null)
                     ExcludeSemantics(
@@ -123,9 +123,9 @@ class FocusStepThread extends StatelessWidget {
                               : t.styles.body)
                           .copyWith(
                             color: s.done
-                                ? t.colors.muted
+                                ? t.colors.secondary
                                 : i == state.stepIndex
-                                ? t.colors.accentInk
+                                ? t.colors.accentText
                                 : null,
                             decoration: s.done
                                 ? TextDecoration.lineThrough
@@ -158,7 +158,7 @@ class _StepMark extends StatelessWidget {
           shape: BoxShape.circle,
           color: step.done ? c.accent : null,
           border: Border.all(
-            color: step.done || current ? c.accent : c.muted,
+            color: step.done || current ? c.accent : c.secondary,
             width: DotSize.smallDotOutline,
           ),
         ),
@@ -201,8 +201,8 @@ class FocusToggle extends StatelessWidget {
     final on = value && onChanged != null;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: on ? t.colors.accentTint : null,
-        border: Border.all(color: on ? t.colors.accent : t.colors.outline),
+        color: on ? t.colors.tonal : null,
+        border: Border.all(color: on ? t.colors.accent : t.colors.hairline),
         borderRadius: const BorderRadius.all(
           Radius.circular(DotRadii.cardLarge),
         ),
@@ -218,7 +218,7 @@ class FocusToggle extends StatelessWidget {
             children: [
               DotIcon(
                 glyph,
-                color: on ? t.colors.accentInk : t.colors.muted,
+                color: on ? t.colors.accentText : t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
               Expanded(
@@ -228,13 +228,15 @@ class FocusToggle extends StatelessWidget {
                     Text(
                       label,
                       style: t.styles.body.copyWith(
-                        color: on ? t.colors.accentInk : null,
+                        color: on ? t.colors.accentText : null,
                       ),
                     ),
                     if (detail case final d?)
                       Text(
                         d,
-                        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                        style: t.styles.rowMeta.copyWith(
+                          color: t.colors.secondary,
+                        ),
                       ),
                   ],
                 ),

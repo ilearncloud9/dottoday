@@ -56,7 +56,7 @@ class NowRow extends StatelessWidget {
     final when = Text(
       time,
       style: (meta == null ? t.styles.rowTitle : t.styles.rowMeta).copyWith(
-        color: below ? t.colors.muted : t.colors.text,
+        color: below ? t.colors.secondary : t.colors.ink,
       ),
     );
     return MergeSemantics(
@@ -73,7 +73,7 @@ class NowRow extends StatelessWidget {
                 child: Text(
                   label,
                   style: t.styles.rowMeta.copyWith(
-                    color: t.colors.muted,
+                    color: t.colors.secondary,
                     fontWeight: android ? FontWeight.w500 : FontWeight.w700,
                   ),
                 ),
@@ -98,7 +98,7 @@ class NowRow extends StatelessWidget {
                             TextSpan(
                               text: ' $m', // l10n-ignore: a space before
                               style: t.styles.rowMeta.copyWith(
-                                color: t.colors.muted,
+                                color: t.colors.secondary,
                               ),
                             ),
                         ],
@@ -108,12 +108,14 @@ class NowRow extends StatelessWidget {
                           ? t.styles.rowTitle.copyWith(
                               fontWeight: FontWeight.w700,
                             )
-                          : t.styles.rowMeta.copyWith(color: t.colors.text),
+                          : t.styles.rowMeta.copyWith(color: t.colors.ink),
                     ),
                     if (meta case final m?)
                       Text(
                         m,
-                        style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                        style: t.styles.rowMeta.copyWith(
+                          color: t.colors.secondary,
+                        ),
                       ),
                     if (below) when,
                   ],
@@ -184,7 +186,7 @@ class NextUpRing extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: t.colors.raised,
+          color: t.colors.card,
           border: Border.all(color: s.ring, width: DotSize.nextUpStroke),
         ),
         child: glyph == null

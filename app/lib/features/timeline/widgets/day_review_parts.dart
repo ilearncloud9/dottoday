@@ -96,7 +96,7 @@ class ReviewWeekRow extends ConsumerWidget {
           ExcludeSemantics(
             child: DotIcon(
               DotGlyphs.chevronRight,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.rowIcon,
             ),
           ),
@@ -121,7 +121,7 @@ class _Card extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     const radius = BorderRadius.all(Radius.circular(DotRadii.cardLarge));
     final card = Material(
-      color: c.raised,
+      color: c.card,
       shape: RoundedRectangleBorder(
         borderRadius: radius,
         side: BorderSide(color: c.hairline),

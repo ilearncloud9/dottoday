@@ -27,7 +27,7 @@ class LowEnergyRow extends ConsumerWidget {
     return SettingsRow(
       // The leaf, as the Low-energy · on chip (E-R2-22).
       glyph: TaskIcon.leaf.glyph!,
-      tint: t.colors.accentInk,
+      tint: t.colors.accentText,
       title: l10n.lowEnergyMode,
       formLabel: l10n.planningFormEnergy,
       subtitle: l10n.settingsLowEnergyDetail,

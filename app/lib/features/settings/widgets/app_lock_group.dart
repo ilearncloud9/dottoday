@@ -27,7 +27,7 @@ class AppLockGroup extends ConsumerWidget {
       children: [
         SettingsRow(
           glyph: DotGlyphs.lock,
-          tint: t.colors.accentInk,
+          tint: t.colors.accentText,
           title: l10n.lockToggle,
           subtitle: l10n.lockToggleDetail,
           toggle: settings.enabled,
@@ -37,7 +37,7 @@ class AppLockGroup extends ConsumerWidget {
         if (settings.enabled)
           SettingsRow(
             glyph: DotGlyphs.clockFace,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.lockAfter,
             value: _label(l10n, settings.after),
             onTap: () async {
@@ -91,7 +91,7 @@ class _WebLock extends StatelessWidget {
       children: [
         SettingsRow(
           glyph: DotGlyphs.check,
-          tint: DotTheme.of(context).colors.muted,
+          tint: DotTheme.of(context).colors.secondary,
           title: l10n.lockWebTitle,
           subtitle: l10n.lockWebDetail,
           // Only tells, as drawn (E-R2-24 §3, ED-497).

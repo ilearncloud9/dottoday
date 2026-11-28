@@ -28,12 +28,12 @@ class RoundMoreButton extends StatelessWidget {
       onPressed: onTap,
       tooltip: tooltip,
       style: IconButton.styleFrom(
-        backgroundColor: open ? t.colors.accentTint : null,
-        side: open ? BorderSide.none : BorderSide(color: t.colors.outline),
+        backgroundColor: open ? t.colors.tonal : null,
+        side: open ? BorderSide.none : BorderSide(color: t.colors.hairline),
       ),
       icon: DotIcon(
         DotGlyphs.more,
-        color: open ? t.colors.accentInk : t.colors.muted,
+        color: open ? t.colors.accentText : t.colors.secondary,
         size: DotSize.rowIcon,
         active: true,
       ),

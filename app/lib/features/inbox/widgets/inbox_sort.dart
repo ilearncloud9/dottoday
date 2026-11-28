@@ -25,7 +25,7 @@ class InboxSortButton extends ConsumerWidget {
           MenuItemButton(
             onPressed: () => ref.read(inboxSortChoiceProvider.notifier).pick(s),
             trailingIcon: s == picked
-                ? DotIcon(DotGlyphs.check, color: t.colors.accentInk)
+                ? DotIcon(DotGlyphs.check, color: t.colors.accentText)
                 : null,
             child: Text(name(s)),
           ),
@@ -33,7 +33,7 @@ class InboxSortButton extends ConsumerWidget {
       builder: (context, controller, _) => TextButton(
         onPressed: () =>
             controller.isOpen ? controller.close() : controller.open(),
-        style: TextButton.styleFrom(foregroundColor: t.colors.muted),
+        style: TextButton.styleFrom(foregroundColor: t.colors.secondary),
         child: Text(l10n.inboxSortLabel(name(picked))),
       ),
     );

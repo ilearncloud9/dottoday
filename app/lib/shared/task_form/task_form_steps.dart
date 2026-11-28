@@ -74,10 +74,10 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
       ),
     );
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        side: BorderSide(color: t.colors.outline),
+        side: BorderSide(color: t.colors.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.m),
@@ -87,7 +87,7 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
             caption(widget.stepsCaption),
             for (final (i, s) in widget.steps.indexed) _stepRow(t, i, s),
             _addRow(t),
-            Divider(height: DotSpace.l, color: t.colors.outline),
+            Divider(height: DotSpace.l, color: t.colors.hairline),
             caption(widget.notesCaption),
             TextField(
               contextMenuBuilder: systemTextMenu,
@@ -140,7 +140,7 @@ class _TaskFormStepsState extends State<TaskFormSteps> {
               onPressed: () => remove(i),
               icon: DotIcon(
                 DotGlyphs.close,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.sidebarGlyph,
               ),
             ),

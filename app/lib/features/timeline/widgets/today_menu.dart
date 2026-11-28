@@ -54,7 +54,7 @@ class TodayMenu extends ConsumerWidget {
     return DotMenuButton<VoidCallback>(
       tooltip: l10n.timelineMenu,
       icon: button == null
-          ? DotIcon(DotGlyphs.more, color: t.colors.text)
+          ? DotIcon(DotGlyphs.more, color: t.colors.ink)
           : null,
       child: button,
       onSelected: (run) => run(),

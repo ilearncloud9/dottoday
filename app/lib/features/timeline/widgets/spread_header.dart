@@ -66,7 +66,7 @@ class SpreadHeader extends ConsumerWidget {
         ),
         Text(
           _subtitle(context, ref, DateFormat.MMMMEEEEd(locale)),
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
       ],
     );

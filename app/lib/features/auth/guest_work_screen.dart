@@ -169,7 +169,7 @@ class _MineBox extends StatelessWidget {
                     style: AccountDecisionType.row(
                       t.styles,
                       look,
-                    ).copyWith(color: t.colors.muted),
+                    ).copyWith(color: t.colors.secondary),
                   ),
                 ),
               ],
@@ -222,10 +222,10 @@ class _GuestNoticeScreenState extends ConsumerState<GuestNoticeScreen> {
       content: [
         ChoiceCardFrame(
           look: look,
-          outline: t.colors.outline,
+          outline: t.colors.hairline,
           mark: DotIcon(
             DotGlyphs.checkCircle,
-            color: t.colors.accentInk,
+            color: t.colors.accentText,
             size: AccountDecisionSize.radio(look),
           ),
           title: l10n.guestNoticeCardTitle,

@@ -51,7 +51,7 @@ class ReviewNightLine extends ConsumerWidget {
       // On Today's card it is a quiet line under the title (E-R2-27).
       style: pill
           ? t.styles.chip
-          : t.styles.body.copyWith(color: t.colors.muted),
+          : t.styles.body.copyWith(color: t.colors.secondary),
     );
     if (!pill) return text;
     return DecoratedBox(
@@ -70,7 +70,7 @@ class ReviewNightLine extends ConsumerWidget {
             ExcludeSemantics(
               child: DotIcon(
                 DotGlyphs.moon,
-                color: t.colors.muted,
+                color: t.colors.secondary,
                 size: DotSize.rowIcon,
               ),
             ),

@@ -114,7 +114,7 @@ class _GradientSliderState extends State<GradientSlider> {
                   thumb: widget.thumb,
                   ring: DotPrimitives.white,
                   edge: t.colors.hairline,
-                  halo: _focus.hasFocus ? t.colors.accentTint : null,
+                  halo: _focus.hasFocus ? t.colors.tonal : null,
                   track: widget.track,
                   thumbSize: widget.thumbSize,
                 ),

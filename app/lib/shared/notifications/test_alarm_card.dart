@@ -166,9 +166,9 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
         if (_step != TestAlarmStep.idle)
           DecoratedBox(
             decoration: BoxDecoration(
-              color: t.colors.raised,
+              color: t.colors.card,
               borderRadius: BorderRadius.circular(DotRadii.card),
-              border: Border.all(color: t.colors.outline),
+              border: Border.all(color: t.colors.hairline),
             ),
             child: Padding(
               padding: const EdgeInsets.all(DotSpace.l),
@@ -184,7 +184,7 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
     final t = DotTheme.of(context);
     return SettingsRow(
       glyph: DotGlyphs.bell,
-      tint: t.colors.accentInk,
+      tint: t.colors.accentText,
       title: widget.title,
       subtitle: widget.subtitle,
       // A button on a Mac/web form (ED-450).
@@ -268,8 +268,8 @@ class _TestAlarmRowState extends State<TestAlarmRow> {
       style: OutlinedButton.styleFrom(
         shape: shape,
         minimumSize: size,
-        foregroundColor: ink ? t.colors.text : t.colors.accentInk,
-        side: BorderSide(color: t.colors.outline),
+        foregroundColor: ink ? t.colors.ink : t.colors.accentText,
+        side: BorderSide(color: t.colors.hairline),
       ),
       child: Text(label),
     );

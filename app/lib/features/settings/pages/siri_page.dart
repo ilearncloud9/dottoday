@@ -33,7 +33,7 @@ class SiriPage extends ConsumerWidget {
             for (final (glyph, color, phrase, detail) in [
               (
                 DotGlyphs.add,
-                t.colors.accentInk,
+                t.colors.accentText,
                 l10n.siriPhraseAdd,
                 l10n.siriPhraseAddDetail,
               ),

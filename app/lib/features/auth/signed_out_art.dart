@@ -40,7 +40,7 @@ class SignedOutArt extends StatelessWidget {
               ),
               DotIcon(
                 DotGlyphs.signedOutLock,
-                color: c.muted,
+                color: c.secondary,
                 size: size * SignedOutSize.artLock,
               ),
             ],

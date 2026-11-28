@@ -181,7 +181,7 @@ class _Text extends StatelessWidget {
     final t = DotTheme.of(context);
     final l10n = context.l10n;
     final done = task.state == DotState.done;
-    final muted = t.colors.muted;
+    final muted = t.colors.secondary;
     final metaStyle = large ? t.styles.threadMeta : t.styles.rowMeta;
     final meta = Wrap(
       spacing: DotSpace.xs,
@@ -242,5 +242,5 @@ class _Text extends StatelessWidget {
 
   /// The plan's words on the Reality thread: quieter than the times.
   static TextStyle _plan(DotTheme t) =>
-      t.styles.rowMeta.copyWith(color: t.colors.muted);
+      t.styles.rowMeta.copyWith(color: t.colors.secondary);
 }

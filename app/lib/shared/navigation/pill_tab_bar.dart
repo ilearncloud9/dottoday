@@ -58,11 +58,11 @@ class _Pill extends StatelessWidget {
       height: PillTabShell.height,
       padding: const EdgeInsets.all(DotSpace.xs),
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(DotRadii.pill),
         border:
             solidOutline(context) ??
-            Border.all(color: c.outline, width: DotSpace.hairline),
+            Border.all(color: c.hairline, width: DotSpace.hairline),
         boxShadow: DotElevation.floating,
       ),
       child: Row(
@@ -96,7 +96,7 @@ class _Tab extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final c = t.colors;
-    final ink = selected ? c.accentInk : c.muted;
+    final ink = selected ? c.accentText : c.secondary;
     return Semantics(
       button: true,
       selected: selected,
@@ -111,7 +111,7 @@ class _Tab extends StatelessWidget {
           curve: t.motion.curve,
           decoration: ShapeDecoration(
             shape: const StadiumBorder(),
-            color: selected ? Color.alphaBlend(c.accentTint, c.raised) : null,
+            color: selected ? Color.alphaBlend(c.tonal, c.card) : null,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -120,7 +120,7 @@ class _Tab extends StatelessWidget {
               ShellIcon(
                 destination: destination,
                 active: selected,
-                color: selected ? c.accent : c.text,
+                color: selected ? c.accent : c.ink,
               ),
               Text(
                 destination.label,

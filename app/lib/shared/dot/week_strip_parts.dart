@@ -24,7 +24,7 @@ class CompletionDot extends StatelessWidget {
       painter: _CompletionPainter(
         share: completion.share,
         accent: c.accent,
-        track: Color.alphaBlend(c.accentTint, c.raised),
+        track: Color.alphaBlend(c.tonal, c.card),
         hairline: c.threadAhead,
       ),
     );
@@ -109,7 +109,7 @@ class PullHandle extends StatelessWidget {
               width: DotSize.rowDot,
               height: DotSize.weekDot / 2 + 1,
               decoration: BoxDecoration(
-                color: c.outline,
+                color: c.hairline,
                 borderRadius: BorderRadius.circular(DotRadii.pill),
               ),
             ),

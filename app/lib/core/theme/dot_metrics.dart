@@ -16,9 +16,6 @@ abstract final class DotSpace {
   /// Side margin of phone pages (20 pt in `Main`, `A-ios-inbox`).
   static const double page = 20;
 
-  /// Side margin of Mac/web pages (`A-mac-today-alt1-spread`).
-  static const double pageExpanded = 64;
-
   /// The now pill's side padding (E rules §5.3: 0 7).
   static const double nowPill = 7;
 
@@ -435,7 +432,7 @@ abstract final class DotSize {
   /// The Workspace inspector (E-FullA-v2, ED-170 C1): 248 wide with 14
   /// inside; its 38 ring, the 36 "Need more time?" pill with 28 chips,
   /// the 32 Done / Focus / Shift rest buttons, the 58 label column, 26
-  /// fields, 24 alert chips, 15 subtask boxes and the 22 overlap knot. With
+  /// fields, 24 alert chips and the 22 overlap knot. With
   /// touch they grow to the touch height.
   static const double inspector = 248;
   static const double inspectorPad = 14;
@@ -446,7 +443,6 @@ abstract final class DotSize {
   static const double inspectorLabel = 58;
   static const double inspectorField = 26;
   static const double inspectorChip = 24;
-  static const double inspectorCheck = 15;
   static const double inspectorKnot = 22;
 
   /// The inspector's start and end boxes (46 and 50 drawn; one width), and
@@ -469,11 +465,6 @@ abstract final class DotSize {
   /// row.
   static const double wideRowFrom = 300;
   static const double wideRowMeta = 144;
-
-  /// Today card's share of the Mac spread against each side day (render:
-  /// 700 px card between ~430 px days).
-  static const int spreadCardFlex = 8;
-  static const int spreadSideFlex = 5;
 
   static const double rowDot = 36;
 
@@ -701,9 +692,6 @@ abstract final class DotSize {
   static const double breakdownLead = 34;
   static const double dayDot = 44;
 
-  /// The day dot on the Wake Up card (docs/15 §5 step 2).
-  static const double wakeUpDayDot = 96;
-
   /// The Wake Up card as the thread (E-R2-19-B, ED-314): the time column,
   /// the mark column and its marks (Wake Up's sun, the first dot, the rest),
   /// the line between them, the gap between rows, and the widths it docks
@@ -722,10 +710,6 @@ abstract final class DotSize {
   /// The day dot on Today's one-line header, beside the date and ⋯ so
   /// "October 21, 2026 ⌄" fits a 390 pt phone (ADR-0015).
   static const double headerDayDot = 36;
-
-  /// The identity dot on Add step 1 (`A-ios-add-what`); step 2 uses
-  /// [dayDot].
-  static const double addDot = 64;
 
   /// Focus's ring (`B-ios-focus`: 160 px; the roadmap's 120 corrected,
   /// docs/09 M10.5), its stroke and the glyph inside.

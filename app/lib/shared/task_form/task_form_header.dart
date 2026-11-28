@@ -63,7 +63,7 @@ class TaskFormHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (summary case final s?)
-                Text(s, style: t.styles.rowMeta.copyWith(color: t.colors.text)),
+                Text(s, style: t.styles.rowMeta.copyWith(color: t.colors.ink)),
               title,
             ],
           ),
@@ -136,9 +136,9 @@ class _Look extends StatelessWidget {
                   width: badge,
                   height: badge,
                   decoration: BoxDecoration(
-                    color: t.colors.raised,
+                    color: t.colors.card,
                     shape: BoxShape.circle,
-                    border: Border.all(color: t.colors.outline),
+                    border: Border.all(color: t.colors.hairline),
                   ),
                   alignment: Alignment.center,
                   child: DotIcon(
@@ -203,7 +203,7 @@ class TaskFormTitleField extends StatelessWidget {
         // A full touch target, however short the title's line (§12).
         constraints: const BoxConstraints(minHeight: DotTouch.android),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: t.colors.outline),
+          borderSide: BorderSide(color: t.colors.hairline),
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: t.colors.accent, width: DotSpace.xxs),

@@ -222,7 +222,7 @@ class _Column extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: DotTouch.android),
           decoration: hovered
               ? BoxDecoration(
-                  color: DotTheme.of(context).colors.accentTint,
+                  color: DotTheme.of(context).colors.tonal,
                   borderRadius: BorderRadius.circular(DotRadii.card),
                 )
               : null,
@@ -264,7 +264,7 @@ class _Column extends StatelessWidget {
             day.date,
             style: t.styles.stripDate.copyWith(
               color: filled
-                  ? (day.isToday ? c.onAccent : c.surface)
+                  ? (day.isToday ? c.onAccent : c.ground)
                   : day.isToday
                   ? c.accent
                   : null,

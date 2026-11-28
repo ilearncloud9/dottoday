@@ -86,7 +86,7 @@ class ChoiceRow<T> extends StatelessWidget {
         title: Text(
           choice.label,
           style: disabled
-              ? t.styles.body.copyWith(color: t.colors.muted)
+              ? t.styles.body.copyWith(color: t.colors.secondary)
               : t.styles.body,
         ),
         subtitle: detail == null ? null : Text(detail, style: t.styles.rowMeta),

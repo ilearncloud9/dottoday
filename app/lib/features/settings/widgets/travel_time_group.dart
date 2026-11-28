@@ -37,7 +37,7 @@ class TravelTimeGroup extends StatelessWidget {
         if (settings.suggestTravelTime)
           SettingsRow(
             glyph: DotGlyphs.clock,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.travelTitle,
             value: formatDurationShort(l10n, settings.travelTimeMin),
             onTap: () => unawaited(_pick(context)),

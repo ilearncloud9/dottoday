@@ -37,7 +37,7 @@ class EverythingPage extends ConsumerWidget {
           children: [
             SettingsRow(
               glyph: DotGlyphs.search,
-              tint: t.colors.accentInk,
+              tint: t.colors.accentText,
               title: l10n.navSearch,
               onTap: () => context.go(AppRoutes.search),
             ),

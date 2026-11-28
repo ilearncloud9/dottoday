@@ -180,7 +180,7 @@ class _Header extends StatelessWidget {
               ),
               Text(
                 l10n.searchSubtitle,
-                style: t.styles.body.copyWith(color: t.colors.muted),
+                style: t.styles.body.copyWith(color: t.colors.secondary),
               ),
             ],
           ),

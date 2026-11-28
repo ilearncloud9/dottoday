@@ -14,26 +14,26 @@ class LockedDot extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _Thread(color: c.muted),
+          _Thread(color: c.secondary),
           Container(
             width: DotSize.stateIcon,
             height: DotSize.stateIcon,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: c.accentInk,
+                color: c.accentText,
                 width: DotSize.miniRingStroke,
               ),
             ),
             child: Center(
               child: DotIcon(
                 DotGlyphs.lock,
-                color: c.accentInk,
+                color: c.accentText,
                 size: DotSize.stateGlyph,
               ),
             ),
           ),
-          _Thread(color: c.muted),
+          _Thread(color: c.secondary),
         ],
       ),
     );

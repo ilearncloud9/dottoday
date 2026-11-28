@@ -229,7 +229,7 @@ class _Page extends StatelessWidget {
             ),
             Text(
               _stats(context, locale),
-              style: t.styles.body.copyWith(color: t.colors.muted),
+              style: t.styles.body.copyWith(color: t.colors.secondary),
             ),
           ],
         ),

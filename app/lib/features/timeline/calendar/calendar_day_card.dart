@@ -41,7 +41,7 @@ class CalendarDayCard extends ConsumerWidget {
       ..sort((a, b) => a.startUtc!.compareTo(b.startUtc!));
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: android ? t.colors.tile : t.colors.raised,
+        color: android ? t.colors.tile : t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Padding(
@@ -161,7 +161,7 @@ class _Row extends StatelessWidget {
                     left == null
                         ? range
                         : l10n.liveMeta(range, l10n.liveNowLeft(left)),
-                    style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
                   ),
                   Text(task.title, style: t.styles.rowTitle),
                 ],

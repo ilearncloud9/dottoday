@@ -56,7 +56,7 @@ class AccountPage extends ConsumerWidget {
             children: [
               SettingsRow(
                 glyph: DotGlyphs.person,
-                tint: t.colors.accentInk,
+                tint: t.colors.accentText,
                 title: l10n.accountName,
                 value: name == null || name.isEmpty
                     ? l10n.accountNameNone

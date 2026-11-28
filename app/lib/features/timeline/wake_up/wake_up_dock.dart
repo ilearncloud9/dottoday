@@ -39,9 +39,9 @@ class WakeUpCardPanel extends ConsumerWidget {
         DotSpace.m,
       ),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.sheetCard),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
         boxShadow: DotElevation.floating,
       ),
       clipBehavior: Clip.antiAlias,

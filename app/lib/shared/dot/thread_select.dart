@@ -96,7 +96,7 @@ class _SelectableTaskRowState extends State<SelectableTaskRow> {
         onTap: onSelect,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: selected ? c.accentTint : null,
+            color: selected ? c.tonal : null,
             borderRadius: BorderRadius.circular(DotRadii.card),
           ),
           child: Stack(
@@ -176,7 +176,7 @@ class PickedRowEdge extends StatelessWidget {
             ? ShapeDecoration(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(DotRadii.card),
-                  side: BorderSide(color: c.text, width: DotSpace.xxs),
+                  side: BorderSide(color: c.ink, width: DotSpace.xxs),
                 ),
               )
             : const BoxDecoration(),

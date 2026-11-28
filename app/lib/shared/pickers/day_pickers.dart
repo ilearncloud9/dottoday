@@ -132,12 +132,12 @@ class _MonthPickerState extends State<_MonthPicker> {
       IconButton(
         tooltip: l10n.monthPrevious,
         onPressed: () => _shift(-1),
-        icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentInk),
+        icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.accentText),
       ),
       IconButton(
         tooltip: l10n.monthNext,
         onPressed: () => _shift(1),
-        icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.accentInk),
+        icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.accentText),
       ),
     ],
   );
@@ -214,7 +214,7 @@ class _WeekPickerState extends State<_WeekPicker> {
         IconButton(
           tooltip: l10n.weekPrevious,
           onPressed: () => _shift(-7),
-          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.chevronLeft, color: t.colors.ink),
         ),
         Expanded(
           child: WeekStrip(
@@ -235,7 +235,7 @@ class _WeekPickerState extends State<_WeekPicker> {
         IconButton(
           tooltip: l10n.weekNext,
           onPressed: () => _shift(7),
-          icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.chevronRight, color: t.colors.ink),
         ),
       ],
     );

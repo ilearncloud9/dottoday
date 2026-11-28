@@ -45,7 +45,7 @@ class SettingsChoiceCard extends StatelessWidget {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AccountDecisionSize.radius(look)),
       side: BorderSide(
-        color: selected ? c.accent : c.outline,
+        color: selected ? c.accent : c.hairline,
         width: AccountDecisionSize.cardOutline,
       ),
     );
@@ -54,7 +54,7 @@ class SettingsChoiceCard extends StatelessWidget {
       inMutuallyExclusiveGroup: true,
       checked: selected,
       child: Material(
-        color: c.raised,
+        color: c.card,
         shape: shape,
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -122,7 +122,7 @@ class _Rows extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final value = AccountDecisionType.row(t.styles, look);
-    final label = value.copyWith(color: t.colors.muted);
+    final label = value.copyWith(color: t.colors.secondary);
     final gap = AccountDecisionSize.rowGap(look);
     return Table(
       columnWidths: {

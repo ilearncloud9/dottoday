@@ -171,7 +171,7 @@ class LookSearchField extends StatelessWidget {
         prefixIcon: Center(
           widthFactor: 1,
           heightFactor: 1,
-          child: DotIcon(DotGlyphs.search, color: t.colors.muted),
+          child: DotIcon(DotGlyphs.search, color: t.colors.secondary),
         ),
       ),
     );
@@ -207,7 +207,7 @@ class _Chips extends StatelessWidget {
               side: BorderSide.none,
               labelStyle: t.styles.rowMeta.copyWith(
                 fontWeight: FontWeight.w600,
-                color: c == selected ? t.colors.onAccent : t.colors.text,
+                color: c == selected ? t.colors.onAccent : t.colors.ink,
               ),
               onSelected: (_) => onTap(c),
             ),

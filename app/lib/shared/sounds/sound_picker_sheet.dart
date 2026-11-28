@@ -64,7 +64,7 @@ class _SoundSheetState extends ConsumerState<_SoundSheet> {
                 IconButton(
                   onPressed: () => Navigator.of(context).maybePop(),
                   tooltip: l10n.sheetClose,
-                  icon: DotIcon(DotGlyphs.close, color: t.colors.muted),
+                  icon: DotIcon(DotGlyphs.close, color: t.colors.secondary),
                 ),
               ],
             ),

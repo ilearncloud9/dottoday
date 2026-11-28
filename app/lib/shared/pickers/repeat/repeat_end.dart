@@ -32,7 +32,7 @@ class CountStepper extends StatelessWidget {
         IconButton(
           tooltip: less,
           onPressed: value > 1 ? () => onChanged(value - 1) : null,
-          icon: DotIcon(DotGlyphs.minus, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.minus, color: t.colors.ink),
         ),
         Semantics(
           liveRegion: true,
@@ -41,7 +41,7 @@ class CountStepper extends StatelessWidget {
         IconButton(
           tooltip: more,
           onPressed: value < 99 ? () => onChanged(value + 1) : null,
-          icon: DotIcon(DotGlyphs.add, color: t.colors.text),
+          icon: DotIcon(DotGlyphs.add, color: t.colors.ink),
         ),
       ],
     );
@@ -106,7 +106,7 @@ class RepeatEndRow extends StatelessWidget {
           ),
           EndsOn(:final until) => OutlinedButton.icon(
             onPressed: () => unawaited(_pickDate(context, until)),
-            icon: DotIcon(DotGlyphs.calendar, color: t.colors.text),
+            icon: DotIcon(DotGlyphs.calendar, color: t.colors.ink),
             label: Text(DateFormat.yMMMd(locale).format(until)),
           ),
           EndsNever() => const SizedBox.shrink(),

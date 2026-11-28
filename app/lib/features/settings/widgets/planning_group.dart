@@ -53,7 +53,7 @@ class PlanningGroup extends StatelessWidget {
     return [
       SettingsRow(
         glyph: DotGlyphs.clock,
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
         title: l10n.settingsDefaultDuration,
         value: formatDurationShort(l10n, settings.defaultDurationMin),
         onTap: () => unawaited(_duration(context)),
@@ -70,7 +70,7 @@ class PlanningGroup extends StatelessWidget {
     return [
       SettingsRow(
         glyph: DotGlyphs.dottedLine,
-        tint: t.colors.muted,
+        tint: t.colors.secondary,
         title: l10n.settingsShowFree,
         subtitle: l10n.settingsShowFreeDetail,
         formLabel: l10n.planningFormDay,
@@ -101,7 +101,7 @@ class PlanningGroup extends StatelessWidget {
       // PRD F3.3: off by default, once a day from Wake Up.
       SettingsRow(
         glyph: DotGlyphs.inbox,
-        tint: t.colors.accentInk,
+        tint: t.colors.accentText,
         title: l10n.settingsInboxNudge,
         subtitle: l10n.settingsInboxNudgeDetail,
         toggle: settings.inboxNudge,
@@ -218,7 +218,7 @@ class _RoutinesRow extends ConsumerWidget {
     final path = AppRoutes.settingsPage(SettingsPage.routines);
     return SettingsRow(
       glyph: DotGlyphs.repeat,
-      tint: t.colors.accentInk,
+      tint: t.colors.accentText,
       title: context.l10n.routinesTitle,
       formButton: context.l10n.settingsOpenRoutines,
       // The form's button names the page instead (ED-450).

@@ -75,7 +75,7 @@ class AddModeTabs extends StatelessWidget {
     return CupertinoSlidingSegmentedControl<AddMode>(
       groupValue: mode,
       backgroundColor: c.chip,
-      thumbColor: c.raised,
+      thumbColor: c.card,
       onValueChanged: pick,
       children: children,
     );

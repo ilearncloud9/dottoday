@@ -124,7 +124,7 @@ class _WeekCardState extends State<WeekCard> {
     final edge = widget.selected
         ? c.accentFill
         : widget.picked
-        ? c.text
+        ? c.ink
         : MediaQuery.highContrastOf(context)
         ? c.secondary
         : hover || widget.lifted

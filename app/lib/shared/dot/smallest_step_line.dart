@@ -17,15 +17,15 @@ class SmallestStepLine extends StatelessWidget {
     final t = DotTheme.of(context);
     final line = Text(
       text,
-      style: t.styles.chip.copyWith(color: t.colors.accentInk),
+      style: t.styles.chip.copyWith(color: t.colors.accentText),
     );
     final onStart = this.onStart;
     if (onStart == null) return line;
     final start = FilledButton(
       onPressed: onStart,
       style: FilledButton.styleFrom(
-        backgroundColor: t.colors.accentTint,
-        foregroundColor: t.colors.accentInk,
+        backgroundColor: t.colors.tonal,
+        foregroundColor: t.colors.accentText,
         shape: const StadiumBorder(),
         // Small to look at, the platform's floor to tap.
         minimumSize: const Size(0, DotSize.smallChipHeight),

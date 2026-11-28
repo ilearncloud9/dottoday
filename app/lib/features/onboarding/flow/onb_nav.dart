@@ -58,10 +58,10 @@ class _Back extends StatelessWidget {
           width: OnbSize.navSpaceAndroid,
           height: DotTouch.android,
         ),
-        icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.text),
+        icon: DotIcon(DotGlyphs.arrowLeft, color: t.colors.ink),
       );
     }
-    final ink = t.colors.accentInk;
+    final ink = t.colors.accentText;
     return TextButton(
       key: OnbKeys.back,
       onPressed: onBack,
@@ -113,7 +113,7 @@ class OnbProgress extends StatelessWidget {
                 width: OnbSize.bar,
                 height: OnbSize.barHeight,
                 child: ColoredBox(
-                  color: c.outline,
+                  color: c.hairline,
                   child: TweenAnimationBuilder<double>(
                     tween: Tween(end: k < at ? 1 : 0),
                     duration: reduced ? Duration.zero : OnbMotion.bars,
@@ -154,11 +154,11 @@ class _Dot extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: done ? c.accent : c.raised,
+        color: done ? c.accent : c.card,
         border: done
             ? null
             : Border.all(
-                color: current ? c.accent : c.outline,
+                color: current ? c.accent : c.hairline,
                 width: current ? OnbSize.dotRingCurrent : OnbSize.dotRing,
               ),
       ),

@@ -46,7 +46,7 @@ class WebBarShell extends StatelessWidget {
           ? null
           : DecoratedBox(
               decoration: BoxDecoration(
-                color: c.surface,
+                color: c.ground,
                 border: Border(top: BorderSide(color: c.hairlineStrong)),
               ),
               child: SafeArea(
@@ -76,7 +76,7 @@ class WebBarShell extends StatelessWidget {
     final selected = i == bar.selected;
     final label = selected
         ? DotType.emphasis(
-            t.styles.tabLabelActive.copyWith(color: c.accentInk),
+            t.styles.tabLabelActive.copyWith(color: c.accentText),
             bold: true,
             italic: false,
           )
@@ -100,14 +100,14 @@ class WebBarShell extends StatelessWidget {
                 width: DotSize.webBarIndicator.width,
                 height: DotSize.webBarIndicator.height,
                 decoration: BoxDecoration(
-                  color: selected ? c.accentTint : null,
+                  color: selected ? c.tonal : null,
                   borderRadius: BorderRadius.circular(DotRadii.webIndicator),
                 ),
                 child: Center(
                   child: ShellIcon(
                     destination: d,
                     active: selected,
-                    color: selected ? c.accentInk : c.ink2,
+                    color: selected ? c.accentText : c.ink2,
                   ),
                 ),
               ),

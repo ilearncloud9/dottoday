@@ -91,14 +91,14 @@ class RemindersGroup extends ConsumerWidget {
         else
           SettingsRow(
             glyph: DotGlyphs.bell,
-            tint: t.colors.accentInk,
+            tint: t.colors.accentText,
             title: l10n.settingsTaskStarts,
             value: alertSetText(l10n, settings.defaultAlerts),
             onTap: () => unawaited(_editAlerts(context)),
           ),
         SettingsRow(
           glyph: DotGlyphs.sound,
-          tint: t.colors.muted,
+          tint: t.colors.secondary,
           title: l10n.settingsSound,
           // Unset is the Dot tone; "system" the OS sound (docs/12 §3).
           value: reminderSoundName(l10n, settings.reminderSound),

@@ -47,7 +47,7 @@ class FirstSyncRow extends StatelessWidget {
                 Text(
                   count,
                   style: t.styles.rowMeta.copyWith(
-                    color: t.colors.text,
+                    color: t.colors.ink,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -56,7 +56,7 @@ class FirstSyncRow extends StatelessWidget {
                   child: Text(
                     l10n.syncArriving,
                     textAlign: TextAlign.end,
-                    style: t.styles.rowMeta.copyWith(color: t.colors.text),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.ink),
                   ),
                 ),
               ],

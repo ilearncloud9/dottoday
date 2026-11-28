@@ -148,7 +148,7 @@ class LandingPreview extends StatelessWidget {
     return Container(
       height: scale.dot,
       decoration: BoxDecoration(
-        color: Color.alphaBlend(c.accentTint, c.raised),
+        color: Color.alphaBlend(c.tonal, c.card),
         borderRadius: BorderRadius.circular(DotRadii.pill),
         boxShadow: DotElevation.floating,
       ),
@@ -188,7 +188,7 @@ class LandingPreview extends StatelessWidget {
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         style: t.styles.button.copyWith(
-                          color: swatch?.ink ?? c.accentInk,
+                          color: swatch?.ink ?? c.accentText,
                         ),
                       ),
                     ),
@@ -250,13 +250,13 @@ class AllDayDropTarget extends StatelessWidget {
                   child: IgnorePointer(
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Color.alphaBlend(c.accentTint, c.raised),
+                        color: Color.alphaBlend(c.tonal, c.card),
                         borderRadius: BorderRadius.circular(DotRadii.pill),
                       ),
                       child: Center(
                         child: Text(
                           label,
-                          style: t.styles.button.copyWith(color: c.accentInk),
+                          style: t.styles.button.copyWith(color: c.accentText),
                         ),
                       ),
                     ),

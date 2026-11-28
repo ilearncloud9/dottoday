@@ -28,9 +28,9 @@ class AppearancePreview extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(DotSpace.m),
         decoration: BoxDecoration(
-          color: t.colors.raised,
+          color: t.colors.card,
           borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-          border: Border.all(color: t.colors.outline),
+          border: Border.all(color: t.colors.hairline),
         ),
         // Its own height, which grows with the text size; the switch
         // crossfades and the card eases to the new height.
@@ -132,13 +132,13 @@ class _Less extends StatelessWidget {
         SizedBox.square(
           dimension: DotSize.previewRing,
           child: CustomPaint(
-            painter: _Ring(track: t.colors.outline, arc: t.colors.accentInk),
+            painter: _Ring(track: t.colors.hairline, arc: t.colors.accentText),
             child: Center(
               child: Text(number.format(18), style: t.styles.rowTitle),
             ),
           ),
         ),
-        Text(l10n.previewTask, style: small.copyWith(color: t.colors.text)),
+        Text(l10n.previewTask, style: small.copyWith(color: t.colors.ink)),
         _Pill(text: l10n.liveDone),
         Text(l10n.previewNext, style: small),
         const SizedBox(height: DotSpace.s),
@@ -171,7 +171,7 @@ class _Tabs extends StatelessWidget {
           DotIcon(
             g,
             size: DotSize.rowIcon,
-            color: i == 0 ? t.colors.accentInk : t.colors.muted,
+            color: i == 0 ? t.colors.accentText : t.colors.secondary,
           ),
       ],
     );
@@ -189,7 +189,7 @@ class _Day extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final style = t.styles.rowMeta.copyWith(
-      color: today ? t.colors.onAccent : t.colors.text,
+      color: today ? t.colors.onAccent : t.colors.ink,
       fontWeight: FontWeight.w700,
     );
     return Container(
@@ -234,7 +234,7 @@ class _Line extends StatelessWidget {
             child: Container(
               height: DotSpace.xs,
               decoration: BoxDecoration(
-                color: t.colors.outline,
+                color: t.colors.hairline,
                 borderRadius: BorderRadius.circular(DotSpace.xs),
               ),
             ),

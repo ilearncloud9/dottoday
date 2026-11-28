@@ -59,7 +59,7 @@ class CalendarHeader extends StatelessWidget {
                 tooltip: l10n.todayPill,
                 icon: DotIcon(
                   DotGlyphs.calendar,
-                  color: t.colors.text,
+                  color: t.colors.ink,
                   size: DotSize.headerGlyphAndroid,
                 ),
               ),
@@ -126,7 +126,7 @@ class _Title extends StatelessWidget {
                       ),
                       child: DotIcon(
                         DotGlyphs.chevronDown,
-                        color: android ? t.colors.text : t.colors.accent,
+                        color: android ? t.colors.ink : t.colors.accent,
                         size: android
                             ? DotSize.headerGlyphAndroid
                             : DotSize.rowIcon,
@@ -177,7 +177,7 @@ class CalendarNav extends StatelessWidget {
           TextButton(
             onPressed: today,
             style: TextButton.styleFrom(
-              backgroundColor: t.colors.raised,
+              backgroundColor: t.colors.card,
               foregroundColor: t.colors.accentText,
               shape: const StadiumBorder(),
               minimumSize: const Size(0, DotTouch.min),
@@ -211,7 +211,7 @@ class _Step extends StatelessWidget {
       ),
       icon: DotIcon(
         glyph,
-        color: android ? c.text : c.accentText,
+        color: android ? c.ink : c.accentText,
         size: DotSize.rowIcon,
         bold: !android,
       ),

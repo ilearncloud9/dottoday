@@ -54,14 +54,14 @@ class _Sheet extends StatelessWidget {
     final t = DotTheme.of(context);
     final colors = TaskColor.values;
     return ColoredBox(
-      color: t.colors.surface,
+      color: t.colors.ground,
       child: Padding(
         padding: const EdgeInsets.all(DotSpace.page),
         child: Wrap(
           spacing: DotSpace.l,
           runSpacing: DotSpace.l,
           children: [
-            for (final g in _interface) DotIcon(g, color: t.colors.text),
+            for (final g in _interface) DotIcon(g, color: t.colors.ink),
             for (final g in _interface)
               DotIcon(g, color: t.colors.accent, active: true),
             for (final (i, icon) in _planning.indexed)

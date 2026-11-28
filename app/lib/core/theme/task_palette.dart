@@ -212,7 +212,7 @@ TaskSwatch _swatch(
 }) {
   final tint = Color.alphaBlend(
     color.withValues(alpha: tintAlpha),
-    colors.raised,
+    colors.card,
   );
   return TaskSwatch(
     color: color,
@@ -220,14 +220,14 @@ TaskSwatch _swatch(
     check: check,
     ink: inkFor(
       color,
-      backgrounds: [colors.surface, colors.raised, tint],
-      toward: colors.text,
+      backgrounds: [colors.ground, colors.card, tint],
+      toward: colors.ink,
     ),
     tint: tint,
     glyph: inkFor(
       color,
       backgrounds: [tint],
-      toward: colors.text,
+      toward: colors.ink,
       minRatio: glyphContrastTarget,
     ),
   );

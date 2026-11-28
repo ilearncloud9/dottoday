@@ -117,7 +117,7 @@ class _SyncBody extends ConsumerWidget {
           children: [
             DotIcon(
               paused ? DotGlyphs.clock : _stateGlyph(status.state),
-              color: t.colors.text,
+              color: t.colors.ink,
               size: DotSize.rowIcon,
             ),
             Expanded(
@@ -208,8 +208,8 @@ Widget _syncNowButton(
             onPressed: onPressed,
             // The E tonal (Q2a): the theme's pill is filled.
             style: FilledButton.styleFrom(
-              backgroundColor: c.accentTint,
-              foregroundColor: c.accentInk,
+              backgroundColor: c.tonal,
+              foregroundColor: c.accentText,
             ),
             child: label,
           )

@@ -47,7 +47,7 @@ class PickerCaption extends StatelessWidget {
           if (busy == null)
             DotIcon(
               DotGlyphs.freeRing,
-              color: t.colors.muted,
+              color: t.colors.secondary,
               size: DotSize.rowIcon,
             )
           else
@@ -59,7 +59,7 @@ class PickerCaption extends StatelessWidget {
             child: Text(
               text,
               style: busy == null
-                  ? t.styles.body.copyWith(color: t.colors.muted)
+                  ? t.styles.body.copyWith(color: t.colors.secondary)
                   : t.styles.body.copyWith(fontWeight: FontWeight.w600),
             ),
           ),

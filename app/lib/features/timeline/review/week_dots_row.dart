@@ -72,7 +72,7 @@ class _DayColumn extends StatelessWidget {
       ),
       excludeSemantics: true,
       child: Material(
-        color: selected ? c.accentTint : Colors.transparent,
+        color: selected ? c.tonal : Colors.transparent,
         borderRadius: radius,
         child: InkWell(
           onTap: onTap,

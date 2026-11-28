@@ -97,15 +97,15 @@ class _Chip extends StatelessWidget {
       ),
       child: FilterChip(
         label: Text(label),
-        labelStyle: TextStyle(color: value ? colors.accentInk : colors.text),
+        labelStyle: TextStyle(color: value ? colors.accentText : colors.ink),
         selected: value,
         onSelected: onChanged,
         color: WidgetStateProperty.resolveWith(
           (s) => s.contains(WidgetState.selected)
-              ? Color.alphaBlend(colors.accentTint, colors.raised)
-              : colors.raised,
+              ? Color.alphaBlend(colors.tonal, colors.card)
+              : colors.card,
         ),
-        checkmarkColor: colors.accentInk,
+        checkmarkColor: colors.accentText,
         side: BorderSide.none,
         shape: const StadiumBorder(),
       ),

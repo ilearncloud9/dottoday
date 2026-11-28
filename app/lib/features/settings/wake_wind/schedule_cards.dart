@@ -64,10 +64,10 @@ class ScheduleCards extends StatelessWidget {
           ),
         if (schedules.length < 7)
           Material(
-            color: t.colors.raised,
+            color: t.colors.card,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-              side: BorderSide(color: t.colors.outline),
+              side: BorderSide(color: t.colors.hairline),
             ),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
@@ -79,11 +79,11 @@ class ScheduleCards extends StatelessWidget {
                   child: Row(
                     spacing: DotSpace.s,
                     children: [
-                      DotIcon(DotGlyphs.add, color: t.colors.accentInk),
+                      DotIcon(DotGlyphs.add, color: t.colors.accentText),
                       Text(
                         l10n.wwdAddSchedule,
                         style: t.styles.cardTitle.copyWith(
-                          color: t.colors.accentInk,
+                          color: t.colors.accentText,
                         ),
                       ),
                     ],
@@ -98,7 +98,7 @@ class ScheduleCards extends StatelessWidget {
           ),
           child: Text(
             l10n.wwdWeekFooter,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
         ),
       ],
@@ -134,9 +134,9 @@ class _ScheduleCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DotSpace.l),
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: t.colors.outline),
+        border: Border.all(color: t.colors.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -159,7 +159,7 @@ class _ScheduleCard extends StatelessWidget {
               if (kind != ScheduleKind.everyDay)
                 Text(
                   daysText(context, days),
-                  style: t.styles.body.copyWith(color: t.colors.muted),
+                  style: t.styles.body.copyWith(color: t.colors.secondary),
                 ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -168,13 +168,13 @@ class _ScheduleCard extends StatelessWidget {
                   DotIcon(
                     DotGlyphs.bell,
                     size: DotSize.rowIcon,
-                    color: rings ? t.colors.accentInk : t.colors.muted,
+                    color: rings ? t.colors.accentText : t.colors.secondary,
                   ),
                   Text(
                     rings ? l10n.wwdAlarmOn : l10n.wwdNoAlarm,
                     style: t.styles.rowMeta.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: rings ? t.colors.accentInk : t.colors.muted,
+                      color: rings ? t.colors.accentText : t.colors.secondary,
                     ),
                   ),
                 ],
@@ -209,7 +209,7 @@ class _ScheduleCard extends StatelessWidget {
               ),
             ],
           ),
-          Divider(height: 1, color: t.colors.outline),
+          Divider(height: 1, color: t.colors.hairline),
           Row(
             children: [
               Expanded(
@@ -217,7 +217,7 @@ class _ScheduleCard extends StatelessWidget {
                   l10n.wwdNight(
                     formatDurationShort(l10n, nightAfter(settings, days.first)),
                   ),
-                  style: t.styles.body.copyWith(color: t.colors.muted),
+                  style: t.styles.body.copyWith(color: t.colors.secondary),
                 ),
               ),
               TextButton(onPressed: onEdit, child: Text(l10n.sheetEdit)),

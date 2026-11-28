@@ -72,8 +72,8 @@ class StateMessage extends StatelessWidget {
             FilledButton.tonal(
               onPressed: onAction,
               style: FilledButton.styleFrom(
-                backgroundColor: c.accentTint,
-                foregroundColor: c.accentInk,
+                backgroundColor: c.tonal,
+                foregroundColor: c.accentText,
                 minimumSize: const Size(DotTouch.min, DotTouch.min),
                 padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
               ),

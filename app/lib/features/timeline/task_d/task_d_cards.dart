@@ -94,7 +94,10 @@ class TaskDStepsNotes extends StatelessWidget {
       children: [
         Expanded(child: Text(text, style: t.styles.rowMeta)),
         if (end != null)
-          Text(end, style: t.styles.rowMeta.copyWith(color: t.colors.muted)),
+          Text(
+            end,
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
+          ),
       ],
     );
     return _Card(
@@ -104,7 +107,7 @@ class TaskDStepsNotes extends StatelessWidget {
           steps.isEmpty ? null : l10n.liveSubtasks(done, steps.length),
         ),
         SheetSubtasks(task: task, editing: true, quiet: true),
-        Divider(height: DotSpace.l, color: t.colors.outline),
+        Divider(height: DotSpace.l, color: t.colors.hairline),
         caption(l10n.editorNotes),
         EditorNotes(
           notes: draft.notes,
@@ -176,8 +179,8 @@ class TaskDMore extends ConsumerWidget {
           ),
         TextButton.icon(
           onPressed: () => unawaited(leave.delete(context, ref)),
-          style: TextButton.styleFrom(foregroundColor: t.colors.text),
-          icon: DotIcon(DotGlyphs.trash, color: t.colors.text),
+          style: TextButton.styleFrom(foregroundColor: t.colors.ink),
+          icon: DotIcon(DotGlyphs.trash, color: t.colors.ink),
           label: Text(l10n.editorDelete),
         ),
       ],
@@ -196,7 +199,7 @@ class _Card extends StatelessWidget {
     final android = DotIdiom.of(context) == DotIdiom.material;
     // A Material: the Pinned row's ListTile paints its ink on it.
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           android ? DotRadii.sheetCardAndroid : DotRadii.sheetCard,

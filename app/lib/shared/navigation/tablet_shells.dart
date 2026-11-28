@@ -76,10 +76,10 @@ class _SidebarShellState extends State<SidebarShell> {
                   onToggle: () => setState(() => _folded = true),
                 ),
           ),
-          VerticalDivider(width: DotSpace.hairline, color: c.outline),
+          VerticalDivider(width: DotSpace.hairline, color: c.hairline),
           Expanded(
             child: vibrant
-                ? ColoredBox(color: c.surface, child: widget.body)
+                ? ColoredBox(color: c.ground, child: widget.body)
                 : widget.body,
           ),
         ],
@@ -228,7 +228,7 @@ class _TopTabs extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     return Material(
-      color: selected ? c.raised : Colors.transparent,
+      color: selected ? c.card : Colors.transparent,
       shape: const StadiumBorder(),
       elevation: selected ? 1 : 0,
       shadowColor: c.shadow,
@@ -248,7 +248,7 @@ class _TopTabs extends StatelessWidget {
                 d.label,
                 style: selected
                     ? DotType.emphasis(
-                        t.styles.chip.copyWith(color: c.accentInk),
+                        t.styles.chip.copyWith(color: c.accentText),
                         bold: true,
                         italic: false,
                       )

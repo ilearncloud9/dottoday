@@ -36,7 +36,7 @@ class ProposalChangeChip extends StatelessWidget {
       ProposalChange.overlaps ||
       // The quiet grey tag of E-Phones-2 ("no room · to the Inbox").
       ProposalChange.toInbox => (t.colors.control, t.colors.ink2),
-      _ => (t.colors.accentTint, t.colors.accentInk),
+      _ => (t.colors.tonal, t.colors.accentText),
     };
     // The tag's shape (DotTag, E-Phones-2): 20 tall, fully round, 700 12.
     return ConstrainedBox(
@@ -54,7 +54,7 @@ class ProposalChangeChip extends StatelessWidget {
               if (change == ProposalChange.overlaps)
                 OverlapKnot(
                   first: t.tasks[color].color,
-                  second: t.colors.muted,
+                  second: t.colors.secondary,
                 ),
               Flexible(
                 child: Text(text, style: t.styles.tag.copyWith(color: ink)),

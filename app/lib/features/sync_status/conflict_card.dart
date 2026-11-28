@@ -84,7 +84,7 @@ class ConflictCard extends ConsumerWidget {
                 Text(
                   l10n.conflictBothUnavailable,
                   style: t.styles.rowMeta.copyWith(
-                    color: t.colors.text,
+                    color: t.colors.ink,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

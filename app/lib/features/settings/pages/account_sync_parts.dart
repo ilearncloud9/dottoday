@@ -40,7 +40,7 @@ class AccountSyncLine extends StatelessWidget {
     final text = Text(
       synced ? l10n.syncSynced : l10n.syncPending(count),
       style: look == AccountDialogLook.desktop
-          ? t.styles.inspectorValue.copyWith(color: t.colors.muted)
+          ? t.styles.inspectorValue.copyWith(color: t.colors.secondary)
           : AccountSyncType.status(t.styles, t.colors),
     );
     // The tick is the iPhone and iPad cards' (`AccountChoose`).
@@ -54,7 +54,7 @@ class AccountSyncLine extends StatelessWidget {
         children: [
           DotIcon(
             DotGlyphs.check,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: AccountSyncSize.tick,
           ),
           Expanded(child: text),
@@ -88,7 +88,7 @@ class AccountSyncBlock extends StatelessWidget {
         child: Text(
           context.l10n.accountSync,
           style: android
-              ? t.styles.caption.copyWith(color: t.colors.accentInk)
+              ? t.styles.caption.copyWith(color: t.colors.accentText)
               : t.styles.caption,
         ),
       ),
@@ -115,7 +115,7 @@ class AccountSyncBlock extends StatelessWidget {
         caption,
         DecoratedBox(
           decoration: BoxDecoration(
-            color: t.colors.raised,
+            color: t.colors.card,
             borderRadius: BorderRadius.circular(AccountSyncSize.cardRadius),
           ),
           child: Padding(
@@ -172,11 +172,11 @@ class ChooseSettingsRow extends StatelessWidget {
       AccountDialogLook.android => const RoundedRectangleBorder(),
       AccountDialogLook.desktop => RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AccountSyncSize.rowRadiusDesktop),
-        side: BorderSide(color: c.outline, width: AccountSyncSize.rowRing),
+        side: BorderSide(color: c.hairline, width: AccountSyncSize.rowRing),
       ),
     };
     final row = Material(
-      color: look == AccountDialogLook.android ? Colors.transparent : c.raised,
+      color: look == AccountDialogLook.android ? Colors.transparent : c.card,
       shape: shape,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -205,7 +205,11 @@ class ChooseSettingsRow extends StatelessWidget {
                     ],
                   ),
                 ),
-                DotIcon(DotGlyphs.chevronRight, color: c.muted, size: chevron),
+                DotIcon(
+                  DotGlyphs.chevronRight,
+                  color: c.secondary,
+                  size: chevron,
+                ),
               ],
             ),
           ),

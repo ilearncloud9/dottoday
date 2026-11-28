@@ -92,7 +92,7 @@ class _Thumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final edge = selected ? t.colors.accentInk : t.colors.outline;
+    final edge = selected ? t.colors.accentText : t.colors.hairline;
     return Semantics(
       button: true,
       selected: selected,
@@ -137,7 +137,7 @@ class _Thumb extends StatelessWidget {
                     label,
                     textAlign: TextAlign.center,
                     style: t.styles.rowMeta.copyWith(
-                      color: selected ? t.colors.accentInk : t.colors.text,
+                      color: selected ? t.colors.accentText : t.colors.ink,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

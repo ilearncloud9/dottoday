@@ -100,8 +100,8 @@ class NightDial extends StatelessWidget {
     track: t.colors.chip,
     nightBand: t.tasks[TaskColor.violet].tint,
     nightLine: t.tasks[TaskColor.violet].color,
-    ticks: t.colors.outline,
-    dots: t.colors.muted,
+    ticks: t.colors.hairline,
+    dots: t.colors.secondary,
   );
 
   /// The largest size whose length fits the centre disc, or null.
@@ -131,7 +131,7 @@ class NightDial extends StatelessWidget {
         Text(
           lengthCaption,
           style: t.styles.rowMeta.copyWith(
-            color: t.colors.muted,
+            color: t.colors.secondary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -271,8 +271,8 @@ class _Handle extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: focused || selected
-                      ? t.colors.accentInk
-                      : t.colors.raised,
+                      ? t.colors.accentText
+                      : t.colors.card,
                   width: DotSize.smallDotOutline,
                 ),
               ),

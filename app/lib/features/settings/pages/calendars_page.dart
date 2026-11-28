@@ -220,7 +220,7 @@ class _ConnectPill extends StatelessWidget {
             color: c.controlOutline,
             width: CalendarsSize.pillOutline,
           ),
-          foregroundColor: c.accentInk,
+          foregroundColor: c.accentText,
           textStyle: t.styles.button.copyWith(
             fontSize: 15,
             fontWeight: FontWeight.w600,

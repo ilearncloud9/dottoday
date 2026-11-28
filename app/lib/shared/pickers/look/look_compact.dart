@@ -164,7 +164,7 @@ class _AllIconsButton extends StatelessWidget {
       fontWeight: FontWeight.w600,
     );
     return Material(
-      color: t.colors.raised,
+      color: t.colors.card,
       shape: StadiumBorder(
         side: BorderSide(color: t.colors.hairline, width: DotSpace.hairline),
       ),

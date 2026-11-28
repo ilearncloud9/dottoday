@@ -29,8 +29,8 @@ abstract final class SettingsTiles {
   ///   before.
   static SettingsTile of(DotColors c, TaskPalette tasks, Color ink) {
     final dark = c.brightness == Brightness.dark;
-    if (ink == c.accentInk || ink == tasks[TaskColor.teal].ink) {
-      return (tile: c.accentTint, glyph: c.accentInk);
+    if (ink == c.accentText || ink == tasks[TaskColor.teal].ink) {
+      return (tile: c.tonal, glyph: c.accentText);
     }
     if (ink == tasks[TaskColor.amber].ink) {
       return (tile: c.wakeCap, glyph: c.wakeIcon);
@@ -43,7 +43,7 @@ abstract final class SettingsTiles {
     }
     if (ink == tasks[TaskColor.rose].ink) return dark ? _roseDark : _roseLight;
     if (ink == tasks[TaskColor.mint].ink) return dark ? _mintDark : _mintLight;
-    if (ink == c.muted || ink == tasks[TaskColor.slate].ink) {
+    if (ink == c.secondary || ink == tasks[TaskColor.slate].ink) {
       return (tile: c.chip, glyph: c.ink2);
     }
     return (

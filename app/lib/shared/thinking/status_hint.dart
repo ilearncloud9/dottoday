@@ -53,11 +53,11 @@ class StatusHint extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: leadPart,
-                          style: style.copyWith(color: t.colors.muted),
+                          style: style.copyWith(color: t.colors.secondary),
                         ),
                         TextSpan(
                           text: action,
-                          style: style.copyWith(color: t.colors.accentInk),
+                          style: style.copyWith(color: t.colors.accentText),
                         ),
                       ],
                     ),
@@ -76,7 +76,7 @@ class StatusHint extends StatelessWidget {
           ),
           icon: DotIcon(
             DotGlyphs.close,
-            color: t.colors.muted,
+            color: t.colors.secondary,
             size: DotSize.rowIcon,
           ),
         ),

@@ -106,8 +106,8 @@ class HealthRow extends ConsumerWidget {
       },
       tint: switch (check.level) {
         HealthLevel.ok => t.colors.success,
-        HealthLevel.problem => t.colors.accentInk,
-        HealthLevel.info => t.colors.muted,
+        HealthLevel.problem => t.colors.accentText,
+        HealthLevel.info => t.colors.secondary,
       },
       title: title,
       subtitle: detail,

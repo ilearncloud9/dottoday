@@ -14,7 +14,7 @@ class KeyCap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
-    final ink = color ?? t.colors.muted;
+    final ink = color ?? t.colors.secondary;
     return ExcludeSemantics(
       child: DecoratedBox(
         decoration: BoxDecoration(

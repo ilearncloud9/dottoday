@@ -51,7 +51,7 @@ class DotSegmented<T extends Object> extends StatelessWidget {
                   // muted label was 3.3:1 (M20.7 Appearance a11y check).
                   child: Text(
                     label,
-                    style: t.styles.rowMeta.copyWith(color: t.colors.text),
+                    style: t.styles.rowMeta.copyWith(color: t.colors.ink),
                   ),
                 ),
               ),

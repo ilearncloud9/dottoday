@@ -69,7 +69,7 @@ class InspectorSubtasks extends ConsumerWidget {
             title: Text(
               s.title,
               style: t.styles.inspectorValue.copyWith(
-                color: s.done ? c.muted : null,
+                color: s.done ? c.secondary : null,
               ),
             ),
             onChanged: (v) =>
@@ -136,7 +136,7 @@ class InspectorOverlap extends ConsumerWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: t.colors.raised,
+            color: t.colors.card,
             border: Border.all(color: t.colors.hairline),
           ),
           child: OverlapKnot(
@@ -250,7 +250,7 @@ class _NotesState extends ConsumerState<InspectorNotes> {
           decoration: InputDecoration(
             isDense: true,
             filled: true,
-            fillColor: c.raised,
+            fillColor: c.card,
             hintText: l10n.editorNotesHint,
             labelText: null,
             border: edge,

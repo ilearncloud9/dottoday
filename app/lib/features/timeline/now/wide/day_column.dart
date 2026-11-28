@@ -60,7 +60,7 @@ class _DayColumnState extends ConsumerState<DayColumn> {
     return Container(
       width: DotSize.dayColumn,
       decoration: BoxDecoration(
-        color: t.colors.surface,
+        color: t.colors.ground,
         border: BorderDirectional(start: BorderSide(color: t.colors.hairline)),
       ),
       child: id == null
@@ -163,7 +163,7 @@ class _Day extends ConsumerWidget {
                           .read(dayColumnHiddenProvider.notifier)
                           .set(hidden: true),
                     ),
-                icon: DotIcon(DotGlyphs.close, color: t.colors.text),
+                icon: DotIcon(DotGlyphs.close, color: t.colors.ink),
               ),
             ],
           ),

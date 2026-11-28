@@ -25,7 +25,7 @@ class _SearchOrRunRow extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     return Material(
-      color: c.raised,
+      color: c.card,
       borderRadius: BorderRadius.circular(DotRadii.railItem),
       child: InkWell(
         borderRadius: BorderRadius.circular(DotRadii.railItem),
@@ -79,7 +79,7 @@ class _KeysHint extends StatelessWidget {
     ];
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.card),
       ),
       child: Padding(

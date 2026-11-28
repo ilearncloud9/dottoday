@@ -17,9 +17,9 @@ class LowEnergyCard extends StatelessWidget {
     final c = DotTheme.of(context).colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: BorderRadius.circular(DotRadii.cardLarge),
-        border: Border.all(color: c.outline, width: DotSpace.hairline),
+        border: Border.all(color: c.hairline, width: DotSpace.hairline),
       ),
       child: Padding(padding: const EdgeInsets.all(DotSpace.l), child: child),
     );
@@ -74,7 +74,7 @@ class NextDotCard extends StatelessWidget {
           Text(
             when,
             textAlign: TextAlign.center,
-            style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+            style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
           ),
           const SizedBox(height: DotSpace.xs),
           Wrap(
@@ -219,7 +219,7 @@ class LowEnergyChip extends StatelessWidget {
             widthFactor: 1,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: c.accentTint,
+                color: c.tonal,
                 borderRadius: BorderRadius.circular(DotRadii.pill),
               ),
               child: Padding(
@@ -233,13 +233,13 @@ class LowEnergyChip extends StatelessWidget {
                   children: [
                     DotIcon(
                       TaskIcon.leaf.glyph!,
-                      color: c.accentInk,
+                      color: c.accentText,
                       size: DotSize.miniRing + DotSpace.xxs,
                     ),
                     Text(
                       l10n.lowEnergyOn,
                       style: t.styles.rowMeta.copyWith(
-                        color: c.accentInk,
+                        color: c.accentText,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

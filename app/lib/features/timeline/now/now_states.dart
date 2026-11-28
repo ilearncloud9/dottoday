@@ -52,7 +52,7 @@ class NowNextUpView extends StatelessWidget {
             Text(
               l10n.threadFree(formatDurationShort(l10n, free.inMinutes)),
               style: t.styles.rowMeta.copyWith(
-                color: t.colors.accentInk,
+                color: t.colors.accentText,
                 fontWeight: FontWeight.w700,
               ),
             ),

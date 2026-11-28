@@ -34,7 +34,7 @@ class YearMonthRing extends StatelessWidget {
         share: days == 0 ? 0 : planned / days,
         inProgress: inProgress,
         accent: c.accent,
-        track: Color.alphaBlend(c.accentTint, c.raised),
+        track: Color.alphaBlend(c.tonal, c.card),
         outer: focused ? c.focus : (open ? c.accent : null),
       ),
       child: SizedBox.square(

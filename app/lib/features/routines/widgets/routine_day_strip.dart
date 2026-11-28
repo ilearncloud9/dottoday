@@ -56,7 +56,7 @@ class _DayTile extends StatelessWidget {
     final t = DotTheme.of(context);
     final c = t.colors;
     final locale = Localizations.localeOf(context).toLanguageTag();
-    final ink = picked ? c.onAccent : c.text;
+    final ink = picked ? c.onAccent : c.ink;
     return Semantics(
       button: true,
       selected: picked,
@@ -65,12 +65,12 @@ class _DayTile extends StatelessWidget {
       ),
       excludeSemantics: true,
       child: Material(
-        color: picked ? c.accent : c.raised,
+        color: picked ? c.accent : c.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DotRadii.dayTile),
           side: picked
               ? BorderSide.none
-              : BorderSide(color: c.outline, width: DotSpace.hairline),
+              : BorderSide(color: c.hairline, width: DotSpace.hairline),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

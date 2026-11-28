@@ -38,7 +38,7 @@ export 'week_review_tokens.dart';
 ///
 /// ```dart
 /// final t = DotTheme.of(context);
-/// Container(color: t.colors.raised);
+/// Container(color: t.colors.card);
 /// Text(title, style: t.styles.rowTitle);
 /// AnimatedOpacity(duration: t.motion.base, ...);
 /// ```
@@ -175,7 +175,7 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
   // Snackbars and tooltips sit on the inverse surface: the other mode's
   // raised surface and text, so their contrast is already tested.
   final inverse = c.isDark ? DotColors.light() : DotColors.dark();
-  final type = DotType.withColors(text: c.text, muted: c.muted);
+  final type = DotType.withColors(text: c.ink, muted: c.secondary);
   final scheme = _scheme(c, inverse);
   final parts = DotComponents(c, type, platform);
   return ThemeData(
@@ -183,7 +183,7 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
     platform: platform,
     brightness: c.brightness,
     colorScheme: scheme,
-    scaffoldBackgroundColor: c.surface,
+    scaffoldBackgroundColor: c.ground,
     fontFamily: DotType.fontFamily,
     // Material shrinks controls on desktop (compact density, shrink-wrapped
     // targets), which took the Mac's and web's buttons to 40 px and below.
@@ -201,7 +201,7 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
       },
     ),
     textTheme: _textTheme(type),
-    dividerColor: c.outline,
+    dividerColor: c.hairline,
     // Keyboard focus is visible everywhere (M3e.6, R-12): ink rows, cards
     // and chips take an accent wash; buttons also get a ring (below).
     focusColor: c.accent.withValues(alpha: _focusWash),
@@ -217,7 +217,7 @@ ThemeData _build(DotColors c, TargetPlatform platform) {
     // Text buttons in the accent's ink, which keeps 4.5:1 on the page as
     // well as on cards (the raw accent is 4.3:1 on the page; M4.1, R-12).
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(foregroundColor: c.accentInk),
+      style: TextButton.styleFrom(foregroundColor: c.accentText),
     ),
     // Sheets, dialogs, chips and menus (M18.4): from the theme, not the
     // caller, so an open sheet follows a light/dark switch (M3c.6).
@@ -266,20 +266,20 @@ ButtonStyle _pill(DotType type, DotColors c, {bool filled = false}) =>
             ? c.ring
             : filled
             ? c.onAccent
-            : c.text,
+            : c.ink,
       ),
       backgroundColor: WidgetStateProperty.resolveWith(
         (s) => s.contains(WidgetState.disabled)
             ? c.tile
             : filled
             ? c.accentFill
-            : c.raised,
+            : c.card,
       ),
       side: _focusRing(
         c,
         rest: filled
             ? BorderSide.none
-            : BorderSide(color: c.outline, width: DotSpace.hairline),
+            : BorderSide(color: c.hairline, width: DotSpace.hairline),
       ),
     );
 
@@ -291,7 +291,7 @@ const _focusWash = 0.22;
 WidgetStateProperty<BorderSide?> _focusRing(DotColors c, {BorderSide? rest}) =>
     WidgetStateProperty.resolveWith(
       (s) => s.contains(WidgetState.focused)
-          ? BorderSide(color: c.accentInk, width: DotSize.smallDotOutline)
+          ? BorderSide(color: c.accentText, width: DotSize.smallDotOutline)
           : rest,
     );
 
@@ -299,24 +299,24 @@ ColorScheme _scheme(DotColors c, DotColors inverse) => ColorScheme(
   brightness: c.brightness,
   primary: c.accent,
   onPrimary: c.onAccent,
-  primaryContainer: Color.alphaBlend(c.accentTint, c.raised),
-  onPrimaryContainer: c.accentInk,
+  primaryContainer: Color.alphaBlend(c.tonal, c.card),
+  onPrimaryContainer: c.accentText,
   secondary: c.accent,
   onSecondary: c.onAccent,
   // Concept A has no error hue (§2.1); errors are inline text (§5.4).
-  error: c.text,
-  onError: c.raised,
-  surface: c.surface,
-  onSurface: c.text,
-  onSurfaceVariant: c.muted,
-  surfaceContainerLowest: c.surface,
-  surfaceContainerLow: c.raised,
-  surfaceContainer: c.raised,
-  surfaceContainerHigh: c.raised,
-  surfaceContainerHighest: c.raised,
-  outline: c.outline,
-  outlineVariant: c.outline,
-  inverseSurface: inverse.raised,
-  onInverseSurface: inverse.text,
-  inversePrimary: inverse.accentInk,
+  error: c.ink,
+  onError: c.card,
+  surface: c.ground,
+  onSurface: c.ink,
+  onSurfaceVariant: c.secondary,
+  surfaceContainerLowest: c.ground,
+  surfaceContainerLow: c.card,
+  surfaceContainer: c.card,
+  surfaceContainerHigh: c.card,
+  surfaceContainerHighest: c.card,
+  outline: c.hairline,
+  outlineVariant: c.hairline,
+  inverseSurface: inverse.card,
+  onInverseSurface: inverse.ink,
+  inversePrimary: inverse.accentText,
 );

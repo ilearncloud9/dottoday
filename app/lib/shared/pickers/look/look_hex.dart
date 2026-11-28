@@ -89,7 +89,7 @@ class _HexChipState extends State<HexChip> {
             hintText: context.l10n.lookHexLabel,
             isDense: true,
             filled: true,
-            fillColor: t.colors.raised,
+            fillColor: t.colors.card,
             constraints: const BoxConstraints(minHeight: DotTouch.android),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: DotSpace.s,

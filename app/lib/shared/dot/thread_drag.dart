@@ -213,7 +213,7 @@ class LiftedDot extends StatelessWidget {
           builder: (context, text, _) => text == null
               ? const SizedBox.shrink()
               : Material(
-                  color: t.colors.text,
+                  color: t.colors.ink,
                   shape: const StadiumBorder(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -222,7 +222,7 @@ class LiftedDot extends StatelessWidget {
                     ),
                     child: Text(
                       text,
-                      style: t.styles.button.copyWith(color: t.colors.raised),
+                      style: t.styles.button.copyWith(color: t.colors.card),
                     ),
                   ),
                 ),

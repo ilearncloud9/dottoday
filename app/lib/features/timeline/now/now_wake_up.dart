@@ -33,7 +33,7 @@ class NowWakeUp extends ConsumerWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: t.colors.raised,
+        color: t.colors.card,
         borderRadius: BorderRadius.circular(DotRadii.sheet),
         boxShadow: DotElevation.capsule(t.colors),
       ),

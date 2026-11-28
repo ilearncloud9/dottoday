@@ -108,7 +108,7 @@ class _DayDialState extends State<DayDial> {
                       sky: OnbSky.of(
                         t.colors.isDark ? Brightness.dark : Brightness.light,
                       ),
-                      ground: t.colors.surface,
+                      ground: t.colors.ground,
                       accent: t.colors.accent,
                       rtl: Directionality.of(context) == TextDirection.rtl,
                     ),

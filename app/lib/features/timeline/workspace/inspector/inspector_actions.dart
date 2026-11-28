@@ -38,7 +38,7 @@ class InspectorExtend extends ConsumerWidget {
         end: DotSpace.xs,
       ),
       decoration: ShapeDecoration(
-        color: c.raised,
+        color: c.card,
         shape: StadiumBorder(side: BorderSide(color: c.hairline)),
       ),
       child: Row(
@@ -118,11 +118,11 @@ class InspectorButtons extends ConsumerWidget {
         ),
         button(
           l10n.focusTitle,
-          c.accentTint,
-          c.accentInk,
+          c.tonal,
+          c.accentText,
           task.startUtc == null ? null : () => openFocus(context, task.id),
         ),
-        button(l10n.inspectorShiftRest, c.raised, c.text, shift, edge: true),
+        button(l10n.inspectorShiftRest, c.card, c.ink, shift, edge: true),
       ],
     );
   }
@@ -200,7 +200,7 @@ class _Chip extends StatelessWidget {
       excludeSemantics: true,
       onTap: onTap,
       child: Material(
-        color: c.accentTint,
+        color: c.tonal,
         shape: const StadiumBorder(),
         child: InkWell(
           onTap: onTap,
@@ -211,7 +211,7 @@ class _Chip extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text,
-              style: t.styles.inspectorButton.copyWith(color: c.accentInk),
+              style: t.styles.inspectorButton.copyWith(color: c.accentText),
             ),
           ),
         ),

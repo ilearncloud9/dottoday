@@ -189,7 +189,7 @@ class _FormState extends ConsumerState<_Form> with EditorDraft<_Form> {
         Text(
           context.l10n.taskPullUp,
           textAlign: TextAlign.center,
-          style: t.styles.rowMeta.copyWith(color: t.colors.muted),
+          style: t.styles.rowMeta.copyWith(color: t.colors.secondary),
         ),
     ];
   }

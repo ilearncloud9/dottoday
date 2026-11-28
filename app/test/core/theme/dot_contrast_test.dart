@@ -14,21 +14,21 @@ void main() {
   };
 
   test('secondary text is one step stronger, as drawn', () {
-    expect(DotColors.light().moreContrast().muted, const Color(0xFF4E4757));
-    expect(DotColors.dark().moreContrast().muted, const Color(0xFFDDD5D9));
+    expect(DotColors.light().moreContrast().secondary, const Color(0xFF4E4757));
+    expect(DotColors.dark().moreContrast().secondary, const Color(0xFFDDD5D9));
   });
 
   for (final MapEntry(key: name, value: c) in themes.entries) {
     test('$name: text at 4.5:1, edges and the thread at 3:1', () {
       final m = c.moreContrast();
-      for (final ground in [m.surface, m.raised]) {
-        expect(contrastRatio(m.muted, ground), greaterThan(4.5));
+      for (final ground in [m.ground, m.card]) {
+        expect(contrastRatio(m.secondary, ground), greaterThan(4.5));
         expect(
-          contrastRatio(m.muted, ground),
-          greaterThan(contrastRatio(c.muted, ground)),
+          contrastRatio(m.secondary, ground),
+          greaterThan(contrastRatio(c.secondary, ground)),
         );
         for (final edge in [
-          m.outline,
+          m.hairline,
           m.hairlineStrong,
           m.controlOutline,
           m.blockEdge,
@@ -62,7 +62,7 @@ void main() {
         ),
       ),
     );
-    expect(seen.colors.muted, const Color(0xFF4E4757));
+    expect(seen.colors.secondary, const Color(0xFF4E4757));
     expect(seen.styles.rowMeta.color, const Color(0xFF4E4757));
   });
 }

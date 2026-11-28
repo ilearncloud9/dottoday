@@ -208,7 +208,7 @@ class _SensorMissionState extends State<SensorMission>
             child: Text(
               _status(l10n),
               style: t.styles.dawnStatus.copyWith(
-                color: t.colors.text.withValues(alpha: _statusAlpha),
+                color: t.colors.ink.withValues(alpha: _statusAlpha),
               ),
               textAlign: TextAlign.center,
             ),

@@ -58,7 +58,7 @@ class _NewDot extends StatelessWidget {
           builder: (context, text, _) => text == null
               ? const SizedBox.shrink()
               : Material(
-                  color: c.text,
+                  color: c.ink,
                   shape: const StadiumBorder(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -67,7 +67,7 @@ class _NewDot extends StatelessWidget {
                     ),
                     child: Text(
                       text,
-                      style: t.styles.button.copyWith(color: c.raised),
+                      style: t.styles.button.copyWith(color: c.card),
                     ),
                   ),
                 ),
@@ -153,8 +153,8 @@ class _Bin extends StatelessWidget {
     final c = t.colors;
     // The text colour, never red: putting a task away is not a failure
     // (11 §D no shame).
-    final fill = hovered ? c.text : c.raised;
-    final ink = hovered ? c.raised : c.text;
+    final fill = hovered ? c.ink : c.card;
+    final ink = hovered ? c.card : c.ink;
     return Semantics(
       label: label,
       child: AnimatedContainer(
@@ -165,7 +165,7 @@ class _Bin extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: fill,
-          border: Border.all(color: c.outline, width: DotSpace.hairline),
+          border: Border.all(color: c.hairline, width: DotSpace.hairline),
           boxShadow: DotElevation.floating,
         ),
         child: Center(child: DotIcon(DotGlyphs.trash, color: ink, bold: true)),

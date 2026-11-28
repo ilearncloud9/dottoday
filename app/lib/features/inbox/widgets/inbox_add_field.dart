@@ -107,12 +107,12 @@ class _InboxAddFieldState extends State<InboxAddField> {
                     heightFactor: 1,
                     child: DotIcon(
                       DotGlyphs.add,
-                      color: t.colors.text,
+                      color: t.colors.ink,
                       size: DotSize.rowIcon,
                     ),
                   ),
             filled: true,
-            fillColor: t.colors.raised,
+            fillColor: t.colors.card,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DotRadii.card),
               borderSide: BorderSide(color: t.colors.threadAhead),

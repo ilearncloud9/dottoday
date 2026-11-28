@@ -175,7 +175,7 @@ Future<void> _pump(WidgetTester tester, StoreDevice d, _Shot shot) async {
         builder: (context, child) => RepaintBoundary(
           key: _boundary,
           child: Material(
-            color: DotTheme.of(context).colors.surface,
+            color: DotTheme.of(context).colors.ground,
             child: child,
           ),
         ),
@@ -232,7 +232,7 @@ class _AddOverToday extends StatelessWidget {
     final compact = MediaQuery.sizeOf(context).width < WidthClass.mediumFrom;
     final sheet = Container(
       decoration: BoxDecoration(
-        color: c.raised,
+        color: c.card,
         borderRadius: compact
             ? const BorderRadius.vertical(top: Radius.circular(DotRadii.sheet))
             : BorderRadius.circular(DotRadii.sheet),

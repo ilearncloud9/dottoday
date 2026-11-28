@@ -32,7 +32,7 @@ class PinRow extends StatelessWidget {
         onTap: () => onChanged(!pinned),
         contentPadding: contentPadding,
         minTileHeight: minHeight,
-        leading: DotIcon(DotGlyphs.lock, color: t.colors.muted),
+        leading: DotIcon(DotGlyphs.lock, color: t.colors.secondary),
         title: Text(l10n.pinTitle, style: t.styles.body),
         subtitle: Text(l10n.pinDetail, style: t.styles.rowMeta),
         trailing: DotSwitch(value: pinned, onChanged: onChanged),

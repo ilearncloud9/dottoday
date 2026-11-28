@@ -23,7 +23,7 @@ class InboxHeader extends StatelessWidget {
         ),
         Text(
           l10n.inboxSummary(count, formatDurationShort(l10n, minutes)),
-          style: t.styles.body.copyWith(color: t.colors.muted),
+          style: t.styles.body.copyWith(color: t.colors.secondary),
         ),
       ],
     );
