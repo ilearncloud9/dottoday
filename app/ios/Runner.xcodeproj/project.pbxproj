@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D07A0C0E5EAD7E0000000A01 /* ReduceTransparencyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07A0C0E5EAD7E0000000A02 /* ReduceTransparencyBridge.swift */; };
 		D61030AD2FF6A40A8F86CCD1 /* Manrope-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA66FD842AC6FE41DCED982F /* Manrope-Variable.ttf */; };
 		0198158024A57009A75B0BEB /* start_lovingly.caf in Resources */ = {isa = PBXBuildFile; fileRef = 0902871A5CE25538DAD36A02 /* start_lovingly.caf */; };
 		02678329CCD2A03207DA79D5 /* AlarmBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923A60B7EFB7BFEBF94DBB37 /* AlarmBridge.swift */; };
@@ -184,6 +185,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D07A0C0E5EAD7E0000000A02 /* ReduceTransparencyBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ReduceTransparencyBridge.swift; sourceTree = "<group>"; };
 		DA66FD842AC6FE41DCED982F /* Manrope-Variable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Manrope-Variable.ttf"; path = "../assets/fonts/Manrope-Variable.ttf"; sourceTree = SOURCE_ROOT; };
 		002323410D2E1E136FBBA344 /* start_dawn_chorus.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_dawn_chorus.caf; path = Runner/Sounds/start_dawn_chorus.caf; sourceTree = SOURCE_ROOT; };
 		022814BBCB43E2BEF7A63546 /* start_slow_bell.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = start_slow_bell.caf; path = Runner/Sounds/start_slow_bell.caf; sourceTree = SOURCE_ROOT; };
@@ -559,6 +561,7 @@
 				3013B4C5D6CD3BCE94FE8938 /* AppShortcuts.strings */,
 				D057CBF4043C1304FE844CA9 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B02 /* SpeechBridge.swift */,
+				D07A0C0E5EAD7E0000000A02 /* ReduceTransparencyBridge.swift */,
 				6820E09A14DA165B8555B2D1 /* NativeTabBar.swift */,
 				8DB7F288BBCDE2951E9F2474 /* NativeIPadTabs.swift */,
 				B8F4DA2E6A3C5E7F9B1D2A34 /* KeyMenusBridge.swift */,
@@ -973,6 +976,7 @@
 				393277596608AB97021B23B3 /* DotShortcuts.swift in Sources */,
 				D015D12A752D6D3BCDC243C7 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B01 /* SpeechBridge.swift in Sources */,
+				D07A0C0E5EAD7E0000000A01 /* ReduceTransparencyBridge.swift in Sources */,
 				CBB5BF469938257C7BD106F1 /* NativeTabBar.swift in Sources */,
 				CB0CCED8763B32AC93CC1005 /* NativeIPadTabs.swift in Sources */,
 				A7E3C91D5F2B4D6E8A0C1F23 /* KeyMenusBridge.swift in Sources */,

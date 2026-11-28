@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:flutter/material.dart';
 
 /// The iPhone's glass capsule (ED-034): Sync and the profile share one in
@@ -17,7 +18,7 @@ class GlassCapsule extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = DotTheme.of(context).colors;
     const shape = BorderRadius.all(Radius.circular(DotSize.capsule / 2));
-    final solid = MediaQuery.highContrastOf(context);
+    final solid = solidChrome(context);
     final fill = BoxDecoration(
       borderRadius: shape,
       color: solid ? c.card : null,
@@ -28,9 +29,8 @@ class GlassCapsule extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [c.glassTop, c.glassBottom],
             ),
-      border: solid
-          ? Border.all(color: c.outline)
-          : Border(top: BorderSide(color: c.glassEdge)),
+      border:
+          solidOutline(context) ?? Border(top: BorderSide(color: c.glassEdge)),
     );
     final body = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: DotSize.capsule),

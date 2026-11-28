@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/features/onboarding/flow/css_saturate.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:flutter/material.dart';
 
 /// The reminder preview (`.banner`): the app's mark, "Read in 10 minutes",
@@ -37,6 +38,17 @@ class NudgeBanner extends StatelessWidget {
     final glass = c.raised.withValues(
       alpha: c.isDark ? OnbSize.glassAlphaDark : OnbSize.glassAlphaLight,
     );
+    final solid = solidChrome(context);
+    final body = ColoredBox(
+      color: solid ? c.raised : glass,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: OnbSize.bannerPadV,
+          horizontal: OnbSize.bannerPadH,
+        ),
+        child: _content(t),
+      ),
+    );
     return Semantics(
       container: true,
       label: l10n.onboardingNudgePreviewLabel,
@@ -48,28 +60,18 @@ class NudgeBanner extends StatelessWidget {
               borderRadius: radius,
               boxShadow: [_softShadow(c)],
             ),
-            child: ClipRRect(
-              borderRadius: radius,
-              child: BackdropFilter(
-                filter: ui.ImageFilter.compose(
-                  outer: ui.ImageFilter.blur(
-                    sigmaX: OnbSize.bannerBlur / 2,
-                    sigmaY: OnbSize.bannerBlur / 2,
-                  ),
-                  inner: ColorFilter.matrix(
-                    cssSaturate(OnbSize.bannerSaturation),
-                  ),
-                ),
-                child: ColoredBox(
-                  color: glass,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: OnbSize.bannerPadV,
-                      horizontal: OnbSize.bannerPadH,
-                    ),
-                    child: _content(t),
-                  ),
-                ),
+            // Solid with its outline under Reduce Transparency or
+            // Increase Contrast (ED-248 C).
+            position: DecorationPosition.background,
+            child: DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: BoxDecoration(
+                borderRadius: radius,
+                border: solidOutline(context),
+              ),
+              child: ClipRRect(
+                borderRadius: radius,
+                child: solid ? body : _frost(body),
               ),
             ),
           ),
@@ -82,6 +84,18 @@ class NudgeBanner extends StatelessWidget {
       ),
     );
   }
+
+  /// The preview's frosted look, as the system draws a notification.
+  Widget _frost(Widget child) => BackdropFilter(
+    filter: ui.ImageFilter.compose(
+      outer: ui.ImageFilter.blur(
+        sigmaX: OnbSize.bannerBlur / 2,
+        sigmaY: OnbSize.bannerBlur / 2,
+      ),
+      inner: ColorFilter.matrix(cssSaturate(OnbSize.bannerSaturation)),
+    ),
+    child: child,
+  );
 
   Widget _content(DotTheme t) => Row(
     spacing: OnbSize.bannerGap,

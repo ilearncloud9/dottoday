@@ -6157,6 +6157,15 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze clean; 8 new tests (`now_keyboard_test`, `week_reader_test`); goldens unchanged; the pseudo locale regenerated; the full suite but the Supabase tests (Docker off).
 - **Not checked:** real VoiceOver or TalkBack, a browser, a device; no overlap in the captures (the week's data has none; a test covers it); Return from the Week was not captured (the fixture's ids are not links).
 
+### ED-502 · M20.13 part 6: Reduce Transparency and Increase Contrast (ED-248 C)
+- **Date:** 2026-11-28. **Owner:** "Push and start 6"; proposal page (https://claude.ai/artifact/C2v1UWWy9LxQBPF8T5KkA6), then, after asking why and for a check with the design skills, the rationale with a prototype on the same page: "Yes, as recommended". Review page: https://claude.ai/artifact/Vg5ziCFbhWPFQUu5mAqVUk. **Approved 2026-11-28: "Approve part 6".** Source: E-G4-7-States D4, ED-248 C; checked against Apple's HIG (accessibility, colour, materials, Liquid Glass), WCAG 2.2 1.4.11 and the UI/UX skill.
+- **Two settings, as rules §12.1 split them:** Reduce Transparency makes floating glass solid with a 1.5 outline in the secondary colour and keeps the standard colours. Increase Contrast does that too and strengthens the colours: Apple treats them the same way (materials, Liquid Glass › accessibility states).
+- **Increase Contrast colours (`DotColors.moreContrast`, read in `DotTheme.of` so sheets, popovers and a custom App colour follow):** secondary text #4E4757 light (8.3:1, as drawn) and **#DDD5D9 dark (12.7:1; the board keeps #C7BEC4; owner chose the step so dark has an increased-contrast variant as Apple asks of every custom colour)**; the thread ahead, control outlines, card and row edges and Week block edges at tertiary (#7A7280 4.55:1 light, #8C838A 4.2:1 dark). Unchanged: the hour grid (background guides, not controls), the accent, task colours, the focus ring (6.8:1 / 9:1).
+- **Solid surfaces (`solidChrome` / `solidOutline`):** iPhone glass capsules, Day ▾, the Flutter tab bar, Android's toolbar and + (Android mirrors iPhone), the onboarding notification preview. Native: the iOS 16–25 tab bar turns opaque with the outline (ED-131); iOS 26's bar is left to iOS; the Mac sidebar already (ED-376).
+- **Reading Reduce Transparency (Flutter does not report it):** `ReduceTransparencyBridge.swift`, one file in the iOS and macOS Runners (no new target), and the browser's `prefers-reduced-transparency`; Android has none (its blur switch is `frostedChrome`). Carried by `ReduceTransparencyScope` above the routes.
+- **Checks:** analyze clean, format; 13 new tests (contrast roles for light, dark and a custom colour; the theme; glass vs solid per setting; the reader); goldens unchanged; full suite but the Supabase tests (Docker off); macOS and iOS Simulator debug builds.
+- **Not checked:** a device, simulator or browser with the settings on (the iOS 26 and 16–25 bars, the Mac, the web).
+
 ---
 
 ## Pending owner answers

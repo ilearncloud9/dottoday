@@ -1,4 +1,5 @@
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,9 @@ class _Pill extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.raised,
         borderRadius: BorderRadius.circular(DotRadii.pill),
-        border: Border.all(color: c.outline, width: DotSpace.hairline),
+        border:
+            solidOutline(context) ??
+            Border.all(color: c.outline, width: DotSpace.hairline),
         boxShadow: DotElevation.floating,
       ),
       child: Row(

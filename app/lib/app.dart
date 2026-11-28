@@ -16,6 +16,7 @@ import 'package:dottoday/core/router/router_provider.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
 import 'package:dottoday/data/layout/layout_providers.dart';
+import 'package:dottoday/data/layout/reduce_transparency.dart';
 import 'package:dottoday/data/live_activity/live_activity_dismissed.dart';
 import 'package:dottoday/data/live_activity/web_live_dot.dart';
 import 'package:dottoday/data/live_activity/web_live_dot_providers.dart';
@@ -37,6 +38,7 @@ import 'package:dottoday/features/sync_status/sync_sheet.dart';
 import 'package:dottoday/features/task_editor/add/add_flow_sheet.dart';
 import 'package:dottoday/features/task_editor/breakdown/breakdown_flow.dart';
 import 'package:dottoday/features/timeline/workspace/plan_panel_state.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:dottoday/shared/haptics/app_haptics.dart';
 import 'package:dottoday/shared/layout/layout_switch.dart';
 import 'package:dottoday/shared/navigation/mac_window_chrome.dart';
@@ -129,37 +131,41 @@ class DottodayApp extends ConsumerWidget {
         );
         // The Mac window takes the app's theme (ED-176); a view's
         // `?task=` opens the task over it (ED-097).
-        return withAddModes(
-          MacWindowChrome(
-            // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
-            child: LayoutSwitchGuard(
-              child: HapticsScope(
-                enabled: settings?.inAppHapticsEnabled ?? true,
-                child: AppLifecycleScope(
-                  // The Mac menu bar (M5.5) runs the same handlers as the keys.
-                  child: AppMenuBar(
-                    router: router,
-                    handlers: handlers,
-                    child: AppCommandScope(
+        // Reduce Transparency, which Flutter does not report (ED-248 C).
+        return ReduceTransparencyScope(
+          on: ref.watch(reduceTransparencyProvider).value ?? false,
+          child: withAddModes(
+            MacWindowChrome(
+              // Above every route, so a plain widget asks AppHaptics (docs/12 §2.6).
+              child: LayoutSwitchGuard(
+                child: HapticsScope(
+                  enabled: settings?.inAppHapticsEnabled ?? true,
+                  child: AppLifecycleScope(
+                    // The Mac menu bar (M5.5) runs the same handlers as the keys.
+                    child: AppMenuBar(
+                      router: router,
                       handlers: handlers,
-                      singleKeys: settings?.webSingleKeys ?? true,
-                      // The tablets' + menus (E-R2-3): Add on a tab.
-                      onAddMode: (mode) => openQuickAdd(router, mode: mode),
-                      child: UndoKeys(
-                        child: Actions(
-                          actions: _intents(router),
-                          // An unreadable database replaces every screen (M3f.9).
-                          child: DatabaseGate(
-                            // The optional app lock over everything else (M5.8).
-                            child: LockGate(
-                              // After a change of owner: signed out, guest work,
-                              // settings, an unfinished removal (CR-160).
-                              child: AccountGateView(
-                                // First run on this device (M4).
-                                child: OnboardingGate(
-                                  child: TaskLinkHost(
-                                    router: router,
-                                    child: child ?? const SizedBox.shrink(),
+                      child: AppCommandScope(
+                        handlers: handlers,
+                        singleKeys: settings?.webSingleKeys ?? true,
+                        // The tablets' + menus (E-R2-3): Add on a tab.
+                        onAddMode: (mode) => openQuickAdd(router, mode: mode),
+                        child: UndoKeys(
+                          child: Actions(
+                            actions: _intents(router),
+                            // An unreadable database replaces every screen (M3f.9).
+                            child: DatabaseGate(
+                              // The optional app lock over everything else (M5.8).
+                              child: LockGate(
+                                // After a change of owner: signed out, guest work,
+                                // settings, an unfinished removal (CR-160).
+                                child: AccountGateView(
+                                  // First run on this device (M4).
+                                  child: OnboardingGate(
+                                    child: TaskLinkHost(
+                                      router: router,
+                                      child: child ?? const SizedBox.shrink(),
+                                    ),
                                   ),
                                 ),
                               ),

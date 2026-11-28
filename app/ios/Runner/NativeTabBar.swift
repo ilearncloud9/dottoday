@@ -19,6 +19,7 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
   private var addHeight: NSLayoutConstraint?
   private var add: UIButton?
   private var addLabel = ""
+  private var accessibilityObservers: [NSObjectProtocol] = []
 
   /// The board's insets (ED-124).
   private let edge: CGFloat = 21
@@ -133,6 +134,11 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
     self.addHeight = addHeight
     if #unavailable(iOS 26.0) {
       styleCompat(bar)
+      watchSolid(bar)
+      bar.onTraits = { [weak self, weak bar] in
+        guard let self, let bar else { return }
+        self.styleCompat(bar)
+      }
       bar.heightAnchor.constraint(equalToConstant: capsule).isActive = true
     }
     self.bar = bar
@@ -147,15 +153,63 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
     return button
   }
 
-  /// F2 (iOS 16–25): the system material bar, rounded to a capsule.
+  /// F2 (iOS 16–25): the system material bar, rounded to a capsule. Its
+  /// classic blur does not turn opaque by itself (ED-131), so with Reduce
+  /// Transparency or Increase Contrast on it is solid with a 1.5 outline in
+  /// the secondary colour (ED-248 C, E-G4-7-States D4).
   private func styleCompat(_ bar: UITabBar) {
+    let solid = UIAccessibility.isReduceTransparencyEnabled
+      || UIAccessibility.isDarkerSystemColorsEnabled
     let look = UITabBarAppearance()
-    look.configureWithDefaultBackground()
+    if solid {
+      look.configureWithOpaqueBackground()
+      look.backgroundColor = card
+      look.shadowColor = nil
+    } else {
+      look.configureWithDefaultBackground()
+    }
     bar.standardAppearance = look
     if #available(iOS 15.0, *) { bar.scrollEdgeAppearance = look }
     bar.layer.cornerCurve = .continuous
     bar.clipsToBounds = true
     bar.layer.cornerRadius = 31.5
+    bar.layer.borderWidth = solid ? 1.5 : 0
+    bar.layer.borderColor = secondary.resolvedColor(with: bar.traitCollection).cgColor
+  }
+
+  /// Restyles the F2 bar when either setting changes.
+  private func watchSolid(_ bar: UITabBar) {
+    let names = [
+      UIAccessibility.reduceTransparencyStatusDidChangeNotification,
+      UIAccessibility.darkerSystemColorsStatusDidChangeNotification,
+    ]
+    accessibilityObservers = names.map { name in
+      NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) {
+        [weak self, weak bar] _ in
+        guard let self, let bar else { return }
+        self.styleCompat(bar)
+      }
+    }
+  }
+
+  /// The card and secondary roles with Increase Contrast's step
+  /// (app/lib/core/theme/tokens.dart: card, DotContrast).
+  private let card = UIColor { traits in
+    traits.userInterfaceStyle == .dark
+      ? UIColor(red: 0x28 / 255, green: 0x23 / 255, blue: 0x2A / 255, alpha: 1)
+      : UIColor(red: 0xFF / 255, green: 0xFD / 255, blue: 0xF9 / 255, alpha: 1)
+  }
+
+  private let secondary = UIColor { traits in
+    let more = traits.accessibilityContrast == .high
+    if traits.userInterfaceStyle == .dark {
+      return more
+        ? UIColor(red: 0xDD / 255, green: 0xD5 / 255, blue: 0xD9 / 255, alpha: 1)
+        : UIColor(red: 0xC7 / 255, green: 0xBE / 255, blue: 0xC4 / 255, alpha: 1)
+    }
+    return more
+      ? UIColor(red: 0x4E / 255, green: 0x47 / 255, blue: 0x57 / 255, alpha: 1)
+      : UIColor(red: 0x6A / 255, green: 0x62 / 255, blue: 0x73 / 255, alpha: 1)
   }
 
   /// iOS 26 sizes the glass capsule to its tabs, centres it at the top
@@ -241,6 +295,14 @@ final class NativeTabBar: NSObject, UITabBarDelegate {
 /// layout; earlier systems have none and report nothing.
 final class CapsuleTabBar: UITabBar {
   var onCapsule: ((CGRect) -> Void)?
+
+  /// Light/dark or contrast changed: the F2 outline's colour is a CGColor.
+  var onTraits: (() -> Void)?
+
+  override func traitCollectionDidChange(_ previous: UITraitCollection?) {
+    super.traitCollectionDidChange(previous)
+    onTraits?()
+  }
 
   override func layoutSubviews() {
     super.layoutSubviews()

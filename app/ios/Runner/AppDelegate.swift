@@ -77,6 +77,10 @@ import workmanager_apple
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SpeechBridge") {
       SpeechBridge.register(registrar.messenger())
     }
+    // Reduce Transparency, which Flutter does not report (ED-248 C).
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "ReduceTransparencyBridge") {
+      ReduceTransparencyBridge.shared.attach(to: registrar.messenger())
+    }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SystemEventsBridge") {
       SystemEventsBridge.shared.attach(to: registrar.messenger())
     }

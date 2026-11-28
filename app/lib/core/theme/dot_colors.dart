@@ -1,6 +1,7 @@
 import 'dart:ui' show Brightness;
 
 import 'package:dottoday/core/theme/contrast.dart';
+import 'package:dottoday/core/theme/dot_contrast.dart';
 import 'package:dottoday/core/theme/task_palette.dart';
 import 'package:dottoday/core/theme/tokens.dart';
 import 'package:flutter/painting.dart';
@@ -91,6 +92,17 @@ final class DotColors {
   /// and fills derived for 4.5:1, the colour itself never changed.
   factory DotColors.custom(Brightness brightness, Color accent) =>
       _resolve(brightness, accent);
+
+  /// These roles with Increase Contrast on (ED-248 C, E-G4-7-States D4):
+  /// secondary text a step further from the ground, the thread ahead and
+  /// every edge at the tertiary colour (3:1 or more).
+  DotColors moreContrast() => _moreCache[(brightness, accent)] ??= _resolve(
+    brightness,
+    accent,
+    more: true,
+  );
+
+  static final _moreCache = <(Brightness, Color), DotColors>{};
 
   final Brightness brightness;
 
@@ -375,9 +387,11 @@ final class DotColors {
   }
 }
 
-DotColors _resolve(Brightness brightness, Color accent) {
+DotColors _resolve(Brightness brightness, Color accent, {bool more = false}) {
   final dark = brightness == Brightness.dark;
   final p = dark ? DotPalette.dark : DotPalette.light;
+  // Increase Contrast (ED-248 C): edges and the thread at tertiary.
+  final edge = more ? p.tertiary : null;
   final isTeal =
       accent == DotAccent.teal.light || accent == DotAccent.teal.dark;
   // White on the light accents, teal ink on the dark ones (ED-174).
@@ -399,9 +413,9 @@ DotColors _resolve(Brightness brightness, Color accent) {
     surface: p.ground,
     raised: p.card,
     text: p.ink,
-    muted: p.secondary,
-    outline: Color.alphaBlend(p.hairline, p.card),
-    threadAhead: p.threadAhead,
+    muted: more ? DotContrast.secondary(brightness) : p.secondary,
+    outline: edge ?? Color.alphaBlend(p.hairline, p.card),
+    threadAhead: edge ?? p.threadAhead,
     accent: accent,
     accentInk: accentText,
     onAccent: onAccent,
@@ -430,9 +444,9 @@ DotColors _resolve(Brightness brightness, Color accent) {
     tertiary: p.tertiary,
     ring: p.ring,
     placeholder: p.placeholder,
-    threadOnRaised: p.threadOnRaised,
-    controlOutline: p.controlOutline,
-    hairlineStrong: Color.alphaBlend(p.hairlineStrong, p.card),
+    threadOnRaised: edge ?? p.threadOnRaised,
+    controlOutline: edge ?? p.controlOutline,
+    hairlineStrong: edge ?? Color.alphaBlend(p.hairlineStrong, p.card),
     calendarIcon: p.calendarIcon,
     tabOff: p.tabOff,
     tonalAndroid: p.tonalAndroid,
@@ -460,7 +474,7 @@ DotColors _resolve(Brightness brightness, Color accent) {
     glassEdge: p.glassEdge,
     gridLine: p.gridLine,
     gridDivider: p.gridDivider,
-    blockEdge: p.blockEdge,
+    blockEdge: edge ?? p.blockEdge,
     fabAndroid: p.fabAndroid,
     shadow: p.shadow,
   );

@@ -1033,7 +1033,7 @@ Text never falls out of its container, at any window size, text size (Dynamic Ty
 - **Android "What is it?" placeholder (Q5, ED-196):** light #6A6473, dark #A0999F.
 - **Accessibility:**
   - sync changes announced politely, once; a failed save announced assertively;
-  - Reduce Transparency → solid surfaces with outlines; Increase Contrast → secondary text one step darker, stronger thread;
+  - Reduce Transparency → floating glass solid with a 1.5 outline in the secondary colour, standard colours; Increase Contrast → the same, plus secondary text one step stronger (#4E4757 light, #DDD5D9 dark), the thread ahead and control, card and row edges at tertiary (≥ 3:1); the hour grid stays faint (ED-502);
   - Reduced Motion → no ring or sheet animation;
   - largest text → one column, nothing truncated.
 

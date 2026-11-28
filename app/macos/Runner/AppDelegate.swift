@@ -89,6 +89,8 @@ class AppDelegate: FlutterAppDelegate {
     ThinkingBridge.register(controller.engine.binaryMessenger)
     // Dictation, on the device only (M14.4, ADR-0014).
     SpeechBridge.register(controller.engine.binaryMessenger)
+    // Reduce Transparency, which Flutter does not report (ED-248 C).
+    ReduceTransparencyBridge.shared.attach(to: controller.engine.binaryMessenger)
 
     // The share extension's queue (docs/09 M12.4).
     IntentQueueBridge.shared.attach(to: controller.engine.binaryMessenger)

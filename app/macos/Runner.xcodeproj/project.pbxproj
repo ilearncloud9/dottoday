@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		D07A0C0E5EAD7E0000000A03 /* ReduceTransparencyBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07A0C0E5EAD7E0000000A04 /* ReduceTransparencyBridge.swift */; };
 		0093699D80D8E7EE4BAEBE40 /* done_done.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7C19495645B7E0B87A9EDCB2 /* done_done.caf */; };
 		03F1E0399EF22D8F046CC29F /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5320F194139FE4ED14609713 /* Pods_RunnerTests.framework */; };
 		0805328A528E626866EFC519 /* done_checked.caf in Resources */ = {isa = PBXBuildFile; fileRef = 4BC72DFFEF261631D79A3275 /* done_checked.caf */; };
@@ -164,6 +165,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D07A0C0E5EAD7E0000000A04 /* ReduceTransparencyBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReduceTransparencyBridge.swift; path = ../../ios/Runner/ReduceTransparencyBridge.swift; sourceTree = "<group>"; };
 		0277A5B525B6876C7DB0326B /* quiet_soft.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = quiet_soft.caf; path = ../ios/Runner/Sounds/quiet_soft.caf; sourceTree = SOURCE_ROOT; };
 		0428686613BE33AFBECCA17F /* play_chick.caf */ = {isa = PBXFileReference; includeInIndex = 1; name = play_chick.caf; path = ../ios/Runner/Sounds/play_chick.caf; sourceTree = SOURCE_ROOT; };
 		D4B2F8E35A9C7B0E1F3D6A42 /* ContextMenuBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContextMenuBridge.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				5427C84AB64FDE92492A5B8B /* NowMiniWindow.swift */,
 				E31060CD99B889FD8CFFD316 /* ThinkingBridge.swift */,
 				A1B2C3D4E5F60718293A4B04 /* SpeechBridge.swift */,
+				D07A0C0E5EAD7E0000000A04 /* ReduceTransparencyBridge.swift */,
 				A1B2C3D4E5F60718293A4C04 /* CalendarSeriesBridge.swift */,
 				FD451A8BE2D7D08996B3C88E /* DotStore.swift */,
 				6D96B6C66E14E3B68B381FDB /* QueueSeal.swift */,
@@ -843,6 +846,7 @@
 				B29F8C4FA53CC28A24CB2B83 /* NowMiniWindow.swift in Sources */,
 				5A38B0F6448DE1214CE36867 /* ThinkingBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4B03 /* SpeechBridge.swift in Sources */,
+				D07A0C0E5EAD7E0000000A03 /* ReduceTransparencyBridge.swift in Sources */,
 				A1B2C3D4E5F60718293A4C03 /* CalendarSeriesBridge.swift in Sources */,
 				D74A14723FFB04FCF582C67F /* DotStore.swift in Sources */,
 				ABD355220B8FDD4C6C3DD215 /* QueueSeal.swift in Sources */,

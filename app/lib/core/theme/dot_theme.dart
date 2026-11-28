@@ -1,6 +1,7 @@
 import 'package:dottoday/core/theme/colour_math.dart';
 import 'package:dottoday/core/theme/dot_colors.dart';
 import 'package:dottoday/core/theme/dot_components.dart';
+import 'package:dottoday/core/theme/dot_contrast.dart';
 import 'package:dottoday/core/theme/dot_metrics.dart';
 import 'package:dottoday/core/theme/dot_motion.dart';
 import 'package:dottoday/core/theme/dot_type.dart';
@@ -16,6 +17,7 @@ export 'app_colours.dart';
 export 'colour_math.dart';
 export 'contrast.dart';
 export 'dot_colors.dart';
+export 'dot_contrast.dart';
 export 'dot_dawn.dart';
 export 'dot_glyphs.dart';
 export 'dot_icon.dart';
@@ -62,7 +64,17 @@ final class DotTheme extends ThemeExtension<DotTheme> {
     final theme = Theme.of(context).extension<DotTheme>();
     assert(theme != null, 'DotTheme missing: use DotTheme.light()/dark().');
     final reduce = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    return theme!.copyWith(motion: DotMotion.resolve(reduceMotion: reduce));
+    final more = MediaQuery.maybeHighContrastOf(context) ?? false;
+    final motion = DotMotion.resolve(reduceMotion: reduce);
+    if (!more) return theme!.copyWith(motion: motion);
+    // Increase Contrast (ED-248 C): every theme in the tree, sheets' and
+    // popovers' own included, reads the stronger roles here.
+    final c = theme!.colors.moreContrast();
+    return theme.copyWith(
+      motion: motion,
+      colors: c,
+      styles: DotContrast.styles(c),
+    );
   }
 
   /// Light [ThemeData] with [accent] (Settings › Look).

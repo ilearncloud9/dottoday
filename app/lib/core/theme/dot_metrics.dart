@@ -649,6 +649,10 @@ abstract final class DotSize {
   /// A 2 px stroke: focus rings (ED-211) and selected outlines.
   static const double smallDotOutline = 2;
 
+  /// Glass made solid by Reduce Transparency or Increase Contrast: its
+  /// 1.5 outline (ED-248 C, E-G4-7-States D4).
+  static const double solidOutline = 1.5;
+
   /// A calendar event's ring (ED-200): 2.5, or 2 on dots of 16 and under.
   static const double calendarOutline = 2.5;
 

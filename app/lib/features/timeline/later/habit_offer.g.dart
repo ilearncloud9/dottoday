@@ -77,7 +77,7 @@ final class HabitOfferProvider
   }
 }
 
-String _$habitOfferHash() => r'e7775bcd5d9820dcee2d4569aa0750a38c12b616';
+String _$habitOfferHash() => r'b394c290f398c07f0f97509f1ca13614b41b6515';
 
 /// The first of this device's onboarding tasks ready for "Make it a
 /// habit" on [today], or null: still every day, three of its days done,

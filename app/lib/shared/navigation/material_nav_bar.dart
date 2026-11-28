@@ -2,6 +2,7 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:dottoday/core/editing/add_anchor.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:dottoday/shared/navigation/dot_shell.dart';
 import 'package:dottoday/shared/navigation/drag_targets.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class MaterialBarShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final onAdd = bar.onAdd;
     final inset = MediaQuery.paddingOf(context).bottom;
-    final glass = frosted && !MediaQuery.highContrastOf(context);
+    final glass = frosted && !solidChrome(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -88,6 +89,7 @@ class _Frost extends StatelessWidget {
       decoration: BoxDecoration(
         color: glass ? fill.withValues(alpha: alpha) : fill,
         borderRadius: shape,
+        border: solidOutline(context),
       ),
       child: child,
     );

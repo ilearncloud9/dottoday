@@ -1,5 +1,6 @@
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
+import 'package:dottoday/shared/dot/solid_chrome.dart';
 import 'package:flutter/material.dart';
 
 /// "Day ▾" floating over a phone's day (E-Phones, ED-093, ED-124): the
@@ -16,6 +17,7 @@ class DayMenuChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: DotSpace.l),
       decoration: BoxDecoration(
         color: t.colors.raised,
+        border: solidOutline(context),
         borderRadius: BorderRadius.circular(DotRadii.pill),
         boxShadow: DotElevation.capsule(t.colors),
       ),
