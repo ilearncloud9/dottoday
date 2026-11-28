@@ -30,6 +30,7 @@ import 'package:dottoday/features/timeline/widgets/sheet_actions.dart';
 import 'package:dottoday/features/timeline/workspace/inspector_pick.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/thread_select.dart';
+import 'package:dottoday/shared/navigation/key_catcher.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -94,8 +95,11 @@ class WeekView extends ConsumerWidget {
     final todayAt = days.indexOf(today);
     final axisStart = todayAt < 0 ? null : _axisStart(zone, today, first);
     final use24h = use24hFor(context, profile.settings.use24h);
-    // Arrow keys between the blocks (handoff "Week", M19.2 part 3b).
+    // Arrow keys between the blocks (handoff "Week", M19.2 part 3b). One
+    // group, so Tab reaches its one stop where the board sits, not where
+    // a block scrolled out of sight would sort (ED-248 B).
     final board = GridFocus(
+      today: today,
       child: WeekBoard(
         loads: loads,
         today: today,
@@ -114,7 +118,14 @@ class WeekView extends ConsumerWidget {
         ],
       ),
     );
-    if (!cues) return _keys(GridScaleScope(scale: scale, child: board));
+    if (!cues) {
+      return _keys(
+        GridScaleScope(
+          scale: scale,
+          child: FocusTraversalGroup(child: board),
+        ),
+      );
+    }
     // The header (or, in the Workspace, the cue chips) over the grid; the
     // grid runs to the content's edges (E-FullA-v2 Week).
     return _keys(
@@ -141,7 +152,10 @@ class WeekView extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: GridScaleScope(scale: scale, child: board),
+              child: GridScaleScope(
+                scale: scale,
+                child: FocusTraversalGroup(child: board),
+              ),
             ),
           ],
         ),
@@ -155,14 +169,7 @@ class WeekView extends ConsumerWidget {
       onPrevious: onPrevious,
       onNext: onNext,
       onCurrent: onToday,
-      child: Focus(
-        autofocus: true,
-        // Catches keys only; adds nothing for screen readers.
-        includeSemantics: false,
-        // No Tab stop: Tab from here starts at Skip to content (SkipLink).
-        skipTraversal: true,
-        child: child,
-      ),
+      child: KeyCatcher(child: child),
     );
   }
 

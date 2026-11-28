@@ -14,6 +14,7 @@ import 'package:dottoday/features/timeline/widgets/day_actions.dart';
 import 'package:dottoday/features/timeline/widgets/export_day.dart';
 import 'package:dottoday/features/timeline/widgets/go_to_date.dart';
 import 'package:dottoday/features/timeline/widgets/task_keys.dart';
+import 'package:dottoday/shared/navigation/key_catcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,15 +102,11 @@ class TodayKeys extends ConsumerWidget {
             child: TaskKeys(
               day: shown,
               today: today,
-              child: Focus(
+              child: KeyCatcher(
                 // Never from a sheet above: on a slow web load Today mounts
                 // under an open Add sheet and took its title's keys (CI
                 // a11y-web). It takes the keys on a build once on top.
                 autofocus: _onTop(context),
-                // Catches keys only; adds nothing for screen readers.
-                includeSemantics: false,
-                // No Tab stop: Tab from here starts at Skip to content (SkipLink).
-                skipTraversal: true,
                 child: child,
               ),
             ),

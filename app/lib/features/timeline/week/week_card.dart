@@ -33,6 +33,7 @@ class WeekCard extends StatefulWidget {
     this.over = false,
     this.picked = false,
     this.selected = false,
+    this.overlaps = const [],
     this.onOpen,
     this.onCue,
     this.onMove,
@@ -58,6 +59,9 @@ class WeekCard extends StatefulWidget {
 
   /// Picked in multi-select (E-R2-6): the accent edge and the check.
   final bool selected;
+
+  /// The tasks whose times cross this one's: "overlaps Run" (ED-248 B).
+  final List<String> overlaps;
   final VoidCallback? onOpen;
 
   /// The cue tapped: Smallest step's Start or Unstick's question.
@@ -223,7 +227,14 @@ class _WeekCardState extends State<WeekCard> {
     return Semantics(
       button: widget.onOpen != null,
       selected: widget.picked || widget.selected,
-      label: taskRowLabel(l10n, _task),
+      label: switch (widget.overlaps) {
+        [] => taskRowLabel(l10n, _task),
+        [final first, ...final rest] => l10n.rowOverlaps(
+          taskRowLabel(l10n, _task),
+          first,
+          rest.length,
+        ),
+      },
       excludeSemantics: true,
       child: move == null || !_eligible
           ? tap

@@ -2139,6 +2139,8 @@
   "webKeyDays": "jours",
   "webKeyEverything": "tout le reste",
   "webKeyHelp": "aide",
+  "rowOverlaps": "{label}, chevauche {title}{others, plural, =0{} =1{ et 1 autre} other{ et {others} autres}}",
+  "gridDaySaid": "{day}{today, select, yes{, aujourd’hui} other{}}, {count, plural, =1{1 tâche} other{{count} tâches}}, {planned} prévu",
   "taskIconCategoryPlanning": "Planification et rythme",
   "taskIconCategoryHealth": "Santé et corps",
   "taskIconCategoryFitness": "Forme et sport",

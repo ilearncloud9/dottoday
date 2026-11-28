@@ -12,6 +12,7 @@ import 'package:dottoday/features/timeline/state/timeline_providers.dart';
 import 'package:dottoday/features/timeline/workspace/plan_panel_state.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_scope.dart';
 import 'package:dottoday/shared/dot/inbox_beside.dart';
+import 'package:dottoday/shared/navigation/focus_return.dart';
 import 'package:dottoday/shared/workspace/plan_panel_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,13 +45,26 @@ class PlanPanelFrame extends ConsumerWidget {
             planPanelHasRoom(box.maxWidth, prefs.width, touch: touch);
         if (docked) {
           final c = DotTheme.of(context).colors;
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Panel(prefs: prefs),
-              VerticalDivider(width: DotSpace.hairline, color: c.hairline),
-              Expanded(child: view),
-            ],
+          // Tab: the panel, then the view (E-G4-7-States D2, ED-248), by
+          // order rather than by where a scrolled block sits.
+          return FocusTraversalGroup(
+            policy: OrderedTraversalPolicy(),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                FocusTraversalOrder(
+                  order: const NumericFocusOrder(0),
+                  child: FocusTraversalGroup(child: _Panel(prefs: prefs)),
+                ),
+                VerticalDivider(width: DotSpace.hairline, color: c.hairline),
+                Expanded(
+                  child: FocusTraversalOrder(
+                    order: const NumericFocusOrder(1),
+                    child: FocusTraversalGroup(child: view),
+                  ),
+                ),
+              ],
+            ),
           );
         }
         if (!out) return view;
@@ -176,9 +190,13 @@ class _Out extends StatefulWidget {
 class _OutState extends State<_Out> {
   final _focus = FocusNode(debugLabel: 'plan panel'); // l10n-ignore: debug
 
+  /// What had focus before, given back when the panel goes (ED-248).
+  final _back = FocusReturn();
+
   @override
   void initState() {
     super.initState();
+    _back.track(false, true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _focus.requestFocus();
     });
@@ -186,6 +204,7 @@ class _OutState extends State<_Out> {
 
   @override
   void dispose() {
+    _back.track(true, false);
     _focus.dispose();
     super.dispose();
   }

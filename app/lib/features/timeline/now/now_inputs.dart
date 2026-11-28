@@ -97,12 +97,14 @@ final class NowInputs {
 
   /// The day horizon for these inputs (ED-241): wake, now, the middle
   /// hour and Wind Down under it. [onTap] with its [hint]; [onDotMenu]
-  /// gets the task under a right-click.
+  /// gets the task under a right-click; [onOpen] the task the keyboard
+  /// or a screen reader opens (ED-248 A).
   Widget horizon(
     BuildContext context, {
     VoidCallback? onTap,
     String? hint,
     void Function(Occurrence task, Offset global)? onDotMenu,
+    void Function(Occurrence task)? onOpen,
   }) {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toLanguageTag();
@@ -137,9 +139,17 @@ final class NowInputs {
         time(shape.bedUtc),
         time(nowUtc),
       ),
+      dotLabels: [
+        for (final o in timed)
+          l10n.rowLabel(
+            o.title,
+            l10n.threadTimeRange(time(o.startUtc!), time(o.endUtc!)),
+          ),
+      ],
       hint: hint,
       onTap: onTap,
       onDotMenu: onDotMenu == null ? null : (i, at) => onDotMenu(timed[i], at),
+      onOpen: onOpen == null ? null : (i) => onOpen(timed[i]),
     );
   }
 }

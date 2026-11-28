@@ -19,6 +19,7 @@ class GridBlock extends StatefulWidget {
     required this.over,
     required this.picked,
     required this.onOpen,
+    this.overlaps = const [],
     this.selected = false,
     this.onHold,
     this.slot,
@@ -33,6 +34,9 @@ class GridBlock extends StatefulWidget {
   final bool narrow;
   final bool over;
   final bool picked;
+
+  /// The tasks whose times cross this one's, said after it (ED-248 B).
+  final List<String> overlaps;
 
   /// Picked in multi-select (E-R2-6).
   final bool selected;
@@ -68,6 +72,7 @@ class _GridBlockState extends State<GridBlock> {
       lifted: lifted,
       over: w.over && !lifted,
       picked: !lifted && w.picked,
+      overlaps: w.overlaps,
       selected: !lifted && w.selected,
       onOpen: w.onOpen,
       onCue: w.onCue,

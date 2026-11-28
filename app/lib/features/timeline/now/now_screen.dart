@@ -1,3 +1,4 @@
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/layout/app_layout.dart';
 import 'package:dottoday/core/router/app_routes.dart';
@@ -81,11 +82,13 @@ class NowScreen extends ConsumerWidget {
                     windDown: time(shape.bedUtc),
                   ),
                   const SizedBox(height: DotSpace.m),
-                  // A tap opens Today (E-PhonesMinimal frame 1).
+                  // A tap opens Today (E-PhonesMinimal frame 1); a screen
+                  // reader swipes along the dots and opens one (ED-248 A).
                   n.horizon(
                     context,
                     onTap: () => context.go(AppRoutes.today),
                     hint: context.l10n.horizonOpensToday,
+                    onOpen: (o) => openTask(context, o.id),
                   ),
                   const SizedBox(height: DotSpace.xl),
                   // The morning's Wake Up card until it's answered, unless a

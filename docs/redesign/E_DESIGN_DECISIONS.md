@@ -6147,6 +6147,16 @@ Source for ED-065 to ED-070: the owner's Group 1 reply, 2026-11-04 (session mess
 - **Checks:** format, analyze clean; changed goldens regenerated (Month, web Settings forms, the web task column, Now wide) and compared by eye; the pseudo locale and icon-names block regenerated; the full suite but the Supabase tests (Docker off).
 - **Not checked:** Focus and the Copy dialog were not re-captured; a browser, a Mac build, VoiceOver.
 
+### ED-501 · M20.13 part 5: keyboard paths and the Week for screen readers (ED-248 A+B)
+- **Date:** 2026-11-28. **Owner:** "Show me first", then the proposal page (https://claude.ai/artifact/VS3S77jASHppuRNjMLMAbL): "Yes, as shown". Review page: https://claude.ai/artifact/MZjM77RwroGJpGgXzbjmkX. **Approved 2026-11-28: "Approve part 5".** Source: E-DF3, ED-248 A and B, E-G4-7-States D2.
+- **A · Wide Minimal Now:** Tab goes Skip to content → sidebar → toolbar → horizon (one stop) → Done · Focus · Need more time? → Next, Add a task, Hide the Day column → Day column (each region a `FocusTraversalGroup`). The horizon starts on the task under way: ←/→ move between dots, Home/End jump to the ends, Return or Space opens that dot's task in the Day column; the picked dot gets a 2 px focus ring. ↑/↓ move between Day column rows.
+- **A · Screen readers:** the horizon is one adjustable element ("Day horizon, 7 AM to 10 PM, now …", value the picked dot's title and time), swipe up or down moves, an "Open" custom action opens it. On phones double-tap still opens Today; Open is the separate action (owner's choice).
+- **A · Focus landing and return:** an opened task or review takes focus on its title (`LandingTitle`, a header for screen readers); Esc or ✕ returns focus to what opened it (`FocusReturn`), also for the Workspace inspector and the pop-out Plan panel.
+- **B · The Week:** reads day by day: a heading "Tuesday, November 3, today, 9 tasks, 6 h 30 planned" (new `gridDaySaid`), then that day's cards in start order; overlapping cards add "overlaps … and N more" (new `rowOverlaps`). The visible headers are unchanged and hidden from screen readers. The grid is one Tab stop landing on the last focused card, else today's first; arrows move (←/→ skip empty days, owner's choice), Return opens the inspector; a focused card scrolls just into view.
+- **Also:** Full follows D2: the Workspace toolbar, Plan panel and view are each finished before Tab moves on (`OrderedTraversalPolicy` for the docked Plan panel). Today's and the Week's key catchers (`KeyCatcher`) are no Tab stop: when Tab comes back into the page it goes on to the first control (the last with Shift).
+- **Checks:** format, analyze clean; 8 new tests (`now_keyboard_test`, `week_reader_test`); goldens unchanged; the pseudo locale regenerated; the full suite but the Supabase tests (Docker off).
+- **Not checked:** real VoiceOver or TalkBack, a browser, a device; no overlap in the captures (the week's data has none; a test covers it); Return from the Week was not captured (the fixture's ids are not links).
+
 ---
 
 ## Pending owner answers

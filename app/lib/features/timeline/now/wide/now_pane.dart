@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dottoday/core/editing/editing_task.dart';
 import 'package:dottoday/core/l10n/l10n.dart';
 import 'package:dottoday/core/shortcuts/app_shortcuts.dart';
 import 'package:dottoday/core/theme/dot_theme.dart';
@@ -62,6 +63,8 @@ class NowPane extends ConsumerWidget {
               hint: dayHidden && !stacked ? l10n.dayColumnShow : null,
               onDotMenu: (o, at) =>
                   unawaited(showNowDotMenu(context, ref, o, at)),
+              // Return on a dot opens it in the Day column (ED-248 A).
+              onOpen: (o) => openTask(context, o.id),
             ),
             const SizedBox(height: DotSpace.xxl),
             NowBody(

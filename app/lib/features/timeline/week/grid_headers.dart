@@ -6,6 +6,19 @@ import 'package:dottoday/shared/duration/duration_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// A day as a screen reader hears it at the top of its column (ED-248 B):
+/// "Tuesday, November 3, today, 9 tasks, 6 h 30 planned".
+String gridDaySaid(BuildContext context, DayLoad load, DateTime today) {
+  final l10n = context.l10n;
+  final locale = Localizations.localeOf(context).toLanguageTag();
+  return l10n.gridDaySaid(
+    DateFormat.MMMMEEEEd(locale).format(load.date),
+    load.date == today ? 'yes' : 'no', // l10n-ignore: ICU select keys
+    load.total,
+    formatDurationShort(l10n, load.plannedMinutes),
+  );
+}
+
 /// A day's header (E-FullA-v2 Week): the weekday, the date and "4 done" /
 /// "3 planned"; today tinted, "Tue · Today", its date in the accent circle
 /// and "3 of 9 · 7 h 40".

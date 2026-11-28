@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/week/grid_headers.dart';
 import 'package:dottoday/features/timeline/week/grid_scale.dart';
 import 'package:dottoday/shared/dot/thread.dart' show hourGutter;
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 /// The hour grid (E-FullA-v2 Week, M19.2 part 2) for Week and 3 days: a
 /// header per day, the hour labels in a 44 gutter, and the day [columns]
@@ -97,7 +98,8 @@ class _WeekBoardState extends State<WeekBoard> {
                     ? box.maxHeight / 2
                     : double.infinity,
               ),
-              child: _headers(context, width),
+              // Said with each day's cards instead (ED-248 B): see _day.
+              child: ExcludeSemantics(child: _headers(context, width)),
             ),
             Expanded(child: _grid(context, width)),
           ],
@@ -185,8 +187,12 @@ class _WeekBoardState extends State<WeekBoard> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        for (final col in widget.columns)
-                          SizedBox(width: width, height: _height, child: col),
+                        for (final (i, col) in widget.columns.indexed)
+                          SizedBox(
+                            width: width,
+                            height: _height,
+                            child: _day(context, i, col),
+                          ),
                       ],
                     ),
                   ),
@@ -210,6 +216,40 @@ class _WeekBoardState extends State<WeekBoard> {
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  /// A day for screen readers (ED-248 B): its heading, "Tuesday, November
+  /// 3, today, 9 tasks, 6 h 30 planned", then its cards in start order,
+  /// day after day. Without a node per day, a reader heard every heading,
+  /// then every card across the week by time.
+  Widget _day(BuildContext context, int i, Widget column) {
+    if (i >= widget.loads.length) return column;
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      sortKey: OrdinalSortKey(i.toDouble()),
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: DotTouch.min,
+            child: Semantics(
+              header: true,
+              sortKey: const OrdinalSortKey(0),
+              label: gridDaySaid(context, widget.loads[i], widget.today),
+              child: const SizedBox.expand(),
+            ),
+          ),
+          Semantics(
+            container: true,
+            sortKey: const OrdinalSortKey(1),
+            child: column,
+          ),
+        ],
       ),
     );
   }

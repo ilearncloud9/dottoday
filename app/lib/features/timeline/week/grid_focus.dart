@@ -10,10 +10,17 @@ import 'package:flutter/widgets.dart';
 ///
 /// [GridFocus] holds the blocks on screen; each [GridFocusTarget]
 /// registers its block's focus node with its day and start.
+///
+/// The grid is one Tab stop (ED-248 B, E-G4-7-States D2): Tab lands on
+/// the block last focused, or [today]'s first block, and the next Tab
+/// leaves the grid; the arrows move inside it.
 class GridFocus extends StatefulWidget {
-  const GridFocus({required this.child, super.key});
+  const GridFocus({required this.child, this.today, super.key});
 
   final Widget child;
+
+  /// Where Tab first lands: this day's first block.
+  final DateTime? today;
 
   @override
   State<GridFocus> createState() => _GridFocusState();
@@ -23,8 +30,10 @@ class _GridFocusState extends State<GridFocus> {
   final _map = GridFocusMap();
 
   @override
-  Widget build(BuildContext context) =>
-      _GridFocusScope(map: _map, child: widget.child);
+  Widget build(BuildContext context) {
+    _map.today = widget.today;
+    return _GridFocusScope(map: _map, child: widget.child);
+  }
 }
 
 class _GridFocusScope extends InheritedWidget {
@@ -45,10 +54,56 @@ typedef GridSlot = ({DateTime day, int minute});
 class GridFocusMap {
   final _entries = <FocusNode, ({String id, GridSlot slot})>{};
 
-  void _add(FocusNode node, String id, GridSlot slot) =>
-      _entries[node] = (id: id, slot: slot);
+  /// The day whose first block Tab lands on.
+  DateTime? today;
+  FocusNode? _last;
 
-  void _remove(FocusNode node) => _entries.remove(node);
+  void _add(FocusNode node, String id, GridSlot slot) {
+    _entries[node] = (id: id, slot: slot);
+    _roving();
+  }
+
+  void _remove(FocusNode node) {
+    _entries.remove(node);
+    if (_last == node) _last = null;
+    _roving();
+  }
+
+  void _focused(FocusNode node) {
+    if (!_entries.containsKey(node) || _last == node) return;
+    _last = node;
+    // After the focus change Flutter is applying: changing the nodes
+    // while it walks them throws.
+    scheduleMicrotask(_roving);
+  }
+
+  /// The one block Tab reaches: the last focused, else today's first,
+  /// else the week's first.
+  FocusNode? get entry {
+    if (_last case final n? when _entries.containsKey(n)) return n;
+    int order(
+      MapEntry<FocusNode, ({String id, GridSlot slot})> a,
+      MapEntry<FocusNode, ({String id, GridSlot slot})> b,
+    ) {
+      final d = a.value.slot.day.compareTo(b.value.slot.day);
+      return d != 0 ? d : a.value.slot.minute.compareTo(b.value.slot.minute);
+    }
+
+    final all = _entries.entries.toList()..sort(order);
+    if (all.isEmpty) return null;
+    final day = today;
+    return all
+        .firstWhere((e) => e.value.slot.day == day, orElse: () => all.first)
+        .key;
+  }
+
+  /// Every other block skips Tab.
+  void _roving() {
+    final stop = entry;
+    for (final n in _entries.keys) {
+      n.skipTraversal = n != stop;
+    }
+  }
 
   /// The block a press of [key] reaches from [from], or null at an edge.
   FocusNode? next(FocusNode from, LogicalKeyboardKey key) {
@@ -184,6 +239,19 @@ class _GridFocusTargetState extends State<GridFocusTarget> {
     skipTraversal: true,
     includeSemantics: false,
     onKeyEvent: _key,
+    onFocusChange: (on) {
+      if (!on || !_node.hasPrimaryFocus) return;
+      _map?._focused(_node);
+      // Tab may land on a block scrolled out of sight (today's first,
+      // before the hours shown): bring it into view, as the arrows do.
+      // Only when out of sight: a block already shown stays where it is.
+      for (final edge in [
+        ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+        ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      ]) {
+        unawaited(Scrollable.ensureVisible(context, alignmentPolicy: edge));
+      }
+    },
     child: widget.builder(_node),
   );
 }

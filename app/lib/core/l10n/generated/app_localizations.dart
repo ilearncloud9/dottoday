@@ -12936,6 +12936,18 @@ abstract class AppLocalizations {
   /// **'help'**
   String get webKeyHelp;
 
+  /// Screen-reader label of a Week card whose time crosses another task's (ED-248 B): the card's label, the first overlapping title and how many more.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, overlaps {title}{others, plural, =0{} =1{ and 1 more} other{ and {others} more}}'**
+  String rowOverlaps(String label, String title, int others);
+
+  /// Screen-reader heading of a day in the Week (ED-248 B): the date, today, how many tasks and the planned time ("2 h 30").
+  ///
+  /// In en, this message translates to:
+  /// **'{day}{today, select, yes{, today} other{}}, {count, plural, =1{1 task} other{{count} tasks}}, {planned} planned'**
+  String gridDaySaid(String day, String today, int count, String planned);
+
   /// Section title in the task icon picker.
   ///
   /// In en, this message translates to:

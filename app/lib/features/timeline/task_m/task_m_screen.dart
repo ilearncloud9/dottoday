@@ -73,7 +73,7 @@ class TaskMScreen extends ConsumerWidget {
               ),
             ],
           ),
-        TaskMHead(task: task, onClose: column ? null : onClose),
+        TaskMHead(task: task, onClose: column ? null : onClose, land: column),
         const SizedBox(height: DotSpace.m),
         TaskMWhen(task: task.occurrence, column: column),
         const SizedBox(height: DotSpace.m),

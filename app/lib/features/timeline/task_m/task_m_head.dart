@@ -6,6 +6,7 @@ import 'package:dottoday/data/profile/profile_providers.dart';
 import 'package:dottoday/features/timeline/state/task_view.dart';
 import 'package:dottoday/shared/dot/task_dot.dart';
 import 'package:dottoday/shared/dot/thread_day.dart';
+import 'package:dottoday/shared/navigation/landing_title.dart';
 import 'package:dottoday/shared/time/time_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,10 +17,18 @@ import 'package:timezone/timezone.dart' as tz;
 /// 18 min left" in teal while it runs, else its times; [onClose] draws
 /// the round ✕ (the phones' sheet; the Day column has its own row).
 class TaskMHead extends ConsumerWidget {
-  const TaskMHead({required this.task, this.onClose, super.key});
+  const TaskMHead({
+    required this.task,
+    this.onClose,
+    this.land = false,
+    super.key,
+  });
 
   final TaskView task;
   final VoidCallback? onClose;
+
+  /// The Day column's: focus lands on the title when it opens (ED-248 A).
+  final bool land;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,8 +76,8 @@ class TaskMHead extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Semantics(
-                header: true,
+              LandingTitle(
+                land: land,
                 child: Text(o.title, style: t.styles.minimalSheetTitle),
               ),
               Text(

@@ -11,6 +11,7 @@ import 'package:dottoday/features/timeline/task_m/task_m_screen.dart';
 import 'package:dottoday/features/timeline/widgets/day_page.dart';
 import 'package:dottoday/features/timeline/widgets/today_menu.dart';
 import 'package:dottoday/features/timeline/workspace/workspace_controls.dart';
+import 'package:dottoday/shared/navigation/focus_return.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,14 +36,22 @@ class DayColumn extends ConsumerStatefulWidget {
   ConsumerState<DayColumn> createState() => _DayColumnState();
 }
 
-/// A leaf: only which task's More options is open.
+/// A leaf: only which task's More options is open, and what opened the
+/// task or review, for focus to go back to (ED-248 A).
 class _DayColumnState extends ConsumerState<DayColumn> {
   String? _more;
+  final _back = FocusReturn();
 
   @override
   Widget build(BuildContext context) {
     final t = DotTheme.of(context);
     final id = ref.watch(editingTaskProvider);
+    ref
+      ..listen(editingTaskProvider, (a, b) => _back.track(a != null, b != null))
+      ..listen(
+        reviewBesideProvider,
+        (a, b) => _back.track(a != null, b != null),
+      );
     void close() {
       setState(() => _more = null);
       ref.read(editingTaskProvider.notifier).close();
@@ -168,12 +177,22 @@ class _Day extends ConsumerWidget {
           ),
           child: Text(l10n.dayColumnHint, style: t.styles.rowMeta),
         ),
+        // ↑/↓ move between the rows, the web too, where arrows would
+        // scroll (ED-248 A).
         Expanded(
-          child: DayPage(
-            date: today,
-            today: today,
-            page: true,
-            runningLate: false,
+          child: Shortcuts(
+            shortcuts: const {
+              SingleActivator(LogicalKeyboardKey.arrowUp):
+                  DirectionalFocusIntent(TraversalDirection.up),
+              SingleActivator(LogicalKeyboardKey.arrowDown):
+                  DirectionalFocusIntent(TraversalDirection.down),
+            },
+            child: DayPage(
+              date: today,
+              today: today,
+              page: true,
+              runningLate: false,
+            ),
           ),
         ),
       ],

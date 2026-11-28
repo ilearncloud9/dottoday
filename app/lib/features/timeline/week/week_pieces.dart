@@ -153,3 +153,26 @@ Widget gridFocusRing(DotColors c, BorderRadius radius, Widget card) {
     children: [card, edge(c.focus, w * 2), edge(c.canvas, w)],
   );
 }
+
+/// The titles of the tasks whose times cross [id]'s, in start order, for
+/// its "overlaps …" (ED-248 B).
+List<String> weekOverlaps(
+  Map<String, ({DateTime startUtc, int minutes})> starts,
+  Map<String, ThreadTask> byId,
+  String id,
+) {
+  final me = starts[id];
+  if (me == null) return const [];
+  final end = me.startUtc.add(Duration(minutes: me.minutes));
+  final others = [
+    for (final MapEntry(key: other, value: s) in starts.entries)
+      if (other != id &&
+          s.startUtc.isBefore(end) &&
+          me.startUtc.isBefore(s.startUtc.add(Duration(minutes: s.minutes))))
+        (s.startUtc, other),
+  ]..sort((a, b) => a.$1.compareTo(b.$1));
+  return [
+    for (final (_, other) in others)
+      if (byId[other] case final task?) task.title,
+  ];
+}

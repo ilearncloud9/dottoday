@@ -233,6 +233,7 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
                 b.height,
                 narrow: stacked ? b.lane > 0 : b.lanes > 1,
                 over: stacked && b.lane > 0,
+                overlaps: weekOverlaps(day.starts, byId, b.id),
               ),
             ),
           ),
@@ -245,11 +246,13 @@ class _WeekDayColumnState extends State<WeekDayColumn> {
     double height, {
     required bool narrow,
     required bool over,
+    List<String> overlaps = const [],
   }) => GridBlock(
     task: task,
     height: height,
     narrow: narrow,
     over: over,
+    overlaps: overlaps,
     picked: widget.day.pickedId == task.id,
     slot: widget.day.slotOf(task.id),
     selected: widget.day.selected.contains(task.id),

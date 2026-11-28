@@ -6825,6 +6825,14 @@ class PseudoAppLocalizations extends AppLocalizationsEn {
   String get webKeyHelp => pseudo(super.webKeyHelp);
 
   @override
+  String rowOverlaps(String label, String title, int others) =>
+      pseudo(super.rowOverlaps(label, title, others));
+
+  @override
+  String gridDaySaid(String day, String today, int count, String planned) =>
+      pseudo(super.gridDaySaid(day, today, count, planned));
+
+  @override
   String get taskIconCategoryPlanning => pseudo(super.taskIconCategoryPlanning);
 
   @override

@@ -84,13 +84,22 @@ class _NowWideState extends ConsumerState<NowWide> {
                         DotSize.dayColumn +
                         DotSpace.hairline;
                 if (!folds) {
+                  // Tab finishes the pane, then the Day column (ED-248 A,
+                  // E-DF3); without groups it went row by row across both.
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
-                        child: NowPane(inputs: n, app: app, dayHidden: hidden),
+                        child: FocusTraversalGroup(
+                          child: NowPane(
+                            inputs: n,
+                            app: app,
+                            dayHidden: hidden,
+                          ),
+                        ),
                       ),
-                      if (!hidden) DayColumn(today: n.today),
+                      if (!hidden)
+                        FocusTraversalGroup(child: DayColumn(today: n.today)),
                     ],
                   );
                 }
@@ -107,11 +116,13 @@ class _NowWideState extends ConsumerState<NowWide> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
-                            child: NowPane(
-                              inputs: n,
-                              app: app,
-                              dayHidden: !open,
-                              onDayRow: _toggle,
+                            child: FocusTraversalGroup(
+                              child: NowPane(
+                                inputs: n,
+                                app: app,
+                                dayHidden: !open,
+                                onDayRow: _toggle,
+                              ),
                             ),
                           ),
                           DayEdge(open: open, focusNode: _edge, onTap: _toggle),
@@ -127,7 +138,9 @@ class _NowWideState extends ConsumerState<NowWide> {
                             decoration: const BoxDecoration(
                               boxShadow: DotElevation.floating,
                             ),
-                            child: DayColumn(today: n.today, onClose: _close),
+                            child: FocusTraversalGroup(
+                              child: DayColumn(today: n.today, onClose: _close),
+                            ),
                           ),
                         ),
                     ],

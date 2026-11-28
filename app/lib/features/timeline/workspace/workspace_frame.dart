@@ -32,22 +32,28 @@ class WorkspaceFrame extends ConsumerWidget {
     final path = router.routerDelegate.currentConfiguration.uri.path;
     final view = workspaceViewOf(path) ?? WorkspaceView.day;
     final settings = ref.watch(currentProfileProvider).value?.settings;
+    // Toolbar, then the view, each finished before the next (E-G4-7-States
+    // D2, ED-248): without groups Tab went across both by height.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        WorkspaceToolbar(
-          view: view,
-          shown: workspaceShownDate(path) ?? today,
-          today: today,
-          firstDayOfWeek: settings?.firstDayOfWeek ?? 1,
-          leading: const PlanPanelButton(),
-          trailing: workspaceInspects(path) ? const InspectorToggle() : null,
+        FocusTraversalGroup(
+          child: WorkspaceToolbar(
+            view: view,
+            shown: workspaceShownDate(path) ?? today,
+            today: today,
+            firstDayOfWeek: settings?.firstDayOfWeek ?? 1,
+            leading: const PlanPanelButton(),
+            trailing: workspaceInspects(path) ? const InspectorToggle() : null,
+          ),
         ),
         Expanded(
-          child: WorkspaceScope(
-            child: InspectorFrame(
-              inspects: workspaceInspects(path),
-              child: child,
+          child: FocusTraversalGroup(
+            child: WorkspaceScope(
+              child: InspectorFrame(
+                inspects: workspaceInspects(path),
+                child: child,
+              ),
             ),
           ),
         ),

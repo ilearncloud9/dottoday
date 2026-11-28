@@ -8538,6 +8538,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get webKeyHelp => 'ayuda';
 
   @override
+  String rowOverlaps(String label, String title, int others) {
+    String _temp0 = intl.Intl.pluralLogic(
+      others,
+      locale: localeName,
+      other: ' y $others más',
+      one: ' y 1 más',
+      zero: '',
+    );
+    return '$label, se solapa con $title$_temp0';
+  }
+
+  @override
+  String gridDaySaid(String day, String today, int count, String planned) {
+    String _temp0 = intl.Intl.selectLogic(today, {'yes': ', hoy', 'other': ''});
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tareas',
+      one: '1 tarea',
+    );
+    return '$day$_temp0, $_temp1, $planned planificado';
+  }
+
+  @override
   String get taskIconCategoryPlanning => 'Planificación y ritmo';
 
   @override

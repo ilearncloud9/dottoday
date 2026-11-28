@@ -7,6 +7,7 @@ import 'package:dottoday/domain/review/week_review.dart';
 import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/review/week_review_sheet.dart';
 import 'package:dottoday/features/timeline/widgets/day_review.dart';
+import 'package:dottoday/shared/navigation/landing_title.dart';
 import 'package:dottoday/shared/sheets/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -118,8 +119,8 @@ class _ReviewPanelState extends ConsumerState<ReviewPanel> {
       spacing: DotSpace.s,
       children: [
         Expanded(
-          child: Semantics(
-            header: true,
+          // Focus lands here when the review opens (ED-248 A).
+          child: LandingTitle(
             child: Text(
               l10n.reviewColumnCaption(_date(context)),
               style: t.styles.caption.copyWith(color: t.colors.muted),

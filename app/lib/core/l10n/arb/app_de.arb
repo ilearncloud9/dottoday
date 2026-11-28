@@ -2139,6 +2139,8 @@
   "webKeyDays": "Tage",
   "webKeyEverything": "alles andere",
   "webKeyHelp": "Hilfe",
+  "rowOverlaps": "{label}, überschneidet sich mit {title}{others, plural, =0{} =1{ und 1 weiteren} other{ und {others} weiteren}}",
+  "gridDaySaid": "{day}{today, select, yes{, heute} other{}}, {count, plural, =1{1 Aufgabe} other{{count} Aufgaben}}, {planned} geplant",
   "taskIconCategoryPlanning": "Planung & Rhythmus",
   "taskIconCategoryHealth": "Gesundheit & Körper",
   "taskIconCategoryFitness": "Fitness & Sport",

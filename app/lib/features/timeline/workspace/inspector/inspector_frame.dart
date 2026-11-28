@@ -7,6 +7,7 @@ import 'package:dottoday/features/timeline/review/review_panel.dart';
 import 'package:dottoday/features/timeline/review/review_state.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/inspector_write.dart';
 import 'package:dottoday/features/timeline/workspace/inspector/workspace_inspector.dart';
+import 'package:dottoday/shared/navigation/focus_return.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,9 +41,12 @@ class InspectorFrame extends ConsumerStatefulWidget {
   ConsumerState<InspectorFrame> createState() => _InspectorFrameState();
 }
 
-/// A leaf: the focus that lets Esc reach the frame after a click.
+/// A leaf: the focus that lets Esc reach the frame after a click, and
+/// the card that opened the inspector, for focus to go back to when it
+/// closes (E-G4-7-States D2, ED-248).
 class _InspectorFrameState extends ConsumerState<InspectorFrame> {
   final _focus = FocusNode(debugLabel: 'inspector'); // l10n-ignore: debug
+  final _back = FocusReturn();
 
   @override
   void initState() {
@@ -68,7 +72,8 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
   Widget build(BuildContext context) {
     // A click doesn't move focus: bring it inside, so Esc and Tab work on
     // what was just picked.
-    ref.listen(inspectedTaskProvider, (_, next) {
+    ref.listen(inspectedTaskProvider, (was, next) {
+      _back.track(was != null, next != null);
       if (next != null && !_focus.hasFocus) _focus.requestFocus();
     });
     final inspects = widget.inspects;
@@ -91,6 +96,9 @@ class _InspectorFrameState extends ConsumerState<InspectorFrame> {
       },
       child: Focus(
         focusNode: _focus,
+        // Holds focus for Esc after a click; not a Tab stop of its own
+        // (ED-248: Tab went to the whole grid before its first block).
+        skipTraversal: true,
         child: LayoutBuilder(
           builder: (context, box) => reviewing
               ? _layout(
